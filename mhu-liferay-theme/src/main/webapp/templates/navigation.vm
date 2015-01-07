@@ -1,0 +1,66 @@
+<nav class="$nav_css_class navbar site-navigation" id="navigation" role="navigation">
+	<div class="navbar yamm">
+		<div class="navbar-inner">
+			<div id="header_content_nav">
+				<div class="collapse nav-collapse container">
+					<ul class="nav">
+						#foreach ($nav_level_top in $nav_items)
+						#if ($nav_level_top.isSelected())
+						#set ($nav_level_top_attr_selected="")
+						#set ($nav_level_top_attr_has_popup="")
+						#set ($nav_level_top_caret="")
+						#set ($nav_level_top_css_class="")
+						#set ($nav_level_top_link_css_class="")
+						#end
+						#if ($nav_level_top.hasChildren())
+						#set ($nav_level_top_attr_selected="aria-selected='true'")
+						#set ($nav_level_top_css_class="$nav_level_top_css_class selected active")
+						#end
+						<li class="dropdown">
+							<a href=" $nav_level_top.getURL() " class="dropdown-toggle">$nav_level_top.getName() #if($nav_level_top.hasChildren())<b class="caret"></b>#end </a>
+							#if ($nav_level_top.hasChildren())
+							<ul class="dropdown-menu">
+								<li>
+									<div class="yamm-content container row">
+										#foreach ($nav_level_sub1 in $nav_level_top.getChildren())
+										<ul class="unstyled col col-lg-1 col-md-1 col-sm-4 col-xs-6">
+											<li>
+												<p>
+													<a href="$nav_level_sub1.getURL()"><strong>$nav_level_sub1.getName()</strong></a>
+												</p>
+											</li>
+											#if ($nav_level_sub1.hasChildren())
+											#foreach ($nav_level_sub2 in $nav_level_sub1.getChildren())
+											<li class="text-left">
+												<a href="$nav_level_sub2.getURL()" class="grey"><span class="glyphicon glyphicon-play"></span> $nav_level_sub2.getName()</a>
+												#if ($nav_level_sub2.hasChildren())
+												<ul>
+													#foreach ($nav_level_sub3 in $nav_level_sub2.getChildren())
+													<li class="pull-left">
+														<a href="$nav_level_sub3.getURL()" class="grey">$nav_level_sub3.getName()</a>
+													</li>
+													#end
+												</ul>
+												#end
+											</li>
+											#end
+											#end
+										</ul>
+										#end
+									</div>
+								</li>
+							</ul>
+							#end
+						</li>
+						#end
+					</ul>
+					<div class="pull-right" id="search-field">
+						$theme.search()
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</nav>
+<script>Liferay.Data.NAV_LIST_SELECTOR = '.navbar-inner .nav-collapse > ul';</script>

@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1419979431361
+Build-Jdk: 1.7.0_51
+Built-By: mikehummel
+Bundle-Description: Library with usefull tools to rapide develop a appli
+ cation
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: mhu-lib-forms
+Bundle-SymbolicName: mhu-lib-forms
+Bundle-Version: 3.2.8.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: de.mhus.lib.form;version="3.2.8.SNAPSHOT";uses:="de.mhus
+ .lib.core,de.mhus.lib.core.activator,de.mhus.lib.core.directory,de.mhus
+ .lib.core.form,de.mhus.lib.core.lang,de.mhus.lib.core.util,de.mhus.lib.
+ errors",de.mhus.lib.form.binding;version="3.2.8.SNAPSHOT";uses:="de.mhu
+ s.lib.core.pojo,de.mhus.lib.form",de.mhus.lib.form.control;version="3.2
+ .8.SNAPSHOT";uses:="de.mhus.lib.core.directory,de.mhus.lib.errors,de.mh
+ us.lib.form",de.mhus.lib.form.definition;version="3.2.8.SNAPSHOT";uses:
+ ="de.mhus.lib.core.config,de.mhus.lib.core.definition,de.mhus.lib.error
+ s,de.mhus.lib.form.control",de.mhus.lib.form.pojo;version="3.2.8.SNAPSH
+ OT";uses:="de.mhus.lib.form",de.mhus.lib.form.ui;version="3.2.8.SNAPSHO
+ T";uses:="de.mhus.lib.core.definition,de.mhus.lib.errors,de.mhus.lib.fo
+ rm.definition",de.mhus.lib.form.validation;version="3.2.8.SNAPSHOT";use
+ s:="de.mhus.lib.form"
+Import-Package: de.mhus.lib.annotations.form;version="[3.2,4)",de.mhus.l
+ ib.core;version="[3.2,4)",de.mhus.lib.core.activator;version="[3.2,4)",
+ de.mhus.lib.core.config;version="[3.2,4)",de.mhus.lib.core.definition;v
+ ersion="[3.2,4)",de.mhus.lib.core.directory;version="[3.2,4)",de.mhus.l
+ ib.core.form;version="[3.2,4)",de.mhus.lib.core.lang;version="[3.2,4)",
+ de.mhus.lib.core.logging;version="[3.2,4)",de.mhus.lib.core.pojo;versio
+ n="[3.2,4)",de.mhus.lib.core.util;version="[3.2,4)",de.mhus.lib.errors;
+ version="[3.2,4)"
+Tool: Bnd-2.1.0.20130426-122213

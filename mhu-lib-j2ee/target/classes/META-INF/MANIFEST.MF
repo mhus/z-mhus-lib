@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1419979431883
+Build-Jdk: 1.7.0_51
+Built-By: mikehummel
+Bundle-Description: Library with usefull tools to rapide develop a appli
+ cation
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: mhu-lib-j2ee
+Bundle-SymbolicName: mhu-lib-j2ee
+Bundle-Version: 3.2.8.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: de.mhus.lib.portlet;version="3.2.8.SNAPSHOT";uses:="de.m
+ hus.lib.core.logging,de.mhus.lib.portlet.actions,de.mhus.lib.portlet.re
+ source,javax.portlet",de.mhus.lib.portlet.actions;version="3.2.8.SNAPSH
+ OT";uses:="de.mhus.lib.core,javax.portlet",de.mhus.lib.portlet.callback
+ ;version="3.2.8.SNAPSHOT";uses:="de.mhus.lib.core,de.mhus.lib.core.logg
+ ing,de.mhus.lib.core.util,de.mhus.lib.errors,de.mhus.lib.portlet.resour
+ ce,javax.portlet,org.codehaus.jackson,org.codehaus.jackson.node",de.mhu
+ s.lib.portlet.resource;version="3.2.8.SNAPSHOT";uses:="de.mhus.lib.core
+ ,javax.portlet,org.codehaus.jackson"
+Import-Package: de.mhus.lib.core;version="[3.2,4)",de.mhus.lib.core.logg
+ ing;version="[3.2,4)",de.mhus.lib.core.util;version="[3.2,4)",de.mhus.l
+ ib.errors;version="[3.2,4)",javax.portlet;version="[2.0,3)",org.codehau
+ s.jackson;version="[1.7,2)",org.codehaus.jackson.map;version="[1.7,2)",
+ org.codehaus.jackson.node;version="[1.7,2)",de.mhus.lib.mutable;version
+ ="3.2.8.SNAPSHOT";resolution:=optional
+Tool: Bnd-2.1.0.20130426-122213

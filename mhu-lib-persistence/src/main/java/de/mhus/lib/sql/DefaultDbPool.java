@@ -1,0 +1,228 @@
+/*
+ *  Copyright (C) 2002-2004 Mike Hummel
+ *
+ *  This library is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published
+ *  by the Free Software Foundation; either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+package de.mhus.lib.sql;
+
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.List;
+
+import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MHousekeeper;
+import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.directory.ResourceNode;
+
+/**
+ * The pool handles a bundle of connections. The connections should have the same
+ * credentials (url, user access). Unused or closed connections will be freed after a
+ * pending period.
+ * 
+ * @author mikehummel
+ *
+ */
+public class DefaultDbPool extends DbPool {
+
+	private List<InternalDbConnection> pool = new LinkedList<InternalDbConnection>();
+	
+	
+	/**
+	 * Create a new pool from central configuration.
+	 * It's used the MSingleton configuration with the key of this class.
+	 * 
+	 * @throws Exception
+	 */
+	public DefaultDbPool() throws Exception {
+		super(null,null);
+		initHousekeeper();
+	}
+	
+	/**
+	 * Create a new pool from a configuration.
+	 * 
+	 * @param config Config element or null. null will use the central MSingleton configuration.
+	 * @param activator Activator or null. null will use the central MSingleton Activator.
+	 * @throws Exception
+	 */
+	public DefaultDbPool(ResourceNode config,MActivator activator) throws Exception {
+		super(config,activator);
+		initHousekeeper();
+	}
+
+	/**
+	 * Create a pool with the DbProvider.
+	 * 
+	 * @param provider
+	 */
+	public DefaultDbPool(DbProvider provider) {
+		super(provider);
+		initHousekeeper();
+	}
+	
+	protected void initHousekeeper() {
+		
+		Housekeeper housekeeper = new Housekeeper(this);
+		base(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
+	}
+	
+	/**
+	 * Look into the pool for an unused DbProvider. If no one find, create one.
+	 * 
+	 * @param jmxName
+	 * @return
+	 * @throws Exception 
+	 */
+	@Override
+	public DbConnection getConnection() throws Exception {
+		log().t(getName(),"getConnection");
+		boolean foundClosed = false;
+		try {
+			synchronized (pool) {
+				for (InternalDbConnection con : pool) {
+					if (con.isClosed() || con.checkTimedOut()) {
+						foundClosed = true;
+					} else
+					if (!con.isUsed()) {
+						con.setUsed(true);
+						return new DbConnectionProxy(con);
+					}
+				}
+				InternalDbConnection con = getProvider().createConnection();
+				if (con == null) return null;
+				con.setPool(this);
+				pool.add(con);
+				con.setUsed(true);
+				return new DbConnectionProxy(con);
+			}
+		} finally {
+			if (foundClosed) cleanup(false);
+		}
+	}
+
+	/**
+	 * Current pool size.
+	 * 
+	 * @return Current pool size, also pending closed connections.
+	 */
+	@Override
+	@JmxManaged(descrition="Current size of the pool")
+	public int getSize() {
+		synchronized (pool) {
+			return pool.size();
+		}
+	}
+
+	@Override
+	@JmxManaged(descrition="Current used connections in the pool")
+	public int getUsedSize() {
+		int cnt = 0;
+		synchronized (pool) {
+			for (DbConnection con : new LinkedList<DbConnection>(pool)) {
+				if( con.isUsed()) cnt++;
+			}
+		}
+		return cnt;
+	}
+	
+	/**
+	 * Cleanup the connection pool. Unused or closed connections will be removed.
+	 * TODO new strategy to remove unused connections - not prompt, need a timeout time or minimum pool size.
+	 */
+	@Override
+	@JmxManaged(descrition="Cleanup unused connections")
+	public void cleanup(boolean unusedAlso) {
+		log().t(getName(),"cleanup");
+		synchronized (pool) {
+			for (InternalDbConnection con : new LinkedList<InternalDbConnection>(pool)) {
+				try {
+					con.checkTimedOut();
+					if( unusedAlso && !con.isUsed() || con.isClosed()) {
+						con.close();
+						pool.remove(con);
+					}
+				} catch (Throwable t) {} // for secure - do not impact the thread
+			}
+		}		
+	}
+
+	/**
+	 * Close the pool and all connections.
+	 * 
+	 */
+	@Override
+	public void close() {
+		if (pool == null) return;
+		log().t(getName(),"close");
+		synchronized (pool) {
+			for (DbConnection con : pool) {
+				con.close();
+			}
+			pool = null;
+		}
+	}
+	
+	@Override
+	@JmxManaged(descrition="Return the usage of the connections")
+	public String dumpUsage(boolean used) {
+		StringBuffer out = new StringBuffer();
+		synchronized (pool) {
+			for (DbConnection con : pool) {
+				if (!used || con.isUsed()) {
+					out.append("--- ").append(con.getClass().getCanonicalName()).append("(").append(con.isUsed() ? "used" : "unused" ).append(")\n");
+					StackTraceElement[] trace = con.getUsedTrace();
+					if (trace != null) {
+						for (StackTraceElement ste : trace)
+							out.append(ste.getClassName()).append(" ").append(ste.getMethodName())
+							.append("(").append(ste.getFileName()).append(":").append(ste.getLineNumber()).append(")\n");
+					}
+				}
+			}
+			pool = null;
+		}
+		return out.toString();
+	}
+	
+	private static class Housekeeper extends MHousekeeperTask {
+
+		private WeakReference<DefaultDbPool> pool;
+		private String name;
+		
+		private Housekeeper(DefaultDbPool pool) {
+			this.pool = new WeakReference<DefaultDbPool>(pool);
+			this.name = pool.getPoolId();
+		}
+		
+		@Override
+		public void doit() throws Exception {
+			DefaultDbPool obj = pool.get();
+			if (obj == null || obj.isClosed()) {
+				log().t(name,"close");
+				cancel();
+				return;
+			}
+			log().t(getClass(),name,"Housekeeping");
+			obj.cleanup(false);
+		}
+		
+	}
+
+	@Override
+	public boolean isClosed() {
+		return pool == null;
+	}
+}

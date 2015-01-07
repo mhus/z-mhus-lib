@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1419979438813
+Build-Jdk: 1.7.0_51
+Built-By: mikehummel
+Bundle-Blueprint: OSGI-INF/blueprint/blueprint.xml
+Bundle-Description: mhu-lib-karaf OSGi blueprint bundle project.
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: mhu-lib-karaf
+Bundle-SymbolicName: mhu-lib-karaf
+Bundle-Version: 3.2.8.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: de.mhus.lib.karaf;version="3.2.8.SNAPSHOT";uses:="javax.
+ sql,org.osgi.framework",de.mhus.lib.karaf.adb;version="3.2.8.SNAPSHOT";
+ uses:="de.mhus.lib.adb,de.mhus.lib.core,de.mhus.lib.core.directory,de.m
+ hus.lib.core.logging,de.mhus.lib.errors,de.mhus.lib.karaf,de.mhus.lib.s
+ ql,javax.sql,org.apache.felix.service.command,org.apache.karaf.shell.co
+ mmands,org.osgi.framework,org.osgi.service.component",de.mhus.lib.mutab
+ le;version="3.2.8.SNAPSHOT";uses:="de.mhus.lib.core,de.mhus.lib.core.co
+ nfig,de.mhus.lib.core.lang,de.mhus.lib.core.logging,de.mhus.lib.core.se
+ rvice,de.mhus.lib.core.system"
+Import-Package: de.mhus.lib.adb;version="[3.2,4)",de.mhus.lib.adb.model;
+ version="[3.2,4)",de.mhus.lib.core;version="[3.2,4)",de.mhus.lib.core.a
+ ctivator;version="[3.2,4)",de.mhus.lib.core.config;version="[3.2,4)",de
+ .mhus.lib.core.console;version="[3.2,4)",de.mhus.lib.core.directory;ver
+ sion="[3.2,4)",de.mhus.lib.core.lang;version="[3.2,4)",de.mhus.lib.core
+ .logging;version="[3.2,4)",de.mhus.lib.core.service;version="[3.2,4)",d
+ e.mhus.lib.core.system;version="[3.2,4)",de.mhus.lib.core.util;version=
+ "[3.2,4)",de.mhus.lib.errors;version="[3.2,4)",de.mhus.lib.logging;vers
+ ion="[3.2,4)",de.mhus.lib.sql;version="[3.2,4)",javax.sql,org.apache.fe
+ lix.service.command;version="[0.10,1)";status=provisional,org.apache.ka
+ raf.shell.commands;version="[3.0,4)",org.osgi.framework;version="[1.7,2
+ )",org.osgi.service.blueprint;version="[1.0.0,2.0.0)",org.osgi.service.
+ component;version="[1.2,2)"
+Service-Component: OSGI-INF/DbManagerServiceProviderDynamic.xml,OSGI-INF
+ /DbManagerServiceProviderOsgi.xml
+Tool: Bnd-2.1.0.20130426-122213

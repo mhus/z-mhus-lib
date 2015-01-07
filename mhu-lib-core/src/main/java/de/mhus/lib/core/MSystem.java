@@ -1,0 +1,224 @@
+package de.mhus.lib.core;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+
+import de.mhus.lib.core.logging.Log;
+
+public class MSystem {
+
+	private static Log log = Log.getLog(MSystem.class);
+	
+	/**
+	 * Returns the name of the current system. COMPUTERNAME or HOSTNAME.
+	 * 
+	 * @return
+	 */
+	public static String getHostname() 
+	{
+		String out = System.getenv().get("COMPUTERNAME");
+		if (out == null)
+			out = System.getenv().get("HOSTNAME");
+		if (out == null)
+		{
+			RuntimeMXBean rt = ManagementFactory.getRuntimeMXBean();
+			String name = rt.getName();
+			out = MString.afterIndex(name, '@');
+		}
+		return out;
+	}
+	
+	/**
+	 * Returns the process id of the current application.
+	 * 
+	 * @return
+	 */
+	public static String getPid() 
+	{
+		RuntimeMXBean rt = ManagementFactory.getRuntimeMXBean();
+		String name = rt.getName();
+		return MString.beforeIndex(name, '@');
+	}
+	
+	/**
+	 * Load and return a properties file. If the file not exists it will only
+	 * log the impact and return a empty properties object.
+	 * 
+	 * If the properties object is not null this instance will be used to load
+	 * the file entries.
+	 * 
+	 * 1. Find by system property {propertyname}.file=
+	 * 2. Find in {current dir}
+	 * 3. Find in {current dir}/config
+	 * 4. Find in {CONFIGURATION}/config
+	 * 5. Find in classpath without package name
+	 * 6. Find in classpath with package of the owner (if set)
+	 * 7. throw an error
+	 * 
+	 * @param owner null or reference object for the class path
+	 * @param properties A pre-instanciated properties object
+	 * @param propertyFile Name of the properties file, e.g. something.properties
+	 * @return The loaded properties instance
+	 */
+	public static Properties loadProperties(Object owner,Properties properties, String propertyFile) {
+       log.d("Loading properties",propertyFile);
+       // get resource
+       if (properties == null ) properties = new Properties();
+       try {
+	       URL m_url = locateResource(owner,propertyFile);
+	       if (m_url==null) {
+	    	   log.w("Properties file not found",propertyFile);
+	    	   return properties;
+	       }
+	       log.i("load",m_url);
+	       InputStream stream = m_url.openStream();
+	       properties.load(stream);
+	       stream.close();
+       } catch (IOException e) {
+    	   log.i("Error loading properties file", propertyFile,e.toString());
+    	   //logger.t(e);
+       }
+       return properties;
+	}
+       
+	/**
+	 * 
+	 * 1. Find by system property {propertyname}.file=
+	 * 2. Find in {current dir}
+	 * 3. Find in {current dir}/config
+	 * 4. Find in {CONFIGURATION}/config
+	 * 5. Find in classpath without package name
+	 * 6. Find in classpath with package of the owner (if set)
+	 * 7. throw an error
+	 * @param owner
+	 * @param propertyFile
+	 * @return
+	 * @throws IOException
+	 */
+	@SuppressWarnings("deprecation")
+	public static URL locateResource(Object owner,String propertyFile) throws IOException {
+
+		  URL url = null;
+		  
+		  String location = System.getProperty(propertyFile + ".file");
+	      if (url == null && location != null) {
+	         File f = new File(location);
+	         if ( f.exists() && f.isFile() )
+	        	 url = f.toURL();
+	      }
+	      
+	      {
+		      File f = new File(propertyFile);
+		      if ( f.exists() && f.isFile() )
+		    	  return f.toURL();
+	      }
+	      
+	      {
+		      File f = new File("config/" + propertyFile);
+		      if ( f.exists() && f.isFile() )
+		    	  return f.toURL();
+	      }
+	      
+	      try {
+		      String configurationPath = System.getenv("CONFIGURATION");
+		      if ( url == null && configurationPath != null ) {
+		    	  File f = new File(configurationPath + "/" + propertyFile);
+		          if ( f.exists() && f.isFile() )
+		         	 url = f.toURL();    	  
+		      }
+	      } catch (SecurityException e) {}
+	      
+	      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	      if (url == null && loader != null)
+	         url = loader.getResource(propertyFile);
+	      	      
+	      if (owner !=null && url == null) {
+	         url = owner.getClass().getResource("/" + owner.getClass().getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
+	      }
+	      if (owner !=null && url == null) {
+		         url = owner.getClass().getResource( owner.getClass().getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
+		  }
+	      
+	      if (url != null) return url;
+	      throw new FileNotFoundException("Cannot locate resource: " + propertyFile);
+	   }
+	
+	/**
+	 * makeshift system beep if awt.Toolkit.beep is not available. Works also in
+	 * JDK 1.02.
+	 */
+	public static void beep() {
+		System.out.print("\007");
+		System.out.flush();
+	} // end beep
+
+	public static String findSource(int returns) {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		if (stack.length > returns)
+			return stack[returns].getClassName();
+		return "?";
+	}
+
+	/**
+	 * Return the name of the main class or null if not found.
+	 * @return
+	 */
+	public static String getMainClassName()
+	{
+	  for(final Map.Entry<String, String> entry : System.getenv().entrySet())
+	  {
+	    if(entry.getKey().startsWith("JAVA_MAIN_CLASS"))
+	      return entry.getValue();
+	  }
+	  return null;
+	}
+
+	/**
+	 * Return the system temp directory.
+	 * 
+	 * @return
+	 */
+	public static String getTmpDirectory() {
+		return System.getProperty("java.io.tmpdir");
+	}
+	
+	public static String toString(Object sender, Object ... attributes) {
+		StringBuffer sb = new StringBuffer();
+		sb.append('[').append(sender == null ? "?" : sender.getClass().getSimpleName()).append(':');
+		boolean first = true;
+		for (Object a : attributes) {
+			if (!first) sb.append(','); else first = false;
+			if (a == null)
+				sb.append("null");
+			else
+				sb.append(a.toString());
+		}
+		sb.append(']');
+		return sb.toString();
+	}
+	
+	public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotation) {
+		Class<?> current = clazz;
+		while (current != null) {
+			if (current.isAnnotationPresent(annotation))
+				return current.getAnnotation(annotation);
+			current = current.getSuperclass();
+		}
+		return null;
+	}
+
+	public static boolean equals(Object a, Object b) {
+		if (a == null && b == null) return true;
+		if (a == null) return false;
+		return a.equals(b);
+	}
+	
+}

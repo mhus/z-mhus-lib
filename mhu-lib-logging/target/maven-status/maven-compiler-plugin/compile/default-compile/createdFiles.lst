@@ -1,0 +1,12 @@
+de/mhus/lib/logging/SLF4JFactory$SLF4JLog.class
+de/mhus/lib/logging/adapters/Log4JAppender.class
+de/mhus/lib/logging/SLF4JFactory$1.class
+de/mhus/lib/logging/Log4JFactory$1.class
+de/mhus/lib/logging/SLF4JFactory.class
+de/mhus/lib/logging/JavaLoggerFactory$JLLog.class
+de/mhus/lib/logging/Log4JFactory.class
+de/mhus/lib/logging/Log4JFactory$Log4JLog.class
+de/mhus/lib/logging/JavaLoggerFactory$1.class
+de/mhus/lib/logging/JavaLoggerFactory.class
+de/mhus/lib/logging/adapters/JavaLoggerHandler.class
+de/mhus/lib/logging/adapters/SLF4JAppender.class

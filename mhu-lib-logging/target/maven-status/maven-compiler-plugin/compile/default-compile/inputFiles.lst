@@ -1,0 +1,6 @@
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/adapters/Log4JAppender.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/adapters/SLF4JAppender.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/JavaLoggerFactory.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/Log4JFactory.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/adapters/JavaLoggerHandler.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-logging/src/main/java/de/mhus/lib/logging/SLF4JFactory.java

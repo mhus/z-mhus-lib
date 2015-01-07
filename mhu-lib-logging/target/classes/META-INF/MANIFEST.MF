@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1419979430845
+Build-Jdk: 1.7.0_51
+Built-By: mikehummel
+Bundle-Description: Library with usefull tools to rapide develop a appli
+ cation
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: mhu-lib-logging
+Bundle-SymbolicName: mhu-lib-logging
+Bundle-Version: 3.2.8.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: de.mhus.lib.logging;version="3.2.8.SNAPSHOT";uses:="de.m
+ hus.lib.core.directory,de.mhus.lib.core.logging,org.apache.log4j",de.mh
+ us.lib.logging.adapters;version="3.2.8.SNAPSHOT";uses:="org.apache.log4
+ j,org.apache.log4j.spi"
+Import-Package: de.mhus.lib.core;version="[3.2,4)",de.mhus.lib.core.conf
+ ig;version="[3.2,4)",de.mhus.lib.core.directory;version="[3.2,4)",de.mh
+ us.lib.core.logging;version="[3.2,4)",de.mhus.lib.core.system;version="
+ [3.2,4)",org.apache.log4j,org.apache.log4j.spi,org.apache.log4j.xml,org
+ .slf4j;version="[1.7,2)",org.w3c.dom
+Tool: Bnd-2.1.0.20130426-122213

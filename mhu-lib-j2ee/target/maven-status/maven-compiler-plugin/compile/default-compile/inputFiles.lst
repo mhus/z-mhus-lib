@@ -1,0 +1,13 @@
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/MPortlet.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/actions/ActionRequestHandler.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/resource/ResourceRequestHandler.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/actions/AbstractAction.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/resource/Resource.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/actions/ActionProperties.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/actions/Action.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/callback/AbstractAjaxCallback.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/resource/AbstractResource.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/resource/ResourceProperties.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/resource/AjaxResource.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/callback/CallContext.java
+/Users/mikehummel/Documents/MHUs/workspaces/mhu-lib-3.2/mhu-lib/mhu-lib-j2ee/src/main/java/de/mhus/lib/portlet/IllegalCharacterException.java

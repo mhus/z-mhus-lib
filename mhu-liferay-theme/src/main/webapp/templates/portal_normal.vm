@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+#parse ($init)
+<html class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id">
+    <head>
+        <title>$company_name - $the_title</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta content="initial-scale=1.0, width=device-width" name="viewport" />
+            $theme.include($top_head_include)
+            <script type="text/javascript">var jspath = "$javascript_folder";</script>
+            <script src="$javascript_folder/underscore-min.js"></script>
+            <script src="$javascript_folder/jquery.min.js"></script>
+            <script src="$javascript_folder/knockout-3.0.0.js"></script>
+            <script src="$javascript_folder/mhus.js"></script>
+</head>
+<body class="$css_class">
+    $theme.include($body_top_include)
+    #dockbar()
+    <div class="container-fluid">
+        <header id="banner" role="banner">
+            <div id="header_content">
+                <div id="heading">
+                    <h1 class="site-title">
+                        <a class="$logo_css_class" href="$site_default_url" title="$site_name">
+                            <img alt="$logo_description" height="$site_logo_height" src="$site_logo" width="$site_logo_width" />
+                            #if ($show_site_name)
+                                <span class="site-name" title="$site_name">
+                                    $site_name
+                                </span>
+                            #end
+                        </a>
+                    </h1>
+                    <h2 class="page-title">
+                        <span>$the_title</span>
+                    </h2>
+                </div>
+            </div>
+            #if ($has_navigation || $is_signed_in)
+                #parse ("$full_templates_path/navigation.vm")
+            #end
+        </header>
+        <div id="wrapper">
+            <div id="content">
+                <div data-alerts="alerts" data-titles="{'error':'<em>Error!</em>
+                    ','warning': '<em>Warning!</em>
+                    ', 'info':'<em>Information</em>
+                    '}" data-fade="3000"></div>
+                    <div id="spinner" style="display:none">
+                        <img alt="activity indicator" src="$javascript_folder/spinner.gif"/>
+                    </div>
+                    #if ($selectable)
+                        $theme.include($content_include)
+                    #else
+                        $portletDisplay.recycle()
+                        $portletDisplay.setTitle($the_title)
+                        $theme.wrapPortlet("portlet.vm", $content_include)
+                    #end
+            </div>
+            <div class="clear"></div>
+        </div>
+        <footer id="footer" role="contentinfo" class="row">
+            <div id="footer_content" class="container">
+                #foreach ($nav_level_top in $nav_items)
+                    <div class="col col-md-1 col-sm-4">
+                        <a href=" $nav_level_top.getURL() " class="list-group-item active">$nav_level_top.getName()</a>
+                    </div>
+                #end
+            </div>
+        </footer>
+    </div>
+    $theme.include($body_bottom_include)
+    $theme.include($bottom_include)
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        <script type="text/javascript" src="https://apis.google.com/js/platform.js">
+            {lang: 'de'}
+        </script>
+        <script src="$javascript_folder/bootstrap.min.js"></script>
+</body>
+</html>
