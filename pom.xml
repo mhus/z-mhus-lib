@@ -36,7 +36,7 @@
   </licenses>
   <scm>
     <url>https://mhu-lib.googlecode.com/svn/trunk/mhu-lib</url>
-    <connection>scm:svn:https://mhu-lib.googlecode.com/svn/trunk/mhu-lib</connection>
+    <connection>scm:git:https://github.com/mhus/mhus-lib/</connection>
   </scm>
   <developers>
     <developer>
