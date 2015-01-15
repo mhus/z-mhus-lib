@@ -32,13 +32,14 @@ import de.mhus.lib.sql.DbResult;
 public abstract class DbSchema extends MObject {
 
 	
-	public abstract void findObjectTypes(List<Class<?>> list);
+	public abstract void findObjectTypes(List<Class<? extends Persistable>> list);
 	protected String tablePrefix = "";
-	private LinkedList<Class<?>> objectTypes;
+	private LinkedList<Class<? extends Persistable>> objectTypes;
 	
-	public final Class<?>[] getObjectTypes() {
+	@SuppressWarnings("unchecked")
+	public final Class<? extends Persistable>[] getObjectTypes() {
 		initObjectTypes();
-		return objectTypes.toArray(new Class<?>[objectTypes.size()]);
+		return (Class<? extends Persistable>[]) objectTypes.toArray(new Class<?>[objectTypes.size()]);
 	}
 	
 	/**
@@ -95,21 +96,21 @@ public abstract class DbSchema extends MObject {
 	 * @param manager
 	 * @return
 	 */
-	public Class<?> findClassForObject(Object object, DbManager manager) {
+	public Class<? extends Persistable> findClassForObject(Object object, DbManager manager) {
 		initObjectTypes();
 		if (object instanceof Class<?>) {
-			for (Class<?> c : objectTypes)
+			for (Class<? extends Persistable> c : objectTypes)
 				if (((Class<?>)object).isAssignableFrom(c)) return c;
 		}
 		
-		for (Class<?> c : objectTypes)
+		for (Class<? extends Persistable> c : objectTypes)
 			if (c.isInstance(object)) return c;
 		return null;
 	}
 
 	protected synchronized void initObjectTypes() {
 		if (objectTypes != null) return;
-		objectTypes = new LinkedList<Class<?>>();
+		objectTypes = new LinkedList<>();
 		findObjectTypes(objectTypes);
 	}
 
@@ -183,7 +184,7 @@ public abstract class DbSchema extends MObject {
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
 	 */
-	public void doPreRemove(Table table, Object object, DbConnection con, DbManager dbManager) {
+	public void doPreRemove(Table table, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
 			((DbObject)object).doPreRemove(con);
 		}
@@ -193,7 +194,7 @@ public abstract class DbSchema extends MObject {
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
 	 */
-	public void doPostLoad(Table table, Object object, DbConnection con, DbManager manager) {
+	public void doPostLoad(Table table, Persistable object, DbConnection con, DbManager manager) {
 		if (object instanceof DbObject) {
 			((DbObject)object).doPostLoad(con);
 		}
@@ -203,7 +204,7 @@ public abstract class DbSchema extends MObject {
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
 	 */
-	public void doPostRemove(Table c, Object object, DbConnection con, DbManager dbManager) {
+	public void doPostRemove(Table c, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
 			((DbObject)object).doPostRemove(con);
 		}
@@ -250,7 +251,7 @@ public abstract class DbSchema extends MObject {
 		return MSystem.toString(this,getSchemaName(),objectTypes);
 	}
 
-	public Table createTable(DbManager manager, Class<?> clazz,String registryName, String tableName) {
+	public Table createTable(DbManager manager, Class<? extends Persistable> clazz,String registryName, String tableName) {
 		
 		boolean isDynamic = true;
 		try {

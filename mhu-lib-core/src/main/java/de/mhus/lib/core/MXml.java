@@ -806,4 +806,10 @@ public class MXml {
 		
 	}
 	
+	public static String getValue(Element root, String path, String def) {
+		Element ele = getElementByPath(root, path);
+		if (ele == null) return def;
+		return getValue(ele, false);
+	}
+	
 }

@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.Persistable;
 
 
 public class AaaUtil {
 
-	public static void findObjectTypes(List<Class<?>> list) {
+	public static void findObjectTypes(List<Class<? extends Persistable>> list) {
 		list.add(Acl.class);
 		list.add(Subject.class);
 		list.add(AclToSubject.class);

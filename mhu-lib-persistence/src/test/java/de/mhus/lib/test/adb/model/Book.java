@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbObject;
+import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.relation.RelSingle;
 import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;
@@ -14,7 +15,7 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 
 @DbTable(tableName="book")
-public class Book implements DbObject {
+public class Book implements DbObject, Persistable {
 
 	private UUID id;
 	private String name;

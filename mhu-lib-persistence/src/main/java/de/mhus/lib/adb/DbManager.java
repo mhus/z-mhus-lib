@@ -235,7 +235,7 @@ public class DbManager extends MJmx {
 				myCon.close();
 			}
 			
-			schema.doPostLoad(c, out, con, this);
+			schema.doPostLoad(c, (Persistable) out, con, this);
 
 			return out;
 		} catch (Throwable t) {
@@ -295,7 +295,7 @@ public class DbManager extends MJmx {
 			}
 			c.fillObject(object,con,res);
 			
-			schema.doPostLoad(c,object,con, this);
+			schema.doPostLoad(c,(Persistable) object,con, this);
 			
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -345,7 +345,7 @@ public class DbManager extends MJmx {
 			if (c.fillObject(con,object,keys.toArray()) == null)
 				throw new MException("object not found");
 			
-			schema.doPostLoad(c,object,con,this);
+			schema.doPostLoad(c,(Persistable) object,con,this);
 			
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -464,7 +464,7 @@ public class DbManager extends MJmx {
 		try {
 			c.fillObject(con,object,keys);
 			
-			schema.doPostLoad(c,object,con,this);
+			schema.doPostLoad(c,(Persistable) object,con,this);
 			
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -532,7 +532,7 @@ public class DbManager extends MJmx {
 		
 			c.createObject(con,object);
 			
-			schema.doPostLoad(c,object,con,this);
+			schema.doPostLoad(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -654,12 +654,12 @@ public class DbManager extends MJmx {
 		
 		try {
 			// prepare object
-			schema.doPreRemove(c,object,con,this);
+			schema.doPreRemove(c,(Persistable) object,con,this);
 			
 			//save object
 			c.removeObject(con,object);
 			
-			schema.doPostRemove(c,object,con,this);
+			schema.doPostRemove(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -693,7 +693,7 @@ public class DbManager extends MJmx {
 		
 		if (nameMapping != null) return;
 		
-		Class<?>[] types = schema.getObjectTypes();
+		Class<? extends Persistable>[] types = schema.getObjectTypes();
 		DbConnection con = pool.getConnection();
 		if (con == null) return;
 		
@@ -709,7 +709,7 @@ public class DbManager extends MJmx {
 		}
 		
 		// classes
-		for (Class<?> clazz : types) {
+		for (Class<? extends Persistable> clazz : types) {
 			addClass(null,getRegistryName(clazz),clazz,con, cleanup);
 		}
 		con.commit();
@@ -742,7 +742,7 @@ public class DbManager extends MJmx {
 		
 	}
 	
-	protected void addClass(String tableName, String registryName, Class<?> clazz, DbConnection con, boolean cleanup) throws Exception {
+	protected void addClass(String tableName, String registryName, Class<? extends Persistable> clazz, DbConnection con, boolean cleanup) throws Exception {
 		Table c = schema.createTable(this,clazz,registryName,tableName);
 		c.initDatabase(con, cleanup);
 //		c.registryName = registryName;
@@ -987,7 +987,7 @@ public class DbManager extends MJmx {
 		if (object instanceof Class<?>) {
 			return ((Class<?>)object).getCanonicalName();
 		}
-		Class<?> clazz = schema.findClassForObject(object,this);
+		Class<? extends Persistable> clazz = schema.findClassForObject(object,this);
 		if (clazz == null) return null;
 		return clazz.getCanonicalName();
 	}
@@ -996,9 +996,13 @@ public class DbManager extends MJmx {
 			return clazz.getSimpleName().toLowerCase();
 	}
 	
-	public <T> T injectObject(T object) {
+	public <T extends Persistable> T injectObject(T object) {
 		getTable(getRegistryName(object)).injectObject(object);
 		return object;
+	}
+	
+	public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
+		return getByQualification(clazz, "", null);
 	}
 
 }

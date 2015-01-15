@@ -11,6 +11,7 @@ import org.junit.Test;
 import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
+import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.errors.MException;
@@ -317,7 +318,7 @@ public class AaaTest {
     	private Subject currentSubject;
     	
 		@Override
-		public void findObjectTypes(List<Class<?>> list) {
+		public void findObjectTypes(List<Class<? extends Persistable>> list) {
 			AaaUtil.findObjectTypes(list);
 			list.add(TestMe.class);
 			list.add(TestSimpleEntity.class);

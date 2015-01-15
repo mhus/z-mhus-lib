@@ -8,7 +8,7 @@ import de.mhus.lib.sql.DbConnection;
  * @author mikehummel
  *
  */
-public interface DbObject {
+public interface DbObject extends Persistable {
 
 	void doPreCreate(DbConnection con);
 	

@@ -9,6 +9,7 @@ import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 import org.osgi.framework.BundleContext;
 
+import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.MString;
@@ -38,7 +39,7 @@ public class CmdCreate implements Action {
 	public Object execute(CommandSession session) throws Exception {
 		
 		DbManagerService service = AdbUtil.getService(context,serviceName);
-		Class<?> type = AdbUtil.getType(service, typeName);
+		Class<? extends Persistable> type = AdbUtil.getType(service, typeName);
 		String regName = service.getManager().getRegistryName(type);
 		Table tableInfo = service.getManager().getTable(regName);
 

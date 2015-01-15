@@ -10,6 +10,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
+import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.Rfc1738;
@@ -17,8 +18,8 @@ import de.mhus.lib.errors.MException;
 
 public class AdbUtil {
 
-	public static Class<?> getType(DbManagerService service, String typeName) throws IOException {
-		for (Class<?> item : service.getManager().getSchema().getObjectTypes())
+	public static Class<? extends Persistable> getType(DbManagerService service, String typeName) throws IOException {
+		for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
 			if (item.getSimpleName().equals(typeName)) {
 				return item; 
 			}
