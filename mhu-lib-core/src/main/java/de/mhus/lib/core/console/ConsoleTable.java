@@ -16,10 +16,10 @@ public class ConsoleTable {
         return row;
     }
     
-    public void addRowValues(String ... values) {
+    public void addRowValues(Object ... values) {
     	List<String> row = addRow();
-    	for (String v : values)
-    		row.add(v);
+    	for (Object v : values)
+    		row.add(String.valueOf(v));
     }
     
     public List<String> getHeader() {
