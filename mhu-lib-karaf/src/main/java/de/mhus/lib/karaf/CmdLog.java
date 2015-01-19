@@ -16,7 +16,7 @@ public class CmdLog implements Action {
 	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full", multiValued=false)
     String cmd;
 
-	@Argument(index=3, name="paramteters", required=false, description="Parameters", multiValued=true)
+	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
 
 	@Override
