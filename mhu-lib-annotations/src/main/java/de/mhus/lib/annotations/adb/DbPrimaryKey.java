@@ -15,4 +15,5 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbPrimaryKey {
 	boolean auto_id() default true;
+	String prefix() default "";
 }

@@ -15,7 +15,7 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 
 @DbTable(tableName="book")
-public class Book implements DbObject, Persistable {
+public class Book implements DbObject {
 
 	private UUID id;
 	private String name;

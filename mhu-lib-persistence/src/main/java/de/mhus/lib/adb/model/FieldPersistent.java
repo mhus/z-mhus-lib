@@ -13,6 +13,7 @@ import de.mhus.lib.adb.DbDynamic;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.MObjectInputStream;
 import de.mhus.lib.core.lang.Raw;
@@ -23,6 +24,7 @@ import de.mhus.lib.sql.DbResult;
 public class FieldPersistent extends Field {
 
 	private DbManager manager;
+	private String autoPrefix;
 
 	@SuppressWarnings("unchecked")
 	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField) throws MException {
@@ -58,6 +60,7 @@ public class FieldPersistent extends Field {
 //		if (this.retDbType.equals("DATE"))
 //			this.retDbType = "DATETIME";
 		this.autoId = attr.getBoolean("auto_id",false);
+		this.autoPrefix = attr.getString("auto_prefix",null);
 		size = attr.getInt("size", size );
 		defValue = attr.getString("default", null);
 		nullable = attr.getBoolean("nullable", true);
@@ -84,6 +87,11 @@ public class FieldPersistent extends Field {
 				Object curVal = get(obj);
 				if (curVal == null) {
 					UUID uuid = UUID.randomUUID();
+					if (MString.isSet(autoPrefix)) {
+						String uidStr = uuid.toString();
+						uidStr = autoPrefix + uidStr.substring(autoPrefix.length());
+						uuid = UUID.fromString(uidStr);
+					}
 					set(obj,uuid);
 				}
 			} else
@@ -91,7 +99,11 @@ public class FieldPersistent extends Field {
 				Object curVal = get(obj);
 				if (curVal == null) {
 					UUID uuid = UUID.randomUUID();
-					set(obj, uuid.toString() );
+					String uidStr = uuid.toString();
+					if (MString.isSet(autoPrefix)) {
+						uidStr = autoPrefix + uidStr.substring(autoPrefix.length());
+					}
+					set(obj, uidStr );
 				}
 			} else
 			if (attribute.getType() == long.class) {

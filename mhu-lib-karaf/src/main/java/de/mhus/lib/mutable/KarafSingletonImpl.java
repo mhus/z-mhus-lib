@@ -1,6 +1,7 @@
 package de.mhus.lib.mutable;
 
 import java.io.File;
+import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.activator.ActivatorImpl;
@@ -29,6 +30,8 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	private IConfig config;
 	private BaseControl baseControl;
 	private ConfigProvider configProvider;
+	private boolean fullTrace = false;
+	private HashSet<String> logTrace = new HashSet<>();
 
 	@Override
 	public Log createLog(Object owner) {
@@ -45,16 +48,25 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	public synchronized IConfig getConfig() { //TODO load from service
 		if (config == null) {
-			File file = new File(baseDir,"config.xml");
+			File file = new File(baseDir,"etc/mhus-config.xml");
+			if (fullTrace)
+				System.out.println("Try to load mhus config from " + file.getAbsolutePath());
 			if (file.exists() && file.isFile())
 				try {
 					config = new XmlConfigFile(file);
 				} catch (Exception e) {
+					if (fullTrace)
+						e.printStackTrace();
 				}
 			if (config == null)
 				config = new HashConfig();
 		}
 		return config;
+	}
+	
+	public void reloadConfig() {
+		config = null;
+		getConfig();
 	}
 
 	@Override
@@ -93,7 +105,23 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	@Override
 	public boolean isTrace(String name) {
-		return false;
+		return fullTrace || logTrace.contains(name);
 	}
 
+	public void setFullTrace(boolean trace) {
+		fullTrace = trace;
+	}
+	
+	public void setTrace(String name) {
+		logTrace.add(name);
+	}
+	
+	public void clearTrace() {
+		logTrace.clear();
+	}
+
+	public String[] getTraceNames() {
+		return logTrace.toArray(new String[logTrace.size()]);
+	}
+	
 }
