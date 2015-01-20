@@ -105,8 +105,6 @@ public class ConsoleFactory extends LogFactory {
 
 		public ConsoleLog(String name) {
 			super(name);
-			if (config != null)
-					setTrace(config.getBoolean(name + ".TRACE", false));
 		}
 		
 		@Override

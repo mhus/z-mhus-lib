@@ -303,5 +303,17 @@ public abstract class DbSchema extends MObject {
 
 		return field;
 	}
+
+	public void internalCreateObject(DbConnection con, String name, Object object,
+			HashMap<String, Object> attributes) {
+	}
+
+	public void internalSaveObject(DbConnection con, String name, Object object,
+			HashMap<String, Object> attributes) {
+	}
+
+	public void internalRemoveObject(DbConnection con, String name, Object object,
+			HashMap<String, Object> attributes) {
+	}
 	
 }

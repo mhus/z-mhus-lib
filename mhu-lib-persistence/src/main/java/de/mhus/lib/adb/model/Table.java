@@ -155,6 +155,8 @@ public abstract class Table extends MObject {
 			attributes.put(f.name, f.getFromTarget(object));
 		}
 		
+		schema.internalCreateObject(con, name, object, attributes);
+		
 		sqlInsert.getStatement(con).execute(attributes);
 		
 		for (FieldRelation f : relationList) {
@@ -177,6 +179,8 @@ public abstract class Table extends MObject {
 			f.prepareSave(con,object);
 		}
 
+		schema.internalSaveObject(con, name, object, attributes);
+		
 		int c = sqlUpdate.getStatement(con).executeUpdate(attributes);
 		if ( c != 1)
 			throw new MException("update failed, updated objects " + c);
@@ -454,6 +458,9 @@ public abstract class Table extends MObject {
 		for (Field f : pk) {
 			attributes.put(f.name, f.getFromTarget(object));
 		}
+		
+		schema.internalRemoveObject(con, name, object, attributes);
+		
 		sqlRemove.getStatement(con).execute(attributes);
 	}
 
