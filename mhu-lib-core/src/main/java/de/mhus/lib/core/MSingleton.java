@@ -20,7 +20,7 @@ public class MSingleton {
 			try {
 				ISingleton obj = null;
 				String path = "de.mhus.lib.mutable.SingletonFactory";
-				if (System.getProperty("mhu.lib.singleton.factory") != null) path = System.getProperty("mhu.lib.singleton.factory");
+				if (System.getProperty("mhu.lib.singleton.factory") != null) path = System.getProperty(MSystem.PROP_SINGLETON_FACTORY_CLASS);
 				if (isDirtyTrace()) System.out.println("--- MSingletonFactory:" + path);
 				ISingletonFactory factory = (ISingletonFactory)Class.forName(path).newInstance();
 				if (factory != null) {
@@ -41,8 +41,12 @@ public class MSingleton {
 	
 	
 	public static boolean isDirtyTrace() {
-		if (trace == null) trace = "true".equals(System.getProperty("mhu.lib.singleton.trace"));
+		if (trace == null) trace = "true".equals(System.getProperty(MSystem.PROP_DIRTY_TRACE));
 		return trace;
+	}
+	
+	public static void setDirtyTrace(boolean dt) {
+		trace = dt;
 	}
 
 	public static boolean isTrace(String name) {

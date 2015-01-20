@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.config.HashConfig;
@@ -19,9 +21,6 @@ import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.service.ConfigProvider;
 
 public class DefaultSingleton implements ISingleton, SingletonInitialize {
-
-	public static final String PROP_FILE_WATCH = "mhus.config.watch";
-	public static final String PROP_CONFIG_FILE = "mhus.config.file";
 	
 	private ConsoleFactory logFactory;
 	private File baseDir;
@@ -50,8 +49,8 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
-		needFileWatch = "true".equals(System.getProperty(PROP_FILE_WATCH));
-		configFile = System.getProperty(PROP_CONFIG_FILE, "mhus-config.xml");
+		needFileWatch = "true".equals(System.getProperty(MSystem.PROP_FILE_WATCH));
+		configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, "mhus-config.xml");
 		logFactory = new ConsoleFactory();
 		baseDir = new File(".");
 	}
@@ -65,8 +64,8 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 			}
 			
 			File f = new File(baseDir,configFile);
-			if (fullTrace)
-				System.out.println("Try to load mhus config from " + f.getAbsolutePath());
+			if (MSingleton.isDirtyTrace())
+				System.out.println("--- Try to load mhus config from " + f.getAbsolutePath());
 			internalLoadConfig(f);
 			
 			if (needFileWatch) {
@@ -81,7 +80,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	
 					@Override
 					public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-						if (fullTrace)
+						if (MSingleton.isDirtyTrace())
 							t.printStackTrace();
 					}
 					

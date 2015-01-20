@@ -39,7 +39,7 @@ public class JavaLoggerFactory extends LogFactory {
 	    @Override
 		public void trace(Object message) {
 	    	if (!isTrace()) return;
-            getLogger().log(Level.FINEST, String.valueOf(message) );
+            getLogger().log(Level.ALL, String.valueOf(message) );
 	    }
 	
 	
@@ -50,7 +50,7 @@ public class JavaLoggerFactory extends LogFactory {
 	    @Override
 		public void trace(Object message, Throwable t) {
 	    	if (!isTrace()) return;
-            getLogger().log(Level.FINEST, String.valueOf(message), t );
+            getLogger().log(Level.ALL, String.valueOf(message), t );
 	    }
 	
 	
@@ -59,7 +59,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message) {
-            getLogger().log(Level.FINE, String.valueOf(message) );
+            getLogger().log(isTrace() ? Level.ALL : Level.FINE, String.valueOf(message) );
 	    }
 	
 	    /**
@@ -67,7 +67,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message, Throwable t) {
-            getLogger().log(Level.FINE, String.valueOf(message), t );
+            getLogger().log(isTrace() ? Level.ALL : Level.FINE, String.valueOf(message), t );
 	    }
 	
 	
@@ -76,68 +76,76 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message) {
-            getLogger().log(Level.INFO, String.valueOf(message) );
+            getLogger().log(isTrace() ? Level.ALL : Level.INFO, String.valueOf(message) );
 	    }
 	
 	
 	    /**
 	     * Log an error to the Log4j Logger with <code>INFO</code> priority.
 	     */
-	    public void info(Object message, Throwable t) {
-            getLogger().log(Level.INFO, String.valueOf(message), t );
+	    @Override
+		public void info(Object message, Throwable t) {
+            getLogger().log(isTrace() ? Level.ALL : Level.INFO, String.valueOf(message), t );
 	    }
 	
 	
 	    /**
 	     * Log a message to the Log4j Logger with <code>WARN</code> priority.
 	     */
-	    public void warn(Object message) {
-            getLogger().log(Level.WARNING, String.valueOf(message) );
+	    @Override
+		public void warn(Object message) {
+            getLogger().log(isTrace() ? Level.ALL : Level.WARNING, String.valueOf(message) );
 	    }
 	
 	
 	    /**
 	     * Log an error to the Log4j Logger with <code>WARN</code> priority.
 	     */
-	    public void warn(Object message, Throwable t) {
-            getLogger().log(Level.WARNING, String.valueOf(message), t );
+	    @Override
+		public void warn(Object message, Throwable t) {
+            getLogger().log(isTrace() ? Level.ALL : Level.WARNING, String.valueOf(message), t );
 	    }
 	
 	
 	    /**
 	     * Log a message to the Log4j Logger with <code>ERROR</code> priority.
 	     */
-	    public void error(Object message) {
-            getLogger().log(Level.SEVERE, String.valueOf(message) );
+	    @Override
+		public void error(Object message) {
+            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message) );
 	    }
 	
 	
 	    /**
 	     * Log an error to the Log4j Logger with <code>ERROR</code> priority.
 	     */
-	    public void error(Object message, Throwable t) {
-            getLogger().log(Level.SEVERE, String.valueOf(message), t );
+	    @Override
+		public void error(Object message, Throwable t) {
+            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message), t );
 	    }
 	
 	
 	    /**
 	     * Log a message to the Log4j Logger with <code>FATAL</code> priority.
 	     */
-	    public void fatal(Object message) {
-            getLogger().log(Level.SEVERE, String.valueOf(message) );
+	    @Override
+		public void fatal(Object message) {
+            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message) );
 	    }
 	
 	
 	    /**
 	     * Log an error to the Log4j Logger with <code>FATAL</code> priority.
 	     */
-	    public void fatal(Object message, Throwable t) {
-            getLogger().log(Level.SEVERE, String.valueOf(message), t );
+	    @Override
+		public void fatal(Object message, Throwable t) {
+            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message), t );
 	    }
 	
 	
 	    /**
 	     * Return the native Logger instance we are using.
+	     * @return 
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {
@@ -150,23 +158,26 @@ public class JavaLoggerFactory extends LogFactory {
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>DEBUG</code> priority.
 	     */
-	    public boolean isDebugEnabled() {
-	        return getLogger().isLoggable(Level.FINE);
+	    @Override
+		public boolean isDebugEnabled() {
+	        return isTrace() || getLogger().isLoggable(Level.FINE);
 	    }
 	
 	
 	     /**
 	     * Check whether the Log4j Logger used is enabled for <code>ERROR</code> priority.
 	     */
-	    public boolean isErrorEnabled() {
-	        return getLogger().isLoggable(Level.SEVERE);
+	    @Override
+		public boolean isErrorEnabled() {
+	        return isTrace() || getLogger().isLoggable(Level.SEVERE);
 	    }
 	
 	
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>FATAL</code> priority.
 	     */
-	    public boolean isFatalEnabled() {
+	    @Override
+		public boolean isFatalEnabled() {
 	        return getLogger().isLoggable(Level.SEVERE);
 	    }
 	
@@ -174,8 +185,9 @@ public class JavaLoggerFactory extends LogFactory {
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>INFO</code> priority.
 	     */
-	    public boolean isInfoEnabled() {
-	        return getLogger().isLoggable(Level.INFO);
+	    @Override
+		public boolean isInfoEnabled() {
+	        return isTrace() || getLogger().isLoggable(Level.INFO);
 	    }
 	
 	
@@ -183,15 +195,17 @@ public class JavaLoggerFactory extends LogFactory {
 	     * Check whether the Log4j Logger used is enabled for <code>TRACE</code> priority.
 	     * For Log4J, this returns the value of <code>isDebugEnabled()</code>
 	     */
-	    public boolean isTraceEnabled() {
-	        return getLogger().isLoggable(Level.FINEST);
+	    @Override
+		public boolean isTraceEnabled() {
+	        return isTrace() || getLogger().isLoggable(Level.FINEST);
 	    }
 	
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>WARN</code> priority.
 	     */
-	    public boolean isWarnEnabled() {
-	        return getLogger().isLoggable(Level.WARNING);
+	    @Override
+		public boolean isWarnEnabled() {
+	        return isTrace() || getLogger().isLoggable(Level.WARNING);
 	    }
 	}
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
@@ -48,9 +50,10 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	public synchronized IConfig getConfig() { //TODO load from service
 		if (config == null) {
-			File file = new File(baseDir,"etc/mhus-config.xml");
-			if (fullTrace)
-				System.out.println("Try to load mhus config from " + file.getAbsolutePath());
+			String configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, "etc/mhus-config.xml");
+			File file = new File(baseDir,configFile);
+			if (MSingleton.isDirtyTrace())
+				System.out.println("--- Try to load mhus config from " + file.getAbsolutePath());
 			if (file.exists() && file.isFile())
 				try {
 					config = new XmlConfigFile(file);
@@ -122,6 +125,10 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	public String[] getTraceNames() {
 		return logTrace.toArray(new String[logTrace.size()]);
+	}
+
+	public boolean isFullTrace() {
+		return fullTrace;
 	}
 	
 }

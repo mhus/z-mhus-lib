@@ -16,7 +16,6 @@ public class ConsoleFactory extends LogFactory {
 
 	//public static boolean tracing = true;
 	private PrintStream out;
-	private Log.LEVEL level = Log.LEVEL.INFO;
 	private boolean traces = true;
 	private boolean printTime = true;
 	private ResourceNode config;
@@ -94,6 +93,12 @@ public class ConsoleFactory extends LogFactory {
 		this.level = level;
 	}
 
+	@Override
+	public void updateLoggers() {
+		super.updateLoggers();
+		this.level = MSingleton.get().getLogFactory().getDefaultLevel();
+	}
+	
 	private class ConsoleLog extends Log {
 		
 		private String name;

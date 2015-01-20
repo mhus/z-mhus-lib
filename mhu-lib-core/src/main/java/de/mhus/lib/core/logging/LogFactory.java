@@ -6,12 +6,14 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.service.ConfigProvider;
 
 @DefaultImplementation(ConsoleFactory.class)
 public abstract class LogFactory implements IBase {
 
 	WeakHashMap<String, Log> buffer = new WeakHashMap<String, Log>();
+	protected LEVEL level = LEVEL.INFO;
 			
     /**
      * Convenience method to derive a name from the specified class and
@@ -77,6 +79,22 @@ public abstract class LogFactory implements IBase {
 		return getInstance(class1);
 	}
 
+	public void setDefaultLevel(LEVEL level) {
+		this.level = level;
+	}
+	
+	public LEVEL getDefaultLevel() {
+		return level;
+	}
+
+	public void updateLoggers() {
+		synchronized (buffer) {
+			for (Log log : buffer.values()) {
+				log.update();
+			}
+		}
+	}
+	
 //    public void update(Observable o, Object arg) {
 //        setTrace(MSingleton.instance().getConfig().getBoolean(name + ".TRACE" , MSingleton.instance().getConfig().getBoolean("TRACE",false) ));
 //    }

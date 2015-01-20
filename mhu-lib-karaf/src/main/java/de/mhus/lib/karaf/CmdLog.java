@@ -7,13 +7,14 @@ import org.apache.karaf.shell.commands.Command;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
 public class CmdLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full,dirty,level,reloadconfig", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -33,23 +34,39 @@ public class CmdLog implements Action {
 		case "clear": {
 			singleton.clearTrace();
 			singleton.setFullTrace(false);
+			singleton.getLogFactory().updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "full": {
 			singleton.setFullTrace(MCast.toboolean(parameters.length > 1 ? parameters[0] : "1", false));
+			singleton.getLogFactory().updateLoggers();
+			System.out.println("OK");
+		} break;
+		case "dirty": {
+			MSingleton.setDirtyTrace(MCast.toboolean(parameters.length > 1 ? parameters[0] : "1", false));
 			System.out.println("OK");
 		} break;
 		case "add": {
 			for (String p : parameters)
 				singleton.setTrace(p);
+			singleton.getLogFactory().updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "list": {
+			System.out.println("Default Level: " + singleton.getLogFactory().getDefaultLevel());
+			System.out.println("Trace: " + singleton.isFullTrace());
 			for (String name : singleton.getTraceNames())
 				System.out.println(name);
 		} break;
 		case "reloadconfig": { //TODO need single command class
 			singleton.reloadConfig();
+			singleton.getLogFactory().updateLoggers();
+			System.out.println("OK");
+		} break;
+		case "level": {
+			singleton.getLogFactory().setDefaultLevel(Log.LEVEL.valueOf(parameters[0].toUpperCase()));
+			singleton.getLogFactory().updateLoggers();
+			System.out.println("OK");
 		} break;
 		}
 		

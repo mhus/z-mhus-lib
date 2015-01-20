@@ -408,4 +408,8 @@ public abstract class Log {
 		return MSingleton.get().createLog(owner);
 	}
 
+	public void update() {
+		localTrace = MSingleton.isTrace(name);
+	}
+
 }

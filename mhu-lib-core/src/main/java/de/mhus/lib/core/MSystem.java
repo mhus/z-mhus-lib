@@ -15,6 +15,12 @@ import de.mhus.lib.core.logging.Log;
 
 public class MSystem {
 
+	public static final String PROP_DIRTY_TRACE = "mhu.lib.singleton.trace";
+	public static final String PROP_SINGLETON_FACTORY_CLASS = "mhu.lib.singleton.factory.class";
+	public static final String PROP_FILE_WATCH = "mhus.config.watch";
+	public static final String PROP_CONFIG_FILE = "mhus.config.file";
+	
+	
 	private static Log log = Log.getLog(MSystem.class);
 	
 	/**
