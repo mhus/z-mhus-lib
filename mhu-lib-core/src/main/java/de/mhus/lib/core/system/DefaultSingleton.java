@@ -76,6 +76,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 					public void onFileChanged(FileWatch fileWatch) {
 						File file = fileWatch.getFile();
 						internalLoadConfig(file);
+						logFactory.updateLoggers();
 					}
 	
 					@Override

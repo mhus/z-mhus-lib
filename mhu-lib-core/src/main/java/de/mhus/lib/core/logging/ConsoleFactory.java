@@ -95,8 +95,12 @@ public class ConsoleFactory extends LogFactory {
 
 	@Override
 	public void updateLoggers() {
+		try {
+			init();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		super.updateLoggers();
-		this.level = MSingleton.get().getLogFactory().getDefaultLevel();
 	}
 	
 	private class ConsoleLog extends Log {

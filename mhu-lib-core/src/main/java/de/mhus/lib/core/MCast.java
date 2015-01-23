@@ -605,11 +605,11 @@ public final class MCast {
 		if (String.class.isAssignableFrom(type))
 			return toString(in);
 		if (boolean.class.isAssignableFrom(type))
-			return toboolean(in,def == null ? false : (boolean)def);
+			return toboolean(in,def == null ? false : toboolean(def, false) );
 		if (int.class.isAssignableFrom(type))
-			return toint(in,def == null ? 0 : (int)def);
+			return toint(in,def == null ? 0 : toint(def, 0));
 		if (long.class.isAssignableFrom(type))
-			return tolong(in,def == null ? 0 : (long)def);
+			return tolong(in,def == null ? 0 : tolong(def, 0) );
 
 		Caster<?, ?> caster = casters.get(in.getClass(), type);
 		if (caster == null)
