@@ -57,7 +57,7 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 //		if (!getType().isInstance(pojo))
 //			throw new IOException("Object is not instance of " + getType().getCanonicalName());
 		try {
-			value = (T) MCast.toType(value, getType(), value);
+			value = (T) MCast.toType(value, getType(), null);
 			setter.invoke(pojo, value);
 		} catch (Exception e) {
 			throw new IOException("Error set: " + name + "(" + getType() + ")=" + value, e);

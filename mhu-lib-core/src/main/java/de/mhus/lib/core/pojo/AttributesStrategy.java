@@ -139,7 +139,7 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 				if (!field.isAccessible())
 					field.setAccessible(true);
 
-				value = (T) MCast.toType(value, getType(), value);
+				value = (T) MCast.toType(value, getType(), null);
 
 				field.set(pojo, value);
 			} catch (Exception e) {
