@@ -35,9 +35,11 @@ public class ObjectToLong implements Caster<Object,Long> {
 		
 		try {
 			
-			if (ins.startsWith("0x")) {
+			if (ins.startsWith("0x") || ins.startsWith("-0x") || ins.startsWith("+0x")) {
+				int start = 2;
+				if (ins.startsWith("-")) start = 3;
 				long out = 0;
-				for (int i = 2; i < ins.length(); i++) {
+				for (int i = start; i < ins.length(); i++) {
 					int s = -1;
 					char c = ins.charAt(i);
 					if (c >= '0' && c <= '9')
@@ -51,6 +53,7 @@ public class ObjectToLong implements Caster<Object,Long> {
 						throw new NumberFormatException(ins);
 					out = out * 16 + s;
 				}
+				if (ins.startsWith("-")) out = -out;
 				if (ret != null) ret.setObject(out);
 				return out;
 			}

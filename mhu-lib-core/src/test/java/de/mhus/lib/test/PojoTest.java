@@ -56,6 +56,14 @@ public class PojoTest extends TestCase {
 		assertTrue(myReadOnly.canRead());
 		assertFalse(myReadOnly.canWrite());
 		
+		PojoAttribute<Integer> myInt = model.getAttribute("myint");
+		assertNotNull(myInt);
+		myInt.set(example, 1);
+		assertEquals(1, example.getMyInt());
+		myInt.set(example, null);
+		assertEquals(0, example.getMyInt());
+
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -114,6 +122,13 @@ public class PojoTest extends TestCase {
 		assertNotNull(myReadOnly);
 		assertTrue(myReadOnly.canRead());
 		assertTrue(myReadOnly.canWrite());
+		
+		PojoAttribute<Integer> myInt = model.getAttribute("myint");
+		assertNotNull(myInt);
+		myInt.set(example, 1);
+		assertEquals(1, example.getMyInt());
+		myInt.set(example, null);
+		assertEquals(0, example.getMyInt());
 		
 	}
 	

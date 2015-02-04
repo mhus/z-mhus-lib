@@ -37,11 +37,13 @@ import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.cast.DoubleToString;
 import de.mhus.lib.core.cast.FloatToString;
 import de.mhus.lib.core.cast.ObjectToBoolean;
+import de.mhus.lib.core.cast.ObjectToByte;
 import de.mhus.lib.core.cast.ObjectToCalendar;
 import de.mhus.lib.core.cast.ObjectToDouble;
 import de.mhus.lib.core.cast.ObjectToFloat;
 import de.mhus.lib.core.cast.ObjectToInteger;
 import de.mhus.lib.core.cast.ObjectToLong;
+import de.mhus.lib.core.cast.ObjectToShort;
 import de.mhus.lib.core.cast.ObjectToSqlDate;
 import de.mhus.lib.core.cast.ObjectToString;
 import de.mhus.lib.core.cast.ObjectToUUID;
@@ -74,6 +76,8 @@ public final class MCast {
 	
 	private final static ObjectToBoolean OBJECT_TO_BOOLEAN = new ObjectToBoolean();
 	private final static ObjectToInteger OBJECT_TO_INTEGER = new ObjectToInteger();
+	private final static ObjectToByte OBJECT_TO_BYTE = new ObjectToByte();
+	private final static ObjectToShort OBJECT_TO_SHORT = new ObjectToShort();
 	private final static ObjectToLong OBJECT_TO_LONG = new ObjectToLong();
 	private final static ObjectToDouble OBJECT_TO_DOUBLE = new ObjectToDouble();
 	private final static ObjectToFloat OBJECT_TO_FLOAT = new ObjectToFloat();
@@ -87,6 +91,8 @@ public final class MCast {
 	static {
 		addCaster(OBJECT_TO_BOOLEAN, true);
 		addCaster(OBJECT_TO_INTEGER, true);
+		addCaster(OBJECT_TO_BYTE, true);
+		addCaster(OBJECT_TO_SHORT, true);
 		addCaster(OBJECT_TO_LONG, true);
 		addCaster(OBJECT_TO_DOUBLE, true);
 		addCaster(OBJECT_TO_FLOAT, true);
@@ -344,6 +350,14 @@ public final class MCast {
 		return OBJECT_TO_LONG.toLong(in, def, null);
 	}
 
+	public static byte tobyte(Object in, byte def) {
+		return OBJECT_TO_BYTE.toByte(in, def, null);
+	}
+
+	public static short toshort(Object in, short def) {
+		return OBJECT_TO_SHORT.toShort(in, def, null);
+	}
+	
 	/**
 	 * Convert a double to string. The separator is
 	 * a dot.
@@ -610,6 +624,14 @@ public final class MCast {
 			return toint(in,def == null ? 0 : toint(def, 0));
 		if (long.class.isAssignableFrom(type))
 			return tolong(in,def == null ? 0 : tolong(def, 0) );
+		if (double.class.isAssignableFrom(type))
+			return todouble(in,def == null ? 0 : todouble(def, 0) );
+		if (byte.class.isAssignableFrom(type))
+			return tobyte(in,def == null ? 0 : tobyte(def, (byte) 0) );
+		if (short.class.isAssignableFrom(type))
+			return toshort(in,def == null ? 0 : toshort(def, (short) 0) );
+		if (float.class.isAssignableFrom(type))
+			return tofloat(in,def == null ? 0 : tofloat(def, (short) 0) );
 
 		Caster<?, ?> caster = casters.get(in.getClass(), type);
 		if (caster == null)
@@ -618,6 +640,30 @@ public final class MCast {
 			return def;
 		
 		return ((Caster<Object,Object>)caster).cast(in, def);
+	}
+
+	/**
+	 * Return 0 in 7 flavors or null
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public static Object getDefaultPrimitive(Class<?> type) {
+		if (type == int.class)
+			return (Integer)0;
+		if (type == long.class)
+			return (Long)0L;
+		if (type == short.class)
+			return (Short)(short)0;
+		if (type == double.class)
+			return (Double)0d;
+		if (type == float.class)
+			return (Float)0f;
+		if (type == byte.class)
+			return (Byte)(byte)0;
+		if (type == boolean.class)
+			return (Boolean)false;
+		return null;
 	}
 
 }

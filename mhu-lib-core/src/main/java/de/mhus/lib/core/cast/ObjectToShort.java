@@ -1,16 +1,15 @@
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
-public class ObjectToInteger implements Caster<Object,Integer> {
+public class ObjectToShort implements Caster<Object,Short> {
 
-	private final static Log log = Log.getLog(ObjectToInteger.class);
+	private final static Log log = Log.getLog(ObjectToShort.class);
 	
 	@Override
-	public Class<? extends Integer> getToClass() {
-		return Integer.class;
+	public Class<? extends Short> getToClass() {
+		return Short.class;
 	}
 
 	@Override
@@ -19,20 +18,20 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 	}
 
 	@Override
-	public Integer cast(Object in, Integer def) {
-		ObjectContainer<Integer> ret = new ObjectContainer<>(def);
-		toInt(in, 0, ret);
+	public Short cast(Object in, Short def) {
+		ObjectContainer<Short> ret = new ObjectContainer<>(def);
+		toShort(in, (short) 0, ret);
 		return ret.getObject();
 	}
 
-	public int toInt(Object in, int def, ObjectContainer<Integer> ret) {
+	public short toShort(Object in, short def, ObjectContainer<Short> ret) {
 		if (in == null) return def;
-		if (in instanceof Integer) {
-			if (ret != null) ret.setObject((Integer)in);
-			return ((Integer)in).intValue();
+		if (in instanceof Short) {
+			if (ret != null) ret.setObject((Short)in);
+			return ((Short)in).shortValue();
 		}
 		if (in instanceof Number) {
-			int r = ((Number)in).intValue();
+			short r = ((Number)in).shortValue();
 			if (ret != null) ret.setObject(r);
 			return r;
 		}
@@ -55,14 +54,18 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 
 					if (s == -1)
 						throw new NumberFormatException(_in);
-					out = out * 16 + s;
+					
+
+					out = out * (short)16 + (short)s;
 				}
 				if (_in.startsWith("-")) out = -out;
-				if (ret != null) ret.setObject(out);
-				return out;
+				if (out > Short.MAX_VALUE) out = Short.MAX_VALUE;
+				if (out < Short.MIN_VALUE) out = Short.MIN_VALUE;
+				if (ret != null) ret.setObject((short)out);
+				return (short)out;
 			}
 			
-			int r = Integer.parseInt(_in);
+			short r = Short.parseShort(_in);
 			if (ret != null) ret.setObject(r);
 			return r;
 		} catch (Throwable e) {

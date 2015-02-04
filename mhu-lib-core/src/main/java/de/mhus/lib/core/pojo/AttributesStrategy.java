@@ -140,6 +140,10 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 					field.setAccessible(true);
 
 				value = (T) MCast.toType(value, getType(), null);
+				if (getType().isPrimitive() && value == null) {
+					// that's not possible
+					value = (T)MCast.getDefaultPrimitive(getType());
+				}
 
 				field.set(pojo, value);
 			} catch (Exception e) {

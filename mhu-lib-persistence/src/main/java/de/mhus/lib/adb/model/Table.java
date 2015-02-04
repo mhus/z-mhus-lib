@@ -434,6 +434,7 @@ public abstract class Table extends MObject {
 	    	String n = item.getKey();
 	    	if (n.startsWith(DbIndex.UNIQUE)) {
 	    		cindex.setString(Dialect.I_TYPE, Dialect.I_UNIQUE);
+	    		cindex.setBoolean(Dialect.I_UNIQUE, true);
 	    	}
 	    	cindex.setString(Dialect.I_NAME, "idx_" + n);
 	    	cindex.setString(Dialect.I_TABLE, tableNameOrg);

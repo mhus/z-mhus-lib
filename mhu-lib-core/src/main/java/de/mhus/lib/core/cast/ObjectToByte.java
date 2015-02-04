@@ -1,16 +1,15 @@
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
-public class ObjectToInteger implements Caster<Object,Integer> {
+public class ObjectToByte implements Caster<Object,Byte> {
 
-	private final static Log log = Log.getLog(ObjectToInteger.class);
+	private final static Log log = Log.getLog(ObjectToByte.class);
 	
 	@Override
-	public Class<? extends Integer> getToClass() {
-		return Integer.class;
+	public Class<? extends Byte> getToClass() {
+		return Byte.class;
 	}
 
 	@Override
@@ -19,20 +18,20 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 	}
 
 	@Override
-	public Integer cast(Object in, Integer def) {
-		ObjectContainer<Integer> ret = new ObjectContainer<>(def);
-		toInt(in, 0, ret);
+	public Byte cast(Object in, Byte def) {
+		ObjectContainer<Byte> ret = new ObjectContainer<>(def);
+		toByte(in, (byte) 0, ret);
 		return ret.getObject();
 	}
 
-	public int toInt(Object in, int def, ObjectContainer<Integer> ret) {
+	public byte toByte(Object in, byte def, ObjectContainer<Byte> ret) {
 		if (in == null) return def;
-		if (in instanceof Integer) {
-			if (ret != null) ret.setObject((Integer)in);
-			return ((Integer)in).intValue();
+		if (in instanceof Byte) {
+			if (ret != null) ret.setObject((Byte)in);
+			return ((Byte)in).byteValue();
 		}
 		if (in instanceof Number) {
-			int r = ((Number)in).intValue();
+			byte r = ((Number)in).byteValue();
 			if (ret != null) ret.setObject(r);
 			return r;
 		}
@@ -58,11 +57,13 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 					out = out * 16 + s;
 				}
 				if (_in.startsWith("-")) out = -out;
-				if (ret != null) ret.setObject(out);
-				return out;
+				if (out > Byte.MAX_VALUE) out = Byte.MAX_VALUE;
+				if (out < Byte.MIN_VALUE) out = Byte.MIN_VALUE;
+				if (ret != null) ret.setObject((byte)out);
+				return (byte)out;
 			}
 			
-			int r = Integer.parseInt(_in);
+			byte r = Byte.parseByte(_in);
 			if (ret != null) ret.setObject(r);
 			return r;
 		} catch (Throwable e) {
