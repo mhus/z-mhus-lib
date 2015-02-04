@@ -369,28 +369,47 @@ public class DialectDefault extends Dialect {
 			
 			boolean unique  = cindex.getBoolean("unique", false);
 						
-			ResultSet res = meta.getIndexInfo(null, null, table, unique, false);
 			String columns2 = null;
-			while (res.next()) {
-				
-				String iName2 = res.getString("INDEX_NAME");
-				String fName2 = res.getString("COLUMN_NAME");
-				if (iName2 != null && fName2 != null) {
-					if (equalsIndexName(table,iName,iName2)) {
-						if (columns2 == null) columns2 = fName2; else columns2 = columns2 + "," + fName2;
+			{
+				ResultSet res = meta.getIndexInfo(null, null, table, unique, false);
+				while (res.next()) {
+					
+					String iName2 = res.getString("INDEX_NAME");
+					String fName2 = res.getString("COLUMN_NAME");
+					if (iName2 != null && fName2 != null) {
+						if (equalsIndexName(table,iName,iName2)) {
+							if (columns2 == null) columns2 = fName2; else columns2 = columns2 + "," + fName2;
+						}
 					}
 				}
+				res.close();
 			}
-			res.close();
-			
+			boolean doubleExists = false;
+			{
+				ResultSet res = meta.getIndexInfo(null, null, table, !unique, false);
+				while (res.next()) {
+					
+					String iName2 = res.getString("INDEX_NAME");
+					String fName2 = res.getString("COLUMN_NAME");
+					if (iName2 != null && fName2 != null) {
+						if (equalsIndexName(table,iName,iName2)) {
+							doubleExists = true; break;
+						}
+					}
+				}
+				res.close();
+			}
 			if (columns2 == null) {
 				//create index
-				log().t("create index",iNameOrg,columnsOrg);
-				createIndex(sth,unique,btree,iName,table,columns);
+				log().t("create index",doubleExists,iNameOrg,columnsOrg);
+				if (doubleExists)
+					recreateIndex(sth,unique,btree,iName,table,columns);
+				else
+					createIndex(sth,unique,btree,iName,table,columns);
 			} else {
 				
 				if (!columns.equals(columns2)) {
-					log().t("recreate index",iName,columns2,columns);
+					log().t("recreate index",doubleExists,iName,columns2,columns);
 					recreateIndex(sth,unique,btree,iName,table,columns);
 					
 				}
