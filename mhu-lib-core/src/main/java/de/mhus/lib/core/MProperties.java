@@ -70,5 +70,33 @@ public class MProperties extends IProperties implements Externalizable {
 		properties = (Properties) in.readObject();
 	}
 	
+	public static MProperties explodeToMProperties(String[] properties) {
+		MProperties p = new MProperties();
+		if (properties != null) {
+			for (String i : properties) {
+				if (i != null) {
+					int idx = i.indexOf('=');
+					if (idx >= 0) {
+						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
+					}
+				}
+			}
+		}
+		return p;
+	}
 	
+	public static Properties explodeToProperties(String[] properties) {
+		Properties p = new Properties();
+		if (properties != null) {
+			for (String i : properties) {
+				if (i != null) {
+					int idx = i.indexOf('=');
+					if (idx >= 0) {
+						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
+					}
+				}
+			}
+		}
+		return p;
+	}
 }

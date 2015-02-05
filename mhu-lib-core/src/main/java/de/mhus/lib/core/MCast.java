@@ -159,11 +159,11 @@ public final class MCast {
 	 *         error: ACast.toDate( in ).getTime == 0.
 	 */
 
-	public static Date toDate(String in,Date def) {
+	public static Date toDate(Object in,Date def) {
 		return OBJECT_TO_DATE.cast(in, def);
 	}
 
-	public static Calendar toCalendar(Date in) {
+	public static Calendar toCalendar(Object in) {
 		return OBJECT_TO_CALENDAR.cast(in, null);
 	}
 	
@@ -613,32 +613,44 @@ public final class MCast {
 	
 	@SuppressWarnings("unchecked")
 	public static Object toType(Object in, Class<?> type, Object def) {
+		// if null -> return null
 		if (in == null) return def;
+		// if it's the same type -> return itself
 		if (type.isInstance(in)) return in;
 		
-		if (String.class.isAssignableFrom(type))
-			return toString(in);
-		if (boolean.class.isAssignableFrom(type))
-			return toboolean(in,def == null ? false : toboolean(def, false) );
-		if (int.class.isAssignableFrom(type))
-			return toint(in,def == null ? 0 : toint(def, 0));
-		if (long.class.isAssignableFrom(type))
-			return tolong(in,def == null ? 0 : tolong(def, 0) );
-		if (double.class.isAssignableFrom(type))
-			return todouble(in,def == null ? 0 : todouble(def, 0) );
-		if (byte.class.isAssignableFrom(type))
-			return tobyte(in,def == null ? 0 : tobyte(def, (byte) 0) );
-		if (short.class.isAssignableFrom(type))
-			return toshort(in,def == null ? 0 : toshort(def, (short) 0) );
-		if (float.class.isAssignableFrom(type))
-			return tofloat(in,def == null ? 0 : tofloat(def, (short) 0) );
-
+		// is there a exact caster for the from-to pair ?
 		Caster<?, ?> caster = casters.get(in.getClass(), type);
-		if (caster == null)
+		if (caster == null) {
+			
+			// not, first try to cast primitives
+			
+			if (String.class.isAssignableFrom(type))
+				return toString(in);
+			if (boolean.class.isAssignableFrom(type))
+				return toboolean(in,def == null ? false : toboolean(def, false) );
+			if (int.class.isAssignableFrom(type))
+				return toint(in,def == null ? 0 : toint(def, 0));
+			if (long.class.isAssignableFrom(type))
+				return tolong(in,def == null ? 0 : tolong(def, 0) );
+			if (double.class.isAssignableFrom(type))
+				return todouble(in,def == null ? 0 : todouble(def, 0) );
+			if (byte.class.isAssignableFrom(type))
+				return tobyte(in,def == null ? 0 : tobyte(def, (byte) 0) );
+			if (short.class.isAssignableFrom(type))
+				return toshort(in,def == null ? 0 : toshort(def, (short) 0) );
+			if (float.class.isAssignableFrom(type))
+				return tofloat(in,def == null ? 0 : tofloat(def, (short) 0) );
+
+			// if not found find a default caster (from = Object)
+			
 			caster = casters.get(Object.class, type);
+		}
+		
+		// default also not found -> return default value
 		if (caster == null)
 			return def;
 		
+		// if found a caster -> cast !
 		return ((Caster<Object,Object>)caster).cast(in, def);
 	}
 

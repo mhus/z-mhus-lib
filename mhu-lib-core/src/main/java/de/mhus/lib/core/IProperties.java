@@ -63,16 +63,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		} catch (Throwable e) {
 			return def;
 		}
-		if (out == null) return def;
-		if (out instanceof Boolean) return ((Boolean)out).booleanValue();
-		return MCast.toboolean(String.valueOf(out), def);
+		return MCast.toboolean(out, def);
 	}
 
 	public boolean getBoolean(String name) throws MException {
 		Object out = getProperty(name);
 		if (out == null) throw new MException("value not found");
-		if (out instanceof Boolean) return ((Boolean)out).booleanValue();
-		return MCast.toboolean(String.valueOf(out), false);
+		return MCast.toboolean(out, false);
 	}
 
 	public int getInt(String name, int def) {
@@ -82,9 +79,7 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		} catch (Throwable e) {
 			return def;
 		}
-		if (out == null) return def;
-		if (out instanceof Number) return ((Number)out).intValue();
-		return MCast.toint(String.valueOf(out),def);
+		return MCast.toint(out,def);
 	}
 	
 	public long getLong(String name, long def) {
@@ -94,9 +89,7 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		} catch (Throwable e) {
 			return def;
 		}
-		if (out == null) return def;
-		if (out instanceof Number) return ((Number)out).longValue();
-		return MCast.tolong(String.valueOf(out), def);
+		return MCast.tolong(out, def);
 	}
 	
 	public float getFloat(String name, float def) {
@@ -106,9 +99,7 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		} catch (Throwable e) {
 			return def;
 		}
-		if (out == null) return def;
-		if (out instanceof Number) return ((Number)out).floatValue();
-		return MCast.tofloat(String.valueOf(out), def);
+		return MCast.tofloat(out, def);
 	}
 	
 	public double getDouble(String name, double def) {
@@ -118,26 +109,18 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		} catch (Throwable e) {
 			return def;
 		}
-		if (out == null) return def;
-		if (out instanceof Number) return ((Number)out).doubleValue();
-		return MCast.todouble(String.valueOf(out),def);
+		return MCast.todouble(out,def);
 	}
 	
 	public Calendar getCalendar(String name) throws MException {
 		Object out = getProperty(name);
-		if (out == null) return null;
-		if (out instanceof Calendar) return (Calendar)out;
-		return MCast.toCalendar(String.valueOf(out));
+		return MCast.toCalendar(out);
 	}
 	
 	public Date getDate(String name) {
 		try {
 			Object out = getProperty(name);
-			if (out == null) return null;
-			if (out instanceof Date) return (Date)out;
-			if (out instanceof Calendar) return ((Calendar)out).getTime();
-			
-			return MCast.toDate(String.valueOf(out), null);
+			return MCast.toDate(out, null);
 		} catch (Throwable t) {}
 		return null;
 	}
