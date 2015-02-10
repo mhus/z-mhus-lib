@@ -128,6 +128,51 @@ public abstract class Log {
     // -------------------------------------------------------- Logging Methods
 
     /**
+     * Trace and Stringify
+     * @param msg
+     */
+    public void ts(Object ... msg) {
+    	Stringifier.stringifyArray(msg);
+    	t(msg);
+    }
+    
+    /**
+     * Info and Stringify
+     * @param msg
+     */
+    public void is(Object ... msg) {
+    	Stringifier.stringifyArray(msg);
+    	i(msg);
+    }
+
+    /**
+     * Warn and Stringify
+     * @param msg
+     */
+    public void ws(Object ... msg) {
+    	Stringifier.stringifyArray(msg);
+    	w(msg);
+    }
+    
+    /**
+     * Error and Stringify
+     * @param msg
+     */
+    public void es(Object ... msg) {
+    	Stringifier.stringifyArray(msg);
+    	e(msg);
+    }
+
+    /**
+     * Fatal and Stringify
+     * @param msg
+     */
+    public void fs(Object ... msg) {
+    	Stringifier.stringifyArray(msg);
+    	f(msg);
+    }
+    
+    /**
      * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
      * This is the local trace method. The trace will only written if the local trace is switched on.
      */
