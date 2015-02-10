@@ -50,7 +50,7 @@ public class Log4JAppender extends AppenderSkeleton {
 			logger.t(method, msg,t);
 			break;
 		default:
-			logger.tt(method, msg,t);
+			logger.t(method, msg,t);
 			break;
 		}
 		

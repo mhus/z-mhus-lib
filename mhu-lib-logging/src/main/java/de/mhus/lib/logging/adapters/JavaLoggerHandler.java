@@ -45,7 +45,7 @@ public class JavaLoggerHandler extends Handler {
 		if (level.intValue() == Level.FINER.intValue())
 			logger.t(method,msg,t);
 		else
-			logger.tt(method,msg,t);
+			logger.t(method,msg,t);
 	}
 
 	@Override

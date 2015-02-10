@@ -2,6 +2,7 @@ package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.util.Stringifier;
 
 /**
  * Got the interface from apache-commons-logging. I need to switch because its not working
@@ -164,21 +165,21 @@ public abstract class Log {
 	}
 
 
-	/**
-     * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
-     */
-    public void tt(Object ... msg) {
-    	if (!isTraceEnabled()) return;
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//    		cnt++;
-    	}
-    	trace(sb.toString(),error);
-    }
+//	/**
+//     * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
+//     */
+//    public void tt(Object ... msg) {
+//    	if (!isTraceEnabled()) return;
+//    	StringBuffer sb = new StringBuffer();
+//    	prepare(sb);
+//    	Throwable error = null;
+////    	int cnt=0;
+//    	for (Object o : msg) {
+//			error = serialize(sb,o, error);
+////    		cnt++;
+//    	}
+//    	trace(sb.toString(),error);
+//    }
 
     /**
      * Log a message in debug, it will automatically append the objects if debug is enabled. Can Also add a trace.
@@ -211,17 +212,6 @@ public abstract class Log {
     	}
     	info(sb.toString(),error);
     }
-
-    /**
-     * Log a message in info or debug, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     */
-    public void x(boolean info, Object ... msg) {
-    	if (info)
-    		i(msg);
-    	else
-    		d(msg);
-    }
-    
     
     /**
      * Log a message in warn, it will automatically append the objects if debug is enabled. Can Also add a trace.
