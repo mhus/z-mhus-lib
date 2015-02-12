@@ -74,13 +74,13 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 	
 	/**
-	 * Remove in database.
+	 * Delete from database.
 	 * 
 	 * @throws MException
 	 */
-	public void remove() throws MException {
+	public void delete() throws MException {
 		if (isAdbManaged()) {
-			manager.removeObject(con, registryName,this);
+			manager.deleteObject(con, registryName,this);
 			persistent = false;
 		}
 	}
@@ -104,6 +104,14 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * Overwrite to get the hook, the default behavior is to call doPostLoad().
+	 */
+	@Override
+	public void doPostCreate(DbConnection con) {
+		doPostLoad(con);
+	}
+	
+	/**
 	 * Overwrite to get the hook.
 	 */
 	@Override
@@ -125,6 +133,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 		this.manager = manager;
 	}
 	
+	@Override
 	public boolean isPersistent() {
 		return persistent;
 	}
@@ -133,7 +142,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
-	public void doPreRemove(DbConnection con) {
+	public void doPreDelete(DbConnection con) {
 	}
 
 	/**
@@ -147,7 +156,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
-	public void doPostRemove(DbConnection con) {
+	public void doPostDelete(DbConnection con) {
 	}
 
 	public DbManager getDbManager() {

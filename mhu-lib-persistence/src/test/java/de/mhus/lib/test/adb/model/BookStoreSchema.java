@@ -46,7 +46,7 @@ public class BookStoreSchema extends DbSchema {
 						if (right == DbManager.R_UPDATE && conf.indexOf("write") >= 0 )
 							throw new AccessDeniedException("access denied");
 	
-						if (right == DbManager.R_REMOVE && conf.indexOf("remove") >= 0 )
+						if (right == DbManager.R_DELETE && conf.indexOf("remove") >= 0 )
 							throw new AccessDeniedException("access denied");
 					}
 					// set new acl if needed

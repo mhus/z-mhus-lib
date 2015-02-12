@@ -161,7 +161,7 @@ public class AdbTest extends TestCase {
     	
     	// remove book
     	
-    	manager.removeObject(b);
+    	manager.deleteObject(b);
     	
     	b = (Book) manager.getObject(Book.class, b1);
     	assertNull(b);
@@ -246,7 +246,7 @@ public class AdbTest extends TestCase {
     	assertEquals(s1.getSqlDate().toString(), new java.sql.Date(0).toString());
     	
     	// remove and check behavior of updates
-    	s1.remove();
+    	s1.delete();
     	
     	try {
     		s2.reload();
@@ -310,7 +310,7 @@ public class AdbTest extends TestCase {
     	f.reload();
     	
     	try {
-    		f.remove();
+    		f.delete();
     		assertTrue(false);
     	} catch (MException e) {
     		System.out.println(e);
@@ -320,7 +320,7 @@ public class AdbTest extends TestCase {
     	f.setNewConfidential("");
     	f.save();
     	f.reload();
-    	f.remove();
+    	f.delete();
     	
     	// -------------
     	// test dynamic objects
@@ -338,7 +338,7 @@ public class AdbTest extends TestCase {
 
     	r2.reload();
     	
-    	r2.remove();
+    	r2.delete();
     	
     	timer.stop();
     	System.out.println("Time: " + timer.getCurrentTimeAsString(true));

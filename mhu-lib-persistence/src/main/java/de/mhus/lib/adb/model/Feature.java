@@ -41,7 +41,7 @@ public abstract class Feature extends MObject {
 		
 	}
 
-	public void removeObject(DbConnection con, Object object) throws Exception {
+	public void deleteObject(DbConnection con, Object object) throws Exception {
 		
 	}
 

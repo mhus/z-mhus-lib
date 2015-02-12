@@ -1,9 +1,11 @@
 package de.mhus.lib.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -225,6 +227,38 @@ public class MSystem {
 		if (a == null && b == null) return true;
 		if (a == null) return false;
 		return a.equals(b);
+	}
+	
+	public static ScriptResult startScript(File dir, String script, long timeout) {
+		log.i("script",dir,script);
+		ProcessBuilder pb = new ProcessBuilder(new File(dir, script).getAbsolutePath() );
+		 Map<String, String> env = pb.environment();
+		 pb.directory(dir);
+		 ScriptResult out = new ScriptResult();
+		 try {
+			 Process p = pb.start();
+			 
+			 out.output = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			 out.error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			 
+			 p.waitFor();
+			 p.destroy();
+			 
+			 out.rc = p.exitValue();
+			 
+		 } catch (Throwable t) {
+			 out.exception = t;
+		 }
+		 return out;
+	}
+	
+	public static class ScriptResult {
+
+		public Throwable exception;
+		public int rc;
+		public BufferedReader error;
+		public BufferedReader output;
+		
 	}
 	
 }

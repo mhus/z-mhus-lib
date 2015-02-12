@@ -85,7 +85,7 @@ public class Book implements DbObject {
 		this.manager = manager;
 	}
 	@Override
-	public void doPreRemove(DbConnection con) {
+	public void doPreDelete(DbConnection con) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -95,7 +95,7 @@ public class Book implements DbObject {
 		
 	}
 	@Override
-	public void doPostRemove(DbConnection con) {
+	public void doPostDelete(DbConnection con) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -109,6 +109,11 @@ public class Book implements DbObject {
 	public boolean isPersistent() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	@Override
+	public void doPostCreate(DbConnection con) {
+		// TODO Auto-generated method stub
+		
 	}
 		
 	

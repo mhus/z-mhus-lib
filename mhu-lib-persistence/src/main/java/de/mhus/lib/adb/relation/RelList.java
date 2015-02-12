@@ -134,7 +134,7 @@ public class RelList<T> implements List<T> {
 			for (T t : remove) {
 				try {
 					if (config.remove()) {
-						manager.removeObject(con, t);
+						manager.deleteObject(con, t);
 					} else {
 						manager.getTable(manager.getRegistryName(t)).getField(fName).set(t, null);
 						manager.saveObject(con, t);

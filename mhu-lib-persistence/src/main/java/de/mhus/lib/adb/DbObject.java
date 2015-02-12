@@ -16,11 +16,13 @@ public interface DbObject extends Persistable {
 
 	void doInit(DbManager manager, String registryName, boolean isPersistent);
 
-	void doPreRemove(DbConnection con);
+	void doPreDelete(DbConnection con);
 
 	void doPostLoad(DbConnection con);
 
-	void doPostRemove(DbConnection con);
+	void doPostCreate(DbConnection con);
+	
+	void doPostDelete(DbConnection con);
 
 	boolean isPersistent();
 	

@@ -48,7 +48,7 @@ public class DbProperties {
 			return null;
 		}
 		String oldValue = prop.getValue();
-		manager.removeObject(registryName,prop);
+		manager.deleteObject(registryName,prop);
 		dump = null;
 		return oldValue;
 	}

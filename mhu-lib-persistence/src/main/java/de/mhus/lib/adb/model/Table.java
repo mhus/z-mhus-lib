@@ -50,7 +50,7 @@ public abstract class Table extends MObject {
 	private DbPrepared sqlPrimary;
 	private DbPrepared sqlInsert;
 	private DbPrepared sqlUpdate;
-	private DbPrepared sqlRemove;
+	private DbPrepared sqlDelete;
 	private LinkedList<Feature> features = new LinkedList<Feature>();
 	protected ResourceNode attributes;
 
@@ -264,7 +264,7 @@ public abstract class Table extends MObject {
 			nr++;
 		}
 		
-		sqlRemove = manager.getPool().createStatement(sql);
+		sqlDelete = manager.getPool().createStatement(sql);
 		
 	}
 
@@ -302,6 +302,23 @@ public abstract class Table extends MObject {
 		return obj;
 	}
 
+	public boolean existsObject(DbConnection con, Object[] keys) throws Exception {
+
+		HashMap<String, Object> attributes = new HashMap<String, Object>();
+		int nr = 0;
+		for (Object key : keys) {
+			attributes.put(String.valueOf(nr), key);
+			nr++;
+		}
+		DbResult ret = sqlPrimary.getStatement(con).executeQuery(attributes);
+		if (!ret.next()) {
+			ret.close();
+			return false;
+		}
+		ret.close();
+		
+		return true;
+	}	
 	public void injectObject(Object obj) {
 		if (obj instanceof DbComfortableObject) // TODO Use DbObject interface
 			((DbComfortableObject)obj).setDbManager(manager);
@@ -450,19 +467,19 @@ public abstract class Table extends MObject {
     	
 	}
 
-	public void removeObject(DbConnection con, Object object) throws Exception {
+	public void deleteObject(DbConnection con, Object object) throws Exception {
 		
 		for (Feature f : features)
-			f.removeObject(con,object);
+			f.deleteObject(con,object);
 	
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
 		for (Field f : pk) {
 			attributes.put(f.name, f.getFromTarget(object));
 		}
 		
-		schema.internalRemoveObject(con, name, object, attributes);
+		schema.internalDeleteObject(con, name, object, attributes);
 		
-		sqlRemove.getStatement(con).execute(attributes);
+		sqlDelete.getStatement(con).execute(attributes);
 	}
 
 	public String getRegistryName() {

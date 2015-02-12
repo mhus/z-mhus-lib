@@ -184,9 +184,9 @@ public abstract class DbSchema extends MObject {
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
 	 */
-	public void doPreRemove(Table table, Persistable object, DbConnection con, DbManager dbManager) {
+	public void doPreDelete(Table table, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
-			((DbObject)object).doPreRemove(con);
+			((DbObject)object).doPreDelete(con);
 		}
 	}
 
@@ -200,13 +200,18 @@ public abstract class DbSchema extends MObject {
 		}
 	}
 
+	public void doPostCreate(Table table, Persistable object, DbConnection con, DbManager manager) {
+		if (object instanceof DbObject) {
+			((DbObject)object).doPostCreate(con);
+		}
+	}
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
 	 */
-	public void doPostRemove(Table c, Persistable object, DbConnection con, DbManager dbManager) {
+	public void doPostDelete(Table c, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
-			((DbObject)object).doPostRemove(con);
+			((DbObject)object).doPostDelete(con);
 		}
 	}
 
@@ -312,7 +317,7 @@ public abstract class DbSchema extends MObject {
 			HashMap<String, Object> attributes) {
 	}
 
-	public void internalRemoveObject(DbConnection con, String name, Object object,
+	public void internalDeleteObject(DbConnection con, String name, Object object,
 			HashMap<String, Object> attributes) {
 	}
 	

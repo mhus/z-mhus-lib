@@ -29,8 +29,8 @@ public class FeatureAccessManager extends Feature {
 		if (accessManager != null) accessManager.hasReadAccess(manager, table, con, res);
 	}
 
-	public void removeObject(DbConnection con, Object object) throws Exception {
-		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_REMOVE);
+	public void deleteObject(DbConnection con, Object object) throws Exception {
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_DELETE);
 	}
 	
 	public void checkFillObject(DbConnection con, DbResult res) throws Exception {

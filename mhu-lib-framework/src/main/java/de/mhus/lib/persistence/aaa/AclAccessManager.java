@@ -53,7 +53,7 @@ public class AclAccessManager extends DbAccessManager {
 		if (right == DbManager.R_UPDATE && !hasRight(manager,con,acl,defaultPolicy,Acl.RIGHT_WRITE))
 			throw new AccessDeniedException("access denied", check.getCurrentUserInfo(),acl, Acl.RIGHT_WRITE, object);
 
-		if (right == DbManager.R_REMOVE && !hasRight(manager, con, acl, defaultPolicy, Acl.RIGHT_REMOVE))
+		if (right == DbManager.R_DELETE && !hasRight(manager, con, acl, defaultPolicy, Acl.RIGHT_REMOVE))
 			throw new AccessDeniedException("access denied", check.getCurrentUserInfo(),acl, Acl.RIGHT_REMOVE, object);
 		
 	}

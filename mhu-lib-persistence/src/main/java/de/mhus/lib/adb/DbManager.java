@@ -41,7 +41,7 @@ public class DbManager extends MJmx {
 	public static final int R_READ = 0;
 	public static final int R_CREATE = 1;
 	public static final int R_UPDATE = 2;
-	public static final int R_REMOVE = 3;
+	public static final int R_DELETE = 3;
 
 	private DbSchema schema;
 	private DbPool pool;
@@ -125,6 +125,51 @@ public class DbManager extends MJmx {
 		
 		return executeQuery(con, object, registryName, sql.toString(), attributes);
 	}
+
+	
+	public <T> long getCountAll(Class<T> clazz) throws MException {
+		return getCountByQualification(null, (Object)clazz, null, "", null);
+	}
+	
+	public <T> long getCountByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
+		return getCountByQualification(null, (Object)clazz, null, qualification, attributes);
+	}
+	
+	public <T> long getCountByQualification(T object, String qualification, Map<String,Object> attributes) throws MException {
+		return getCountByQualification(null, object, null, qualification, attributes);
+	}
+
+	public <T> long getCountByQualification(AQuery<T> qualification) throws MException {
+		return getCountByQualification(null, qualification.getType(), null, qualification.toQualification(this), qualification.getAttributes(this));
+	}
+
+	/**
+	 * Returns the count of all found objects for the qualification. It's faster than
+	 * loading all data from the database with getByQualification.
+	 * 
+	 * @param con
+	 * @param object
+	 * @param registryName
+	 * @param qualification
+	 * @param attributes
+	 * @return
+	 * @throws MException
+	 */
+	public <T> long getCountByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
+		Class<?> clazz = schema.findClassForObject(object,this);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT count(*) AS count FROM $db.").append(getMappingName(clazz)).append("$ ");
+		if (MString.isSet(qualification)) {
+			String low = qualification.trim().toLowerCase();
+			if (low.startsWith("order"))
+				sql.append(qualification);
+			else
+				sql.append("WHERE ").append(qualification);
+		}
+		
+		return executeCountQuery(con, "count", sql.toString(), attributes);
+		
+	}
 	
 	public <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException {
 		
@@ -132,7 +177,7 @@ public class DbManager extends MJmx {
 	}
 	
 	/**
-	 * Return an collection.
+	 * Returns an collection.
 	 * 
 	 * @param <T>
 	 * @param con DbConnection or null
@@ -169,6 +214,55 @@ public class DbManager extends MJmx {
 		// do not close, it's used by the collection
 		//	if (myCon != null)
 		//		myCon.close();
+		}
+	}
+	
+	/**
+	 * Returns a long value out of a query.
+	 * 
+	 * @param con
+	 * @param attributeName
+	 * @param query
+	 * @param attributes
+	 * @return
+	 * @throws MException
+	 */
+	public <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException {
+		Map<String, Object> map = null;
+		
+		DbConnection myCon = null;
+		if (con == null) {
+			try {
+				myCon = pool.getConnection();
+			} catch (Throwable t) {
+				throw new MException(con,query,attributes,t);
+			}
+			con = myCon;
+		}
+		if (attributes == null)
+			map = nameMappingRO;
+		else
+			map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
+		DbStatement sth = null;
+		DbResult res = null;
+		try {
+			sth = con.createStatement(query);
+			res = sth.executeQuery(map);
+			long count = -1;
+			while(res.next())
+		        count=res.getLong(attributeName);
+			return count;
+			
+		} catch (Throwable t) {
+			throw new MException(con,query,attributes,t);
+		} finally {
+			try {
+				if (res != null) res.close();
+				if (sth != null) sth.close();
+				if (myCon != null) myCon.close();
+			} catch (Throwable t) {
+				log().w(query,attributeName,t);
+			}
 		}
 	}
 	
@@ -243,6 +337,56 @@ public class DbManager extends MJmx {
 		}
 	}
 
+//
+	
+	public boolean existsObject(String registryName, Object ... keys) throws MException {
+		return existsObject(null,registryName, keys);
+	}
+	
+	public <T> boolean existsObject(Class<T> clazz, Object ... keys) throws MException {
+		return existsObject(null,getRegistryName(clazz), keys);
+	}
+	
+	public <T> boolean existsObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException {
+		return existsObject(con,getRegistryName(clazz), keys);
+	}
+	
+	/**
+	 * Return an object from the database defined by the primary key - like a load operation.
+	 * If more the one attributes is needed, the order is alphabetic by the attribute name.
+	 * 
+	 * @param con A connection to use or null
+	 * @param registryName The registry name
+	 * @param keys The primary key values
+	 * @return
+	 * @throws MException
+	 */
+	public boolean existsObject(DbConnection con, String registryName, Object ... keys) throws MException {
+		
+//		registryName = registryName.toLowerCase();
+		
+		DbConnection myCon = null;
+		if (con == null) {
+			try {
+				myCon = pool.getConnection();
+				con = myCon;
+			} catch (Throwable t) {
+				throw new MException(t);
+			}
+		}
+		
+		Table c = cIndex.get(registryName);
+		if (c == null)
+			throw new MException("class definition not found in schema",registryName);
+		
+		try {
+			return c.existsObject(con,keys);
+		} catch (Throwable t) {
+			throw new MException(registryName,t);
+		}
+	}
+	
+	
 	public void checkFillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
 
 		if (registryName == null) {
@@ -532,7 +676,7 @@ public class DbManager extends MJmx {
 		
 			c.createObject(con,object);
 			
-			schema.doPostLoad(c,(Persistable) object,con,this);
+			schema.doPostCreate(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -610,27 +754,27 @@ public class DbManager extends MJmx {
 		}
 	}
 	
-	public void removeObject(Object object) throws MException {
-		removeObject(null, null, object);
+	public void deleteObject(Object object) throws MException {
+		deleteObject(null, null, object);
 	}
 	
-	public void removeObject(String registryName, Object object) throws MException {
-		removeObject(null, registryName, object);
+	public void deleteObject(String registryName, Object object) throws MException {
+		deleteObject(null, registryName, object);
 	}
 	
-	public void removeObject(DbConnection con, Object object) throws MException {
-		removeObject(con, null, object);
+	public void deleteObject(DbConnection con, Object object) throws MException {
+		deleteObject(con, null, object);
 	}
 	
 	/**
-	 * Remove an object in the database.
+	 * Delete an object in the database.
 	 * 
 	 * @param con The connection to use or null
 	 * @param registryName The registry name to use or null
-	 * @param object The object to remove from database
+	 * @param object The object to delete from database
 	 * @throws MException
 	 */
-	public void removeObject(DbConnection con, String registryName, Object object) throws MException {
+	public void deleteObject(DbConnection con, String registryName, Object object) throws MException {
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -654,12 +798,12 @@ public class DbManager extends MJmx {
 		
 		try {
 			// prepare object
-			schema.doPreRemove(c,(Persistable) object,con,this);
+			schema.doPreDelete(c,(Persistable) object,con,this);
 			
 			//save object
-			c.removeObject(con,object);
+			c.deleteObject(con,object);
 			
-			schema.doPostRemove(c,(Persistable) object,con,this);
+			schema.doPostDelete(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
@@ -751,200 +895,7 @@ public class DbManager extends MJmx {
 //		c.postInit();
 		cIndex.put(registryName,c);
 	}
-	
-	
-	
-//	protected void parseClass(Table c, String tableName) throws Exception {
-//		Class<?> clazz = c.clazz;
-//		DbTable table = clazz.getAnnotation(DbTable.class);
-//		if (tableName != null) {
-//			c.name = tableName;
-//		} else
-//		if (table == null) {
-//			c.name = clazz.getSimpleName();
-//		} else {
-//			c.name = table.value();
-//		}
-//		c.tableNameOrg = schema.getTableName(c.name);
-//		c.tableName = pool.getDialect().normalizeTableName(c.tableNameOrg);
-//		
-//		log().t("new table",c.name,c.tableName);
-//		
-//		c.isDynamic = true;
-//		try {
-//			clazz.asSubclass(DbDynamic.class);
-//		} catch (ClassCastException e) {
-//			c.isDynamic = false;
-//		}
-//
-//		// parse fields
-//		if (c.isDynamic) {
-//			DbDynamic.Field[] fa = ((DbDynamic)clazz.newInstance()).getFieldDefinitions();
-//			for (DbDynamic.Field f : fa) {
-//				Field field =f.isPersistent() ? new PersistentField( f ) : new VirtualField( f );
-//				c.addField( field );
-//				
-//				// indexes
-//				String indexes = f.getIndexes();
-//				if (indexes != null) {
-//					c.addToIndex(indexes,field);
-//				}
-//
-//			}
-//		} else {
-//			for (Method m : clazz.getMethods()) {
-//				DbPrimaryKey pk = m.getAnnotation(DbPrimaryKey.class);
-//				DbAttributes pa = m.getAnnotation(DbAttributes.class);
-//				DbPersistent p  = m.getAnnotation(DbPersistent.class);
-//				DbVirtual    v  = m.getAnnotation(DbVirtual.class);
-//				DbIndex idx = m.getAnnotation(DbIndex.class);
-//	
-//	//			for ( Annotation a : m.getAnnotations()) {
-//	//				System.out.println(m.getName() + ": " + a.toString());
-//	//			}
-//				
-//				if (pk != null || p != null || pa != null || v != null) {
-//					
-//					if (p == null) p = new DbPersistent() {public Class<? extends Annotation> annotationType() {return null;}};
-//	
-//					String mName = m.getName();
-//					Method getter = null;
-//					Method setter = null;
-//					if (mName.startsWith("get")) {
-//						mName = mName.substring(3);
-//						getter = m;
-//						setter = clazz.getMethod("set" + mName,getter.getReturnType());
-//					} else
-//					if (mName.startsWith("set")) {
-//						mName = mName.substring(3);
-//						setter = m;
-//						try {
-//							getter = clazz.getMethod("get" + mName);
-//						} catch (NoSuchMethodException nsme) {
-//							getter = clazz.getMethod("is" + mName);
-//						}
-//					} else
-//					if (mName.startsWith("is")) {
-//						mName = mName.substring(2);
-//						getter = m;
-//						setter = clazz.getMethod("set" + mName,getter.getReturnType());
-//					} else {
-//						log().d("field is not a getter/setter" + mName);
-//						continue;
-//					}
-//					
-//					if (getter == null) {
-//						log().d("getter not found",mName);
-//						continue;
-//					}
-//					if (setter == null) {
-//						log().d("setter not found",mName);
-//						continue;
-//					}
-//					Class<?> ret = getter.getReturnType();
-//					if (ret == void.class) {
-//						log().d("Value type is void - ignore");
-//						continue;
-//					}
-//					
-//					
-//					if (c.fIndex.containsKey(mName.toLowerCase())) {
-//						log().d("field already defined", mName);
-//						continue;
-//					}
-//					
-//					Map<String, String> attr = Rfc1738.explode(toAttributes(pa));
-//					log().t("field",mName);
-//					Field field = null;
-//					if (v != null)
-//						field = new FieldVirtual( mName, pk!=null, setter, getter, ret, attr );
-//					else
-//						field = new PersistentField( mName, pk!=null, setter, getter, ret, attr );
-//					c.addField( field );
-//					
-//					// indexes
-//					if (idx != null && field.isPersistent()) {
-//						c.addToIndex(idx.value(),field);
-//					}
-//						
-//				}
-//			}
-//		}
-//		
-//		
-//		c.accessManager = schema.getAccessManager(c);
-////		if (c.accessManager != null) {
-////			c.accessManager.doInit(this);
-////		}
-//	}
 
-	/**
-	 * Representation of one Table in the registry.
-	 * 
-	 * @author mikehummel
-	 *
-	 */
-//	public class Table {
-//
-//		public boolean isDynamic;
-//		public DbAccessManager accessManager;
-//		private String registryName;
-//		private String name;
-//		private String tableNameOrg;
-//		private String tableName;
-//		private Class<?> clazz;
-//		private HashMap<String,Field> fIndex = new HashMap<String, DbManager.Field>();
-//		private LinkedList<Field> fList = new LinkedList<DbManager.Field>();
-//		private LinkedList<Field> pk = new LinkedList<DbManager.Field>();
-//		private DbPrepared sqlPrimary;
-//		private DbPrepared sqlInsert;
-//		private DbPrepared sqlUpdate;
-//		private HashMap<String, LinkedList<Field>> iIdx = new HashMap<String, LinkedList<Field>>();
-//		private DbPrepared sqlRemove;
-//
-//		public Table(Class<?> clazz) {
-//			this.clazz = clazz;
-//		}
-//
-//		public void removeObject(DbConnection con, Object object) throws Exception {
-//			
-//			if (accessManager != null) accessManager.hasAccess(DbManager.this, this, con, object, R_REMOVE);
-//
-//			HashMap<String, Object> attributes = new HashMap<String, Object>();
-//			for (Field f : pk) {
-//				attributes.put(f.name, f.getFromTarget(object));
-//			}
-//			sqlRemove.getStatement(con).execute(attributes);
-//		}
-//
-//		private void addField(Field field) {
-//			field.table = this;
-//			fIndex.put(field.createName, field);
-//			fList.add(field);
-//			if (field.isPrimary && field.isPersistent()) pk.add(field);
-//		}
-//		
-//		private void fillNameMapping() throws Exception {
-//			nameMapping.put("db." + name, new Raw(tableName));
-//			for (Field f : fList) {
-//				f.fillNameMapping();
-//			}
-//		}
-//
-//		private void addToIndex(String list, Field field) {
-//			for (String nr : MString.split(list, ",")) {
-//				LinkedList<Field> list2 = iIdx.get(nr);
-//				if (list2 == null) {
-//					list2 = new LinkedList<Field>();
-//					iIdx.put(nr, list2);
-//				}
-//				list2.add(field);
-//			}
-//		}
-//		
-//	
-//	}
-//	
 	@JmxManaged(descrition="Used Schema")
 	public DbSchema getSchema() {
 		return schema;

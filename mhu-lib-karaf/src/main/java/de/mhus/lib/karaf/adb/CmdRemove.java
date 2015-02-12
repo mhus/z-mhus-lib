@@ -41,7 +41,7 @@ public class CmdRemove implements Action {
 		for (Object object : AdbUtil.getObjects(service, type, id)) {
 		
 			System.out.println("*** REMOVE " + object);
-			service.getManager().removeObject(regName, object);
+			service.getManager().deleteObject(regName, object);
 			output = object;
 		}
 		if (outputParam != null)

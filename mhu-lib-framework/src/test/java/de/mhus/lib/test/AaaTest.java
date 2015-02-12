@@ -151,7 +151,7 @@ public class AaaTest {
 		simple = manager.getObject(TestSimpleEntity.class, simpleId);
 		simple.save();
 		simple.reload();
-		simple.remove();
+		simple.delete();
 		
 		// test parent child relation
 		
