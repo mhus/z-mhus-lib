@@ -334,13 +334,17 @@ public abstract class Table extends MObject {
 
 	}
 	
-	public void fillObject(Object obj, DbConnection con, DbResult res) throws Exception {
+	public void fillObject(Object obj, DbConnection con, DbResult res) throws Throwable {
 		
 		for (Feature f : features)
 			f.fillObject(obj,con,res);
 
 		for (Field f : fList) {
-			f.setToTarget(res,obj);
+			try {
+				f.setToTarget(res,obj);
+			} catch (Throwable t) {
+				manager.getSchema().onFillObjectException(Table.this,obj, res, f, t);
+			}
 		}
 		
 		for (FieldRelation f : relationList) {
@@ -349,7 +353,7 @@ public abstract class Table extends MObject {
 
 	}
 	
-	public Object fillObject(DbConnection con, Object obj, Object[] keys) throws Exception {
+	public Object fillObject(DbConnection con, Object obj, Object[] keys) throws Throwable {
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
 		int nr = 0;
@@ -368,7 +372,11 @@ public abstract class Table extends MObject {
 
 		// fill object
 		for (Field f : fList) {
-			f.setToTarget(ret,obj);
+			try {
+				f.setToTarget(ret,obj);
+			} catch (Throwable t) {
+				manager.getSchema().onFillObjectException(Table.this, obj, ret, f, t);
+			}
 		}
 		ret.close();
 		

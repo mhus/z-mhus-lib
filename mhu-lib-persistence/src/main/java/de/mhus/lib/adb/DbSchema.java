@@ -320,5 +320,10 @@ public abstract class DbSchema extends MObject {
 	public void internalDeleteObject(DbConnection con, String name, Object object,
 			HashMap<String, Object> attributes) {
 	}
+
+	public void onFillObjectException(Table table, Object obj, DbResult res, Field f,
+			Throwable t) throws Throwable {
+		throw t;
+	}
 	
 }
