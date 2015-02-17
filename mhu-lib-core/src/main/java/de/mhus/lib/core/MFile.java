@@ -19,18 +19,26 @@
 
 package de.mhus.lib.core;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
@@ -596,4 +604,66 @@ public class MFile {
 		
 	}
 
+	/**
+	 * Write a line list to a file. Be aware of the ENTER \\n character in the lines !
+	 * Every line will be truncated by a ENTER \\n sign. This means the last line is empty.
+	 * 
+	 * @param file
+	 * @param lines
+	 * @param append
+	 * @throws IOException
+	 */
+	public static void writeLines(File file, List<String> lines, boolean append) throws IOException {
+		FileWriter w = new FileWriter(file,append);
+		writeLines(w,lines);
+		w.close();
+	}
+	
+	private static void writeLines(Writer w, List<String> lines) throws IOException {
+		for (String line : lines) {
+			w.write(line);
+			w.write('\n');
+		}
+	}
+
+	/**
+	 * Read a file into a list line by line
+	 * 
+	 * @param file
+	 * @param removeLastEmpty If you have written line by line the last ENTER will produce an empty line, set true to remove this line.
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<String> readLines(File file, boolean removeLastEmpty) throws IOException {
+		final LinkedList<String> out = new LinkedList<>();
+		readLines(file, new Observer() {
+			
+			@Override
+			public void update(Observable o, Object arg) {
+				out.add((String)arg);
+			}
+		});
+		
+		if (removeLastEmpty && out.size() > 0 && MString.isEmpty(out.getLast()))
+			out.removeLast();
+		
+		return out;
+	}
+	
+	public static void readLines(File file, Observer lineObserver) throws IOException {
+		FileReader r = new FileReader(file);
+		readLines(r,lineObserver);
+		r.close();
+	}
+
+	public static void readLines(Reader r, Observer lineObserver) throws IOException {
+		BufferedReader br = new BufferedReader(r);
+		String line = null;
+		do {
+			line = br.readLine();
+			if (line != null)
+				lineObserver.update(null, line);
+		} while(line != null);
+	}
+	
 }
