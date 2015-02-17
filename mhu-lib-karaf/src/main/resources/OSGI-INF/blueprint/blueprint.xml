@@ -47,6 +47,11 @@
 		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
+        <command name="adb/count">
+            <action class="de.mhus.lib.karaf.adb.CmdCount">
+		        <property name="context" ref="blueprintBundleContext" />
+            </action>
+        </command>
         <command name="adb/view">
             <action class="de.mhus.lib.karaf.adb.CmdView">
 		        <property name="context" ref="blueprintBundleContext" />
