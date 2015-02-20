@@ -1,5 +1,9 @@
 package de.mhus.lib.core;
 
+import java.util.Locale;
+
+import de.mhus.lib.errors.NotSupportedException;
+
 public class MValidator {
 
 	public static boolean isEmailAddress(String email) {
@@ -52,5 +56,15 @@ public class MValidator {
 		
 	}
 	
+	public static boolean isZipCode(Locale locale, String zip) {
+		if (locale == null) {
+		} else
+		if (locale.getCountry().equals("DE")) {
+			if (zip == null || zip.length() != 5) return false;
+			int i = MCast.toint(zip, 0);
+			return (i >= 1000 && i <= 99999);
+		}
+		throw new NotSupportedException("Country not supported",locale);
+	}
 	
 }

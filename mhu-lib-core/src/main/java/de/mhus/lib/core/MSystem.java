@@ -16,10 +16,7 @@ import java.util.UUID;
 
 import de.mhus.lib.core.logging.Log;
 
-public class MSystem {
-
-	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-	
+public class MSystem {	
 	
 	public static final String PROP_DIRTY_TRACE = "mhu.lib.singleton.trace";
 	public static final String PROP_SINGLETON_FACTORY_CLASS = "mhu.lib.singleton.factory.class";
