@@ -135,7 +135,7 @@ public abstract class DbSchema extends MObject {
 	 */
 	public void doPreCreate(Table table,Object object, DbConnection con, DbManager manager) {
 		if (object instanceof DbObject) {
-			((DbObject)object).doInit(manager, table.getRegistryName(), ((DbObject)object).isPersistent() );
+			((DbObject)object).doInit(manager, table.getRegistryName(), ((DbObject)object).isAdbPersistent() );
 			((DbObject)object).doPreCreate(con);
 		}
 	}

@@ -24,6 +24,6 @@ public interface DbObject extends Persistable {
 	
 	void doPostDelete(DbConnection con);
 
-	boolean isPersistent();
+	boolean isAdbPersistent();
 	
 }

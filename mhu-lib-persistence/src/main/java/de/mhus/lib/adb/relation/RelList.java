@@ -148,7 +148,7 @@ public class RelList<T> implements List<T> {
 			for (T t : add) {
 				try {
 					manager.getTable(manager.getRegistryName(t)).getField(fName).set(t, value);
-					if ((t instanceof DbComfortableObject) && !((DbComfortableObject)t).isPersistent() )
+					if ((t instanceof DbComfortableObject) && !((DbComfortableObject)t).isAdbPersistent() )
 						manager.createObject(con, t);
 					else
 						manager.saveObject(con, t);

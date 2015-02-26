@@ -34,7 +34,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 	
 	/**
-	 * Save changed is not jet managed it will create the object
+	 * Save object if it is not managed jet then it will create the object
 	 * 
 	 * @param manager
 	 * @throws MException 
@@ -134,7 +134,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 	
 	@Override
-	public boolean isPersistent() {
+	public boolean isAdbPersistent() {
 		return persistent;
 	}
 
@@ -161,6 +161,10 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	public DbManager getDbManager() {
 		return manager;
+	}
+	
+	public boolean isAdbChanged() throws MException {
+		return isAdbManaged() && ( !persistent || manager.objectChanged(this) );
 	}
 
 }

@@ -4,6 +4,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -15,6 +16,11 @@ public class MProperties extends IProperties implements Externalizable {
 	
 	public MProperties() {
 		this(new Properties());
+	}
+	
+	public MProperties(Map<String, Object> in) {
+		this.properties = new Properties();
+		this.properties.putAll(in);
 	}
 	
 	public MProperties(Properties properties) {

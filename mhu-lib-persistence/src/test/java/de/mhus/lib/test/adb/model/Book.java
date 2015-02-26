@@ -106,7 +106,7 @@ public class Book implements DbObject {
 	}
 
 	@Override
-	public boolean isPersistent() {
+	public boolean isAdbPersistent() {
 		// TODO Auto-generated method stub
 		return false;
 	}
