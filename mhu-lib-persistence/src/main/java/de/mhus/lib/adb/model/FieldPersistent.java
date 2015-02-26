@@ -27,9 +27,10 @@ public class FieldPersistent extends Field {
 	private String autoPrefix;
 
 	@SuppressWarnings("unchecked")
-	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField) throws MException {
+	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
 		this.manager = manager;
 		this.table = table;
+		this.manager = table.manager;
 		this.nameOrg = attribute.getName();
 		this.name = manager.getPool().getDialect().normalizeColumnName(nameOrg.toLowerCase());
 		this.createName = nameOrg.toLowerCase();
@@ -38,7 +39,7 @@ public class FieldPersistent extends Field {
 		this.attribute = (PojoAttribute<Object>) attribute;
 		this.attr = attr2;
 		this.dynamicField = dynamicField;
-		init();
+		init(features);
 	}
 
 //	public FieldPersistent(DbManager manager, Table table, DbDynamic.Field f) {
@@ -55,7 +56,7 @@ public class FieldPersistent extends Field {
 //		init();
 //	}
 
-	protected void init() throws MException {
+	protected void init(String[] features) throws MException {
 		this.retDbType = attr.getExtracted("type", table.getDbRetType(attribute.getType()) ).toUpperCase();
 //		if (this.retDbType.equals("DATE"))
 //			this.retDbType = "DATETIME";
@@ -66,6 +67,8 @@ public class FieldPersistent extends Field {
 		nullable = attr.getBoolean("nullable", true);
 		
 		if (isPrimary) nullable = false;
+		
+		super.init(features);
 	}
 	
 	@Override

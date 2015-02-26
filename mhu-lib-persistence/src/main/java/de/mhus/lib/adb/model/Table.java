@@ -88,8 +88,8 @@ public abstract class Table extends MObject {
 		parseFields();
 		
 		// features
-		if (table != null && !MString.isEmptyTrim(table.features())) {
-			for (String featureName : MString.split(table.features(),",")) {
+		if (table != null) {
+			for (String featureName : table.features()) {
 				Feature feature = manager.getSchema().createFeature(manager, this, featureName);
 				if (feature != null) features.add(feature);
 			}

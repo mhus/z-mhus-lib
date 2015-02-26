@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.mhus.lib.adb.model.AttributeFeature;
+import de.mhus.lib.adb.model.AttributeFeatureCut;
 import de.mhus.lib.adb.model.Feature;
 import de.mhus.lib.adb.model.FeatureAccessManager;
 import de.mhus.lib.adb.model.FeatureCut;
@@ -290,7 +292,7 @@ public abstract class DbSchema extends MObject {
 			if (feature != null)
 				feature.init(manager,table);
 			else
-				log().t("feature not found",name);
+				log().w("feature not found",name);
 			return feature;
 		} catch (Exception e) {
 			log().t("feature",name,e);
@@ -298,13 +300,35 @@ public abstract class DbSchema extends MObject {
 		}
 	}
 
-	public Field createField(DbManager manager, Table table, boolean pk, boolean virtual, PojoAttribute<?> attribute, ResourceNode attr,DbDynamic.Field dynamicField) throws MException {
+	public AttributeFeature createAttributeFeature(DbManager manager,
+			Field field, String name) {
+
+		try {
+			AttributeFeature feature = null;
+			
+			if (name.equals("cut")) {
+				feature = new AttributeFeatureCut();
+			}
+			
+			if (feature != null)
+				feature.init(manager,field);
+			else
+				log().w("attribute feature not found",name);
+	
+			return feature;
+		} catch (Exception e) {
+			log().t("feature",name,e);
+			return null;
+		}
+	}
+
+	public Field createField(DbManager manager, Table table, boolean pk, boolean virtual, PojoAttribute<?> attribute, ResourceNode attr,DbDynamic.Field dynamicField, String[] features) throws MException {
 
 		Field field = null;
 		if (virtual)
-			field = new FieldVirtual( table, pk, attribute, attr );
+			field = new FieldVirtual( table, pk, attribute, attr, features );
 		else
-			field = new FieldPersistent( manager, table, pk, attribute, attr, dynamicField );
+			field = new FieldPersistent( manager, table, pk, attribute, attr, dynamicField, features );
 
 		return field;
 	}

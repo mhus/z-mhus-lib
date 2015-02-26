@@ -14,7 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 public @interface DbTable {
 
 	String tableName() default "";
-	String features() default "";
+	String[] features() default {};
 	String attributes() default "";
 	
 }

@@ -15,7 +15,7 @@ public class TableDynamic extends Table {
 		for (DbDynamic.Field f : fa) {
 			
 			PojoAttribute<?> attr = new DynamicAttribute(f);
-			Field field = manager.getSchema().createField(manager, this, f.isPrimaryKey(), !f.isPersistent(), attr, f.getAttributes(), f);
+			Field field = manager.getSchema().createField(manager, this, f.isPrimaryKey(), !f.isPersistent(), attr, f.getAttributes(), f, null);
 			
 			if (field != null) addField( field );
 			

@@ -66,7 +66,7 @@ public class TableAnnotations extends Table {
 					}
 						
 					
-					Field field = manager.getSchema().createField(manager, this, pk!=null, v, attribute, attr, null);
+					Field field = manager.getSchema().createField(manager, this, pk!=null, v, attribute, attr, null, p != null ? p.features() : null);
 					if (field != null)
 						addField( field );
 					
