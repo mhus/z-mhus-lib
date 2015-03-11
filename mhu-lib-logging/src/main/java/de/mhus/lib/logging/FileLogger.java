@@ -17,7 +17,7 @@ public class FileLogger extends Log {
 	private boolean printTime = true;
 	private boolean traces = true;
 	private PrintStream out;
-	private long maxFileSize = 1024 * 1024 * 200; // 200 MB
+	private long maxFileSize = 1024 * 1024 * 500; // 500 MB
 
 	public FileLogger(String name, File file) {
 		super(name);
