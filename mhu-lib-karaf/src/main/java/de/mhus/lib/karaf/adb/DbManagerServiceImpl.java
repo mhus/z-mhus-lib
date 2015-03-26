@@ -3,6 +3,7 @@ package de.mhus.lib.karaf.adb;
 import javax.sql.DataSource;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.ComponentContext;
 
 import de.mhus.lib.adb.DbManager;
@@ -62,6 +63,7 @@ public abstract class DbManagerServiceImpl implements DbManagerService {
 	protected void doOpen(boolean clean) throws Exception {
 		if (manager != null) return;
 		doInitialize();
+		context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		util = new DataSourceUtil(context);
 		
 		if (getDataSource() == null) return;

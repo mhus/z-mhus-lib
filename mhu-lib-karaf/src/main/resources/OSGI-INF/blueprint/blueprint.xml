@@ -87,6 +87,28 @@
             <action class="de.mhus.lib.karaf.CmdLog">
             </action>
         </command>
+
+        <command name="jms/connection-add">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionAdd">
+            </action>
+        </command>
+        <command name="jms/connection-beat">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionBeat">
+            </action>
+        </command>
+        <command name="jms/connection-list">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionList">
+            </action>
+        </command>
+        <command name="jms/connection-remove">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionRemove">
+            </action>
+        </command>
+        <command name="jms/connection-info">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionInfo">
+            </action>
+        </command>
+
         
     </command-bundle>
 

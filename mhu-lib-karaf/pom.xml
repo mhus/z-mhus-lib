@@ -49,6 +49,13 @@
                             de.mhus.lib.mutable*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
+                        	de.mhus.lib.adb*;resolution:=optional,
+                        	de.mhus.lib.jpa*;resolution:=optional,
+                        	de.mhus.lib.cao*;resolution:=optional,
+                        	de.mhus.lib.sql*;resolution:=optional,
+                        	de.mhus.lib.jms*;resolution:=optional,
+                        	org.apache.activemq.*;resolution:=optional,
+                        	javax.jms.*;resolution:=optional,
                             *
                         </Import-Package>
                         <Service-Component>*</Service-Component>
@@ -111,6 +118,23 @@
         	<groupId>de.mhus.lib</groupId>
         	<artifactId>mhu-lib-persistence</artifactId>
         	<version>${project.version}</version>
+        </dependency>
+        <dependency>
+        	<groupId>de.mhus.lib</groupId>
+        	<artifactId>mhu-lib-jms</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
+
+       <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>${activemq.version}</version>
+        	<type>bundle</type>
         </dependency>
 
     </dependencies>

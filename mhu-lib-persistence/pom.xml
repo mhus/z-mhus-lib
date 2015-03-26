@@ -39,13 +39,17 @@
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            de.mhus.lib.adb*;version=${project.version},
-	            de.mhus.lib.adb.util*;version=${project.version},
-	            de.mhus.lib.cao*;version=${project.version},
-	            de.mhus.lib.jpa*;version=${project.version},
-	            de.mhus.lib.sql*;version=${project.version}
+	            de.mhus.lib.adb.*;version=${project.version},
+	            de.mhus.lib.adb.util.*;version=${project.version},
+	            de.mhus.lib.cao.*;version=${project.version},
+	            de.mhus.lib.jpa.*;version=${project.version},
+	            de.mhus.lib.sql.*;version=${project.version}
 	            </Export-Package>
-	            <Import-Package>*</Import-Package>
+	            <Import-Package>
+		            javax.persistence.*;resolution:=optional,
+		            org.apache.openjpa.*;resolution:=optional,
+		            *
+	            </Import-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
