@@ -20,6 +20,7 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 	
 	@Override
 	public synchronized void open() throws JMSException {
+		if (isClosed()) throw new JMSException("server closed");
 		if (consumer == null || getSession() == null) {
 			dest.open();
 			log().i("consume",dest);
@@ -37,14 +38,14 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 	}
 	
 	@Override
-	public void close() {
-		log().i("close",dest);
+	public void reset() {
+		log().i("reset",dest);
 		try {
 			consumer.close();
-		} catch (Throwable t) {}
+		} catch (Throwable t) {log().t(t);}
 		try {
 			replyProducer.close();
-		} catch (Throwable t) {}
+		} catch (Throwable t) {log().t(t);}
 	}
 
 	public abstract void receivedOneWay(Message msg) throws JMSException;
@@ -53,7 +54,7 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 
 	protected void sendAnswer(Message msg, Message answer) throws JMSException {
 		openAnswer();
-		if (answer == null) answer = getSession().createTextMessage("");
+		if (answer == null) answer = getSession().createTextMessage(null); // other side is waiting for an answer - send a null text
 		answer.setJMSMessageID(createMessageId());
 		answer.setJMSCorrelationID(msg.getJMSCorrelationID());
         replyProducer.send(msg.getJMSReplyTo(), answer);
@@ -70,6 +71,16 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 			}
 		} catch (Throwable t) {
 			log().w(t);
+		}
+	}
+
+	@Override
+	public void doBeat() {
+		if (isClosed()) return;
+		try {
+			open(); // try to reopen and re-listen
+		} catch (JMSException e) {
+			log().t(e);
 		}
 	}
 

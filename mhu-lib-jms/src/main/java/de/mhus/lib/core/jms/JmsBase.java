@@ -2,21 +2,16 @@ package de.mhus.lib.core.jms;
 
 import java.util.UUID;
 
-import javax.jms.JMSException;
 import javax.jms.Session;
 
-import de.mhus.lib.core.MLog;
-
-public abstract class JmsBase extends MLog {
+public abstract class JmsBase extends JmsObject {
 
 	protected JmsDestination dest;
 
 	public JmsBase(JmsDestination dest) {
 		this.dest = dest;
+		dest.getConnection().registerBase(this);
 	}
-
-	public abstract void open() throws JMSException;
-	public abstract void close();
 
 	protected String createMessageId() {
 		return UUID.randomUUID().toString();
@@ -26,8 +21,18 @@ public abstract class JmsBase extends MLog {
 		return dest;
 	}
 
+	@Override
 	public Session getSession() {
 		return dest.getSession();
 	}
 
+	@Override
+	public void close() {
+		try {
+			dest.getConnection().unregisterBase(this);
+		} catch (Throwable t) {log().t(t);}
+		super.close();
+	}
+
+	public abstract void doBeat();
 }

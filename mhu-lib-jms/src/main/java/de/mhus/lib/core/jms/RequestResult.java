@@ -20,4 +20,9 @@ public class RequestResult<T> {
 		return properties;
 	}
 	
+	@Override
+	public String toString() {
+		return "Result[" + properties + "," + result + "]";
+	}
+	
 }

@@ -1,25 +1,17 @@
 package de.mhus.lib.core.jms;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.MJson.TransformHelper;
+import de.mhus.lib.core.json.SecurityTransformHelper;
 
 public abstract class ServerJsonObject extends ServerJson {
 
-	private TransformHelper helper = new TransformHelper();
+	private SecurityTransformHelper helper = new SecurityTransformHelper(null, log());
 
 	public ServerJsonObject(JmsDestination dest) {
 		super(dest);
@@ -34,9 +26,11 @@ public abstract class ServerJsonObject extends ServerJson {
 		try {
 			JsonNode array = node.get("array");
 			LinkedList<Object> out = new LinkedList<>();
-			for (JsonNode item : array) {
-				Object to = MJson.jsonToPojo(item, null, helper); //TODO security of creating every object!!!
-				out.add(to);
+			if (array != null) {
+				for (JsonNode item : array) {
+					Object to = MJson.jsonToPojo(item, null, helper);
+					out.add(to);
+				}
 			}
 			receivedOneWay(properties, out.toArray(new Object[out.size()]));
 		} catch (Throwable t) {
@@ -49,9 +43,11 @@ public abstract class ServerJsonObject extends ServerJson {
 		try {
 			JsonNode array = node.get("array");
 			LinkedList<Object> out = new LinkedList<>();
-			for (JsonNode item : array) {
-				Object to = MJson.jsonToPojo(item, null, helper); //TODO security of creating every object!!!
-				out.add(to);
+			if (array != null) {
+				for (JsonNode item : array) {
+					Object to = MJson.jsonToPojo(item, null, helper);
+					out.add(to);
+				}
 			}
 			RequestResult<Object> res = received(properties, out.toArray(new Object[out.size()]));
 			if (res == null) return null;
@@ -64,6 +60,14 @@ public abstract class ServerJsonObject extends ServerJson {
 			t.printStackTrace();
 		}
 		return null;
+	}
+
+	public SecurityTransformHelper getHelper() {
+		return helper;
+	}
+
+	public void setHelper(SecurityTransformHelper helper) {
+		this.helper = helper;
 	}
 
 }

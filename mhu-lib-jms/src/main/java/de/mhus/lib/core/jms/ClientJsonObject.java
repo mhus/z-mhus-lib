@@ -9,11 +9,11 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.MJson.TransformHelper;
+import de.mhus.lib.core.json.SecurityTransformHelper;
 
 public class ClientJsonObject extends ClientJson {
 
-	private TransformHelper helper;
+	private SecurityTransformHelper helper = new SecurityTransformHelper(null, this.log());
 
 	public ClientJsonObject(JmsDestination dest) {
 		super(dest);
@@ -25,22 +25,22 @@ public class ClientJsonObject extends ClientJson {
 		sendJsonOneWay(prop, json);
 	}
 
-	public RequestResult<Object> sendObject(IProperties prop, Object ... obj) throws JMSException, IOException {
+	public RequestResult<Object> sendObject(IProperties prop, Object ... obj) throws JMSException, IOException, IllegalAccessException {
 		ObjectNode json = MJson.createObjectNode();
-		MJson.pojoToJson(obj, json);
+		MJson.pojoToJson(obj, json, helper);
 		RequestResult<JsonNode> res = sendJson(prop, json);
 		if (res == null) return null;
 		
 		Object o = MJson.jsonToPojo(res.getResult(), null, helper);
 		
-		return new RequestResult<Object>(o, prop);
+		return new RequestResult<Object>(o, res.getProperties());
 	}
 
-	public TransformHelper getHelper() {
+	public SecurityTransformHelper getHelper() {
 		return helper;
 	}
 
-	public void setHelper(TransformHelper helper) {
+	public void setHelper(SecurityTransformHelper helper) {
 		this.helper = helper;
 	}
 

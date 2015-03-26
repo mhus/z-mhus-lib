@@ -17,14 +17,14 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 	private Class<? extends Annotation>[] annotationMarker;
 	
 	public FunctionsStrategy() {
-		this(true,true, ".", false, null);
+		this(true,true, ".", false);
 	}
 	
 	public FunctionsStrategy(boolean actionsOnly) {
-		this(true,true, ".", actionsOnly, null);
+		this(true,true, ".", actionsOnly);
 	}
 	
-	public FunctionsStrategy(boolean embedded, boolean toLower, String embedGlue, boolean actionsOnly, Class<? extends Annotation>[] annotationMarker) {
+	public FunctionsStrategy(boolean embedded, boolean toLower, String embedGlue, boolean actionsOnly, Class<? extends Annotation> ... annotationMarker) {
 		this.embedded = embedded;
 		this.toLower = toLower;
 		this.embedGlue = embedGlue;
@@ -132,7 +132,7 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 	}
 	
 	private boolean isMarker(Method getter, Method setter) {
-		if (annotationMarker == null) return true;
+		if (annotationMarker == null || annotationMarker.length == 0) return true;
 		if (getter != null) {
 			for (Class<? extends Annotation> a :annotationMarker)
 				if (getter.isAnnotationPresent(a)) return true;

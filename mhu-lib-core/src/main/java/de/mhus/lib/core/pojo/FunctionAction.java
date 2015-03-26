@@ -3,6 +3,7 @@ package de.mhus.lib.core.pojo;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Set;
 
 public class FunctionAction implements PojoAction {
 
@@ -38,8 +39,18 @@ public class FunctionAction implements PojoAction {
 	
 	@Override
 	public Annotation getAnnotation(Class<? extends Annotation> annotationClass) {
+		
+		
 		Annotation out = action.getAnnotation(annotationClass);
-		return out;
+		if (out != null) return out;
+		
+		Set<Method> res = MethodAnalyser.getMethodsForMethod(clazz, action.getName());
+		for (Method m2 : res) {
+			out = m2.getAnnotation(annotationClass);
+			if (out != null) return out;
+		}
+		
+		return null;
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package de.mhus.lib.core.jms;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Queue;
-import javax.jms.Topic;
 
 public class JmsDestinationQueue extends JmsDestination {
 
@@ -17,6 +16,7 @@ public class JmsDestinationQueue extends JmsDestination {
 
 	@Override
 	public synchronized void open() throws JMSException {
+		if (isClosed()) throw new JMSException("destination closed");
 		if (destination == null || getSession() == null) {
 			con.open();
 			log().i("destination",name);
@@ -31,7 +31,7 @@ public class JmsDestinationQueue extends JmsDestination {
 	}
 
 	@Override
-	public void close() {
+	public void reset() {
 		destination = null;
 	}
 	

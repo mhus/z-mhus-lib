@@ -1,17 +1,14 @@
 package de.mhus.lib.core.jms;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
-import javax.jms.Session;
 import javax.jms.TemporaryQueue;
 
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimeInterval;
 
 public class ClientJms extends JmsBase implements MessageListener {
@@ -52,7 +49,7 @@ public class ClientJms extends JmsBase implements MessageListener {
 				synchronized (this) {
 					this.wait(10000);
 				}
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {log().t(e);}
 			
 			synchronized (responses) {
 				Message answer = responses.get(id);
@@ -76,6 +73,7 @@ public class ClientJms extends JmsBase implements MessageListener {
 
 	@Override
 	public synchronized void open() throws JMSException {
+		if (isClosed()) throw new JMSException("client closed");
 		if (producer == null || getSession() == null) {
 			dest.open();
 			log().i("open",dest);
@@ -84,6 +82,7 @@ public class ClientJms extends JmsBase implements MessageListener {
 	}
 	
 	protected synchronized void openAnswerQueue() throws JMSException {
+		if (isClosed()) throw new JMSException("client closed");
 		if (answerQueue == null || getSession() == null) {
 			open();
 	    	answerQueue = dest.getConnection().getSession().createTemporaryQueue();
@@ -103,19 +102,23 @@ public class ClientJms extends JmsBase implements MessageListener {
 			synchronized (this) {
 				this.notifyAll();
 			}
-		} catch (JMSException e) {
-		}
+		} catch (JMSException e) {log().t(e);}
 	}
 
 	@Override
-	public void close() {
-		log().i("close",dest);
+	public void reset() {
+		log().i("reset",dest);
 		try {
 			producer.close();
-		} catch (Throwable t) {}
+		} catch (Throwable t) {log().t(t);}
 		try {
 			responseConsumer.close();
-		} catch (Throwable t) {}
+		} catch (Throwable t) {log().t(t);}
+	}
+
+	@Override
+	public void doBeat() {
+		// nothing to do
 	}
 
 }

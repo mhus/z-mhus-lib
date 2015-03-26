@@ -16,6 +16,7 @@ public class JmsDestinationTopic extends JmsDestination {
 
 	@Override
 	public synchronized void open() throws JMSException {
+		if (isClosed()) throw new JMSException("destination closed");
 		if (destination == null || getSession() == null) {
 			con.open();
 			log().i("destination",name);
@@ -30,7 +31,7 @@ public class JmsDestinationTopic extends JmsDestination {
 	}
 	
 	@Override
-	public void close() {
+	public void reset() {
 		destination = null;
 	}
 
