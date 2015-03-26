@@ -21,7 +21,7 @@
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib</artifactId>
-    <version>3.2.8-SNAPSHOT</version>
+    <version>3.2.8</version>
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with usefull tools to rapide develop a application</description>

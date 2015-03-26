@@ -25,12 +25,12 @@
     <parent>
         <artifactId>mhu-lib</artifactId>
         <groupId>de.mhus.lib</groupId>
-        <version>3.2.8-SNAPSHOT</version>
+        <version>3.2.8</version>
     </parent>
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib-annotations</artifactId>
-    <version>3.2.8-SNAPSHOT</version>
+    <version>3.2.8</version>
     <packaging>bundle</packaging>
 
     <name>mhu-lib-annotations</name>
