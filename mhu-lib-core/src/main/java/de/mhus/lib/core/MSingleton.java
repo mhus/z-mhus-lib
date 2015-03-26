@@ -50,9 +50,10 @@ public class MSingleton {
 	}
 
 	public static boolean isTrace(String name) {
-		if (isDirtyTrace()) System.out.println("--- Ask for trace: " + name);
-		String value = System.getProperty(name+".trace");
-		if (value != null) return "true".equals(value);
+		if (isDirtyTrace()) 
+			System.out.println("--- Ask for trace: " + name);
+//		String value = System.getProperty(name+".trace");
+//		if (value != null) return "true".equals(value);
 		return get().isTrace(name);
 	}
 		

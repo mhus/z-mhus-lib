@@ -4,6 +4,8 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -16,6 +18,24 @@ public class MProperties extends IProperties implements Externalizable {
 	
 	public MProperties() {
 		this(new Properties());
+	}
+	
+	public MProperties(String ... values) {
+		this(new Properties());
+		if (values != null) {
+			for (int i = 0; i < values.length; i+=2) {
+				if (i+1 < values.length)
+					setString(values[i], values[i+1]);
+			}
+		}
+	}
+	
+	public MProperties(Dictionary<String, ?> config) {
+		this.properties = new Properties();
+		for (Enumeration<String> enu = config.keys(); enu.hasMoreElements();) {
+			String next = enu.nextElement();
+			this.properties.put(next, config.get(next));
+		}
 	}
 	
 	public MProperties(Map<String, Object> in) {

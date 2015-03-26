@@ -1,9 +1,11 @@
 package de.mhus.lib.mutable;
 
 import java.io.File;
+import java.util.Dictionary;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.ActivatorImpl;
@@ -27,6 +29,11 @@ import de.mhus.lib.logging.JavaLoggerFactory;
  */
 public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
+	private static final String CONFIG_FULL_TRACE = "log.full.trace";
+	private static final String CONFIG_TRACE = "log.trace.";
+	private static final String CONFIG_DIRTY_TRACE = "log.dirty.trace";
+	private static final String CONFIG_FILE_NAME = "config.file.name";
+	
 	private JavaLoggerFactory logFactory;
 	private File baseDir;
 	private IConfig config;
@@ -34,6 +41,8 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	private ConfigProvider configProvider;
 	private boolean fullTrace = false;
 	private HashSet<String> logTrace = new HashSet<>();
+
+	private String configFileName = "mhus-config.xml";
 
 	@Override
 	public Log createLog(Object owner) {
@@ -44,32 +53,37 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 		if (owner instanceof Class) {
 			name = ((Class<?>)owner).getName();
 		} else
-			name = String.valueOf(owner);
+			name = owner.getClass().getName();
+//			name = String.valueOf(owner);
 		return logFactory.getInstance(name);
 	}
 
-	public synchronized IConfig getConfig() { //TODO load from service
-		if (config == null) {
-			String configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, "etc/mhus-config.xml");
-			File file = new File(baseDir,configFile);
-			if (MSingleton.isDirtyTrace())
-				System.out.println("--- Try to load mhus config from " + file.getAbsolutePath());
-			if (file.exists() && file.isFile())
-				try {
-					config = new XmlConfigFile(file);
-				} catch (Exception e) {
-					if (fullTrace)
-						e.printStackTrace();
-				}
-			if (config == null)
-				config = new HashConfig();
+	public IConfig getConfig() { //TODO load from service
+		synchronized (this) {
+			if (config == null) {
+				String configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, configFileName );
+				File file = new File(baseDir,configFile);
+				if (MSingleton.isDirtyTrace())
+					System.out.println("--- Try to load mhus config from " + file.getAbsolutePath());
+				if (file.exists() && file.isFile())
+					try {
+						config = new XmlConfigFile(file);
+					} catch (Exception e) {
+						if (fullTrace)
+							e.printStackTrace();
+					}
+				if (config == null)
+					config = new HashConfig();
+			}
+			return config;
 		}
-		return config;
 	}
 	
 	public void reloadConfig() {
-		config = null;
-		getConfig();
+		synchronized (this) {
+			config = null;
+			getConfig();
+		}
 	}
 
 	@Override
@@ -129,6 +143,22 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	public boolean isFullTrace() {
 		return fullTrace;
+	}
+
+	public void updateOsgiConfig(Dictionary<String, ?> config) {
+		synchronized (this) {
+			MProperties p = new MProperties(config);
+			setFullTrace(p.getBoolean(CONFIG_FULL_TRACE, isFullTrace()));
+			MSingleton.setDirtyTrace(p.getBoolean(CONFIG_DIRTY_TRACE, isFullTrace()));
+			clearTrace();
+			for (String name : p.keys()) {
+				if (name.startsWith(CONFIG_TRACE) && p.getBoolean(name, false)) {
+					setTrace(name.substring(CONFIG_TRACE.length()+1));
+				}
+			}
+			configFileName = p.getString(CONFIG_FILE_NAME,configFileName);
+			reloadConfig();
+		}
 	}
 	
 }

@@ -54,6 +54,7 @@
         <felix.metatype.version>1.0.10</felix.metatype.version>
 		<compileSource>1.7</compileSource>
 		<osgi.version>5.0.0</osgi.version>
+		<activemq.version>5.7.0</activemq.version>
       </properties>
 
    <build>
@@ -95,7 +96,8 @@
       <module>mhu-lib-liferay</module>
       <module>mhu-lib-framework</module>
       <module>mhu-lib-karaf</module>
-  </modules>
+      <module>mhu-lib-jms</module>
+    </modules>
 
   <repositories>
 	<repository>

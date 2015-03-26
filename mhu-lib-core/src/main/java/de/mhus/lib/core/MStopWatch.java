@@ -42,12 +42,13 @@ public class MStopWatch extends MJmx {
 		this.name = name;
 	}
 	
-	public void start() {
+	public MStopWatch start() {
 		if (start == 0)
 			start = System.currentTimeMillis();
+		return this;
 	}
 
-	public void stop() {
+	public MStopWatch stop() {
 		if (start != 0 && stop == 0) {
 			stop = System.currentTimeMillis();
 			
@@ -63,6 +64,7 @@ public class MStopWatch extends MJmx {
 //			}
 			
 		}
+		return this;
 	}
 
 	public long getCurrentTime() {
@@ -73,9 +75,10 @@ public class MStopWatch extends MJmx {
 		return stop - start;
 	}
 
-	public void reset() {
+	public MStopWatch reset() {
 		start = 0;
 		stop = 0;
+		return this;
 	}
 
 	public int getStatus() {
@@ -147,6 +150,7 @@ public class MStopWatch extends MJmx {
 		return name;
 	}
 	
+	@Override
 	public String toString() {
 		return name + "=" + getCurrentTimeAsString() + "@MStopWatch";
 	}

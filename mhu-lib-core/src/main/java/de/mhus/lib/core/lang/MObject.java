@@ -1,13 +1,17 @@
 package de.mhus.lib.core.lang;
 
+import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 
 public class MObject extends MLog {
 	
+	@Hidden
 	private Base base;
+	@Hidden
 	private Base originalBase;
+	@Hidden
 	private Base oldBase;
 
 	public MObject() {
@@ -28,7 +32,9 @@ public class MObject extends MLog {
 //			initBase();
 			return base.base(ifc);
 		} catch (Exception e) {
-			return null; // problematic point, can't log in this moment
+			if (MSingleton.isDirtyTrace())
+				e.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -37,7 +43,9 @@ public class MObject extends MLog {
 //			initBase();
 			return base.isBase(ifc);
 		} catch (Exception e) {
-			return false; // problematic point, can't log in this moment
+			if (MSingleton.isDirtyTrace())
+				e.printStackTrace();
+			return false;
 		}
 	}
 	

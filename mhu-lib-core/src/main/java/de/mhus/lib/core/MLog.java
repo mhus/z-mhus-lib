@@ -1,5 +1,6 @@
 package de.mhus.lib.core;
 
+import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.core.logging.Log;
 
 /**
@@ -11,6 +12,7 @@ import de.mhus.lib.core.logging.Log;
  */
 public class MLog {
 	
+	@Hidden
 	private Log log;
 	
 	protected synchronized Log log() {
