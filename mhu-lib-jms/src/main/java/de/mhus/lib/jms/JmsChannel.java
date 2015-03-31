@@ -45,4 +45,7 @@ public abstract class JmsChannel extends JmsObject {
 	public abstract void doBeat();
 	public abstract String getName();
 
+	public void checkConnection() {
+	}
+
 }

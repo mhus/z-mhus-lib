@@ -62,32 +62,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 
 	@Override
 	public synchronized void reset() {
-		JmsConnection con = JmsUtil.getConnection(connectionName);
-		if (channel == null) {
-			if (MString.isSet(implementation)) {
-				try {
-					Class<?> clazz = FrameworkUtil.getBundle(JmsDataChannel.class).loadClass(implementation);
-					Object o = clazz.newInstance();
-					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
-					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
-					channel = new ServerJsonService(dest, descriptor);
-				} catch (Throwable e) {
-					log().w(e);
-				}
-			} else
-			if (MString.isSet(ifc)) {
-				try {
-					Object o = Class.forName(ifc);
-					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
-					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
-					channel = new ClientJsonService<Object>(dest, descriptor);
-				} catch (Throwable e) {
-					log().w(e);
-				}
-			}
-		}
-		if (channel != null)
-			channel.getDestination().setConnection(con);
+		reset(JmsUtil.getService());
 	}
 
 	public String getImplementation() {
@@ -138,6 +113,39 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		if (channel instanceof JmsChannelService)
 			return ((JmsChannelService)channel).getInterface();
 		throw new NotSupportedException("channel is not a service",name);
+	}
+
+	@Override
+	public void reset(JmsManagerService service) {
+		JmsConnection con = service.getConnection(connectionName);
+		
+		if (channel == null) {
+			if (MString.isSet(implementation)) {
+				try {
+					Class<?> clazz = FrameworkUtil.getBundle(JmsDataChannel.class).loadClass(implementation);
+					Object o = clazz.newInstance();
+					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
+					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
+					channel = new ServerJsonService(dest, descriptor);
+				} catch (Throwable e) {
+					log().w(e);
+				}
+			} else
+			if (MString.isSet(ifc)) {
+				try {
+					Object o = Class.forName(ifc);
+					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
+					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
+					channel = new ClientJsonService<Object>(dest, descriptor);
+				} catch (Throwable e) {
+					log().w(e);
+				}
+			}
+		}
+		if (channel != null) {
+			channel.getDestination().setConnection(con);
+			channel.checkConnection();
+		}
 	}
 	
 }

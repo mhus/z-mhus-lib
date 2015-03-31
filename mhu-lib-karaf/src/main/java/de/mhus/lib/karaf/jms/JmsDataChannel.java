@@ -5,6 +5,7 @@ import de.mhus.lib.jms.JmsChannel;
 public interface JmsDataChannel {
 
 	void reset();
+	void reset(JmsManagerService service);
 	JmsChannel getChannel();
 	String getName();
 	String getConnectionName();

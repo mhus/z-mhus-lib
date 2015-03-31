@@ -91,14 +91,14 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		synchronized (channels) {
 			channels.put(channel.getName(), channel);
 		}
-		channel.reset();
+		channel.reset(this);
 	}
 
 	public void resetChannels() {
 		synchronized (channels) {
 			for (JmsDataChannel channel : channels.values())
 				try {
-					channel.reset();
+					channel.reset(this);
 				} catch (Throwable t) {
 					log().t(channel.getName(),t);
 				}

@@ -99,4 +99,13 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		return !(consumer == null || getSession() == null);
 	}
 
+	@Override
+	public void checkConnection() {
+		try {
+			open();
+		} catch (JMSException e) {
+			log().t(e);
+		}
+	}
+
 }
