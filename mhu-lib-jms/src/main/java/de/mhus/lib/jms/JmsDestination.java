@@ -30,6 +30,11 @@ public class JmsDestination extends JmsObject {
 		if (MSystem.equals(this.con, con)) return this;
 		this.con = con;
 		reset();
+		try {
+			open();
+		} catch (JMSException e) {
+			log().t(e);
+		}
 		return this;
 	}
 	

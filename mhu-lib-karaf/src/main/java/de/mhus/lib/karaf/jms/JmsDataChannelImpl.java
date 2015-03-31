@@ -127,7 +127,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		if (channel == null) reset();
 		if (channel == null) throw new NotFoundException("channel is null",name);
 		if (channel instanceof JmsChannelService)
-			return ((JmsChannelService)channel).getObject(ifc);
+			return ((JmsChannelService)channel).getObject();
 		throw new NotSupportedException("channel is not a service",name);
 	}
 
