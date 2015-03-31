@@ -3,10 +3,12 @@ package de.mhus.lib.jms;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,6 +58,7 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 
 	private class MyInvocationHandler implements InvocationHandler {
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args)
 				throws Throwable {
@@ -89,11 +92,21 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 				try {
 					Message[] answers = sendJmsBroadcast(msg);
 					
-					LinkedList<Message> out = new LinkedList<>();
+					LinkedList<Object> out = new LinkedList<>();
 					
 					for (Message answer : answers) {
 						if (answer.getStringProperty("exception") == null) {
-							out.add(answer);
+							if (answer.propertyExists("direct") && answer.getBooleanProperty("direct")) {
+								out.add(answer);
+							} else
+							if (answer instanceof ObjectMessage) {
+								Serializable answerObj = ((ObjectMessage)answer).getObject();
+								if (answerObj instanceof Collection) {
+									for (Object colItem : (Collection)answerObj)
+										out.add(colItem);
+								} else
+									out.add(answerObj);
+							}
 						}
 					}
 					
@@ -174,8 +187,8 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <I> I getObject(Class<? extends I> ifc) {
-		return (I)getClientProxy();
+	public T getObject() {
+		return (T)getClientProxy();
 	}
 		
 	public void sendJsonOneWay(IProperties prop, JsonNode json) throws JMSException, IOException {

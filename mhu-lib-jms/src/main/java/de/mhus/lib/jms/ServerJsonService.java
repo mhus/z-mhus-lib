@@ -5,7 +5,7 @@ import javax.jms.Message;
 
 import de.mhus.lib.core.IProperties;
 
-public class ServerJsonService extends ServerJsonObject implements JmsChannelService {
+public class ServerJsonService<T> extends ServerJsonObject implements JmsChannelService {
 
 	private ServiceDescriptor service;
 
@@ -57,8 +57,8 @@ public class ServerJsonService extends ServerJsonObject implements JmsChannelSer
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <I> I getObject(Class<? extends I> ifc) {
-		return (I)service.getObject();
+	public T getObject() {
+		return (T)service.getObject();
 	}
 
 }

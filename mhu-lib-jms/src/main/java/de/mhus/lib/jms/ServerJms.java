@@ -65,9 +65,12 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	public void onMessage(Message message) {
 		try {
 			if (message.getJMSReplyTo() != null) {
+				log().t("received",message);
 				Message answer = received(message);
+				log().t("receivedAnswer",message);
 				sendAnswer(message, answer);
 			} else {
+				log().t("receivedOneWay",message);
 				receivedOneWay(message);
 			}
 		} catch (Throwable t) {
@@ -78,6 +81,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	@Override
 	public void doBeat() {
 		if (isClosed()) return;
+		log().t("beat");
 		try {
 			open(); // try to reopen and re-listen
 		} catch (JMSException e) {

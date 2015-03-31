@@ -16,7 +16,7 @@ import org.codehaus.jackson.JsonNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 
-public class ServerService extends ServerJms implements JmsChannelService {
+public class ServerService<T> extends ServerJms implements JmsChannelService {
 
 	private ServiceDescriptor service;
 
@@ -131,6 +131,7 @@ public class ServerService extends ServerJms implements JmsChannelService {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Class<?> getInterface() {
 		return service.getInterface();
@@ -138,8 +139,8 @@ public class ServerService extends ServerJms implements JmsChannelService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <I> I getObject(Class<? extends I> ifc) {
-		return (I)service.getObject();
+	public T getObject() {
+		return (T)service.getObject();
 	}
 
 }

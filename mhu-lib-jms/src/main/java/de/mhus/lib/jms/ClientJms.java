@@ -34,6 +34,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	public void sendJmsOneWay(Message msg) throws JMSException {
 		open();
 		msg.setJMSMessageID(createMessageId());
+		log().t("sendJmsOneWay",msg);
 		producer.send(msg);
 	}
 	
@@ -47,6 +48,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
 		try {
+			log().t("sendJms",msg);
 			producer.send(msg);
 	
 			long start = System.currentTimeMillis();
@@ -61,6 +63,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					Message answer = responses.get(id);
 					if (answer != null) {
 						responses.remove(id);
+						log().t("sendJmsAnswer",answer);
 						return answer;
 					}
 				}
@@ -103,6 +106,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
 		try {
+			log().t("sendJmsBroadcast",msg);
 			producer.send(msg);
 	
 			long start = System.currentTimeMillis();
@@ -127,6 +131,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					break;
 			}
 			
+			log().t("sendJmsBroadcastAnswer",res);
 			return res.toArray(new Message[res.size()]);
 		} finally {
 			removeAllowedId(id);

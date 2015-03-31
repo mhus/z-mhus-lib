@@ -177,7 +177,7 @@ public abstract class Log {
      * This is the local trace method. The trace will only written if the local trace is switched on.
      */
     public void t(Object ... msg) {
-    	if (!isTrace()) return;
+    	if (!isTraceEnabled()) return;
     	StringBuffer sb = new StringBuffer();
     	prepare(sb);
     	Throwable error = null;

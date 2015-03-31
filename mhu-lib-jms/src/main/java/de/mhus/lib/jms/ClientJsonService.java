@@ -121,8 +121,8 @@ public class ClientJsonService<T> extends ClientJsonObject implements JmsChannel
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <I> I getObject(Class<? extends I> ifc) {
-		return (I)getClientProxy();
+	public T getObject() {
+		return (T)getClientProxy();
 	}
 	
 }

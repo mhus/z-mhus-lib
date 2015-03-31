@@ -212,7 +212,7 @@ public class ConsoleFactory extends LogFactory {
 	
 		@Override
 		public void trace(Object message, Throwable t) {
-			if (!isTrace()) return;
+			if (!isTraceEnabled()) return;
 			out.println(printTime() + "TRACE: " + name + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
