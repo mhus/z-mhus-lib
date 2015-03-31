@@ -53,9 +53,9 @@ public class DemoJsonServiceSender {
 
 		DummyService service = client.getClientProxy();
 		
-//		service.dummyOneWay(new Dummy());
-//		service.dummySimple(new Dummy());
-//		service.dummyResult(new Dummy());
+		service.dummyOneWay(new Dummy());
+		service.dummySimple(new Dummy());
+		service.dummyResult(new Dummy());
 		try {
 			service.dummyException();
 		} catch (IOException e) {

@@ -11,5 +11,11 @@ public interface JmsManagerService {
 	String[] listConnections();
 	JmsConnection getConnection(String name);
 	void removeConnection(String name);
-	
+	String[] listChannels();
+	JmsDataChannel getChannel(String name);
+	void addChannel(JmsDataChannel channel);
+	void removeChannel(String name);
+	<I> I getObjectForInterface(Class<? extends I> ifc);
+	void resetChannels();
+
 }

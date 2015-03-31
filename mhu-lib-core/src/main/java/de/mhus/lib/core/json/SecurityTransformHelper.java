@@ -43,13 +43,13 @@ public class SecurityTransformHelper extends TransformHelper {
 	}
 
 	@Override
-	public Object createObject(JsonNode from) throws IllegalAccessException {
+	public Class<?> getType(JsonNode from) throws IllegalAccessException {
 		JsonNode cNameNode = from.get("_class");
 		if (cNameNode == null) return null;
 		String cName = cNameNode.getTextValue();
 		if (!checkSecurityForClass(cName))
 			throw new IllegalAccessException(cName);
-		return super.createObject(from);
+		return super.getType(from);
 	}
 	
 	public boolean checkSecurityForClass(String type) {

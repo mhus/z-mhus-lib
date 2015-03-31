@@ -9,10 +9,7 @@ import javax.jws.WebService;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.pojo.AnnotationFilter;
-import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.FunctionsOnlyStrategy;
-import de.mhus.lib.core.pojo.FunctionsStrategy;
 import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
@@ -34,6 +31,11 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 		
 	}
 	
+	@Override
+	public Object getObject() {
+		return service;
+	}
+
 	private static Class<?> findIfc(Object service) {
 		// TODO traverse thru all ifcs
 		Class<?> c = service instanceof Class ? (Class)service : service.getClass();
@@ -52,6 +54,8 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 			this.act = act;
 //			oneWay = act.getAnnotation(Oneway.class) != null || act.getReturnType() == null;
 			oneWay = act.getAnnotation(Oneway.class) != null;
+			returnType = act.getReturnType();
+			if (returnType == null) returnType = Void.class;
 		}
 
 		@Override

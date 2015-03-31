@@ -1,9 +1,8 @@
 package de.mhus.lib.jms;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MThread;
 
-public class ServerJsonService extends ServerJsonObject {
+public class ServerJsonService extends ServerJsonObject implements JmsChannelService {
 
 	private ServiceDescriptor service;
 
@@ -46,6 +45,17 @@ public class ServerJsonService extends ServerJsonObject {
 			return null;
 		}
 		return function.doExecute(properties, obj);
+	}
+
+	@Override
+	public Class<?> getInterface() {
+		return service.getInterface();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <I> I getObject(Class<? extends I> ifc) {
+		return (I)service.getObject();
 	}
 
 }

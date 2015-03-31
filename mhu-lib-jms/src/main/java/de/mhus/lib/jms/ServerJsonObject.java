@@ -28,7 +28,7 @@ public abstract class ServerJsonObject extends ServerJson {
 			LinkedList<Object> out = new LinkedList<>();
 			if (array != null) {
 				for (JsonNode item : array) {
-					Object to = MJson.jsonToPojo(item, null, helper);
+					Object to = MJson.jsonToPojo((ObjectNode) item, helper);
 					out.add(to);
 				}
 			}
@@ -41,19 +41,21 @@ public abstract class ServerJsonObject extends ServerJson {
 	@Override
 	public RequestResult<JsonNode> received(IProperties properties, JsonNode node) {
 		try {
-			JsonNode array = node.get("array");
-			LinkedList<Object> out = new LinkedList<>();
-			if (array != null) {
-				for (JsonNode item : array) {
-					Object to = MJson.jsonToPojo(item, null, helper);
-					out.add(to);
-				}
-			}
-			RequestResult<Object> res = received(properties, out.toArray(new Object[out.size()]));
+//			JsonNode array = node.get("array");
+//			LinkedList<Object> out = new LinkedList<>();
+//			if (array != null) {
+//				for (JsonNode item : array) {
+//					Object to = MJson.jsonToPojo((ObjectNode) item, helper);
+//					out.add(to);
+//				}
+//			}
+//			RequestResult<Object> res = received(properties, out.toArray(new Object[out.size()]));
+			Object[] attr = (Object[]) MJson.jsonToPojo(node, helper);
+			
+			RequestResult<Object> res = received(properties, attr);
 			if (res == null) return null;
 			
-			ObjectNode to = MJson.createObjectNode();
-			MJson.pojoToJson(res.getResult(), to, helper);
+			JsonNode to = MJson.pojoToJson(res.getResult(), helper);
 			
 			return new RequestResult<JsonNode>(to, res.getProperties());
 		} catch (Throwable t) {

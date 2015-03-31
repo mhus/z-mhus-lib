@@ -21,4 +21,8 @@ public class ServiceDescriptor extends MLog {
 		return ifc;
 	}
 
+	public Object getObject() {
+		return null;
+	}
+
 }

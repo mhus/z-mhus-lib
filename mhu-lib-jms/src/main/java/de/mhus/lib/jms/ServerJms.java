@@ -8,7 +8,7 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 
 
-public abstract class ServerJms extends JmsBase implements MessageListener {
+public abstract class ServerJms extends JmsChannel implements MessageListener {
 
     public ServerJms(JmsDestination dest) {
 		super(dest);
@@ -23,6 +23,7 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 		if (isClosed()) throw new JMSException("server closed");
 		if (consumer == null || getSession() == null) {
 			dest.open();
+			dest.getConnection().registerChannel(this);
 			log().i("consume",dest);
             consumer = dest.getConnection().getSession().createConsumer(dest.getDestination());
             consumer.setMessageListener(this);
@@ -82,6 +83,16 @@ public abstract class ServerJms extends JmsBase implements MessageListener {
 		} catch (JMSException e) {
 			log().t(e);
 		}
+	}
+
+	@Override
+	public String getName() {
+		return "openwire:/server" + dest.getName();
+	}
+
+	@Override
+	public boolean isConnected() {
+		return !(consumer == null || getSession() == null);
 	}
 
 }

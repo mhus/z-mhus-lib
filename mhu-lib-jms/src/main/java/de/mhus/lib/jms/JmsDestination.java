@@ -4,19 +4,76 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-public abstract class JmsDestination extends JmsObject {
+import de.mhus.lib.core.MSystem;
+
+public class JmsDestination extends JmsObject {
 
 	protected JmsConnection con;
+	private String destination;
+	private boolean destinantionTopic;
+	private Destination jmsDestination;
 
-	public abstract Destination getDestination() throws JMSException;
+	public JmsDestination(String destination, boolean destinationTopic) {
+		this.destination = destination;
+		this.destinantionTopic = destinationTopic;
+	}
+	
+	public Destination getDestination() throws JMSException {
+		return jmsDestination;
+	}
 	
 	public JmsConnection getConnection() {
 		return con;
 	}
 
+	public JmsDestination setConnection(JmsConnection con) {
+		if (MSystem.equals(this.con, con)) return this;
+		this.con = con;
+		reset();
+		return this;
+	}
+	
 	@Override
 	public Session getSession() {
+		if (con == null) return null;
 		return con.getSession();
+	}
+
+	@Override
+	public synchronized void open() throws JMSException {
+		if (isClosed()) throw new JMSException("destination closed");
+		if (con == null) return;
+		if (jmsDestination == null || getSession() == null) {
+			con.open();
+			log().i("destination",destination);
+			if (destinantionTopic)
+	            jmsDestination = getSession().createTopic(destination);
+			else
+	            jmsDestination = getSession().createQueue(destination);
+		}
+	}
+
+	public String getName() {
+		return (destinantionTopic ? "/topic/" : "/queue/") + destination;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	@Override
+	public void reset() {
+		jmsDestination = null;
+	}
+
+	public boolean isTopic() {
+		return destinantionTopic;
+	}
+
+	@Override
+	public boolean isConnected() {
+		return jmsDestination != null;
 	}
 
 }

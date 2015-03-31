@@ -1,6 +1,8 @@
 package de.mhus.lib.jms;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -11,7 +13,7 @@ import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MTimeInterval;
 
-public class ClientJms extends JmsBase implements MessageListener {
+public class ClientJms extends JmsChannel implements MessageListener {
 
 
 	private MessageProducer producer;
@@ -20,8 +22,10 @@ public class ClientJms extends JmsBase implements MessageListener {
 	private MessageConsumer responseConsumer;
 	
 	private HashMap<String, Message> responses = null;
+	private HashSet<String> allowedIds = new HashSet<>();
 	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
 	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+	private long broadcastTimeout = 100;
 	
 	public ClientJms(JmsDestination dest) {
 		super(dest);
@@ -41,36 +45,94 @@ public class ClientJms extends JmsBase implements MessageListener {
 		openAnswerQueue();
 		msg.setJMSReplyTo(answerQueue);
 		msg.setJMSCorrelationID(id);
-		producer.send(msg);
-
-		long start = System.currentTimeMillis();
-		while (true) {
-			try {
-				synchronized (this) {
-					this.wait(10000);
+		addAllowedId(id);
+		try {
+			producer.send(msg);
+	
+			long start = System.currentTimeMillis();
+			while (true) {
+				try {
+					synchronized (this) {
+						this.wait(10000);
+					}
+				} catch (InterruptedException e) {log().t(e);}
+				
+				synchronized (responses) {
+					Message answer = responses.get(id);
+					if (answer != null) {
+						responses.remove(id);
+						return answer;
+					}
 				}
-			} catch (InterruptedException e) {log().t(e);}
-			
-			synchronized (responses) {
-				Message answer = responses.get(id);
-				if (answer != null) {
-					responses.remove(id);
-					return answer;
+				
+				long delta = System.currentTimeMillis() - start;
+				if (delta > warnTimeout )
+					log().w("long time waiting", delta);
+				
+				if (delta > timeout ) {
+					log().w("timeout", delta);
+					throw new JMSException("answer timeout");
 				}
 			}
-			
-			long delta = System.currentTimeMillis() - start;
-			if (delta > warnTimeout )
-				log().w("long time waiting", delta);
-			
-			if (delta > timeout ) {
-				log().w("timeout", delta);
-				throw new JMSException("answer timeout");
-			}
+		} finally {
+			removeAllowedId(id);
 		}
-		
 	}
 
+	protected void addAllowedId(String id) {
+		synchronized (responses) {
+			responses.remove(id);
+			allowedIds.add(id);
+		}
+	}
+
+	protected void removeAllowedId(String id) {
+		synchronized (responses) {
+			responses.remove(id);
+			allowedIds.remove(id);
+		}
+	}
+	
+	public Message[] sendJmsBroadcast(Message msg) throws JMSException {
+		open();
+		
+		String id = createMessageId();
+		msg.setJMSMessageID(id);
+		openAnswerQueue();
+		msg.setJMSReplyTo(answerQueue);
+		msg.setJMSCorrelationID(id);
+		addAllowedId(id);
+		try {
+			producer.send(msg);
+	
+			long start = System.currentTimeMillis();
+			LinkedList<Message> res = new LinkedList<>();
+			while (true) {
+				try {
+					synchronized (this) {
+						this.wait(1000);
+					}
+				} catch (InterruptedException e) {log().t(e);}
+				
+				synchronized (responses) {
+					Message answer = responses.get(id);
+					if (answer != null) {
+						responses.remove(id);
+						res.add(answer);
+					}
+				}
+				
+				long delta = System.currentTimeMillis() - start;
+				if (delta > broadcastTimeout )
+					break;
+			}
+			
+			return res.toArray(new Message[res.size()]);
+		} finally {
+			removeAllowedId(id);
+		}
+	}
+	
 	@Override
 	public synchronized void open() throws JMSException {
 		if (isClosed()) throw new JMSException("client closed");
@@ -97,7 +159,9 @@ public class ClientJms extends JmsBase implements MessageListener {
         if (message == null) return;
 		try {
 			synchronized (responses) {
-				responses.put(message.getJMSCorrelationID(),message);
+				String id = message.getJMSCorrelationID();
+				if (!allowedIds.contains(id)) return;
+				responses.put(id,message);
 			}
 			synchronized (this) {
 				this.notifyAll();
@@ -119,6 +183,24 @@ public class ClientJms extends JmsBase implements MessageListener {
 	@Override
 	public void doBeat() {
 		// nothing to do
+	}
+
+	@Override
+	public String getName() {
+		return "openwire:/client" + dest.getName();
+	}
+
+	public long getBroadcastTimeout() {
+		return broadcastTimeout;
+	}
+
+	public void setBroadcastTimeout(long broadcastTimeout) {
+		this.broadcastTimeout = broadcastTimeout;
+	}
+
+	@Override
+	public boolean isConnected() {
+		return !(producer == null || getSession() == null);
 	}
 
 }

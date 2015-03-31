@@ -4,6 +4,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 public class JmsUtil {
@@ -21,6 +23,26 @@ public class JmsUtil {
 		JmsManagerService service = getService();
 		if (service == null) return null;
 		return service.getConnection(name);
+	}
+	
+	public static JmsDataChannel getChannel(String name) {
+		JmsManagerService service = getService();
+		if (service == null) return null;
+		return service.getChannel(name);
+	}
+	
+	public static <I> I getObjectForInterface(Class<? extends I> ifc) {
+		JmsManagerService service = getService();
+		if (service == null) throw new NotFoundException("service not found");
+		return service.getObjectForInterface(ifc);
+	}
+	
+	public static <I> I getObjectForInterface(String channel, Class<? extends I> ifc) {
+		
+		JmsDataChannel c = getChannel(channel);
+		if (c == null) throw new NotFoundException("channel not found",channel);
+		
+		return c.getObject(ifc);
 	}
 	
 }

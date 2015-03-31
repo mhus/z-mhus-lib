@@ -109,6 +109,31 @@
             </action>
         </command>
 
+        <command name="jms/channel-add">
+            <action class="de.mhus.lib.karaf.jms.CmdChannelAdd">
+            </action>
+        </command>
+        <command name="jms/channel-list">
+            <action class="de.mhus.lib.karaf.jms.CmdChannelList">
+            </action>
+        </command>
+        <command name="jms/channel-remove">
+            <action class="de.mhus.lib.karaf.jms.CmdChannelRemove">
+            </action>
+        </command>
+        <command name="jms/channel-reset">
+            <action class="de.mhus.lib.karaf.jms.CmdChannelReset">
+            </action>
+        </command>
+        <command name="jms/channel-beat">
+            <action class="de.mhus.lib.karaf.jms.CmdChannelBeat">
+            </action>
+        </command>
+
+        <command name="jms/ping">
+            <action class="de.mhus.lib.karaf.jms.CmdPing">
+            </action>
+        </command>
         
     </command-bundle>
 

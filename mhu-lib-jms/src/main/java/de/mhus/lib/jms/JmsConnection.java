@@ -16,7 +16,7 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	private Connection connection;
 	private ActiveMQConnectionFactory connectionFactory;
 	private Session session;
-	private WeakHashMap<JmsBase, JmsBase> baseRegistry = new WeakHashMap<>();
+	private WeakHashMap<JmsChannel, JmsChannel> channelRegistry = new WeakHashMap<>();
 
 	private String url;
 
@@ -39,16 +39,16 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
             connection.setExceptionListener(this);
             session = connection.createSession(NON_TRANSACTED, Session.AUTO_ACKNOWLEDGE);
             
-            doBaseBeat();
+            doChannelBeat();
 		}
 	}
 	
 	public JmsDestination createTopic(String name) throws JMSException {
-        return new JmsDestinationTopic(this,name);
+        return new JmsDestination(name, true).setConnection(this);
 	}
 
 	public JmsDestination createQueue(String name) throws JMSException {
-        return new JmsDestinationQueue(this,name);
+        return new JmsDestination(name, false).setConnection(this);
 	}
 	
 	@Override
@@ -72,31 +72,24 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	@Override
 	public void onException(JMSException exception) {
 		log().w("kill connection",connection,exception);
-		try {
-			session.close();
-		} catch (Throwable t) {log().t(t);}
-		try {
-			connection.close();
-		} catch (Throwable t) {log().t(t);}
-		connection = null;
-		session = null;
+		reset();
 	}
 	
-	public void registerBase(JmsBase base) {
-		synchronized (baseRegistry) {
-			baseRegistry.put(base, base);
+	public void registerChannel(JmsChannel base) {
+		synchronized (channelRegistry) {
+			channelRegistry.put(base, base);
 		}
 	}
 	
-	public void unregisterBase(JmsBase base) {
-		synchronized (baseRegistry) {
-			baseRegistry.remove(base);
+	public void unregisterChannel(JmsChannel base) {
+		synchronized (channelRegistry) {
+			channelRegistry.remove(base);
 		}
 	}
 	
-	public void doBaseBeat() {
-		synchronized (baseRegistry) {
-			for (JmsBase base : baseRegistry.keySet())
+	public void doChannelBeat() {
+		synchronized (channelRegistry) {
+			for (JmsChannel base : channelRegistry.keySet())
 				try {
 					base.doBeat();
 				} catch (Throwable t) {
@@ -113,13 +106,14 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 		return user;
 	}
 
+	@Override
 	public boolean isConnected() {
 		return connection != null;
 	}
 
-	public JmsBase[] getListBases() {
-		synchronized (baseRegistry) {
-			return baseRegistry.keySet().toArray(new JmsBase[0]);
+	public JmsChannel[] getChannelList() {
+		synchronized (channelRegistry) {
+			return channelRegistry.keySet().toArray(new JmsChannel[0]);
 		}
 	}
 	

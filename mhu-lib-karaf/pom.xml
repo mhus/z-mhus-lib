@@ -58,6 +58,7 @@
                         	javax.jms.*;resolution:=optional,
                             *
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Service-Component>*</Service-Component>
                     </instructions>
                 </configuration>

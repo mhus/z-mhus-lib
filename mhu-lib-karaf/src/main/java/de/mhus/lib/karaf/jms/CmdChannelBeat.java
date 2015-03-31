@@ -1,16 +1,17 @@
 package de.mhus.lib.karaf.jms;
 
+import java.io.File;
+
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
 
-import de.mhus.lib.jms.JmsConnection;
+@Command(scope = "jms", name = "channel-remove", description = "Remove channel")
+public class CmdChannelBeat implements Action {
 
-@Command(scope = "jms", name = "connection-beat", description = "Remove connection")
-public class CmdConnectionBeat implements Action {
-
-	@Argument(index=0, name="name", required=true, description="ID of the connection", multiValued=false)
+	@Argument(index=0, name="name", required=true, description="ID of the channel", multiValued=false)
     String name;
 
 	@Override
@@ -22,15 +23,8 @@ public class CmdConnectionBeat implements Action {
 			return null;
 		}
 		
-		JmsConnection con = service.getConnection(name);
-		if (con == null) {
-			System.out.println("Connection not found");
-			return null;
-		}
+		service.getChannel(name).getChannel().doBeat();
 		
-		con.doChannelBeat();
-		System.out.println("OK");
-
 		return null;
 	}
 

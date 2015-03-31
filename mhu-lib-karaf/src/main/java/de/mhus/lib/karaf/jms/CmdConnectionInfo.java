@@ -6,7 +6,7 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.jms.JmsBase;
+import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 @Command(scope = "jms", name = "connection-info", description = "Connection Information")
@@ -32,7 +32,7 @@ public class CmdConnectionInfo implements Action {
 		
 		ConsoleTable table = new ConsoleTable();
 		table.setHeaderValues("Queue","Type");
-		for (JmsBase base : con.getListBases()) {
+		for (JmsChannel base : con.getChannelList()) {
 			table.addRowValues(base.toString(),base.getClass().getSimpleName());
 		}
 		table.print(System.out);

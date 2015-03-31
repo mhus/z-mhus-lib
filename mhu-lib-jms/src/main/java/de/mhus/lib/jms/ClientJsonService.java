@@ -4,12 +4,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MRuntimeException;
 
-public class ClientJsonService<T> extends ClientJsonObject {
+public class ClientJsonService<T> extends ClientJsonObject implements JmsChannelService {
 
 	protected T proxy;
 	protected ServiceDescriptor desc;
@@ -51,13 +54,33 @@ public class ClientJsonService<T> extends ClientJsonObject {
 				throw new MRuntimeException("function not found", name);
 			}
 			
-			if (fDesc.isOneWay()) {
+			if (fDesc.isOneWay() || dest.isTopic() && fDesc.getReturnType() == Void.class) {
 				MProperties prop = new MProperties("function",name);
 				try {
-					sendObject(prop, args);
+					sendObjectOneWay(prop, args);
 				} catch (Exception e) {
 					log().w("internal error",desc.getInterface().getCanonicalName(),method.getName(),e);
 				}
+			} else
+			if (dest.isTopic() && fDesc.getReturnType() == List.class ) {
+				MProperties prop = new MProperties("function",name);
+				try {
+					RequestResult<Object>[] answers = sendObjectBroadcast(prop, args);
+					
+					LinkedList<Object> out = new LinkedList<>();
+					
+					for (RequestResult<Object> answer : answers) {
+						if (answer.getProperties().getString("exception") == null) {
+							List<?> answerList = (List<?>) answer.getResult();
+							out.addAll(answerList);
+						}
+					}
+					
+					return out;
+				} catch (Exception e) {
+					log().w("internal error",desc.getInterface().getCanonicalName(),method.getName(),e);
+				}
+
 			} else {
 				MProperties prop = new MProperties("function",name);
 				try {
@@ -89,6 +112,17 @@ public class ClientJsonService<T> extends ClientJsonObject {
 			return null;
 		}
 		
+	}
+
+	@Override
+	public Class<?> getInterface() {
+		return desc.getInterface();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <I> I getObject(Class<? extends I> ifc) {
+		return (I)getClientProxy();
 	}
 	
 }

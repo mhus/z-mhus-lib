@@ -28,4 +28,10 @@ public abstract class JmsObject extends MLog {
 
 	public abstract Session getSession();
 
+	public abstract boolean isConnected();
+	
+	public void reopen() {
+		closed = false;
+		reset();
+	}
 }
