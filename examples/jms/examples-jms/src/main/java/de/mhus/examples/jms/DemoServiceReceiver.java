@@ -13,10 +13,11 @@ import de.mhus.lib.jms.JmsDestination;
 import de.mhus.lib.jms.RequestResult;
 import de.mhus.lib.jms.ServerJsonObject;
 import de.mhus.lib.jms.ServerJsonService;
+import de.mhus.lib.jms.ServerService;
 import de.mhus.lib.jms.ServiceDescriptor;
 import de.mhus.lib.jms.WebServiceDescriptor;
 
-public class DemoJsonServiceReceiver {
+public class DemoServiceReceiver {
 
 
 	public static void main(String[] args) throws JMSException {
@@ -29,25 +30,9 @@ public class DemoJsonServiceReceiver {
 
 		DummyServiceImpl service = new DummyServiceImpl();
 		WebServiceDescriptor descriptor = new WebServiceDescriptor(service);
-		ServerJsonService server = new ServerJsonService(con.createQueue("mike"), descriptor) {
-			
-			public void receivedOneWay(IProperties properties, JsonNode node) {
-				System.out.println("--- JSON: " + properties + ":" + node);
-				super.receivedOneWay(properties, node);
-			}
-
-			public RequestResult<JsonNode> received(IProperties properties, JsonNode node) {
-				System.out.println("--- JSON: " + properties + ":" + node);
-				RequestResult<JsonNode> res = super.received(properties,node);
-				if (res == null)
-					System.out.println("--- RES: null");
-				else
-					System.out.println("--- RES: " + res.getProperties() + ":" + res.getResult());
-				return res;
-			}
-			
-		};
+		ServerService server = new ServerService(con.createQueue("mike"), descriptor);
 		
+		server.open();
 		
 		while(true) {
 			try {

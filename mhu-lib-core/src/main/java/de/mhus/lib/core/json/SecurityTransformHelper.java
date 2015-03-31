@@ -18,7 +18,6 @@ public class SecurityTransformHelper extends TransformHelper {
 	private LinkedList<Rule> rules = null;
 	
 	public SecurityTransformHelper(ClassLoader loader, Log log) {
-		setRememberClass(true);
 		this.log = log;
 		this.loader = loader;
 	}
@@ -43,13 +42,10 @@ public class SecurityTransformHelper extends TransformHelper {
 	}
 
 	@Override
-	public Class<?> getType(JsonNode from) throws IllegalAccessException {
-		JsonNode cNameNode = from.get("_class");
-		if (cNameNode == null) return null;
-		String cName = cNameNode.getTextValue();
+	public Class<?> getType(String cName) throws IllegalAccessException {
 		if (!checkSecurityForClass(cName))
 			throw new IllegalAccessException(cName);
-		return super.getType(from);
+		return super.getType(cName);
 	}
 	
 	public boolean checkSecurityForClass(String type) {

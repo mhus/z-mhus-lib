@@ -55,7 +55,7 @@ public class DemoJsonObjectReceiver {
 		
 		while(true) {
 			try {
-				con.doBaseBeat();
+				con.doChannelBeat();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}

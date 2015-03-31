@@ -12,14 +12,14 @@ import de.mhus.lib.core.MProperties;
 
 public class MJms {
 
-	public static void setProperties(IProperties prop, BytesMessage msg) throws JMSException {
+	public static void setProperties(IProperties prop, Message msg) throws JMSException {
 		if (prop == null || msg == null) return;
 		for (Entry<String, Object> item : prop) {
 			setProperty(item.getKey(),item.getValue(),msg);
 		}
 	}
 
-	public static void setProperty(String name, Object value, BytesMessage msg) throws JMSException {
+	public static void setProperty(String name, Object value, Message msg) throws JMSException {
 		if (name == null || value == null || msg == null) return;
 
 		if (value instanceof String) {

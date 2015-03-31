@@ -1,5 +1,8 @@
 package de.mhus.lib.jms;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import de.mhus.lib.core.IProperties;
 
 public class ServerJsonService extends ServerJsonObject implements JmsChannelService {

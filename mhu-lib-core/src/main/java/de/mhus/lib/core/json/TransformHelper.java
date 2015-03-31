@@ -5,31 +5,22 @@ import java.lang.reflect.Array;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 
 public class TransformHelper {
 	int level = 0;
-	private String prefix = "";
-	private boolean rememberClass = false;
+	protected String prefix = "";
+	protected TransformStrategy strategy = MJson.DEFAULT_STRATEGY;
 	
 	public TransformHelper incLevel() {
 		level++;
 		return this;
 	}
 	
-	public void postToJson(Object from, ObjectNode to) {
-		if (rememberClass && from != null)
-			to.put("_type", from.getClass().getCanonicalName());
-	}
-
-		
-	public Class<?> getType(JsonNode from) throws IllegalAccessException {
-		JsonNode cNameNode = from.get("_type");
-		if (cNameNode == null) return null;
-		String cName = cNameNode.getTextValue();
-		return getType(cName);
+	public void postToJson(Object from, JsonNode to) {
 	}
 	
 	public Class<?> getType(String clazz) throws IllegalAccessException {
@@ -56,17 +47,8 @@ public class TransformHelper {
 		return null;
 	}
 	
-	public boolean isArrayType(JsonNode from) {
-		JsonNode cNameNode = from.get("_type");
-		if (cNameNode == null) return false;
-		String cName = cNameNode.getTextValue();
-		return cName.endsWith("[]");
-	}
-
-	public boolean isKnownType(JsonNode from) {
-		JsonNode cNameNode = from.get("_type");
-		if (cNameNode == null) return false;
-		return true;
+	public boolean isArrayType(String type) {
+		return type.endsWith("[]");
 	}
 	
 	public ClassLoader getClassLoader() {
@@ -108,16 +90,17 @@ public class TransformHelper {
 		return level < 10;
 	}
 
-	public boolean isRememberClass() {
-		return rememberClass;
-	}
-
-	public void setRememberClass(boolean rememberClass) {
-		this.rememberClass = rememberClass;
-	}
-
 	public Object createArray(int length, Class<?> type) {
 		return Array.newInstance(type, length);
+	}
+
+	public TransformStrategy getStrategy() {
+		return strategy;
+	}
+
+	public void postToPojo(JsonNode from, Object to) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

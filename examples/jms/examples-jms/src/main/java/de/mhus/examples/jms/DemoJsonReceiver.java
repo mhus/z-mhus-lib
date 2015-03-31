@@ -40,7 +40,7 @@ public class DemoJsonReceiver {
 		
 		while(true) {
 			try {
-				con.doBaseBeat();
+				con.doChannelBeat();
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
