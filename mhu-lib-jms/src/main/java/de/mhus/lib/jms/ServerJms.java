@@ -27,7 +27,20 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			log().i("consume",dest);
             consumer = dest.getConnection().getSession().createConsumer(dest.getDestination());
             consumer.setMessageListener(this);
+            onOpen();
 		}
+	}
+
+	/**
+	 * The method is called after the open was successful.
+	 */
+	protected void onOpen() {
+	}
+
+	/**
+	 * The method is called after the reset operation.
+	 */
+	protected void onReset() {
 	}
 	
 	public synchronized void openAnswer() throws JMSException {
@@ -47,6 +60,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		try {
 			replyProducer.close();
 		} catch (Throwable t) {log().t(t);}
+		onReset();
 	}
 
 	public abstract void receivedOneWay(Message msg) throws JMSException;

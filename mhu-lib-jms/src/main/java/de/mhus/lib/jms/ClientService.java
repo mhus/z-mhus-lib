@@ -29,6 +29,18 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class ClientService<T> extends ClientJms implements JmsChannelService {
 	
+	public static final String PROP_FUNCTION_NAME = "de.mhus.lib.jms.function";
+
+	public static final String PROP_EXCEPION_TYPE = "de.mhus.lib.jms.exception.type";
+
+	public static final String PROP_DIRECT_MSG = "de.mhus.lib.jms.direct";
+
+	public static final String PROP_EXCEPION_TEXT = "de.mhus.lib.jmsexception.text";
+
+	public static final String PROP_EXCEPION_CLASS = "de.mhus.lib.jmsexception.class";
+
+	public static final String PROP_EXCEPTION_METHOD = "de.mhus.lib.jmsexception.method";
+	
 	private ServiceDescriptor desc;
 	private T proxy;
 	private ClassLoader classLoader = getClass().getClassLoader();
@@ -74,11 +86,11 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 			Message msg = null;
 			if (args != null && args.length == 1 && args[0] instanceof Message) {
 				msg = (Message) args[0];
-				msg.setBooleanProperty("direct", true);
+				msg.setBooleanProperty(PROP_DIRECT_MSG, true);
 			} else
 				msg = getSession().createObjectMessage(args);
 			
-			msg.setStringProperty("function", method.getName().toLowerCase());
+			msg.setStringProperty(PROP_FUNCTION_NAME, method.getName().toLowerCase());
 			
 			if (fDesc.isOneWay() || dest.isTopic() && fDesc.getReturnType() == Void.class) {
 
@@ -95,8 +107,8 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 					LinkedList<Object> out = new LinkedList<>();
 					
 					for (Message answer : answers) {
-						if (answer.getStringProperty("exception") == null) {
-							if (answer.propertyExists("direct") && answer.getBooleanProperty("direct")) {
+						if (answer.getStringProperty(PROP_EXCEPION_TYPE) == null) {
+							if ( answer.propertyExists(PROP_DIRECT_MSG) && answer.getBooleanProperty(PROP_DIRECT_MSG)) {
 								out.add(answer);
 							} else
 							if (answer instanceof ObjectMessage) {
@@ -116,29 +128,35 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 				}
 
 			} else {
+				Message res = null;
 				try {
-					Message res = sendJms(msg);
+					res = sendJms(msg);
 					// check success and throw exceptions
 					if (res == null)
 						throw new MRuntimeException("internal error: result is null",desc.getInterface().getCanonicalName(),method.getName());
+				} catch (Exception e) {
+					log().w("internal error",desc.getInterface().getCanonicalName(),method.getName(),e);
+				}
 					
-					String exceptionType = msg.getStringProperty("exception");
-					if (exceptionType != null) {
-						Class<?> exceptionClass = getClassLoader().loadClass(exceptionType);
-						Throwable exception = null;
-						try {
-							Constructor<?> constructor = exceptionClass.getConstructor(String.class);
-							exception = (Throwable) constructor.newInstance(
-									res.getStringProperty("exceptionMessage") + " [" + 
-									res.getStringProperty("exceptionClass") + "." + 
-									res.getStringProperty("exceptionMethod") + "]" );
-						} catch (Throwable t) {
-							exception = (Throwable) exceptionClass.newInstance();
-						}
-						throw exception;
-					}
+				String exceptionType = res.getStringProperty(PROP_EXCEPION_TYPE);
+				if (exceptionType != null) {
+					Class<?> exceptionClass = getClassLoader().loadClass(exceptionType);
+					Throwable exception = null;
 					try {
-						if (Message.class.isAssignableFrom(method.getReturnType()) && res.getBooleanProperty("direct"))
+						Constructor<?> constructor = exceptionClass.getConstructor(String.class);
+						exception = (Throwable) constructor.newInstance(
+								res.getStringProperty(PROP_EXCEPION_TEXT) + " [" + 
+								res.getStringProperty(PROP_EXCEPION_CLASS) + "." + 
+								res.getStringProperty(PROP_EXCEPTION_METHOD) + "]" );
+					} catch (Throwable t) {
+						exception = (Throwable) exceptionClass.newInstance();
+					}
+					throw exception;
+				}
+				
+				try {
+					try {
+						if (Message.class.isAssignableFrom(method.getReturnType()) && res.getBooleanProperty(PROP_DIRECT_MSG))
 							return res;
 					} catch (JMSException e) {}
 					

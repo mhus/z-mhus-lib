@@ -80,10 +80,10 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 			}
 			if (t != null) {
 				//TODO move into ServerService and ServerJsonService to define the protocol in ONE place
-				p.setString("exception", t.getClass().getCanonicalName());
-				p.setString("exceptionMessage", t.getMessage());
-				p.setString("exceptionClass", act.getManagedClass().getCanonicalName());
-				p.setString("exceptionMethod", act.getName());
+				p.setString(ClientService.PROP_EXCEPION_TYPE, t.getClass().getCanonicalName());
+				p.setString(ClientService.PROP_EXCEPION_TEXT, t.getMessage());
+				p.setString(ClientService.PROP_EXCEPION_CLASS, act.getManagedClass().getCanonicalName());
+				p.setString(ClientService.PROP_EXCEPTION_METHOD, act.getName());
 				
 				log().t(act.getManagedClass().getCanonicalName(),act.getName(),t);
 			}

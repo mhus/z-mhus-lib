@@ -28,7 +28,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 	@Override
 	public void receivedOneWay(Message msg) throws JMSException {
 		
-		String functionName = msg.getStringProperty("function");
+		String functionName = msg.getStringProperty(ClientService.PROP_FUNCTION_NAME);
 		if (functionName == null) {
 			log().w("function not set",getDestination());
 			return;
@@ -46,7 +46,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
-		if (msg.propertyExists("direct") && msg.getBooleanProperty("direct")) {
+		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {
 			obj = new Object[] { msg };
 		} else
 		if (msg instanceof ObjectMessage) {
@@ -70,7 +70,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 	@Override
 	public Message received(Message msg) throws JMSException {
 		
-		String functionName = msg.getStringProperty("function");
+		String functionName = msg.getStringProperty(ClientService.PROP_FUNCTION_NAME);
 		if (functionName == null) {
 			log().w("function not set",getDestination());
 			return null;
@@ -85,7 +85,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
-		if (msg.propertyExists("direct") && msg.getBooleanProperty("direct")) {
+		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {
 			obj = new Object[] { msg };
 		} else
 		if (msg instanceof ObjectMessage) {
@@ -107,11 +107,11 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 			
 			Message out = null;
 			if (res == null || res.getResult() == null) {
-				msg = getSession().createObjectMessage(null);
+				out = getSession().createObjectMessage(null);
 			} else
 			if (res.getResult() instanceof Message) {
 				out = (Message) res.getResult();
-				out.setBooleanProperty("direct", true);
+				out.setBooleanProperty(ClientService.PROP_DIRECT_MSG, true);
 			} else {
 				out = getSession().createObjectMessage((Serializable) res.getResult());
 			}
@@ -131,6 +131,20 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		return null;
 	}
 
+	protected void onOpen() {
+		T o = getObject();
+		if (o != null && o instanceof JmsServiceListener) {
+			((JmsServiceListener)o).jmsServiceOnOpen(this);
+		}
+	}
+
+	protected void onReset() {
+		T o = getObject();
+		if (o != null && o instanceof JmsServiceListener) {
+			((JmsServiceListener)o).jmsServiceOnReset(this);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<?> getInterface() {

@@ -1,5 +1,6 @@
 package de.mhus.lib.core.jms.test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,6 +90,34 @@ public class JmsServiceTest extends TestCase {
 			assertEquals("[x]", ret.toString());
 		}
 		
+		// test raw message
+
+		{
+			impl.lastAction = null;
+			TextMessage msg = client.getSession().createTextMessage("works");
+			ifc.receiveMessage(msg);
+			assertEquals("receiveMessage works", impl.lastAction);
+		}
+		
+		{
+			impl.lastAction = null;
+			Message msg = ifc.sendMessage("text");
+			assertEquals("sendMessage text", impl.lastAction);
+			assertEquals("text", ((TextMessage)msg).getText());
+		}
+		
+		// test exception
+		{
+			impl.lastAction = null;
+			try {
+				ifc.throwException("ex");
+				assertTrue(false);
+			} catch (IOException e) {
+				e.printStackTrace();
+				assertEquals("ex [de.mhus.lib.core.jms.test.TestJmsServiceImp.throwexception]",e.getMessage());
+			}
+			assertEquals("throwException ex", impl.lastAction);
+		}	
 		
 		con1.close();
 		con2.close();
@@ -119,16 +148,31 @@ public class JmsServiceTest extends TestCase {
 			server3.open();
 
 			TestJmsService ifc = client.getObject();
-
-			LinkedList<String> in = new LinkedList<>();
-			in.add("a");
-			List<String> ret = ifc.listSample(in);
 			
-			assertEquals("listSample [a]", impl2.lastAction);
-			assertEquals("listSample [a]", impl3.lastAction);
-//			System.out.println(ret);
-			assertEquals("[x, x]", ret.toString());
+			{
+				LinkedList<String> in = new LinkedList<>();
+				in.add("a");
+				List<String> ret = ifc.listSample(in);
+				
+				assertEquals("listSample [a]", impl2.lastAction);
+				assertEquals("listSample [a]", impl3.lastAction);
+				assertEquals("[x, x]", ret.toString());
+			}
 		
+			// This case is not supported yet. The case "broadcast and raw messages" is extremely rare
+			
+//			{
+//				List<Message> ret = ifc.messageBroadcast("b");
+//				assertEquals("messageBroadcast b", impl2.lastAction);
+//				assertEquals("messageBroadcast b", impl3.lastAction);
+//				System.out.println(ret);
+//				assertEquals(2, ret.size());
+//			}
+			
+			con1.close();
+			con2.close();
+			con3.close();
+			
 	}
 	
 }

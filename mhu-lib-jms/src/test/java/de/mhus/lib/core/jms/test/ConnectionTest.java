@@ -26,7 +26,7 @@ public class ConnectionTest extends TestCase {
 		con.close();
 		try {
 			con.open();
-			assertTrue(true);
+			assertTrue(false);
 		} catch (JMSException e) {}
 		assertFalse(con.isConnected());
 		
