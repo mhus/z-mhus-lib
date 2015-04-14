@@ -215,5 +215,17 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 			throw new NotFoundException("object for interface not found", ifc);
 		}
 	}
+
+	@Override
+	public void doChannelBeat() {
+		synchronized (this) {
+			for (JmsConnection con : connections.values())
+				try {
+					con.doChannelBeat();
+				} catch (Throwable t) {
+					log().t(con,t);
+				}
+		}
+	}
 	
 }

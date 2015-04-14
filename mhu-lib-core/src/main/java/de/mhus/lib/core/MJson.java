@@ -407,4 +407,26 @@ public class MJson {
 		return mapper;
 	}
 	
+	public static String encode(String in) {
+		if (in == null) return null;
+		if (in.indexOf('\\') < 0 && in.indexOf('"') < 0) return in;
+		
+		in = in.replace("\\", "\\\\");
+		in = in.replace("\"", "\\\"");
+//		in = in.replaceAll("\\\\\\\\", "\\\\");
+//		in = in.replaceAll("\"", "\\\"");
+		
+		return in;
+	}
+
+	public static String encodeValue(Object in) {
+		if (in == null) return "null";
+		if (in instanceof Integer || in instanceof Long || in instanceof Byte || in instanceof Short || in instanceof Double || in instanceof Float)
+			return String.valueOf(in).replace(',', '.');
+		if (in instanceof Date)
+			return String.valueOf( ((Date)in).getTime() );
+		return
+				'"' + encode(String.valueOf(in)) + '"';
+	}
+	
 }

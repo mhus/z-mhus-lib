@@ -15,7 +15,7 @@ public abstract class JmsChannel extends JmsObject {
 	public JmsChannel(JmsDestination dest) {
 		this.dest = dest;
 	}
-
+	
 	protected String createMessageId() {
 		return UUID.randomUUID().toString();
 	}

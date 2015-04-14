@@ -135,6 +135,11 @@
             </action>
         </command>
         
+        <command name="jms/heartbeat">
+            <action class="de.mhus.lib.karaf.jms.heartbeat.CmdHeartbeat">
+            </action>
+        </command>
+        
     </command-bundle>
 
 </blueprint>

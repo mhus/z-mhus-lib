@@ -17,5 +17,6 @@ public interface JmsManagerService {
 	void removeChannel(String name);
 	<I> I getObjectForInterface(Class<? extends I> ifc);
 	void resetChannels();
+	void doChannelBeat();
 
 }

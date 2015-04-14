@@ -133,6 +133,9 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			
 			log().t("sendJmsBroadcastAnswer",res);
 			return res.toArray(new Message[res.size()]);
+		} catch (JMSException e) {
+			reset();
+			throw e;
 		} finally {
 			removeAllowedId(id);
 		}
@@ -183,6 +186,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		try {
 			responseConsumer.close();
 		} catch (Throwable t) {log().t(t);}
+		producer = null;
+		responseConsumer = null;
 	}
 
 	@Override

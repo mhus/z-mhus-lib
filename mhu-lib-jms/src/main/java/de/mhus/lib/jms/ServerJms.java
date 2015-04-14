@@ -23,6 +23,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		if (isClosed()) throw new JMSException("server closed");
 		if (consumer == null || getSession() == null) {
 			dest.open();
+			if (dest.getConnection() == null) throw new JMSException("connection offline");
 			dest.getConnection().registerChannel(this);
 			log().i("consume",dest);
             consumer = dest.getConnection().getSession().createConsumer(dest.getDestination());
@@ -87,6 +88,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 				log().t("receivedOneWay",message);
 				receivedOneWay(message);
 			}
+		} catch (JMSException t) {
+			reset();
+			log().w(t);
 		} catch (Throwable t) {
 			log().w(t);
 		}

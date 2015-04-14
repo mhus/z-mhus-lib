@@ -11,6 +11,7 @@ import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsChannelService;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.JmsDestination;
+import de.mhus.lib.jms.ServerJms;
 import de.mhus.lib.jms.ServerJsonService;
 import de.mhus.lib.jms.WebServiceDescriptor;
 
@@ -123,10 +124,14 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 			if (MString.isSet(implementation)) {
 				try {
 					Class<?> clazz = FrameworkUtil.getBundle(JmsDataChannel.class).loadClass(implementation);
-					Object o = clazz.newInstance();
-					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
 					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
-					channel = new ServerJsonService(dest, descriptor);
+					if (JmsChannel.class.isAssignableFrom(clazz)) {
+						channel = (JmsChannel)clazz.getConstructor(JmsDestination.class).newInstance(dest);
+					} else {
+						Object o = clazz.newInstance();
+						WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
+						channel = new ServerJsonService(dest, descriptor);
+					}
 				} catch (Throwable e) {
 					log().w(e);
 				}

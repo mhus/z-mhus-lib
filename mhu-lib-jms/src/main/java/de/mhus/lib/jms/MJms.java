@@ -1,5 +1,6 @@
 package de.mhus.lib.jms;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 
@@ -47,4 +48,33 @@ public class MJms {
 		return out;
 	}
 
+	public static void setMessageProperty(Message msg, String name, Object value) throws JMSException {
+		if (value == null || msg == null || name == null) return;
+		if (value instanceof String)
+			msg.setStringProperty(name, (String)value);
+		else
+		if (value instanceof Boolean)
+			msg.setBooleanProperty(name, (Boolean)value);
+		else
+		if (value instanceof Integer)
+			msg.setIntProperty(name, (Integer)value);
+		else
+		if (value instanceof Long)
+			msg.setLongProperty(name, (Long)value);
+		else
+		if (value instanceof Double)
+			msg.setDoubleProperty(name, (Double)value);
+		else
+		if (value instanceof Byte)
+			msg.setByteProperty(name, (Byte)value);
+		else
+		if (value instanceof Float)
+			msg.setFloatProperty(name, (Float)value);
+		else
+		if (value instanceof Short)
+			msg.setShortProperty(name, (Short)value);
+		else
+			msg.setObjectProperty(name, value);
+	}
+	
 }

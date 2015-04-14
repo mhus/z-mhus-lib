@@ -261,5 +261,9 @@ public class MSystem {
 		public BufferedReader output;
 		
 	}
+
+	public static String getAppIdent() {
+		return getHostname() + ":" + getPid();
+	}
 	
 }

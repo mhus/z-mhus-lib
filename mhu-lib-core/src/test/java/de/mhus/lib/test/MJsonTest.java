@@ -1,6 +1,7 @@
 package de.mhus.lib.test;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -158,5 +159,71 @@ public class MJsonTest extends TestCase {
 		}
 	}
 		
+	public void testUtility() {
+		
+		{
+			String a = "abc";
+			String b = MJson.encode(a);
+			System.out.println(a + " " + b);
+			assertEquals(a, b);
+		}
+		
+		{
+			String a = "ab'c";
+			String b = MJson.encode(a);
+			System.out.println(a + " " + b);
+			assertEquals(a, b);
+		}
+		
+		{
+			String a = "ab\"c";
+			String b = MJson.encode(a);
+			System.out.println(a + " " + b);
+			assertEquals("ab\\\"c", b);
+		}
+		
+		{
+			String a = "ab\\c";
+			String b = MJson.encode(a);
+			System.out.println(a + " " + b);
+			assertEquals("ab\\\\c", b);
+		}
+
+		{
+			String a = "abc";
+			String b = MJson.encodeValue(a);
+			System.out.println(a + " " + b);
+			assertEquals("\"abc\"", b);
+		}
+		
+		{
+			String a = "ab\"c";
+			String b = MJson.encodeValue(a);
+			System.out.println(a + " " + b);
+			assertEquals("\"ab\\\"c\"", b);
+		}
+
+		{
+			int a = 1;
+			String b = MJson.encodeValue(a);
+			System.out.println(a + " " + b);
+			assertEquals("1", b);
+		}
+		
+		{
+			double a = 1.3;
+			String b = MJson.encodeValue(a);
+			System.out.println(a + " " + b);
+			assertEquals("1.3", b);
+		}
+
+		{
+			Date a = new Date();
+			String b = MJson.encodeValue(a);
+			System.out.println(a + " = " + b);
+			assertEquals("" + a.getTime(), b);
+		}
+
+	}
 		
 }
