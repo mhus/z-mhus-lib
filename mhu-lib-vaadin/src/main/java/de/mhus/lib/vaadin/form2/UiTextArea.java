@@ -8,6 +8,8 @@ import de.mhus.lib.errors.MException;
 
 public class UiTextArea extends UiText {
 
+	@SuppressWarnings("rawtypes")
+	@Override
 	protected AbstractField createTextField() throws MException {
 		TextArea out = new TextArea();
 		out.setHeight(getElement().getConfig().getInt("height", 200),Unit.PIXELS);

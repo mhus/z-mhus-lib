@@ -84,7 +84,9 @@ public abstract class ModalDialog extends Window {
         
         final ShortcutListener enter = new ShortcutListener("Enter",
                 KeyCode.ENTER, null) {
-            @Override
+					private static final long serialVersionUID = 1L;
+
+			@Override
             public void handleAction(Object sender, Object target) {
             	for (Component c : buttonBar) {
             		if (
@@ -110,6 +112,7 @@ public abstract class ModalDialog extends Window {
 	
 	protected abstract void initContent(VerticalLayout layout) throws Exception;
 
+	@SuppressWarnings("deprecation")
 	protected void updateButtons() {
 		buttonBar.removeAllComponents();
 		for (final Action a : actions) {
@@ -152,6 +155,7 @@ public abstract class ModalDialog extends Window {
 			return title;
 		}
 		
+		@Override
 		public boolean equals(Object in) {
 			if (in == null) return false;
 			if (in instanceof Action) {
@@ -160,6 +164,7 @@ public abstract class ModalDialog extends Window {
 			return super.equals(in);
 		}
 		
+		@Override
 		public String toString() {
 			return id;
 		}
@@ -185,6 +190,7 @@ public abstract class ModalDialog extends Window {
 			super(id, title);
 		}
 		
+		@Override
 		public void doAction(ModalDialog dialog) {
 				dialog.close();
 		}

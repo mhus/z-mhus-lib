@@ -24,7 +24,7 @@ public class JpaManager extends MObject implements EntityManagerFactory {
 	public JpaManager(JpaProperties properties) {
 		this(properties, null);
 	}
-	
+
 	public JpaManager(JpaProperties properties, JpaSchema schema) {
 		if (schema != null) properties.setSchema(schema);
 		this.schema = properties.getSchema();
@@ -40,18 +40,20 @@ public class JpaManager extends MObject implements EntityManagerFactory {
 		entityManagerFactory = Persistence.createEntityManagerFactory(schema.getSchemaName() + "-" + unitId.toString(), properties);
 		schema.doPostInit(this);
 	}
-	
+
 	public JpaSchema getSchema() {
 		return schema;
 	}
-	
+
+	@Override
 	public JpaEntityManager createEntityManager() {
-	    return new JpaEntityManager(this, entityManagerFactory, null);
+		return new JpaEntityManager(this, entityManagerFactory, null);
 	}
-	
+
+	@Override
 	public void close() {
- 		if (entityManagerFactory == null) return;
- 		log().t("close");
+		if (entityManagerFactory == null) return;
+		log().t("close");
 		entityManagerFactory.close();
 		entityManagerFactory = null;
 	}
@@ -91,5 +93,5 @@ public class JpaManager extends MObject implements EntityManagerFactory {
 	public PersistenceUnitUtil getPersistenceUnitUtil() {
 		return entityManagerFactory.getPersistenceUnitUtil();
 	}
-	
+
 }

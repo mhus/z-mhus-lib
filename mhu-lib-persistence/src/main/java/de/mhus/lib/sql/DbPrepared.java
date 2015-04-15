@@ -19,10 +19,10 @@ public class DbPrepared {
 	DbPrepared(DbPool pool, String queryString, String language) throws MException {
 		this.pool = pool;
 		query = pool.getDialect().getQueryParser(language).compileString(queryString);
-//		query = new SimpleQueryParser().compileString(queryString);
-//		query = new SqlCompiler().compileString(queryString);
+		//		query = new SimpleQueryParser().compileString(queryString);
+		//		query = new SqlCompiler().compileString(queryString);
 	}
-	
+
 	/**
 	 * Return a statement with a new connection from the pool.
 	 * 
@@ -44,7 +44,7 @@ public class DbPrepared {
 	public DbStatement getStatement(DbConnection con) throws Exception {
 		return con.createStatement(this);
 	}
-	
+
 	CompiledString getQuery() {
 		return query;
 	}

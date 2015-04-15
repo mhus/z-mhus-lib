@@ -12,33 +12,32 @@ public class RelMultible <T> implements IRelationObject {
 	private Object obj;
 	private RelList<T> relations;
 
-	@SuppressWarnings("unchecked")
 	public RelList<T> getRelations() throws Exception {
 		synchronized (this) {
 			if (relations == null) {
-				
+
 				Class<?> target = field.getConfig().target();
 				String src = field.getConfig().sourceAttribute();
 				if ("".equals(src)) src = "id";
 				src = src.toLowerCase();
-				
+
 				String tar = field.getConfig().targetAttribute();
 				if ("".equals(tar)) tar = field.getName() + "id";
 				//tar = tar.toLowerCase();
-				
+
 				String order = "";
 				if (!"".equals(field.getConfig().orderBy())) {
 					order = " ORDER BY $db." + field.getManager().getMappingName(target) + "." + field.getConfig().orderBy() + "$";
 				}
-				
+
 				Field idField = field.getTable().getField(src);
 				if (idField == null) return null;
 				Object id = idField.getFromTarget(obj);
 				if (id == null) return null;
-				relations = new RelList<T>( field.getManager().getByQualification(target, 
-						"$db." + field.getManager().getMappingName(field.getConfig().target()) + "." + tar + "$ = $id$" + order , 
+				relations = new RelList<T>( field.getManager().getByQualification(target,
+						"$db." + field.getManager().getMappingName(field.getConfig().target()) + "." + tar + "$ = $id$" + order ,
 						new AttributeMap("id", id) ).toCacheAndClose(), field.getConfig());
-				
+
 			}
 		}
 		return relations;
@@ -49,17 +48,17 @@ public class RelMultible <T> implements IRelationObject {
 			relations = null;
 		}
 	}
-	
+
 	@Override
 	public void prepareCreate() {
-		
+
 	}
 
 	@Override
 	public void created(DbConnection con) throws Exception {
-		
+
 		if (!field.getConfig().managed() || !isChanged()) return;
-		
+
 		String src = field.getConfig().sourceAttribute();
 		if ("".equals(src)) src = "Id";
 		src = src.toLowerCase();
@@ -101,7 +100,7 @@ public class RelMultible <T> implements IRelationObject {
 	@Override
 	public void prepareSave(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

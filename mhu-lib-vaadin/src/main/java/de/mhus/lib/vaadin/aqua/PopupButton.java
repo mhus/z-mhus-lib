@@ -5,6 +5,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class PopupButton extends Button {
 
+	private static final long serialVersionUID = 1L;
+
 	public PopupButton() {
 		super();
 		// TODO Auto-generated constructor stub

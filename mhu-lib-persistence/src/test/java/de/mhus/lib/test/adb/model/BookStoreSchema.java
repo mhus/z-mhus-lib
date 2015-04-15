@@ -20,6 +20,7 @@ public class BookStoreSchema extends DbSchema {
 		System.out.println(nameMapping);
 	}
 
+	@Override
 	public void doMigrate(DbManager dbManager, long currentVersion) throws MException {
 		if (currentVersion == 0) {
 			Person p = new Person();
@@ -37,15 +38,15 @@ public class BookStoreSchema extends DbSchema {
 				@Override
 				public void hasAccess(DbManager manager, Table c,
 						DbConnection con, Object object, int right)
-						throws AccessDeniedException {
-					
+								throws AccessDeniedException {
+
 					Finances f = (Finances) object;
 
 					String conf = f.getConfidential();
 					if (conf != null) {
 						if (right == DbManager.R_UPDATE && conf.indexOf("write") >= 0 )
 							throw new AccessDeniedException("access denied");
-	
+
 						if (right == DbManager.R_DELETE && conf.indexOf("remove") >= 0 )
 							throw new AccessDeniedException("access denied");
 					}
@@ -57,18 +58,18 @@ public class BookStoreSchema extends DbSchema {
 				@Override
 				public void hasReadAccess(DbManager dbManager, Table table,
 						DbConnection con, de.mhus.lib.sql.DbResult ret) throws AccessDeniedException {
-					
+
 					try {
 						String conf = ret.getString( dbManager.getNameMapping().get("db.finances.confidential").toString() );
 						if ( conf != null && conf.indexOf("read") >= 0 ) {
 							throw new AccessDeniedException("access denied");
 						}
 					} catch (Exception e) {
-//						e.printStackTrace();
+						//						e.printStackTrace();
 						throw new AccessDeniedException(e);
 					}
 				}
-				
+
 			};
 		}
 		return null;

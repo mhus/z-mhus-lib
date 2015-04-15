@@ -7,14 +7,14 @@ import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoMetadata;
 
 public class MetadataBundle {
-	
+
 	private CaoDriver driver;
 	private Map<String, CaoMetadata> map = new HashMap<String,CaoMetadata>();
 
 	public MetadataBundle(CaoDriver driver) {
 		this.driver = driver;
 	}
-	
+
 	public Map<String, CaoMetadata> getBundle() {
 		return map;
 	}
@@ -22,5 +22,5 @@ public class MetadataBundle {
 	public CaoDriver getDriver() {
 		return driver;
 	}
-	
+
 }

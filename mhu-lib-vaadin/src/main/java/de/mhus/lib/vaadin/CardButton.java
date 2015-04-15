@@ -37,6 +37,7 @@ public class CardButton extends Button {
 		updateCaption();
 	}
 
+	@SuppressWarnings("deprecation")
 	public void updateCaption() {
 		
 		if (getIcon() != null) {

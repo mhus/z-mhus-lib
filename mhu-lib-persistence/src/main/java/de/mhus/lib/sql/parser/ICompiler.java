@@ -13,7 +13,7 @@ public interface ICompiler {
 	String toSqlDateValue(Date string);
 
 	String valueToString(Object value);
-	
+
 	String escape(String text);
 
 }

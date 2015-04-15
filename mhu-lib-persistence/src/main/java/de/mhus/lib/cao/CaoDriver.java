@@ -12,7 +12,7 @@ public abstract class CaoDriver extends MObject {
 	public CaoConnection connect(String uri, String authentication) throws URISyntaxException {
 		return connect(new URI(uri), authentication);
 	}
-	
+
 	public abstract CaoConnection connect(URI uri, String authentication);
 
 	public String getScheme() {
@@ -20,5 +20,5 @@ public abstract class CaoDriver extends MObject {
 	}
 
 	public abstract CaoLoginForm createLoginForm(URI uri, String authentication);
-	
+
 }

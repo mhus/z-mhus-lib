@@ -18,31 +18,31 @@ public abstract class Feature extends MObject {
 	}
 
 	protected void doInit() throws MException {
-		
+
 	}
 
 	public void createObject(DbConnection con, Object object) throws Exception {
-		
+
 	}
 
 	public void saveObject(DbConnection con, Object object) throws Exception {
-		
+
 	}
 
 	public void getObject(DbConnection con, DbResult ret) throws Exception {
-		
+
 	}
 
 	public void getObject(DbConnection con, Object obj) throws Exception {
-		
+
 	}
 
 	public void fillObject(Object obj, DbConnection con, DbResult res) throws Exception {
-		
+
 	}
 
 	public void deleteObject(DbConnection con, Object object) throws Exception {
-		
+
 	}
 
 	public Object get(Object obj, Field field, Object val) throws Exception {

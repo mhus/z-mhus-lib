@@ -11,7 +11,7 @@ public class JpaProperties extends Properties {
 
 	protected JpaSchema schema;
 	protected ResourceNode config;
-	
+
 	/**
 	 * 
 	 */
@@ -31,9 +31,9 @@ public class JpaProperties extends Properties {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public JpaProperties() {
 		super();
 		config = new HashConfig();
@@ -51,7 +51,7 @@ public class JpaProperties extends Properties {
 	public void setSchema(JpaSchema schema) {
 		this.schema = schema;
 	}
-	
+
 	public void configureTypes() {
 		setProperty("openjpa.RuntimeUnenhancedClasses", "supported");
 
@@ -64,9 +64,9 @@ public class JpaProperties extends Properties {
 			}
 			types.append( type.getCanonicalName() );
 		}
-		put("openjpa.MetaDataFactory", "jpa(Types="+types+")"); 
-		put("openjpa.jdbc.SynchronizeMappings",  "buildSchema(ForeignKeys=true)"); 
-		
+		put("openjpa.MetaDataFactory", "jpa(Types="+types+")");
+		put("openjpa.jdbc.SynchronizeMappings",  "buildSchema(ForeignKeys=true)");
+
 	}
 
 	public ResourceNode getConfig() {

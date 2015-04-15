@@ -4,12 +4,12 @@ import de.mhus.lib.adb.DbManager;
 
 public class AttributeFeatureCut implements AttributeFeature {
 
-//	private Field field;
+	//	private Field field;
 	private int size;
 
 	@Override
 	public void init(DbManager manager, Field field) {
-//		this.field = field;
+		//		this.field = field;
 		size = field.getSize();
 	}
 

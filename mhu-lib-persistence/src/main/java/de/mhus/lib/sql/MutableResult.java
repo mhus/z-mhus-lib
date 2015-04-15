@@ -20,19 +20,19 @@ public class MutableResult extends DbResult {
 	private LinkedList<String> columnList = new LinkedList<String>();
 	private List<String> roColumnNames = Collections.unmodifiableList(columnList);
 	private Iterator<Map<String, Object>> iterator;
-	
+
 	public void add(Map<String, Object> row) {
 		list.add(row);
 	}
-	
+
 	public void reset() {
 		iterator = list.iterator();
 	}
-	
+
 	public void addColumnName(String name) {
 		columnList.add(name);
 	}
-	
+
 	@Override
 	public void close() throws Exception {
 		list = null;

@@ -80,7 +80,7 @@ public class FunctionPart implements ParsingPart {
 			str.consume();
 		} while(true);
 	}
-	
+
 	public void add(ParsingPart pp) {
 		parts.add(pp);
 	}

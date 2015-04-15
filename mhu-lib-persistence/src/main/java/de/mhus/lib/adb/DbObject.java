@@ -11,7 +11,7 @@ import de.mhus.lib.sql.DbConnection;
 public interface DbObject extends Persistable {
 
 	void doPreCreate(DbConnection con);
-	
+
 	void doPreSave(DbConnection con);
 
 	void doInit(DbManager manager, String registryName, boolean isPersistent);
@@ -21,9 +21,9 @@ public interface DbObject extends Persistable {
 	void doPostLoad(DbConnection con);
 
 	void doPostCreate(DbConnection con);
-	
+
 	void doPostDelete(DbConnection con);
 
 	boolean isAdbPersistent();
-	
+
 }

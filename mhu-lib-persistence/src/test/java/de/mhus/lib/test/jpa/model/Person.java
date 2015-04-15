@@ -28,6 +28,6 @@ public class Person extends JpaComfortable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+
 }

@@ -18,6 +18,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 
 public class LoginPanel extends VerticalLayout implements MNlsProvider {
 
+	private static final long serialVersionUID = 1L;
 	private HelpManager helpManager;
 	private Listener listener;
 	private MNls nls;
@@ -26,6 +27,8 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
 	public LoginPanel() {
 		addAttachListener(new AttachListener() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void attach(AttachEvent event) {
 				doContent();
@@ -104,14 +107,18 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
 
         final ShortcutListener enter = new ShortcutListener(MNls.find(this, "signin=Sign In"),
                 KeyCode.ENTER, null) {
-            @Override
+					private static final long serialVersionUID = 1L;
+
+			@Override
             public void handleAction(Object sender, Object target) {
                 signin.click();
             }
         };
 
         signin.addClickListener(new ClickListener() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void buttonClick(ClickEvent event) {
             	
             	if ("".equals(password.getValue())) {
@@ -148,6 +155,7 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
 		this.listener = listener;
 	}
 
+	@Override
 	public MNls getNls() {
 		return nls;
 	}

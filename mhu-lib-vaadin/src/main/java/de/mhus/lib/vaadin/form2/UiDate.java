@@ -12,6 +12,7 @@ public class UiDate extends UiText {
 
 	
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected AbstractField createTextField() {
 		return new DateField();

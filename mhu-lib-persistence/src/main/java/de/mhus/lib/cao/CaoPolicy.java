@@ -10,7 +10,7 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
 public class CaoPolicy extends CaoNode {
-	
+
 	public static final String READ = "read";
 	public static final String WRITE = "write";
 	public static final String POLICIES = "policies";
@@ -24,7 +24,7 @@ public class CaoPolicy extends CaoNode {
 	protected CaoNode element;
 	protected CaoPolicy proxy = null;
 	protected CaoMetadata meta;
-	
+
 	public CaoPolicy(CaoNode element, boolean readable, boolean writable) throws CaoException {
 		super(element);
 		this.element = element;
@@ -33,7 +33,7 @@ public class CaoPolicy extends CaoNode {
 		meta = new CaoMetadata(getConnection().getDriver());
 		fillMetaData(meta.definition);
 	}
-	
+
 	/**
 	 * Overwrite this function to append or set your own right definitions.
 	 * 
@@ -45,12 +45,12 @@ public class CaoPolicy extends CaoNode {
 		definition.add(new CaoMetaDefinition(meta,POLICIES,TYPE.LIST,null,0,CATEGORY_POLICY) );
 		definition.add(new CaoMetaDefinition(meta,PRINCIPAL,TYPE.ELEMENT,null,0) );
 	}
-	
+
 	public boolean isWritable() {
 		if (proxy != null) return proxy.isWritable();
 		return getBoolean(WRITE, writable);
 	}
-	
+
 	public boolean isReadable() {
 		if (proxy != null) return proxy.isReadable();
 		return getBoolean(READ, readable);
@@ -86,15 +86,15 @@ public class CaoPolicy extends CaoNode {
 		return null;
 	}
 
-//	@Override
-//	public String getString(String name) throws CaoException {
-//		if (proxy != null) return proxy.getString(name);
-//		if (name.equals(PRINCIPAL)) {
-//			return getConnection().getCurrentUser().getName();
-//		}
-//		return MCast.toString(getBoolean(name, false));
-//	}
-	
+	//	@Override
+	//	public String getString(String name) throws CaoException {
+	//		if (proxy != null) return proxy.getString(name);
+	//		if (name.equals(PRINCIPAL)) {
+	//			return getConnection().getCurrentUser().getName();
+	//		}
+	//		return MCast.toString(getBoolean(name, false));
+	//	}
+
 	@Override
 	public boolean getBoolean(String name, boolean def) {
 		if (proxy != null) return proxy.getBoolean(name, def);
@@ -103,24 +103,24 @@ public class CaoPolicy extends CaoNode {
 		return def;
 	}
 
-//	@Override
-//	public CaoList getList(String name, CaoAccess access, String... attributes)
-//			throws CaoException {
-//		if (proxy != null) return proxy.getList(name, access, attributes);
-//		
-//		if (POLICIES.equals(name)) {
-//			return getPoliciesList(attributes);
-//		}
-//		
-//		throw new CaoNotFoundException(this,"list",name);
-//	}
+	//	@Override
+	//	public CaoList getList(String name, CaoAccess access, String... attributes)
+	//			throws CaoException {
+	//		if (proxy != null) return proxy.getList(name, access, attributes);
+	//
+	//		if (POLICIES.equals(name)) {
+	//			return getPoliciesList(attributes);
+	//		}
+	//
+	//		throw new CaoNotFoundException(this,"list",name);
+	//	}
 
 	/**
 	 * Overwrite this function to return another policy informations.
 	 * 
 	 * @param attributes
 	 * @return
-	 * @throws CaoException 
+	 * @throws CaoException
 	 */
 	protected CaoList getPoliciesList(String[] attributes) throws CaoException {
 		// Returns a list with the current user
@@ -129,17 +129,17 @@ public class CaoPolicy extends CaoNode {
 		return list;
 	}
 
-//	@Override
-//	public Object getObject(String name, String... attributes)
-//			throws CaoException {
-//		if (proxy != null) return proxy.getObject(name, attributes);
-//		
-//		if (name.equals(PRINCIPAL)) {
-//			return getConnection().getCurrentUser();
-//		}
-//		
-//		throw new CaoNotSupportedException();
-//	}
+	//	@Override
+	//	public Object getObject(String name, String... attributes)
+	//			throws CaoException {
+	//		if (proxy != null) return proxy.getObject(name, attributes);
+	//
+	//		if (name.equals(PRINCIPAL)) {
+	//			return getConnection().getCurrentUser();
+	//		}
+	//
+	//		throw new CaoNotSupportedException();
+	//	}
 
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
@@ -204,12 +204,12 @@ public class CaoPolicy extends CaoNode {
 
 	@Override
 	public void removeProperty(String key) {
-		
+
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
-		
+
 	}
 
 	@Override
@@ -226,5 +226,5 @@ public class CaoPolicy extends CaoNode {
 	public boolean hasContent() {
 		return false;
 	}
-	
+
 }

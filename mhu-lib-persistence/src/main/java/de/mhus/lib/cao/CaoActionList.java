@@ -19,20 +19,20 @@ public class CaoActionList implements Iterable<CaoAction>{
 
 	private LinkedList<CaoAction> actions = new LinkedList<CaoAction>();
 	private HashMap<String, CaoAction> index = new HashMap<String, CaoAction>();
-	
+
 	public void add(CaoAction action) {
 		String name = action.getName();
-		
+
 		if (index.containsKey(name)) {
 			//TODO find the best one, maybe replace
 			return;
 		}
-		
+
 		actions.add(action);
 		index.put(name, action);
-		
+
 	}
-	
+
 	@Override
 	public Iterator<CaoAction> iterator() {
 		return actions.iterator();

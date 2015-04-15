@@ -9,9 +9,9 @@ public abstract class CaoWritableElement extends WritableResourceNode {
 	public CaoWritableElement(CaoNode parent) {
 		this.parent = parent;
 	}
-	
+
 	public CaoNode getElement() {
 		return parent;
 	}
-	
+
 }

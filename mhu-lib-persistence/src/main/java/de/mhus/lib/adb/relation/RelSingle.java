@@ -19,34 +19,34 @@ public class RelSingle <T> implements IRelationObject {
 	public T getRelation() throws Exception {
 		synchronized (this) {
 			if (relation == null) {
-				
+
 				String src = field.getConfig().sourceAttribute();
 				if ("".equals(src)) src = field.getName() + "id";
 				src = src.toLowerCase();
 				String tar = field.getConfig().targetAttribute();
 				if ("".equals(tar)) tar = "id";
 				//tar = tar.toLowerCase();
-				
+
 				Field idField = field.getTable().getField(src);
 				if (idField == null) return null;
 				Object id = idField.getFromTarget(obj);
 				if (id == null) return null;
-				
-				List<?> res = field.getManager().getByQualification(field.getConfig().target(), 
-						"$db." + field.getManager().getMappingName(field.getConfig().target()) + "." + tar + "$ = $id$", 
+
+				List<?> res = field.getManager().getByQualification(field.getConfig().target(),
+						"$db." + field.getManager().getMappingName(field.getConfig().target()) + "." + tar + "$ = $id$",
 						new AttributeMap("id", id) ).toCacheAndClose();
-				
+
 				if (res != null && res.size() > 0)
 					relation = (T) res.get(0);
 
 				// relation = (T) field.getManager().getObject(field.getConfig().target(), id);
-				
+
 			}
 		}
 		changed = false;
 		return relation;
 	}
-	
+
 	public void setRelation(T relation) {
 		changed = true;
 		this.relation = relation;
@@ -57,18 +57,18 @@ public class RelSingle <T> implements IRelationObject {
 			relation = null;
 		}
 	}
-	
+
 	protected void prepare() throws Exception {
 		if (!field.getConfig().managed() || !isChanged()) return;
 		synchronized (this) {
-			
+
 			String src = field.getConfig().sourceAttribute();
 			if ("".equals(src)) src = field.getName() + "id";
 			src = src.toLowerCase();
 
 			Field idField = field.getTable().getField(src);
 			if (idField == null) return;
-			
+
 			if (relation == null)
 				idField.set(obj, null);
 			else {
@@ -82,7 +82,7 @@ public class RelSingle <T> implements IRelationObject {
 			changed = false;
 		}
 	}
-	
+
 	@Override
 	public void prepareCreate() throws Exception{
 		prepare();

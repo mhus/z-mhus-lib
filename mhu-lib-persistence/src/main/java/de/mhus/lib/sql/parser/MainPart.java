@@ -22,7 +22,7 @@ public class MainPart extends StringParsingPart {
 	private ParsingPart last;
 	private boolean parseAttributes = true;
 	private ICompiler compiler;
-	
+
 	public MainPart(ICompiler compiler) {
 		this.compiler = compiler;
 		setParseAttributes(compiler.isParseAttributes());
@@ -38,7 +38,7 @@ public class MainPart extends StringParsingPart {
 			throw new MRuntimeException(e);
 		}
 	}
-	
+
 	public void add(ParsingPart pp) {
 		parts.add(pp);
 		last = pp;
@@ -54,106 +54,106 @@ public class MainPart extends StringParsingPart {
 
 	@Override
 	public boolean parse(char c, ParseReader str) throws ParseException, IOException {
-		
+
 		if (stopOnComma && ( c == ',' || ( c == ')' && brakCount == 0 ) ) ) {
 			return false;
 		} else
-		if (stopOnComma && c == '(') {
-			ParsingPart pp = new OnePart(compiler);
-			add(pp);
-			pp.parse(str);
-			brakCount++;
-			return true;
-		} else
-		if (stopOnComma && c == ')') {
-			ParsingPart pp = new OnePart(compiler);
-			add(pp);
-			pp.parse(str);
-			brakCount--;
-			return true;
-		} else
-		if (c >= '0' && c <= '9') {
-			ParsingPart pp = new NumberPart(compiler);
-			add(pp);
-			pp.parse(str);
-			return true;
-		} else
-		if (   c == '-' || c == '+' || c == '(' || c == ')' || c == ' ' || c == '\n' 
-			|| c == '\r' || c == '\t' || c == '*' || c == '=' || c == '>' || c == '<'
-			|| c == '!' || c == '/' || c == ',' || c == '.' || c == '|' || c == '&' || c == '%') {
-			
-			if (last != null && last instanceof OnePart) {
-				((OnePart)last).append(c);
-				str.consume();
-			} else {
+			if (stopOnComma && c == '(') {
 				ParsingPart pp = new OnePart(compiler);
 				add(pp);
 				pp.parse(str);
-			}
-			return true;
-		} else
-		if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' ) {
-			ConstWordPart pp = new ConstWordPart(compiler);
-			pp.parse(str);
-			// remove spaces - not allowed yet
-//			boolean consumed;
-//			do {
-//				consumed = false;
-//				char c2 = str.character();
-//				if (c2 == ' ' || c2 == '\t') {
-//					str.consume();
-//					consumed = true;
-//				}
-//			} while (consumed);
-			// it's a function?
-			if (!str.isClosed() && str.character() == '(') {
-				ParsingPart pp2 = new FunctionPart(compiler,pp.getContent());
-				str.consume(); // consume ( on this place
-				pp2.parse(str);
-				pp2 = compiler.compileFunction((FunctionPart) pp2);
-				add(pp2);
-			} else {
-				add(pp);
-			}
-			return true;
-		} else
-//		if (c == '(') {
-//			str.consume();
-//			ParsingPart pp = new MyParsingPart();
-//			add(pp);
-//			pp.parse(str);
-//			return true;
-//		} else
-//		if (c == ')') {
-//			str.consume();
-//			return false;
-//		} else
-		if (c == '\'' || c == '"') {
-			ParsingPart pp = new QuotPart(compiler);
-			add(pp);
-			pp.parse(str);
-			return true;
-		} else
-		if (isParseAttributes() && c == '$') {
-			str.consume();
-			if (str.isClosed()) {
-				add(new ConstantPart("$"));
-				return false;
-			}
-			if (str.character() == '$') {
-				str.consume();
-				add(new ConstantPart("$"));
+				brakCount++;
 				return true;
-			}
-			ParsingPart pp = new ParameterPart(compiler);
-			add(pp);
-			pp.parse(str);
-			return true;
-		}
+			} else
+				if (stopOnComma && c == ')') {
+					ParsingPart pp = new OnePart(compiler);
+					add(pp);
+					pp.parse(str);
+					brakCount--;
+					return true;
+				} else
+					if (c >= '0' && c <= '9') {
+						ParsingPart pp = new NumberPart(compiler);
+						add(pp);
+						pp.parse(str);
+						return true;
+					} else
+						if (   c == '-' || c == '+' || c == '(' || c == ')' || c == ' ' || c == '\n'
+						|| c == '\r' || c == '\t' || c == '*' || c == '=' || c == '>' || c == '<'
+						|| c == '!' || c == '/' || c == ',' || c == '.' || c == '|' || c == '&' || c == '%') {
+
+							if (last != null && last instanceof OnePart) {
+								((OnePart)last).append(c);
+								str.consume();
+							} else {
+								ParsingPart pp = new OnePart(compiler);
+								add(pp);
+								pp.parse(str);
+							}
+							return true;
+						} else
+							if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' ) {
+								ConstWordPart pp = new ConstWordPart(compiler);
+								pp.parse(str);
+								// remove spaces - not allowed yet
+								//			boolean consumed;
+								//			do {
+								//				consumed = false;
+								//				char c2 = str.character();
+								//				if (c2 == ' ' || c2 == '\t') {
+								//					str.consume();
+								//					consumed = true;
+								//				}
+								//			} while (consumed);
+								// it's a function?
+								if (!str.isClosed() && str.character() == '(') {
+									ParsingPart pp2 = new FunctionPart(compiler,pp.getContent());
+									str.consume(); // consume ( on this place
+									pp2.parse(str);
+									pp2 = compiler.compileFunction((FunctionPart) pp2);
+									add(pp2);
+								} else {
+									add(pp);
+								}
+								return true;
+							} else
+								//		if (c == '(') {
+								//			str.consume();
+								//			ParsingPart pp = new MyParsingPart();
+								//			add(pp);
+								//			pp.parse(str);
+								//			return true;
+								//		} else
+								//		if (c == ')') {
+								//			str.consume();
+								//			return false;
+								//		} else
+								if (c == '\'' || c == '"') {
+									ParsingPart pp = new QuotPart(compiler);
+									add(pp);
+									pp.parse(str);
+									return true;
+								} else
+									if (isParseAttributes() && c == '$') {
+										str.consume();
+										if (str.isClosed()) {
+											add(new ConstantPart("$"));
+											return false;
+										}
+										if (str.character() == '$') {
+											str.consume();
+											add(new ConstantPart("$"));
+											return true;
+										}
+										ParsingPart pp = new ParameterPart(compiler);
+										add(pp);
+										pp.parse(str);
+										return true;
+									}
 
 		throw new ParseException("unknown character",c,str.getPosition() ); // TODO more info
 	}
-	
+
 	@Override
 	public void dump(int level, StringBuffer out) {
 		MString.appendRepeating(level, ' ', out);

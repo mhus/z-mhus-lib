@@ -23,7 +23,7 @@ public class Book implements DbObject {
 	private UUID lendToId;
 	private RelSingle<Person> lendTo = new RelSingle<Person>();
 	private DbManager manager;
-	
+
 	@DbPrimaryKey
 	public UUID getId() {
 		return id;
@@ -56,7 +56,7 @@ public class Book implements DbObject {
 	public void setPages(int pages) {
 		this.pages = pages;
 	}
-	
+
 	@DbPersistent
 	public UUID getLendToId() {
 		return lendToId;
@@ -66,18 +66,18 @@ public class Book implements DbObject {
 	}
 	public Person getLendToPerson() throws MException {
 		if (lendToId == null) return null;
-		return (Person) manager.getObject(Person.class, getLendToId());
+		return manager.getObject(Person.class, getLendToId());
 	}
-	
+
 	@Override
 	public void doPreCreate(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void doPreSave(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void doInit(DbManager manager, String registryName, boolean isPersistent) {
@@ -86,19 +86,19 @@ public class Book implements DbObject {
 	@Override
 	public void doPreDelete(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void doPostLoad(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void doPostDelete(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@DbRelation(target=Person.class)
 	public RelSingle<Person> getLendTo() {
 		return lendTo;
@@ -112,9 +112,9 @@ public class Book implements DbObject {
 	@Override
 	public void doPostCreate(DbConnection con) {
 		// TODO Auto-generated method stub
-		
+
 	}
-		
-	
-	
+
+
+
 }

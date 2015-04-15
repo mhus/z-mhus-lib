@@ -77,7 +77,8 @@ public final class Log4JFactory extends LogFactory {
      *  instance cannot be returned
      */
 
-    public Log createInstance(String name)
+    @Override
+	public Log createInstance(String name)
     {
     	Log4JLog instance = new Log4JLog( Logger.getLogger( name ));
         return instance;
@@ -102,7 +103,8 @@ public final class Log4JFactory extends LogFactory {
 	     * Log a message to the Log4j Logger with <code>TRACE</code> priority.
 	     * Currently logs to <code>DEBUG</code> level in Log4J.
 	     */
-	    public void trace(Object message) {
+	    @Override
+		public void trace(Object message) {
 	    	if (!isTrace()) return;
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, null );
@@ -116,7 +118,8 @@ public final class Log4JFactory extends LogFactory {
 	     * Log an error to the Log4j Logger with <code>TRACE</code> priority.
 	     * Currently logs to <code>DEBUG</code> level in Log4J.
 	     */
-	    public void trace(Object message, Throwable t) {
+	    @Override
+		public void trace(Object message, Throwable t) {
 	    	if (!isTrace()) return;
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, t );
@@ -129,7 +132,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log a message to the Log4j Logger with <code>DEBUG</code> priority.
 	     */
-	    public void debug(Object message) {
+	    @Override
+		public void debug(Object message) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, null );
 	        } else {
@@ -140,7 +144,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log an error to the Log4j Logger with <code>DEBUG</code> priority.
 	     */
-	    public void debug(Object message, Throwable t) {
+	    @Override
+		public void debug(Object message, Throwable t) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, t );
 	        } else {
@@ -152,7 +157,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log a message to the Log4j Logger with <code>INFO</code> priority.
 	     */
-	    public void info(Object message) {
+	    @Override
+		public void info(Object message) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.INFO, message, null );
 	        } else {
@@ -164,7 +170,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log an error to the Log4j Logger with <code>INFO</code> priority.
 	     */
-	    public void info(Object message, Throwable t) {
+	    @Override
+		public void info(Object message, Throwable t) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.INFO, message, t );
 	        } else {
@@ -176,7 +183,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log a message to the Log4j Logger with <code>WARN</code> priority.
 	     */
-	    public void warn(Object message) {
+	    @Override
+		public void warn(Object message) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.WARN, message, null );
 	        } else {
@@ -188,7 +196,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log an error to the Log4j Logger with <code>WARN</code> priority.
 	     */
-	    public void warn(Object message, Throwable t) {
+	    @Override
+		public void warn(Object message, Throwable t) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.WARN, message, t );
 	        } else {
@@ -200,7 +209,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log a message to the Log4j Logger with <code>ERROR</code> priority.
 	     */
-	    public void error(Object message) {
+	    @Override
+		public void error(Object message) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.ERROR, message, null );
 	        } else {
@@ -212,7 +222,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log an error to the Log4j Logger with <code>ERROR</code> priority.
 	     */
-	    public void error(Object message, Throwable t) {
+	    @Override
+		public void error(Object message, Throwable t) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.ERROR, message, t );
 	        } else {
@@ -224,7 +235,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log a message to the Log4j Logger with <code>FATAL</code> priority.
 	     */
-	    public void fatal(Object message) {
+	    @Override
+		public void fatal(Object message) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.FATAL, message, null );
 	        } else {
@@ -236,7 +248,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Log an error to the Log4j Logger with <code>FATAL</code> priority.
 	     */
-	    public void fatal(Object message, Throwable t) {
+	    @Override
+		public void fatal(Object message, Throwable t) {
 	        if(is12) {
 	            getLogger().log(FQCN, (Priority) Level.FATAL, message, t );
 	        } else {
@@ -247,6 +260,7 @@ public final class Log4JFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
+	     * @return 
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {
@@ -259,7 +273,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>DEBUG</code> priority.
 	     */
-	    public boolean isDebugEnabled() {
+	    @Override
+		public boolean isDebugEnabled() {
 	        return getLogger().isDebugEnabled();
 	    }
 	
@@ -267,7 +282,8 @@ public final class Log4JFactory extends LogFactory {
 	     /**
 	     * Check whether the Log4j Logger used is enabled for <code>ERROR</code> priority.
 	     */
-	    public boolean isErrorEnabled() {
+	    @Override
+		public boolean isErrorEnabled() {
 	        if(is12) {
 	            return getLogger().isEnabledFor((Priority) Level.ERROR);
 	        } else {
@@ -279,7 +295,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>FATAL</code> priority.
 	     */
-	    public boolean isFatalEnabled() {
+	    @Override
+		public boolean isFatalEnabled() {
 	        if(is12) {
 	            return getLogger().isEnabledFor((Priority) Level.FATAL);
 	        } else {
@@ -291,7 +308,8 @@ public final class Log4JFactory extends LogFactory {
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>INFO</code> priority.
 	     */
-	    public boolean isInfoEnabled() {
+	    @Override
+		public boolean isInfoEnabled() {
 	        return getLogger().isInfoEnabled();
 	    }
 	
@@ -300,14 +318,16 @@ public final class Log4JFactory extends LogFactory {
 	     * Check whether the Log4j Logger used is enabled for <code>TRACE</code> priority.
 	     * For Log4J, this returns the value of <code>isDebugEnabled()</code>
 	     */
-	    public boolean isTraceEnabled() {
+	    @Override
+		public boolean isTraceEnabled() {
 	        return getLogger().isDebugEnabled();
 	    }
 	
 	    /**
 	     * Check whether the Log4j Logger used is enabled for <code>WARN</code> priority.
 	     */
-	    public boolean isWarnEnabled() {
+	    @Override
+		public boolean isWarnEnabled() {
 	        if(is12) {
 	            return getLogger().isEnabledFor((Priority) Level.WARN);
 	        } else {

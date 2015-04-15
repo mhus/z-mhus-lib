@@ -9,6 +9,7 @@ import com.vaadin.ui.Table;
 
 public class SimpleTable extends Table {
 
+	private static final long serialVersionUID = 1L;
 	private IndexedContainer dataSource;
 	private ColumnDefinition[] columns;
 
@@ -62,6 +63,7 @@ public class SimpleTable extends Table {
 		return columns;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addRow(Object id, Object ... values) {
 		Item item = dataSource.addItem(id);
 		for (int i = 0; i < columns.length; i++)
@@ -74,6 +76,7 @@ public class SimpleTable extends Table {
 								);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean updateRow(Object id, Object[] values) {
 		Item item = dataSource.getItem(id);
 		if (item == null) return false;

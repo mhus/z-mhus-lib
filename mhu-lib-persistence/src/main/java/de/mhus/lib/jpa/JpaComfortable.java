@@ -13,30 +13,30 @@ public class JpaComfortable implements JpaInjection {
 	public void doInjectJpa(JpaEntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
-	
+
+
 	public boolean isManaged() {
 		return entityManager != null && entityManager.isOpen();
 	}
-	
+
 	public void save() {
 		entityManager.persist(this);
 	}
-	
+
 	public void revert() {
 		entityManager.refresh(this);
 	}
-	
+
 	public Object copy() {
 		return entityManager.copy(this);
 	}
-	
+
 	public void remove() {
 		entityManager.remove(this);
 	}
-	
+
 	public void detach() {
 		entityManager.detach(this);
 	}
-	
+
 }

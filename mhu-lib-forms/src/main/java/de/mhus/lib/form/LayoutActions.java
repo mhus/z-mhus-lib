@@ -13,6 +13,7 @@ public class LayoutActions extends LayoutComposite {
 	private LinkedList<FormAction> actions = new LinkedList<FormAction>();
 	private HashMap<String, FormAction> map = new HashMap<String, FormAction>();
 	
+	@Override
 	protected void doBuildChildren() throws Exception {
 		// load actions
 		ResourceNode cActions = config.getNode("actions");

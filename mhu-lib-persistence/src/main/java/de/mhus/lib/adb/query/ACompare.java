@@ -44,7 +44,7 @@ public class ACompare extends APart {
 		case IN:
 			buffer.append(" in ");
 			break;
-		
+
 		}
 		right.print(query, buffer);
 	}

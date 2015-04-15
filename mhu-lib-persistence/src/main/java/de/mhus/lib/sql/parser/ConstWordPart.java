@@ -13,8 +13,8 @@ public class ConstWordPart extends ConstantParsingPart {
 
 	@Override
 	public boolean parse(char c, ParseReader str) throws ParseException,
-			IOException {
-		
+	IOException {
+
 		if (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c == '_') {
 			buffer.append(c);
 			str.consume();
@@ -22,5 +22,5 @@ public class ConstWordPart extends ConstantParsingPart {
 		}
 		return false;
 	}
-	
+
 }

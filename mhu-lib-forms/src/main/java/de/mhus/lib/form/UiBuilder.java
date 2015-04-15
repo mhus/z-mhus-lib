@@ -18,6 +18,7 @@ public abstract class UiBuilder extends MObject implements IUiBuilder {
 		return root;
 	}
 
+	@Override
 	public void doBuild() throws Exception {
 		root.build((IUiBuilder)this);
 	}

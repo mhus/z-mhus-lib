@@ -16,25 +16,25 @@ import de.mhus.lib.core.parser.StringPart;
 
 public class SqlCompiler implements  Parser, ICompiler {
 
-//	private static Log log = Log.getLog(SqlCompiler.class);
+	//	private static Log log = Log.getLog(SqlCompiler.class);
 
 	private ICompiler compiler = null;
-	
+
 	public SqlCompiler() {
 		compiler = this;
 	}
-	
+
 	public SqlCompiler(ICompiler compiler) {
 		this.compiler = compiler;
 	}
-	
+
 	@Override
 	public CompiledString compileString(String in) throws ParseException {
 
 		MainPart root = new MainPart(compiler);
 
 		StringReader sr = new StringReader(in);
-		
+
 		ParseReader pr;
 		try {
 			pr = new ParseReader(sr);
@@ -42,7 +42,7 @@ public class SqlCompiler implements  Parser, ICompiler {
 			throw new ParseException(e);
 		}
 		root.parse(pr);
-		
+
 		return new CompiledString(new StringPart[] {root});
 	}
 
@@ -78,5 +78,5 @@ public class SqlCompiler implements  Parser, ICompiler {
 	public String escape(String text) {
 		return MSql.escape(text);
 	}
-	
+
 }

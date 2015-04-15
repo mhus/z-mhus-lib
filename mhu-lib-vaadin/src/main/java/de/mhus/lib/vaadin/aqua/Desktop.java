@@ -110,6 +110,7 @@ public class Desktop extends VerticalLayout {
                                 settingsMenuCmd = new MenuBar.Command() {
 									private static final long serialVersionUID = 1L;
 
+									@Override
 									public void menuSelected(
 											MenuItem selectedItem) {
 										connector.doSettingsMenuAction(selectedItem);
@@ -130,6 +131,7 @@ public class Desktop extends VerticalLayout {
 
 									private static final long serialVersionUID = 1L;
 
+									@Override
 									public void buttonClick(Button.ClickEvent event) {
                                     	connector.doLogout();
                                     }

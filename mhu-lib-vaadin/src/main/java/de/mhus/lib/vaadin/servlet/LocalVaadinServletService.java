@@ -10,6 +10,8 @@ import com.vaadin.server.VaadinServletService;
 
 public class LocalVaadinServletService extends VaadinServletService {
 
+	private static final long serialVersionUID = 1L;
+
 	public LocalVaadinServletService(VaadinServlet servlet,
 			DeploymentConfiguration deploymentConfiguration)
 			throws ServiceException {

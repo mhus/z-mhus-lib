@@ -16,7 +16,7 @@ public class ALiteralList extends APart {
 			part.print(query, buffer);
 		}
 	}
-	
+
 	@Override
 	public void getAttributes(AttributeMap map) {
 		for (APart part : operations)

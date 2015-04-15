@@ -13,7 +13,7 @@ public class Store extends DbComfortableObject {
 	private String address;
 	private UUID principal;
 	private java.sql.Date sqlDate;
-	
+
 	@DbPrimaryKey
 	public UUID getId() {
 		return id;
@@ -21,7 +21,7 @@ public class Store extends DbComfortableObject {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	
+
 	@DbPersistent
 	public String getName() {
 		return name;
@@ -29,7 +29,7 @@ public class Store extends DbComfortableObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@DbPersistent
 	public String getAddress() {
 		return address;
@@ -37,7 +37,7 @@ public class Store extends DbComfortableObject {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	@DbPersistent
 	public UUID getPrincipal() {
 		return principal;
@@ -53,7 +53,7 @@ public class Store extends DbComfortableObject {
 	public void setSqlDate(java.sql.Date sqlDate) {
 		this.sqlDate = sqlDate;
 	}
-	
-	
-	
+
+
+
 }

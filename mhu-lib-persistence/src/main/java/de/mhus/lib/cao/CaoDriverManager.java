@@ -12,7 +12,7 @@ import de.mhus.lib.core.lang.MObject;
 public class CaoDriverManager extends MObject implements IBase {
 
 	protected HashMap<String, CaoDriver> schemes = new HashMap<String, CaoDriver>();
-	
+
 	public CaoDriver getScheme(String name) {
 		return schemes.get(name);
 	}
@@ -20,7 +20,7 @@ public class CaoDriverManager extends MObject implements IBase {
 	public CaoConnection connect(String uri, String authentication) throws URISyntaxException {
 		return connect(new URI(uri), authentication);
 	}
-	
+
 	public CaoConnection connect(URI uri, String authentication) {
 		log().t("connect",uri);
 		CaoDriver scheme = getScheme(uri.getScheme());
@@ -28,5 +28,5 @@ public class CaoDriverManager extends MObject implements IBase {
 		return scheme.connect(uri, authentication);
 	}
 
-	
+
 }

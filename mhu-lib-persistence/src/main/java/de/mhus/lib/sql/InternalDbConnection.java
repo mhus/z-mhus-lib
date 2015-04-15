@@ -11,11 +11,11 @@ public abstract class InternalDbConnection extends MObject implements DbConnecti
 	protected long lastUsedTime = 0;
 	protected long timeoutUnused    = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
 	protected long timeoutLifetime = MTimeInterval.HOUR_IN_MILLISECOUNDS;
-	
+
 	public InternalDbConnection() {
 		creationTime = System.currentTimeMillis();
 	}
-	
+
 	public void setPool(DbPool pool) {
 		this.poolId = pool.getPoolId();
 		this.pool = pool;
@@ -32,6 +32,7 @@ public abstract class InternalDbConnection extends MObject implements DbConnecti
 		return false;
 	}
 
+	@Override
 	public void setUsed(boolean used) {
 		lastUsedTime = System.currentTimeMillis();
 	}

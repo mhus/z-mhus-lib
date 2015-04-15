@@ -14,7 +14,7 @@ public class ANot extends APart {
 	public void print(AQuery<?> query, StringBuffer buffer) {
 		buffer.append("not ");
 		operation.print(query, buffer);
-//		buffer.append(')');
+		//		buffer.append(')');
 	}
 
 	@Override

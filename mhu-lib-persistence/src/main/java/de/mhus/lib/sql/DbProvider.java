@@ -34,8 +34,8 @@ import de.mhus.lib.errors.MRuntimeException;
  *
  */
 public abstract class DbProvider extends MObject {
-	
-//	private static Log log = Log.getLog(DbProvider.class);
+
+	//	private static Log log = Log.getLog(DbProvider.class);
 
 	protected ResourceNode config;
 	protected MActivator activator;
@@ -60,7 +60,7 @@ public abstract class DbProvider extends MObject {
 		this.config = config;
 		this.activator = activator;
 	}
-	
+
 	/**
 	 * Returns the predefined statement by this name.
 	 * TODO need to manipulate the set of statements from outside.
@@ -68,13 +68,13 @@ public abstract class DbProvider extends MObject {
 	 * @param name
 	 * @return The query string or null.
 	 */
-	public String[] getQuery(String name) {		
+	public String[] getQuery(String name) {
 		try {
 			ResourceNode query = config.getNode("queries");
 			String queryLanguage = null;
 			String queryString = query.getString(name,null);
 			String[] out = new String[] { queryLanguage, queryString };
-			
+
 			if (queryString == null) {
 				for (ResourceNode q : query.getNodes("query") ) {
 					if (q.getString("name", "").equals(name)) {
@@ -90,7 +90,7 @@ public abstract class DbProvider extends MObject {
 			throw new MRuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * Returns the Dialect object for this database. It contains all deep specific
 	 * abstraction functions to handle the database.
@@ -120,5 +120,5 @@ public abstract class DbProvider extends MObject {
 	public MActivator getActivator() {
 		return activator;
 	}
-	
+
 }

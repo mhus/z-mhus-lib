@@ -21,13 +21,13 @@ public abstract class CaoAction extends MObject {
 	public CaoAction() {
 		resourceBundle = new MNls();
 	}
-	
-	public CaoAction(MResourceProvider res, String resourceName) {
+
+	public CaoAction(MResourceProvider<?> res, String resourceName) {
 		resourceBundle = base(MNlsFactory.class).load(res,this.getClass(), resourceName, null);
 	}
-		
+
 	public abstract String getName();
-	
+
 	/**
 	 * Returns a configuration Form for the operation. The list of elements
 	 * should be a representative list. The configuration use most time the
@@ -37,11 +37,12 @@ public abstract class CaoAction extends MObject {
 	 * @param list
 	 * @param initConfig specific initial attributes
 	 * @return
+	 * @throws CaoException 
 	 */
 	public abstract MForm createConfiguration(CaoList list,Object...initConfig) throws CaoException;
-	
+
 	public abstract boolean canExecute(CaoList list, Object...initConfig);
-	
+
 	/**
 	 * Executes a defined action. Is the action need to execute an operation it will
 	 * return the operation object to be executed by the caller.
@@ -53,6 +54,7 @@ public abstract class CaoAction extends MObject {
 	 */
 	public abstract CaoOperation execute(CaoList list, Object configuration) throws CaoException;
 
+	@Override
 	public String toString() {
 		return "Action " + getName() + " (" + getClass().getCanonicalName() + ")";
 	}
@@ -60,5 +62,5 @@ public abstract class CaoAction extends MObject {
 	public MNls getResourceBundle() {
 		return resourceBundle;
 	}
-	
+
 }

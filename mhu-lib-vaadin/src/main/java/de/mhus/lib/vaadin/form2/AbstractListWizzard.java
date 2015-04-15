@@ -55,6 +55,7 @@ public abstract class AbstractListWizzard extends AbstractWizzard {
 
 		}
 		
+		@SuppressWarnings("deprecation")
 		@Override
 		protected void initContent(VerticalLayout layout) throws Exception {
 			if (options.isProperty("description")) {

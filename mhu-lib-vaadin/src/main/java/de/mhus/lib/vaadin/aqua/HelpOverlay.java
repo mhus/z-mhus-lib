@@ -9,7 +9,9 @@ import com.vaadin.ui.Window;
 
 public class HelpOverlay extends Window {
 
-    public HelpOverlay() {
+	private static final long serialVersionUID = 1L;
+
+	public HelpOverlay() {
         setContent(new CssLayout());
         setPrimaryStyleName("help-overlay");
         setDraggable(false);

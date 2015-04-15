@@ -19,7 +19,7 @@ import de.mhus.lib.errors.MRuntimeException;
 public class JdbcProvider extends DbProvider {
 
 	private Dialect dialect;
-	
+
 	@Override
 	public synchronized Dialect getDialect() {
 		try {
@@ -39,8 +39,8 @@ public class JdbcProvider extends DbProvider {
 						if (driver.indexOf("hsqldb") > 0)
 							dialect = new DialectHsqldb();
 						else
-						if (driver.indexOf("mysql") > 0)
-							dialect = new DialectMysql();
+							if (driver.indexOf("mysql") > 0)
+								dialect = new DialectMysql();
 					}
 				}
 				if (dialect == null) {
@@ -61,12 +61,12 @@ public class JdbcProvider extends DbProvider {
 		String url = concon.getExtracted("url");
 		String user = concon.getExtracted("user");
 		String pass = concon.getExtracted("pass");
-		
+
 		if (!MString.isEmpty(driver)) {
-//			activator.getClazz(driver);
+			//			activator.getClazz(driver);
 			Class.forName(driver);
 		}
-		
+
 		log().t(driver,url,user);
 		Connection con = DriverManager.getConnection(url,user,MPassword.decode(pass));
 		con.setAutoCommit(false);

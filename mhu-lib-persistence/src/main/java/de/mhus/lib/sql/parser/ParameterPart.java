@@ -19,7 +19,7 @@ import de.mhus.lib.sql.DbStatement;
 
 public class ParameterPart extends StringParsingPart {
 
-	
+
 	private StringBuffer buffer;
 	public String[] attribute;
 
@@ -31,7 +31,7 @@ public class ParameterPart extends StringParsingPart {
 
 	@Override
 	public void execute(StringBuffer out, Map<String, Object> attributes) {
-		
+
 		Object value = attributes.get(attribute[0]);
 		if (value == null) {
 			out.append("null");
@@ -71,48 +71,48 @@ public class ParameterPart extends StringParsingPart {
 			if (value instanceof Number || value instanceof Raw)
 				type = "raw";  // direct toString() operation (via compiler request)
 			else
-			if (value instanceof Date || value instanceof Calendar || value instanceof java.sql.Date )
-				type = "date";
-			else
-			if (value instanceof Boolean)
-				type = "bool";
-			else
-			if (value instanceof Enum)
-				type = "int";
+				if (value instanceof Date || value instanceof Calendar || value instanceof java.sql.Date )
+					type = "date";
+				else
+					if (value instanceof Boolean)
+						type = "bool";
+					else
+						if (value instanceof Enum)
+							type = "int";
 		}
 		if (type == null)
 			type = "text";
-		
+
 		log().t(type,value);
-		
+
 		if ("text".equals(type) || "string".equals(type))
 			out.append("'").append(compiler.escape(String.valueOf(value))).append("'");
 		else
-		if ("int".equals(type)) {
-			if (value instanceof Enum)
-				out.append(compiler.valueToString( ((Enum<?>)value).ordinal() ) );
-			else
-				out.append(compiler.valueToString(MCast.toint(value.toString(),0)));
-		} else
-		if ("long".equals(type))
-			out.append(compiler.valueToString(MCast.tolong(value.toString(),0)));
-		else
-		if ("float".equals(type))
-			out.append(compiler.valueToString(MCast.tofloat(value.toString(),0)));
-		else
-		if ("double".equals(type))
-			out.append(compiler.valueToString(MCast.todouble(value.toString(),0)));
-		else
-		if ("date".equals(type))
-			out.append( compiler.toSqlDateValue( MCast.objectToDate(value) ) );
-		else
-		if ("raw".equals(type))
-			out.append(compiler.valueToString(value));
-		else
-		if ("bool".equals(type))
-			out.append( MCast.toboolean(value.toString(),false) ? "1" : "0" );
-		else
-			log().warn("Unknown attribute type: " + type);			
+			if ("int".equals(type)) {
+				if (value instanceof Enum)
+					out.append(compiler.valueToString( ((Enum<?>)value).ordinal() ) );
+				else
+					out.append(compiler.valueToString(MCast.toint(value.toString(),0)));
+			} else
+				if ("long".equals(type))
+					out.append(compiler.valueToString(MCast.tolong(value.toString(),0)));
+				else
+					if ("float".equals(type))
+						out.append(compiler.valueToString(MCast.tofloat(value.toString(),0)));
+					else
+						if ("double".equals(type))
+							out.append(compiler.valueToString(MCast.todouble(value.toString(),0)));
+						else
+							if ("date".equals(type))
+								out.append( compiler.toSqlDateValue( MCast.objectToDate(value) ) );
+							else
+								if ("raw".equals(type))
+									out.append(compiler.valueToString(value));
+								else
+									if ("bool".equals(type))
+										out.append( MCast.toboolean(value.toString(),false) ? "1" : "0" );
+									else
+										log().warn("Unknown attribute type: " + type);
 	}
 
 	@Override
@@ -128,19 +128,19 @@ public class ParameterPart extends StringParsingPart {
 
 	@Override
 	public boolean parse(char c, ParseReader str) throws ParseException,
-			IOException {
-		
+	IOException {
+
 		str.consume();
 		if (c == '$') {
 			return false;
 		}
 
 		buffer.append(c);
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	public void dump(int level, StringBuffer out) {
 		MString.appendRepeating(level, ' ', out);

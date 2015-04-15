@@ -10,11 +10,13 @@ public class UiAccordion extends UiVaadinComposite {
 
 	private Accordion accordion;
 
+	@Override
 	public void createUi(VaadinFormBuilder builder) {
 		accordion = new Accordion();
 		builder.addComposite((LayoutComposite)getElement(), accordion);
 	}
 	
+	@Override
 	public void addComponent(LayoutElement element, Component component, int col1, int row1, int col2, int row2) {
 		accordion.addTab(component,element.getTitle());
 	}

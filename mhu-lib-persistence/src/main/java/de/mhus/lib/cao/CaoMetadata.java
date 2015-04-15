@@ -9,13 +9,13 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition>{
 
 	protected LinkedList<CaoMetaDefinition> definition = new LinkedList<CaoMetaDefinition>();
 	protected HashMap<String, CaoMetaDefinition> index = null;
-	
+
 	private CaoDriver driver;
-	
+
 	public CaoMetadata(CaoDriver driver) {
 		this.driver = driver;
 	}
-	
+
 	@Override
 	public Iterator<CaoMetaDefinition> iterator() {
 		return definition.iterator();
@@ -24,11 +24,11 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition>{
 	public int getCount() {
 		return definition.size();
 	}
-	
+
 	public CaoMetaDefinition getDefinitionAt(int index) {
 		return definition.get(index);
 	}
-	
+
 	public final CaoDriver getDriver() {
 		return driver;
 	}

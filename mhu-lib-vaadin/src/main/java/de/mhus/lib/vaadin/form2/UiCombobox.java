@@ -18,6 +18,7 @@ public class UiCombobox extends UiText {
 	private IndexedContainer container;
 	private Object value;
 
+	@Override
 	protected void setValueToField(Object arg) {
 		value = arg;
 		ComboBox editor = (ComboBox)field;
@@ -27,6 +28,7 @@ public class UiCombobox extends UiText {
 			editor.select(arg);	
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doUpdate(DataConnector data) throws MException {
 
@@ -69,6 +71,8 @@ public class UiCombobox extends UiText {
 		super.doUpdate(data);
 	}
 	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	@Override
 	protected AbstractField createTextField() {
 		ComboBox out = new ComboBox();
 		out.setItemCaptionPropertyId("title");

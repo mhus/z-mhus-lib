@@ -26,7 +26,7 @@ public abstract class DbAccessManager {
 	 * @throws AccessDeniedException
 	 */
 	public abstract void hasAccess(DbManager manager, Table c, DbConnection con, Object object, int right) throws AccessDeniedException;
-	
+
 	/**
 	 * This is used to validate rights before reading from a database. The right to check is ever READ.
 	 * Throws an exception if the access is not allowed.

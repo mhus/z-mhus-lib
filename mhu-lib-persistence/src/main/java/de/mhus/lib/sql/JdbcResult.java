@@ -44,7 +44,7 @@ public class JdbcResult extends DbResult {
 		this.sth = sth;
 		this.instance = instance;
 	}
-	
+
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		return instance.unwrap(iface);
 	}
@@ -53,10 +53,12 @@ public class JdbcResult extends DbResult {
 		return instance.isWrapperFor(iface);
 	}
 
+	@Override
 	public boolean next() throws SQLException {
 		return instance.next();
 	}
 
+	@Override
 	public void close() throws SQLException {
 		instance.close();
 	}
@@ -132,10 +134,12 @@ public class JdbcResult extends DbResult {
 		return instance.getBinaryStream(columnIndex);
 	}
 
+	@Override
 	public String getString(String columnLabel) throws SQLException {
 		return instance.getString(columnLabel);
 	}
 
+	@Override
 	public boolean getBoolean(String columnLabel) throws SQLException {
 		return instance.getBoolean(columnLabel);
 	}
@@ -148,18 +152,22 @@ public class JdbcResult extends DbResult {
 		return instance.getShort(columnLabel);
 	}
 
+	@Override
 	public int getInt(String columnLabel) throws SQLException {
 		return instance.getInt(columnLabel);
 	}
 
+	@Override
 	public long getLong(String columnLabel) throws SQLException {
 		return instance.getLong(columnLabel);
 	}
 
+	@Override
 	public float getFloat(String columnLabel) throws SQLException {
 		return instance.getFloat(columnLabel);
 	}
 
+	@Override
 	public double getDouble(String columnLabel) throws SQLException {
 		return instance.getDouble(columnLabel);
 	}
@@ -174,14 +182,17 @@ public class JdbcResult extends DbResult {
 		return instance.getBytes(columnLabel);
 	}
 
+	@Override
 	public Date getDate(String columnLabel) throws SQLException {
 		return instance.getDate(columnLabel);
 	}
 
+	@Override
 	public Time getTime(String columnLabel) throws SQLException {
 		return instance.getTime(columnLabel);
 	}
 
+	@Override
 	public Timestamp getTimestamp(String columnLabel) throws SQLException {
 		return instance.getTimestamp(columnLabel);
 	}
@@ -195,6 +206,7 @@ public class JdbcResult extends DbResult {
 		return instance.getUnicodeStream(columnLabel);
 	}
 
+	@Override
 	public InputStream getBinaryStream(String columnLabel) throws SQLException {
 		return instance.getBinaryStream(columnLabel);
 	}
@@ -877,6 +889,6 @@ public class JdbcResult extends DbResult {
 		}
 		return columnNames;
 	}
-	
-	
+
+
 }

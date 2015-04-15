@@ -14,6 +14,7 @@ public class LayoutComposite extends LayoutElement {
 	private int offset;
 	protected LinkedList<LayoutElement> elements = new LinkedList<LayoutElement>();
 
+	@Override
 	protected void doInit() throws Exception {
 		
 		this.cols = doCalculateColums();
@@ -110,6 +111,7 @@ public class LayoutComposite extends LayoutElement {
 		labelCols = col;
 	}
 
+	@Override
 	public void dump(PrintStream out, int level) {
 		super.dump(out,level);
 		out.println(MString.getRepeatig(level, ' ') + "(");
@@ -118,6 +120,7 @@ public class LayoutComposite extends LayoutElement {
 		out.println(MString.getRepeatig(level, ' ') + ")");
 	}
 
+	@Override
 	public void build(UiBuilder builder) throws MException {
 		builder.createCompositStart(this);
 		for (LayoutElement c : elements)
@@ -133,6 +136,7 @@ public class LayoutComposite extends LayoutElement {
 		this.offset = offset;
 	}
 	
+	@Override
 	public String toString() {
 		return super.toString() + ",c:" + cols + ",lc:" + labelCols + ",o:" + offset;
 	}

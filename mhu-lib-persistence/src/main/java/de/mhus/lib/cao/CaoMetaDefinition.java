@@ -11,7 +11,7 @@ public class CaoMetaDefinition {
 	private long size;
 	private String[] categories;
 	private CaoDriver driver;
-	
+
 	public CaoMetaDefinition(CaoMetadata meta, String name, TYPE type, String nls, long size, String ... categories ) {
 		this.name = name;
 		this.type = type;
@@ -20,27 +20,27 @@ public class CaoMetaDefinition {
 		this.categories = categories;
 		this.driver = meta.getDriver();
 	}
-	
+
 	public TYPE getType() {
 		return type;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getNls() {
 		return nls;
 	}
-	
+
 	public long getSize() {
 		return size;
 	}
-	
+
 	public String[] getCategories() {
 		return categories;
 	}
-	
+
 	public final CaoDriver getDriver() {
 		return driver;
 	}
@@ -52,5 +52,5 @@ public class CaoMetaDefinition {
 			if (c != null && c.equals(category)) return true;
 		return false;
 	}
-	
+
 }

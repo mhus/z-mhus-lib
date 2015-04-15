@@ -15,23 +15,24 @@ public abstract class DbStatement extends MObject {
 
 	public static final String RETURN_BINARY_KEY = "return_binary_attribute_";
 
+	@Override
 	protected void finalize() throws Throwable {
 		close();
 	};
-	
+
 	/**
 	 * Executes the given SQL statement, which may return multiple results. In this statement
 	 * InputStream as attribute values are allowed.
 	 * 
 	 * @See Statement.execute
-	 * @param attributes 
+	 * @param attributes
 	 * @return
 	 * @throws Exception
 	 */
 	public abstract boolean execute(Map<String, Object> attributes) throws Exception;
-	
+
 	public abstract DbResult getResultSet() throws SQLException;
-	
+
 	public abstract int getUpdateCount() throws SQLException;
 
 	/**
@@ -42,7 +43,7 @@ public abstract class DbStatement extends MObject {
 	 * @throws Exception
 	 */
 	public abstract DbResult executeQuery(Map<String, Object> attributes) throws Exception;
-	
+
 	/**
 	 * Return the result of an update query. In the attributes InputStreams are allowed (blobs).
 	 * 
@@ -58,7 +59,7 @@ public abstract class DbStatement extends MObject {
 	 * @return
 	 */
 	public abstract DbConnection getConnection();
-	
+
 	/**
 	 * Close the statement and free resources.
 	 */
@@ -76,5 +77,5 @@ public abstract class DbStatement extends MObject {
 		while (attributes.containsKey(DbStatement.RETURN_BINARY_KEY + nr)) nr++;
 		attributes.put(DbStatement.RETURN_BINARY_KEY + nr, value);
 	}
-	
+
 }

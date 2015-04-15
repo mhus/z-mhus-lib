@@ -14,6 +14,7 @@ public class FieldRelation extends MObject {
 	private Table table;
 	private PojoAttribute<Object> attribute;
 
+	@SuppressWarnings("unchecked")
 	public FieldRelation(DbManager manager, Table table, PojoAttribute<?> attribute, DbRelation config) {
 		this.attribute = (PojoAttribute<Object>) attribute;
 		this.manager = manager;
@@ -24,7 +25,7 @@ public class FieldRelation extends MObject {
 	public String getName() {
 		return attribute.getName();
 	}
-	
+
 	public IRelationObject getRelationObject(Object obj) {
 		try {
 			IRelationObject rel = (IRelationObject)attribute.get(obj);

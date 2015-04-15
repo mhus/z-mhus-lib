@@ -31,6 +31,7 @@ import de.mhus.lib.vaadin.converter.IntPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.LongPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.SqlDateConverter;
 
+@SuppressWarnings("serial")
 public class MhuTable extends Table {
 	
 	private static final long serialVersionUID = 1L;

@@ -11,19 +11,19 @@ public abstract class CaoNode extends ResourceNode {
 	public CaoNode(CaoNode parent) {
 		this(parent.getConnection(),parent);
 	}
-	
+
 	public CaoNode(CaoConnection con, CaoNode parent) {
 		this.con = con;
 		this.parent = parent;
 	}
-	
+
 	public CaoConnection getConnection() {
 		return con;
 	}
-	
+
 	/**
 	 * Returns a parent element where this element is coming from. Usually this
-	 * is possible if the element is created from a tree node. The element can 
+	 * is possible if the element is created from a tree node. The element can
 	 * also have other parents. If no parent is known in this situation the
 	 * function returns null.
 	 * 
@@ -33,9 +33,9 @@ public abstract class CaoNode extends ResourceNode {
 	public CaoNode getParent() {
 		return parent;
 	}
-	
+
 	public abstract CaoWritableElement getWritableNode() throws MException;
-	
+
 	/**
 	 * Returns the meta structure definition for this data.
 	 * 
@@ -49,7 +49,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * unique id could not be returned.
 	 * 
 	 * @return Unique ID or null
-	 * @throws CaoException 
+	 * @throws CaoException
 	 */
 	public abstract String getId() throws CaoException;
 
@@ -57,7 +57,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * Return a display name of this object.
 	 * 
 	 * @return The display name
-	 * @throws MException 
+	 * @throws MException
 	 */
 	@Override
 	public abstract String getName() throws MException;
@@ -75,6 +75,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * original state of the object. It will also load the new state from the
 	 * system is something was changed from another process. After reload the
 	 * object is no more dirty.
+	 * @throws CaoException 
 	 */
 	public abstract void reload() throws CaoException;
 
@@ -96,6 +97,7 @@ public abstract class CaoNode extends ResourceNode {
 	 */
 	public abstract boolean isValid();
 
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof CaoNode) {
 			try {
@@ -118,10 +120,10 @@ public abstract class CaoNode extends ResourceNode {
 	 * Return the current access policy for this element.
 	 * 
 	 * @return
-	 * @throws CaoException 
+	 * @throws CaoException
 	 */
 	public CaoPolicy getAccessPolicy() throws CaoException {
 		return new CaoPolicy(this ,true, isEditable());
 	}
-	
+
 }

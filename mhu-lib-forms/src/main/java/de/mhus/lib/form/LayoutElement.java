@@ -233,6 +233,7 @@ public class LayoutElement extends MObject implements Observer {
 		return type;
 	}
 	
+	@Override
 	public String toString() {
 		try {
 			return config.getName() + "=n:" + name + ",t:" + type + ",fw:" + isFullWidth + ",ti:" + isTitleInside;

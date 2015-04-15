@@ -34,6 +34,7 @@ public class PropertiesGridPanel extends VerticalLayout implements MNlsProvider 
 		grid.addComponent(new Label(value));
 	}
 	
+	@Override
 	public MNls getNls() {
 		return nls;
 	}

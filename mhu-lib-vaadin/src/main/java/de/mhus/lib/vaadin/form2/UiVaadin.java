@@ -54,6 +54,7 @@ public abstract class UiVaadin extends UiElement {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected AbstractComponent getLabel() {
 		if (label == null) {
 			if (getElement().getConfig().isProperty("wizzard")) {
@@ -77,6 +78,7 @@ public abstract class UiVaadin extends UiElement {
 	
 	protected abstract Component getField() throws MException;
 	
+	@Override
 	public void doUpdate(DataConnector data) throws MException {
 		if (data.getTaskName().equals(DataSource.CONNECTOR_TASK_TITLE)) {
 			String arg = data.getString((String)label.getCaption());
@@ -96,6 +98,7 @@ public abstract class UiVaadin extends UiElement {
 		getLabel().setComponentError(msg == null ? null : new UserError(msg));
 	}
 	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	protected void prepareInputField(AbstractField text) {
 		if (text instanceof FocusNotifier)
 			((FocusNotifier)text).addListener(new FieldEvents.FocusListener() {

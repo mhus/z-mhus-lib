@@ -19,5 +19,5 @@ public class NumberPart extends ConstantParsingPart {
 		}
 		return false;
 	}
-	
+
 }

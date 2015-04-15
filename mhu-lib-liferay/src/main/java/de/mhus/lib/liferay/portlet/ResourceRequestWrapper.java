@@ -41,26 +41,28 @@ public class ResourceRequestWrapper extends PortletRequestWrapper implements Res
 		return servletRequest;
 	}
 	
+	@Override
 	public String getParameter(String name) {
 		if (servletRequest != null)
 			return servletRequest.getParameter(name);
 		return super.getParameter(name);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public Enumeration<String> getParameterNames() {
 		if (servletRequest != null)
 			return servletRequest.getParameterNames();
 		return super.getAttributeNames();
 	}
 
+	@Override
 	public String[] getParameterValues(String name) {
 		if (servletRequest != null)
 			return servletRequest.getParameterValues(name);
 		return super.getParameterValues(name);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public Map<String, String[]> getParameterMap() {
 		if (servletRequest != null)
 			return servletRequest.getParameterMap();

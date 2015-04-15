@@ -11,7 +11,7 @@ public class BookStoreSchema extends JpaSchema {
 				JpaComfortable.class,
 				Book.class,
 				Person.class
-			};
+		};
 	}
 
 }

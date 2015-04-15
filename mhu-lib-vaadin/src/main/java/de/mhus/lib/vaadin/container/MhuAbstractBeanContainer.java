@@ -71,7 +71,10 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
         Filterable, SimpleFilterable, Sortable, ValueChangeListener,
         PropertySetChangeNotifier {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+
+	/**
      * Resolver that maps beans to their (item) identifiers, removing the need
      * to explicitly specify item identifiers when there is no need to customize
      * this.
@@ -104,7 +107,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
     protected class PropertyBasedBeanIdResolver implements
             BeanIdResolver<IDTYPE, BEANTYPE> {
 
-        private final Object propertyId;
+		private static final long serialVersionUID = 1L;
+		private final Object propertyId;
 
         public PropertyBasedBeanIdResolver(Object propertyId) {
             if (propertyId == null) {
@@ -168,7 +172,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @throws IllegalArgumentException
      *             If {@code type} is null
      */
-    protected MhuAbstractBeanContainer(Class<? super BEANTYPE> type) {
+    @SuppressWarnings("unchecked")
+	protected MhuAbstractBeanContainer(Class<? super BEANTYPE> type) {
         if (type == null) {
             throw new IllegalArgumentException(
                     "The bean type passed to AbstractBeanContainer must not be null");
@@ -286,7 +291,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
@@ -427,7 +433,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyId
      *            The id of the property
      */
-    private void addValueChangeListener(Item item, Object propertyId) {
+    @SuppressWarnings("deprecation")
+	private void addValueChangeListener(Item item, Object propertyId) {
         Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             // avoid multiple notifications for the same property if
@@ -446,7 +453,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyId
      *            The id of the property
      */
-    private void removeValueChangeListener(Item item, Object propertyId) {
+    @SuppressWarnings("deprecation")
+	private void removeValueChangeListener(Item item, Object propertyId) {
         Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) property).removeListener(this);

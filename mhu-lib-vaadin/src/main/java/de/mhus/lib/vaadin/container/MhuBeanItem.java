@@ -43,6 +43,7 @@ import de.mhus.lib.core.pojo.PojoParser;
  * A wrapper class for adding the Item interface to any Java Bean.
  * 
  * @author Vaadin Ltd.
+ * @param <BT> 
  * @since 3.0
  */
 @SuppressWarnings("serial")
@@ -70,7 +71,8 @@ public class MhuBeanItem<BT> extends PropertysetItem {
      *            the Java Bean to copy properties from.
      * 
      */
-    public MhuBeanItem(BT bean) {
+    @SuppressWarnings("unchecked")
+	public MhuBeanItem(BT bean) {
         this(bean, getPropertyDescriptors((Class<BT>) bean.getClass()));
     }
 
@@ -119,7 +121,8 @@ public class MhuBeanItem<BT> extends PropertysetItem {
         this.bean = bean;
 
         // Create bean information
-        LinkedHashMap<String, PojoPropertyDescriptor<BT>> pds = getPropertyDescriptors((Class<BT>) bean
+        @SuppressWarnings("unchecked")
+		LinkedHashMap<String, PojoPropertyDescriptor<BT>> pds = getPropertyDescriptors((Class<BT>) bean
                 .getClass());
 
         // Add all the bean properties as MethodProperties to this Item
@@ -218,13 +221,15 @@ public class MhuBeanItem<BT> extends PropertysetItem {
     public static class PojoProperty<T> extends AbstractProperty<T> {
 
 		private Object bean;
+		@SuppressWarnings("rawtypes")
 		private PojoAttribute attr;
 
-		public PojoProperty(PojoAttribute attr, Object bean) {
+		public PojoProperty(@SuppressWarnings("rawtypes") PojoAttribute attr, Object bean) {
 			this.attr = attr;
 			this.bean = bean;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public T getValue() {
 			try {
@@ -234,6 +239,7 @@ public class MhuBeanItem<BT> extends PropertysetItem {
 			}
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void setValue(T newValue)
 				throws com.vaadin.data.Property.ReadOnlyException {
@@ -244,6 +250,7 @@ public class MhuBeanItem<BT> extends PropertysetItem {
 			}
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public Class<? extends T> getType() {
 			return attr.getType();
@@ -267,7 +274,8 @@ public class MhuBeanItem<BT> extends PropertysetItem {
      * @return
      * @throws IntrospectionException
      */
-    private static List<PropertyDescriptor> getBeanPropertyDescriptor(
+    @SuppressWarnings("unused")
+	private static List<PropertyDescriptor> getBeanPropertyDescriptor(
             final Class<?> beanClass) throws IntrospectionException {
         // Oracle bug 4275879: Introspector does not consider superinterfaces of
         // an interface

@@ -94,6 +94,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		channel.reset(this);
 	}
 
+	@Override
 	public void resetChannels() {
 		synchronized (channels) {
 			for (JmsDataChannel channel : channels.values())

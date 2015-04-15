@@ -14,7 +14,7 @@ public class Person implements Persistable {
 	private UUID id;
 	private String name;
 	private RelMultible<Book> lendTo = new RelMultible<Book>();
-	
+
 	@DbPrimaryKey
 	public UUID getId() {
 		return id;
@@ -30,13 +30,13 @@ public class Person implements Persistable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@DbRelation(target=Book.class)
 	public RelMultible<Book> getLendTo() {
 		return lendTo;
 	}
 
-	
-	
-	
+
+
+
 }

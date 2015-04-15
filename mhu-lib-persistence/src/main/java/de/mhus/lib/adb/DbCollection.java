@@ -30,24 +30,24 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	private boolean ownConnection;
 
 	public DbCollection(DbManager manager, DbConnection con, boolean ownConnection, String registryName, O object, DbResult res) throws MException {
-		
+
 		if (registryName == null) {
 			Class<?> clazz = manager.getSchema().findClassForObject(object,manager);
 			if (clazz == null)
 				throw new MException("class definition not found for object",object.getClass().getCanonicalName(),registryName);
 			registryName = clazz.getCanonicalName();
 		}
-		
+
 		this.manager = manager;
 		this.res = res;
 		this.con = con;
 		this.registryName = registryName;
 		this.object = object;
 		this.ownConnection = ownConnection;
-		
+
 		nextObject();
 	}
-	
+
 	private void nextObject() {
 		if (!hasNext) return;
 		try {
@@ -87,17 +87,17 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	 * If recycle is on the original container object will be used for every iteration. If it's off then every time a new object will be created.
 	 * Default is off.
 	 * @param on
-	 * @return 
+	 * @return
 	 */
 	public DbCollection<O> setRecycle(boolean on) {
 		recycle = on;
 		return this;
 	}
-	
+
 	public boolean isRecycle() {
 		return recycle;
 	}
-	
+
 	@Override
 	public boolean hasNext() {
 		return hasNext;
@@ -141,26 +141,26 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 		}
 		throw new NoSuchElementException();
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void addToList(List list) {
 		for (O o : this) {
 			list.add(o);
 		}
 	}
-	
+
 	public List<O> toCacheAndClose() {
 		List<O> list = new LinkedList<O>();
 		addToList(list);
 		close();
 		return list;
 	}
-	
+
 	public O[] toArrayAndClose(O[] dummy) {
 		List<O> list = toCacheAndClose();
-		return (O[]) list.toArray(dummy);
+		return list.toArray(dummy);
 	}
-	
+
 	public O getNextAndClose() {
 		try {
 			return hasNext() ? next() : null;

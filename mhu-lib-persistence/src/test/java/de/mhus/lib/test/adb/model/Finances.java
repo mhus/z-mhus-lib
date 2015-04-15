@@ -16,7 +16,7 @@ public class Finances extends DbComfortableObject {
 	private double passiva;
 	private String confidential;
 	private String newConfidential;
-	
+
 	@DbPrimaryKey
 	public UUID getId() {
 		return id;
@@ -24,7 +24,7 @@ public class Finances extends DbComfortableObject {
 	public void setId(UUID id) {
 		this.id = id;
 	}
-	
+
 	@DbPersistent
 	public double getActiva() {
 		return activa;
@@ -32,7 +32,7 @@ public class Finances extends DbComfortableObject {
 	public void setActiva(double activa) {
 		this.activa = activa;
 	}
-	
+
 	@DbPersistent
 	public double getPassiva() {
 		return passiva;
@@ -40,7 +40,7 @@ public class Finances extends DbComfortableObject {
 	public void setPassiva(double passiva) {
 		this.passiva = passiva;
 	}
-	
+
 	@DbPersistent
 	public void setStore(UUID shop) {
 		this.store = shop;
@@ -48,7 +48,7 @@ public class Finances extends DbComfortableObject {
 	public UUID getStore() {
 		return store;
 	}
-	
+
 	@DbPersistent
 	public void setConfidential(String confidential) {
 		this.confidential = confidential;
@@ -57,13 +57,13 @@ public class Finances extends DbComfortableObject {
 	public String getConfidential() {
 		return confidential;
 	}
-	
+
 	public void setNewConfidential(String string) {
 		newConfidential = string;
 	}
 	public String getNewConfidential() {
 		return newConfidential;
 	}
-	
-	
+
+
 }

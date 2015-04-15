@@ -6,5 +6,5 @@ public class CaoUser extends CaoPrincipal {
 			boolean writable) throws CaoException {
 		super(element, name, PRINCIPAL_TYPES.USER, readable, writable);
 	}
-	
+
 }

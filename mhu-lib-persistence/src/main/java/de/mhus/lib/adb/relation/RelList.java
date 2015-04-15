@@ -19,32 +19,39 @@ public class RelList<T> implements List<T> {
 	List<T> org;
 	List<T> changed;
 	private DbRelation config;
-	
+
 	@SuppressWarnings("unchecked")
 	public RelList(List<?> list, DbRelation config) {
 		org = (List<T>) list;
 		current = (List<T>) list;
 		this.config = config;
 	}
-	
+
+	@Override
 	public int size() {
 		return current.size();
 	}
+	@Override
 	public boolean isEmpty() {
 		return current.isEmpty();
 	}
+	@Override
 	public boolean contains(Object o) {
 		return current.contains(o);
 	}
+	@Override
 	public Iterator<T> iterator() {
 		return new LinkedList<T>(current).iterator(); // iterate over a copy
 	}
+	@Override
 	public Object[] toArray() {
 		return current.toArray();
 	}
-	public <T> T[] toArray(T[] a) {
+	@Override
+	public <E> E[] toArray(E[] a) {
 		return current.toArray(a);
 	}
+	@Override
 	public boolean add(T e) {
 		init();
 		if (remove.contains(e)) remove.remove(e);
@@ -52,13 +59,15 @@ public class RelList<T> implements List<T> {
 		if (!current.contains(e)) current.add(e);
 		return true;
 	}
+	@SuppressWarnings("unchecked")
+	@Override
 	public boolean remove(Object o) {
 		init();
 		if (!remove.contains(o) && org.contains(o)) remove.add((T)o);
 		if (add.contains(o)) add.remove(o);
 		return current.remove(o);
 	}
-	
+
 	private void init() {
 		if (add != null) return;
 		current = new LinkedList<T>(org);
@@ -67,68 +76,85 @@ public class RelList<T> implements List<T> {
 		changed = new LinkedList<T>();
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> c) {
 		return current.containsAll(c);
 	}
+	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		for (T t : c) add(t);
 		return true;
 	}
+	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
 		for (T t : c) add(t);
 		return true;
 	}
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		for (Object t : c) remove(t);
 		return true;
 
 	}
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		return current.retainAll(c);
 	}
+	@Override
 	public void clear() {
 		for (T t : current) remove(t);
 	}
+	@Override
 	public boolean equals(Object o) {
 		return current.equals(o);
 	}
+	@Override
 	public int hashCode() {
 		return current.hashCode();
 	}
+	@Override
 	public T get(int index) {
 		return current.get(index);
 	}
+	@Override
 	public T set(int index, T element) {
 		// return current.set(index, element);
 		return null;
 	}
+	@Override
 	public void add(int index, T element) {
 		add(element);
 	}
+	@Override
 	public T remove(int index) {
 		remove(get(index));
 		return null;
 	}
+	@Override
 	public int indexOf(Object o) {
 		return current.indexOf(o);
 	}
+	@Override
 	public int lastIndexOf(Object o) {
 		return current.lastIndexOf(o);
 	}
+	@Override
 	public ListIterator<T> listIterator() {
 		return current.listIterator();
 	}
+	@Override
 	public ListIterator<T> listIterator(int index) {
 		return current.listIterator(index);
 	}
+	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
 		return current.subList(fromIndex, toIndex);
 	}
-	
+
 	public boolean changed() {
 		return add != null && (add.size() > 0 || remove.size() > 0 || changed.size() > 0);
 	}
-	
+
 	public void save(DbManager manager, DbConnection con, String fName, Object value) throws Exception {
 		if (remove != null) {
 			for (T t : remove) {
@@ -154,7 +180,7 @@ public class RelList<T> implements List<T> {
 						manager.saveObject(con, t);
 				} catch (Throwable te) {
 					te.printStackTrace(); //XXX
-				}	
+				}
 			}
 		}
 		if (changed != null) {
@@ -162,32 +188,32 @@ public class RelList<T> implements List<T> {
 				try {
 					if (current.contains(t)) {
 						manager.getTable(manager.getRegistryName(t)).getField(fName).set(t, value);
-	//					if (t instanceof DbComfortableObject && !((DbComfortableObject)t).isAdbManaged() )
-							manager.saveObject(con, t);
-	//					else
-	//						manager.saveObject(con, t);
+						//					if (t instanceof DbComfortableObject && !((DbComfortableObject)t).isAdbManaged() )
+						manager.saveObject(con, t);
+						//					else
+						//						manager.saveObject(con, t);
 					}
 				} catch (Throwable te) {
 					te.printStackTrace(); //XXX
 				}
 			}
 		}
-		
+
 		org = current;
 		current = null;
 		add = null;
 		remove = null;
 		changed = null;
 	}
-	
+
 	public void setChanged(T obj) {
 		init();
 		changed.add(obj);
 	}
-	
+
 	public void unsetChanged(T obj) {
 		if (changed == null) return;
 		changed.remove(obj);
 	}
-	
+
 }

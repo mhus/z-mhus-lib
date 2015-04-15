@@ -129,7 +129,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 					} else {
 						Object o = clazz.newInstance();
 						WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
-						channel = new ServerJsonService(dest, descriptor);
+						channel = new ServerJsonService<Object>(dest, descriptor);
 					}
 				} catch (Throwable e) {
 					log().w(e);

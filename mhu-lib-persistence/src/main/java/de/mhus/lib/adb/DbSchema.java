@@ -33,17 +33,17 @@ import de.mhus.lib.sql.DbResult;
  */
 public abstract class DbSchema extends MObject {
 
-	
+
 	public abstract void findObjectTypes(List<Class<? extends Persistable>> list);
 	protected String tablePrefix = "";
 	private LinkedList<Class<? extends Persistable>> objectTypes;
-	
+
 	@SuppressWarnings("unchecked")
 	public final Class<? extends Persistable>[] getObjectTypes() {
 		initObjectTypes();
 		return (Class<? extends Persistable>[]) objectTypes.toArray(new Class<?>[objectTypes.size()]);
 	}
-	
+
 	/**
 	 * This should be called after the manager is created.
 	 * 
@@ -51,7 +51,7 @@ public abstract class DbSchema extends MObject {
 	 */
 	public void doPostInit(DbManager manager) {
 	}
-	
+
 	/**
 	 * Overwrite this method to get the configuration object and initialize the schem. It should be
 	 * called by the creator to initialize the schema before it is given to the manager.
@@ -59,9 +59,9 @@ public abstract class DbSchema extends MObject {
 	 * @param config
 	 */
 	public void doInit(ResourceNode config) {
-		
+
 	}
-	
+
 	/**
 	 * Masquerade the table names if needed. By default a tablePrefix is set for the table.
 	 * 
@@ -71,7 +71,7 @@ public abstract class DbSchema extends MObject {
 	public String getTableName(String name) {
 		return tablePrefix + name;
 	}
-	
+
 
 	/**
 	 * Object factory to create different kinds of objects for one table.
@@ -80,6 +80,7 @@ public abstract class DbSchema extends MObject {
 	 * @param registryName
 	 * @param ret could be null, return the default object
 	 * @param manager
+	 * @param isPersistent
 	 * @return
 	 * @throws Exception
 	 */
@@ -104,7 +105,7 @@ public abstract class DbSchema extends MObject {
 			for (Class<? extends Persistable> c : objectTypes)
 				if (((Class<?>)object).isAssignableFrom(c)) return c;
 		}
-		
+
 		for (Class<? extends Persistable> c : objectTypes)
 			if (c.isInstance(object)) return c;
 		return null;
@@ -134,6 +135,10 @@ public abstract class DbSchema extends MObject {
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
+	 * @param table
+	 * @param object
+	 * @param con
+	 * @param manager
 	 */
 	public void doPreCreate(Table table,Object object, DbConnection con, DbManager manager) {
 		if (object instanceof DbObject) {
@@ -145,6 +150,10 @@ public abstract class DbSchema extends MObject {
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
+	 * @param table
+	 * @param object
+	 * @param con
+	 * @param manager
 	 */
 	public void doPreSave(Table table,Object object, DbConnection con, DbManager manager) {
 		if (object instanceof DbObject) {
@@ -179,12 +188,16 @@ public abstract class DbSchema extends MObject {
 	 * @param nameMapping
 	 */
 	public void doFillNameMapping(HashMap<String, Object> nameMapping) {
-		
+
 	}
 
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
+	 * @param table
+	 * @param object
+	 * @param con
+	 * @param dbManager
 	 */
 	public void doPreDelete(Table table, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
@@ -195,6 +208,10 @@ public abstract class DbSchema extends MObject {
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
+	 * @param table
+	 * @param object
+	 * @param con
+	 * @param manager
 	 */
 	public void doPostLoad(Table table, Persistable object, DbConnection con, DbManager manager) {
 		if (object instanceof DbObject) {
@@ -210,6 +227,10 @@ public abstract class DbSchema extends MObject {
 	/**
 	 * Overwrite this to get the hook in the schema. By default it's delegated to the object.
 	 * Remember to call the super.
+	 * @param c
+	 * @param object
+	 * @param con
+	 * @param dbManager
 	 */
 	public void doPostDelete(Table c, Persistable object, DbConnection con, DbManager dbManager) {
 		if (object instanceof DbObject) {
@@ -224,7 +245,7 @@ public abstract class DbSchema extends MObject {
 	 * @param dbManager
 	 */
 	public void doInitProperties(DbManager dbManager) {
-		
+
 	}
 
 	/**
@@ -238,7 +259,7 @@ public abstract class DbSchema extends MObject {
 	 * @throws MException
 	 */
 	public void doMigrate(DbManager dbManager, long currentVersion) throws MException {
-		
+
 	}
 
 	/**
@@ -251,7 +272,7 @@ public abstract class DbSchema extends MObject {
 	public DbAccessManager getAccessManager(Table c) {
 		return null;
 	}
-	
+
 	@Override
 	public String toString() {
 		initObjectTypes();
@@ -259,7 +280,7 @@ public abstract class DbSchema extends MObject {
 	}
 
 	public Table createTable(DbManager manager, Class<? extends Persistable> clazz,String registryName, String tableName) {
-		
+
 		boolean isDynamic = true;
 		try {
 			clazz.asSubclass(DbDynamic.class);
@@ -277,18 +298,18 @@ public abstract class DbSchema extends MObject {
 	}
 
 	public Feature createFeature(DbManager manager, Table table, String name) {
-		
+
 		try {
 			Feature feature = null;
-		
+
 			name = name.trim().toLowerCase();
-			
+
 			if (name.equals("accesscontrol"))
 				feature = new FeatureAccessManager();
 			else
-			if (name.equals("cut"))
-				feature = new FeatureCut();
-			
+				if (name.equals("cut"))
+					feature = new FeatureCut();
+
 			if (feature != null)
 				feature.init(manager,table);
 			else
@@ -305,16 +326,16 @@ public abstract class DbSchema extends MObject {
 
 		try {
 			AttributeFeature feature = null;
-			
+
 			if (name.equals("cut")) {
 				feature = new AttributeFeatureCut();
 			}
-			
+
 			if (feature != null)
 				feature.init(manager,field);
 			else
 				log().w("attribute feature not found",name);
-	
+
 			return feature;
 		} catch (Exception e) {
 			log().t("feature",name,e);
@@ -349,5 +370,5 @@ public abstract class DbSchema extends MObject {
 			Throwable t) throws Throwable {
 		throw t;
 	}
-	
+
 }

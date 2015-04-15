@@ -25,7 +25,7 @@ import de.mhus.lib.core.directory.ResourceNode;
  *
  */
 public class DialectDefault extends Dialect {
-	
+
 	/**
 	 * Create or Update the defined tables. The config object need a bundle of 'table' configurations
 	 * which define the needed table structure.
@@ -37,140 +37,140 @@ public class DialectDefault extends Dialect {
 	 * [/config]
 	 * @param data
 	 * @param db
-	 * @param caoBundle 
+	 * @param caoBundle
 	 * @param cleanup Cleanup unknown fields from the table
 	 * @throws Exception
 	 */
 	@Override
 	public void createTables(ResourceNode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception {
-		
+
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
 		DatabaseMetaData meta = con.getMetaData();
-		
+
 		// first check tables
 		for (ResourceNode ctable : data.getNodes("table")) {
 			String tName = ctable.getExtracted("name");
 			String tPrefix = ctable.getExtracted("prefix","");
-			
+
 			String tnOrg = tPrefix + tName;
 			log().t("table",tnOrg);
 			String tn = normalizeTableName(tnOrg);
-			
+
 			ResultSet tRes = meta.getTables(null, null, tn, new String[] {"TABLE"});
-			
+
 			if (caoBundle !=null) caoBundle.getBundle().remove(tName);
-			
-//			boolean found = false;
-//			while (tRes.next()) {
-//				String tn2 = tRes.getString("TABLE_NAME");
-//				if (tn.equals(tn2)) {
-//					found = true;
-//				}
-//			}
-			
+
+			//			boolean found = false;
+			//			while (tRes.next()) {
+			//				String tn2 = tRes.getString("TABLE_NAME");
+			//				if (tn.equals(tn2)) {
+			//					found = true;
+			//				}
+			//			}
+
 			if (tRes.next()) {
 				// merge table definition
 				log().t("--- found table",tName);
-				
+
 				MutableMetadata caoMeta = null;
 				if (caoBundle !=null) {
 					caoMeta = new MutableMetadata();
 					caoBundle.getBundle().put(tName, caoMeta);
 				}
-				
+
 				// check fields
-				
+
 				LinkedList<String> fieldsInTable = null;
 				if (cleanup)
 					fieldsInTable = new LinkedList<>();
-					
-				for (ResourceNode cfield : ctable.getNodes("field")) {
-					
-					String fNameOrg = cfield.getExtracted("name");
-					String fName = normalizeColumnName(fNameOrg);
-					
-					if (cfield.getString(K_CATEGORIES, "").indexOf(C_VIRTUAL) < 0) {
-						ResultSet fRes = meta.getColumns(null, null, tn, fName);
-						log().t("field",tName,fNameOrg);
-						if (fRes.next()) {
-							String fName2 = fRes.getString("COLUMN_NAME");
-							String fType = fRes.getString("TYPE_NAME");
-							int    fSize = fRes.getInt("COLUMN_SIZE");
-							int    fNull = fRes.getInt("NULLABLE");
-							String fDef  = fRes.getString("COLUMN_DEF");
-							log().t("found field",tName,fName2,fType,fSize,fNull,fDef);
-							
-							// check field type && not null
-	
-							String fType1 = getDbType(cfield);
-							
-							if (fType.indexOf("CHAR") >=0) fType = fType + "(" + fSize + ")"; // add size to type
-							
-							if (!fType1.equals(fType)) {
-								alterColumn(sth,tn,cfield);
-							} else {
-								boolean xdef = cfield.getProperty("default") != null;
-								// check field default
-								if (fDef != null && !xdef) {
-									//remove default
-									alterColumnDropDefault(sth,tn,fName);
-								} else
-								if (fDef == null && xdef || fDef != null && !fDef.equals(cfield.getProperty("default")) ) {
-									//set default
-									alterColumnSetDefault(sth,tn,fName,cfield);
+
+					for (ResourceNode cfield : ctable.getNodes("field")) {
+
+						String fNameOrg = cfield.getExtracted("name");
+						String fName = normalizeColumnName(fNameOrg);
+
+						if (cfield.getString(K_CATEGORIES, "").indexOf(C_VIRTUAL) < 0) {
+							ResultSet fRes = meta.getColumns(null, null, tn, fName);
+							log().t("field",tName,fNameOrg);
+							if (fRes.next()) {
+								String fName2 = fRes.getString("COLUMN_NAME");
+								String fType = fRes.getString("TYPE_NAME");
+								int    fSize = fRes.getInt("COLUMN_SIZE");
+								int    fNull = fRes.getInt("NULLABLE");
+								String fDef  = fRes.getString("COLUMN_DEF");
+								log().t("found field",tName,fName2,fType,fSize,fNull,fDef);
+
+								// check field type && not null
+
+								String fType1 = getDbType(cfield);
+
+								if (fType.indexOf("CHAR") >=0) fType = fType + "(" + fSize + ")"; // add size to type
+
+								if (!fType1.equals(fType)) {
+									alterColumn(sth,tn,cfield);
+								} else {
+									boolean xdef = cfield.getProperty("default") != null;
+									// check field default
+									if (fDef != null && !xdef) {
+										//remove default
+										alterColumnDropDefault(sth,tn,fName);
+									} else
+										if (fDef == null && xdef || fDef != null && !fDef.equals(cfield.getProperty("default")) ) {
+											//set default
+											alterColumnSetDefault(sth,tn,fName,cfield);
+										}
+
 								}
-								
+
+
+							} else {
+								alterColumnAdd(sth,tn,cfield);
 							}
-							
-							
-						} else {
-							alterColumnAdd(sth,tn,cfield);
+							fRes.close();
+
+							if (fieldsInTable != null) fieldsInTable.add(fName); // remember not to remove
+
 						}
-						fRes.close();
-						
-						if (fieldsInTable != null) fieldsInTable.add(fName); // remember not to remove
-						
-					}
-					if (caoMeta != null) {
-						List<CaoMetaDefinition> metaMap = caoMeta.getMap();
-						CaoMetaDefinition.TYPE caoType = getCaoType(cfield);
-						String[] categories = MString.splitIgnoreEmpty(cfield.getString(K_CATEGORIES, ""),",",true);
-						metaMap.add(new CaoMetaDefinition(caoMeta, cfield.getExtracted("name"), caoType, cfield.getExtracted("nls"), cfield.getInt("size",100), categories ));
-					}
-					
-				}
-				
-				// END fields
-				
-				if (tRes.next()) {
-					log().t("*** found more then one table",tName);
-				}
-				
-				// remove fields
-				if (fieldsInTable != null) {
-					ResultSet fRes = meta.getColumns(null, null, tn, null);
-					while (fRes.next()) {
-						String fName2 = fRes.getString("COLUMN_NAME");
-						if (!fieldsInTable.contains(fName2)) {
-							log().t("remove column", fName2);
-							alterColumnDrop(sth,tn,fName2);
+						if (caoMeta != null) {
+							List<CaoMetaDefinition> metaMap = caoMeta.getMap();
+							CaoMetaDefinition.TYPE caoType = getCaoType(cfield);
+							String[] categories = MString.splitIgnoreEmpty(cfield.getString(K_CATEGORIES, ""),",",true);
+							metaMap.add(new CaoMetaDefinition(caoMeta, cfield.getExtracted("name"), caoType, cfield.getExtracted("nls"), cfield.getInt("size",100), categories ));
 						}
 
 					}
-					
-				}
-				
+
+					// END fields
+
+					if (tRes.next()) {
+						log().t("*** found more then one table",tName);
+					}
+
+					// remove fields
+					if (fieldsInTable != null) {
+						ResultSet fRes = meta.getColumns(null, null, tn, null);
+						while (fRes.next()) {
+							String fName2 = fRes.getString("COLUMN_NAME");
+							if (!fieldsInTable.contains(fName2)) {
+								log().t("remove column", fName2);
+								alterColumnDrop(sth,tn,fName2);
+							}
+
+						}
+
+					}
+
 			} else {
 				log().t("--- table not found",tName);
 				// create
-				
+
 				MutableMetadata caoMeta = null;
 				if (caoBundle !=null) {
 					caoMeta = new MutableMetadata();
 					caoBundle.getBundle().put(tName, caoMeta);
 				}
-				
+
 				createTable(sth,tn,ctable);
 				for (ResourceNode f:ctable.getNodes("field")) {
 					if (caoMeta != null) {
@@ -181,9 +181,9 @@ public class DialectDefault extends Dialect {
 				}
 			}
 			tRes.close();
-			
+
 			// check primary key
-			
+
 			String keys = ctable.getExtracted("primary_key");
 			// order by name
 			if (keys!=null) {
@@ -191,7 +191,7 @@ public class DialectDefault extends Dialect {
 				for (String item : keys.split(",") ) set.add(normalizeColumnName(item));
 				keys = MString.join(set.iterator(), ",");
 			}
-			
+
 			// look for the primary key
 			tRes = meta.getPrimaryKeys(null, null, tn);
 			String keys2 = null;
@@ -207,9 +207,9 @@ public class DialectDefault extends Dialect {
 				if (keys==null) {
 					alterTableDropPrimaryKey(sth,tn);
 				} else
-				if (!keys.equals(keys2)) {
-					alterTableChangePrimaryKey(sth,tn,keys);
-				}
+					if (!keys.equals(keys2)) {
+						alterTableChangePrimaryKey(sth,tn,keys);
+					}
 			} else {
 				if (keys != null) {
 					alterTableAddPrimaryKey(sth,tn,keys);
@@ -218,7 +218,7 @@ public class DialectDefault extends Dialect {
 		}
 		sth.close();
 	}
-	
+
 	protected void createTable(Statement sth, String tn, ResourceNode ctable) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("create table " + tn + " ( ");
@@ -239,7 +239,7 @@ public class DialectDefault extends Dialect {
 	}
 
 	protected void createTableLastCheck(ResourceNode ctable, String tn, StringBuffer sql) {
-		
+
 	}
 
 	protected void alterTableAddPrimaryKey(Statement sth, String tn, String keys) {
@@ -260,7 +260,7 @@ public class DialectDefault extends Dialect {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
 			log().i(sql,e);
-		}					
+		}
 	}
 
 	protected void alterTableDropPrimaryKey(Statement sth, String tn) {
@@ -270,11 +270,11 @@ public class DialectDefault extends Dialect {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
 			log().i(sql,e);
-		}					
+		}
 	}
 
 	protected void alterColumnAdd(Statement sth, String tn, ResourceNode cfield) {
-//		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
+		//		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
 		String sql = "ALTER TABLE " + tn + " ADD COLUMN " + getFieldConfig(cfield);
 		log().t("alter table",sql);
 		try {
@@ -292,7 +292,7 @@ public class DialectDefault extends Dialect {
 			log().t("alter table",sql);
 			sth.execute(sql);
 		} catch (Exception e) {
-				log().i(sql,e);
+			log().i(sql,e);
 		}
 	}
 
@@ -327,7 +327,7 @@ public class DialectDefault extends Dialect {
 		}
 
 	}
-	
+
 	/**
 	 * Create or update indexes. The configuration need a bundle of 'index' elements to define the indexes.
 	 * Example:
@@ -336,16 +336,16 @@ public class DialectDefault extends Dialect {
 	 * [/config]
 	 * @param data
 	 * @param db
-	 * @param caoMeta 
+	 * @param caoMeta
 	 * @throws Exception
 	 */
 	@Override
 	public void createIndexes(ResourceNode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception {
-		
+
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
 		DatabaseMetaData meta = con.getMetaData();
-		
+
 		// first check tables
 		for (ResourceNode cindex : data.getNodes("index")) {
 			String  iNameOrg   = cindex.getExtracted("name");
@@ -366,14 +366,14 @@ public class DialectDefault extends Dialect {
 			} else {
 				columns = ""; //?
 			}
-			
+
 			boolean unique  = cindex.getBoolean("unique", false);
-						
+
 			String columns2 = null;
 			{
 				ResultSet res = meta.getIndexInfo(null, null, table, unique, false);
 				while (res.next()) {
-					
+
 					String iName2 = res.getString("INDEX_NAME");
 					String fName2 = res.getString("COLUMN_NAME");
 					if (iName2 != null && fName2 != null) {
@@ -388,7 +388,7 @@ public class DialectDefault extends Dialect {
 			{
 				ResultSet res = meta.getIndexInfo(null, null, table, !unique, false);
 				while (res.next()) {
-					
+
 					String iName2 = res.getString("INDEX_NAME");
 					String fName2 = res.getString("COLUMN_NAME");
 					if (iName2 != null && fName2 != null) {
@@ -407,18 +407,18 @@ public class DialectDefault extends Dialect {
 				else
 					createIndex(sth,unique,btree,iName,table,columns);
 			} else {
-				
+
 				if (!columns.equals(columns2)) {
 					log().t("recreate index",doubleExists,iName,columns2,columns);
 					recreateIndex(sth,unique,btree,iName,table,columns);
-					
+
 				}
 			}
-			
+
 		}
 		sth.close();
 	}
-	
+
 	protected boolean equalsIndexName(String table, String iName, String iName2) {
 		return iName2.equals(iName);
 	}
@@ -467,7 +467,7 @@ public class DialectDefault extends Dialect {
 	public void createData(ResourceNode data, DbConnection db) throws Exception {
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
-		
+
 		// first check tables
 		for (ResourceNode cdata : data.getNodes("data")) {
 			//String table  = cdata.getExtracted("table");
@@ -494,14 +494,14 @@ public class DialectDefault extends Dialect {
 					foundError = true;
 				}
 			}
-			
+
 			boolean accepted = true;
-			
+
 			if (condition != null) {
-				accepted = 	(condition.equals("found") && foundRow) || (condition.equals("not found") && !foundRow) || 
-							(condition.equals("error") && foundError) || (condition.equals("no error") && !foundError);
+				accepted = 	(condition.equals("found") && foundRow) || (condition.equals("not found") && !foundRow) ||
+						(condition.equals("error") && foundError) || (condition.equals("no error") && !foundError);
 			}
-			
+
 			if (accepted) {
 				for (ResourceNode cexecute : cdata.getNodes("execute")) {
 					String sql = cexecute.getExtracted("sql");
@@ -528,7 +528,7 @@ public class DialectDefault extends Dialect {
 	public String normalizeIndexName(String tableName) throws Exception {
 		return tableName;
 	}
-	
+
 	@Override
 	public String normalizeColumnName(String columnName) {
 		return columnName;

@@ -27,5 +27,5 @@ public class ADbAttribute extends AAttribute {
 	@Override
 	public void getAttributes(AttributeMap map) {
 	}
-	
+
 }

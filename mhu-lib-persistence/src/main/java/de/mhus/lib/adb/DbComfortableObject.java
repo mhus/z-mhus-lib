@@ -32,12 +32,12 @@ public class DbComfortableObject extends MObject implements DbObject {
 		else
 			manager.saveObject(con, registryName,this);
 	}
-	
+
 	/**
 	 * Save object if it is not managed jet then it will create the object
 	 * 
 	 * @param manager
-	 * @throws MException 
+	 * @throws MException
 	 */
 	public void save(DbManager manager) throws MException {
 		if (isAdbManaged() && persistent)
@@ -45,7 +45,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 		else
 			create(manager);
 	}
-	
+
 	/**
 	 * Save the object if the object differs from database.
 	 * 
@@ -57,10 +57,10 @@ public class DbComfortableObject extends MObject implements DbObject {
 			create(manager);
 			return true;
 		} else
-		if (manager.objectChanged(this)) {
-			manager.saveObject(con, registryName,this);
-			return true;
-		}
+			if (manager.objectChanged(this)) {
+				manager.saveObject(con, registryName,this);
+				return true;
+			}
 		return false;
 	}
 
@@ -72,7 +72,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	public void reload() throws MException {
 		manager.reloadObject(con, registryName, this);
 	}
-	
+
 	/**
 	 * Delete from database.
 	 * 
@@ -84,7 +84,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 			persistent = false;
 		}
 	}
-	
+
 	/**
 	 * Create this new object in the database.
 	 * 
@@ -95,7 +95,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 		manager.createObject(con, this);
 		persistent = true;
 	}
-	
+
 	/**
 	 * Overwrite to get the hook.
 	 */
@@ -110,7 +110,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	public void doPostCreate(DbConnection con) {
 		doPostLoad(con);
 	}
-	
+
 	/**
 	 * Overwrite to get the hook.
 	 */
@@ -132,7 +132,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	public void setDbManager(DbManager manager) {
 		this.manager = manager;
 	}
-	
+
 	@Override
 	public boolean isAdbPersistent() {
 		return persistent;
@@ -162,7 +162,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	public DbManager getDbManager() {
 		return manager;
 	}
-	
+
 	public boolean isAdbChanged() throws MException {
 		return isAdbManaged() && ( !persistent || manager.objectChanged(this) );
 	}

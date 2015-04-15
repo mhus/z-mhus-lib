@@ -39,8 +39,8 @@ import de.mhus.lib.core.directory.ResourceNode;
 public class DefaultDbPool extends DbPool {
 
 	private List<InternalDbConnection> pool = new LinkedList<InternalDbConnection>();
-	
-	
+
+
 	/**
 	 * Create a new pool from central configuration.
 	 * It's used the MSingleton configuration with the key of this class.
@@ -51,7 +51,7 @@ public class DefaultDbPool extends DbPool {
 		super(null,null);
 		initHousekeeper();
 	}
-	
+
 	/**
 	 * Create a new pool from a configuration.
 	 * 
@@ -73,19 +73,19 @@ public class DefaultDbPool extends DbPool {
 		super(provider);
 		initHousekeeper();
 	}
-	
+
 	protected void initHousekeeper() {
-		
+
 		Housekeeper housekeeper = new Housekeeper(this);
 		base(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
 	}
-	
+
 	/**
 	 * Look into the pool for an unused DbProvider. If no one find, create one.
 	 * 
 	 * @param jmxName
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	public DbConnection getConnection() throws Exception {
@@ -97,10 +97,10 @@ public class DefaultDbPool extends DbPool {
 					if (con.isClosed() || con.checkTimedOut()) {
 						foundClosed = true;
 					} else
-					if (!con.isUsed()) {
-						con.setUsed(true);
-						return new DbConnectionProxy(con);
-					}
+						if (!con.isUsed()) {
+							con.setUsed(true);
+							return new DbConnectionProxy(con);
+						}
 				}
 				InternalDbConnection con = getProvider().createConnection();
 				if (con == null) return null;
@@ -138,7 +138,7 @@ public class DefaultDbPool extends DbPool {
 		}
 		return cnt;
 	}
-	
+
 	/**
 	 * Cleanup the connection pool. Unused or closed connections will be removed.
 	 * TODO new strategy to remove unused connections - not prompt, need a timeout time or minimum pool size.
@@ -157,7 +157,7 @@ public class DefaultDbPool extends DbPool {
 					}
 				} catch (Throwable t) {} // for secure - do not impact the thread
 			}
-		}		
+		}
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class DefaultDbPool extends DbPool {
 			pool = null;
 		}
 	}
-	
+
 	@Override
 	@JmxManaged(descrition="Return the usage of the connections")
 	public String dumpUsage(boolean used) {
@@ -196,17 +196,17 @@ public class DefaultDbPool extends DbPool {
 		}
 		return out.toString();
 	}
-	
+
 	private static class Housekeeper extends MHousekeeperTask {
 
 		private WeakReference<DefaultDbPool> pool;
 		private String name;
-		
+
 		private Housekeeper(DefaultDbPool pool) {
 			this.pool = new WeakReference<DefaultDbPool>(pool);
 			this.name = pool.getPoolId();
 		}
-		
+
 		@Override
 		public void doit() throws Exception {
 			DefaultDbPool obj = pool.get();
@@ -218,7 +218,7 @@ public class DefaultDbPool extends DbPool {
 			log().t(getClass(),name,"Housekeeping");
 			obj.cleanup(false);
 		}
-		
+
 	}
 
 	@Override

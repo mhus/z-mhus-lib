@@ -1,7 +1,11 @@
 package de.mhus.lib.cao;
 
-@SuppressWarnings("serial")
 public class ConnectionException extends CaoException {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public ConnectionException() {
 	}

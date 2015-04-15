@@ -89,7 +89,7 @@ public class PojoDataSource extends DataSource {
 	@Override
 	public boolean isProperty(String name) {
 		if (model != null) {
-			PojoAttribute attr = model.getAttribute(name);
+			PojoAttribute<?> attr = model.getAttribute(name);
 			return attr != null;
 		}
 		return false;

@@ -9,7 +9,7 @@ public class ALiteral extends APart {
 	public ALiteral(String literal) {
 		this.literal = literal;
 	}
-	
+
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
 		buffer.append(literal);

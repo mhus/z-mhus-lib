@@ -9,7 +9,7 @@ public class AEnumFix extends AAttribute {
 	public AEnumFix(Enum<?> value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
 		buffer.append(value.ordinal());

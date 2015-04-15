@@ -10,6 +10,7 @@ public class UiCheckbox extends UiText {
 
 	private boolean def;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected AbstractField createTextField() throws MException {
 		def = getElement().getConfig().getBoolean("default",false);

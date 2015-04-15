@@ -43,6 +43,7 @@ public class TextInputDialog extends ModalDialog {
 		return textField;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void initContent(VerticalLayout layout) throws Exception {
 		label = new Label(message);

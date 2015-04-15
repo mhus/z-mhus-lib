@@ -10,16 +10,20 @@ import com.vaadin.ui.HorizontalLayout;
 
 public class SearchField extends HorizontalLayout {
 
+	private static final long serialVersionUID = 1L;
 	private ComboBox filter;
 	private Listener listener;
 	private Button bSearch;
 //	private LinkedList<String> knownFacetNames = new LinkedList<>();
 
+	@SuppressWarnings("serial")
 	public SearchField() {
         filter = new ComboBox();
         filter.setNewItemsAllowed(true);
         filter.setNewItemHandler(new AbstractSelect.NewItemHandler() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void addNewItem(String newItemCaption) {
 				addKnownFacetName(newItemCaption);

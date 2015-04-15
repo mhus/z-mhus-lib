@@ -125,6 +125,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		return null;
 	}
 
+	@Override
 	protected void onOpen() {
 		T o = getObject();
 		if (o != null && o instanceof JmsServiceListener) {
@@ -132,6 +133,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		}
 	}
 
+	@Override
 	protected void onReset() {
 		T o = getObject();
 		if (o != null && o instanceof JmsServiceListener) {
@@ -139,7 +141,6 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public Class<?> getInterface() {
 		return service.getInterface();

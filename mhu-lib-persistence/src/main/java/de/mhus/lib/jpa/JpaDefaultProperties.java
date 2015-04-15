@@ -28,14 +28,14 @@ public class JpaDefaultProperties extends JpaProperties {
 	}
 
 	public void configureHsqlMemory() {
-    	setProperty("openjpa.ConnectionDriverName", "org.hsqldb.jdbcDriver");
-    	setProperty("openjpa.ConnectionURL", "jdbc:hsqldb:mem:aname");
-    	setProperty("openjpa.ConnectionUserName", "sa");
-    	setProperty("openjpa.ConnectionPassword", "");
+		setProperty("openjpa.ConnectionDriverName", "org.hsqldb.jdbcDriver");
+		setProperty("openjpa.ConnectionURL", "jdbc:hsqldb:mem:aname");
+		setProperty("openjpa.ConnectionUserName", "sa");
+		setProperty("openjpa.ConnectionPassword", "");
 	}
-	
+
 	public void enableSqlTrace() {
 		setProperty("openjpa.Log", "SQL=TRACE");
 	}
-	
+
 }

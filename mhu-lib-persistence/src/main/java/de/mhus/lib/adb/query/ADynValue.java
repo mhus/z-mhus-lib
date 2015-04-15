@@ -12,12 +12,12 @@ public class ADynValue extends AAttribute {
 	public ADynValue(Object value) {
 		this(UUID.randomUUID().toString(), value);
 	}
-	
+
 	public ADynValue(String name, Object value) {
 		this.name = name;
 		this.value = value;
 	}
-	
+
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
 		buffer.append('$').append(name).append('$');

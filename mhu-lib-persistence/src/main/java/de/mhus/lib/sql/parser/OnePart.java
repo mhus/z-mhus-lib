@@ -6,9 +6,9 @@ import de.mhus.lib.core.parser.ConstantParsingPart;
 import de.mhus.lib.core.parser.ParseReader;
 
 public class OnePart extends ConstantParsingPart {
-	
+
 	boolean first = true;
-	
+
 	public OnePart(ICompiler compiler) {
 	}
 
@@ -26,5 +26,5 @@ public class OnePart extends ConstantParsingPart {
 	public void append(char c) {
 		content = content + c;
 	}
-	
+
 }

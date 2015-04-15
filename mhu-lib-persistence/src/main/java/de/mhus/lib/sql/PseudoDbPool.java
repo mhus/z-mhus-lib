@@ -10,7 +10,7 @@ public class PseudoDbPool extends DbPool {
 	public PseudoDbPool() throws Exception {
 		super(null,null);
 	}
-	
+
 	/**
 	 * Create a new pool from a configuration.
 	 * 
@@ -52,7 +52,7 @@ public class PseudoDbPool extends DbPool {
 
 	@Override
 	public void cleanup(boolean unusedAlso) {
-		
+
 	}
 
 	@Override

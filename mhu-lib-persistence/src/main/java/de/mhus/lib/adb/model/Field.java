@@ -47,16 +47,16 @@ public abstract class Field extends MObject {
 			}
 		}
 	}
-	
+
 	public void set(Object obj, Object value) throws Exception {
-		
+
 		if (attribute.getType().isEnum()) {
 			int index = -1;
 			if (value == null)
 				index= MCast.toint(defValue, -1);
 			else
-			if (value instanceof Number)
-				index = ((Number)value).intValue();
+				if (value instanceof Number)
+					index = ((Number)value).intValue();
 
 			Object[] values=attribute.getType().getEnumConstants();
 			if (value instanceof String) {
@@ -65,19 +65,19 @@ public abstract class Field extends MObject {
 				if (index < 0)
 					index = MCast.toint(value, -1);
 			}
-			
+
 			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
-			
+
 			value = values[index];
-			
+
 		}
-		
+
 		for (Feature f : table.getFeatures())
 			value = f.set(obj, this, value);
 
 		for (AttributeFeature f : features)
 			value = f.set(obj, value);
-		
+
 		if (dynamicField != null && obj instanceof DbDynamic)
 			((DbDynamic)obj).setValue(dynamicField,value);
 		else
@@ -85,22 +85,22 @@ public abstract class Field extends MObject {
 	}
 
 	public boolean different(Object obj, Object value) throws Exception {
-		
+
 		if (attribute.getType().isEnum()) {
 			int index = -1;
 			if (value == null)
 				index= MCast.toint(defValue, -1);
 			else
-			if (value instanceof Number)
-				index = ((Number)value).intValue();
+				if (value instanceof Number)
+					index = ((Number)value).intValue();
 
 			Object[] values=attribute.getType().getEnumConstants();
 			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
-			
+
 			value = values[index];
-			
+
 		}
-		
+
 		for (Feature f : table.getFeatures())
 			value = f.set(obj, this, value);
 
@@ -108,18 +108,18 @@ public abstract class Field extends MObject {
 			value = f.set(obj, value);
 
 		Object objValue = null;
-		
+
 		if (dynamicField != null && obj instanceof DbDynamic)
 			objValue = ((DbDynamic)obj).getValue(dynamicField);
 		else
 			objValue = attribute.get(obj);
-		
-//		for (AttributeFeature f : features)
-//			objValue = f.get(obj, objValue);
-//		
-//		for (Feature f : table.getFeatures())
-//			objValue = f.get(obj, this, objValue);
-		
+
+		//		for (AttributeFeature f : features)
+		//			objValue = f.get(obj, objValue);
+		//
+		//		for (Feature f : table.getFeatures())
+		//			objValue = f.get(obj, this, objValue);
+
 		return MSystem.equals(value, objValue);
 	}
 
@@ -129,16 +129,16 @@ public abstract class Field extends MObject {
 			val = ((DbDynamic)obj).getValue(dynamicField);
 		else
 			val = attribute.get(obj);
-		
+
 		for (AttributeFeature f : features)
 			val = f.get(obj, val);
-		
+
 		for (Feature f : table.getFeatures())
 			val = f.get(obj, this, val);
-				
+
 		return val;
 	}
-	
+
 	public ResourceNode getAttributes() {
 		return attr;
 	}
@@ -148,11 +148,11 @@ public abstract class Field extends MObject {
 	public Class<?> getType() {
 		return attribute.getType();
 	}
-	
+
 	public String getName() {
 		return methodName;
 	}
-	
+
 	public String getMappedName() {
 		return name;
 	}

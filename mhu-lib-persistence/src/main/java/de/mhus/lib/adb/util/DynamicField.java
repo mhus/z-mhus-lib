@@ -10,15 +10,15 @@ public class DynamicField implements DbDynamic.Field {
 
 	public static final String PRIMARY_KEY = "primary_key";
 	public static final String INDEXES = "indexes";
-	
+
 	private String name;
 	private boolean isPrimaryKey;
 	private Class<?> ret;
 	private ResourceNode attributes;
 	private boolean persistent = true;
-	
+
 	public DynamicField() {}
-	
+
 	public DynamicField(String name, Class<?> ret, String ... attributes) {
 		setName(name);
 		setRet(ret);
@@ -31,28 +31,32 @@ public class DynamicField implements DbDynamic.Field {
 		setAttributes(x);
 		setPrimaryKey(x.getBoolean(PRIMARY_KEY, false));
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}
 	public void setPrimaryKey(boolean isPrimaryKey) {
 		this.isPrimaryKey = isPrimaryKey;
 	}
+	@Override
 	public boolean isPrimaryKey() {
 		return isPrimaryKey;
 	}
 	public void setRet(Class<?> ret) {
 		this.ret = ret;
 	}
+	@Override
 	public Class<?> getReturnType() {
 		return ret;
 	}
 	public void setAttributes(ResourceNode attributes) {
 		this.attributes = attributes;
 	}
+	@Override
 	public ResourceNode getAttributes() {
 		return attributes;
 	}
@@ -66,10 +70,10 @@ public class DynamicField implements DbDynamic.Field {
 	public void setPersistent(boolean in) {
 		persistent = in;
 	}
-	
+
 	@Override
 	public boolean isPersistent() {
 		return persistent ;
 	}
-	
+
 }

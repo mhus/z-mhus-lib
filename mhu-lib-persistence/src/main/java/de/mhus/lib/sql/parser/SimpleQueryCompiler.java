@@ -10,9 +10,9 @@ import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
 
 public class SimpleQueryCompiler extends StringCompiler implements ICompiler {
-	
-//	private static Log log = Log.getLog(SimpleQueryCompiler.class);
-	
+
+	//	private static Log log = Log.getLog(SimpleQueryCompiler.class);
+
 	@Override
 	protected StringPart createDefaultAttributePart(String part) {
 		ParameterPart out = new ParameterPart(this);
@@ -45,5 +45,5 @@ public class SimpleQueryCompiler extends StringCompiler implements ICompiler {
 		return MSql.escape(text);
 	}
 
-	
+
 }

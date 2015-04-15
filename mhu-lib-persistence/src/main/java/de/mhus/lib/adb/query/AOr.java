@@ -23,7 +23,7 @@ public class AOr extends APart {
 		}
 		buffer.append(')');
 	}
-	
+
 	@Override
 	public void getAttributes(AttributeMap map) {
 		for (APart part : operations)

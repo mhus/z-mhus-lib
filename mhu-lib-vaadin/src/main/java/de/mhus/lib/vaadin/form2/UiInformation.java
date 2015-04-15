@@ -23,6 +23,7 @@ public class UiInformation extends UiVaadin {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Component getField() {
 		if (field == null) {

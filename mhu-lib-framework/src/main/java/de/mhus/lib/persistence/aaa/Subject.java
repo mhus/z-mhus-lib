@@ -130,6 +130,7 @@ public class Subject extends DbAccessObject {
 		return parents;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (id == null) return false;
 		if (obj instanceof Subject) {

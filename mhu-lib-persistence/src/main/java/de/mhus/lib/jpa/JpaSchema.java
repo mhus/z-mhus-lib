@@ -14,7 +14,7 @@ public abstract class JpaSchema extends MObject {
 	 */
 	public void doPostInit(JpaManager manager) {
 	}
-	
+
 	/**
 	 * Overwrite this method to get the configuration object and initialize the schem. It should be
 	 * called by the creator to initialize the schema before it is given to the manager.
@@ -22,7 +22,7 @@ public abstract class JpaSchema extends MObject {
 	 * @param config
 	 */
 	public void doInit(ResourceNode config) {
-		
+
 	}
 
 	public String getSchemaName() {

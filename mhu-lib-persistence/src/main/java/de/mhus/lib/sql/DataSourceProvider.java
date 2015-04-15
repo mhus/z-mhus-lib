@@ -9,15 +9,15 @@ public class DataSourceProvider extends DbProvider {
 
 	private DataSource dataSource;
 	private Dialect dialect;
-	
+
 	public DataSourceProvider() {}
-	
+
 	public DataSourceProvider(DataSource dataSource, Dialect dialect, ResourceNode config, MActivator activator) {
 		doInitialize(config, activator);
 		setDataSource(dataSource);
 		setDialect(dialect);
 	}
-	
+
 	@Override
 	public InternalDbConnection createConnection() throws Exception {
 		if (dataSource == null) return null;

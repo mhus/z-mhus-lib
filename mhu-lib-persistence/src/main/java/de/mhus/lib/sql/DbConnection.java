@@ -35,7 +35,7 @@ public interface DbConnection {
 	 * @throws Exception
 	 */
 	public void rollback() throws Exception;
-	
+
 	/**
 	 * Returns a predefined statement.
 	 * 
@@ -44,7 +44,7 @@ public interface DbConnection {
 	 * @throws MException
 	 */
 	public DbStatement getStatement(String name) throws MException;
-	
+
 	/**
 	 * Create the default language using the detected language. Default is
 	 * the default language.
@@ -54,7 +54,7 @@ public interface DbConnection {
 	 * @throws MException
 	 */
 	public DbStatement createStatement(String sql) throws MException;
-	
+
 	/**
 	 * Create and returns a new statement. Throws an exception if the language is unknown.
 	 * 
@@ -108,11 +108,12 @@ public interface DbConnection {
 
 	/**
 	 * Create a query compiler for this connection. Used by the DbStatement class.
+	 * @param language 
 	 * @return
-	 * @throws MException 
+	 * @throws MException
 	 */
 	public Parser createQueryCompiler(String language) throws MException;
-	
+
 	/**
 	 * Return the original instance thrue proxies - if possible.
 	 * 
@@ -121,7 +122,7 @@ public interface DbConnection {
 	public DbConnection instance();
 
 	public void setUsedTrace(StackTraceElement[] createStackTrace);
-	
+
 	public StackTraceElement[] getUsedTrace();
 
 	/**
@@ -130,7 +131,7 @@ public interface DbConnection {
 	 * @return The default supported language, could also be null as default value.
 	 */
 	public abstract String getDefaultLanguage();
-	
+
 	/**
 	 * Return a list of supported languages. Every connection should at least
 	 * support the LANGUAGE_COMMON.
@@ -138,5 +139,5 @@ public interface DbConnection {
 	 * @return The list of languages or an empty array but never null.
 	 */
 	public abstract String[] getLanguages();
-	
+
 }

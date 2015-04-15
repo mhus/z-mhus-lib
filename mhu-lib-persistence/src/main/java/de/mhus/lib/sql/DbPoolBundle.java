@@ -19,11 +19,11 @@ import de.mhus.lib.errors.MRuntimeException;
  */
 public class DbPoolBundle extends MObject {
 
-	
+
 	private ResourceNode config;
 	private MActivator activator;
 	private Map<String, DbPool> bundle = new HashMap<String, DbPool>();
-	
+
 	/**
 	 * Create a new bundle from default configuration. Load it from MSingleton with the
 	 * key of this class.
@@ -32,7 +32,7 @@ public class DbPoolBundle extends MObject {
 	public DbPoolBundle() {
 		this(null,null);
 	}
-	
+
 	/**
 	 * Create a new Bundle from configuration.
 	 * 
@@ -47,9 +47,9 @@ public class DbPoolBundle extends MObject {
 		this.config = config;
 		this.activator = activator;
 	}
-	
+
 	public DbPool getPool(String name) throws Exception {
-		
+
 		if (bundle == null) throw new MException("Bundle already closed");
 
 		synchronized (bundle) {
@@ -66,7 +66,7 @@ public class DbPoolBundle extends MObject {
 			return pool;
 		}
 	}
-	
+
 	public String[] getNames() {
 		LinkedList<String> out = new LinkedList<String>();
 		for (ResourceNode c : config.getNodes()) {
@@ -78,28 +78,28 @@ public class DbPoolBundle extends MObject {
 		}
 		return out.toArray(new String[out.size()]);
 	}
-	
+
 	public ResourceNode getConfig(String name) {
 		return config.getNode(name);
 	}
-	
+
 	public ResourceNode getConfig() {
 		return config;
 	}
-	
+
 	public void reset() {
 		bundle = new HashMap<String, DbPool>();
 	}
-	
+
 	public void close() {
-		
+
 		if (bundle == null) return;
-		
+
 		synchronized (bundle) {
 			for (DbPool pool : bundle.values())
 				pool.close();
 			bundle = null;
 		}
 	}
-	
+
 }

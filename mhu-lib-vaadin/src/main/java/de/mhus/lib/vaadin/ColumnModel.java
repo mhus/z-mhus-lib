@@ -48,6 +48,7 @@ public class ColumnModel {
 			this.converter = converter;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Converter<String, ?> generateConverter(Class<?> type) {
 		try {
 			if (converter != null) return (Converter<String, ?>) converter.newInstance();

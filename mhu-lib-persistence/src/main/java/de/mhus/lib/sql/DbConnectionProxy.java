@@ -26,45 +26,53 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 		this.instance = instance;
 		log().t(id,"created",instance.getInstanceId());
 	}
-	
+
+	@Override
 	public void commit() throws Exception {
-		
+
 		instance.commit();
 	}
 
+	@Override
 	public boolean isReadOnly() throws Exception {
 		return instance.isReadOnly();
 	}
 
+	@Override
 	public void rollback() throws Exception {
 		instance.rollback();
 	}
 
+	@Override
 	public DbStatement getStatement(String name) throws MException {
 		return instance.getStatement(name);
 	}
 
+	@Override
 	public boolean isClosed() {
 		if (instance == null) return true;
 		return instance.isClosed();
 	}
 
+	@Override
 	public boolean isUsed() {
 		return instance.isUsed();
 	}
 
+	@Override
 	public void setUsed(boolean used) {
 		if (instance == null) return;
 		instance.setUsed(used);
 		if (!used) instance  = null; // invalidate this proxy
 	}
 
+	@Override
 	public void close() {
 		if (instance == null) return;
 		log().t(id,"close",instance.getInstanceId());
 		setUsed(false); // close of the proxy will free the connection
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		log().t(id,"finalized",instance.getInstanceId());
@@ -102,7 +110,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 
 	@Override
 	public void setUsedTrace(StackTraceElement[] createStackTrace) {
-		
+
 	}
 
 	@Override
@@ -124,5 +132,5 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	public DbStatement createStatement(String sql) throws MException {
 		return instance.createStatement(sql);
 	}
-	
+
 }

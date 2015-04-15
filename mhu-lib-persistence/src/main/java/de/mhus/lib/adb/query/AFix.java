@@ -9,7 +9,7 @@ public class AFix extends AAttribute {
 	public AFix(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
 		buffer.append(value);

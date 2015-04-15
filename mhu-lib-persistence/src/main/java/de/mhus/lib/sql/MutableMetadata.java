@@ -17,7 +17,7 @@ public class MutableMetadata extends CaoMetadata {
 	public MutableMetadata() {
 		super(null); //TODO check !
 	}
-	
+
 	public MutableMetadata(CaoDriver driver) {
 		super(driver);
 	}

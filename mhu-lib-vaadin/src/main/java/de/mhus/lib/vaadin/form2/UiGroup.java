@@ -9,6 +9,7 @@ public class UiGroup extends UiVaadinComposite {
 	
 	private Panel panel;
 
+	@Override
 	protected void addToCurrent(VaadinFormBuilder builder) {
 		if (!MString.isEmpty(getElement().getTitle())) {
 			panel = new Panel(getElement().getTitle());

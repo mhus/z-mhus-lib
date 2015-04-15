@@ -10,6 +10,7 @@ public class MyDataSource extends MemoryDataSource {
 		super(properties);
 	}
 
+	@Override
 	public void setPropertyData(String key, Object value) {
 		System.out.println("DataSource: " + key +"=" + value);
 		super.setPropertyData(key, value);

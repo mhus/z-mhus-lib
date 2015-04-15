@@ -9,7 +9,7 @@ public class CaoPrincipal extends CaoPolicy {
 	public static final String NAME = "name";
 	public static final String PRINCIPAL_TYPE = "principal_type";
 	public static enum PRINCIPAL_TYPES {USER,GROUP,ROLE,OTHER};
-	
+
 	private String name;
 	protected int principalType;
 
@@ -19,12 +19,14 @@ public class CaoPrincipal extends CaoPolicy {
 		this.name = name;
 		principalType = type.ordinal();
 	}
-	
+
+	@Override
 	protected void fillMetaData(LinkedList<CaoMetaDefinition> definition) {
 		definition.add(new CaoMetaDefinition(meta,NAME,TYPE.STRING,null,256) );
 		definition.add(new CaoMetaDefinition(meta,PRINCIPAL_TYPE,TYPE.LONG,null,0) );
 	}
 
+	@Override
 	public String getName() throws CaoException {
 		return name;
 	}
@@ -38,7 +40,7 @@ public class CaoPrincipal extends CaoPolicy {
 			return PRINCIPAL_TYPES.OTHER;
 		}
 	}
-	
+
 	@Override
 	public String getProperty(String name) {
 		if (NAME.equals(name))
@@ -47,5 +49,5 @@ public class CaoPrincipal extends CaoPolicy {
 			return String.valueOf(principalType);
 		return super.getString(name, null);
 	}
-	
+
 }

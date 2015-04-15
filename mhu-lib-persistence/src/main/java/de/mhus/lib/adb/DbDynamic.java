@@ -23,13 +23,13 @@ public interface DbDynamic {
 
 
 	void setValue(Field dynamicField, Object value);
-	
+
 	Object getValue(Field dynamicField);
-	
+
 	public interface Field {
-		
+
 		String getName();
-		
+
 		boolean isPrimaryKey();
 
 		Class<?> getReturnType();
@@ -37,8 +37,8 @@ public interface DbDynamic {
 		ResourceNode getAttributes();
 
 		String[] getIndexes() throws MException;
-		
+
 		boolean isPersistent();
-		
+
 	}
 }

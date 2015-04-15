@@ -31,13 +31,13 @@ import de.mhus.lib.sql.DbStatement;
  */
 @JmxManaged(descrition="ADB manager information interface")
 public class DbManager extends MJmx {
-		
+
 	public static final String DATABASE_VERSION = "db.version";
 	public static final String DATABASE_CREATED = "db.created";
 	public static final String DATABASE_MANAGER_VERSION = "db.manager.version";
 
 	public static final String MANAGER_VERSION = "1.0";
-	
+
 	public static final int R_READ = 0;
 	public static final int R_CREATE = 1;
 	public static final int R_UPDATE = 2;
@@ -48,7 +48,7 @@ public class DbManager extends MJmx {
 	private HashMap<String, Table> cIndex = new HashMap<String, Table>();
 	private HashMap<String, Object> nameMapping;
 	private Map<String, Object> nameMappingRO;
-	
+
 	private DbProperties schemaPersistence;
 	private MetadataBundle caoBundle;
 	private MActivator activator;
@@ -62,6 +62,7 @@ public class DbManager extends MJmx {
 	 * 
 	 * @param pool
 	 * @param schema
+	 * @param cleanup
 	 * @throws Exception
 	 */
 	public DbManager(DbPool pool, DbSchema schema, boolean cleanup) throws Exception {
@@ -69,9 +70,9 @@ public class DbManager extends MJmx {
 		this.schema = schema;
 		this.activator = pool.getProvider().getActivator();
 		initDatabase(cleanup);
-		
+
 	}
-	
+
 	public DbManager(DbPool pool, DbSchema schema, MActivator activator) throws Exception {
 		this(pool, schema, activator, false);
 	}
@@ -80,14 +81,14 @@ public class DbManager extends MJmx {
 		this.schema = schema;
 		this.activator = activator == null ? pool.getProvider().getActivator() : activator;
 		initDatabase(cleanup);
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> DbCollection<T> getByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
 		return (DbCollection<T>) getByQualification(null, (Object)clazz, null, qualification, attributes);
 	}
-	
+
 	public <T> DbCollection<T> getByQualification(T object, String qualification, Map<String,Object> attributes) throws MException {
 		return getByQualification(null, object, null, qualification, attributes);
 	}
@@ -96,7 +97,7 @@ public class DbManager extends MJmx {
 	public <T> DbCollection<T> getByQualification(AQuery<T> qualification) throws MException {
 		return (DbCollection<T>) getByQualification(null, qualification.getType(), null, qualification.toQualification(this), qualification.getAttributes(this));
 	}
-	
+
 	/**
 	 * Get an collection of objects by it's qualification. The qualification is the WHERE part of a
 	 * query. e.g. "$db.table.name$ like 'Joe %'"
@@ -111,7 +112,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public <T> DbCollection<T> getByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
-		
+
 		Class<?> clazz = schema.findClassForObject(object,this);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT * FROM $db.").append(getMappingName(clazz)).append("$ ");
@@ -122,19 +123,19 @@ public class DbManager extends MJmx {
 			else
 				sql.append("WHERE ").append(qualification);
 		}
-		
+
 		return executeQuery(con, object, registryName, sql.toString(), attributes);
 	}
 
-	
+
 	public <T> long getCountAll(Class<T> clazz) throws MException {
 		return getCountByQualification(null, (Object)clazz, null, "", null);
 	}
-	
+
 	public <T> long getCountByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
 		return getCountByQualification(null, (Object)clazz, null, qualification, attributes);
 	}
-	
+
 	public <T> long getCountByQualification(T object, String qualification, Map<String,Object> attributes) throws MException {
 		return getCountByQualification(null, object, null, qualification, attributes);
 	}
@@ -166,16 +167,16 @@ public class DbManager extends MJmx {
 			else
 				sql.append("WHERE ").append(qualification);
 		}
-		
+
 		return executeCountQuery(con, "count", sql.toString(), attributes);
-		
+
 	}
-	
+
 	public <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException {
-		
+
 		return executeQuery(null, clazz, null, query, attributes);
 	}
-	
+
 	/**
 	 * Returns an collection.
 	 * 
@@ -190,7 +191,7 @@ public class DbManager extends MJmx {
 	 */
 	public <T> DbCollection<T> executeQuery(DbConnection con, T clazz, String registryName, String query, Map<String,Object> attributes) throws MException {
 		Map<String, Object> map = null;
-		
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -211,12 +212,12 @@ public class DbManager extends MJmx {
 		} catch (Throwable t) {
 			throw new MException(con,query,attributes,t);
 		} finally {
-		// do not close, it's used by the collection
-		//	if (myCon != null)
-		//		myCon.close();
+			// do not close, it's used by the collection
+			//	if (myCon != null)
+			//		myCon.close();
 		}
 	}
-	
+
 	/**
 	 * Returns a long value out of a query.
 	 * 
@@ -229,7 +230,7 @@ public class DbManager extends MJmx {
 	 */
 	public <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException {
 		Map<String, Object> map = null;
-		
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -250,9 +251,9 @@ public class DbManager extends MJmx {
 			res = sth.executeQuery(map);
 			long count = -1;
 			while(res.next())
-		        count=res.getLong(attributeName);
+				count=res.getLong(attributeName);
 			return count;
-			
+
 		} catch (Throwable t) {
 			throw new MException(con,query,attributes,t);
 		} finally {
@@ -265,7 +266,7 @@ public class DbManager extends MJmx {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the persistent schema properties if supported.
 	 * @return The properties or null
@@ -274,21 +275,21 @@ public class DbManager extends MJmx {
 	public DbProperties getSchemaProperties() {
 		return schemaPersistence;
 	}
-	
+
 	public Object getObject(String registryName, Object ... keys) throws MException {
 		return getObject(null,registryName, keys);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(Class<T> clazz, Object ... keys) throws MException {
 		return (T)getObject(null,getRegistryName(clazz), keys);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException {
 		return (T)getObject(con,getRegistryName(clazz), keys);
 	}
-	
+
 	/**
 	 * Return an object from the database defined by the primary key - like a load operation.
 	 * If more the one attributes is needed, the order is alphabetic by the attribute name.
@@ -300,9 +301,9 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public Object getObject(DbConnection con, String registryName, Object ... keys) throws MException {
-		
-//		registryName = registryName.toLowerCase();
-		
+
+		//		registryName = registryName.toLowerCase();
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -312,14 +313,14 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			Object out = c.getObject(con,keys);
-			
+
 			if (myCon != null) {
 				try {
 					myCon.commit();
@@ -328,7 +329,7 @@ public class DbManager extends MJmx {
 				}
 				myCon.close();
 			}
-			
+
 			schema.doPostLoad(c, (Persistable) out, con, this);
 
 			return out;
@@ -337,20 +338,20 @@ public class DbManager extends MJmx {
 		}
 	}
 
-//
-	
+	//
+
 	public boolean existsObject(String registryName, Object ... keys) throws MException {
 		return existsObject(null,registryName, keys);
 	}
-	
+
 	public <T> boolean existsObject(Class<T> clazz, Object ... keys) throws MException {
 		return existsObject(null,getRegistryName(clazz), keys);
 	}
-	
+
 	public <T> boolean existsObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException {
 		return existsObject(con,getRegistryName(clazz), keys);
 	}
-	
+
 	/**
 	 * Return an object from the database defined by the primary key - like a load operation.
 	 * If more the one attributes is needed, the order is alphabetic by the attribute name.
@@ -362,9 +363,9 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public boolean existsObject(DbConnection con, String registryName, Object ... keys) throws MException {
-		
-//		registryName = registryName.toLowerCase();
-		
+
+		//		registryName = registryName.toLowerCase();
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -374,19 +375,19 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			return c.existsObject(con,keys);
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
 	}
-	
-	
+
+
 	public void checkFillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
 
 		if (registryName == null) {
@@ -399,18 +400,18 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			c.checkFillObject(con,res);
-			
-//			schema.doPostLoad(c,object,con, this);
-			
+
+			//			schema.doPostLoad(c,object,con, this);
+
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
 
 	}
-	
+
 	/**
 	 * Fill an object with values.
 	 * @param registryName The registry name or null
@@ -431,25 +432,25 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			if (object == null) {
-				
+
 				object = schema.createObject(c.getClazz(), registryName, res, this, true);
 			}
 			c.fillObject(object,con,res);
-			
+
 			schema.doPostLoad(c,(Persistable) object,con, this);
-			
+
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
 	}
-	
+
 	public void reloadObject(String registryName, Object object) throws MException {
 		reloadObject(null,registryName, object);
 	}
-	
+
 	/**
 	 * Reload the object data from database.
 	 * @param con The connection to use or null
@@ -468,7 +469,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName == null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -485,16 +486,16 @@ public class DbManager extends MJmx {
 			for (Field f : c.getPrimaryKeys()) {
 				keys.add(f.getFromTarget(object));
 			}
-			
+
 			if (c.fillObject(con,object,keys.toArray()) == null)
 				throw new MException("object not found");
-			
+
 			schema.doPostLoad(c,(Persistable) object,con,this);
-			
+
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -533,7 +534,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName == null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -551,15 +552,15 @@ public class DbManager extends MJmx {
 			for (Field f : c.getPrimaryKeys()) {
 				keys.add(f.getFromTarget(object));
 			}
-			
+
 			ret = c.objectChanged(con,object,keys.toArray());
-			
+
 			// schema.doPostLoad(c,object,con,this);
-			
+
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -568,10 +569,10 @@ public class DbManager extends MJmx {
 			}
 			myCon.close();
 		}
-		
+
 		return ret;
 	}
-	
+
 	/**
 	 * Fill a object with the values of an entry. This can cause big problems and exceptions if the
 	 * kind of the object is not correct. This is used to recycle objects. It's not save in every case.
@@ -593,7 +594,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName == null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -604,16 +605,16 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			c.fillObject(con,object,keys);
-			
+
 			schema.doPostLoad(c,(Persistable) object,con,this);
-			
+
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -622,21 +623,21 @@ public class DbManager extends MJmx {
 			}
 			myCon.close();
 		}
-		
+
 	}
-		
+
 	public void createObject(Object object) throws MException {
 		createObject(null,null,object);
 	}
-	
+
 	public void createObject(String registryName, Object object) throws MException {
 		createObject(null, registryName, object);
 	}
-	
+
 	public void createObject(DbConnection con, Object object) throws MException {
 		createObject(con, null, object);
 	}
-	
+
 	/**
 	 * Create a object in the database.
 	 * 
@@ -646,7 +647,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void createObject(DbConnection con, String registryName, Object object) throws MException {
-		
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -656,7 +657,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName == null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -666,22 +667,22 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			// prepare object
 			c.prepareCreate(object);
 			schema.doPreCreate(c,object,con,this);
-			
+
 			//save object
-		
+
 			c.createObject(con,object);
-			
+
 			schema.doPostCreate(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -691,19 +692,19 @@ public class DbManager extends MJmx {
 			myCon.close();
 		}
 	}
-	
+
 	public void saveObject(Object object) throws MException {
 		saveObject(null, null, object);
 	}
-	
+
 	public void saveObject(String registryName, Object object) throws MException {
 		saveObject(null,registryName,object);
 	}
-	
+
 	public void saveObject(DbConnection con, Object object) throws MException {
 		saveObject(con, null, object);
 	}
-	
+
 	/**
 	 * Update the data of the object in the database. This will not create an object.
 	 * 
@@ -713,7 +714,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void saveObject(DbConnection con, String registryName, Object object) throws MException {
-		
+
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -723,7 +724,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName==null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -733,17 +734,17 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			// prepare object
 			schema.doPreSave(c,object,con,this);
-			
+
 			//save object
 			c.saveObject(con,object);
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -753,19 +754,19 @@ public class DbManager extends MJmx {
 			myCon.close();
 		}
 	}
-	
+
 	public void deleteObject(Object object) throws MException {
 		deleteObject(null, null, object);
 	}
-	
+
 	public void deleteObject(String registryName, Object object) throws MException {
 		deleteObject(null, registryName, object);
 	}
-	
+
 	public void deleteObject(DbConnection con, Object object) throws MException {
 		deleteObject(con, null, object);
 	}
-	
+
 	/**
 	 * Delete an object in the database.
 	 * 
@@ -785,7 +786,7 @@ public class DbManager extends MJmx {
 				throw new MException(t);
 			}
 		}
-		
+
 		if (registryName == null) {
 			Class<?> clazz = schema.findClassForObject(object,this);
 			if (clazz == null)
@@ -795,20 +796,20 @@ public class DbManager extends MJmx {
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
-		
+
 		try {
 			// prepare object
 			schema.doPreDelete(c,(Persistable) object,con,this);
-			
+
 			//save object
 			c.deleteObject(con,object);
-			
+
 			schema.doPostDelete(c,(Persistable) object,con,this);
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
-		
+
 		if (myCon != null) {
 			try {
 				myCon.commit();
@@ -817,54 +818,54 @@ public class DbManager extends MJmx {
 			}
 			myCon.close();
 		}
-		
+
 	}
-	
+
 	public boolean isConnected() {
 		return nameMapping != null;
 	}
-	
+
 	public void connect() throws Exception {
 		initDatabase(false);
 	}
-	
+
 	/**
 	 * Initialize the database schema.
 	 * 
 	 * @throws Exception
 	 */
 	protected void initDatabase(boolean cleanup) throws Exception {
-		
+
 		if (nameMapping != null) return;
-		
+
 		Class<? extends Persistable>[] types = schema.getObjectTypes();
 		DbConnection con = pool.getConnection();
 		if (con == null) return;
-		
+
 		cIndex.clear();
 		nameMapping = new HashMap<String, Object>();
 		nameMappingRO = Collections.unmodifiableMap(nameMapping);
-    	caoBundle = new MetadataBundle(NoneDriver.getInstance());
+		caoBundle = new MetadataBundle(NoneDriver.getInstance());
 
 		// schema info
 		if (schema.hasPersistentInfo()) {
 			addClass(schema.getSchemaName(),getRegistryName(schema.getClass()),Property.class,con, cleanup);
 			schemaPersistence = new DbProperties(this, getRegistryName(schema.getClass()));
 		}
-		
+
 		// classes
 		for (Class<? extends Persistable> clazz : types) {
 			addClass(null,getRegistryName(clazz),clazz,con, cleanup);
 		}
 		con.commit();
-		
+
 		// fill name mapping
 		for (Table c : cIndex.values()) {
 			c.fillNameMapping(nameMapping);
 		}
-		
+
 		schema.doFillNameMapping(nameMapping);
-		
+
 		// validate and migrate database version
 		if (schemaPersistence != null) {
 			String dbVersion = schemaPersistence.get(DATABASE_VERSION);
@@ -874,25 +875,25 @@ public class DbManager extends MJmx {
 				schemaPersistence.set(DATABASE_CREATED,new MDate().toString());
 				schemaPersistence.set(DATABASE_MANAGER_VERSION,MANAGER_VERSION);
 				schema.doInitProperties(this);
-				
+
 				dbVersion = schemaPersistence.get(DATABASE_VERSION);
 			}
-			
+
 			// migrate to current version
 			long dbVersionLong = MCast.tolong(dbVersion, 0);
 			schema.doMigrate(this, dbVersionLong);
-			
+
 		}
-		
+
 	}
-	
+
 	protected void addClass(String tableName, String registryName, Class<? extends Persistable> clazz, DbConnection con, boolean cleanup) throws Exception {
 		Table c = schema.createTable(this,clazz,registryName,tableName);
 		c.initDatabase(con, cleanup);
-//		c.registryName = registryName;
-//		parseClass(c,tableName);
-//		c.createTable(con);
-//		c.postInit();
+		//		c.registryName = registryName;
+		//		parseClass(c,tableName);
+		//		c.createTable(con);
+		//		c.postInit();
 		cIndex.put(registryName,c);
 	}
 
@@ -904,16 +905,16 @@ public class DbManager extends MJmx {
 	public DbPool getPool() {
 		return pool;
 	}
-	
+
 	public MActivator getActivator() {
 		return activator;
 	}
-	
+
 	@JmxManaged(descrition="Current mapping of the table and column names")
 	public Map<String,Object> getNameMapping() {
 		return nameMappingRO;
 	}
-	
+
 	public MetadataBundle getCaoMetadata() {
 		return caoBundle;
 	}
@@ -922,18 +923,18 @@ public class DbManager extends MJmx {
 	public String[] getRegistryNames() {
 		return cIndex.keySet().toArray(new String[0]);
 	}
-	
+
 	@JmxManaged(descrition="Returns the table for the registry name")
 	public Table getTable(String registryName) {
 		return cIndex.get(registryName);
 	}
-	
+
 	public Object createSchemaObject(String registryName) throws Exception {
 		Table table = cIndex.get(registryName);
 		if (table == null) throw new MException("class definition not found in schema",registryName);
 		return schema.createObject(table.getClazz(), table.getRegistryName(), null, this, false);
 	}
-	
+
 	public String getRegistryName(Object object) {
 		if (object instanceof Class<?>) {
 			return ((Class<?>)object).getCanonicalName();
@@ -944,14 +945,14 @@ public class DbManager extends MJmx {
 	}
 
 	public String getMappingName(Class<?> clazz) {
-			return clazz.getSimpleName().toLowerCase();
+		return clazz.getSimpleName().toLowerCase();
 	}
-	
+
 	public <T extends Persistable> T injectObject(T object) {
 		getTable(getRegistryName(object)).injectObject(object);
 		return object;
 	}
-	
+
 	public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
 		return getByQualification(clazz, "", null);
 	}

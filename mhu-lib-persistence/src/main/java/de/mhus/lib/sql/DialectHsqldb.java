@@ -19,15 +19,15 @@ import de.mhus.lib.errors.MRuntimeException;
  *
  */
 public class DialectHsqldb extends DialectDefault {
-	
+
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	protected String getFieldConfig(ResourceNode f) {
 		try {
-			String type = getDbType(f);		
+			String type = getDbType(f);
 			String ret = f.getString("name",null).toUpperCase() + " " + type;
-			
+
 			String def = f.getExtracted("default");
 			if (def != null) {
 				def = getDbDef(def);
@@ -37,7 +37,7 @@ public class DialectHsqldb extends DialectDefault {
 			if (notNull)
 				ret = ret + " NOT NULL";
 			else
-				ret = ret + " NULL";			
+				ret = ret + " NULL";
 			return ret;
 		} catch (MException e) {
 			throw new MRuntimeException(e);
@@ -48,36 +48,36 @@ public class DialectHsqldb extends DialectDefault {
 		try {
 			String type = getDbType(f);
 			String ret = f.getString("name").toUpperCase() + " " + type;
-			
-	//		String def = f.getExtracted("default");
-	//		if (def != null) {
-	//			def = getDbDef(def);
-	//			ret = ret + " DEFAULT " + def;
-	//		}
-	//		boolean notNull = f.getBoolean("notnull", false);
-	//		if (notNull)
-	//			ret = ret + " NOT NULL";
-	//		else
-	//			ret = ret + " NULL";			
+
+			//		String def = f.getExtracted("default");
+			//		if (def != null) {
+			//			def = getDbDef(def);
+			//			ret = ret + " DEFAULT " + def;
+			//		}
+			//		boolean notNull = f.getBoolean("notnull", false);
+			//		if (notNull)
+			//			ret = ret + " NOT NULL";
+			//		else
+			//			ret = ret + " NULL";
 			return ret;
 		} catch (MException e) {
 			throw new MRuntimeException(e);
 		}
 	}
 
-	
+
 	@Override
 	public String toSqlDateValue(Date date) {
 		synchronized (dateFormat) {
 			return "TO_DATE('" + dateFormat.format(date) + "','YYYY-MM-DD HH:MI:SS')";
 		}
 	}
-	
+
 	@Override
 	public String normalizeColumnName(String columnName) {
 		return columnName.toUpperCase();
 	}
-	
+
 	@Override
 	protected void alterColumn(Statement sth,String tn, ResourceNode cfield) {
 		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + getFieldConfigWithoutExtras(cfield);
@@ -121,9 +121,9 @@ public class DialectHsqldb extends DialectDefault {
 	@Override
 	protected void createIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
-		
+
 		iName = table + iName;
-		
+
 		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
 		log().t(sql);
 		try {
@@ -133,7 +133,7 @@ public class DialectHsqldb extends DialectDefault {
 		}
 
 	}
-	
+
 	@Override
 	protected boolean equalsIndexName(String table, String iName, String iName2) {
 		return iName2.equals(table + iName);

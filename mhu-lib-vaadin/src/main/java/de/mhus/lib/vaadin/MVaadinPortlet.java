@@ -26,6 +26,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 	private int height;
 	private boolean hasButtons = true;
 
+	@SuppressWarnings({ "deprecation", "serial" })
 	@Override
 	public void doContent(VerticalLayout innerLayout) {
 		

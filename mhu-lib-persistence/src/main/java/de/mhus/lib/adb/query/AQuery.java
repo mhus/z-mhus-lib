@@ -22,7 +22,7 @@ public class AQuery<T> extends APrint {
 	public Class<?> getType() {
 		return type;
 	}
-	
+
 	public String toQualification(DbManager dbManager) {
 		manager = dbManager;
 		StringBuffer buffer = new StringBuffer();
@@ -39,7 +39,7 @@ public class AQuery<T> extends APrint {
 
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
-//		buffer.append('(');
+		//		buffer.append('(');
 		{
 			boolean first = true;
 			for (AOperation operation : operations) {
@@ -52,7 +52,7 @@ public class AQuery<T> extends APrint {
 				}
 			}
 		}
-//		buffer.append(')');
+		//		buffer.append(')');
 
 		{
 			boolean first = true;
@@ -66,17 +66,17 @@ public class AQuery<T> extends APrint {
 						buffer.append(" , ");
 					operation.print(query, buffer);
 				} else
-				if (operation instanceof ALimit)
-					limit = operation;
+					if (operation instanceof ALimit)
+						limit = operation;
 			}
-			
+
 			if (limit != null) {
 				limit.print(query, buffer);
 			}
-			
+
 		}
-		
-		
+
+
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class AQuery<T> extends APrint {
 		for (AOperation operation : operations)
 			operation.getAttributes(map);
 	}
-	
+
 	public DbManager getManager() {
 		return manager;
 	}
@@ -93,12 +93,12 @@ public class AQuery<T> extends APrint {
 		operations.add(Db.eq(left, right));
 		return this;
 	}
-	
+
 	public AQuery<T> ne(AAttribute left, AAttribute right) {
 		operations.add(Db.ne(left, right));
 		return this;
 	}
-	
+
 	public AQuery<T> lt(AAttribute left, AAttribute right) {
 		operations.add(Db.lt(left, right));
 		return this;
@@ -133,27 +133,27 @@ public class AQuery<T> extends APrint {
 		operations.add(Db.or(parts));
 		return this;
 	}
-	
+
 	public AQuery<T> order(AOrder order) {
 		operations.add(order);
 		return this;
 	}
-	
+
 	public AQuery<T> asc(String attr) {
 		operations.add(new AOrder(type, attr, true));
 		return this;
 	}
-	
+
 	public AQuery<T> desc(String attr) {
 		operations.add(new AOrder(type, attr, false));
 		return this;
 	}
-	
+
 	public AQuery<T> literal(APart ... parts) {
 		operations.add(Db.literal(parts));
 		return this;
 	}
-	
+
 	public AQuery<T> literal(ALiteral literal) {
 		operations.add(Db.literal(literal));
 		return this;
@@ -163,12 +163,12 @@ public class AQuery<T> extends APrint {
 		operations.add(Db.not(part));
 		return this;
 	}
-	
+
 	public AQuery<T> in(AAttribute left, AAttribute ... right) {
 		operations.add(Db.in(left, new AList(right) ));
 		return this;
 	}
-	
+
 	public AQuery<T> limit(int limit) {
 		operations.add(Db.limit(limit));
 		return this;

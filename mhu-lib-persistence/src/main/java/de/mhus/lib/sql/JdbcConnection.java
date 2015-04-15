@@ -16,9 +16,9 @@ import de.mhus.lib.sql.parser.SimpleQueryCompiler;
  *
  */
 public class JdbcConnection extends InternalDbConnection {
-	
+
 	public static final String LANGUAGE_SQL = "sql";
-	
+
 	private boolean used = false;
 	private Connection connection;
 	private DbProvider provider;
@@ -55,40 +55,40 @@ public class JdbcConnection extends InternalDbConnection {
 		this.connection = con;
 		id = base(UniqueId.class).nextUniqueId();
 	}
-	
+
 	@Override
 	public DbStatement getStatement(String name) throws MException {
 		synchronized (this) {
 			if (closed) throw new MException("Connection not valid");
-			
+
 			String[] query = provider.getQuery(name);
 			if (query == null) return null;
 			return new JdbcStatement(this, query[1],query[0]);
 		}
 	}
-		
+
 	@Override
 	public DbStatement createStatement(String sql, String language) throws MException {
 		synchronized (this) {
 			if (closed) throw new MException("Connection not valid");
-			
+
 			return new JdbcStatement(this, sql, language);
 		}
 	}
-	
+
 	@Override
 	public boolean isClosed() {
 		synchronized (this) {
 			return closed;
 		}
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
-			close();
+		close();
 		super.finalize();
 	}
-	
+
 	@Override
 	public boolean isUsed() {
 		synchronized (this) {
@@ -120,7 +120,7 @@ public class JdbcConnection extends InternalDbConnection {
 	public Connection getConnection() {
 		return connection;
 	}
-	
+
 
 	@Override
 	public void close() {
@@ -191,6 +191,6 @@ public class JdbcConnection extends InternalDbConnection {
 	@Override
 	public DbStatement createStatement(String sql) throws MException {
 		return createStatement(sql, provider.getDialect().detectLanguage(sql));
-	}	
+	}
 
 }

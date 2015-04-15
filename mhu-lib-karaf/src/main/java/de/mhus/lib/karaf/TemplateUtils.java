@@ -29,6 +29,7 @@ public class TemplateUtils {
                 line = filter(line, properties);
                 out.println(line);
             }
+            scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can not create " + outFile, e);
         } finally {

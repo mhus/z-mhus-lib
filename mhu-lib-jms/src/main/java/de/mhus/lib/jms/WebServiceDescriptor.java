@@ -38,7 +38,7 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 
 	private static Class<?> findIfc(Object service) {
 		// TODO traverse thru all ifcs
-		Class<?> c = service instanceof Class ? (Class)service : service.getClass();
+		Class<?> c = service instanceof Class ? (Class<?>)service : service.getClass();
 		if (c.isAnnotationPresent(WebService.class)) return c;
 		for (Class<?> i : c.getInterfaces()) {
 			if (i.isAnnotationPresent(WebService.class)) return i;

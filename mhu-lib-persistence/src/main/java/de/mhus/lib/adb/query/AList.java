@@ -23,7 +23,7 @@ public class AList extends AAttribute {
 		}
 		buffer.append(')');
 	}
-	
+
 	@Override
 	public void getAttributes(AttributeMap map) {
 		for (AAttribute part : operations)

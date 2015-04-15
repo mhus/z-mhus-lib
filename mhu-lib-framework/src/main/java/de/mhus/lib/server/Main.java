@@ -50,7 +50,7 @@ public class Main extends MJmx {
 			// menu 
 			//console.printLine();
 			status = "[sleeping]";
-			int cnt = 0;
+//			int cnt = 0;
 //			console.println("gc: Garbage Collection");
 //			console.println("q: Quit");
 //			console.println("r: Reload");

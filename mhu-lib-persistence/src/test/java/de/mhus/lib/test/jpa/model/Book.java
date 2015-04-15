@@ -35,13 +35,13 @@ public class Book {
 	public void setPages(int pages) {
 		this.pages = pages;
 	}
-	
+
 	public long getLendTo() {
 		return lendTo;
 	}
-	
+
 	public void setLendTo(long lendTo) {
 		this.lendTo = lendTo;
 	}
-		
+
 }

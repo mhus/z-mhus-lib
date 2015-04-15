@@ -17,6 +17,7 @@ public class UiVaadinActions extends UiVaadinComposite {
 	PopupButton secButton = null;
 	public VerticalLayout secLayout;
 	
+	@Override
 	public void createUi(VaadinFormBuilder builder) {
 		
 		int row = builder.getCurrentComposite().createRow();
@@ -26,6 +27,7 @@ public class UiVaadinActions extends UiVaadinComposite {
 		}
 	}
 
+	@Override
 	public boolean isTransparent() {
 		return true;
 	}
@@ -35,6 +37,7 @@ public class UiVaadinActions extends UiVaadinComposite {
 		private FormAction a;
 		private Button button;
 
+		@SuppressWarnings("deprecation")
 		public UiButton(FormAction action, VaadinFormBuilder builder, int row) {
 			this.a = action;
 			a.setUi(this);
@@ -78,6 +81,7 @@ public class UiVaadinActions extends UiVaadinComposite {
 			}
 		}
 		
+		@Override
 		public void doUpdateEnabled() {
 			button.setEnabled(a.isEnabled());
 		}

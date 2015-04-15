@@ -10,6 +10,7 @@ import de.mhus.lib.sql.DbResult;
 
 public class FieldVirtual extends Field {
 
+	@SuppressWarnings("unchecked")
 	public FieldVirtual(Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2, String[] features) throws MException {
 		this.attribute = (PojoAttribute<Object>) attribute;
 		this.nameOrg = attribute.getName();
@@ -23,17 +24,17 @@ public class FieldVirtual extends Field {
 		init(features);
 	}
 
-//	public FieldVirtual(Table table, de.mhus.lib.adb.DbDynamic.Field f) {
-//		methodName = f.getName();
-//		this.table = table;
-//		this.nameOrg = methodName;
-//		this.name = methodName.toLowerCase();
-//		this.createName = methodName.toLowerCase();
-//		this.isPrimary = f.isPrimaryKey();
-//		this.ret = f.getReturnType();
-//		this.attr = f.getAttributes();
-//		this.dynamicField = f;
-//	}
+	//	public FieldVirtual(Table table, de.mhus.lib.adb.DbDynamic.Field f) {
+	//		methodName = f.getName();
+	//		this.table = table;
+	//		this.nameOrg = methodName;
+	//		this.name = methodName.toLowerCase();
+	//		this.createName = methodName.toLowerCase();
+	//		this.isPrimary = f.isPrimaryKey();
+	//		this.ret = f.getReturnType();
+	//		this.attr = f.getAttributes();
+	//		this.dynamicField = f;
+	//	}
 
 	@Override
 	public void prepareCreate(Object obj)
@@ -55,7 +56,7 @@ public class FieldVirtual extends Field {
 	public boolean changed(DbResult res, Object obj) throws Exception {
 		return false;
 	}
-	
+
 	@Override
 	public void fillNameMapping(HashMap<String, Object> nameMapping) {
 	}

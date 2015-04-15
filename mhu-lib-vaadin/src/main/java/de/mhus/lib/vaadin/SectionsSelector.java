@@ -101,6 +101,7 @@ public class SectionsSelector extends VerticalLayout {
 		private boolean selected = false;
 		private Object userData;
 
+		@SuppressWarnings("deprecation")
 		public Section(String name, String title) {
 			this.name = name;
 			this.title = title;

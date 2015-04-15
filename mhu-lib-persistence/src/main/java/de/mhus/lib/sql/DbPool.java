@@ -41,8 +41,8 @@ public abstract class DbPool extends MJmx {
 	private DbProvider provider;
 	private String name;
 	private ResourceNode config;
-	
-	
+
+
 	/**
 	 * Create a new pool from central configuration.
 	 * It's used the MSingleton configuration with the key of this class.
@@ -52,7 +52,7 @@ public abstract class DbPool extends MJmx {
 	public DbPool() throws Exception {
 		this(null,null);
 	}
-	
+
 	/**
 	 * Create a new pool from a configuration.
 	 * 
@@ -61,15 +61,15 @@ public abstract class DbPool extends MJmx {
 	 * @throws Exception
 	 */
 	public DbPool(ResourceNode config,MActivator activator) throws Exception {
-		
+
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
 		if (activator == null) activator = base(MActivator.class);
-		
+
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
-		
+
 		this.provider = provider;
 	}
 
@@ -82,15 +82,15 @@ public abstract class DbPool extends MJmx {
 		doCreateConfig();
 		setProvider(provider);
 	}
-	
+
 	protected ResourceNode getConfig() {
 		return config;
 	}
-	
+
 	protected String getName() {
 		return name;
 	}
-	
+
 	protected void doCreateConfig() {
 		try {
 			config = base(ConfigProvider.class).getConfig(this,null);
@@ -98,7 +98,7 @@ public abstract class DbPool extends MJmx {
 		}
 		if (config == null) config = new HashConfig();
 	}
-	
+
 	/**
 	 * Set a DbProvider for this pool.
 	 * 
@@ -110,7 +110,7 @@ public abstract class DbPool extends MJmx {
 		if (name == null) name = "pool";
 		name = name + base(UniqueId.class).nextUniqueId();
 	}
-	
+
 	/**
 	 * Returns the DbProvider, it implements the database behavior and creates new connections.
 	 * 
@@ -127,13 +127,13 @@ public abstract class DbPool extends MJmx {
 	public Dialect getDialect() {
 		return provider.getDialect();
 	}
-	
+
 	/**
 	 * Look into the pool for an unused DbProvider. If no one find, create one.
 	 * 
 	 * @param jmxName
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public abstract DbConnection getConnection() throws Exception;
 
@@ -147,10 +147,11 @@ public abstract class DbPool extends MJmx {
 
 	@JmxManaged(descrition="Current used connections in the pool")
 	public abstract int getUsedSize();
-	
+
 	/**
 	 * Cleanup the connection pool. Unused or closed connections will be removed.
 	 * TODO new strategy to remove unused connections - not prompt, need a timeout time or minimum pool size.
+	 * @param unusedAlso 
 	 */
 	@JmxManaged(descrition="Cleanup unused connections")
 	public abstract void cleanup(boolean unusedAlso);
@@ -160,36 +161,36 @@ public abstract class DbPool extends MJmx {
 	 * 
 	 */
 	public abstract void close();
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
 	}
-	
+
 	public DbPrepared getStatement(String name) throws MException {
 		String[] query = provider.getQuery(name);
 		return new DbPrepared(this, query[1], query[0]);
 	}
-		
+
 	/**
 	 * Create a prepared statement using the default language.
 	 * 
 	 * @param sql
 	 * @return
-	 * @throws MException 
+	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql) throws MException {
 		return createStatement(sql, null);
 	}
-	
+
 	/**
 	 * Create a new prepared statement for further use.
 	 * 
 	 * @param sql
 	 * @param language
 	 * @return
-	 * @throws MException 
+	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql, String language) throws MException {
 		return new DbPrepared(this, sql, language);
@@ -202,7 +203,7 @@ public abstract class DbPool extends MJmx {
 
 	@JmxManaged(descrition="Return the usage of the connections")
 	public abstract String dumpUsage(boolean used);
-	
+
 	public abstract boolean isClosed();
-	
+
 }

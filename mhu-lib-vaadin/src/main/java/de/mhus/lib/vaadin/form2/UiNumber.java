@@ -11,6 +11,7 @@ public class UiNumber extends UiText {
 
 	private String type;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected AbstractField createTextField() throws MException {
 
@@ -38,6 +39,7 @@ public class UiNumber extends UiText {
 		return spinner;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void setValueToField(Object arg) {
 		((SpinnerNumberField<Object>)field).setValue(String.valueOf(arg));

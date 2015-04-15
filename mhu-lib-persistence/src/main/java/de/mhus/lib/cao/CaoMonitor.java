@@ -14,12 +14,12 @@ public abstract class CaoMonitor {
 	 * 
 	 * @param name the name (or description) of the main task
 	 * @param totalWork the total number of work units into which
-	 *  the main task is been subdivided. If the value is <code>UNKNOWN</code> 
-	 *  the implementation is free to indicate progress in a way which 
+	 *  the main task is been subdivided. If the value is <code>UNKNOWN</code>
+	 *  the implementation is free to indicate progress in a way which
 	 *  doesn't require the total number of work units in advance.
 	 */
 	public abstract void beginTask(String name, int totalWork);
-	
+
 	/**
 	 * Returns whether cancelation of current operation has been requested.
 	 * Long-running operations should poll to see if cancelation
@@ -48,12 +48,13 @@ public abstract class CaoMonitor {
 	 * @param work a non-negative number of work units just completed
 	 */
 	public abstract void worked(int work);
-	
+
 	/**
 	 * Returns the actual number of already worked items set by worked().
+	 * @return 
 	 */
 	public abstract int alreadyWorked();
-	
+
 	/**
 	 * Notifies that the next work unit is finished. This call needs no
 	 * knowledge of the actual worked items.
@@ -61,7 +62,7 @@ public abstract class CaoMonitor {
 	public void nextFinished() {
 		worked(alreadyWorked()+1);
 	}
-	
+
 	/**
 	 * Return a logger to use by the client. The client should use this
 	 * logger to be sure the results of the operation will be stored

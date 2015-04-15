@@ -36,6 +36,7 @@ public class ConfirmDialog extends ModalDialog {
 		return label;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void initContent(VerticalLayout layout) throws Exception {
 		label = new Label(message);

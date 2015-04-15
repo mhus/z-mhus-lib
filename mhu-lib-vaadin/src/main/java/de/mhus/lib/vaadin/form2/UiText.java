@@ -13,6 +13,7 @@ import de.mhus.lib.form.DataSource;
 
 public class UiText extends UiVaadin {
 
+	@SuppressWarnings("rawtypes")
 	protected AbstractField field;
 
 	@Override
@@ -35,6 +36,7 @@ public class UiText extends UiVaadin {
 		data.setString((String)field.getValue());
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void setValueToField(Object arg) {
 		field.setValue(arg);
 	}
@@ -84,6 +86,7 @@ public class UiText extends UiVaadin {
 		super.doUpdate(data);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Component getField() throws MException {
 		if (field == null) {
@@ -112,6 +115,7 @@ public class UiText extends UiVaadin {
 		return field;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected AbstractField createTextField() throws MException {
 		return new TextField();
 	}

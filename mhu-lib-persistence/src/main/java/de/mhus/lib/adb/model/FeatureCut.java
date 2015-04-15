@@ -7,12 +7,14 @@ public class FeatureCut extends Feature {
 
 	private boolean cutAll;
 
+	@Override
 	public void doInit() throws MException {
 		cutAll = table.getAttributes().getBoolean("cut_all", false);
 	}
-	
+
+	@Override
 	public Object get(Object obj, Field field, Object val) throws MException {
-		
+
 		if ( ( cutAll || field.getAttributes().getBoolean("cut",false) ) && val != null && val instanceof String && ((String)val).length() > field.getSize()) {
 			log().t("cut",field);
 			val = ((String)val).substring(0,field.getSize());

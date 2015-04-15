@@ -13,19 +13,19 @@ public class TableDynamic extends Table {
 	protected void parseFields() throws InstantiationException, IllegalAccessException, MException {
 		DbDynamic.Field[] fa = ((DbDynamic)clazz.newInstance()).getFieldDefinitions();
 		for (DbDynamic.Field f : fa) {
-			
+
 			PojoAttribute<?> attr = new DynamicAttribute(f);
 			Field field = manager.getSchema().createField(manager, this, f.isPrimaryKey(), !f.isPersistent(), attr, f.getAttributes(), f, null);
-			
+
 			if (field != null) addField( field );
-			
+
 			// indexes
 			String[] indexes = f.getIndexes();
 			if (indexes != null) {
 				addToIndex(indexes,field);
 			}
 
-		}		
+		}
 	}
 
 	private class DynamicAttribute implements PojoAttribute<Object> {
@@ -43,7 +43,7 @@ public class TableDynamic extends Table {
 
 		@Override
 		public void set(Object pojo, Object value) throws IOException {
-			
+
 		}
 
 		@Override
@@ -76,6 +76,6 @@ public class TableDynamic extends Table {
 				Class<? extends A> annotationClass) {
 			return null;
 		}
-		
+
 	}
 }

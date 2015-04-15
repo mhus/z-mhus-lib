@@ -37,6 +37,7 @@ public class DataConnector extends Observable {
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return getTaskName() + "=" + name;
 	}
