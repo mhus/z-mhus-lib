@@ -1,7 +1,6 @@
 package de.mhus.examples.jms;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -9,7 +8,6 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.RequestResult;
-import de.mhus.lib.jms.ServerJms;
 import de.mhus.lib.jms.ServerJson;
 
 public class DemoJsonReceiver {
@@ -22,6 +20,7 @@ public class DemoJsonReceiver {
 		
 		JmsConnection con = new JmsConnection(url, user, password);
 
+		@SuppressWarnings("unused")
 		ServerJson server = new ServerJson(con.createQueue("mike")) {
 
 			@Override

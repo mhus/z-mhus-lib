@@ -1,10 +1,8 @@
 package de.mhus.lib.jms;
 
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 
-import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 

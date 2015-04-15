@@ -5,7 +5,6 @@ import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
-import org.osgi.framework.BundleContext;
 
 @Command(scope = "adb", name = "connect", description = "Connect ADB DataSource")
 public class CmdConnect implements Action {

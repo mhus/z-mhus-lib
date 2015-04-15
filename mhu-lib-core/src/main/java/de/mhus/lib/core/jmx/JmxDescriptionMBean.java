@@ -95,6 +95,7 @@ public class JmxDescriptionMBean extends JmxDescription {
 		return methods.get(actionName);
 	}
 
+	@Override
 	public MBeanInfo getMBeanInfo() {
 		return info;
 	}

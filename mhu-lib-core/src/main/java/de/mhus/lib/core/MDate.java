@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class MDate extends Date {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static SimpleDateFormat iso8601DateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss");
 	private static SimpleDateFormat fileDateFormat = new SimpleDateFormat(
@@ -30,6 +32,7 @@ public class MDate extends Date {
 		this.setTime(date.getTime());
 	}
 
+	@Override
 	public String toString() {
 		return toIso8601(this);
 	}
@@ -124,6 +127,7 @@ public class MDate extends Date {
 
 	/**
 	 * Calendar to iso date: yyyy-mm-dd
+	 * @param timeStamp 
 	 * 
 	 * @param _in
 	 * @return

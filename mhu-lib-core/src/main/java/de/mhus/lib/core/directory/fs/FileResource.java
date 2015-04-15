@@ -113,6 +113,7 @@ public class FileResource extends ResourceNode {
 		return parent;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public URL getUrl() {
 		try {

@@ -25,6 +25,7 @@ public class DynamicClassLoader extends ClassLoader {
 	public static Log log = Log.getLog(DynamicClassLoader.class);
 	
 	protected String name = null;
+	@SuppressWarnings("rawtypes")
 	protected LinkedList<MResourceProvider> classLoaders = new LinkedList<MResourceProvider>();
 	protected Rule[] rules = null;
 	protected RESULT defaultRule = RESULT.NEXT;
@@ -89,7 +90,7 @@ public class DynamicClassLoader extends ClassLoader {
 			return super.findClass(name);
 
 		String resName = name.replaceAll("\\.", "/") + ".class";
-		for (MResourceProvider cl : classLoaders) {
+		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
 				InputStream res = cl.getResource(resName).getInputStream();
 				if (res != null) {
@@ -111,7 +112,7 @@ public class DynamicClassLoader extends ClassLoader {
 		}
 		
 		String resName = name.replaceAll("\\.", "/") + ".class";
-		for (MResourceProvider cl : classLoaders) {
+		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
 				InputStream res = cl.getResource(resName).getInputStream();
 				if (res != null) {
@@ -151,7 +152,7 @@ public class DynamicClassLoader extends ClassLoader {
 	@Override
 	protected URL findResource(String name) {
 		log.t("resource",this,name);
-		for (MResourceProvider cl : classLoaders) {
+		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
 				URL res = cl.getResource(name).getUrl();
 				if (res != null) {
@@ -166,11 +167,11 @@ public class DynamicClassLoader extends ClassLoader {
 
 	// --- Methods to handle list
 	
-	public boolean add(MResourceProvider e) {
+	public boolean add(@SuppressWarnings("rawtypes") MResourceProvider e) {
 		return classLoaders.add(e);
 	}
 
-	public boolean remove(MResourceProvider o) {
+	public boolean remove(@SuppressWarnings("rawtypes") MResourceProvider o) {
 		return classLoaders.remove(o);
 	}
 
@@ -178,7 +179,7 @@ public class DynamicClassLoader extends ClassLoader {
 		classLoaders.clear();
 	}
 
-	public void add(int index, MResourceProvider element) {
+	public void add(int index, @SuppressWarnings("rawtypes") MResourceProvider element) {
 		classLoaders.add(index, element);
 	}
 	

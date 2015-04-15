@@ -1,8 +1,5 @@
 package de.mhus.lib.karaf.jms;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
@@ -13,7 +10,6 @@ import org.apache.karaf.shell.commands.Option;
 
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.jms.ping.Ping;
-import de.mhus.lib.karaf.TemplateUtils;
 
 @Command(scope = "jms", name = "ping", description = "ping")
 public class CmdPing implements Action {

@@ -22,9 +22,6 @@ package de.mhus.lib.core;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +36,7 @@ import de.mhus.lib.core.cast.FloatToString;
 import de.mhus.lib.core.cast.ObjectToBoolean;
 import de.mhus.lib.core.cast.ObjectToByte;
 import de.mhus.lib.core.cast.ObjectToCalendar;
+import de.mhus.lib.core.cast.ObjectToDate;
 import de.mhus.lib.core.cast.ObjectToDouble;
 import de.mhus.lib.core.cast.ObjectToFloat;
 import de.mhus.lib.core.cast.ObjectToInteger;
@@ -47,8 +45,6 @@ import de.mhus.lib.core.cast.ObjectToShort;
 import de.mhus.lib.core.cast.ObjectToSqlDate;
 import de.mhus.lib.core.cast.ObjectToString;
 import de.mhus.lib.core.cast.ObjectToUUID;
-import de.mhus.lib.core.cast.ObjectToDate;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.VectorMap;
 
 
@@ -63,7 +59,7 @@ import de.mhus.lib.core.util.VectorMap;
  */
 public final class MCast {
 
-	private static Log log = Log.getLog(MCast.class);
+//	private static Log log = Log.getLog(MCast.class);
 //	private static SimpleDateFormat dateFormat = new SimpleDateFormat(
 //			"yyyy-MM-dd_HH:mm:ss.SSS z");
 
@@ -145,7 +141,7 @@ public final class MCast {
 	/**
 	 * Try to parse a String and return the equivalent Date object. The string
 	 * should contain a iso date string like "yyyy-mm-dd" syntax:
-	 * "yyyy-mm-dd[[ HH:MM:SS].XXX]" where XXX is Millisecond. Milliseconds are
+	 * "yyyy-mm-dd[[ HH:MM:SS].xxx]" where xxx is Millisecond. Milliseconds are
 	 * ignored. For the date part there are alternative syntax: "dd.mm.yyyy" or
 	 * "mm/dd/yyyy". Or a timestamp.
 	 * <p>
@@ -407,15 +403,15 @@ public final class MCast {
 	 * Converts integer to string with the minimum digits.
 	 * 
 	 * @param _in
+	 * @param _digits 
 	 * @param _numbers
 	 * @return
 	 */
 	public static String toString(int _in, int _digits) {
-		// FIXME performance please !
-		String out = Integer.toString(_in);
+		StringBuffer out = new StringBuffer().append(Integer.toString(_in));
 		while (out.length() < _digits)
-			out = "0" + out;
-		return out;
+			out.insert(0, '0');
+		return out.toString();
 	}
 
 	/**

@@ -7,15 +7,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import junit.framework.TestCase;
+
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.JacksonTransformer;
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.SimpleObjectTransformer;
 import de.mhus.lib.core.json.TransformHelper;
-import junit.framework.TestCase;
 
 public class MJsonTest extends TestCase {
 
@@ -107,6 +107,7 @@ public class MJsonTest extends TestCase {
 		
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testJacksonTransformations() {
 		TransformHelper helper = new TransformHelper() {
 			{

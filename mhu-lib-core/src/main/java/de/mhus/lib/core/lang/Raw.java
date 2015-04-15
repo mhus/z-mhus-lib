@@ -24,6 +24,7 @@ public class Raw implements Serializable {
 	public Raw() {
 	}
 
+	@Override
 	public String toString() {
 		return value;
 	}

@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class PojoModelImpl implements PojoModel {
 
+	@SuppressWarnings("rawtypes")
 	private HashMap<String, PojoAttribute> attributes = new HashMap<String, PojoAttribute>();
 	private HashMap<String, PojoAction> actions = new HashMap<String, PojoAction>();
 	private Class<?> clazz;
@@ -13,7 +14,7 @@ public class PojoModelImpl implements PojoModel {
 		this.clazz = clazz;
 	}
 	
-	public void addAttribute(PojoAttribute attr) {
+	public void addAttribute(@SuppressWarnings("rawtypes") PojoAttribute attr) {
 		attributes.put(attr.getName(),attr);
 	}
 
@@ -21,11 +22,13 @@ public class PojoModelImpl implements PojoModel {
 		actions.put(attr.getName(),attr);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Iterator<PojoAttribute> iterator() {
 		return attributes.values().iterator();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public PojoAttribute getAttribute(String name) {
 		return attributes.get(name);

@@ -123,7 +123,7 @@ public class MArgs {
 					System.out.print("  -" + u + "   ");
 					for (int j = u.length(); j < 20; j++)
 						System.out.print(' ');
-					System.out.println(pUsage[i + 2]); //FIXME: do not exit ?
+					System.out.println(pUsage[i + 2]);
 				}
 			}
 			System.exit(0);
@@ -217,6 +217,7 @@ public class MArgs {
 		return values.keySet();
 	}
 
+	@Override
 	public String toString() {
 		return values.toString();
 	}

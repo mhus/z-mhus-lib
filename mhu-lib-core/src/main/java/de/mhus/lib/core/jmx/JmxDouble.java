@@ -21,6 +21,7 @@ public class JmxDouble extends MJmx {
 		return value;
 	}
 
+	@Override
 	public String toString() {
 		return String.valueOf(value);
 	}

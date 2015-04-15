@@ -2,7 +2,6 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import org.osgi.service.component.ComponentContext;
 
@@ -12,7 +11,6 @@ import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.MTimerTask;
-import de.mhus.lib.karaf.jms.JmsDataChannel;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 

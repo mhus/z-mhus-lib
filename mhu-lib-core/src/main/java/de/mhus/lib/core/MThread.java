@@ -57,6 +57,7 @@ public class MThread extends MObject implements Runnable {
 		return task;
 	}
 
+	@Override
 	public void run() {
 	}
 
@@ -96,6 +97,7 @@ public class MThread extends MObject implements Runnable {
 	/**
 	 * Sleeps _millisec milliseconds. On Error (e.g. a break), it prints a
 	 * stacktrace dump.
+	 * @param _millisec 
 	 */
 	public static void sleep(long _millisec) {
 		try {

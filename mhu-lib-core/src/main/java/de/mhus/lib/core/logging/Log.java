@@ -71,6 +71,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than debug. </p>
+     * @return 
      */
     public abstract boolean isDebugEnabled();
 
@@ -81,6 +82,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than error. </p>
+     * @return 
      */
     public abstract boolean isErrorEnabled();
 
@@ -91,6 +93,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than fatal. </p>
+     * @return 
      */
     public abstract boolean isFatalEnabled();
 
@@ -101,6 +104,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than info. </p>
+     * @return 
      */
     public abstract boolean isInfoEnabled();
 
@@ -111,6 +115,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than trace. </p>
+     * @return 
      */
     public abstract boolean isTraceEnabled();
 
@@ -121,6 +126,7 @@ public abstract class Log {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than warn. </p>
+     * @return 
      */
     public abstract boolean isWarnEnabled();
 
@@ -175,6 +181,7 @@ public abstract class Log {
     /**
      * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
      * This is the local trace method. The trace will only written if the local trace is switched on.
+     * @param msg 
      */
     public void t(Object ... msg) {
     	if (!isTraceEnabled()) return;
@@ -228,6 +235,7 @@ public abstract class Log {
 
     /**
      * Log a message in debug, it will automatically append the objects if debug is enabled. Can Also add a trace.
+     * @param msg 
      */
     public void d(Object ... msg) {
     	if (!isDebugEnabled()) return;
@@ -244,6 +252,7 @@ public abstract class Log {
 
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also add a trace.
+     * @param msg 
      */
     public void i(Object ... msg) {
     	if (!isInfoEnabled()) return;
@@ -260,6 +269,7 @@ public abstract class Log {
     
     /**
      * Log a message in warn, it will automatically append the objects if debug is enabled. Can Also add a trace.
+     * @param msg 
      */
     public void w(Object ... msg) {
     	if (!isWarnEnabled()) return;
@@ -276,6 +286,7 @@ public abstract class Log {
 
     /**
      * Log a message in error, it will automatically append the objects if debug is enabled. Can Also add a trace.
+     * @param msg 
      */
     public void e(Object ... msg) {
     	if (!isErrorEnabled()) return;
@@ -292,6 +303,7 @@ public abstract class Log {
 
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also add a trace.
+     * @param msg 
      */
     public void f(Object ... msg) {
     	StringBuffer sb = new StringBuffer();

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbObject;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.relation.RelSingle;
 import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;

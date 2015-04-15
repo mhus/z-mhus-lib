@@ -7,7 +7,6 @@ import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
-import org.osgi.framework.BundleContext;
 
 import de.mhus.lib.core.console.ConsoleTable;
 

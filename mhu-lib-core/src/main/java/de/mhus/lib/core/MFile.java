@@ -25,7 +25,6 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -58,6 +57,8 @@ public class MFile {
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot.
+	 * @param _file 
+	 * @return 
 	 */
 	public static String getFileSuffix(File _file) {
 
@@ -66,6 +67,8 @@ public class MFile {
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot or an empty string.
+	 * @param _name 
+	 * @return 
 	 */
 	public static String getFileSuffix(String _name) {
 
@@ -81,6 +84,8 @@ public class MFile {
 	/**
 	 * Returns the name of the file in a path name. Using the OS specific
 	 * separator.
+	 * @param _path 
+	 * @return 
 	 */
 	public static String getFileName(String _path) {
 
@@ -95,6 +100,7 @@ public class MFile {
 
 	/**
 	 * return the internal working directory.
+	 * @return 
 	 */
 	public static File getWorkingDirectory() {
 
@@ -105,6 +111,8 @@ public class MFile {
 	/**
 	 * Open and read a file. It returns the content of the file as string.
 	 * Be aware of special characters.
+	 * @param _f 
+	 * @return 
 	 */
 	public static String readFile(File _f) {
 
@@ -125,6 +133,8 @@ public class MFile {
 	/**
 	 * Open and read a file. It returns the content of the file as string.
 	 * Be aware of special characters.
+	 * @param _is 
+	 * @return 
 	 */
 	public static String readFile(Reader _is) {
 
@@ -172,6 +182,8 @@ public class MFile {
 	/**
 	 * Open and read a stream. It returns the content of the file as string.
 	 * Be aware of special characters.
+	 * @param _is 
+	 * @return 
 	 */
 	public static String readFile(InputStream _is) {
 
@@ -194,6 +206,9 @@ public class MFile {
 
 	/**
 	 * Open and read a file. It returns the content of the file as byte array.
+	 * @param in 
+	 * @return 
+	 * @throws IOException 
 	 */
 	public static byte[] readBinaryFile(File in) throws IOException {
 		InputStream fis = new FileInputStream(in);
@@ -207,6 +222,9 @@ public class MFile {
 
 	/**
 	 * Open and read a stream. It returns the content of the file as byte array.
+	 * @param is 
+	 * @return 
+	 * @throws IOException 
 	 */
 	public static byte[] readBinary(InputStream is) throws IOException {
 		return readBinary(is, false);
@@ -238,6 +256,11 @@ public class MFile {
 
 	/**
 	 * Open and read a stream. It put the content of the file into the byte array.
+	 * @param is 
+	 * @param buffer 
+	 * @param offset 
+	 * @param length 
+	 * @throws IOException 
 	 */
 	public static void readBinary(InputStream is, byte[] buffer, int offset,
 			int length) throws IOException {
@@ -254,6 +277,9 @@ public class MFile {
 
 	/**
 	 * Open and write a file. Be aware of special characters.
+	 * @param _f 
+	 * @param _content 
+	 * @return 
 	 */
 	public static boolean writeFile(File _f, String _content) {
 
@@ -334,6 +360,8 @@ public class MFile {
 
 	/**
 	 * Copy a stream.
+	 * @param _is 
+	 * @param _os 
 	 */
 	public static void copyFile(InputStream _is, OutputStream _os) {
 
@@ -356,6 +384,8 @@ public class MFile {
 
 	/**
 	 * Copy a stream.
+	 * @param _is 
+	 * @param _os 
 	 */
 	public static void copyFile(Reader _is, Writer _os) {
 
@@ -383,7 +413,6 @@ public class MFile {
 	 * @return
 	 */
 	public static String toFileName(String _name) {
-		// FIXME: Use StringBuffer
 		String out = _name.replace('\\', '_');
 		out = out.replace('/', '_');
 		out = out.replace('*', '_');
@@ -437,8 +466,6 @@ public class MFile {
 
 	/**
 	 * Copy a directory with content. Use the filter to filter the content.
-	 * 
-	 * FIXME: Use FileFilter
 	 * 
 	 * @param _src
 	 * @param _dest

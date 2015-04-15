@@ -35,7 +35,8 @@ public class MObjectInputStream extends ObjectInputStream {
         }
     }
 
-    protected Class<?> resolveProxyClass(String[] interfaces)
+    @Override
+	protected Class<?> resolveProxyClass(String[] interfaces)
             throws IOException, ClassNotFoundException
     {
         ClassLoader latestLoader = cl;
@@ -43,9 +44,11 @@ public class MObjectInputStream extends ObjectInputStream {
         boolean hasNonPublicInterface = false;
 
         // define proxy in class loader of non-public interface(s), if any
-        Class[] classObjs = new Class[interfaces.length];
+        @SuppressWarnings("rawtypes")
+		Class[] classObjs = new Class[interfaces.length];
         for (int i = 0; i < interfaces.length; i++) {
-            Class cl = Class.forName(interfaces[i], false, latestLoader);
+            @SuppressWarnings("rawtypes")
+			Class cl = Class.forName(interfaces[i], false, latestLoader);
             if ((cl.getModifiers() & Modifier.PUBLIC) == 0) {
                 if (hasNonPublicInterface) {
                     if (nonPublicLoader != cl.getClassLoader()) {

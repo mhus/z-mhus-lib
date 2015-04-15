@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.Set;
 
-import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.lang.MObject;
 
 public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
@@ -15,9 +14,10 @@ public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
 	private Class<? extends Annotation>[] annotationMarker;
 	
 	public FunctionsOnlyStrategy() {
-		this(true, null);
+		this(true, (Class<? extends Annotation>)null);
 	}
 		
+	@SafeVarargs
 	public FunctionsOnlyStrategy(boolean toLower, Class<? extends Annotation> ... annotationMarker) {
 		this.toLower = toLower;
 		this.annotationMarker = annotationMarker;

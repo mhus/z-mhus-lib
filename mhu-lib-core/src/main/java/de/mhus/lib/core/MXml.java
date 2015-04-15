@@ -238,10 +238,12 @@ public class MXml {
 	@SuppressWarnings("serial")
 	private static class MyNodeList extends Vector<Node> implements NodeList {
 
+		@Override
 		public int getLength() {
 			return size();
 		}
 
+		@Override
 		public Node item(int index) {
 			return (Node) elementAt(index);
 		}
@@ -426,6 +428,8 @@ public class MXml {
 
 	/**
 	 * Decodes a string with encoded characters to a java string.
+	 * @param _in 
+	 * @return 
 	 * 
 	 */
 	public static String decode(String _in) {
@@ -577,20 +581,24 @@ public class MXml {
 			next = 0;
 		}
 
+		@Override
 		public boolean hasNext() {
 			return list != null && list.getLength() > next;
 		}
 
+		@Override
 		public Element next() {
 			Element ret = (Element)list.item(next);
 			next++;
 			return ret;
 		}
 
+		@Override
 		public void remove() {
 			// not supported
 		}
 
+		@Override
 		public Iterator<Element> iterator() {
 			return this;
 		}
@@ -605,20 +613,24 @@ public class MXml {
 			next = 0;
 		}
 
+		@Override
 		public boolean hasNext() {
 			return list != null && list.getLength() > next;
 		}
 
+		@Override
 		public Node next() {
 			Node ret = (Node)list.item(next);
 			next++;
 			return ret;
 		}
 
+		@Override
 		public void remove() {
 			// not supported
 		}
 
+		@Override
 		public Iterator<Node> iterator() {
 			return this;
 		}

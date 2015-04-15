@@ -12,7 +12,6 @@ import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
-import org.osgi.framework.BundleContext;
 
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.model.Field;

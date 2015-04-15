@@ -1,6 +1,5 @@
 package de.mhus.lib.jms;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
@@ -23,7 +21,6 @@ import org.codehaus.jackson.JsonNode;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotSupportedException;
 

@@ -19,6 +19,7 @@ public class StringCompiler implements Parser {
 		return compiler.compileString(in);
 	}
 
+	@Override
 	public CompiledString compileString(String in) {
 		LinkedList<StringPart> compiled = new LinkedList<StringPart>();
 		String[] parts = MString.split(in, separator);

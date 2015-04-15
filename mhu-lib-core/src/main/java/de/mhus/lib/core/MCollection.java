@@ -28,6 +28,8 @@ public class MCollection {
 
 	/**
 	 * Fills a list at the end with the values of an array, ignoring null values.
+	 * @param array 
+	 * @param list 
 	 */
 	public static <T> void copyArray(T[] array, Collection<T> list) {
 		if (array == null || list == null) return;

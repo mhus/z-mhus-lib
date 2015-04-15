@@ -5,10 +5,10 @@ import java.util.Dictionary;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
 
+import aQute.bnd.annotation.component.Component;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.mutable.KarafSingletonImpl;
-import aQute.bnd.annotation.component.Component;
 
 @Component(name="de.mhus.lib.karaf.MhuConfigUpdater",provide=ManagedService.class,immediate=true)
 public class MhuConfigUpdater implements ManagedService {

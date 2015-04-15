@@ -4,6 +4,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import junit.framework.TestCase;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -11,7 +12,6 @@ import de.mhus.lib.core.util.ObjectContainer;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerJms;
-import junit.framework.TestCase;
 
 public class JmsTest extends TestCase {
 

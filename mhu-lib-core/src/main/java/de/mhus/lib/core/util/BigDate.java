@@ -1238,6 +1238,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * 
 	 * @return true if BigDate d refers to the same date
 	 */
+	@Override
 	public final boolean equals(Object d) {
 		if (d == this) {
 			return true;
@@ -1253,6 +1254,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * 
 	 * @return the ordinal which is perfectly unique for the date.
 	 */
+	@Override
 	public final int hashCode() {
 		return ordinal;
 	}
@@ -1264,6 +1266,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 *         international standard format. NOT final so you can override to
 	 *         suit yourself.
 	 */
+	@Override
 	public String toString() {
 		if (ordinal == NULL_ORDINAL) {
 			return "";
@@ -1294,6 +1297,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 *         zero if this date = anotherBigDate.<br/> a negative number if
 	 *         this date < (before) anotherBigDate.
 	 */
+	@Override
 	public final int compareTo(Object anotherBigDate) {
 		return this.ordinal - ((BigDate) anotherBigDate).ordinal;
 	}

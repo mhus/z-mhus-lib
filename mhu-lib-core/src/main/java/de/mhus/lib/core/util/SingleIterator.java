@@ -28,16 +28,19 @@ public class SingleIterator<E> implements Iterator<E> {
 		this.element = element;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return (element != null);
 	}
 
+	@Override
 	public E next() {
 		E next = element;
 		element = null;
 		return next;
 	}
 
+	@Override
 	public void remove() {
 	}
 

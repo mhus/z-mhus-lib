@@ -4,7 +4,6 @@ import javax.sql.DataSource;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.ComponentContext;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;

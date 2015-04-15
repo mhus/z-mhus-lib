@@ -146,6 +146,7 @@ public class SerializerTransformer extends TransformStrategy {
 				
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JsonNode pojoToJson(Object from, TransformHelper helper)
 			throws NotSupportedException {
@@ -188,6 +189,7 @@ public class SerializerTransformer extends TransformStrategy {
 			if (from instanceof Map) {
 				out.put("_type", from.getClass().getCanonicalName());
 				out.put("_special", "map");
+				@SuppressWarnings({ "rawtypes" })
 				Map<Object,Object> map = (Map)from;
 				ObjectNode x = out.objectNode();
 				out.put("_map", x);
@@ -199,6 +201,7 @@ public class SerializerTransformer extends TransformStrategy {
 			if (from instanceof Collection) {
 				out.put("_type", from.getClass().getCanonicalName());
 				out.put("_special", "collection");
+				@SuppressWarnings({ "rawtypes"})
 				Collection<Object> col = (Collection)from;
 				out.put("_array", pojoToJson( col.toArray() ) ); 
 			} else {

@@ -2,17 +2,7 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import javax.jms.JMSException;
 
-import org.osgi.service.component.ComponentContext;
-
-import aQute.bnd.annotation.component.Activate;
-import aQute.bnd.annotation.component.Component;
-import aQute.bnd.annotation.component.Deactivate;
-import de.mhus.lib.core.MTimer;
-import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.jms.heartbeat.Heartbeat;
-import de.mhus.lib.jms.heartbeat.HeartbeatReceiver;
-import de.mhus.lib.jms.heartbeat.HeartbeatSender;
-import de.mhus.lib.karaf.jms.JmsDataChannel;
 import de.mhus.lib.karaf.jms.JmsDataChannelImpl;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;

@@ -115,10 +115,12 @@ public class ActivatorImpl extends MActivator implements MutableActivator {
 		}
 	}
 	
+	@Override
 	public String[] getMapNames() {
 		return mapper.keySet().toArray(new String[mapper.size()]);
 	}
 	
+	@Override
 	public String[] getObjectNames() {
 		return instances.keySet().toArray(new String[mapper.size()]);
 	}

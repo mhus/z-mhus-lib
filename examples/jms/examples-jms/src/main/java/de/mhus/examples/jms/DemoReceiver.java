@@ -17,6 +17,7 @@ public class DemoReceiver {
 		
 		JmsConnection con = new JmsConnection(url, user, password);
 
+		@SuppressWarnings("unused")
 		ServerJms server = new ServerJms(con.createQueue("mike")) {
 
 			@Override

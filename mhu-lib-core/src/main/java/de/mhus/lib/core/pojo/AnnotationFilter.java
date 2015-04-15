@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 public class AnnotationFilter implements PojoFilter {
 
 	private Class<? extends Annotation>[] allowed;
+	@SafeVarargs
 	public AnnotationFilter(Class<? extends Annotation> ... allowed) {
 		this.allowed = allowed;
 	}

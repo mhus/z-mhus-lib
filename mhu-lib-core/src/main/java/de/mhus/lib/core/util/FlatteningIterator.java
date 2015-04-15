@@ -24,6 +24,7 @@ import java.util.Stack;
  * generic type.
  * 
  * @author david
+ * @param <E> 
  */
 public class FlatteningIterator<E> implements Iterator<E> {
 	// Marker object. This is never exposed outside this class, so can be
@@ -47,6 +48,7 @@ public class FlatteningIterator<E> implements Iterator<E> {
 		this.iterators.push(Arrays.asList(objects).iterator());
 	}
 
+	@Override
 	public void remove() {
 		/* Not implemented */}
 
@@ -76,6 +78,7 @@ public class FlatteningIterator<E> implements Iterator<E> {
 	 * Returns the next element in our iteration, throwing a
 	 * NoSuchElementException if none is found.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public E next() {
 		moveToNext();
@@ -94,6 +97,7 @@ public class FlatteningIterator<E> implements Iterator<E> {
 	 * change the internal state of the object when it is called, but repeated
 	 * calls to it will not have any additional side effects.
 	 */
+	@Override
 	public boolean hasNext() {
 		moveToNext();
 		return (this.next != blank);

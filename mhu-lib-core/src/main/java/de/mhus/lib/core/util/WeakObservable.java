@@ -21,7 +21,8 @@ public class WeakObservable extends Observable {
      * @param   o   an observer to be added.
      * @throws NullPointerException   if the parameter o is null.
      */
-    public synchronized void addObserver(Observer o) {
+    @Override
+	public synchronized void addObserver(Observer o) {
         if (o == null)
             throw new NullPointerException();
 		if (!obs.containsKey(o)) {
@@ -34,7 +35,8 @@ public class WeakObservable extends Observable {
      * Passing <CODE>null</CODE> to this method will have no effect.
      * @param   o   the observer to be deleted.
      */
-    public synchronized void deleteObserver(Observer o) {
+    @Override
+	public synchronized void deleteObserver(Observer o) {
         obs.remove(o);
     }
 
@@ -54,7 +56,8 @@ public class WeakObservable extends Observable {
      * @see     java.util.Observable#hasChanged()
      * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void notifyObservers() {
+    @Override
+	public void notifyObservers() {
     	notifyObservers(null);
     }
 
@@ -72,7 +75,8 @@ public class WeakObservable extends Observable {
      * @see     java.util.Observable#hasChanged()
      * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
-    public void notifyObservers(Object arg) {
+    @Override
+	public void notifyObservers(Object arg) {
 	/*
          * a temporary array buffer, used as a snapshot of the state of
          * current Observers.
@@ -105,7 +109,8 @@ public class WeakObservable extends Observable {
     /**
      * Clears the observer list so that this object no longer has any observers.
      */
-    public synchronized void deleteObservers() {
+    @Override
+	public synchronized void deleteObservers() {
     	obs.clear();
     }
 
@@ -113,7 +118,8 @@ public class WeakObservable extends Observable {
      * Marks this <tt>Observable</tt> object as having been changed; the 
      * <tt>hasChanged</tt> method will now return <tt>true</tt>.
      */
-    public synchronized void setChanged() {
+    @Override
+	public synchronized void setChanged() {
     	changed = true;
     }
 
@@ -127,7 +133,8 @@ public class WeakObservable extends Observable {
      * @see     java.util.Observable#notifyObservers()
      * @see     java.util.Observable#notifyObservers(java.lang.Object)
      */
-    protected synchronized void clearChanged() {
+    @Override
+	protected synchronized void clearChanged() {
     	changed = false;
     }
 
@@ -141,7 +148,8 @@ public class WeakObservable extends Observable {
      * @see     java.util.Observable#clearChanged()
      * @see     java.util.Observable#setChanged()
      */
-    public synchronized boolean hasChanged() {
+    @Override
+	public synchronized boolean hasChanged() {
     	return changed;
     }
 
@@ -150,7 +158,8 @@ public class WeakObservable extends Observable {
      *
      * @return  the number of observers of this object.
      */
-    public synchronized int countObservers() {
+    @Override
+	public synchronized int countObservers() {
     	return obs.size();
     }
 }

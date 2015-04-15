@@ -18,6 +18,7 @@ public class ConsoleFactory extends LogFactory {
 	private PrintStream out;
 	private boolean traces = true;
 	private boolean printTime = true;
+	@SuppressWarnings("unused")
 	private ResourceNode config;
 
 	public ConsoleFactory() {

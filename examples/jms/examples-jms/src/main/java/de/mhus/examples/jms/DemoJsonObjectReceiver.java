@@ -3,7 +3,6 @@ package de.mhus.examples.jms;
 import java.util.Arrays;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -11,8 +10,6 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.RequestResult;
-import de.mhus.lib.jms.ServerJms;
-import de.mhus.lib.jms.ServerJson;
 import de.mhus.lib.jms.ServerJsonObject;
 
 public class DemoJsonObjectReceiver {
@@ -25,6 +22,7 @@ public class DemoJsonObjectReceiver {
 		
 		JmsConnection con = new JmsConnection(url, user, password);
 
+		@SuppressWarnings("unused")
 		ServerJsonObject server = new ServerJsonObject(con.createQueue("mike")) {
 
 			@Override
@@ -39,11 +37,13 @@ public class DemoJsonObjectReceiver {
 				return new RequestResult<Object>(new Dummy(),properties);
 			}
 			
+			@Override
 			public void receivedOneWay(IProperties properties, JsonNode node) {
 				System.out.println("--- JSON: " + node);
 				super.receivedOneWay(properties, node);
 			}
 
+			@Override
 			public RequestResult<JsonNode> received(IProperties properties, JsonNode node) {
 				System.out.println("--- JSON: " + node);
 				return super.received(properties,node);

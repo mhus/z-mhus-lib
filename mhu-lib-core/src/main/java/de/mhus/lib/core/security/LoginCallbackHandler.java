@@ -34,7 +34,8 @@ public class LoginCallbackHandler implements CallbackHandler {
 	   * @param callbacks the callbacks to handle
 	   * @throws IOException if an input or output error occurs.
 	   */
-	  public void handle( Callback[] callbacks)
+	  @Override
+	public void handle( Callback[] callbacks)
 	      throws IOException, UnsupportedCallbackException {
 	 
 	    for ( int i=0; i<callbacks.length; i++) {

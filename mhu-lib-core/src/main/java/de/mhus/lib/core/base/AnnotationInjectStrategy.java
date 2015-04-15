@@ -12,6 +12,7 @@ import de.mhus.lib.core.pojo.PojoParser;
 
 public class AnnotationInjectStrategy extends InjectStrategy {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void inject(Object object, Base base) {
 		

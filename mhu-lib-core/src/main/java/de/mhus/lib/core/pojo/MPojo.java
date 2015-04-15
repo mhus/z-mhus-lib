@@ -34,6 +34,7 @@ public class MPojo {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void jsonToPojo(JsonNode from, Object to) throws IOException {
 		PojoModel model = new PojoParser().parse(to,"_",null).filter(new DefaultFilter(true, false, false, false, true) ).getModel();
 		for (PojoAttribute<Object> attr : model) {

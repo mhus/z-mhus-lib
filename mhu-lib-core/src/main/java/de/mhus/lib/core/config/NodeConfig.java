@@ -19,10 +19,12 @@ public class NodeConfig extends PropertiesConfig {
 		configurations.put(name, config);
 	}
 	
+	@Override
 	public ResourceNode getNode(String key) {
 		return configurations.get(key);
 	}
 
+	@Override
 	public ResourceNode[] getNodes(String key) {
 		return new ResourceNode[] { getNode(key)};
 //		return configurations.values().toArray(new IConfig[configurations.size()]);
@@ -32,6 +34,7 @@ public class NodeConfig extends PropertiesConfig {
 		return configurations.keySet().toArray(new String[configurations.size()]);
 	}
 
+	@Override
 	public WritableResourceNode createConfig(String key) throws MException {
 		NodeConfig newConfig = new NodeConfig();
 		setConfig(key, newConfig);

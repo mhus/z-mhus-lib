@@ -13,14 +13,17 @@ public class NullableMap<K,V> implements Map<K, V> {
 	private static final NullValue NULL_VALUE = new NullValue();
 	private HashMap<K, Object> impl = new HashMap<K, Object>();
 
+	@Override
 	public int size() {
 		return impl.size();
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return impl.isEmpty();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public V get(Object key) {
 		Object ret = impl.get(key);
@@ -29,14 +32,17 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return impl.equals(o);
 	}
 
+	@Override
 	public boolean containsKey(Object key) {
 		return impl.containsKey(key);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public V put(K key, V value) {
 		if (value == null) {
@@ -52,18 +58,22 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	@Override
 	public int hashCode() {
 		return impl.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		return impl.toString();
 	}
 
+	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
 		impl.putAll(m);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public V remove(Object key) {
 		Object ret = impl.remove(key);
@@ -72,22 +82,27 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	@Override
 	public void clear() {
 		impl.clear();
 	}
 
+	@Override
 	public boolean containsValue(Object value) {
 		return impl.containsValue(value);
 	}
 
+	@Override
 	public Object clone() {
 		return impl.clone();
 	}
 
+	@Override
 	public Set<K> keySet() {
 		return impl.keySet();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<V> values() {
 		LinkedList<V> out = new LinkedList<V>();
@@ -98,6 +113,7 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return out;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Set<Map.Entry<K, V>> entrySet() {
 		LinkedList<Map.Entry<K,V>> out = new LinkedList<Map.Entry<K,V>>();

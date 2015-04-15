@@ -40,7 +40,7 @@ public class MNlsFactory extends MObject {
 		return load(null, owner, null, null);
 	}
 	
-	public MNls load(MResourceProvider res, Class<?> owner, String resourceName, String locale) {
+	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale) {
 		try {
 			// if (res == null) res = base(MDirectory.class);
 			

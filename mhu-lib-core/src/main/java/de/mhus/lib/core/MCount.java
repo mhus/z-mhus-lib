@@ -74,10 +74,12 @@ public class MCount extends MJmx {
 		log().i("close",name,cnt,getHitsPerSecond());
 	}
 	
+	@Override
 	protected void finalize() {
 		close();
 	}
 	
+	@Override
 	public String toString() {
 		return MSystem.toString(this, getStatusAsString());
 	}

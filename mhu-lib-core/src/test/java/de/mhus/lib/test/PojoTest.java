@@ -66,11 +66,11 @@ public class PojoTest extends TestCase {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testFunctionUpper() {
 		
 		PojoExample example = new PojoExample();
-		PojoModel model = new PojoParser().parse(example,new FunctionsStrategy(true, false, ".", false, null)).filter(new DefaultFilter()).getModel();
+		PojoModel model = new PojoParser().parse(example,new FunctionsStrategy(true, false, ".", false, (Class)null)).filter(new DefaultFilter()).getModel();
 		
 		System.out.println("Attributes: " + MString.join(model.getAttributeNames(), ','));
 		System.out.println("Actions: " + MString.join(model.getActionNames(), ','));
@@ -89,6 +89,7 @@ public class PojoTest extends TestCase {
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "unused" })
 	public void testAttributeStrategy() throws Exception {
 		
 		PojoExample example = new PojoExample();
@@ -132,6 +133,7 @@ public class PojoTest extends TestCase {
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "unused" })
 	public void testDefaultStrategy() throws Exception {
 		
 		PojoExample example = new PojoExample();

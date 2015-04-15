@@ -23,6 +23,7 @@ public class DelegateClassLoader extends ClassLoader {
 		}
 	}
 	
+	@Override
 	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		synchronized(list) {
 			for (Package p : list) {

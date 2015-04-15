@@ -180,6 +180,9 @@ public class MString {
 
 	/**
 	 * Return, if the char is located in the string (indexOf).
+	 * @param _s 
+	 * @param _c 
+	 * @return 
 	 */
 
 	public static boolean isIndex(String _s, char _c) {
@@ -192,6 +195,9 @@ public class MString {
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
 	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
 	 */
 	public static String beforeIndex(String _s, char _c) {
 		if (!isIndex(_s, _c))
@@ -203,6 +209,9 @@ public class MString {
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
 	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
 	 */
 	public static String afterIndex(String _s, char _c) {
 		if (!isIndex(_s, _c))
@@ -230,6 +239,9 @@ public class MString {
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
 	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
 	 */
 	public static String beforeIndex(String _s, char[] _c) {
 
@@ -244,6 +256,9 @@ public class MString {
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
 	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
 	 */
 	public static String afterIndex(String _s, char[] _c) {
 
@@ -1219,6 +1234,8 @@ public class MString {
 	/**
 	 * Split the string in n parts and return the part number nr. If the part is not found
 	 * the default value will be returned.
+	 * @param value 
+	 * @param nr 
 	 * @param name
 	 * @param def
 	 * @param index

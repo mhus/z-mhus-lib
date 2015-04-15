@@ -29,21 +29,25 @@ public class YOutputStream extends OutputStream {
 		streams = pStreams;
 	}
 
+	@Override
 	public void write(int b) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b);
 	}
 
+	@Override
 	public void write(byte b[]) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b);
 	}
 
+	@Override
 	public void write(byte b[], int off, int len) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b, off, len);
 	}
 
+	@Override
 	public void close() throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].close();

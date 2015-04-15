@@ -16,15 +16,17 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 	private boolean actionsOnly;
 	private Class<? extends Annotation>[] annotationMarker;
 	
+	@SuppressWarnings("unchecked")
 	public FunctionsStrategy() {
 		this(true,true, ".", false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public FunctionsStrategy(boolean actionsOnly) {
 		this(true,true, ".", actionsOnly);
 	}
 	
-	public FunctionsStrategy(boolean embedded, boolean toLower, String embedGlue, boolean actionsOnly, Class<? extends Annotation> ... annotationMarker) {
+	public FunctionsStrategy(boolean embedded, boolean toLower, String embedGlue, boolean actionsOnly, @SuppressWarnings("unchecked") Class<? extends Annotation> ... annotationMarker) {
 		this.embedded = embedded;
 		this.toLower = toLower;
 		this.embedGlue = embedGlue;
@@ -37,6 +39,7 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 		parse("", null, parser, clazz, model, 0);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void parse(String prefix, FunctionAttribute<Object> parent, PojoParser parser, Class<?> clazz, PojoModelImpl model, int level) {
 
 		if (level > 10 ) return; // logging ?
@@ -108,6 +111,7 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 						)
 					) {
 					
+					@SuppressWarnings({ "rawtypes" })
 					FunctionAttribute attr = new FunctionAttribute(clazz, getter, setter, name, parent);
 					if (isEmbedded(getter,setter)) {
 						parse(prefix + name + embedGlue, attr, parser, attr.getType(), model, level+1);

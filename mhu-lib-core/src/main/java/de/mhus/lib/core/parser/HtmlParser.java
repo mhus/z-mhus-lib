@@ -45,7 +45,9 @@ public class HtmlParser {
 	public HtmlParser() {
 	}
 
-	/** Creates a new instance of Parser */
+	/** Creates a new instance of Parser 
+	 * @param _is 
+	 * @param _listener */
 	public HtmlParser(InputStream _is, Listener _listener) {
 		is = new InputStreamReader(_is);
 		listener = _listener;

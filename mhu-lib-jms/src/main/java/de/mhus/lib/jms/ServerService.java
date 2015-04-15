@@ -1,8 +1,5 @@
 package de.mhus.lib.jms;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 
 import javax.jms.BytesMessage;
@@ -11,10 +8,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
-import org.codehaus.jackson.JsonNode;
-
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MJson;
 
 public class ServerService<T> extends ServerJms implements JmsChannelService {
 

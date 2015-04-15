@@ -264,6 +264,7 @@ public class MTimeInterval {
 
 	}
 
+	@Override
 	public String toString() {
 		return "" + weeks + "w " + days + "d "
 				+ hours + "h " + minutes + "M " + seconds + "s " + millisec

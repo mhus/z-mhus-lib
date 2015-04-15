@@ -59,6 +59,8 @@ public class MSql {
 
 	/**
 	 * Remove all double single quots.
+	 * @param in 
+	 * @return 
 	 */
 	public static String unescape(String in) {
 		if (in == null)

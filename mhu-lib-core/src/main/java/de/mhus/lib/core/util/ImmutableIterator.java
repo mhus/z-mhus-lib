@@ -10,14 +10,17 @@ public class ImmutableIterator<E> implements Iterator<E> {
 		this.parent = parent;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return parent.hasNext();
 	}
 
+	@Override
 	public E next() {
 		return parent.next();
 	}
 
+	@Override
 	public void remove() {
 	}
 

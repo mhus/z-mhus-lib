@@ -3,19 +3,10 @@ package de.mhus.lib.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -26,20 +17,13 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.BooleanNode;
-import org.codehaus.jackson.node.DoubleNode;
-import org.codehaus.jackson.node.IntNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.node.TextNode;
-import org.codehaus.jackson.type.TypeReference;
 
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.json.TransformStrategy;
-import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
-import de.mhus.lib.core.pojo.PojoParser;
 
 public class MJson {
 	

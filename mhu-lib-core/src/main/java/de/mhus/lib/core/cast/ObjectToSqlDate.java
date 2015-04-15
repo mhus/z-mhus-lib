@@ -1,7 +1,6 @@
 package de.mhus.lib.core.cast;
 
 import java.sql.Date;
-import java.util.UUID;
 
 import de.mhus.lib.core.MCast;
 

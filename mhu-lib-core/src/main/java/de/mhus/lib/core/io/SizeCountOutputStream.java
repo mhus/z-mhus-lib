@@ -40,10 +40,12 @@ public class SizeCountOutputStream extends OutputStream {
 		return count;
 	}
 
+	@Override
 	public void close() throws IOException {
 		stream.close();
 	}
 
+	@Override
 	public void flush() throws IOException {
 		stream.flush();
 	}

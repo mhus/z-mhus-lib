@@ -2,8 +2,6 @@ package de.mhus.lib.core.cast;
 
 import java.util.UUID;
 
-import de.mhus.lib.core.MCast;
-
 public class ObjectToUUID implements Caster<Object,UUID>{
 
 	@Override

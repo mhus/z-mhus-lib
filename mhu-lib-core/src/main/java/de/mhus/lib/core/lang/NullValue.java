@@ -8,6 +8,7 @@ package de.mhus.lib.core.lang;
  */
 public class NullValue {
 
+	@Override
 	public String toString() {
 		return "null";
 	}

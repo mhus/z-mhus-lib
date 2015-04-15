@@ -16,6 +16,7 @@ import de.mhus.lib.core.util.FlatteningIterator;
 public class FileListIterator implements Iterator<File>, Iterable<File> {
 	private final FlatteningIterator<File> flatteningIterator;
 
+	@Override
 	public void remove() {
 	}
 
@@ -28,10 +29,12 @@ public class FileListIterator implements Iterator<File>, Iterable<File> {
 		this(file, null);
 	}
 
+	@Override
 	public boolean hasNext() {
 		return flatteningIterator.hasNext();
 	}
 
+	@Override
 	public File next() {
 		return flatteningIterator.next();
 	}
@@ -50,9 +53,11 @@ public class FileListIterator implements Iterator<File>, Iterable<File> {
 			this.filter = filter;
 		}
 
+		@Override
 		public void remove() {
 		}
 
+		@Override
 		public Object next() {
 			File next = this.files.next();
 
@@ -62,6 +67,7 @@ public class FileListIterator implements Iterator<File>, Iterable<File> {
 				return next;
 		}
 
+		@Override
 		public boolean hasNext() {
 			return this.files.hasNext();
 		}

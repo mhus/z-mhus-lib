@@ -74,18 +74,22 @@ public class PropertiesConfig extends IConfig implements IFlatConfig {
 	public void configRemoved() {
 	}
 
+	@Override
 	public ResourceNode getNode(String key) {
 		return null;
 	}
 
+	@Override
 	public ResourceNode[] getNodes(String key) {
 		return new WritableResourceNode[0];
 	}
 
+	@Override
 	public ResourceNode[] getNodes() {
 		return new WritableResourceNode[0];
 	}
 	
+	@Override
 	public String[] getNodeKeys() {
 		//return (String[]) properties.keySet().toArray(new String[properties.size()]);
 		return new String[0];

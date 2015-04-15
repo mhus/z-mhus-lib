@@ -3,7 +3,6 @@ package de.mhus.lib.core.json;
 import java.lang.reflect.Array;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.pojo.DefaultFilter;

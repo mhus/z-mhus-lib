@@ -27,6 +27,7 @@ import java.util.Iterator;
  * 
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @version $Id: EnumerationIterator.java 463298 2006-10-12 16:10:32Z henning $
+ * @param <T> 
  */
 public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	/**
@@ -51,6 +52,7 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	 * 
 	 * @return The next object in the array.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public T next() {
 		return (T) enumeration.nextElement();
@@ -61,6 +63,7 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	 * 
 	 * @return Whether there is another element.
 	 */
+	@Override
 	public boolean hasNext() {
 		return enumeration.hasMoreElements();
 	}
@@ -68,6 +71,7 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	/**
 	 * Unimplemented. No analogy in Enumeration
 	 */
+	@Override
 	public void remove() {
 		// not implemented
 	}

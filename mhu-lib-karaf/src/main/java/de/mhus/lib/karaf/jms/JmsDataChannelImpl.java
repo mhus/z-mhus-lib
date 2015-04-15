@@ -11,7 +11,6 @@ import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsChannelService;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.JmsDestination;
-import de.mhus.lib.jms.ServerJms;
 import de.mhus.lib.jms.ServerJsonService;
 import de.mhus.lib.jms.WebServiceDescriptor;
 

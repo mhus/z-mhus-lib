@@ -14,8 +14,6 @@ import javax.swing.JDialog;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
-// TODO Move in the correct lib - module ??!!
-
 public class MSwing {
 
 	/**
@@ -41,7 +39,7 @@ public class MSwing {
 			return Color.LIGHT_GRAY;
 		if ("red".equals(string))
 			return Color.RED;
-		// TODO
+
 		out = Color.getColor(string);
 		if (out == null)
 			out = def;
@@ -54,6 +52,8 @@ public class MSwing {
 	 * Cast a Image to a Buffered Image. The new image is a
 	 * BufferedImage.TYPE_3BYTE_BGR type. Perhaps some informations of the
 	 * origin image will be lost.
+	 * @param _in 
+	 * @return 
 	 */
 
 	public static BufferedImage toBufferedImage(Image _in) {

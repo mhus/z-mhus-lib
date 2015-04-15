@@ -1,12 +1,9 @@
 package de.mhus.lib.karaf.jms;
 
-import java.io.File;
-
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.commands.Action;
 import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
 
 @Command(scope = "jms", name = "channel-reset", description = "Reset channels")
 public class CmdChannelReset implements Action {

@@ -220,10 +220,12 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 	public abstract boolean isEditable();
 	
 	/**
+	 * @return 
 	 * 
 	 */
 	public abstract Set<String> keys();
 	
+	@Override
 	public Iterator<Map.Entry<String, Object>> iterator() {
 		return new IPIterator();
 	}

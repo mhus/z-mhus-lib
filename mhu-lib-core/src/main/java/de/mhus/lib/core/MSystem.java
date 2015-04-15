@@ -12,7 +12,6 @@ import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -233,7 +232,8 @@ public class MSystem {
 	public static ScriptResult startScript(File dir, String script, long timeout) {
 		log.i("script",dir,script);
 		ProcessBuilder pb = new ProcessBuilder(new File(dir, script).getAbsolutePath() );
-		 Map<String, String> env = pb.environment();
+		 @SuppressWarnings("unused")
+		Map<String, String> env = pb.environment();
 		 pb.directory(dir);
 		 ScriptResult out = new ScriptResult();
 		 try {

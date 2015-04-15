@@ -5,7 +5,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 public class JmsUtil {

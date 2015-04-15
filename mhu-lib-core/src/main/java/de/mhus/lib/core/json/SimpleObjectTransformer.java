@@ -21,6 +21,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class SimpleObjectTransformer extends TransformStrategy {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object jsonToPojo(JsonNode from, Class<?> type,
 			TransformHelper helper) throws NotSupportedException {
@@ -153,6 +154,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JsonNode pojoToJson(Object from, TransformHelper helper)
 			throws NotSupportedException {

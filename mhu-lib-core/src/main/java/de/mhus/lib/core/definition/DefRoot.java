@@ -43,6 +43,7 @@ public class DefRoot extends DefComponent {
 		return this;
 	}
 	
+	@Override
 	public DefRoot transform(IDefTransformer transformer)  throws MException {
 		return (DefRoot) transformer.transform(this);
 	}
