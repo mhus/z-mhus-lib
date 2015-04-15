@@ -92,7 +92,6 @@
       <module>mhu-lib-j2ee</module>
       <module>mhu-lib-persistence</module>
       <module>mhu-lib-vaadin</module>
-      <module>mhu-lib-vaadin6</module>
       <module>mhu-lib-liferay</module>
       <module>mhu-lib-framework</module>
       <module>mhu-lib-karaf</module>
