@@ -21,23 +21,20 @@ public class CmdChannelList implements Action {
 		}
 		
 		ConsoleTable table = new ConsoleTable();
-		table.setHeaderValues("Name","Connection","Destination","Type","Interface","Connected","Closed");
+		table.setHeaderValues("Name","Connection","Destination","Type","Information","Connected","Closed");
 		for (String name : service.listChannels()) {
 			JmsDataChannel chd = service.getChannel(name);
 			JmsChannel ch = chd.getChannel();
 			JmsConnection con = null;
 			if (ch !=null && ch.getDestination() != null)
 				con  = ch.getDestination().getConnection();
-			Class<?> i = null;
-			try {
-				i = chd.getInterface();
-			} catch (Throwable t) {}
+			String i = chd.getInformation();
 			table.addRowValues(
 					chd.getName(), 
 					(con == null ? "(" : "" ) + chd.getConnectionName() + (con == null ? ")" : "" ),
 					ch == null ? "" : ch.getDestination() ,
-					ch == null ? "" : ch.getClass().getSimpleName(),
-					i == null ? "" : i.getCanonicalName() ,
+					ch == null ? "" : ch.getClass().getCanonicalName(),
+					i,
 					ch == null ? ""  : ch.isConnected(),
 					ch == null ? "" : ch.isClosed()
 				);

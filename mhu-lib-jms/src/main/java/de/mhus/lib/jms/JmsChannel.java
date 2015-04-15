@@ -48,4 +48,9 @@ public abstract class JmsChannel extends JmsObject {
 	public void checkConnection() {
 	}
 
+	public void reset(JmsDestination dest) {
+		this.dest = dest;
+		reset();
+	}
+
 }

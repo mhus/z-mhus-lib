@@ -47,7 +47,7 @@ public class JmsDestination extends JmsObject {
 	@Override
 	public synchronized void open() throws JMSException {
 		if (isClosed()) throw new JMSException("destination closed");
-		if (con == null) return;
+		if (con == null || destination == null) return;
 		if (jmsDestination == null || getSession() == null) {
 			con.open();
 			log().i("destination",destination);

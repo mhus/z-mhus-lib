@@ -23,6 +23,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	private String ifc;
 	private String destination;
 	private boolean destinationTopic;
+	private boolean initialized = false;
 	
 	public JmsDataChannelImpl() {
 	}
@@ -58,6 +59,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 
 	public void setChannel(JmsChannel channel) {
 		this.channel = channel;
+		initialized=true;
 	}
 
 	@Override
@@ -79,6 +81,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 
 	public void setDestination(String destination) {
 		this.destination = destination;
+		initialized = false;
 	}
 
 	public boolean isDestinationTopic() {
@@ -87,6 +90,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 
 	public void setDestinationTopic(boolean destinationTopic) {
 		this.destinationTopic = destinationTopic;
+		initialized = false;
 	}
 
 	public String getIfc() {
@@ -125,11 +129,13 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 					Class<?> clazz = FrameworkUtil.getBundle(JmsDataChannel.class).loadClass(implementation);
 					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
 					if (JmsChannel.class.isAssignableFrom(clazz)) {
-						channel = (JmsChannel)clazz.getConstructor(JmsDestination.class).newInstance(dest);
+						channel = (JmsChannel)clazz.newInstance();
+						initialized = false;
 					} else {
 						Object o = clazz.newInstance();
 						WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
 						channel = new ServerJsonService<Object>(dest, descriptor);
+						initialized = true;
 					}
 				} catch (Throwable e) {
 					log().w(e);
@@ -141,15 +147,39 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 					WebServiceDescriptor descriptor = new WebServiceDescriptor(o);
 					JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
 					channel = new ClientJsonService<Object>(dest, descriptor);
+					initialized = true;
 				} catch (Throwable e) {
 					log().w(e);
 				}
 			}
 		}
 		if (channel != null) {
+			if (!initialized || channel.getDestination() == null) {
+				JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
+				channel.reset(dest);
+				initialized = true;
+			}
 			channel.getDestination().setConnection(con);
 			channel.checkConnection();
 		}
+	}
+
+	@Override
+	public String getInformation() {
+		try {
+			Class<?> i = getInterface();
+			if (i != null)
+				return i.getCanonicalName();
+		} catch (Throwable t) {}
+		try {
+			Object o = getObject(Object.class);
+			if (o != null)
+				return o.toString();
+		} catch (Throwable t) {}
+		JmsChannel c = getChannel();
+		if (c != null)
+			return c.toString();
+		return "";
 	}
 	
 }

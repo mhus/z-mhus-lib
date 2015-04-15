@@ -11,5 +11,6 @@ public interface JmsDataChannel {
 	String getConnectionName();
 	Class<?> getInterface();
 	<I> I getObject(Class<? extends I> ifc);
+	String getInformation();
 	
 }
