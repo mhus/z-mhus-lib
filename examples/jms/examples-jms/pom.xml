@@ -49,7 +49,7 @@
     </dependency>
     <dependency>
         <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-core</artifactId>
+        <artifactId>activemq-all</artifactId>
         <version>${activemq.version}</version>
     	<type>jar</type>
     </dependency>
@@ -67,6 +67,12 @@
   		<groupId>de.mhus.lib</groupId>
   		<artifactId>mhu-lib-jms</artifactId>
   		<version>${mhulib.version}</version>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>activemq-core</artifactId>
+  				<groupId>org.apache.activemq</groupId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
 
   	<dependency>
