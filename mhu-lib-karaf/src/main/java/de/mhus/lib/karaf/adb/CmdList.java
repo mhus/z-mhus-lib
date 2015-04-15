@@ -11,12 +11,6 @@ import de.mhus.lib.core.console.ConsoleTable;
 @Command(scope = "adb", name = "list", description = "List all ADB Services")
 public class CmdList implements Action {
 
-	private BundleContext context;
-	
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		ConsoleTable table = new ConsoleTable();
@@ -25,7 +19,7 @@ public class CmdList implements Action {
 		
 		int cnt = 0;
 
-		for ( DbManagerService service : AdbUtil.getServices(context, false)) {
+		for ( DbManagerService service : AdbUtil.getServices(false)) {
 			if (service.isConnected()) {
 				DbManager manager = service.getManager();
 				StringBuffer types = new StringBuffer();

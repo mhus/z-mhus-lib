@@ -16,4 +16,6 @@ public interface DbManagerService {
 
 	String getServiceName();
 
+	void doInitialize() throws Exception;
+
 }

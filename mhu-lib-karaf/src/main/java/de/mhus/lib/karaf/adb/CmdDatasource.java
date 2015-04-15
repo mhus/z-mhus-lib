@@ -9,8 +9,6 @@ import org.osgi.framework.ServiceReference;
 
 @Command(scope = "adb", name = "datasource", description = "Update ADB DataSource")
 public class CmdDatasource implements Action {
-
-	private BundleContext context;
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
@@ -18,16 +16,12 @@ public class CmdDatasource implements Action {
 	@Argument(index=1, name="source", required=false, description="Data Source", multiValued=false)
     String sourceName;
 	
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 
 		int cnt = 0;
-		for ( ServiceReference<DbManagerService> sr : context.getServiceReferences(DbManagerService.class, null)) {
-			DbManagerService service = context.getService(sr);
+		
+		for ( DbManagerService service : AdbUtil.getAdmin().getServices()) {
 //			if (service.isConnected()) {
 				if (service.getClass().getCanonicalName().equals(serviceName)) {
 					if (sourceName == null)

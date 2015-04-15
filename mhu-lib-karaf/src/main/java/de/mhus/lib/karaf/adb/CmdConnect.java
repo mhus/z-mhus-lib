@@ -10,8 +10,6 @@ import org.osgi.framework.BundleContext;
 @Command(scope = "adb", name = "connect", description = "Connect ADB DataSource")
 public class CmdConnect implements Action {
 
-	private BundleContext context;
-	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
 	
@@ -21,14 +19,10 @@ public class CmdConnect implements Action {
 	@Option(name="-c", aliases="--cleanup", description="Cleanup unised table field and indexes - this can delete additional data",required=false)
 	boolean cleanup = false;
 
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		if (service != null) {
 			if (update || cleanup)
 				service.updateManager(cleanup);

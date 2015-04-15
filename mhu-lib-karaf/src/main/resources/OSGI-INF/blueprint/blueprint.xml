@@ -19,67 +19,50 @@
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
         <command name="adb/list">
             <action class="de.mhus.lib.karaf.adb.CmdList">
-		        <property name="context" ref="blueprintBundleContext" />
-            </action>
-        </command>
-        <command name="adb/providers">
-            <action class="de.mhus.lib.karaf.adb.CmdListProviders">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/datasource">
             <action class="de.mhus.lib.karaf.adb.CmdDatasource">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/connect">
             <action class="de.mhus.lib.karaf.adb.CmdConnect">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/mapping">
             <action class="de.mhus.lib.karaf.adb.CmdMapping">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/select">
             <action class="de.mhus.lib.karaf.adb.CmdSelect">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/count">
             <action class="de.mhus.lib.karaf.adb.CmdCount">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/view">
             <action class="de.mhus.lib.karaf.adb.CmdView">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/create">
             <action class="de.mhus.lib.karaf.adb.CmdCreate">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/update">
             <action class="de.mhus.lib.karaf.adb.CmdUpdate">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/remove">
             <action class="de.mhus.lib.karaf.adb.CmdRemove">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/clone">
             <action class="de.mhus.lib.karaf.adb.CmdClone">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
         <command name="adb/info">
             <action class="de.mhus.lib.karaf.adb.CmdInfo">
-		        <property name="context" ref="blueprintBundleContext" />
             </action>
         </command>
                 

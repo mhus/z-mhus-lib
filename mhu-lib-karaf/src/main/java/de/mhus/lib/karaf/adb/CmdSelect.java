@@ -23,8 +23,6 @@ import de.mhus.lib.core.console.ConsoleTable;
 @Command(scope = "adb", name = "select", description = "Select data from ADB DataSource ant print the results")
 public class CmdSelect implements Action {
 
-	private BundleContext context;
-	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
 
@@ -49,16 +47,12 @@ public class CmdSelect implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 	
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		
 		Object output = null;
 		
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		Class<?> type = AdbUtil.getType(service, typeName);
 		
 		HashMap<String, Object> attrObj = null;

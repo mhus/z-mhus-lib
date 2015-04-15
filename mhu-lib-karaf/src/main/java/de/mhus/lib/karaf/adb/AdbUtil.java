@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
@@ -26,35 +27,32 @@ public class AdbUtil {
 		throw new IOException("Type not found in service: " + typeName);
 	}
 	
-	public static List<DbManagerServiceProvider> getServiceProviders(BundleContext context) {
-		LinkedList<DbManagerServiceProvider> out = new LinkedList<>();
-		try {
-			for ( ServiceReference<DbManagerServiceProvider> sr : context.getServiceReferences(DbManagerServiceProvider.class, null)) {
-				DbManagerServiceProvider service = context.getService(sr);
-				out.add(service);
-			}
-		} catch (InvalidSyntaxException e) {
-			// should not happen
-		}
-		return out;
+	public static DbManagerAdmin getAdmin() {
+		BundleContext context = FrameworkUtil.getBundle(AdbUtil.class).getBundleContext();
+		ServiceReference<DbManagerAdmin> adminRef = context.getServiceReference(DbManagerAdmin.class);
+		if (adminRef == null) return null;
+		DbManagerAdmin admin = context.getService(adminRef);
+		return admin;
 	}
-	
-	public static List<DbManagerService> getServices(BundleContext context, boolean connectedOnly) {
-
+		
+	public static List<DbManagerService> getServices(boolean connectedOnly) {
+		
+		DbManagerAdmin admin = getAdmin();
 		LinkedList<DbManagerService> out = new LinkedList<>();
-		for (DbManagerServiceProvider provider : getServiceProviders(context)) {
-			for (DbManagerService service : provider.getServices()) {
+		if (admin != null) {
+			for (DbManagerService service : admin.getServices())
 				if (!connectedOnly || service.isConnected())
 					out.add(service);
-			}
 		}
 		return out;
 	}
 	
-	public static DbManagerService getService(BundleContext context, String serviceName) throws IOException, InvalidSyntaxException {
+	public static DbManagerService getService(String serviceName) throws IOException, InvalidSyntaxException {
 		int cnt = 0;
-		for (DbManagerServiceProvider provider : getServiceProviders(context)) {
-			for (DbManagerService service : provider.getServices()) {
+		
+		DbManagerAdmin admin = getAdmin();
+		if (admin != null) {
+			for (DbManagerService service : admin.getServices()) {
 				if (serviceName.equals("*") || serviceName.equals("*" + cnt) || serviceName.equals(service.getServiceName()))
 					return service;
 				cnt++;

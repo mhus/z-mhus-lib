@@ -14,23 +14,17 @@ import de.mhus.lib.core.console.ConsoleTable;
 
 @Command(scope = "adb", name = "info", description = "Show information of a type")
 public class CmdInfo implements Action {
-
-	private BundleContext context;
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
 
 	@Argument(index=1, name="type", required=true, description="Type to select", multiValued=false)
     String typeName;
-		
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
 
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		Class<?> type = AdbUtil.getType(service, typeName);
 		
 		String regName = service.getManager().getRegistryName(type);

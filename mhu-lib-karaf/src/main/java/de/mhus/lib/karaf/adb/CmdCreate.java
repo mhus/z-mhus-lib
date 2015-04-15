@@ -16,8 +16,6 @@ import de.mhus.lib.core.MString;
 
 @Command(scope = "adb", name = "create", description = "Select data from ADB DataSource ant print the results")
 public class CmdCreate implements Action {
-
-	private BundleContext context;
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
@@ -31,14 +29,10 @@ public class CmdCreate implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		Class<? extends Persistable> type = AdbUtil.getType(service, typeName);
 		String regName = service.getManager().getRegistryName(type);
 		Table tableInfo = service.getManager().getTable(regName);

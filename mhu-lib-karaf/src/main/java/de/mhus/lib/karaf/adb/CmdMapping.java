@@ -14,19 +14,13 @@ import de.mhus.lib.core.console.ConsoleTable;
 @Command(scope = "adb", name = "mapping", description = "Print the mapping table of a ADB DataSource")
 public class CmdMapping implements Action {
 
-	private BundleContext context;
-	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
 		
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
-
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		
 		ConsoleTable table = new ConsoleTable();
 		table.setHeaderValues("Key","Mapping");

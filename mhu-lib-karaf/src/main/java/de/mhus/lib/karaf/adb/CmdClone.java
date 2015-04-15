@@ -15,8 +15,6 @@ import de.mhus.lib.core.MString;
 
 @Command(scope = "adb", name = "clone", description = "Load a object out of the database and store it as a clone.")
 public class CmdClone implements Action {
-
-	private BundleContext context;
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;
@@ -33,16 +31,13 @@ public class CmdClone implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 
-	public void setContext(BundleContext context) {
-        this.context = context;
-    }
 
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 
 		Object output = null;
 
-		DbManagerService service = AdbUtil.getService(context,serviceName);
+		DbManagerService service = AdbUtil.getService(serviceName);
 		Class<?> type = AdbUtil.getType(service, typeName);
 		String regName = service.getManager().getRegistryName(type);
 		Table tableInfo = service.getManager().getTable(regName);

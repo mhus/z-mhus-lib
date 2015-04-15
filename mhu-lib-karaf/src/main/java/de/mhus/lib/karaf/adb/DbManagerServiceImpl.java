@@ -22,39 +22,12 @@ import de.mhus.lib.sql.Dialect;
 //@Component(provide=DbManagerService.class,name="...",immediate=true)
 public abstract class DbManagerServiceImpl implements DbManagerService {
 
-	protected BundleContext context;
 	protected DataSourceUtil util;
 	private String dataSourceName;
 	private DbManager manager;
 	protected Log log = Log.getLog(this.getClass());
 
-/* Include this in your service
-	@Activate
-	public void doActivate(ComponentContext ctx) {
-		super.doActivate(ctx);
-	}
-
-	@Deactivate
-	public void doDeactivate(ComponentContext ctx) {
-		super.doDeactivate(ctx);
-	}
- */
-	public void doActivate(ComponentContext ctx) {
-		log.i("Activate");
-		context = ctx.getBundleContext();
-//		try {
-//			doOpen();
-//		} catch (Exception e) {
-//			log.e(e);
-//		}
-	}
-	
-	public void doDeactivate(ComponentContext ctx) {
-		log.i("Deactivate");
-		doClose();
-	}
-	
-	protected abstract void doInitialize() throws Exception;
+//	protected abstract void doInitialize() throws Exception;
 	
 	/**
 	 * Call this function in the doActivate() after you set the context and dataSourceName attribute.
@@ -63,7 +36,7 @@ public abstract class DbManagerServiceImpl implements DbManagerService {
 	protected void doOpen(boolean clean) throws Exception {
 		if (manager != null) return;
 		doInitialize();
-		context = FrameworkUtil.getBundle(getClass()).getBundleContext();
+		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		util = new DataSourceUtil(context);
 		
 		if (getDataSource() == null) return;
