@@ -70,7 +70,7 @@ public class PojoTest extends TestCase {
 	public void testFunctionUpper() {
 		
 		PojoExample example = new PojoExample();
-		PojoModel model = new PojoParser().parse(example,new FunctionsStrategy(true, false, ".", false, (Class)null)).filter(new DefaultFilter()).getModel();
+		PojoModel model = new PojoParser().parse(example,new FunctionsStrategy(true, false, ".", false)).filter(new DefaultFilter()).getModel();
 		
 		System.out.println("Attributes: " + MString.join(model.getAttributeNames(), ','));
 		System.out.println("Actions: " + MString.join(model.getActionNames(), ','));

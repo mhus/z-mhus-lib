@@ -14,7 +14,7 @@ public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
 	private Class<? extends Annotation>[] annotationMarker;
 	
 	public FunctionsOnlyStrategy() {
-		this(true, (Class<? extends Annotation>)null);
+		this(true);
 	}
 		
 	@SafeVarargs
