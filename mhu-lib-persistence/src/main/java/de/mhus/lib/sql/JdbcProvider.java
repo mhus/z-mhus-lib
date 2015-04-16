@@ -69,7 +69,7 @@ public class JdbcProvider extends DbProvider {
 
 		log().t(driver,url,user);
 		Connection con = DriverManager.getConnection(url,user,MPassword.decode(pass));
-		con.setAutoCommit(false);
+		getDialect().prepareConnection(con);
 		JdbcConnection dbCon = new JdbcConnection(this,con);
 		long timeoutUnused = MTimeInterval.toMilliseconds( config.getExtracted("timeout_unused"), 0 );
 		long timeoutLifetime = MTimeInterval.toMilliseconds( config.getExtracted("timeout_lifetime"), 0 );

@@ -1,5 +1,7 @@
 package de.mhus.lib.sql;
 
+import java.sql.Connection;
+
 import javax.sql.DataSource;
 
 import de.mhus.lib.core.MActivator;
@@ -21,7 +23,9 @@ public class DataSourceProvider extends DbProvider {
 	@Override
 	public InternalDbConnection createConnection() throws Exception {
 		if (dataSource == null) return null;
-		return new JdbcConnection(this, dataSource.getConnection());
+		Connection con = dataSource.getConnection();
+		getDialect().prepareConnection(con);
+		return new JdbcConnection(this, con);
 	}
 
 	@Override

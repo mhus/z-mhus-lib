@@ -1,5 +1,7 @@
 package de.mhus.lib.sql;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -147,6 +149,16 @@ public class DialectHsqldb extends DialectDefault {
 	@Override
 	public String normalizeIndexName(String tableName) throws Exception {
 		return tableName.toUpperCase();
+	}
+
+	@Override
+	public void prepareConnection(Connection con) throws SQLException {
+		super.prepareConnection(con);
+		Statement sth = con.createStatement();
+		sth.execute("SET DATABASE TRANSACTION CONTROL MVCC");
+		sth.execute("SET DATABASE DEFAULT ISOLATION LEVEL READ COMMITTED");
+		//sth.execute("SET DATABASE TRANSACTION ROLLBACK ON DEADLOCK TRUE");
+		sth.close();
 	}
 
 }

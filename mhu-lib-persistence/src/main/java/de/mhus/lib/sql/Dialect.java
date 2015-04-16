@@ -1,5 +1,7 @@
 package de.mhus.lib.sql;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 
 import de.mhus.lib.annotations.adb.DbType;
@@ -59,6 +61,10 @@ public abstract class Dialect extends MObject implements ICompiler {
 
 	public static final String K_CATEGORIES = "category";
 
+	public static final String K_DESCRIPTION = "description";
+	
+	public static final String K_HINTS = "hints";
+	
 	public static final String C_VIRTUAL = "[virtual]";
 
 	public static final String C_PRIMARY_KEY = "[pk]";
@@ -382,6 +388,10 @@ public abstract class Dialect extends MObject implements ICompiler {
 		if (sql == null) return null;
 		if (sql.startsWith("<common>")) return DbConnection.LANGUAGE_COMMON;
 		return null;
+	}
+
+	public void prepareConnection(Connection con) throws SQLException {
+		con.setAutoCommit(false);
 	}
 
 }

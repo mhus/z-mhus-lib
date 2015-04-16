@@ -17,6 +17,8 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.concurrent.Lock;
+import de.mhus.lib.core.concurrent.ThreadLock;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.errors.MException;
@@ -42,6 +44,7 @@ public class DbManager extends MJmx {
 	public static final int R_CREATE = 1;
 	public static final int R_UPDATE = 2;
 	public static final int R_DELETE = 3;
+	private static final long MAX_LOCK = 1000 * 60 * 10;
 
 	private DbSchema schema;
 	private DbPool pool;
@@ -52,6 +55,7 @@ public class DbManager extends MJmx {
 	private DbProperties schemaPersistence;
 	private MetadataBundle caoBundle;
 	private MActivator activator;
+	private Lock reloadLock = new ThreadLock("reload");
 
 	public DbManager(DbPool pool, DbSchema schema) throws Exception {
 		this(pool, schema, false);
@@ -81,7 +85,6 @@ public class DbManager extends MJmx {
 		this.schema = schema;
 		this.activator = activator == null ? pool.getProvider().getActivator() : activator;
 		initDatabase(cleanup);
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -112,6 +115,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public <T> DbCollection<T> getByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		Class<?> clazz = schema.findClassForObject(object,this);
 		StringBuffer sql = new StringBuffer();
@@ -157,6 +161,8 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public <T> long getCountByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+		
 		Class<?> clazz = schema.findClassForObject(object,this);
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT count(*) AS count FROM $db.").append(getMappingName(clazz)).append("$ ");
@@ -190,6 +196,8 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public <T> DbCollection<T> executeQuery(DbConnection con, T clazz, String registryName, String query, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+		
 		Map<String, Object> map = null;
 
 		DbConnection myCon = null;
@@ -229,6 +237,8 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+
 		Map<String, Object> map = null;
 
 		DbConnection myCon = null;
@@ -273,6 +283,7 @@ public class DbManager extends MJmx {
 	 */
 	@JmxManaged(descrition="Database Properties of the Schema")
 	public DbProperties getSchemaProperties() {
+		reloadLock.waitWithException(MAX_LOCK);
 		return schemaPersistence;
 	}
 
@@ -301,6 +312,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public Object getObject(DbConnection con, String registryName, Object ... keys) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		//		registryName = registryName.toLowerCase();
 
@@ -363,6 +375,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public boolean existsObject(DbConnection con, String registryName, Object ... keys) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		//		registryName = registryName.toLowerCase();
 
@@ -389,6 +402,7 @@ public class DbManager extends MJmx {
 
 
 	public void checkFillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		if (registryName == null) {
 			Class<?> clazz = getSchema().findClassForObject(object,this);
@@ -421,6 +435,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	void fillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		if (registryName == null) {
 			Class<?> clazz = getSchema().findClassForObject(object,this);
@@ -459,6 +474,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void reloadObject(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -524,6 +540,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public boolean objectChanged(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -584,6 +601,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void fillObject(DbConnection con, String registryName, Object object, Object ... keys) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -647,6 +665,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void createObject(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -714,6 +733,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void saveObject(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -776,6 +796,7 @@ public class DbManager extends MJmx {
 	 * @throws MException
 	 */
 	public void deleteObject(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
 		if (con == null) {
@@ -826,7 +847,31 @@ public class DbManager extends MJmx {
 	}
 
 	public void connect() throws Exception {
-		initDatabase(false);
+		synchronized (this) {
+			initDatabase(false);
+		}
+	}
+	
+	public void disconnect() {
+		synchronized (this) {
+			if (nameMapping == null) return;
+			cIndex.clear();
+			
+			nameMapping = null;
+			nameMappingRO = null;
+			caoBundle = null;
+			schemaPersistence = null;
+		}
+	}
+	
+	public void reconnect() throws Exception {
+		try {
+			reloadLock.lockWithException(MAX_LOCK);
+			disconnect();
+			connect();
+		} finally {
+			reloadLock.unlockHard();
+		}
 	}
 
 	/**
@@ -838,10 +883,12 @@ public class DbManager extends MJmx {
 
 		if (nameMapping != null) return;
 
+		schema.resetObjectTypes();
+		pool.cleanup(true);
 		Class<? extends Persistable>[] types = schema.getObjectTypes();
 		DbConnection con = pool.getConnection();
 		if (con == null) return;
-
+		
 		cIndex.clear();
 		nameMapping = new HashMap<String, Object>();
 		nameMappingRO = Collections.unmodifiableMap(nameMapping);
@@ -912,30 +959,36 @@ public class DbManager extends MJmx {
 
 	@JmxManaged(descrition="Current mapping of the table and column names")
 	public Map<String,Object> getNameMapping() {
+		reloadLock.waitWithException(MAX_LOCK);
 		return nameMappingRO;
 	}
 
 	public MetadataBundle getCaoMetadata() {
+		reloadLock.waitWithException(MAX_LOCK);
 		return caoBundle;
 	}
 
 	@JmxManaged(descrition="Returns valide registry names")
 	public String[] getRegistryNames() {
+		reloadLock.waitWithException(MAX_LOCK);
 		return cIndex.keySet().toArray(new String[0]);
 	}
 
 	@JmxManaged(descrition="Returns the table for the registry name")
 	public Table getTable(String registryName) {
+		reloadLock.waitWithException(MAX_LOCK);
 		return cIndex.get(registryName);
 	}
 
 	public Object createSchemaObject(String registryName) throws Exception {
+		reloadLock.waitWithException(MAX_LOCK);
 		Table table = cIndex.get(registryName);
 		if (table == null) throw new MException("class definition not found in schema",registryName);
 		return schema.createObject(table.getClazz(), table.getRegistryName(), null, this, false);
 	}
 
 	public String getRegistryName(Object object) {
+		reloadLock.waitWithException(MAX_LOCK);
 		if (object instanceof Class<?>) {
 			return ((Class<?>)object).getCanonicalName();
 		}
@@ -945,10 +998,12 @@ public class DbManager extends MJmx {
 	}
 
 	public String getMappingName(Class<?> clazz) {
+		reloadLock.waitWithException(MAX_LOCK);
 		return clazz.getSimpleName().toLowerCase();
 	}
 
 	public <T extends Persistable> T injectObject(T object) {
+		reloadLock.waitWithException(MAX_LOCK);
 		getTable(getRegistryName(object)).injectObject(object);
 		return object;
 	}

@@ -107,6 +107,7 @@ public class DefaultDbPool extends DbPool {
 				con.setPool(this);
 				pool.add(con);
 				con.setUsed(true);
+				//getDialect().initializeConnection(con, this);
 				return new DbConnectionProxy(con);
 			}
 		} finally {

@@ -23,6 +23,8 @@ public abstract class Field extends MObject {
 	protected DbManager manager;
 	protected boolean nullable = true;
 	protected String defValue = null;
+	protected String description;
+	protected String[] hints;
 	protected int size = 200;
 	protected String retDbType;
 	protected String methodName;
@@ -157,5 +159,12 @@ public abstract class Field extends MObject {
 		return name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+	
+	public String[] getHints() {
+		return hints;
+	}
 
 }

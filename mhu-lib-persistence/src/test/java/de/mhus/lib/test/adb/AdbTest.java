@@ -9,8 +9,11 @@ import junit.framework.TestSuite;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.query.Db;
+import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.config.NodeConfig;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -42,7 +45,7 @@ public class AdbTest extends TestCase {
 		return new TestSuite( AdbTest.class );
 	}
 
-	public DbPoolBundle createPool() {
+	public DbPoolBundle createPool(String name) {
 		NodeConfig cdb = new NodeConfig();
 		NodeConfig cconfig = new NodeConfig();
 		NodeConfig ccon = new NodeConfig();
@@ -53,7 +56,7 @@ public class AdbTest extends TestCase {
 		//    	ccon.setProperty("pass", "test");
 
 		ccon.setProperty("driver", "org.hsqldb.jdbcDriver");
-		ccon.setProperty("url", "jdbc:hsqldb:mem:aname");
+		ccon.setProperty("url", "jdbc:hsqldb:mem:" + name);
 		ccon.setProperty("user", "sa");
 		ccon.setProperty("pass", "");
 
@@ -79,14 +82,16 @@ public class AdbTest extends TestCase {
 
 	public void testModel() throws Throwable {
 
-		DbPool pool = createPool().getPool("test");
+		DbPool pool = createPool("testModel").getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
 		MStopWatch timer = new MStopWatch();
 		timer.start();
 
+//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		DbManager manager = new DbManager(pool, schema);
+//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
 		// create persons
 		Person p = new Person();
@@ -324,25 +329,41 @@ public class AdbTest extends TestCase {
 
 		// -------------
 		// test dynamic objects
-
-		Regal r = new Regal();
-		r.setValue("store", s1.getId());
-		r.setValue("name", "regal 1");
-		r.create(manager);
-
-		r.setValue("name", "regal 22113221");
-		r.save();
-
-		Regal r2 = manager.getObject(Regal.class, r.getValue("id"));
-		assertNotNull(r2);
-
-		r2.reload();
-
-		r2.delete();
-
+		{
+			Regal r = new Regal();
+			r.setValue("store", s1.getId());
+			r.setValue("name", "regal 1");
+			r.create(manager);
+	
+			r.setValue("name", "regal 22113221");
+			r.save();
+	
+			Regal r2 = manager.getObject(Regal.class, r.getValue("id"));
+			assertNotNull(r2);
+	
+			r2.reload();
+	
+			r2.delete();
+	
+		}
+		
 		timer.stop();
 		System.out.println("Time: " + timer.getCurrentTimeAsString(true));
 	}
 
+	public void testReconnect() throws Exception {
+		DbPool pool = createPool("testReconnect").getPool("test");
+
+//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+		BookStoreSchema schema1 = new BookStoreSchema();
+		DbManager manager1 = new DbManager(pool, schema1);
+
+		BookStoreSchema schema2 = new BookStoreSchema();
+		DbManager manager2 = new DbManager(pool, schema2);
+
+		manager1.reconnect();
+		manager2.reconnect();
+		
+	}
 
 }

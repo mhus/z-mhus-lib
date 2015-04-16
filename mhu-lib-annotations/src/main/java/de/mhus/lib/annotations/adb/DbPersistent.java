@@ -22,4 +22,6 @@ public @interface DbPersistent {
 	boolean auto_id() default false;
 	boolean virtual() default false;
 	String[] features() default {};
+	String[] hints() default {};
+	String description() default "";
 }

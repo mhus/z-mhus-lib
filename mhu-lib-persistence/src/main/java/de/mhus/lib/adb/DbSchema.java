@@ -44,6 +44,10 @@ public abstract class DbSchema extends MObject {
 		return (Class<? extends Persistable>[]) objectTypes.toArray(new Class<?>[objectTypes.size()]);
 	}
 
+	void resetObjectTypes() {
+		objectTypes = null;
+	}
+	
 	/**
 	 * This should be called after the manager is created.
 	 * 
