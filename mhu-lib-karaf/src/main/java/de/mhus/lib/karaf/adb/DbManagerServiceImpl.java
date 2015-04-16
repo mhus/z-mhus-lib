@@ -8,6 +8,7 @@ import org.osgi.framework.FrameworkUtil;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -19,12 +20,11 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DefaultDbPool;
 import de.mhus.lib.sql.Dialect;
 //@Component(provide=DbManagerService.class,name="...",immediate=true)
-public abstract class DbManagerServiceImpl implements DbManagerService {
+public abstract class DbManagerServiceImpl extends MLog implements DbManagerService {
 
 	protected DataSourceUtil util;
 	private String dataSourceName;
 	private DbManager manager;
-	protected Log log = Log.getLog(this.getClass());
 
 //	protected abstract void doInitialize() throws Exception;
 	
@@ -66,7 +66,7 @@ public abstract class DbManagerServiceImpl implements DbManagerService {
 		try {
 			return new ActivatorImpl(null, getClass().getClassLoader());
 		} catch (MException e) {
-			log.e(e);
+			log().e(e);
 		}
 		return null;
 	}
@@ -82,7 +82,7 @@ public abstract class DbManagerServiceImpl implements DbManagerService {
 	protected DataSource getDataSource() {
 		DataSource ds = util.getDataSource(dataSourceName);
 		if (ds == null)
-			log.w("DataSource is unknown",dataSourceName);
+			log().w("DataSource is unknown",dataSourceName);
 		return ds;
 	}
 	

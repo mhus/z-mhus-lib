@@ -72,6 +72,7 @@ public class DbManagerAdminImpl implements DbManagerAdmin {
 
 	@Override
 	public void addService(DbManagerService service) throws Exception {
+		if (service == null) return;
 		service.doInitialize();
 		synchronized (services) {
 			services.add(service);
@@ -80,6 +81,7 @@ public class DbManagerAdminImpl implements DbManagerAdmin {
 
 	@Override
 	public void removeService(DbManagerService service) {
+		if (service == null) return;
 		synchronized (services) {
 			services.remove(service);
 		}
@@ -87,6 +89,7 @@ public class DbManagerAdminImpl implements DbManagerAdmin {
 
 	@Override
 	public DbManagerService getService(String name) {
+		if (name == null) return null;
 		synchronized (services) {
 			for (DbManagerService service : services) {
 				if (name.equals(service.getServiceName()))
