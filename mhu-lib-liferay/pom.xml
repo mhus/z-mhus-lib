@@ -65,7 +65,7 @@
   	</dependency>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-vaadin6</artifactId>
+  		<artifactId>mhu-lib-vaadin</artifactId>
   		<version>${project.version}</version>
   	</dependency>
   	<dependency>
