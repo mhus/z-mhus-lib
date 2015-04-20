@@ -7,6 +7,8 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 
+import de.mhus.lib.core.logging.Log;
+
 
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
@@ -17,6 +19,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	MessageConsumer consumer;
 
 	private MessageProducer replyProducer;
+	private JmsInterceptorIn interceptorIn;
+
+	private JmsInterceptorOut interceptorOut;
 	
 	@Override
 	public synchronized void open() throws JMSException {
@@ -74,6 +79,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	protected void sendAnswer(Message msg, Message answer) throws JMSException {
 		openAnswer();
 		if (answer == null) answer = getSession().createTextMessage(null); // other side is waiting for an answer - send a null text
+		if (interceptorOut != null)
+			interceptorOut.prepare(answer);
 		answer.setJMSMessageID(createMessageId());
 		answer.setJMSCorrelationID(msg.getJMSCorrelationID());
         replyProducer.send(msg.getJMSReplyTo(), answer);
@@ -81,6 +88,11 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	@Override
 	public void onMessage(Message message) {
+		
+		if (interceptorIn != null) {
+			interceptorIn.begin(message);
+		}
+		
 		try {
 			if (message.getJMSReplyTo() != null) {
 				log().t("received",message);
@@ -96,6 +108,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			log().w(t);
 		} catch (Throwable t) {
 			log().w(t);
+		} finally {
+			if (interceptorIn != null) {
+				interceptorIn.end(message);
+			}
 		}
 	}
 
@@ -127,6 +143,22 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		} catch (JMSException e) {
 			log().t(e);
 		}
+	}
+
+	public JmsInterceptorIn getInterceptorIn() {
+		return interceptorIn;
+	}
+
+	public void setInterceptorIn(JmsInterceptorIn interceptor) {
+		this.interceptorIn = interceptor;
+	}
+
+	public JmsInterceptorOut getInterceptorOut() {
+		return interceptorOut;
+	}
+
+	public void setInterceptorOut(JmsInterceptorOut interceptorOut) {
+		this.interceptorOut = interceptorOut;
 	}
 
 }

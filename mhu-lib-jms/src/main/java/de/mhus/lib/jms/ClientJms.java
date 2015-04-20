@@ -12,6 +12,7 @@ import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.logging.Log;
 
 public class ClientJms extends JmsChannel implements MessageListener {
 
@@ -26,6 +27,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
 	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 	private long broadcastTimeout = 100;
+
+	private JmsInterceptorOut interceptorOut;
 	
 	public ClientJms(JmsDestination dest) {
 		super(dest);
@@ -34,6 +37,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	public void sendJmsOneWay(Message msg) throws JMSException {
 		open();
 		msg.setJMSMessageID(createMessageId());
+		if (interceptorOut != null)
+			interceptorOut.prepare(msg);
 		log().t("sendJmsOneWay",msg);
 		producer.send(msg);
 	}
@@ -47,6 +52,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSReplyTo(answerQueue);
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
+		if (interceptorOut != null)
+			interceptorOut.prepare(msg);
 		try {
 			log().t("sendJms",msg);
 			producer.send(msg);
@@ -211,6 +218,14 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	@Override
 	public boolean isConnected() {
 		return !(producer == null || getSession() == null);
+	}
+
+	public JmsInterceptorOut getInterceptorOut() {
+		return interceptorOut;
+	}
+
+	public void setInterceptorOut(JmsInterceptorOut interceptorOut) {
+		this.interceptorOut = interceptorOut;
 	}
 
 }
