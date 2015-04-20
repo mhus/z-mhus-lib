@@ -2,7 +2,6 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Timer;
 
 import org.osgi.service.component.ComponentContext;
 
@@ -10,9 +9,8 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.MTimerTask;
-import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
@@ -20,7 +18,7 @@ import de.mhus.lib.karaf.jms.JmsUtil;
 @Component(provide=HeartbeatAdmin.class,immediate=true,name="de.mhus.lib.karaf.jms.heartbeat.HeartbeatAdmin")
 public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 
-	private Timer timer;
+	private TimerIfc timer;
 	private HashMap<String, HeartbeatService> services = new HashMap<>();
 	private boolean enabled = true;
 	private MTimerTask timerTask;

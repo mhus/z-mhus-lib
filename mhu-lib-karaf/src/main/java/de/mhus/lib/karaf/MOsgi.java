@@ -6,6 +6,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import de.mhus.lib.core.util.TimerFactory;
+import de.mhus.lib.core.util.TimerIfc;
+import de.mhus.lib.core.util.TimerImpl;
 import de.mhus.lib.errors.NotFoundException;
 
 public class MOsgi {
@@ -22,16 +25,16 @@ public class MOsgi {
 		return obj;
 	}
 
-	public static synchronized Timer getTimer() {
-		Timer timer = null;
+	public static synchronized TimerIfc getTimer() {
+		TimerIfc timer = null;
 		try {
-			timer = getService(Timer.class);
+			timer = getService(TimerFactory.class).getTimer();
 		} catch (Throwable t) {}
 		if (timer == null) {
 			// oh oh
 			if (localTimer == null)
 				localTimer = new Timer("de.mhu.lib.localtimer",true);
-			timer = localTimer;
+			timer = new TimerImpl( localTimer );
 		}
 		return timer;
 	}

@@ -12,7 +12,6 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.karaf.DataSourceUtil;
 import de.mhus.lib.sql.DataSourceProvider;
