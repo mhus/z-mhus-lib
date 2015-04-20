@@ -1,5 +1,7 @@
 package de.mhus.lib.karaf;
 
+import java.util.Timer;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -18,4 +20,9 @@ public class MOsgi {
 		return obj;
 	}
 
+	public static Timer getTimer() {
+		Timer timer = getService(Timer.class);
+		return timer;
+	}
+	
 }

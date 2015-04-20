@@ -175,7 +175,7 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 		
 		@Override
-		public void doit() throws Exception {
+		public void doIt() throws Exception {
 			MRemoteManager obj = manager.get();
 			if (obj == null) {
 				log().t("close");

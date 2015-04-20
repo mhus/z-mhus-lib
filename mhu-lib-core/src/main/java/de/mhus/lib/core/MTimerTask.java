@@ -26,7 +26,7 @@ public abstract class MTimerTask extends TimerTask {
 	final public void run() {
 		boolean error = false;
 		try {
-			doit();
+			doIt();
 		} catch (Throwable t) {
 			try {
 				onError(t);
@@ -47,5 +47,5 @@ public abstract class MTimerTask extends TimerTask {
 	protected void onFinal(boolean isError) {
 	}
 
-	public abstract void doit() throws Exception;
+	public abstract void doIt() throws Exception;
 }

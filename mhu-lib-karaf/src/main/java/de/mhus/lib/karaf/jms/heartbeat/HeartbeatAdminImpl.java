@@ -2,6 +2,7 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Timer;
 
 import org.osgi.service.component.ComponentContext;
 
@@ -11,26 +12,30 @@ import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.MTimerTask;
+import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 
 @Component(provide=HeartbeatAdmin.class,immediate=true,name="de.mhus.lib.karaf.jms.heartbeat.HeartbeatAdmin")
 public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 
-	private MTimer timer;
+	private Timer timer;
 	private HashMap<String, HeartbeatService> services = new HashMap<>();
 	private boolean enabled = true;
+	private MTimerTask timerTask;
 
 	@Activate
 	public void doActivate(ComponentContext ctx) {
-		timer = new MTimer(true);
-		timer.schedule(new MTimerTask() {
+		timer = MOsgi.getTimer();
+		timerTask = new MTimerTask() {
 			
 			@Override
-			public void doit() throws Exception {
+			public void doIt() throws Exception {
 				doTimerTask();
 			}
-		}, 10000, 60000 * 5);
+		};
+		timer.schedule(timerTask, 10000, 60000 * 5);
 	}
 	
 	protected void doTimerTask() {
@@ -40,7 +45,7 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-		timer.cancel();
+		timerTask.cancel();
 	}
 
 	@Override
