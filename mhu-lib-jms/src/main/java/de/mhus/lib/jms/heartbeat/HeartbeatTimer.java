@@ -26,7 +26,7 @@ public class HeartbeatTimer extends Heartbeat {
 			timer.schedule(new MTimerTask() {
 				
 				@Override
-				public void doIt() throws Exception {
+				public void doit() throws Exception {
 					doTimerTask();
 				}
 			}, 10000,60000 * 5);

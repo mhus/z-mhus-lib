@@ -209,7 +209,7 @@ public class DefaultDbPool extends DbPool {
 		}
 
 		@Override
-		public void doIt() throws Exception {
+		public void doit() throws Exception {
 			DefaultDbPool obj = pool.get();
 			if (obj == null || obj.isClosed()) {
 				log().t(name,"close");

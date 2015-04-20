@@ -17,7 +17,7 @@ public class MThreadManager extends MObject implements IBase {
 	private class ThreadHousekeeper extends MHousekeeperTask {
 
 		@Override
-		public void doIt() {
+		public void doit() {
 			log().t(getClass(),"Housekeeper");
 			poolClean(PENDING_TIME);
 			MThreadDaemon.poolClean(PENDING_TIME);

@@ -31,7 +31,7 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 		timerTask = new MTimerTask() {
 			
 			@Override
-			public void doIt() throws Exception {
+			public void doit() throws Exception {
 				doTimerTask();
 			}
 		};

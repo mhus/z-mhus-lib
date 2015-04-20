@@ -39,7 +39,7 @@ public class MHousekeeper extends MLog implements IBase {
 		}
 
 		@Override
-		public void doIt() throws Exception {
+		public void doit() throws Exception {
 			
 			TimerTask r = null;
 			
