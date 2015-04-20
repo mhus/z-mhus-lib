@@ -4,7 +4,6 @@ package de.mhus.lib.karaf.services;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Timer;
-import java.util.TimerHack;
 import java.util.TimerTask;
 
 import org.osgi.framework.Bundle;
@@ -100,10 +99,10 @@ public class TimerFactoryImpl implements TimerFactory {
 		@Override
 		public void run() {
 			try {
-				if (TimerHack.isCancelled(task)) {
-					cancel();
-					return;
-				}
+//				if (DefaultTimerFactory.isCancelled(task)) {
+//					cancel();
+//					return;
+//				}
 				if (bundle.getState() != Bundle.ACTIVE) {
 					log.d("stop task",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 					cancel();

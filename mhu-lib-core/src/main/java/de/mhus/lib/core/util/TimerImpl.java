@@ -3,7 +3,6 @@ package de.mhus.lib.core.util;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Timer;
-import java.util.TimerHack;
 import java.util.TimerTask;
 
 import de.mhus.lib.core.logging.Log;
@@ -90,10 +89,10 @@ public class TimerImpl implements TimerIfc {
 		@Override
 		public void run() {
 			try {
-				if (TimerHack.isCancelled(task)) {
-					cancel();
-					return;
-				}
+//				if (task.isCancelled(task)) {
+//					cancel();
+//					return;
+//				}
 				task.run();
 			} catch (Throwable t) {
 				log.i("error",task.getClass().getCanonicalName(), t);

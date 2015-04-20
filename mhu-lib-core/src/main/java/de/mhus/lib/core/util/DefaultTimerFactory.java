@@ -24,5 +24,5 @@ public class DefaultTimerFactory implements TimerFactory, ObjectFactory {
 		if (timer == null)
 			timer = new Timer(TimerIfc.class.getCanonicalName(), true);
 	}
-
+	
 }
