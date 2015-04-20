@@ -10,6 +10,8 @@ import de.mhus.lib.errors.NotFoundException;
 
 public class MOsgi {
 	
+	private static Timer localTimer; // fallback timer
+
 	public static <T> T getService(Class<T> ifc) {
 		BundleContext context = FrameworkUtil.getBundle(ifc).getBundleContext();
 		if (context == null) throw new NotFoundException("service context not found", ifc);
@@ -20,8 +22,17 @@ public class MOsgi {
 		return obj;
 	}
 
-	public static Timer getTimer() {
-		Timer timer = getService(Timer.class);
+	public static synchronized Timer getTimer() {
+		Timer timer = null;
+		try {
+			timer = getService(Timer.class);
+		} catch (Throwable t) {}
+		if (timer == null) {
+			// oh oh
+			if (localTimer == null)
+				localTimer = new Timer("de.mhu.lib.localtimer",true);
+			timer = localTimer;
+		}
 		return timer;
 	}
 	

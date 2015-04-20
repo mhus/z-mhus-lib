@@ -15,13 +15,13 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 
-@Component(provide = java.util.Timer.class)
+@Component(provide = java.util.Timer.class, immediate=true,name="java.util.Timer")
 public class TimerImpl extends java.util.Timer {
 	
 	private Log log = Log.getLog(TimerImpl.class);
 
 	public TimerImpl() {
-		super("mhu-osgi-commands.Timer", true);
+		super("de.mhus.lib.karaf.Timer", true);
 	}
 	
 	@Deactivate
