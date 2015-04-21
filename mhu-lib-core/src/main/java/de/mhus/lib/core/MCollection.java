@@ -1,5 +1,6 @@
 package de.mhus.lib.core;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -76,6 +77,20 @@ public class MCollection {
 	        	encountered.add(t);
 	        }
 	    }
+	}
+
+	@SafeVarargs
+	public static <T> T[] append(T[] array,T ... newElements) {
+		
+		if (newElements == null || newElements.length == 0) return array;
+		if (array == null) return newElements;
+		
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length + newElements.length);
+		System.arraycopy(array, 0, newArray, 0, array.length);
+		System.arraycopy(newElements, 0, newArray, array.length, newElements.length);
+		
+		return newArray;
 	}
 	
 }

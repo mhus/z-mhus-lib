@@ -28,7 +28,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 	private long broadcastTimeout = 100;
 
-	private JmsInterceptorOut interceptorOut;
+	private JmsInterceptor interceptorOut;
+	private JmsInterceptor interceptorIn;
 	
 	public ClientJms(JmsDestination dest) {
 		super(dest);
@@ -176,6 +177,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			synchronized (responses) {
 				String id = message.getJMSCorrelationID();
 				if (!allowedIds.contains(id)) return;
+				if (interceptorIn != null)
+					interceptorIn.answer(message);
 				responses.put(id,message);
 			}
 			synchronized (this) {
@@ -220,12 +223,20 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		return !(producer == null || getSession() == null);
 	}
 
-	public JmsInterceptorOut getInterceptorOut() {
+	public JmsInterceptor getInterceptorOut() {
 		return interceptorOut;
 	}
 
-	public void setInterceptorOut(JmsInterceptorOut interceptorOut) {
+	public void setInterceptorOut(JmsInterceptor interceptorOut) {
 		this.interceptorOut = interceptorOut;
+	}
+
+	public JmsInterceptor getInterceptorIn() {
+		return interceptorIn;
+	}
+
+	public void setInterceptorIn(JmsInterceptor interceptorIn) {
+		this.interceptorIn = interceptorIn;
 	}
 
 }

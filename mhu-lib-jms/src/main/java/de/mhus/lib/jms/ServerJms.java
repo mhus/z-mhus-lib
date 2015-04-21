@@ -19,9 +19,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	MessageConsumer consumer;
 
 	private MessageProducer replyProducer;
-	private JmsInterceptorIn interceptorIn;
+	private JmsInterceptor interceptorIn;
 
-	private JmsInterceptorOut interceptorOut;
+	private JmsInterceptor interceptorOut;
 	
 	@Override
 	public synchronized void open() throws JMSException {
@@ -145,19 +145,19 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		}
 	}
 
-	public JmsInterceptorIn getInterceptorIn() {
+	public JmsInterceptor getInterceptorIn() {
 		return interceptorIn;
 	}
 
-	public void setInterceptorIn(JmsInterceptorIn interceptor) {
+	public void setInterceptorIn(JmsInterceptor interceptor) {
 		this.interceptorIn = interceptor;
 	}
 
-	public JmsInterceptorOut getInterceptorOut() {
+	public JmsInterceptor getInterceptorOut() {
 		return interceptorOut;
 	}
 
-	public void setInterceptorOut(JmsInterceptorOut interceptorOut) {
+	public void setInterceptorOut(JmsInterceptor interceptorOut) {
 		this.interceptorOut = interceptorOut;
 	}
 

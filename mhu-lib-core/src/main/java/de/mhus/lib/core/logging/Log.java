@@ -197,22 +197,24 @@ public abstract class Log {
     }
 
     private Throwable serialize(StringBuffer sb, Object o, Throwable error) {
-    	if (o == null) {
-			sb.append("[null]");
-    	} else
-		if (o instanceof Throwable) {
-			if (error == null) return (Throwable)o;
-			// another error
-			sb.append("[").append(o).append("]");
-		} else
-    	if (o.getClass().isArray()) {
-    		sb.append("{");
-    		for (Object p : (Object[])o) {
-    			error = serialize(sb, p, error);
-    		}
-    		sb.append("}");
-    	} else
-    		sb.append("[").append(o).append("]");
+    	try {
+	    	if (o == null) {
+				sb.append("[null]");
+	    	} else
+			if (o instanceof Throwable) {
+				if (error == null) return (Throwable)o;
+				// another error
+				sb.append("[").append(o).append("]");
+			} else
+	    	if (o.getClass().isArray()) {
+	    		sb.append("{");
+	    		for (Object p : (Object[])o) {
+	    			error = serialize(sb, p, error);
+	    		}
+	    		sb.append("}");
+	    	} else
+	    		sb.append("[").append(o).append("]");
+    	} catch (Throwable t) {}
 		return error;
 	}
 
