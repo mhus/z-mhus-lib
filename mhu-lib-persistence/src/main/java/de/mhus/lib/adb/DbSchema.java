@@ -347,13 +347,13 @@ public abstract class DbSchema extends MObject {
 		}
 	}
 
-	public Field createField(DbManager manager, Table table, boolean pk, boolean virtual, PojoAttribute<?> attribute, ResourceNode attr,DbDynamic.Field dynamicField, String[] features) throws MException {
+	public Field createField(DbManager manager, Table table, boolean pk, boolean readOnly, boolean virtual, PojoAttribute<?> attribute, ResourceNode attr,DbDynamic.Field dynamicField, String[] features) throws MException {
 
 		Field field = null;
 		if (virtual)
 			field = new FieldVirtual( table, pk, attribute, attr, features );
 		else
-			field = new FieldPersistent( manager, table, pk, attribute, attr, dynamicField, features );
+			field = new FieldPersistent( manager, table, pk, readOnly, attribute, attr, dynamicField, features );
 
 		return field;
 	}

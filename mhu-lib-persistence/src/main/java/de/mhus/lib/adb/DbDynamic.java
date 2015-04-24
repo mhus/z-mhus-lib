@@ -40,5 +40,7 @@ public interface DbDynamic {
 
 		boolean isPersistent();
 
+		boolean isReadOnly();
+
 	}
 }

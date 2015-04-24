@@ -13,7 +13,7 @@ public class FeatureCut extends Feature {
 	}
 
 	@Override
-	public Object get(Object obj, Field field, Object val) throws MException {
+	public Object getValue(Object obj, Field field, Object val) throws MException {
 
 		if ( ( cutAll || field.getAttributes().getBoolean("cut",false) ) && val != null && val instanceof String && ((String)val).length() > field.getSize()) {
 			log().t("cut",field);

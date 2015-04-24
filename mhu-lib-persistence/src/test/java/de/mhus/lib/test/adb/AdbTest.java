@@ -104,6 +104,13 @@ public class AdbTest extends TestCase {
 		manager.createObject(p);
 		UUID p2 = p.getId();
 
+		{
+			List<Person> list = manager.getByQualification(Db.query(Person.class).asc("name") ).toCacheAndClose();
+			assertEquals(3, list.size());
+			assertEquals("Alex Admin", list.get(0).getName());
+			assertEquals("Hausmeister Krause", list.get(1).getName());
+			assertEquals("Klaus Mustermann", list.get(2).getName());
+		}
 		// create books
 
 		Book b = new Book();

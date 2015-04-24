@@ -49,25 +49,14 @@ public class BookStoreSchema extends DbSchema {
 
 						if (right == DbManager.R_DELETE && conf.indexOf("remove") >= 0 )
 							throw new AccessDeniedException("access denied");
+						
+						if (right == DbManager.R_READ && conf.indexOf("read") >= 0 ) 
+							throw new AccessDeniedException("access denied");
+							
 					}
 					// set new acl if needed
 					if (f.getNewConfidential() != null)
 						f.setConfidential(f.getNewConfidential());
-				}
-
-				@Override
-				public void hasReadAccess(DbManager dbManager, Table table,
-						DbConnection con, de.mhus.lib.sql.DbResult ret) throws AccessDeniedException {
-
-					try {
-						String conf = ret.getString( dbManager.getNameMapping().get("db.finances.confidential").toString() );
-						if ( conf != null && conf.indexOf("read") >= 0 ) {
-							throw new AccessDeniedException("access denied");
-						}
-					} catch (Exception e) {
-						//						e.printStackTrace();
-						throw new AccessDeniedException(e);
-					}
 				}
 
 			};

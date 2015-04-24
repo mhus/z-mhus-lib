@@ -24,4 +24,5 @@ public @interface DbPersistent {
 	String[] features() default {};
 	String[] hints() default {};
 	String description() default "";
+	boolean ro() default false;
 }

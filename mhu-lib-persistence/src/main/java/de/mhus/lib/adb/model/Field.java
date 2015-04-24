@@ -33,6 +33,7 @@ public abstract class Field extends MObject {
 	protected DbDynamic.Field dynamicField;
 	protected PojoAttribute<Object> attribute;
 	private LinkedList<AttributeFeature> features = new LinkedList<>();
+	protected boolean readOnly = false;
 
 	public abstract void prepareCreate(Object obj) throws Exception;
 	public abstract boolean isPersistent();
@@ -75,7 +76,7 @@ public abstract class Field extends MObject {
 		}
 
 		for (Feature f : table.getFeatures())
-			value = f.set(obj, this, value);
+			value = f.setValue(obj, this, value);
 
 		for (AttributeFeature f : features)
 			value = f.set(obj, value);
@@ -104,7 +105,7 @@ public abstract class Field extends MObject {
 		}
 
 		for (Feature f : table.getFeatures())
-			value = f.set(obj, this, value);
+			value = f.setValue(obj, this, value);
 
 		for (AttributeFeature f : features)
 			value = f.set(obj, value);
@@ -136,7 +137,7 @@ public abstract class Field extends MObject {
 			val = f.get(obj, val);
 
 		for (Feature f : table.getFeatures())
-			val = f.get(obj, this, val);
+			val = f.getValue(obj, this, val);
 
 		return val;
 	}
@@ -165,6 +166,9 @@ public abstract class Field extends MObject {
 	
 	public String[] getHints() {
 		return hints;
+	}
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 
 }

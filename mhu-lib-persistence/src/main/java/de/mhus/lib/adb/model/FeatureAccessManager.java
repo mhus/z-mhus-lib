@@ -13,35 +13,25 @@ public class FeatureAccessManager extends Feature {
 	protected void doInit() {
 		accessManager = manager.getSchema().getAccessManager(table);
 	}
-
+	
 	@Override
-	public void createObject(DbConnection con, Object object) throws Exception {
+	public void postFillObject(Object obj, DbConnection con) throws Exception {
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, obj, DbManager.R_READ);
+	}
+	
+	@Override
+	public void preCreateObject(DbConnection con, Object object) throws Exception {
 		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_CREATE);
 	}
 
 	@Override
-	public void saveObject(DbConnection con, Object object) throws Exception {
+	public void preSaveObject(DbConnection con, Object object) throws Exception {
 		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_UPDATE);
-	}
-
-	@Override
-	public void getObject(DbConnection con, DbResult ret) throws Exception {
-		if (accessManager != null) accessManager.hasReadAccess(manager, table, con, ret);
-	}
-
-	@Override
-	public void fillObject(Object obj, DbConnection con, DbResult res) throws Exception {
-		if (accessManager != null) accessManager.hasReadAccess(manager, table, con, res);
 	}
 
 	@Override
 	public void deleteObject(DbConnection con, Object object) throws Exception {
 		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_DELETE);
-	}
-
-	@Override
-	public void checkFillObject(DbConnection con, DbResult res) throws Exception {
-		if (accessManager != null) accessManager.hasReadAccess(manager, table, con, res);
 	}
 
 }

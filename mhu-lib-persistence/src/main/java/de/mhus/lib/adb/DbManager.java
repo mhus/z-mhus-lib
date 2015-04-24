@@ -21,6 +21,7 @@ import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.concurrent.ThreadLock;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.util.FallbackMap;
+import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -400,32 +401,6 @@ public class DbManager extends MJmx {
 		}
 	}
 
-
-	public void checkFillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
-		reloadLock.waitWithException(MAX_LOCK);
-
-		if (registryName == null) {
-			Class<?> clazz = getSchema().findClassForObject(object,this);
-			if (clazz == null)
-				throw new MException("class definition not found for object",object.getClass().getCanonicalName(),registryName);
-			registryName = getRegistryName(clazz);
-		}
-
-		Table c = cIndex.get(registryName);
-		if (c == null)
-			throw new MException("class definition not found in schema",registryName);
-
-		try {
-			c.checkFillObject(con,res);
-
-			//			schema.doPostLoad(c,object,con, this);
-
-		} catch (Throwable t) {
-			throw new MException(registryName,t);
-		}
-
-	}
-
 	/**
 	 * Fill an object with values.
 	 * @param registryName The registry name or null
@@ -457,6 +432,8 @@ public class DbManager extends MJmx {
 
 			schema.doPostLoad(c,(Persistable) object,con, this);
 
+		} catch (AccessDeniedException ade) {
+			throw ade;
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}

@@ -36,7 +36,10 @@ public class Person implements Persistable {
 		return lendTo;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Person " + name;
+	}
 
 
 }

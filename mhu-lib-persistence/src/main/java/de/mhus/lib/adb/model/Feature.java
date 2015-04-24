@@ -21,23 +21,23 @@ public abstract class Feature extends MObject {
 
 	}
 
-	public void createObject(DbConnection con, Object object) throws Exception {
+	public void preCreateObject(DbConnection con, Object object) throws Exception {
 
 	}
 
-	public void saveObject(DbConnection con, Object object) throws Exception {
+	public void preSaveObject(DbConnection con, Object object) throws Exception {
 
 	}
 
-	public void getObject(DbConnection con, DbResult ret) throws Exception {
+	public void preGetObject(DbConnection con, DbResult ret) throws Exception {
 
 	}
 
-	public void getObject(DbConnection con, Object obj) throws Exception {
+	public void postGetObject(DbConnection con, Object obj) throws Exception {
 
 	}
 
-	public void fillObject(Object obj, DbConnection con, DbResult res) throws Exception {
+	public void preFillObject(Object obj, DbConnection con, DbResult res) throws Exception {
 
 	}
 
@@ -45,15 +45,26 @@ public abstract class Feature extends MObject {
 
 	}
 
-	public Object get(Object obj, Field field, Object val) throws Exception {
+	public Object getValue(Object obj, Field field, Object val) throws Exception {
 		return val;
 	}
 
-	public Object set(Object obj, Field field, Object value) throws Exception {
+	public Object setValue(Object obj, Field field, Object value) throws Exception {
 		return value;
 	}
 
-	public void checkFillObject(DbConnection con, DbResult res) throws Exception {
+	public void postFillObject(Object obj, DbConnection con) throws Exception {
+	}
+
+	public void postCreateObject(DbConnection con, Object object) throws Exception {
+	}
+
+	public void postSaveObject(DbConnection con, Object object) throws Exception {
+	}
+
+	public void postFillObject(Object obj, DbConnection con, DbResult res) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

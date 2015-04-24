@@ -149,7 +149,7 @@ public abstract class Table extends MObject {
 	public void createObject(DbConnection con, Object object) throws Exception {
 
 		for (Feature f : features)
-			f.createObject(con,object);
+			f.preCreateObject(con,object);
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
 		for (Field f : fList) {
@@ -160,6 +160,9 @@ public abstract class Table extends MObject {
 
 		sqlInsert.getStatement(con).execute(attributes);
 
+		for (Feature f : features)
+			f.postCreateObject(con,object);
+
 		for (FieldRelation f : relationList) {
 			f.created(con,object);
 		}
@@ -169,7 +172,7 @@ public abstract class Table extends MObject {
 	public void saveObject(DbConnection con, Object object) throws Exception {
 
 		for (Feature f : features)
-			f.saveObject(con,object);
+			f.preSaveObject(con,object);
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
 		for (Field f : fList) {
@@ -186,6 +189,9 @@ public abstract class Table extends MObject {
 		if ( c != 1)
 			throw new MException("update failed, updated objects " + c);
 
+		for (Feature f : features)
+			f.postSaveObject(con,object);
+		
 		for (FieldRelation f : relationList) {
 			f.saved(con,object);
 		}
@@ -241,7 +247,7 @@ public abstract class Table extends MObject {
 		sql = "UPDATE " + tableName + " SET ";
 		nr = 0;
 		for (Field f : fList) {
-			if (!f.isPrimary && f.isPersistent()) {
+			if (!f.isPrimary && f.isPersistent() && !f.isReadOnly()) {
 				if (nr > 0) sql += ",";
 				sql += f.name + "=$" + f.name + "$";
 				nr++;
@@ -284,7 +290,7 @@ public abstract class Table extends MObject {
 		}
 
 		for (Feature f : features)
-			f.getObject(con,ret);
+			f.preGetObject(con,ret);
 
 		Object obj = schema.createObject(clazz, registryName, ret,manager, true);
 
@@ -294,7 +300,7 @@ public abstract class Table extends MObject {
 		}
 
 		for (Feature f : features)
-			f.getObject(con,obj);
+			f.postGetObject(con,obj);
 
 		for (FieldRelation f : relationList) {
 			f.loaded(con,obj);
@@ -328,17 +334,10 @@ public abstract class Table extends MObject {
 		}
 	}
 
-	public void checkFillObject(DbConnection con, DbResult res) throws Exception {
-
-		for (Feature f : features)
-			f.checkFillObject(con,res);
-
-	}
-
 	public void fillObject(Object obj, DbConnection con, DbResult res) throws Throwable {
 
 		for (Feature f : features)
-			f.fillObject(obj,con,res);
+			f.preFillObject(obj,con,res);
 
 		for (Field f : fList) {
 			try {
@@ -348,6 +347,9 @@ public abstract class Table extends MObject {
 			}
 		}
 
+		for (Feature f : features)
+			f.postFillObject(obj,con,res);
+		
 		for (FieldRelation f : relationList) {
 			f.loaded(con,obj);
 		}
@@ -369,7 +371,7 @@ public abstract class Table extends MObject {
 		}
 
 		for (Feature f : features)
-			f.fillObject(obj, con, ret);
+			f.preFillObject(obj, con, ret);
 
 		// fill object
 		for (Field f : fList) {
@@ -381,9 +383,13 @@ public abstract class Table extends MObject {
 		}
 		ret.close();
 
+		for (Feature f : features)
+			f.postFillObject(obj, con);
+		
 		for (FieldRelation f : relationList) {
 			f.loaded(con,obj);
 		}
+
 
 		return obj;
 	}

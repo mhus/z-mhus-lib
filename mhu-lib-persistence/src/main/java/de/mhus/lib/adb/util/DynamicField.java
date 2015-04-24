@@ -16,6 +16,7 @@ public class DynamicField implements DbDynamic.Field {
 	private Class<?> ret;
 	private ResourceNode attributes;
 	private boolean persistent = true;
+	private boolean readOnly;
 
 	public DynamicField() {}
 
@@ -74,6 +75,15 @@ public class DynamicField implements DbDynamic.Field {
 	@Override
 	public boolean isPersistent() {
 		return persistent ;
+	}
+
+	@Override
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+	
+	public void setReadOnly(boolean ro) {
+		this.readOnly = ro;
 	}
 
 }

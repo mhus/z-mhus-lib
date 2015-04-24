@@ -25,9 +25,11 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	private DbConnection con;
 	private String registryName;
 	private O object;
+	private O next;
 	private boolean recycle = false;
 	private boolean hasNext = true;
 	private boolean ownConnection;
+	private O current;
 
 	public DbCollection(DbManager manager, DbConnection con, boolean ownConnection, String registryName, O object, DbResult res) throws MException {
 
@@ -48,21 +50,37 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 		nextObject();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void nextObject() {
+		next = null;
 		if (!hasNext) return;
 		try {
 			while(true) {
 				try {
+					
 					hasNext = res.next();
-					if (hasNext)
-						manager.checkFillObject(registryName, object, con, res);
+					if (hasNext) {
+						O out = object;
+						if (!recycle) {
+							try {
+								out = (O)manager.getSchema().createObject(object instanceof Class<?> ? (Class<?>)object : object.getClass(),registryName,res,manager, true);
+							} catch (Throwable t) {
+								throw new MException(con,t);
+							}
+						}
+						manager.fillObject(registryName, out, con, res);
+						next = out;
+					} else {
+						next = null;
+					}
 					break;
-				} catch (MException ade) {
-					if (ade.getCause() == null || !(ade.getCause() instanceof AccessDeniedException) )
-						throw ade;
+					
+				} catch (AccessDeniedException ade) {
+					// next one
+				} catch (Throwable ade) {
+					throw ade;
 				}
 			}
-			// TODO check read access and maybe get next row
 		} catch (Exception e) {
 			log().w(e);
 			hasNext = false;
@@ -81,6 +99,9 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 		if (ownConnection)
 			con.close();
 		res = null;
+		next = null;
+		hasNext = false;
+		object = null;
 	}
 
 	/**
@@ -103,20 +124,8 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 		return hasNext;
 	}
 
-	@SuppressWarnings("unchecked")
-	public O getObject() throws MException {
-
-		O out = object;
-		if (!recycle) {
-			try {
-				out = (O)manager.getSchema().createObject(object instanceof Class<?> ? (Class<?>)object : object.getClass(),registryName,res,manager, true);
-			} catch (Throwable t) {
-				throw new MException(con,t);
-			}
-		}
-		if (out == null) return null; // for secure
-		manager.fillObject(registryName, out, con, res);
-		return out;
+	public O current() throws MException {
+		return current;
 	}
 
 	@Override
@@ -132,14 +141,9 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	@Override
 	public O next() {
 		if (!hasNext) throw new NoSuchElementException();
-		try {
-			O out = getObject();
-			nextObject();
-			return out;
-		} catch (MException e) {
-			log().w(e);
-		}
-		throw new NoSuchElementException();
+		current = next;
+		nextObject();
+		return current;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

@@ -28,7 +28,7 @@ public class FieldPersistent extends Field {
 	private String autoPrefix;
 
 	@SuppressWarnings("unchecked")
-	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
+	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, boolean readOnly, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
 		this.manager = manager;
 		this.table = table;
 		this.manager = table.manager;
@@ -40,6 +40,7 @@ public class FieldPersistent extends Field {
 		this.attribute = (PojoAttribute<Object>) attribute;
 		this.attr = attr2;
 		this.dynamicField = dynamicField;
+		this.readOnly = readOnly;
 		init(features);
 	}
 
