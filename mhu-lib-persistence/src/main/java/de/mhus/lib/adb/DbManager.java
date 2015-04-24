@@ -41,10 +41,6 @@ public class DbManager extends MJmx {
 
 	public static final String MANAGER_VERSION = "1.0";
 
-	public static final int R_READ = 0;
-	public static final int R_CREATE = 1;
-	public static final int R_UPDATE = 2;
-	public static final int R_DELETE = 3;
 	private static final long MAX_LOCK = 1000 * 60 * 10;
 
 	private DbSchema schema;

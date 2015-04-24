@@ -16,22 +16,22 @@ public class FeatureAccessManager extends Feature {
 	
 	@Override
 	public void postFillObject(Object obj, DbConnection con) throws Exception {
-		if (accessManager != null) accessManager.hasAccess(manager, table, con, obj, DbManager.R_READ);
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, obj, DbAccessManager.ACCESS.READ);
 	}
 	
 	@Override
 	public void preCreateObject(DbConnection con, Object object) throws Exception {
-		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_CREATE);
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbAccessManager.ACCESS.CREATE);
 	}
 
 	@Override
 	public void preSaveObject(DbConnection con, Object object) throws Exception {
-		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_UPDATE);
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbAccessManager.ACCESS.UPDATE);
 	}
 
 	@Override
 	public void deleteObject(DbConnection con, Object object) throws Exception {
-		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbManager.R_DELETE);
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbAccessManager.ACCESS.DELETE);
 	}
 
 }

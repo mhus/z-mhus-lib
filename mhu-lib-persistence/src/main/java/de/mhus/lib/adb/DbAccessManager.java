@@ -14,6 +14,7 @@ import de.mhus.lib.sql.DbResult;
 public abstract class DbAccessManager {
 
 	public static final String FEATURE_NAME = "accesscontrol";
+	public enum ACCESS {READ, CREATE, UPDATE, DELETE};
 
 	/**
 	 * Throws an Exception if the access is not allowed.
@@ -25,6 +26,6 @@ public abstract class DbAccessManager {
 	 * @param right
 	 * @throws AccessDeniedException
 	 */
-	public abstract void hasAccess(DbManager manager, Table c, DbConnection con, Object object, int right) throws AccessDeniedException;
+	public abstract void hasAccess(DbManager manager, Table c, DbConnection con, Object object, ACCESS right) throws AccessDeniedException;
 
 }

@@ -37,20 +37,20 @@ public class BookStoreSchema extends DbSchema {
 
 				@Override
 				public void hasAccess(DbManager manager, Table c,
-						DbConnection con, Object object, int right)
+						DbConnection con, Object object, DbAccessManager.ACCESS right )
 								throws AccessDeniedException {
 
 					Finances f = (Finances) object;
 
 					String conf = f.getConfidential();
 					if (conf != null) {
-						if (right == DbManager.R_UPDATE && conf.indexOf("write") >= 0 )
+						if (right == DbAccessManager.ACCESS.UPDATE && conf.indexOf("write") >= 0 )
 							throw new AccessDeniedException("access denied");
 
-						if (right == DbManager.R_DELETE && conf.indexOf("remove") >= 0 )
+						if (right == DbAccessManager.ACCESS.DELETE && conf.indexOf("remove") >= 0 )
 							throw new AccessDeniedException("access denied");
 						
-						if (right == DbManager.R_READ && conf.indexOf("read") >= 0 ) 
+						if (right == DbAccessManager.ACCESS.READ && conf.indexOf("read") >= 0 ) 
 							throw new AccessDeniedException("access denied");
 							
 					}
