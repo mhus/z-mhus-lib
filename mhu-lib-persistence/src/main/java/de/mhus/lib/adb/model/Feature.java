@@ -62,9 +62,4 @@ public abstract class Feature extends MObject {
 	public void postSaveObject(DbConnection con, Object object) throws Exception {
 	}
 
-	public void postFillObject(Object obj, DbConnection con, DbResult res) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

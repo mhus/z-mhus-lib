@@ -348,7 +348,7 @@ public abstract class Table extends MObject {
 		}
 
 		for (Feature f : features)
-			f.postFillObject(obj,con,res);
+			f.postFillObject(obj,con);
 		
 		for (FieldRelation f : relationList) {
 			f.loaded(con,obj);
