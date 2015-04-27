@@ -1003,6 +1003,7 @@ public class MString {
 	 * @return String, e.g. rep('*',4) returns "****"
 	 */
 	public static String rep(char c, int count) {
+		if (count <= 0) return "";
 		char[] s = new char[count];
 		for (int i = 0; i < count; i++) {
 			s[i] = c;
