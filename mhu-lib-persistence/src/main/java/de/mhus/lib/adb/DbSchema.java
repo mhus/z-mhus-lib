@@ -22,6 +22,7 @@ import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
+import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
 
 /**
@@ -373,6 +374,37 @@ public abstract class DbSchema extends MObject {
 	public void onFillObjectException(Table table, Object obj, DbResult res, Field f,
 			Throwable t) throws Throwable {
 		throw t;
+	}
+
+	/**
+	 * Return a default connection if no connection is given for the operation with the object. If you want to
+	 * work with transactions use this method to return a transaction bound connection. By default a new
+	 * connection from the pool are used. You may overwrite the commit() or rollback() methods.
+	 * 
+	 * @param pool
+	 * @return
+	 * @throws Exception
+	 */
+	public DbConnection getConnection(DbPool pool) throws Exception {
+		return pool.getConnection();
+	}
+
+	/**
+	 * Close the default connection given with getConnection().
+	 * 
+	 * @param con
+	 */
+	public void closeConnection(DbConnection con) {
+		con.close();
+	}
+
+	/**
+	 * Used to commit a default connection. See getConnection()
+	 * @param con
+	 * @throws Exception
+	 */
+	public void commitConnection(DbConnection con) throws Exception {
+		con.commit();
 	}
 
 }

@@ -97,7 +97,7 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 			log().w(e);
 		}
 		if (ownConnection)
-			con.close();
+			manager.getSchema().closeConnection(con);
 		res = null;
 		next = null;
 		hasNext = false;

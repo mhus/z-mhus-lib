@@ -200,7 +200,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 			} catch (Throwable t) {
 				throw new MException(con,query,attributes,t);
 			}
@@ -216,10 +216,6 @@ public class DbManager extends MJmx {
 			return new DbCollection<T>(this,con,myCon != null,registryName,clazz,res);
 		} catch (Throwable t) {
 			throw new MException(con,query,attributes,t);
-		} finally {
-			// do not close, it's used by the collection
-			//	if (myCon != null)
-			//		myCon.close();
 		}
 	}
 
@@ -241,7 +237,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 			} catch (Throwable t) {
 				throw new MException(con,query,attributes,t);
 			}
@@ -267,7 +263,7 @@ public class DbManager extends MJmx {
 			try {
 				if (res != null) res.close();
 				if (sth != null) sth.close();
-				if (myCon != null) myCon.close();
+				if (myCon != null) schema.closeConnection(myCon);
 			} catch (Throwable t) {
 				log().w(query,attributeName,t);
 			}
@@ -316,7 +312,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -332,11 +328,11 @@ public class DbManager extends MJmx {
 
 			if (myCon != null) {
 				try {
-					myCon.commit();
+					schema.commitConnection(myCon);
 				} catch (Throwable t) {
 					throw new MException(t);
 				}
-				myCon.close();
+				schema.closeConnection(myCon);
 			}
 
 			schema.doPostLoad(c, (Persistable) out, con, this);
@@ -379,7 +375,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -391,7 +387,13 @@ public class DbManager extends MJmx {
 			throw new MException("class definition not found in schema",registryName);
 
 		try {
-			return c.existsObject(con,keys);
+			boolean ret = c.existsObject(con,keys);
+			if (myCon != null) {
+				try {
+					schema.closeConnection(myCon);
+				} catch (Throwable t) {}
+			}
+			return ret;
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		}
@@ -452,7 +454,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -487,11 +489,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 	}
 
@@ -518,7 +520,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -553,11 +555,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 
 		return ret;
@@ -579,7 +581,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -608,11 +610,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 
 	}
@@ -643,7 +645,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -677,11 +679,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 	}
 
@@ -711,7 +713,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -740,11 +742,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 	}
 
@@ -774,7 +776,7 @@ public class DbManager extends MJmx {
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
-				myCon = pool.getConnection();
+				myCon = schema.getConnection(pool);
 				con = myCon;
 			} catch (Throwable t) {
 				throw new MException(t);
@@ -806,11 +808,11 @@ public class DbManager extends MJmx {
 
 		if (myCon != null) {
 			try {
-				myCon.commit();
+				schema.commitConnection(myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			myCon.close();
+			schema.closeConnection(myCon);
 		}
 
 	}
