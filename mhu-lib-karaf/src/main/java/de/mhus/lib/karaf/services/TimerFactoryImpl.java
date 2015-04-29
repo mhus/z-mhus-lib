@@ -86,11 +86,13 @@ public class TimerFactoryImpl implements TimerFactory {
 
 		private TimerTask task;
 		private Bundle bundle;
+		private long modified = 0;
 		private TimerWrap timer;
 		
 		public TimerTaskWrap(TimerWrap timer, TimerTask task) {
 			this.task = task;
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
+			this.modified = bundle.getLastModified();
 			this.timer = timer;
 			synchronized (timer) {
 				timer.tasks.add(this);
@@ -103,7 +105,7 @@ public class TimerFactoryImpl implements TimerFactory {
 //					cancel();
 //					return;
 //				}
-				if (bundle.getState() != Bundle.ACTIVE) {
+				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified) {
 					log.d("stop task",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 					cancel();
 					return;

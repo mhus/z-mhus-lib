@@ -61,7 +61,8 @@
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
                         	de.mhus.lib.annotations*;version=${project.version},
-                        	de.mhus.lib.errors*;version=${project.version}
+                        	de.mhus.lib.errors*;version=${project.version},
+                        	de.mhus.lib.basics*;version=${project.version}
                         	</Export-Package>
                         <Import-Package>*</Import-Package>
                     </instructions>
