@@ -325,21 +325,27 @@ public class DbManager extends MJmx {
 
 		try {
 			Object out = c.getObject(con,keys);
-
-			if (myCon != null) {
-				try {
-					schema.commitConnection(myCon);
-				} catch (Throwable t) {
-					throw new MException(t);
-				}
-				schema.closeConnection(myCon);
-			}
-
 			schema.doPostLoad(c, (Persistable) out, con, this);
-
 			return out;
+		} catch (AccessDeniedException e) {
+			return null;
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
+		} finally {
+			
+			try {
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {
+				log().w(t);
+			}
+			
 		}
 	}
 
@@ -388,14 +394,19 @@ public class DbManager extends MJmx {
 
 		try {
 			boolean ret = c.existsObject(con,keys);
-			if (myCon != null) {
-				try {
-					schema.closeConnection(myCon);
-				} catch (Throwable t) {}
-			}
 			return ret;
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
+		} finally {
+			try {
+				if (myCon != null) {
+					try {
+						schema.closeConnection(myCon);
+					} catch (Throwable t) {}
+				}
+			} catch (Throwable t) {		
+				log().w(t);
+			}
 		}
 	}
 
@@ -485,15 +496,19 @@ public class DbManager extends MJmx {
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
-		}
-
-		if (myCon != null) {
+		} finally {
 			try {
-				schema.commitConnection(myCon);
-			} catch (Throwable t) {
-				throw new MException(t);
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
 			}
-			schema.closeConnection(myCon);
 		}
 	}
 
@@ -551,16 +566,21 @@ public class DbManager extends MJmx {
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
+		} finally {
+			try {
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
+			}
 		}
 
-		if (myCon != null) {
-			try {
-				schema.commitConnection(myCon);
-			} catch (Throwable t) {
-				throw new MException(t);
-			}
-			schema.closeConnection(myCon);
-		}
 
 		return ret;
 	}
@@ -675,16 +695,21 @@ public class DbManager extends MJmx {
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
+		} finally {
+			try {
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
+			}
 		}
 
-		if (myCon != null) {
-			try {
-				schema.commitConnection(myCon);
-			} catch (Throwable t) {
-				throw new MException(t);
-			}
-			schema.closeConnection(myCon);
-		}
 	}
 
 	public void saveObject(Object object) throws MException {
@@ -738,15 +763,19 @@ public class DbManager extends MJmx {
 			c.saveObject(con,object);
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
-		}
-
-		if (myCon != null) {
+		} finally {
 			try {
-				schema.commitConnection(myCon);
-			} catch (Throwable t) {
-				throw new MException(t);
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
 			}
-			schema.closeConnection(myCon);
 		}
 	}
 
@@ -804,17 +833,21 @@ public class DbManager extends MJmx {
 
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
-		}
+		} finally {
 
-		if (myCon != null) {
 			try {
-				schema.commitConnection(myCon);
-			} catch (Throwable t) {
-				throw new MException(t);
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
 			}
-			schema.closeConnection(myCon);
 		}
-
 	}
 
 	public boolean isConnected() {

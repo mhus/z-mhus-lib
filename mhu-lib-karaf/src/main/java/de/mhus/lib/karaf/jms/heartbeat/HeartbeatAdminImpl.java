@@ -8,8 +8,10 @@ import org.osgi.service.component.ComponentContext;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
+import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
+import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.jms.JmsManagerService;
@@ -25,7 +27,17 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 
 	@Activate
 	public void doActivate(ComponentContext ctx) {
-		timer = MOsgi.getTimer();
+	}
+	
+	protected void doTimerTask() {
+		if (!enabled) return;
+		sendHeartbeat();
+	}
+
+	@Reference(service=TimerFactory.class)
+	public void setTimerFactory(TimerFactory factory) {
+		log().i("create timer");
+		timer = factory.getTimer();
 		timerTask = new MTimerTask() {
 			
 			@Override
@@ -36,11 +48,6 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 		timer.schedule(timerTask, 10000, 60000 * 5);
 	}
 	
-	protected void doTimerTask() {
-		if (!enabled) return;
-		sendHeartbeat();
-	}
-
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
 		timerTask.cancel();

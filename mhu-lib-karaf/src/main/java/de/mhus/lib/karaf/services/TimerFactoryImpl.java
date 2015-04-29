@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.component.ComponentContext;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
@@ -27,13 +28,15 @@ public class TimerFactoryImpl implements TimerFactory {
 	}
 	
 	@Deactivate
-	void doDeactivate() {
+	void doDeactivate(ComponentContext ctx) {
+		log.i("cancel common timer");
 		myTimer.cancel();
 		myTimer = null;
 	}
 
 	@Activate
-	void doActivate() {
+	void doActivate(ComponentContext ctx) {
+		log.i("start common timer");
 		myTimer = new Timer("de.mhus.lib.karaf.Timer", true);
 	}
 

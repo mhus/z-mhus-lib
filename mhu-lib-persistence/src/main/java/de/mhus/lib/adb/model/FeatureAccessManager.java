@@ -34,4 +34,9 @@ public class FeatureAccessManager extends Feature {
 		if (accessManager != null) accessManager.hasAccess(manager, table, con, object, DbAccessManager.ACCESS.DELETE);
 	}
 
+	@Override
+	public void postGetObject(DbConnection con, Object obj) throws Exception {
+		if (accessManager != null) accessManager.hasAccess(manager, table, con, obj, DbAccessManager.ACCESS.READ);
+	}
+
 }

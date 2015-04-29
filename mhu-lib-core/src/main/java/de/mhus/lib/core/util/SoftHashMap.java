@@ -72,6 +72,7 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		periodicCleanup();
 		synchronized (map) {
 			SoftReference<V> s = map.get(key);
+			if (s == null) return null;
 			V v = s.get();
 			if (v == null) {
 				map.remove(key);
