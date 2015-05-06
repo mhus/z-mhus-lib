@@ -173,4 +173,10 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 		}
 	}
 
+	public boolean skip(int cnt) { // TODO optimize, do not fully load objects
+		for (int i = 0; i < cnt && hasNext(); i++)
+			next();
+		return hasNext();
+	}
+	
 }

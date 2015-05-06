@@ -15,10 +15,16 @@ import de.mhus.lib.adb.model.FieldVirtual;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.model.TableAnnotations;
 import de.mhus.lib.adb.model.TableDynamic;
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.pojo.PojoModel;
+import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
@@ -49,6 +55,11 @@ public abstract class DbSchema extends MObject {
 		objectTypes = null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public PojoModel getPojoModel(Class<?> clazz) {
+		return new PojoParser().parse(clazz, "_", new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(new DefaultFilter(true,false,true,false,true)).getModel();
+	}
+
 	/**
 	 * This should be called after the manager is created.
 	 * 

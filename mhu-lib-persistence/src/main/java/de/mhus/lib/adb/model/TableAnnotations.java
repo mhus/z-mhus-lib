@@ -13,15 +13,10 @@ import de.mhus.lib.core.pojo.PojoParser;
 
 public class TableAnnotations extends Table {
 
-	@SuppressWarnings("unchecked")
-	protected PojoModel getPojoModel() {
-		return new PojoParser().parse(clazz, "_", new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(new DefaultFilter(true,false,true,false,true)).getModel();
-	}
-
 	@Override
 	protected void parseFields() throws Exception {
 
-		PojoModel model = getPojoModel();
+		PojoModel model = manager.getSchema().getPojoModel(clazz);
 
 		for (PojoAttribute<?> attribute : model) {
 			String mName = attribute.getName();

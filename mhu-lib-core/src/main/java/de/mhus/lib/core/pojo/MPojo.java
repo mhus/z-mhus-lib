@@ -8,8 +8,12 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.Element;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.util.Base64;
 
 public class MPojo {
+
+	private static final String MAGIC = "\n\t\t\r[[";
 
 	private static PojoModel createModel(Object from) {
 		PojoModel model = new PojoParser().parse(from,"_",null).filter(new DefaultFilter(true, false, false, false, true) ).getModel();
@@ -110,15 +114,35 @@ public class MPojo {
 				to.setAttribute(name, MCast.toString((int)value));
 			else
 			if (value instanceof String)
-				to.setAttribute(name, (String)value);
+				to.setAttribute(name, toAttribute( (String)value) );
 			else
 			if (value.getClass().isEnum()) {
 				to.setAttribute(name, MCast.toString( ((Enum<?>)value).ordinal() ) );
 				//to.setAttribute(name + "_", ((Enum<?>)value).name());
 			}
 			else
-				to.setAttribute(attr.getName(), MCast.toString(value));
+				to.setAttribute(attr.getName(), toAttribute( MCast.toString(value)) );
 		}
+	}
+
+	private static String fromAttribute(String value) {
+		if (value == null) return null;
+		if (value.equals(MAGIC + "null")) return null;
+		if (value.startsWith(MAGIC)) {
+			new String( Base64.decode( value.substring(MAGIC.length()) ) );
+		}
+		return value;
+	}
+	private static String toAttribute(String value) {
+		if (value == null) return MAGIC + "null";
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			if (c == '\n' || c == '\r' || c == '\t' || c >= 32 && c <= 55295 ) {
+			} else {
+				return MAGIC + Base64.encode(value);
+			}
+		}
+		return value;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -144,7 +168,7 @@ public class MPojo {
 					attr.set(to, value);
 				else
 				if (type == String.class)
-					attr.set(to, value);
+					attr.set(to, fromAttribute( value ) );
 				else
 				if (type == UUID.class)
 					try {
@@ -161,11 +185,46 @@ public class MPojo {
 					attr.set(to, c );
 				}
 				else
-					attr.set(to, value);
+					attr.set(to, fromAttribute( value ) );
 			} catch (Throwable t) {
 				System.out.println("ERROR " + name);
 				t.printStackTrace();
 			}
 		}
 	}
+	
+	/**
+	 * Functionize a String. Remove bad names and set first characters to upper. Return def if the name
+	 * can't be created, e.g. only numbers.
+	 * 
+	 * @param in
+	 * @param firstUpper 
+	 * @param def
+	 * @return
+	 */
+	public static String toFunctionName(String in, boolean firstUpper,String def) {
+		if (MString.isEmpty(in)) return def;
+		boolean first = firstUpper;
+		StringBuffer out = new StringBuffer();
+		for (int i = 0; i < in.length(); i++) {
+			char c = in.charAt(i);
+			if (c >= 'a' && c <= 'z' || c >='A' && c <='Z' || c == '_') {
+				if (first)
+					c = Character.toUpperCase(c);
+				first = false;
+				out.append(c);
+			} else
+			if (!first && c >='0' && c <= '9') {
+				out.append(c);
+			} else {
+				first = true;
+			}
+		}
+		
+		if (out.length() == 0) return def;
+		return out.toString();
+	}
+	
+	
+	
 }

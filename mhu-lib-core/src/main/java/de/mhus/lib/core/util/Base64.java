@@ -177,4 +177,9 @@ public class Base64 {
 		return c != '=' ? -1 : 0;
 	}
 
+	public static String encode(String value) {
+		if (value == null) return "";
+		return encode(value.getBytes());
+	}
+
 }

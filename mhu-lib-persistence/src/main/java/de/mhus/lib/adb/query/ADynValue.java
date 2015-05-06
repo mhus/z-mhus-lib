@@ -27,5 +27,9 @@ public class ADynValue extends AAttribute {
 	public void getAttributes(AttributeMap map) {
 		map.put(name, value);
 	}
+	
+	public Object getValue() {
+		return value;
+	}
 
 }

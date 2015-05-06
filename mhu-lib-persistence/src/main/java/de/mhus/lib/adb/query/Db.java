@@ -1,5 +1,10 @@
 package de.mhus.lib.adb.query;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
+import de.mhus.lib.core.parser.AttributeMap;
+
 public class Db {
 
 	public static <T> AQuery<T> query(Class<T> type) {
@@ -34,6 +39,10 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LIKE,left,right);
 	}
 
+	public static APart contains(AAttribute left, AAttribute right) {
+		return new ACompare(ACompare.TYPE.LIKE,left, new AContainsWrap( right ) );
+	}
+	
 	public static APart in(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.IN,left,right);
 	}
@@ -124,6 +133,31 @@ public class Db {
 
 	public static AOperation limit(int limit) {
 		return new ALimit(limit);
+	}
+	
+	private static class AContainsWrap extends AAttribute {
+
+		private AAttribute attr;
+
+		public AContainsWrap(AAttribute attr) {
+			this.attr = attr;
+		}
+
+		@Override
+		public void print(AQuery<?> query, StringBuffer buffer) {
+			attr.print(query, buffer);
+		}
+
+		@Override
+		public void getAttributes(AttributeMap map) {
+			AttributeMap map2 = new AttributeMap();
+			attr.getAttributes(map2);
+			
+			for (Entry<String, Object> entry : map2.entrySet())
+				map.put(entry.getKey(), "%" + entry.getValue() + "%" );
+			
+		}
+		
 	}
 
 }
