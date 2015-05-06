@@ -21,6 +21,9 @@ public class DbManagerAdminImpl implements DbManagerAdmin {
 
 	private BundleContext context;
 	
+	public DbManagerAdminImpl() {
+		
+	}
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 		context = ctx.getBundleContext();
