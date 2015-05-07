@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.Map.Entry;
 
 import javax.jms.JMSException;
+import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import de.mhus.lib.core.IProperties;
@@ -19,34 +20,6 @@ public class MJms {
 	}
 
 	public static void setProperty(String name, Object value, Message msg) throws JMSException {
-		if (name == null || value == null || msg == null) return;
-
-		if (value instanceof String) {
-			msg.setStringProperty(name, (String)value);
-		} else
-		if (value instanceof Boolean) {
-			msg.setBooleanProperty(name, (Boolean)value);
-		} else
-		if (value instanceof Integer) {
-			msg.setIntProperty(name, (Integer)value);
-		} else
-			msg.setObjectProperty(name, value);
-		//TODO ...
-	}
-
-	public static IProperties getProperties(Message msg) throws JMSException {
-		MProperties out = new MProperties();
-		if (msg == null) return out;
-		@SuppressWarnings("unchecked")
-		Enumeration<String> enu = msg.getPropertyNames();
-		while (enu.hasMoreElements()) {
-			String name = enu.nextElement();
-			out.setProperty( name, msg.getObjectProperty(name) );
-		}
-		return out;
-	}
-
-	public static void setMessageProperty(Message msg, String name, Object value) throws JMSException {
 		if (value == null || msg == null || name == null) return;
 		if (value instanceof String)
 			msg.setStringProperty(name, (String)value);
@@ -73,6 +46,66 @@ public class MJms {
 			msg.setShortProperty(name, (Short)value);
 		else
 			msg.setObjectProperty(name, value);
+	}
+
+	public static IProperties getProperties(Message msg) throws JMSException {
+		MProperties out = new MProperties();
+		if (msg == null) return out;
+		@SuppressWarnings("unchecked")
+		Enumeration<String> enu = msg.getPropertyNames();
+		while (enu.hasMoreElements()) {
+			String name = enu.nextElement();
+			out.setProperty( name, msg.getObjectProperty(name) );
+		}
+		return out;
+	}
+	
+	public static void setMapProperties(IProperties prop, MapMessage msg) throws JMSException {
+		if (prop == null || msg == null) return;
+		for (Entry<String, Object> item : prop) {
+			setMapProperty(item.getKey(),item.getValue(),msg);
+		}
+	}
+
+	public static void setMapProperty(String name, Object value, MapMessage msg) throws JMSException {
+		if (value == null || msg == null || name == null) return;
+		if (value instanceof String)
+			msg.setString(name, (String)value);
+		else
+		if (value instanceof Boolean)
+			msg.setBoolean(name, (Boolean)value);
+		else
+		if (value instanceof Integer)
+			msg.setInt(name, (Integer)value);
+		else
+		if (value instanceof Long)
+			msg.setLong(name, (Long)value);
+		else
+		if (value instanceof Double)
+			msg.setDouble(name, (Double)value);
+		else
+		if (value instanceof Byte)
+			msg.setByte(name, (Byte)value);
+		else
+		if (value instanceof Float)
+			msg.setFloat(name, (Float)value);
+		else
+		if (value instanceof Short)
+			msg.setShort(name, (Short)value);
+		else
+			msg.setObject(name, value);
+	}
+
+	public static IProperties getMapProperties(MapMessage msg) throws JMSException {
+		MProperties out = new MProperties();
+		if (msg == null) return out;
+		@SuppressWarnings("unchecked")
+		Enumeration<String> enu = msg.getMapNames();
+		while (enu.hasMoreElements()) {
+			String name = enu.nextElement();
+			out.setProperty( name, msg.getObject(name) );
+		}
+		return out;
 	}
 	
 }

@@ -6,7 +6,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmText extends FmElement {
 
-	public FmText(String name, IDefAttribute ... definitions) throws MException {
+	public FmText(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type", "text");
 	}

@@ -6,7 +6,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmElement extends DefComponent {
 
-	public FmElement(String name, IDefAttribute ... definitions) throws MException {
+	public FmElement(String name, IDefAttribute ... definitions) {
 		super("element", definitions);
 		setString("name", name);
 	}

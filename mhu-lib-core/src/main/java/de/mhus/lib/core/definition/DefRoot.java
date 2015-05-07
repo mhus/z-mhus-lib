@@ -13,10 +13,10 @@ public class DefRoot extends DefComponent {
 
 	public static final String ROOT = "root";
 
-	public DefRoot(IDefDefinition ... definitions) throws MException {
+	public DefRoot(IDefDefinition ... definitions) {
 		this(ROOT,definitions);
 	}
-	public DefRoot(String name, IDefDefinition ... definitions) throws MException {
+	public DefRoot(String name, IDefDefinition ... definitions) {
 		super(name, definitions);
 		setString("columns", "8");
 	}

@@ -6,7 +6,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmSplit extends DefComponent {
 
-	public FmSplit(IDefDefinition[] definitions) throws MException {
+	public FmSplit(IDefDefinition[] definitions) {
 		super("split", definitions);
 	}
 

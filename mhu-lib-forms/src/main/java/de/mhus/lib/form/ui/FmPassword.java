@@ -6,7 +6,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmPassword extends FmElement {
 
-	public FmPassword(String name, IDefAttribute ... definitions) throws MException {
+	public FmPassword(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type", "password");
 	}

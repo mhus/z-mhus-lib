@@ -6,12 +6,13 @@ public class SynchronizedExecuteStrategy extends ExecuteStrategy {
 	private Operation executable;
 	
 	@Override
-	public void doExecute(TaskContext context) throws Exception {
+	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		synchronized (this) {
-			if (executable == null) return;
+			if (executable == null) return new NotSuccessful(this, "executable not found");
 			executable.setBusy(this);
-			executable.doExecute(context);
+			OperationResult out = executable.doExecute(context);
 			executable.releaseBusy(this);
+			return out;
 		}
 		
 	}
@@ -26,4 +27,16 @@ public class SynchronizedExecuteStrategy extends ExecuteStrategy {
 		this.executable = executable;
 	}
 	
+	@Override
+	public OperationDescription getDescription() {
+		if (executable == null) return null;
+		return executable.getDescription();
+	}
+
+	@Override
+	public boolean canExecute(TaskContext context) {
+		if (executable == null) return false;
+		return executable.canExecute(context);
+	}
+
 }

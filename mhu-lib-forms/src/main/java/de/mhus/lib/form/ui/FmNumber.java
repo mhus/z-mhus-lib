@@ -8,7 +8,7 @@ public class FmNumber extends FmElement {
 	public enum TYPE {INTEGER,LONG,FLOAT,DOUBLE}
 	public enum FORMAT {PERCENTAGE,CURRENCY}
 
-	public FmNumber(String name, TYPE type, IDefAttribute ... definitions) throws MException {
+	public FmNumber(String name, TYPE type, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type","number");
 		setString("number",type.name().toLowerCase());

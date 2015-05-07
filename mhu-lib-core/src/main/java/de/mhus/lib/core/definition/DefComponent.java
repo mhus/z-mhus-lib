@@ -12,7 +12,7 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 	private String tag;
 	private LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
 
-	public DefComponent(String tag, IDefDefinition ... definitions) throws MException {
+	public DefComponent(String tag, IDefDefinition ... definitions) {
 		super(tag,null);
 		this.tag = tag;
 		addDefinition(definitions);

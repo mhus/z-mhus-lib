@@ -6,6 +6,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
+import javax.jms.Queue;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -55,8 +56,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	public synchronized void openAnswer() throws JMSException {
 		if (replyProducer == null || getSession() == null) {
 			open();
-	        replyProducer = dest.getConnection().getSession().createProducer(null);
-	        replyProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+	        replyProducer = dest.getSession().createProducer(null);
 		}
 	}
 	
@@ -83,7 +83,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			interceptorOut.prepare(answer);
 		answer.setJMSMessageID(createMessageId());
 		answer.setJMSCorrelationID(msg.getJMSCorrelationID());
-        replyProducer.send(msg.getJMSReplyTo(), answer);
+        replyProducer.send(msg.getJMSReplyTo(), answer, deliveryMode, getPriority(), getTimeToLive());
 	}
 
 	@Override

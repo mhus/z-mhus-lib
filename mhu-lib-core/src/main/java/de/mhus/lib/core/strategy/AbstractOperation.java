@@ -1,8 +1,18 @@
 package de.mhus.lib.core.strategy;
 
-public abstract class AbstractOperation implements Operation {
+import de.mhus.lib.core.MLog;
+
+public abstract class AbstractOperation extends MLog implements Operation {
 
 	private Object owner;
+
+	@Override
+	public final OperationResult doExecute(TaskContext context) throws Exception {
+		if (!canExecute(context)) return new NotSuccessful(this, "can't execute");
+		return doExecute2(context);
+	}
+	
+	protected abstract OperationResult doExecute2(TaskContext context) throws Exception;
 
 	@Override
 	public boolean isBusy() {

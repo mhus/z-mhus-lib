@@ -6,7 +6,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmOverlay extends DefComponent {
 
-	public FmOverlay(IDefDefinition[] definitions) throws MException {
+	public FmOverlay(IDefDefinition[] definitions) {
 		super("overlay", definitions);
 	}
 

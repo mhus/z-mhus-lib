@@ -6,7 +6,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmCombobox extends FmElement {
 
-	public FmCombobox(String name, IDefAttribute ... definitions) throws MException {
+	public FmCombobox(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type", "combobox");
 	}

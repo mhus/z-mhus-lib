@@ -6,7 +6,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmComponent extends DefComponent {
 
-	public FmComponent(IDefDefinition ... definitions) throws MException {
+	public FmComponent(IDefDefinition ... definitions) {
 		super("component", definitions);
 	}
 

@@ -7,7 +7,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmInformation extends FmElement {
 
-	public FmInformation(IDefAttribute ... definitions) throws MException {
+	public FmInformation(IDefAttribute ... definitions) {
 		super(DataSource.NAME_INFORMATION, definitions);
 		setString("type", "information");
 		setString("fullwidth", "true");

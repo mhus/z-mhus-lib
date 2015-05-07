@@ -12,7 +12,6 @@ import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.logging.Log;
 
 public class ClientJms extends JmsChannel implements MessageListener {
 
@@ -115,7 +114,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		addAllowedId(id);
 		try {
 			log().t("sendJmsBroadcast",msg);
-			producer.send(msg);
+			producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
 	
 			long start = System.currentTimeMillis();
 			LinkedList<Message> res = new LinkedList<>();
@@ -239,4 +238,24 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		this.interceptorIn = interceptorIn;
 	}
 
+	public long getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+
+	public long getWarnTimeout() {
+		return warnTimeout;
+	}
+
+	public void setWarnTimeout(long warnTimeout) {
+		this.warnTimeout = warnTimeout;
+	}
+
+//	public MessageProducer getProducer() {
+//		return producer;
+//	}
+		
 }

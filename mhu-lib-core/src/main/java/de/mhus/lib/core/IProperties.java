@@ -2,6 +2,7 @@ package de.mhus.lib.core;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -229,7 +230,15 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 	public Iterator<Map.Entry<String, Object>> iterator() {
 		return new IPIterator();
 	}
-	
+
+	public Map<String, Object> toMap() {
+		Map<String, Object> out = new HashMap<>();
+		for (Map.Entry<String, Object> entry : this) {
+			out.put(entry.getKey(), entry.getValue());
+		}
+		return out;
+	}
+
 	private class IPIterator implements Iterator<Map.Entry<String, Object>> {
 
 		private Iterator<String> keys;

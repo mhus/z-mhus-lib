@@ -6,7 +6,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmCheckbox extends FmElement {
 
-	public FmCheckbox(String name, IDefAttribute ... definitions) throws MException {
+	public FmCheckbox(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type","checkbox");
 	}

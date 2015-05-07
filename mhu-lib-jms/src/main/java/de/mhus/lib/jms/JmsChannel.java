@@ -2,11 +2,15 @@ package de.mhus.lib.jms;
 
 import java.util.UUID;
 
+import javax.jms.DeliveryMode;
 import javax.jms.Session;
 
 public abstract class JmsChannel extends JmsObject {
 
 	protected JmsDestination dest;
+	protected int deliveryMode = DeliveryMode.NON_PERSISTENT;
+	protected int priority = 0; // default
+	protected long timeToLive = 60 * 60 * 1000; // TODO check this !!!
 
 	public JmsChannel(String destination, boolean destinationTopic) {
 		dest = new JmsDestination(destination, destinationTopic);
@@ -51,6 +55,30 @@ public abstract class JmsChannel extends JmsObject {
 	public void reset(JmsDestination dest) {
 		this.dest = dest;
 		reset();
+	}
+
+	public boolean isDeliveryModePersistent() {
+		return deliveryMode == DeliveryMode.PERSISTENT;
+	}
+
+	public void setDeliveryModePersistent(boolean persistent) {
+		this.deliveryMode = persistent ? DeliveryMode.PERSISTENT : DeliveryMode.NON_PERSISTENT;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public long getTimeToLive() {
+		return timeToLive;
+	}
+
+	public void setTimeToLive(long timeToLive) {
+		this.timeToLive = timeToLive;
 	}
 
 }

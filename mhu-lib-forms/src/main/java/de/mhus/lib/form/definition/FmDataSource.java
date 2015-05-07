@@ -4,7 +4,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmDataSource extends FmSource {
 
-	public FmDataSource(String name) throws MException {
+	public FmDataSource(String name) {
 		super("data", name);
 	}
 

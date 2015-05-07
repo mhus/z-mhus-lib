@@ -6,7 +6,7 @@ import de.mhus.lib.form.definition.FmElement;
 
 public class FmDate extends FmElement {
 
-	public FmDate(String name, IDefAttribute ... definitions) throws MException {
+	public FmDate(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type", "date");
 	}

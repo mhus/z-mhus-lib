@@ -5,14 +5,15 @@ public class SkipExecuteStrategy extends ExecuteStrategy {
 	private Operation executable;
 	
 	@Override
-	public void doExecute(TaskContext context) throws Exception {
+	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		synchronized (this) {
-			if (executable == null) return;
-			if (executable.isBusy()) return;
+			if (executable == null) return new NotSuccessful(this, "executable not found");
+			if (executable.isBusy()) return new NotSuccessful(this, "skip");
 
 			executable.setBusy(this);
-			executable.doExecute(context);
+			OperationResult out = executable.doExecute(context);
 			executable.releaseBusy(this);
+			return out;
 		}
 	}
 
@@ -24,6 +25,18 @@ public class SkipExecuteStrategy extends ExecuteStrategy {
 	@Override
 	public void setExecutable(Operation executable) {
 		this.executable = executable;
+	}
+
+	@Override
+	public OperationDescription getDescription() {
+		if (executable == null) return null;
+		return executable.getDescription();
+	}
+
+	@Override
+	public boolean canExecute(TaskContext context) {
+		if (executable == null) return false;
+		return executable.canExecute(context);
 	}
 	
 }

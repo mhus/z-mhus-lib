@@ -9,7 +9,7 @@ public class FmSource extends HashConfig implements IDefAttribute {
 
 	private String tag;
 
-	public FmSource(String tag, String name) throws MException {
+	public FmSource(String tag, String name) {
 		super(tag, null);
 		this.tag = tag;
 		setString("name", name);
