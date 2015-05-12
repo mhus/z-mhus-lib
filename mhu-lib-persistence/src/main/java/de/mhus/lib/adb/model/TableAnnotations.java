@@ -16,7 +16,7 @@ public class TableAnnotations extends Table {
 	@Override
 	protected void parseFields() throws Exception {
 
-		PojoModel model = manager.getSchema().getPojoModel(clazz);
+		PojoModel model = manager.getSchema().createPojoModel(clazz);
 
 		for (PojoAttribute<?> attribute : model) {
 			String mName = attribute.getName();

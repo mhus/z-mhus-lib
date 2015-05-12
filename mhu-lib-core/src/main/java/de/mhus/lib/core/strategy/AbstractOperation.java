@@ -8,7 +8,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
-		if (!canExecute(context)) return new NotSuccessful(this, "can't execute");
+		if (!canExecute(context)) return new NotSuccessful(this, "can't execute", OperationResult.NOT_EXECUTABLE);
 		return doExecute2(context);
 	}
 	

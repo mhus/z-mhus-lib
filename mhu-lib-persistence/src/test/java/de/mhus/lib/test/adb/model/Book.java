@@ -114,6 +114,10 @@ public class Book implements DbObject {
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public DbManager getDbManager() {
+		return manager;
+	}
 
 
 

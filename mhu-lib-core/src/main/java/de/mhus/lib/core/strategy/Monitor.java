@@ -10,8 +10,8 @@ public interface Monitor {
 	
 	Log log();
 
-	void setEstimatedSteps(long steps);
-	void setCurrentStep(long step);
+	void setSteps(long steps);
+	void setStep(long step);
 	void incrementStep();
 		
 }

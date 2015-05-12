@@ -55,12 +55,12 @@ public class PrintWriterTaskContext implements TaskContext {
 	}
 
 	@Override
-	public void setEstimatedSteps(long steps) {
+	public void setSteps(long steps) {
 		estimated = steps;
 	}
 
 	@Override
-	public void setCurrentStep(long step) {
+	public void setStep(long step) {
 		this.step = step;
 	}
 
@@ -80,7 +80,7 @@ public class PrintWriterTaskContext implements TaskContext {
 	}
 
 	@Override
-	public MProperties getAttributes() {
+	public MProperties getParameters() {
 		return attributes;
 	}
 

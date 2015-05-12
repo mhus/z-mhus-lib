@@ -84,6 +84,10 @@ public class DbManager extends MJmx {
 		initDatabase(cleanup);
 	}
 
+	public <T> T getObjectByQualification(AQuery<T> qualification) throws MException {
+		return getByQualification(qualification).getNextAndClose();
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> DbCollection<T> getByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
 		return (DbCollection<T>) getByQualification(null, (Object)clazz, null, qualification, attributes);

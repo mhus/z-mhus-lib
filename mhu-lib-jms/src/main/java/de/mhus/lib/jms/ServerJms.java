@@ -7,7 +7,9 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
+import javax.jms.TextMessage;
 
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log;
 
 
@@ -23,6 +25,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	private JmsInterceptor interceptorIn;
 
 	private JmsInterceptor interceptorOut;
+
+	private boolean fork = true;
 	
 	@Override
 	public synchronized void open() throws JMSException {
@@ -78,7 +82,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	protected void sendAnswer(Message msg, Message answer) throws JMSException {
 		openAnswer();
-		if (answer == null) answer = getSession().createTextMessage(null); // other side is waiting for an answer - send a null text
+		if (answer == null) answer = createErrorAnswer(null); // other side is waiting for an answer - send a null text
 		if (interceptorOut != null)
 			interceptorOut.prepare(answer);
 		answer.setJMSMessageID(createMessageId());
@@ -87,17 +91,57 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	}
 
 	@Override
-	public void onMessage(Message message) {
+	public void onMessage(final Message message) {
 		
-		if (interceptorIn != null) {
-			interceptorIn.begin(message);
+		if (fork) {
+			new MThread(
+					new Runnable() {
+						
+						@Override
+						public void run() {
+							processMessage(message);
+						}
+					}
+					).start();
+		} else
+			processMessage(message);
+			
+	}
+	
+	public void processMessage(final Message message) {
+
+		log().t("received",message);
+		
+		try {
+			if (interceptorIn != null) {
+				interceptorIn.begin(message);
+			}
+		} catch (Throwable t) {
+			log().w(t);
+			try {
+				if (message.getJMSReplyTo() != null) {
+					TextMessage answer = createErrorAnswer(t);
+					log().t("errorAnswer",answer);
+					sendAnswer(message, answer);
+				}
+			} catch (Throwable tt) {
+				log().w(tt);
+			}
+			return;
 		}
 		
 		try {
 			if (message.getJMSReplyTo() != null) {
-				log().t("received",message);
-				Message answer = received(message);
-				log().t("receivedAnswer",message);
+				Message answer = null;
+				try {
+					answer = received(message);
+				} catch (JMSException t) {
+					throw t;
+				} catch(Throwable t) {
+					log().i(t);
+					answer = createErrorAnswer(t);
+				}
+				log().t("receivedAnswer",answer);
 				sendAnswer(message, answer);
 			} else {
 				log().t("receivedOneWay",message);
@@ -113,6 +157,13 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 				interceptorIn.end(message);
 			}
 		}
+	}
+
+	protected TextMessage createErrorAnswer(Throwable t) throws JMSException {
+		TextMessage ret = getSession().createTextMessage(null);
+		if (t != null)
+			ret.setStringProperty("_error", t.toString());
+		return ret;
 	}
 
 	@Override
@@ -159,6 +210,14 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	public void setInterceptorOut(JmsInterceptor interceptorOut) {
 		this.interceptorOut = interceptorOut;
+	}
+
+	public boolean isFork() {
+		return fork;
+	}
+
+	public void setFork(boolean fork) {
+		this.fork = fork;
 	}
 
 }

@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
@@ -145,7 +144,7 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object clone() {
 		cleanup();

@@ -15,18 +15,25 @@ import de.mhus.lib.adb.model.FieldVirtual;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.model.TableAnnotations;
 import de.mhus.lib.adb.model.TableDynamic;
+import de.mhus.lib.adb.transaction.DbLockObject;
+import de.mhus.lib.adb.transaction.Transaction;
+import de.mhus.lib.adb.transaction.LockStrategy;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
+import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.TimeoutRuntimeException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
@@ -38,13 +45,15 @@ import de.mhus.lib.sql.DbResult;
  * @author mikehummel
  *
  */
-public abstract class DbSchema extends MObject {
+public abstract class DbSchema extends MObject implements PojoModelFactory {
 
 
-	public abstract void findObjectTypes(List<Class<? extends Persistable>> list);
 	protected String tablePrefix = "";
 	private LinkedList<Class<? extends Persistable>> objectTypes;
+	protected LockStrategy lockStrategy; // set this object to enable locking
 
+	public abstract void findObjectTypes(List<Class<? extends Persistable>> list);
+	
 	@SuppressWarnings("unchecked")
 	public final Class<? extends Persistable>[] getObjectTypes() {
 		initObjectTypes();
@@ -56,7 +65,7 @@ public abstract class DbSchema extends MObject {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public PojoModel getPojoModel(Class<?> clazz) {
+	public PojoModel createPojoModel(Class<?> clazz) {
 		return new PojoParser().parse(clazz, "_", new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(new DefaultFilter(true,false,true,false,true)).getModel();
 	}
 
@@ -416,6 +425,10 @@ public abstract class DbSchema extends MObject {
 	 */
 	public void commitConnection(DbConnection con) throws Exception {
 		con.commit();
+	}
+
+	public LockStrategy getLockStrategy() {
+		return lockStrategy;
 	}
 
 }

@@ -13,9 +13,13 @@ import de.mhus.lib.core.MProperties;
 public class MJms {
 
 	public static void setProperties(IProperties prop, Message msg) throws JMSException {
+		setProperties("",prop, msg);
+	}
+	
+	public static void setProperties(String prefix, IProperties prop, Message msg) throws JMSException {
 		if (prop == null || msg == null) return;
 		for (Entry<String, Object> item : prop) {
-			setProperty(item.getKey(),item.getValue(),msg);
+			setProperty(prefix + item.getKey(),item.getValue(),msg);
 		}
 	}
 
@@ -61,9 +65,13 @@ public class MJms {
 	}
 	
 	public static void setMapProperties(IProperties prop, MapMessage msg) throws JMSException {
+		setMapProperties("", prop, msg);
+	}
+	
+	public static void setMapProperties(String prefix, IProperties prop, MapMessage msg) throws JMSException {
 		if (prop == null || msg == null) return;
 		for (Entry<String, Object> item : prop) {
-			setMapProperty(item.getKey(),item.getValue(),msg);
+			setMapProperty(prefix + item.getKey(),item.getValue(),msg);
 		}
 	}
 

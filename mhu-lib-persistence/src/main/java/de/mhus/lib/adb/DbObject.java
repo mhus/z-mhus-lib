@@ -26,4 +26,5 @@ public interface DbObject extends Persistable {
 
 	boolean isAdbPersistent();
 
+	DbManager getDbManager();
 }

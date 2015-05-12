@@ -7,8 +7,8 @@ public class SkipExecuteStrategy extends ExecuteStrategy {
 	@Override
 	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		synchronized (this) {
-			if (executable == null) return new NotSuccessful(this, "executable not found");
-			if (executable.isBusy()) return new NotSuccessful(this, "skip");
+			if (executable == null) return new NotSuccessful(this, "executable not found", OperationResult.EMPTY);
+			if (executable.isBusy()) return new NotSuccessful(this, "skip", OperationResult.BUSY);
 
 			executable.setBusy(this);
 			OperationResult out = executable.doExecute(context);

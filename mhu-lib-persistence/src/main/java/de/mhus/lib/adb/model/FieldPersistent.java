@@ -24,7 +24,6 @@ import de.mhus.lib.sql.DbResult;
 
 public class FieldPersistent extends Field {
 
-	private DbManager manager;
 	private String autoPrefix;
 
 	@SuppressWarnings("unchecked")

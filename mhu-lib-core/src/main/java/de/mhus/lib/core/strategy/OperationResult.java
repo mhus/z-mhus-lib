@@ -5,11 +5,22 @@ import de.mhus.lib.core.pojo.ObjectWrapperPojo;
 
 public class OperationResult {
 
+	public static final long EMPTY = -10;
+	public static final long BUSY = -11;
+	public static final long NOT_EXECUTABLE = -12;
+
+	public static final long INTERNAL_ERROR = -500;
+	public static final long ACCESS_DENIED = -401;
+	public static final long NOT_FOUND = -404;
+	public static final long NOT_SUPPORTED = -505;
+	public static final long WRONG_STATUS = -506;
+
 	private String operationPath;
 	private String title;
 	private String msg;
-	private ObjectWrapperPojo<Object> result; // technical result
+	private Object result; // technical result
 	private boolean successful;
+	private long returnCode = 0;
 	
 	private OperationDescription nextOperation;
 	
@@ -52,15 +63,22 @@ public class OperationResult {
 	public void setNextOperation(OperationDescription nextOperation) {
 		this.nextOperation = nextOperation;
 	}
-	public ObjectWrapperPojo<Object> getResult() {
+	public Object getResult() {
 		return result;
 	}
-	public void setResult(ObjectWrapperPojo<Object> result) {
+	public void setResult(Object result) {
 		this.result = result;
 	}
 	
+	@Override
 	public String toString() {
 		return MSystem.toString(this, operationPath, successful, msg, nextOperation ); // result ?
+	}
+	public long getReturnCode() {
+		return returnCode;
+	}
+	public void setReturnCode(long returnCode) {
+		this.returnCode = returnCode;
 	}
 
 }

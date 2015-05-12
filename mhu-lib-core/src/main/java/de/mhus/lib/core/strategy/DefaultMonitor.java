@@ -1,43 +1,62 @@
 package de.mhus.lib.core.strategy;
 
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.logging.Log;
 
-public class DefaultMonitor implements Monitor {
+public class DefaultMonitor extends MLog implements Monitor {
 
-	static Log log = Log.getLog(DefaultMonitor.class);
-	
-	@Override
-	public void println() {
+	private long steps;
+	private long step;
+	private StringBuffer lineBuffer = new StringBuffer();
+
+	public long getSteps() {
+		return steps;
 	}
 
 	@Override
-	public void println(Object... out) {
-		log.i(out);
+	public void setSteps(long steps) {
+		this.steps = steps;
+	}
+
+	public long getStep() {
+		return step;
 	}
 
 	@Override
-	public void print(Object... out) {
-		log.i(out);
+	public void setStep(long step) {
+		this.step = step;
 	}
 
 	@Override
 	public Log log() {
-		return log;
+		return super.log();
 	}
 
 	@Override
-	public void setEstimatedSteps(long steps) {
-		
+	public void println() {
+		synchronized (lineBuffer) {
+			log().i("STDOUT", lineBuffer);
+			lineBuffer = new StringBuffer();
+		}
 	}
 
 	@Override
-	public void setCurrentStep(long step) {
-		
+	public void println(Object... out) {
+		print(out);
+		println();
+	}
+
+	@Override
+	public void print(Object... out) {
+		synchronized (lineBuffer) {
+			for (Object o : out)
+				lineBuffer.append(o);
+		}
 	}
 
 	@Override
 	public void incrementStep() {
-		
+		step++;
 	}
 
 }

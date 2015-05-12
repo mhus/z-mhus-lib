@@ -1,9 +1,13 @@
 package de.mhus.lib.core.pojo;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.Element;
 
@@ -15,46 +19,157 @@ public class MPojo {
 
 	private static final String MAGIC = "\n\t\t\r[[";
 
-	private static PojoModel createModel(Object from) {
-		PojoModel model = new PojoParser().parse(from,"_",null).filter(new DefaultFilter(true, false, false, false, true) ).getModel();
-		return model;
+	private static PojoModelFactory createModelFactory() {
+		return new PojoModelFactory() {
+			
+			@Override
+			public PojoModel createPojoModel(Class<?> pojoClass) {
+				PojoModel model = new PojoParser().parse(pojoClass,"_",null).filter(new DefaultFilter(true, false, false, false, true) ).getModel();
+				return model;
+			}
+		};
 	}
 	
 	public static void pojoToJson(Object from, ObjectNode to) throws IOException {
-		pojoToJson(from, to, createModel(from));
+		pojoToJson(from, to, createModelFactory());
 	}
 	
-	public static void pojoToJson(Object from, ObjectNode to, PojoModel model) throws IOException {
+	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory) throws IOException {
+		pojoToJson(from, to, factory, 0);
+	}
+	
+	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory, int level) throws IOException {
+		if (level > 10) return;
+		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
 			Object value = attr.get(from);
 			String name = attr.getName();
-			if (value == null)
-				to.put(name, (String)null);
-			else
-			if (value instanceof Boolean)
-				to.put(name, (boolean)value);
-			else
-			if (value instanceof Integer)
-				to.put(name, (int)value);
-			else
-			if (value instanceof String)
-				to.put(name, (String)value);
-			else
-			if (value.getClass().isEnum()) {
-				to.put(name, ((Enum<?>)value).ordinal());
-				to.put(name + "_", ((Enum<?>)value).name());
+			setJsonValue(to, name, value, factory, false, level+1);
+		}
+	}
+
+	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
+		if (level > 10) return;
+		
+		if (value == null)
+			to.addNull();
+		else
+		if (value instanceof Boolean)
+			to.add((boolean)value);
+		else
+		if (value instanceof Integer)
+			to.add((int)value);
+		else
+		if (value instanceof String)
+			to.add((String)value);
+		else
+		if (value instanceof Long)
+			to.add((Long)value);
+		else
+		if (value instanceof byte[])
+			to.add((byte[])value);
+		else
+		if (value instanceof Float)
+			to.add((Float)value);
+		else
+		if (value instanceof BigDecimal)
+			to.add((BigDecimal)value);
+		else
+		if (value instanceof JsonNode)
+			to.add((JsonNode)value);
+		else
+		if (value.getClass().isEnum()) {
+			to.add(((Enum<?>)value).ordinal());
+//			to.put(name + "_", ((Enum<?>)value).name());
+		} else
+		if (value instanceof Map) {
+			ObjectNode obj = to.objectNode();
+			to.add(obj);
+			for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
+				setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
 			}
-			else
-				to.put(attr.getName(), String.valueOf(value));
+		} else
+		if (value instanceof Collection) {
+			ArrayNode array = to.arrayNode();
+			to.add(array);
+			for (Object o : ((Collection<Object>)value)) {
+				addJsonValue(array,o,factory,true,level+1);
+			}
+		} else {
+			if (deep) {
+				ObjectNode too = to.objectNode();
+				to.add(too);
+				pojoToJson(value, too, null, level+1);
+			} else {
+				to.add(String.valueOf(value));
+			}
+		}		
+	}
+	
+	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
+		if (level > 10) return;
+		if (value == null)
+			to.putNull(name);
+		else
+		if (value instanceof Boolean)
+			to.put(name, (boolean)value);
+		else
+		if (value instanceof Integer)
+			to.put(name, (int)value);
+		else
+		if (value instanceof String)
+			to.put(name, (String)value);
+		else
+		if (value instanceof Long)
+			to.put(name, (Long)value);
+		else
+		if (value instanceof byte[])
+			to.put(name, (byte[])value);
+		else
+		if (value instanceof Float)
+			to.put(name, (Float)value);
+		else
+		if (value instanceof BigDecimal)
+			to.put(name, (BigDecimal)value);
+		else
+		if (value instanceof JsonNode)
+			to.put(name, (JsonNode)value);
+		else
+		if (value.getClass().isEnum()) {
+			to.put(name, ((Enum<?>)value).ordinal());
+			to.put(name + "_", ((Enum<?>)value).name());
+		} else
+		if (value instanceof Map) {
+			ObjectNode obj = to.objectNode();
+			to.put(name, obj);
+			for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
+				setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
+			}
+		} else
+		if (value instanceof Collection) {
+			ArrayNode array = to.arrayNode();
+			to.put(name, array);
+			for (Object o : ((Collection<Object>)value)) {
+				addJsonValue(array,o,factory,true,level+1);
+			}
+		} else {
+			if (deep) {
+				ObjectNode too = to.objectNode();
+				to.put(name, too);
+				pojoToJson(value, too, factory, level+1);
+			} else {
+				to.put(name, String.valueOf(value));
+			}
 		}
 	}
 
 	public static void jsonToPojo(JsonNode from, Object to) throws IOException {
-		jsonToPojo(from, to, createModel(to));
+		jsonToPojo(from, to, createModelFactory());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void jsonToPojo(JsonNode from, Object to, PojoModel  model) throws IOException {
+	public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory) throws IOException {
+		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
 			String name = attr.getName();
 			Class<?> type = attr.getType();
@@ -97,10 +212,11 @@ public class MPojo {
 	}
 
 	public static void pojoToXml(Object from, Element to) throws IOException {
-		pojoToXml(from, to, createModel(from));
+		pojoToXml(from, to, createModelFactory());
 	}
 
-	public static void pojoToXml(Object from, Element to, PojoModel model) throws IOException {
+	public static void pojoToXml(Object from, Element to, PojoModelFactory factory) throws IOException {
+		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
 			Object value = attr.get(from);
 			String name = attr.getName();
@@ -145,13 +261,13 @@ public class MPojo {
 		return value;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void xmlToPojo(Element from, Object to) throws IOException {
-		xmlToPojo(from, to, createModel(to));
+		xmlToPojo(from, to, createModelFactory());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void xmlToPojo(Element from, Object to, PojoModel model) throws IOException {
+	public static void xmlToPojo(Element from, Object to, PojoModelFactory factory) throws IOException {
+		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
 			String name = attr.getName();
 			Class<?> type = attr.getType();

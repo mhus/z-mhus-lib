@@ -1,6 +1,7 @@
 package de.mhus.lib.core;
 
 import java.util.Locale;
+import java.util.UUID;
 
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -65,6 +66,26 @@ public class MValidator {
 			return (i >= 1000 && i <= 99999);
 		}
 		throw new NotSupportedException("Country not supported",locale);
+	}
+	
+	public static boolean isUUID(String id) {
+		if (id == null || id.length() != 36) return false;
+        String[] components = id.split("-");
+        if (components.length != 5) return false;
+        
+        if (components[0].length() != 8 || components[1].length() != 4 || components[2].length() != 4 || components[3].length() != 4 || components[4].length() != 12)
+        	return false;
+        
+        for (int i=0; i<5; i++) {
+        	String part = components[i];
+        	for (int j=0; j < part.length(); j++) {
+        		char c = part.charAt(j);
+        		if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4' && c != '5' && c != '6' && c != '7' && c != '8' && c != '9' && c != 'a' && c != 'b' && c != 'c' && c != 'd' && c != 'e' && c != 'f' )
+        			return false;
+        	}
+        }
+        	
+        return true;
 	}
 	
 }
