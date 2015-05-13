@@ -51,7 +51,15 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	public void doInitialize(ClassLoader coreLoader) {
 		needFileWatch = "true".equals(System.getProperty(MSystem.PROP_FILE_WATCH));
 		configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, "mhus-config.xml");
-		logFactory = new ConsoleFactory();
+		String logFactoryClassName = System.getProperty("mhu.lib.log.factory.class");
+		if (MString.isSet(logFactoryClassName))
+			try {
+				logFactory = (ConsoleFactory) getClass().getClassLoader().loadClass(logFactoryClassName).newInstance();
+			} catch (Throwable t) {
+				System.out.println("MHU-Singleton: " + logFactoryClassName + " " + t.toString());
+			}
+		if (logFactory == null)
+			logFactory = new ConsoleFactory();
 		baseDir = new File(".");
 	}
 
