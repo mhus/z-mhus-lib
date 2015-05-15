@@ -1,5 +1,7 @@
 package de.mhus.lib.adb.transaction;
 
+import java.util.Set;
+
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
@@ -18,6 +20,12 @@ public class TransactionEncapsulation extends Transaction {
 
 	@Override
 	public DbManager getDbManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<String> getLockKeys() {
 		// TODO Auto-generated method stub
 		return null;
 	}

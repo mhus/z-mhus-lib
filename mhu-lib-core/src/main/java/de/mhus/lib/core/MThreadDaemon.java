@@ -53,8 +53,9 @@ public class MThreadDaemon extends MThread implements Runnable {
 	private static ThreadGroup group = new ThreadGroup("AThreadDeamon");
 
 	@Override
-	public void start() {
+	public MThreadDaemon start() {
 		tc = start(this, name);
+		return this;
 	}
 
 	private static ThreadContainer start(MThreadDaemon _task, String _name) {

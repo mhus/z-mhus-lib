@@ -61,8 +61,9 @@ public class MThread extends MObject implements Runnable {
 	public void run() {
 	}
 
-	public void start() {
+	public MThread start() {
 		tc = base(MThreadManager.class).start(this, name);
+		return this;
 	}
 
 	public void setName(String _name) {

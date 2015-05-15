@@ -1014,12 +1014,17 @@ public class DbManager extends MJmx {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
+	@Deprecated
 	public <T extends Persistable> T injectObject(T object) {
+		return inject(object);
+	}
+
+	public <T extends Persistable> T inject(T object) {
 		reloadLock.waitWithException(MAX_LOCK);
 		getTable(getRegistryName(object)).injectObject(object);
 		return object;
 	}
-
+	
 	public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
 		return getByQualification(clazz, "", null);
 	}

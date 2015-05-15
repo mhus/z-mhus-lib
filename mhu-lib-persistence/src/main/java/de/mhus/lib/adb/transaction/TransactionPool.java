@@ -11,24 +11,51 @@ public class TransactionPool {
 		return instance;
 	}
 	
+	/**
+	 * Return current transaction, if cascaded transactions, return the last/current
+	 * @return
+	 */
 	public Transaction get() {
 		synchronized (pool) {
-			return pool.get();
+			Transaction out = pool.get();
+			Transaction nested = out.getNested();
+			if (nested != null) return nested;
+			return out;
+		}
+	}
+	
+	/**
+	 * Return current transaction, if cascaded transactions, return the base
+	 * @return
+	 */
+	public Transaction getBase() {
+		synchronized (pool) {
+			Transaction out = pool.get();
+			return out;
 		}
 	}
 	
 	public void release() {
 		synchronized (pool) {
 			Transaction out = pool.get();
-			pool.remove();
-			out.release();
+			if (out == null) return;
+			Transaction nested = out.popNestedLock();
+			if (nested == null) {
+				pool.remove();
+				out.release();
+			}
 		}
 	}
 	
 	public void lock(long timeout, Transaction transaction) {
 		synchronized (pool) {
-			pool.set(transaction);
-			transaction.lock(timeout);
+			Transaction current = pool.get();
+			if (current != null)
+				current.pushNestedLock(transaction);
+			else {
+				pool.set(transaction);
+				transaction.lock(timeout);
+			}
 		}
 	}
 

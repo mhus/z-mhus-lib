@@ -1,6 +1,7 @@
 package de.mhus.lib.adb.transaction;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import de.mhus.lib.adb.DbManager;
@@ -16,6 +17,7 @@ public class TransactionLock extends Transaction {
 	private Persistable[] objects;
 	private DbManager manager;
 	private boolean locked;
+	private TreeMap<String, Persistable> orderedKeys;
 
 	public TransactionLock(DbManager manager, Persistable ... objects) {
 		this.manager = manager;
@@ -39,19 +41,15 @@ public class TransactionLock extends Transaction {
 		LockStrategy strategy = manager.getSchema().getLockStrategy();
 		if (strategy == null) return;
 
-		TreeMap<String, Persistable> ordered = new TreeMap<>();
-		for (Persistable o : objects) {
-			String key = createKey(o);
-			ordered.put(key, o);
-		}
+		getLockKeys();
 		
 		long start = System.currentTimeMillis();
-		for (Map.Entry<String, Persistable> entry : ordered.entrySet()) {
+		for (Map.Entry<String, Persistable> entry : orderedKeys.entrySet()) {
 			try {
 				strategy.lock(entry.getValue(), entry.getKey(), this, timeout);
 			} catch (Throwable t) {log().d(t);}
 			if (System.currentTimeMillis() - start > timeout) {
-				for (Map.Entry<String, Persistable> entry2 : ordered.entrySet()) {
+				for (Map.Entry<String, Persistable> entry2 : orderedKeys.entrySet()) {
 					try {
 						strategy.releaseLock(entry2.getValue(), entry2.getKey(), this);
 					} catch (Throwable t) {log().d(t);}
@@ -103,6 +101,21 @@ public class TransactionLock extends Transaction {
 	}
 	
 	@Override
+	public synchronized void pushNestedLock(Transaction transaction) {
+		// validate lock objects
+		Set<String> keys = transaction.getLockKeys();
+		getLockKeys();
+		if (keys != null) {
+			for (String key : keys) {
+				if (!orderedKeys.containsKey(key)) {
+					throw new TransactionNestedException("Nested Key Not Locked in MainLock: " + key);
+				}
+			}
+		}
+		super.pushNestedLock(transaction);
+	}
+	
+	@Override
 	protected void finalize() {
 		//TODO error message !
 		release();
@@ -111,6 +124,20 @@ public class TransactionLock extends Transaction {
 	@Override
 	public DbManager getDbManager() {
 		return manager;
+	}
+
+	@Override
+	public synchronized Set<String> getLockKeys() {
+		if (orderedKeys == null) {
+			orderedKeys = new TreeMap<>();
+			if (objects != null) {
+				for (Persistable o : objects) {
+					String key = createKey(o);
+					orderedKeys.put(key, o);
+				}
+			}
+		}
+		return orderedKeys.keySet();
 	}
 
 }

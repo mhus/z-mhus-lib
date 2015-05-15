@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonFactory;
@@ -143,10 +146,10 @@ public class MJson {
 		Object out = null;
 		if (node == null) return null;
 		try {
-			if (node.isTextual())
-				out = node.getValueAsText();
-			else if (node.isNull())
+			if (node.isNull())
 				out = null;
+			else if (node.isTextual())
+				out = node.getValueAsText();
 			else if (node.isBigDecimal())
 				out = node.getDecimalValue();
 			else if (node.isBigInteger())
@@ -163,6 +166,20 @@ public class MJson {
 				out = node.getLongValue();
 			else if (node.isNumber())
 				out = node.getNumberValue();
+			else if (node.isArray()) {
+				LinkedList<Object> l = new LinkedList<>();
+				for (JsonNode n : node) {
+					l.add(getValue(n,helper));
+				}
+				out = l;
+			}
+			else if (node.isObject()) {
+				HashMap<String, Object> m = new HashMap<>();
+				for (Iterator<String> i = node.getFieldNames(); i.hasNext();) {
+					String name = i.next();
+					m.put(name, getValue(node.get(name), helper));
+				}
+			}
 		} catch (IOException e) {}
 		return out;
 	}
