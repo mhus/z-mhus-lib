@@ -5,6 +5,7 @@ import de.mhus.lib.core.pojo.ObjectWrapperPojo;
 
 public class OperationResult {
 
+	public static final long OK = 0;
 	public static final long EMPTY = -10;
 	public static final long BUSY = -11;
 	public static final long NOT_EXECUTABLE = -12;
