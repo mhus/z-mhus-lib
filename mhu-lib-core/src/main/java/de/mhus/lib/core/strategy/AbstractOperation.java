@@ -8,7 +8,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
-		if (!hasAccess(context)) return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
+		if (!hasAccess()) return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
 		if (!canExecute(context)) return new NotSuccessful(this, "can't execute", OperationResult.NOT_EXECUTABLE);
 		return doExecute2(context);
 	}

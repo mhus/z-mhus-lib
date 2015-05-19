@@ -60,9 +60,9 @@ public class WaitExecuteStrategy extends ExecuteStrategy {
 	}
 
 	@Override
-	public boolean hasAccess(TaskContext context) {
+	public boolean hasAccess() {
 		if (executable == null) return false;
-		return executable.hasAccess(context);
+		return executable.hasAccess();
 	}
 
 }

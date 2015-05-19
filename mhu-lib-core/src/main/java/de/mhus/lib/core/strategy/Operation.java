@@ -2,7 +2,7 @@ package de.mhus.lib.core.strategy;
 
 public interface Operation {
 
-	boolean hasAccess(TaskContext context);
+	boolean hasAccess();
 	boolean canExecute(TaskContext context);
 	OperationDescription getDescription();
 	OperationResult doExecute(TaskContext context) throws Exception;
