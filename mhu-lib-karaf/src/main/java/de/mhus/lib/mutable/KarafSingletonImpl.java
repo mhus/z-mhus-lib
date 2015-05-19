@@ -5,6 +5,7 @@ import java.util.Dictionary;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
@@ -43,6 +44,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	private HashSet<String> logTrace = new HashSet<>();
 
 	private String configFileName = "mhus-config.xml";
+	private KarafHousekeeper housekeeper;
 
 	@Override
 	public Log createLog(Object owner) {
@@ -117,7 +119,10 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	public void doInitialize(ClassLoader coreLoader) {
 		logFactory = new JavaLoggerFactory();
 		baseDir = new File(".");
-
+		
+		housekeeper = new KarafHousekeeper();
+		getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
+		
 	}
 
 	@Override

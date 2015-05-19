@@ -1,16 +1,20 @@
-package de.mhus.lib.core;
+package de.mhus.lib.core.system;
 
 import java.lang.ref.WeakReference;
 import java.util.TimerTask;
 
-import de.mhus.lib.core.lang.IBase;
+import de.mhus.lib.core.MHousekeeper;
+import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MTimer;
+import de.mhus.lib.core.MTimerTask;
 
-public class MHousekeeper extends MLog implements IBase {
-	
+public class DefaultHousekeeper extends MLog implements MHousekeeper {
+
 	private MTimer timer;
-	
-	public MHousekeeper() {
-		log().t("new housekeeper");
+
+	public DefaultHousekeeper() {
+		log().t("new default housekeeper");
 		timer = new MTimer(true);
 	}
 	
