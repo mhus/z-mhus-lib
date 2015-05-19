@@ -38,7 +38,7 @@ public class Successful extends OperationResult {
 		setSuccessful(true);
 		HashMap<Object, Object> r = new HashMap<>();
 		for (int i = 0; i < keyValues.length - 1; i+=2)
-			if (keyValues.length < i+1)
+			if (keyValues.length > i+1)
 			r.put(keyValues[i], keyValues[i+1]);
 		setResult(r);
 	}
