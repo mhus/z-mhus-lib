@@ -126,7 +126,7 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
             <version>${activemq.version}</version>
-        	<type>bundle</type>
+        	<type>jar</type>
         </dependency>
 
     </dependencies>
