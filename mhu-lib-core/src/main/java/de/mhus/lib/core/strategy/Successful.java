@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 public class Successful extends OperationResult {
 
-	public Successful(Operation operation, String msg) {
-		this(operation, msg, 0, null);
+	public Successful(Operation operation) {
+		this(operation, "", 0, null);
 	}
 	
 	public Successful(Operation operation, String msg, Object result) {
@@ -28,6 +28,10 @@ public class Successful extends OperationResult {
 		setResult(result);
 		setReturnCode(rc);
 		setSuccessful(true);
+	}
+	
+	public Successful(Operation operation, String msg, String ... keyValues) {
+		this(operation.getDescription().getPath(), msg, 0, keyValues);
 	}
 	
 	public Successful(String path, String msg, long rc, String ... keyValues) {

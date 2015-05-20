@@ -145,8 +145,14 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         loginLayout.addComponent(loginPanel);
         loginLayout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 		
+        doCustomize(loginPanel, labels, fields);
 	}
 	
+	protected void doCustomize(VerticalLayout loginPanel, HorizontalLayout labels,
+			HorizontalLayout fields) {
+		
+	}
+
 	public Listener getListener() {
 		return listener;
 	}
