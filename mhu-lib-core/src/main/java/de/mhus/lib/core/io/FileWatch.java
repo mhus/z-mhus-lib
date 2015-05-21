@@ -4,59 +4,94 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FileWatch extends TimerTask {
+public class FileWatch {
 
 	private File file;
 	private Timer timer;
 	private long period = 30 * 1000;
-	private long size = -2;
+	private long modified = -2;
 	private Listener listener;
+	private boolean started = false;
+	private TimerTask task;
+	private long lastRun;
+	private boolean startHook;
 
-	public FileWatch(File fileToWatch, Timer timer, Listener listener) {
-		this(fileToWatch, timer, 30000, false, listener);
+	public FileWatch(File fileToWatch, Listener listener) {
+		this(fileToWatch, null, 30000, true, listener);
 	}
 	
+	public FileWatch(File fileToWatch, Timer timer, Listener listener) {
+		this(fileToWatch, timer, 30000, true, listener);
+	}
+	/**
+	 * Watch a file or directory (one level!) against changes. Check the modify date to recognize
+	 * a change. It has two ways to work:
+	 * 1. Manual check, every time you use the file, call the checkFile() method.
+	 * 2. Use of a timer.
+	 * 
+	 * @param fileToWatch
+	 * @param timer
+	 * @param period
+	 * @param startHook
+	 * @param listener
+	 */
 	public FileWatch(File fileToWatch, Timer timer, long period, boolean startHook, Listener listener) {
 		file = fileToWatch;
 		this.timer = timer;
 		this.period = period;
-		if (startHook) size = -3;
+		this.startHook = startHook;
 		this.listener = listener;
 	}
 	
 	public FileWatch doStart() {
-		timer.schedule(this, 0, period);
+		if (started) return this;
+		started = true; // do not need sync...
+		if (startHook) checkFile(); // init
+		if (timer != null) {
+			this.task = new TimerTask() {
+
+				@Override
+				public void run() {
+					checkFile();
+				}
+				
+			};
+			timer.schedule(task, period, period);
+		}
 		return this;
 	}
 	
 	public FileWatch doStop() {
-		cancel();
+		if (!started) return this;
+		if (task != null)
+			task.cancel();
 		return this;
 	}
 
-	@Override
-	public void run() {
+	public void checkFile() {
+		if (System.currentTimeMillis() - lastRun < period) return;
+		lastRun = System.currentTimeMillis();
 		try {
-			long newSize = 0;
+			long modSum = 0;
 			if (file.exists()) {
 				if (file.isFile())
-					newSize = file.length();
+					modSum = file.lastModified();
 				else
 				if (file.isDirectory()) {
 					for (File f : file.listFiles()) {
 						if (f.isFile() && !f.isHidden()) {
-							newSize+=f.length();
+							modSum+=f.lastModified();
 						}
 					}
 				}
 			} else {
-				newSize = -1;
+				modSum = -1;
 			}
 			
-			if (size != -2 && listener != null) {
+			if (modified != -2 && listener != null && modified != modSum) {
 				listener.onFileChanged(this);
 			}
-			size = newSize;
+			modified = modSum;
 			
 		} catch (Throwable t) {
 			if (listener != null)
