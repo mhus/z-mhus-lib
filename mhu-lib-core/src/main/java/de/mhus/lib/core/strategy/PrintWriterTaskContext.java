@@ -16,6 +16,7 @@ public class PrintWriterTaskContext implements TaskContext {
 	private long estimated;
 	private long step;
 	private Log log = null;
+	private String errorMessage;
 	
 	public PrintWriterTaskContext(String name, PrintWriter writer, IConfig config, boolean testOnly) {
 		log = new PrintWriterLog(name, writer);
@@ -90,6 +91,20 @@ public class PrintWriterTaskContext implements TaskContext {
 
 	public long getStep() {
 		return step;
+	}
+
+	@Override
+	public void addErrorMessage(String msg) {
+		if (msg == null) return;
+		if (errorMessage == null)
+			errorMessage = msg;
+		else
+			errorMessage = errorMessage + "\n" + msg;
+	}
+
+	@Override
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 }

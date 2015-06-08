@@ -11,4 +11,7 @@ public interface TaskContext extends Monitor {
 	
 	IProperties getParameters();
 	
+	void addErrorMessage(String msg);
+	String getErrorMessage();
+	
 }

@@ -9,6 +9,7 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 	private IConfig config;
 	private boolean test;
 	private IProperties parameters;
+	private String errorMessage;
 
 	public void setTestOnly(boolean test) {
 		this.test = test;
@@ -35,6 +36,20 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 	@Override
 	public IProperties getParameters() {
 		return parameters;
+	}
+
+	@Override
+	public synchronized void addErrorMessage(String msg) {
+		if (msg == null) return;
+		if (errorMessage == null)
+			errorMessage = msg;
+		else
+			errorMessage = errorMessage + "\n" + msg;
+	}
+
+	@Override
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 }
