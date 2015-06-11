@@ -94,6 +94,11 @@ public class AQuery<T> extends APrint {
 		return this;
 	}
 
+	public AQuery<T> eq(String attr, Object value) {
+		operations.add(Db.eq(attr, value));
+		return this;
+	}
+
 	public AQuery<T> ne(AAttribute left, AAttribute right) {
 		operations.add(Db.ne(left, right));
 		return this;
