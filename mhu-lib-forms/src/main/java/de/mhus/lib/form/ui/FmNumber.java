@@ -2,11 +2,17 @@ package de.mhus.lib.form.ui;
 
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.form.definition.FmDefaultSources;
 import de.mhus.lib.form.definition.FmElement;
+import de.mhus.lib.form.definition.FmNls;
 
 public class FmNumber extends FmElement {
 	public enum TYPE {INTEGER,LONG,FLOAT,DOUBLE}
 	public enum FORMAT {PERCENTAGE,CURRENCY}
+
+	public FmNumber(String name, TYPE type, String title, String description) {
+		this(name, type, new FmNls(title, description), new FmDefaultSources());
+	}
 
 	public FmNumber(String name, TYPE type, IDefAttribute ... definitions) {
 		super(name, definitions);

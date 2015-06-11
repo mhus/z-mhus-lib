@@ -1,6 +1,5 @@
 package de.mhus.lib.adb.query;
 
-import java.util.Map;
 import java.util.Map.Entry;
 
 import de.mhus.lib.core.parser.AttributeMap;
@@ -15,6 +14,10 @@ public class Db {
 		return new ACompare(ACompare.TYPE.EQ,left,right);
 	}
 
+	public static APart eq(String attr, Object value) {
+		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(value));
+	}
+	
 	public static APart ne(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.NE,left,right);
 	}
