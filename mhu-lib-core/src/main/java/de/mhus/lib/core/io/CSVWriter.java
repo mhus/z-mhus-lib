@@ -24,21 +24,17 @@ import java.io.Writer;
  *         writing.<br>
  *         2.1 2005-07-17 reorganization, new bat files.<br>
  *         2.2 2005-08-28 - add CSVAlign and CSVPack to the suite.
+ *         2.3 2015-06-12 fix enclosing of fields
  */
 public class CSVWriter {
 
 	// ------------------------------ FIELDS ------------------------------
 
 	/**
-	 * true if want debugging output
-	 */
-	static final boolean DEBUGGING = false;
-
-	/**
 	 * line separator to use. We use Windows style for all platforms since csv
 	 * is a Windows format file.
 	 */
-	private static final String lineSeparator = "\r\n";
+	private String lineSeparator = "\r\n";
 
 	/**
 	 * PrintWriter where CSV fields will be written.
@@ -52,11 +48,10 @@ public class CSVWriter {
 	private final boolean trim;
 
 	/**
-	 * true if there has was a field previously written to this line, meaning
-	 * there is a comma pending to be written.
+	 * next column to write, contains the current size of columns for actual line
 	 */
-	private boolean wasPreviousField = false;
-
+	private int column = 0;
+	
 	/**
 	 * quote character, usually '\"' '\'' for SOL used to enclose fields
 	 * containing a separator character.
@@ -75,6 +70,8 @@ public class CSVWriter {
 	private int quoteLevel;
 
 	private String defaultNullValue = "";
+	
+	private ValueWriter writer = new DefaultValueWriter();
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
@@ -147,6 +144,10 @@ public class CSVWriter {
 	public void setDefaultNullValue(String in) {
 		defaultNullValue = in;
 	}
+	
+	public String getDefaultNullValue() {
+		return defaultNullValue;
+	}
 
 	/**
 	 * Write a new line in the CVS output file to demark the end of record.
@@ -157,8 +158,8 @@ public class CSVWriter {
 					"attempt to use a closed CSVWriter");
 		}
 		/* don't bother to write last pending comma on the line */
-		pw.write(lineSeparator);
-		wasPreviousField = false;
+		writer.nl(this);
+		column = 0;
 	}
 
 	public void print(Object ... values) {
@@ -193,19 +194,78 @@ public class CSVWriter {
 		if (values == null || values.length == 0) return;
 		
 		for (String s : values ) {
-			if (s == null) {
-	
-				if (defaultNullValue == null) {
-					nl();
-					return;
-				}
-				s = defaultNullValue;
-			}
-	
-			if (wasPreviousField) {
+			
+			
+			if (column != 0) {
 				pw.write(separator);
 			}
-			if (trim) {
+			writer.write(this, s);
+			
+			/* make a note to print trailing comma later */
+			column++;
+		}
+	}
+
+	public String getLineSeparator() {
+		return lineSeparator;
+	}
+
+	public void setLineSeparator(String lineSeparator) {
+		this.lineSeparator = lineSeparator;
+	}
+	
+	public boolean isTrim() {
+		return trim;
+	}
+	
+	public char getQuote() {
+		return quote;
+	}
+
+	public PrintWriter getPrintWriter() {
+		return pw;
+	}
+	
+	public int getQuoteLevel() {
+		return quoteLevel;
+	}
+	
+	public int getColumnOfLine() {
+		return column;
+	}
+	
+	public ValueWriter getValueWriter() {
+		return writer;
+	}
+
+	public void setValueWriter(ValueWriter writer) {
+		this.writer = writer;
+	}
+
+	public static interface ValueWriter {
+		void write(CSVWriter writer, String value);
+		void nl(CSVWriter writer);
+	}
+	
+	public static class DefaultValueWriter implements ValueWriter {
+
+		@Override
+		public void write(CSVWriter writer, String s) {
+			
+			PrintWriter pw = writer.getPrintWriter();
+			int quoteLevel = getQuoteLevel(writer);
+			char quote = writer.getQuote();
+			
+			if (s == null) {
+				
+				if (writer.getDefaultNullValue() == null) {
+					writer.nl();
+					return;
+				}
+				s = writer.getDefaultNullValue();
+			}
+			
+			if (writer.isTrim()) {
 				s = s.trim();
 			}
 			if (s.indexOf(quote) >= 0) {
@@ -215,14 +275,17 @@ public class CSVWriter {
 					char c = s.charAt(i);
 					if (c == quote) {
 						if (quote != CSVReader.NO_QUOTS) pw.write(quote);
-						pw.write(quote);
+						pw.write(writer.getQuote());
 					} else {
 						pw.write(c);
 					}
 				}
-				if (quote != CSVReader.NO_QUOTS) pw.write(quote);
-			} else if (quoteLevel == 2 || quoteLevel == 1 && s.indexOf(' ') >= 0
-					|| s.indexOf(separator) >= 0) {
+				if (quote != CSVReader.NO_QUOTS) pw.write(writer.getQuote());
+			} else if (
+					quoteLevel == 2 || 
+					quoteLevel == 1 && s.indexOf(' ') >= 0 || 
+					s.indexOf(writer.getLineSeparator()) >= 0)
+			{
 				/* need surrounding quotes */
 				if (quote != CSVReader.NO_QUOTS) pw.write(quote);
 				pw.write(s);
@@ -231,43 +294,32 @@ public class CSVWriter {
 				/* ordinary case, no surrounding quotes needed */
 				pw.write(s);
 			}
-			/* make a note to print trailing comma later */
-			wasPreviousField = true;
+
+			
 		}
+		
+		public int getQuoteLevel(CSVWriter writer) {
+			return writer.getQuoteLevel();
+		}
+		
+		@Override
+		public void nl(CSVWriter writer) {
+			writer.getPrintWriter().write(writer.getLineSeparator());
+
+		}
+		
 	}
-
-	// --------------------------- main() method ---------------------------
-
-	/**
-	 * Test driver
+	
+	/*
 	 * 
-	 * @param args
-	 *            not used
+	 * writer = new CSVWriter(...);
+	 * writer.setValueWriter(new CSVWriter.DefaultValueWriter() {
+	 *   public void write(CSVWriter writer, String value) {
+	 *     if (MString.isEmpty(value)) return;
+	 *     super(write(writer,value);
+	 *   }
+	 * }
+	 * 
 	 */
-	public static void main(String[] args) {
-		if (DEBUGGING) {
-			try {
-				// write out a test file
-				@SuppressWarnings("resource")
-				CSVWriter csv = new CSVWriter(new FileWriter("temp.txt"), 1,
-						';', '\'', true);
-				csv.put("abc");
-				csv.put("def");
-				csv.put("g h i");
-				csv.put("jk,l");
-				csv.put("m\"n\'o ");
-				csv.nl();
-				csv.put("m\"n\'o ");
-				csv.put("    ");
-				csv.put("a");
-				csv.put("x,y,z");
-				csv.put("x;y;z");
-				csv.nl();
-				csv.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
-			}
-		} // end if
-	} // end main
+
 } // end CSVWriter class.
