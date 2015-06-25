@@ -25,6 +25,7 @@ public class CmdChannelReset implements Action {
 		else {
 			JmsDataChannel channel = service.getChannel(name);
 			channel.getChannel().reset();
+			channel.getChannel().open();
 		}
 		return null;
 	}

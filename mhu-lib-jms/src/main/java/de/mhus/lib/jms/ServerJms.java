@@ -73,6 +73,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		try {
 			replyProducer.close();
 		} catch (Throwable t) {log().t(t);}
+		consumer = null;
+		replyProducer = null;
 		onReset();
 	}
 

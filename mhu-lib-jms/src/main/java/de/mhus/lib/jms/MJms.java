@@ -1,5 +1,6 @@
 package de.mhus.lib.jms;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 
@@ -114,6 +115,13 @@ public class MJms {
 			out.setProperty( name, msg.getObject(name) );
 		}
 		return out;
+	}
+	
+	public static Object toPrimitive(Object in) {
+		if (in == null) return null;
+		if (in.getClass().isPrimitive()) return in;
+		if (in instanceof Date) return ((Date)in).getTime();
+		return String.valueOf(in);
 	}
 	
 }
