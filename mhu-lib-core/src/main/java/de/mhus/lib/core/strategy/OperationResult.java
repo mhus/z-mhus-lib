@@ -9,6 +9,8 @@ public class OperationResult {
 	public static final long EMPTY = -10;
 	public static final long BUSY = -11;
 	public static final long NOT_EXECUTABLE = -12;
+	public static final long SYNTAX_ERROR = -13;
+	public static final long USAGE = -14;
 
 	public static final long INTERNAL_ERROR = -500;
 	public static final long ACCESS_DENIED = -401;

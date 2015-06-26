@@ -114,6 +114,12 @@
         <dependency>
         	<groupId>de.mhus.lib</groupId>
         	<artifactId>mhu-lib-jms</artifactId>
+        	<exclusions>
+        		<exclusion>
+        			<artifactId>activemq-core</artifactId>
+        			<groupId>org.apache.activemq</groupId>
+        		</exclusion>
+        	</exclusions>
         	<version>${project.version}</version>
         </dependency>
 
