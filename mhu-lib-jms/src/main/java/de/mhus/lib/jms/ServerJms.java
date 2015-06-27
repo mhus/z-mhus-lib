@@ -9,8 +9,12 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.TextMessage;
 
+import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.TrailLevelMapper;
 
 
 public abstract class ServerJms extends JmsChannel implements MessageListener {
@@ -113,50 +117,73 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	public void processMessage(final Message message) {
 
 		log().t("received",message);
-		
+
+		boolean releaseLog = false;
 		try {
-			if (interceptorIn != null) {
-				interceptorIn.begin(message);
+			if (message != null) {
+				try {
+					String logMapper = message.getStringProperty(MConstants.LOG_MAPPER);
+					if (logMapper != null) {
+						LevelMapper levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
+						if (levelMapper != null && levelMapper instanceof TrailLevelMapper) {
+							((TrailLevelMapper)levelMapper).doConfigureTrail(logMapper);
+							releaseLog = true;
+						}
+					}
+				} catch (Throwable t) {}
 			}
-		} catch (Throwable t) {
-			log().w(t);
+		
+			try {
+				if (interceptorIn != null) {
+					interceptorIn.begin(message);
+				}
+			} catch (Throwable t) {
+				log().w(t);
+				try {
+					if (message.getJMSReplyTo() != null) {
+						TextMessage answer = createErrorAnswer(t);
+						log().t("errorAnswer",answer);
+						sendAnswer(message, answer);
+					}
+				} catch (Throwable tt) {
+					log().w(tt);
+				}
+				return;
+			}
+			
 			try {
 				if (message.getJMSReplyTo() != null) {
-					TextMessage answer = createErrorAnswer(t);
-					log().t("errorAnswer",answer);
+					Message answer = null;
+					try {
+						answer = received(message);
+					} catch (JMSException t) {
+						throw t;
+					} catch(Throwable t) {
+						log().i(t);
+						answer = createErrorAnswer(t);
+					}
+					log().t("receivedAnswer",answer);
 					sendAnswer(message, answer);
+				} else {
+					log().t("receivedOneWay",message);
+					receivedOneWay(message);
 				}
-			} catch (Throwable tt) {
-				log().w(tt);
-			}
-			return;
-		}
-		
-		try {
-			if (message.getJMSReplyTo() != null) {
-				Message answer = null;
-				try {
-					answer = received(message);
-				} catch (JMSException t) {
-					throw t;
-				} catch(Throwable t) {
-					log().i(t);
-					answer = createErrorAnswer(t);
+			} catch (JMSException t) {
+				reset();
+				log().w(t);
+			} catch (Throwable t) {
+				log().w(t);
+			} finally {
+				if (interceptorIn != null) {
+					interceptorIn.end(message);
 				}
-				log().t("receivedAnswer",answer);
-				sendAnswer(message, answer);
-			} else {
-				log().t("receivedOneWay",message);
-				receivedOneWay(message);
 			}
-		} catch (JMSException t) {
-			reset();
-			log().w(t);
-		} catch (Throwable t) {
-			log().w(t);
+			
 		} finally {
-			if (interceptorIn != null) {
-				interceptorIn.end(message);
+			if (releaseLog) {
+				LevelMapper levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
+				if (levelMapper != null && levelMapper instanceof TrailLevelMapper)
+					((TrailLevelMapper)levelMapper).doResetTrail();
 			}
 		}
 	}

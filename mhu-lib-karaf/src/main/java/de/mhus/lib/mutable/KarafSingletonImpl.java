@@ -13,6 +13,7 @@ import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
+import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
@@ -20,6 +21,7 @@ import de.mhus.lib.core.service.ConfigProvider;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.SingletonInitialize;
 import de.mhus.lib.logging.JavaLoggerFactory;
+import de.mhus.lib.logging.mapper.ThreadBasedMapper;
 
 /**
  * TODO: Map config to service
@@ -123,6 +125,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 		housekeeper = new KarafHousekeeper();
 		getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
 		
+		logFactory.setLevelMapper(new ThreadBasedMapper() );
 	}
 
 	@Override
@@ -164,6 +167,11 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 			configFileName = p.getString(CONFIG_FILE_NAME,configFileName);
 			reloadConfig();
 		}
+	}
+
+	@Override
+	public Base base() {
+		return getBaseControl().getCurrentBase();
 	}
 	
 }

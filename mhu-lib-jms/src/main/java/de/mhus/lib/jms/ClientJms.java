@@ -11,7 +11,11 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
+import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class ClientJms extends JmsChannel implements MessageListener {
 
@@ -36,18 +40,30 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	
 	public void sendJmsOneWay(Message msg) throws JMSException {
 		open();
-		msg.setJMSMessageID(createMessageId());
+		prepareMessage(msg);
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
 		log().t("sendJmsOneWay",msg);
 		producer.send(msg);
 	}
 	
+	protected void prepareMessage(Message msg) throws JMSException {
+		
+		msg.setJMSMessageID(createMessageId());
+		
+		LevelMapper levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
+		if (levelMapper != null && levelMapper instanceof TrailLevelMapper && !((TrailLevelMapper)levelMapper).isLocalTrail() ) {
+			String config = ((TrailLevelMapper)levelMapper).doSerializeTrail();
+			if (config != null)
+				msg.setStringProperty(MConstants.LOG_MAPPER, config);
+		}
+	}
+
 	public Message sendJms(Message msg) throws JMSException {
 		open();
 		
-		String id = createMessageId();
-		msg.setJMSMessageID(id);
+		prepareMessage(msg);
+		String id = msg.getJMSMessageID();
 		openAnswerQueue();
 		msg.setJMSReplyTo(answerQueue);
 		msg.setJMSCorrelationID(id);

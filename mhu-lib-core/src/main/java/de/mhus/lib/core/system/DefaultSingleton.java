@@ -14,6 +14,7 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.FileWatch;
+import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
@@ -161,6 +162,11 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	@Override
 	public boolean isTrace(String name) {
 		return fullTrace || logTrace.contains(name);
+	}
+
+	@Override
+	public Base base() {
+		return getBaseControl().getCurrentBase();
 	}
 
 }

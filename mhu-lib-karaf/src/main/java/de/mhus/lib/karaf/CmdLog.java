@@ -7,14 +7,17 @@ import org.apache.karaf.shell.commands.Command;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.system.ISingleton;
+import de.mhus.lib.logging.mapper.ThreadMapperConfig;
+import de.mhus.lib.logging.mapper.ThreadBasedMapper;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
 public class CmdLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full,dirty,level,reloadconfig", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full,dirty,level,reloadconfig,setThread [<config>],isThread,releaseThread", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -67,6 +70,37 @@ public class CmdLog implements Action {
 			singleton.getLogFactory().setDefaultLevel(Log.LEVEL.valueOf(parameters[0].toUpperCase()));
 			singleton.getLogFactory().updateLoggers();
 			System.out.println("OK");
+		} break;
+		case "setThread": {
+			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			if (mapper != null && mapper instanceof ThreadBasedMapper) {
+				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
+				ThreadMapperConfig config = new ThreadMapperConfig();
+				if (parameters != null && parameters.length == 1) {
+					config.doConfigure(parameters[0]);
+				}
+				m.set(config);
+			} else {
+				System.out.println("Wrong Mapper " + mapper);
+			}
+		} break;
+		case "isThread": {
+			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			if (mapper != null && mapper instanceof ThreadBasedMapper) {
+				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
+				System.out.println("LevelMapper: " + m.get());
+			} else {
+				System.out.println("Wrong Mapper " + mapper);
+			}
+		} break;
+		case "releaseThread": {
+			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			if (mapper != null && mapper instanceof ThreadBasedMapper) {
+				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
+				m.release();
+			} else {
+				System.out.println("Wrong Mapper " + mapper);
+			}
 		} break;
 		}
 		

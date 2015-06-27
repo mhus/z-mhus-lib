@@ -21,4 +21,5 @@ public class MLog {
 		}
 		return log;
 	}
+	
 }

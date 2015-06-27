@@ -12,6 +12,7 @@ import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
+import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
@@ -161,4 +162,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 		}
 	}
 	
+	@Override
+	public Base base() {
+		return getBaseControl().getCurrentBase();
+	}
+
 }

@@ -190,7 +190,7 @@ public abstract class Log {
 
     public void log(LEVEL level, Object ... msg) {
     	
-    	if (mapper != null) level = mapper.map(level,msg);
+    	if (mapper != null) level = mapper.map(this, level,msg);
     	switch (level) {
 		case DEBUG:
 			if (!isDebugEnabled()) return;

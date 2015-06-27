@@ -4,6 +4,7 @@ import de.mhus.lib.core.logging.Log.LEVEL;
 
 public interface LevelMapper {
 
-	LEVEL map(LEVEL level, Object ... msg);
+	LEVEL map(Log log, LEVEL level, Object ... msg);
 
+	
 }

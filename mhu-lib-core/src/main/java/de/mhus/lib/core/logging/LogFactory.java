@@ -97,6 +97,19 @@ public abstract class LogFactory implements IBase {
 		}
 	}
 
+//	public synchronized LevelMapper getLevelMapper(Class<? extends LevelMapper> defaultMapper) {
+//		if (levelMapper == null && defaultMapper != null) {
+//			try {
+//				levelMapper = defaultMapper.newInstance();
+//			} catch (Exception e) {
+//			}
+//		}
+//		if (defaultMapper != null && defaultMapper.isInstance(levelMapper))
+//			return levelMapper;
+//		else
+//			return null;
+//	}
+	
 	public LevelMapper getLevelMapper() {
 		return levelMapper;
 	}

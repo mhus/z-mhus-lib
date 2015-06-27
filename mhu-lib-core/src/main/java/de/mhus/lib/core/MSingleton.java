@@ -1,5 +1,7 @@
 package de.mhus.lib.core;
 
+import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.DefaultSingleton;
 import de.mhus.lib.core.system.DummyClass;
 import de.mhus.lib.core.system.ISingleton;
@@ -57,4 +59,16 @@ public class MSingleton {
 		return get().isTrace(name);
 	}
 		
+	public static void doStartTrailLog() {
+		LevelMapper mapper = get().getLogFactory().getLevelMapper();
+		if (mapper != null && mapper instanceof TrailLevelMapper)
+			((TrailLevelMapper)mapper).doConfigureTrail("MAP");
+	}
+	
+	public static void doStopTrailLog() {
+		LevelMapper mapper = get().getLogFactory().getLevelMapper();
+		if (mapper != null && mapper instanceof TrailLevelMapper)
+			((TrailLevelMapper)mapper).doResetTrail();
+	}
+
 }
