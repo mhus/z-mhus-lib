@@ -78,7 +78,7 @@ public class MNlsFactory extends MObject {
 			return new MNls(properties,"");
 			
 		} catch (Exception e) {
-			log().info(e);
+			log().i(e);
 		}
 
 		return new MNls();

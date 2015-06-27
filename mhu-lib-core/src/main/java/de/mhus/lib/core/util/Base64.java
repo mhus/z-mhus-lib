@@ -97,7 +97,7 @@ public class Base64 {
 			os.flush();
 		}
 		catch (Exception e) {
-			log.error(e, e);
+			log.e(e, e);
 		}
 
 		return encode(ubaos.toByteArray(), 0, ubaos.size());

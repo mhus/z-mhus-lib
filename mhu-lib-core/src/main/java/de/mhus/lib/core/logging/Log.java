@@ -17,6 +17,7 @@ public abstract class Log {
 
 	protected boolean localTrace = true;
 	private String name;
+	protected LevelMapper mapper;
     
 	public Log(String name) {
 		this.name = name;
@@ -184,7 +185,35 @@ public abstract class Log {
      * @param msg 
      */
     public void t(Object ... msg) {
-    	if (!isTraceEnabled()) return;
+    	log(LEVEL.TRACE, msg);
+    }
+
+    public void log(LEVEL level, Object ... msg) {
+    	
+    	if (mapper != null) level = mapper.map(level,msg);
+    	switch (level) {
+		case DEBUG:
+			if (!isDebugEnabled()) return;
+			break;
+		case ERROR:
+			if (!isErrorEnabled()) return;
+			break;
+		case FATAL:
+			if (!isFatalEnabled()) return;
+			break;
+		case INFO:
+			if (!isInfoEnabled()) return;
+			break;
+		case TRACE:
+			if (!isTraceEnabled()) return;
+			break;
+		case WARN:
+			if (!isWarnEnabled()) return;
+			break;
+		default:
+			return;
+    	}
+
     	StringBuffer sb = new StringBuffer();
     	prepare(sb);
     	Throwable error = null;
@@ -193,10 +222,32 @@ public abstract class Log {
 			error = serialize(sb,o, error);
 //   		cnt++;
     	}
-    	trace(sb.toString(),error);
-    }
+    	
+    	switch (level) {
+		case DEBUG:
+	    	debug(sb.toString(),error);
+			break;
+		case ERROR:
+	    	error(sb.toString(),error);
+			break;
+		case FATAL:
+	    	fatal(sb.toString(),error);
+			break;
+		case INFO:
+	    	info(sb.toString(),error);
+			break;
+		case TRACE:
+	    	trace(sb.toString(),error);
+			break;
+		case WARN:
+	    	warn(sb.toString(),error);
+			break;
+		default:
+			break;
+    	}
+	}
 
-    private Throwable serialize(StringBuffer sb, Object o, Throwable error) {
+	private Throwable serialize(StringBuffer sb, Object o, Throwable error) {
     	try {
 	    	if (o == null) {
 				sb.append("[null]");
@@ -240,16 +291,7 @@ public abstract class Log {
      * @param msg 
      */
     public void d(Object ... msg) {
-    	if (!isDebugEnabled()) return;
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//    		cnt++;
-    	}
-    	debug(sb.toString(),error);
+    	log(LEVEL.DEBUG, msg);
     }
 
     /**
@@ -257,16 +299,7 @@ public abstract class Log {
      * @param msg 
      */
     public void i(Object ... msg) {
-    	if (!isInfoEnabled()) return;
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//    		cnt++;
-    	}
-    	info(sb.toString(),error);
+    	log(LEVEL.INFO, msg);
     }
     
     /**
@@ -274,16 +307,7 @@ public abstract class Log {
      * @param msg 
      */
     public void w(Object ... msg) {
-    	if (!isWarnEnabled()) return;
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//    		cnt++;
-    	}
-    	warn(sb.toString(),error);
+    	log(LEVEL.WARN, msg);
     }
 
     /**
@@ -291,16 +315,7 @@ public abstract class Log {
      * @param msg 
      */
     public void e(Object ... msg) {
-    	if (!isErrorEnabled()) return;
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//   		cnt++;
-    	}
-    	error(sb.toString(),error);
+    	log(LEVEL.ERROR, msg);
     }
 
     /**
@@ -308,15 +323,7 @@ public abstract class Log {
      * @param msg 
      */
     public void f(Object ... msg) {
-    	StringBuffer sb = new StringBuffer();
-    	prepare(sb);
-    	Throwable error = null;
-//    	int cnt=0;
-    	for (Object o : msg) {
-			error = serialize(sb,o, error);
-//    		cnt++;
-    	}
-    	fatal(sb.toString(),error);
+    	log(LEVEL.FATAL, msg);
     }
 
     protected void prepare(StringBuffer sb) {
@@ -328,7 +335,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void trace(Object message);
+    protected abstract void trace(Object message);
 
 
     /**
@@ -337,7 +344,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void trace(Object message, Throwable t);
+    protected abstract void trace(Object message, Throwable t);
 
 
     /**
@@ -345,7 +352,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void debug(Object message);
+    protected abstract void debug(Object message);
 
 
     /**
@@ -354,7 +361,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void debug(Object message, Throwable t);
+    protected abstract void debug(Object message, Throwable t);
 
 
     /**
@@ -362,7 +369,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void info(Object message);
+    protected abstract void info(Object message);
 
 
     /**
@@ -371,7 +378,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void info(Object message, Throwable t);
+    protected abstract void info(Object message, Throwable t);
 
 
     /**
@@ -379,7 +386,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void warn(Object message);
+    protected abstract void warn(Object message);
 
 
     /**
@@ -388,7 +395,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void warn(Object message, Throwable t);
+    protected abstract void warn(Object message, Throwable t);
 
 
     /**
@@ -396,7 +403,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void error(Object message);
+    protected abstract void error(Object message);
 
 
     /**
@@ -405,7 +412,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void error(Object message, Throwable t);
+    protected abstract void error(Object message, Throwable t);
 
 
     /**
@@ -413,7 +420,7 @@ public abstract class Log {
      *
      * @param message log this message
      */
-    public abstract void fatal(Object message);
+    protected abstract void fatal(Object message);
 
 
     /**
@@ -422,7 +429,7 @@ public abstract class Log {
      * @param message log this message
      * @param t log this cause
      */
-    public abstract void fatal(Object message, Throwable t);
+    protected abstract void fatal(Object message, Throwable t);
 
 	public void setTrace(boolean localTrace) {
 		this.localTrace = localTrace;
@@ -459,6 +466,10 @@ public abstract class Log {
 
 	public void update() {
 		localTrace = MSingleton.isTrace(name);
+	}
+
+	public void setLevelMapper(LevelMapper levelMapper) {
+		mapper = levelMapper;
 	}
 
 }

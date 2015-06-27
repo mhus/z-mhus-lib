@@ -112,7 +112,7 @@ public class ParameterPart extends StringParsingPart {
 									if ("bool".equals(type))
 										out.append( MCast.toboolean(value.toString(),false) ? "1" : "0" );
 									else
-										log().warn("Unknown attribute type: " + type);
+										log().w("Unknown attribute type:",type);
 	}
 
 	@Override
