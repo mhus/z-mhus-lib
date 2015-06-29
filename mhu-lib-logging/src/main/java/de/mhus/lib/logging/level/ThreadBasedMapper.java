@@ -1,4 +1,4 @@
-package de.mhus.lib.logging.mapper;
+package de.mhus.lib.logging.level;
 
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.Log;
@@ -61,6 +61,16 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 	public boolean isLocalTrail() {
 		ThreadMapperConfig c = get();
 		return c == null ? true : c.isLocal();
+	}
+
+	@Override
+	public void prepareMessage(Log log, StringBuffer msg) {
+		ThreadMapperConfig config = map.get();
+		if (config == null) {
+    		msg.append('(').append(Thread.currentThread().getId()).append(')');
+		} else {
+			config.prepareMessage(log, msg);
+		}
 	}
 	
 }

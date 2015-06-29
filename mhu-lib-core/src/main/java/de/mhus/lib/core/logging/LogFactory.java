@@ -15,7 +15,8 @@ public abstract class LogFactory implements IBase {
 	WeakHashMap<String, Log> buffer = new WeakHashMap<String, Log>();
 	protected LEVEL level = LEVEL.INFO;
 	protected LevelMapper levelMapper;
-			
+    private ParameterMapper parameterMapper;
+
     /**
      * Convenience method to derive a name from the specified class and
      * call <code>getInstance(String)</code> with it.
@@ -54,7 +55,7 @@ public abstract class LogFactory implements IBase {
 		Log inst = buffer.get(name);
 		if (inst == null) {
 			inst = createInstance(name);
-			inst.setLevelMapper(levelMapper);
+			inst.doInitialize(this);
 			buffer.put(name,inst);
 		}
 		return inst;
@@ -116,6 +117,14 @@ public abstract class LogFactory implements IBase {
 
 	public void setLevelMapper(LevelMapper levelMapper) {
 		this.levelMapper = levelMapper;
+	}
+
+	public ParameterMapper getParameterMapper() {
+		return parameterMapper;
+	}
+
+	public void setParameterMapper(ParameterMapper parameterMapper) {
+		this.parameterMapper = parameterMapper;
 	}
 	
 //    public void update(Observable o, Object arg) {

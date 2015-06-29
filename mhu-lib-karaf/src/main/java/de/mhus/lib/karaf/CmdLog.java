@@ -10,8 +10,8 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.system.ISingleton;
-import de.mhus.lib.logging.mapper.ThreadMapperConfig;
-import de.mhus.lib.logging.mapper.ThreadBasedMapper;
+import de.mhus.lib.logging.level.ThreadBasedMapper;
+import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
@@ -56,8 +56,14 @@ public class CmdLog implements Action {
 			System.out.println("OK");
 		} break;
 		case "list": {
-			System.out.println("Default Level: " + singleton.getLogFactory().getDefaultLevel());
-			System.out.println("Trace: " + singleton.isFullTrace());
+			System.out.println("Default Level  : " + singleton.getLogFactory().getDefaultLevel());
+			System.out.println("Trace          : " + singleton.isFullTrace());
+			System.out.println("LogFoctory     : " + singleton.getLogFactory().getClass().getSimpleName());
+			if (singleton.getLogFactory().getLevelMapper() != null)
+			System.out.println("LevelMapper    : " + singleton.getLogFactory().getLevelMapper().getClass().getSimpleName());
+			if (singleton.getLogFactory().getParameterMapper() != null)
+			System.out.println("ParameterMapper: " + singleton.getLogFactory().getParameterMapper().getClass().getSimpleName());
+			
 			for (String name : singleton.getTraceNames())
 				System.out.println(name);
 		} break;

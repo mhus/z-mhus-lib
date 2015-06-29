@@ -1,6 +1,7 @@
-package de.mhus.lib.logging.mapper;
+package de.mhus.lib.logging.level;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -18,6 +19,8 @@ public class ThreadMapperConfig implements LevelMapper {
 	private boolean local = false;
 	private long timeout = 0;
 	private long timetout = 0;
+
+	private String id = MMath.toBasis36( (long) (Math.random() * 36 * 36 * 36), 3 );
 
 	public boolean isTimedOut() {
 		if (timetout <= 0)
@@ -47,7 +50,7 @@ public class ThreadMapperConfig implements LevelMapper {
 	public void doConfigure(String config) {
 		if (config == null) return;
 		String[] parts = config.toUpperCase().split(",");
-		if (parts.length <= 8) return;
+		if (parts.length <= 9) return;
 		trace = LEVEL.valueOf(parts[1]);
 		debug = LEVEL.valueOf(parts[2]);
 		info  = LEVEL.valueOf(parts[3]);
@@ -56,6 +59,7 @@ public class ThreadMapperConfig implements LevelMapper {
 		fatal = LEVEL.valueOf(parts[6]);
 		local = parts[7].equals("LOCAL");
 		setTimeout( MCast.tolong(parts[8], 0));
+		id = parts[9];
 	}
 
 	public String doSerialize() {
@@ -67,7 +71,8 @@ public class ThreadMapperConfig implements LevelMapper {
 				error.name() + "," + 
 				fatal.name() + "," +
 				(local ? "LOCAL" : "GLOBAL") + "," +
-				timeout;
+				timeout + "," +
+				id;
 	}
 	
 	@Override
@@ -94,6 +99,11 @@ public class ThreadMapperConfig implements LevelMapper {
 			timetout = System.currentTimeMillis() + timeout;
 		}
 		this.timeout = timeout;
+	}
+
+	@Override
+	public void prepareMessage(Log log, StringBuffer msg) {
+		msg.append('{').append(id).append('}');
 	}
 
 }

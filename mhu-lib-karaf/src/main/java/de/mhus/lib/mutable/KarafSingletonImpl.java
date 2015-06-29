@@ -21,7 +21,7 @@ import de.mhus.lib.core.service.ConfigProvider;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.SingletonInitialize;
 import de.mhus.lib.logging.JavaLoggerFactory;
-import de.mhus.lib.logging.mapper.ThreadBasedMapper;
+import de.mhus.lib.logging.level.ThreadBasedMapper;
 
 /**
  * TODO: Map config to service

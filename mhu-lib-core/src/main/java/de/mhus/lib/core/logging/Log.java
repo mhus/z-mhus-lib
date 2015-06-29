@@ -17,8 +17,9 @@ public abstract class Log {
 
 	protected boolean localTrace = true;
 	private String name;
-	protected LevelMapper mapper;
-    
+	protected LevelMapper levelMapper;
+    private ParameterMapper parameterMapper;
+	
 	public Log(String name) {
 		this.name = name;
 		localTrace = MSingleton.isTrace(name);
@@ -133,51 +134,6 @@ public abstract class Log {
 
 
     // -------------------------------------------------------- Logging Methods
-
-    /**
-     * Trace and Stringify
-     * @param msg
-     */
-    public void ts(Object ... msg) {
-    	Stringifier.stringifyArray(msg);
-    	t(msg);
-    }
-    
-    /**
-     * Info and Stringify
-     * @param msg
-     */
-    public void is(Object ... msg) {
-    	Stringifier.stringifyArray(msg);
-    	i(msg);
-    }
-
-    /**
-     * Warn and Stringify
-     * @param msg
-     */
-    public void ws(Object ... msg) {
-    	Stringifier.stringifyArray(msg);
-    	w(msg);
-    }
-    
-    /**
-     * Error and Stringify
-     * @param msg
-     */
-    public void es(Object ... msg) {
-    	Stringifier.stringifyArray(msg);
-    	e(msg);
-    }
-
-    /**
-     * Fatal and Stringify
-     * @param msg
-     */
-    public void fs(Object ... msg) {
-    	Stringifier.stringifyArray(msg);
-    	f(msg);
-    }
     
     /**
      * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
@@ -190,7 +146,9 @@ public abstract class Log {
 
     public void log(LEVEL level, Object ... msg) {
     	
-    	if (mapper != null) level = mapper.map(this, level,msg);
+    	if (levelMapper != null) level = levelMapper.map(this, level,msg);
+    	if (parameterMapper != null) msg = parameterMapper.map(this, msg);
+    	
     	switch (level) {
 		case DEBUG:
 			if (!isDebugEnabled()) return;
@@ -327,7 +285,11 @@ public abstract class Log {
     }
 
     protected void prepare(StringBuffer sb) {
-    	sb.append('[').append(Thread.currentThread().getId()).append(']'); //TODO make configurable
+    	if (levelMapper != null) {
+    		levelMapper.prepareMessage(this,sb);
+    	} else {
+    		sb.append('[').append(Thread.currentThread().getId()).append(']');
+    	}
 	}
 
 	/**
@@ -466,10 +428,46 @@ public abstract class Log {
 
 	public void update() {
 		localTrace = MSingleton.isTrace(name);
+		levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
+		parameterMapper = MSingleton.get().getLogFactory().getParameterMapper();
 	}
 
-	public void setLevelMapper(LevelMapper levelMapper) {
-		mapper = levelMapper;
+	public ParameterMapper getParameterMapper() {
+		return parameterMapper;
 	}
 
+	public void doInitialize(LogFactory logFactory) {
+		levelMapper = logFactory.getLevelMapper();
+		parameterMapper = logFactory.getParameterMapper();
+	}
+	
+	/**
+	 * Return if the given level is enabled. This function also uses the
+	 * levelMapper to find the return value. Instead of the is...Enabled().
+	 * 
+	 * @param level
+	 * @return
+	 */
+	public boolean isLevelEnabled(LEVEL level) {
+    	if (levelMapper != null) level = levelMapper.map(this, level);
+    	
+    	switch (level) {
+		case DEBUG:
+			return isDebugEnabled();
+		case ERROR:
+			return isErrorEnabled();
+		case FATAL:
+			return isFatalEnabled();
+		case INFO:
+			return isInfoEnabled();
+		case TRACE:
+			return isTraceEnabled();
+		case WARN:
+			return isWarnEnabled();
+		default:
+			return false;
+    	}
+
+	}
+	
 }
