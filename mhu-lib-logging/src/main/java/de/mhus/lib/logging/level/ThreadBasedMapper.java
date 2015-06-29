@@ -72,5 +72,15 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 			config.prepareMessage(log, msg);
 		}
 	}
+
+	@Override
+	public String getTrailId() {
+		ThreadMapperConfig config = map.get();
+		if (config == null) {
+    		return String.valueOf(Thread.currentThread().getId());
+		} else {
+			return config.getTrailId();
+		}
+	}
 	
 }

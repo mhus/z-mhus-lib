@@ -9,6 +9,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
 import de.mhus.lib.logging.level.ThreadMapperConfig;
@@ -17,7 +18,7 @@ import de.mhus.lib.mutable.KarafSingletonImpl;
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
 public class CmdLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="Command clear,add,full,dirty,level,reloadconfig,setThread [<config>],isThread,releaseThread", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command:\n clear - reset all loggers,\n add <path> - add a trace log,\n full - enable full trace logging,\n dirty - enable dirty logging,\n level - set log level (console logger),\n reloadconfig,\n settrail [<config>] - enable trail logging for this thread,\n istrail - output the traillog config,\n releasetrail - unset the current trail log config", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -59,8 +60,12 @@ public class CmdLog implements Action {
 			System.out.println("Default Level  : " + singleton.getLogFactory().getDefaultLevel());
 			System.out.println("Trace          : " + singleton.isFullTrace());
 			System.out.println("LogFoctory     : " + singleton.getLogFactory().getClass().getSimpleName());
-			if (singleton.getLogFactory().getLevelMapper() != null)
-			System.out.println("LevelMapper    : " + singleton.getLogFactory().getLevelMapper().getClass().getSimpleName());
+			LevelMapper lm = singleton.getLogFactory().getLevelMapper();
+			if (lm != null) {
+			System.out.println("LevelMapper    : " + lm.getClass().getSimpleName());
+			if (lm instanceof TrailLevelMapper)
+			System.out.println("   Configurtion: " + ((TrailLevelMapper)lm).doSerializeTrail() );
+			}
 			if (singleton.getLogFactory().getParameterMapper() != null)
 			System.out.println("ParameterMapper: " + singleton.getLogFactory().getParameterMapper().getClass().getSimpleName());
 			
@@ -77,7 +82,7 @@ public class CmdLog implements Action {
 			singleton.getLogFactory().updateLoggers();
 			System.out.println("OK");
 		} break;
-		case "setThread": {
+		case "settrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (mapper != null && mapper instanceof ThreadBasedMapper) {
 				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
@@ -90,7 +95,7 @@ public class CmdLog implements Action {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
-		case "isThread": {
+		case "istrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (mapper != null && mapper instanceof ThreadBasedMapper) {
 				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
@@ -99,7 +104,7 @@ public class CmdLog implements Action {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
-		case "releaseThread": {
+		case "releasetrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (mapper != null && mapper instanceof ThreadBasedMapper) {
 				ThreadBasedMapper m = (ThreadBasedMapper)mapper;

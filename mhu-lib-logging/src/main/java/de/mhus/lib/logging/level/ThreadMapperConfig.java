@@ -106,4 +106,8 @@ public class ThreadMapperConfig implements LevelMapper {
 		msg.append('{').append(id).append('}');
 	}
 
+	public String getTrailId() {
+		return id;
+	}
+	
 }
