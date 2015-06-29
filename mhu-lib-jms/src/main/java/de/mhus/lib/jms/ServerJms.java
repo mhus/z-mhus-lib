@@ -73,10 +73,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		log().i("reset",dest);
 		try {
 			consumer.close();
-		} catch (Throwable t) {log().t(t);}
+		} catch (Throwable t) {log().d(t);}
 		try {
 			replyProducer.close();
-		} catch (Throwable t) {log().t(t);}
+		} catch (Throwable t) {log().d(t);}
 		consumer = null;
 		replyProducer = null;
 		onReset();
@@ -116,7 +116,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	
 	public void processMessage(final Message message) {
 
-		log().t("received",message);
+		log().d("received",message);
 
 		boolean releaseLog = false;
 		try {
@@ -142,7 +142,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 				try {
 					if (message.getJMSReplyTo() != null) {
 						TextMessage answer = createErrorAnswer(t);
-						log().t("errorAnswer",answer);
+						log().d("errorAnswer",answer);
 						sendAnswer(message, answer);
 					}
 				} catch (Throwable tt) {
@@ -162,10 +162,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 						log().i(t);
 						answer = createErrorAnswer(t);
 					}
-					log().t("receivedAnswer",answer);
+					log().d("receivedAnswer",answer);
 					sendAnswer(message, answer);
 				} else {
-					log().t("receivedOneWay",message);
+					log().d("receivedOneWay",message);
 					receivedOneWay(message);
 				}
 			} catch (JMSException t) {
@@ -198,11 +198,11 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	@Override
 	public void doBeat() {
 		if (isClosed()) return;
-		log().t("beat");
+		log().d("beat");
 		try {
 			open(); // try to reopen and re-listen
 		} catch (JMSException e) {
-			log().t(e);
+			log().d(e);
 		}
 	}
 
@@ -221,7 +221,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		try {
 			open();
 		} catch (JMSException e) {
-			log().t(e);
+			log().d(e);
 		}
 	}
 

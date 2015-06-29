@@ -14,13 +14,13 @@ public class ThreadMapperConfig implements LevelMapper {
 	private LEVEL error = LEVEL.ERROR;
 	private LEVEL fatal = LEVEL.FATAL;
 	private LEVEL info = LEVEL.INFO;
-	private LEVEL trace = LEVEL.INFO;
+	private LEVEL trace = LEVEL.TRACE;
 	private LEVEL warn = LEVEL.WARN;
 	private boolean local = false;
 	private long timeout = 0;
 	private long timetout = 0;
 
-	private String id = MMath.toBasis36( (long) (Math.random() * 36 * 36 * 36), 3 );
+	private String id = MMath.toBasis36( (long) (Math.random() * 36 * 36 * 36 * 36), 4 );
 
 	public boolean isTimedOut() {
 		if (timetout <= 0)
@@ -50,27 +50,47 @@ public class ThreadMapperConfig implements LevelMapper {
 	public void doConfigure(String config) {
 		if (config == null) return;
 		String[] parts = config.toUpperCase().split(",");
-		if (parts.length <= 9) return;
-		trace = LEVEL.valueOf(parts[1]);
-		debug = LEVEL.valueOf(parts[2]);
-		info  = LEVEL.valueOf(parts[3]);
-		warn  = LEVEL.valueOf(parts[4]);
-		error = LEVEL.valueOf(parts[5]);
-		fatal = LEVEL.valueOf(parts[6]);
-		local = parts[7].equals("LOCAL");
-		setTimeout( MCast.tolong(parts[8], 0));
-		id = parts[9];
+		if (parts.length > 1)
+			trace = toLevel(parts[1]);
+		if (parts.length > 2)
+			debug = toLevel(parts[2]);
+		if (parts.length > 3)
+			info  = toLevel(parts[3]);
+		if (parts.length > 4)
+			warn  = toLevel(parts[4]);
+		if (parts.length > 5)
+			error = toLevel(parts[5]);
+		if (parts.length > 6)
+			fatal = toLevel(parts[6]);
+		if (parts.length > 7)
+			local = parts[7].equals("L");
+		if (parts.length > 8)
+			setTimeout( MCast.tolong(parts[8], 0));
+		if (parts.length > 9)
+			id = parts[9];
+	}
+
+	private LEVEL toLevel(String in) {
+		switch (in) {
+		case "T":return LEVEL.TRACE;
+		case "D":return LEVEL.DEBUG;
+		case "I":return LEVEL.INFO;
+		case "W":return LEVEL.WARN;
+		case "E":return LEVEL.ERROR;
+		case "F":return LEVEL.FATAL;
+		}
+		return LEVEL.TRACE;
 	}
 
 	public String doSerialize() {
 		return MAP_LABEL + "," + 
-				trace.name() + "," + 
-				debug.name() + "," + 
-				info.name() + "," + 
-				warn.name() + "," + 
-				error.name() + "," + 
-				fatal.name() + "," +
-				(local ? "LOCAL" : "GLOBAL") + "," +
+				trace.name().substring(0, 1) + "," + 
+				debug.name().substring(0, 1) + "," + 
+				info.name().substring(0, 1) + "," + 
+				warn.name().substring(0, 1) + "," + 
+				error.name().substring(0, 1) + "," + 
+				fatal.name().substring(0, 1) + "," +
+				(local ? "L" : "G") + "," +
 				timeout + "," +
 				id;
 	}
@@ -104,6 +124,7 @@ public class ThreadMapperConfig implements LevelMapper {
 	@Override
 	public void prepareMessage(Log log, StringBuffer msg) {
 		msg.append('{').append(id).append('}');
+		msg.append('(').append(Thread.currentThread().getId()).append(')');
 	}
 
 	public String getTrailId() {

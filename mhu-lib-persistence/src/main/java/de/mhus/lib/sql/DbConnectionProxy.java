@@ -19,7 +19,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	private StackTraceElement[] createStackTrace;
 
 	public DbConnectionProxy(DbConnection instance) {
-		if (log().isTrace()) {
+		if (log().isLocalTrace()) {
 			createStackTrace = Thread.currentThread().getStackTrace();
 			instance.setUsedTrace(createStackTrace);
 		}
@@ -77,7 +77,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	protected void finalize() throws Throwable {
 		log().t(id,"finalized",instance.getInstanceId());
 		if (instance != null) {
-			log().d(id,"final closed",instance.getInstanceId(),createStackTrace);
+			log().i(id,"final closed",instance.getInstanceId(),createStackTrace);
 			setUsed(false);
 		}
 		super.finalize();

@@ -128,8 +128,9 @@ public class DbManager extends MJmx {
 			else
 				sql.append("WHERE ").append(qualification);
 		}
-
-		return executeQuery(con, object, registryName, sql.toString(), attributes);
+		String s = sql.toString();
+		log().d("getByQualification",registryName,s,attributes);
+		return executeQuery(con, object, registryName, s, attributes);
 	}
 
 
@@ -198,7 +199,7 @@ public class DbManager extends MJmx {
 	 */
 	public <T> DbCollection<T> executeQuery(DbConnection con, T clazz, String registryName, String query, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
-		
+		log().t("query",clazz,registryName,query,attributes);
 		Map<String, Object> map = null;
 
 		DbConnection myCon = null;
@@ -235,7 +236,7 @@ public class DbManager extends MJmx {
 	 */
 	public <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
-
+		log().t("count",attributeName,query,attributes);
 		Map<String, Object> map = null;
 
 		DbConnection myCon = null;
@@ -323,6 +324,7 @@ public class DbManager extends MJmx {
 			}
 		}
 
+		log().d("get",registryName,keys);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -483,6 +485,7 @@ public class DbManager extends MJmx {
 			registryName = getRegistryName(clazz);
 		}
 
+		log().d("reload",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -553,6 +556,7 @@ public class DbManager extends MJmx {
 			registryName = getRegistryName(clazz);
 		}
 
+		log().t("changed",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -586,6 +590,7 @@ public class DbManager extends MJmx {
 		}
 
 
+		log().d("changed",registryName,object,ret);
 		return ret;
 	}
 
@@ -665,7 +670,6 @@ public class DbManager extends MJmx {
 	 */
 	public void createObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
-
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -682,6 +686,7 @@ public class DbManager extends MJmx {
 				throw new MException("class definition not found for object",object.getClass().getCanonicalName(),registryName);
 			registryName = getRegistryName(clazz);
 		}
+		log().d("create",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -755,6 +760,7 @@ public class DbManager extends MJmx {
 				throw new MException("class definition not found for object",object.getClass().getCanonicalName());
 			registryName = getRegistryName(clazz);
 		}
+		log().d("save",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -805,7 +811,6 @@ public class DbManager extends MJmx {
 	 */
 	public void deleteObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
-
 		DbConnection myCon = null;
 		if (con == null) {
 			try {
@@ -822,6 +827,7 @@ public class DbManager extends MJmx {
 				throw new MException("class definition not found for object",object.getClass().getCanonicalName());
 			registryName = getRegistryName(clazz);
 		}
+		log().d("delete",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
@@ -859,12 +865,14 @@ public class DbManager extends MJmx {
 	}
 
 	public void connect() throws Exception {
+		log().i("connect");
 		synchronized (this) {
 			initDatabase(false);
 		}
 	}
 	
 	public void disconnect() {
+		log().i("disconnect");
 		synchronized (this) {
 			if (nameMapping == null) return;
 			cIndex.clear();

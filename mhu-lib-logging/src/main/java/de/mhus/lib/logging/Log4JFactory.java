@@ -105,11 +105,10 @@ public final class Log4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message) {
-	    	if (!isTrace()) return;
 	        if(is12) {
-	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, null );
+	            getLogger().log(FQCN, (Priority) Level.TRACE, message, null );
 	        } else {
-	            getLogger().log(FQCN, Level.DEBUG, message, null );
+	            getLogger().log(FQCN, Level.TRACE, message, null );
 	        }
 	    }
 	
@@ -120,11 +119,10 @@ public final class Log4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message, Throwable t) {
-	    	if (!isTrace()) return;
 	        if(is12) {
-	            getLogger().log(FQCN, (Priority) Level.DEBUG, message, t );
+	            getLogger().log(FQCN, (Priority) Level.TRACE, message, t );
 	        } else {
-	            getLogger().log(FQCN, Level.DEBUG, message, t );
+	            getLogger().log(FQCN, Level.TRACE, message, t );
 	        }
 	    }
 	

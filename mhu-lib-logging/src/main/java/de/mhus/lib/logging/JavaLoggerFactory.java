@@ -38,7 +38,6 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message) {
-	    	if (!isTrace()) return;
             getLogger().log(Level.ALL, String.valueOf(message) );
 	    }
 	
@@ -49,7 +48,6 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message, Throwable t) {
-	    	if (!isTrace()) return;
             getLogger().log(Level.ALL, String.valueOf(message), t );
 	    }
 	
@@ -59,7 +57,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message) {
-            getLogger().log(isTrace() ? Level.ALL : Level.FINE, String.valueOf(message) );
+            getLogger().log(Level.FINE, String.valueOf(message) );
 	    }
 	
 	    /**
@@ -67,7 +65,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message, Throwable t) {
-            getLogger().log(isTrace() ? Level.ALL : Level.FINE, String.valueOf(message), t );
+            getLogger().log(Level.FINE, String.valueOf(message), t );
 	    }
 	
 	
@@ -76,7 +74,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message) {
-            getLogger().log(isTrace() ? Level.ALL : Level.INFO, String.valueOf(message) );
+            getLogger().log(Level.INFO, String.valueOf(message) );
 	    }
 	
 	
@@ -85,7 +83,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message, Throwable t) {
-            getLogger().log(isTrace() ? Level.ALL : Level.INFO, String.valueOf(message), t );
+            getLogger().log(Level.INFO, String.valueOf(message), t );
 	    }
 	
 	
@@ -94,7 +92,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void warn(Object message) {
-            getLogger().log(isTrace() ? Level.ALL : Level.WARNING, String.valueOf(message) );
+            getLogger().log(Level.WARNING, String.valueOf(message) );
 	    }
 	
 	
@@ -103,7 +101,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void warn(Object message, Throwable t) {
-            getLogger().log(isTrace() ? Level.ALL : Level.WARNING, String.valueOf(message), t );
+            getLogger().log(Level.WARNING, String.valueOf(message), t );
 	    }
 	
 	
@@ -112,7 +110,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void error(Object message) {
-            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message) );
+            getLogger().log(Level.SEVERE, String.valueOf(message) );
 	    }
 	
 	
@@ -121,7 +119,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void error(Object message, Throwable t) {
-            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message), t );
+            getLogger().log(Level.SEVERE, String.valueOf(message), t );
 	    }
 	
 	
@@ -130,7 +128,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void fatal(Object message) {
-            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message) );
+            getLogger().log(Level.SEVERE, String.valueOf(message) );
 	    }
 	
 	
@@ -139,7 +137,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void fatal(Object message, Throwable t) {
-            getLogger().log(isTrace() ? Level.ALL : Level.SEVERE, String.valueOf(message), t );
+            getLogger().log(Level.SEVERE, String.valueOf(message), t );
 	    }
 	
 	
@@ -160,7 +158,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isDebugEnabled() {
-	        return isTrace() || getLogger().isLoggable(Level.FINE);
+	        return getLogger().isLoggable(Level.FINE);
 	    }
 	
 	
@@ -169,7 +167,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isErrorEnabled() {
-	        return isTrace() || getLogger().isLoggable(Level.SEVERE);
+	        return getLogger().isLoggable(Level.SEVERE);
 	    }
 	
 	
@@ -187,7 +185,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isInfoEnabled() {
-	        return isTrace() || getLogger().isLoggable(Level.INFO);
+	        return getLogger().isLoggable(Level.INFO);
 	    }
 	
 	
@@ -197,7 +195,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isTraceEnabled() {
-	        return isTrace() || getLogger().isLoggable(Level.FINEST);
+	        return getLogger().isLoggable(Level.FINEST);
 	    }
 	
 	    /**
@@ -205,7 +203,7 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isWarnEnabled() {
-	        return isTrace() || getLogger().isLoggable(Level.WARNING);
+	        return getLogger().isLoggable(Level.WARNING);
 	    }
 	}
 }

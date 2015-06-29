@@ -80,37 +80,37 @@ public class PrintWriterLog extends Log {
 
 	@Override
 	public boolean isDebugEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.DEBUG.ordinal();
+		return level.ordinal() <= LEVEL.DEBUG.ordinal();
 	}
 
 	@Override
 	public boolean isErrorEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.ERROR.ordinal();
+		return level.ordinal() <= LEVEL.ERROR.ordinal();
 	}
 
 	@Override
 	public boolean isFatalEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.FATAL.ordinal();
+		return level.ordinal() <= LEVEL.FATAL.ordinal();
 	}
 
 	@Override
 	public boolean isInfoEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.INFO.ordinal();
+		return level.ordinal() <= LEVEL.INFO.ordinal();
 	}
 
 	@Override
 	public boolean isTraceEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.TRACE.ordinal();
+		return level.ordinal() <= LEVEL.TRACE.ordinal();
 	}
 
 	@Override
 	public boolean isWarnEnabled() {
-		return isTrace() || level.ordinal() <= LEVEL.WARN.ordinal();
+		return level.ordinal() <= LEVEL.WARN.ordinal();
 	}
 
 	@Override
 	public void trace(Object message) {
-		if (isTrace()) {
+		if (isTraceEnabled()) {
 			out.println(printTime() + "TRACE: " + name + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
@@ -119,7 +119,7 @@ public class PrintWriterLog extends Log {
 
 	@Override
 	public void trace(Object message, Throwable t) {
-		if (!isTrace()) return;
+		if (!isTraceEnabled()) return;
 		out.println(printTime() + "TRACE: " + name + " " + message);
 		if (t!=null && traces) t.printStackTrace(out);
 	}

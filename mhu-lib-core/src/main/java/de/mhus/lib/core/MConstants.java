@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class MConstants {
 
-	public static final String LOG_MAPPER = "_mhus_log_mapper";
+	public static final String LOG_MAPPER = "_mhus_log";
 
 	public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 

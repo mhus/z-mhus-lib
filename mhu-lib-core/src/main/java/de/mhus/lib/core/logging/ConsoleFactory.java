@@ -174,41 +174,40 @@ public class ConsoleFactory extends LogFactory {
 	
 		@Override
 		public boolean isDebugEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.DEBUG.ordinal();
+			return getLevel().ordinal() <= LEVEL.DEBUG.ordinal();
 		}
 	
 		@Override
 		public boolean isErrorEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.ERROR.ordinal();
+			return getLevel().ordinal() <= LEVEL.ERROR.ordinal();
 		}
 	
 		@Override
 		public boolean isFatalEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.FATAL.ordinal();
+			return getLevel().ordinal() <= LEVEL.FATAL.ordinal();
 		}
 	
 		@Override
 		public boolean isInfoEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.INFO.ordinal();
+			return getLevel().ordinal() <= LEVEL.INFO.ordinal();
 		}
 	
 		@Override
 		public boolean isTraceEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.TRACE.ordinal();
+			return getLevel().ordinal() <= LEVEL.TRACE.ordinal();
 		}
 	
 		@Override
 		public boolean isWarnEnabled() {
-			return isTrace() || getLevel().ordinal() <= LEVEL.WARN.ordinal();
+			return getLevel().ordinal() <= LEVEL.WARN.ordinal();
 		}
 	
 		@Override
 		public void trace(Object message) {
-			if (isTrace()) {
-				out.println(printTime() + "TRACE: " + name + " " + message);
-				if (message != null && message instanceof Throwable && traces)
-					((Throwable)message).printStackTrace(out);
-			}
+			if (!isTraceEnabled()) return;
+			out.println(printTime() + "TRACE: " + name + " " + message);
+			if (message != null && message instanceof Throwable && traces)
+				((Throwable)message).printStackTrace(out);
 		}
 	
 		@Override

@@ -37,8 +37,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message) {
-	    	if (!isTrace()) return;
-	            getLogger().trace(String.valueOf(message));
+	    	getLogger().trace(String.valueOf(message));
 	    }
 	
 	
@@ -48,7 +47,6 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void trace(Object message, Throwable t) {
-	    	if (!isTrace()) return;
             getLogger().trace(String.valueOf(message),t);
 	    }
 	
@@ -58,9 +56,6 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message));
-	    	else
             getLogger().debug(String.valueOf(message));
 	    }
 	
@@ -69,9 +64,6 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void debug(Object message, Throwable t) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message), t);
-	    	else
             getLogger().debug(String.valueOf(message),t);
 	    }
 	
@@ -81,10 +73,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message));
-	    	else
-	    		getLogger().info(String.valueOf(message));
+    		getLogger().info(String.valueOf(message));
 	    }
 	
 	
@@ -93,10 +82,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message, Throwable t) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message), t);
-	    	else
-	    		getLogger().info(String.valueOf(message),t);
+    		getLogger().info(String.valueOf(message),t);
 	    }
 	
 	
@@ -105,10 +91,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void warn(Object message) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message));
-	    	else
-	    		getLogger().warn(String.valueOf(message));
+    		getLogger().warn(String.valueOf(message));
 	    }
 	
 	
@@ -117,10 +100,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public void warn(Object message, Throwable t) {
-	    	if (isTrace())
-	            getLogger().error(String.valueOf(message), t);
-	    	else
-	    		getLogger().warn(String.valueOf(message),t);
+    		getLogger().warn(String.valueOf(message),t);
 	    }
 	
 	
@@ -177,7 +157,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isDebugEnabled() {
-	        return isTrace() || getLogger().isDebugEnabled();
+	        return getLogger().isDebugEnabled();
 	    }
 	
 	
@@ -186,7 +166,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isErrorEnabled() {
-            return isTrace() || getLogger().isErrorEnabled();
+            return getLogger().isErrorEnabled();
 	    }
 	
 	
@@ -195,7 +175,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isFatalEnabled() {
-	    	return isTrace() || logger.isErrorEnabled();
+	    	return logger.isErrorEnabled();
 	    }
 	
 	
@@ -204,7 +184,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isInfoEnabled() {
-	        return isTrace() || getLogger().isInfoEnabled();
+	        return getLogger().isInfoEnabled();
 	    }
 	
 	
@@ -214,7 +194,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isTraceEnabled() {
-	        return isTrace() || getLogger().isTraceEnabled();
+	        return getLogger().isTraceEnabled();
 	    }
 	
 	    /**
@@ -222,7 +202,7 @@ public class SLF4JFactory extends LogFactory {
 	     */
 	    @Override
 		public boolean isWarnEnabled() {
-	        return isTrace() || getLogger().isWarnEnabled();
+	        return getLogger().isWarnEnabled();
 	    }
 	}
 

@@ -5,13 +5,16 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.TrailLevelMapper;
 
-public class TimerImpl implements TimerIfc {
+public class TimerImpl extends MLog implements TimerIfc {
 	
 	private Timer timer;
 	private LinkedList<TimerTaskWrap> tasks = new LinkedList<>();
-	private Log log = Log.getLog(TimerImpl.class);
 	
 	public TimerImpl(Timer timer) {
 		this.timer = timer;
@@ -29,16 +32,19 @@ public class TimerImpl implements TimerIfc {
 
 	@Override
 	public void schedule(TimerTask task, long delay) {
+		log().d("schedule",task,delay);
 		timer.schedule(new TimerTaskWrap(this, task), delay);
 	}
 
 	@Override
 	public void schedule(TimerTask task, Date time) {
+		log().d("schedule",task,time);
 		timer.schedule(new TimerTaskWrap(this, task), time);
 	}
 
 	@Override
 	public void schedule(TimerTask task, long delay, long period) {
+		log().d("schedule",task,delay,period);
 		timer.schedule(new TimerTaskWrap(this, task), delay, period);
 	}
 
@@ -49,16 +55,19 @@ public class TimerImpl implements TimerIfc {
 
 	@Override
 	public void schedule(TimerTask task, Date firstTime, long period) {
+		log().d("schedule",task,firstTime,period);
 		timer.schedule(new TimerTaskWrap(this, task), firstTime, period);
 	}
 
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
+		log().d("scheduleAtFixedRate",task,delay,period);
 		timer.scheduleAtFixedRate(new TimerTaskWrap(this, task), delay, period);
 	}
 
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
+		log().d("scheduleAtFixedRate",task,firstTime,period);
 		timer.scheduleAtFixedRate(new TimerTaskWrap(this, task), firstTime, period);
 	}
 
@@ -78,6 +87,7 @@ public class TimerImpl implements TimerIfc {
 
 		private TimerTask task;
 		private TimerImpl timer;
+		private String log;
 		
 		public TimerTaskWrap(TimerImpl timer, TimerTask task) {
 			this.task = task;
@@ -85,6 +95,9 @@ public class TimerImpl implements TimerIfc {
 			synchronized (timer) {
 				timer.tasks.add(this);
 			}
+			LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+			if (lm != null && lm instanceof TrailLevelMapper)
+				log = ((TrailLevelMapper)lm).doSerializeTrail();
 		}
 		@Override
 		public void run() {
@@ -93,14 +106,27 @@ public class TimerImpl implements TimerIfc {
 //					cancel();
 //					return;
 //				}
+				if (log != null) {
+					LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+					if (lm != null && lm instanceof TrailLevelMapper)
+						((TrailLevelMapper)lm).doConfigureTrail(log);
+				}
+				
+				log().t("run",task);
 				task.run();
 			} catch (Throwable t) {
-				log.i("error",task.getClass().getCanonicalName(), t);
+				log().i("error",task.getClass().getCanonicalName(), t);
 				if (task instanceof TimerTaskSelfControl) {
 					if ( ((TimerTaskSelfControl)task).isCancelOnError() )
 							cancel();
 				} else
 					cancel();
+			} finally {
+				if (log != null) {
+					LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+					if (lm != null && lm instanceof TrailLevelMapper)
+						((TrailLevelMapper)lm).doResetTrail();
+				}
 			}
 		}
 		

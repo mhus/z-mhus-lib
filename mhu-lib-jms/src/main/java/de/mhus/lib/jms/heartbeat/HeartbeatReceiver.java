@@ -28,7 +28,7 @@ public class HeartbeatReceiver extends ServerJms {
 	public Message received(Message msg) throws JMSException {
 		String txt = "";
 		if (msg instanceof TextMessage) txt =((TextMessage)msg).getText();
-		log().i("received",txt);
+		log().d("received",txt);
 		TextMessage ret = getSession().createTextMessage(MSystem.getAppIdent());
 		return ret;
 	}

@@ -43,7 +43,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		prepareMessage(msg);
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
-		log().t("sendJmsOneWay",msg);
+		log().d("sendJmsOneWay",msg);
 		producer.send(msg);
 	}
 	
@@ -71,7 +71,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
 		try {
-			log().t("sendJms",msg);
+			log().d("sendJms",msg);
 			producer.send(msg);
 	
 			long start = System.currentTimeMillis();
@@ -80,13 +80,13 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					synchronized (this) {
 						this.wait(10000);
 					}
-				} catch (InterruptedException e) {log().t(e);}
+				} catch (InterruptedException e) {log().d(e);}
 				
 				synchronized (responses) {
 					Message answer = responses.get(id);
 					if (answer != null) {
 						responses.remove(id);
-						log().t("sendJmsAnswer",answer);
+						log().d("sendJmsAnswer",answer);
 						return answer;
 					}
 				}
@@ -129,7 +129,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
 		try {
-			log().t("sendJmsBroadcast",msg);
+			log().d("sendJmsBroadcast",msg);
 			producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
 	
 			long start = System.currentTimeMillis();
@@ -139,7 +139,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					synchronized (this) {
 						this.wait(1000);
 					}
-				} catch (InterruptedException e) {log().t(e);}
+				} catch (InterruptedException e) {log().d(e);}
 				
 				synchronized (responses) {
 					Message answer = responses.get(id);
@@ -154,7 +154,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					break;
 			}
 			
-			log().t("sendJmsBroadcastAnswer",res);
+			log().d("sendJmsBroadcastAnswer",res);
 			return res.toArray(new Message[res.size()]);
 		} catch (JMSException e) {
 			reset();
@@ -199,7 +199,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			synchronized (this) {
 				this.notifyAll();
 			}
-		} catch (JMSException e) {log().t(e);}
+		} catch (JMSException e) {log().d(e);}
 	}
 
 	@Override
@@ -207,10 +207,10 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		log().i("reset",dest);
 		try {
 			producer.close();
-		} catch (Throwable t) {log().t(t);}
+		} catch (Throwable t) {log().d(t);}
 		try {
 			responseConsumer.close();
-		} catch (Throwable t) {log().t(t);}
+		} catch (Throwable t) {log().d(t);}
 		producer = null;
 		responseConsumer = null;
 	}

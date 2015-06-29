@@ -75,7 +75,7 @@ public abstract class Log {
      * when the log level is more than debug. </p>
      * @return 
      */
-    public abstract boolean isDebugEnabled();
+	protected abstract boolean isDebugEnabled();
 
 
     /**
@@ -86,7 +86,7 @@ public abstract class Log {
      * when the log level is more than error. </p>
      * @return 
      */
-    public abstract boolean isErrorEnabled();
+    protected abstract boolean isErrorEnabled();
 
 
     /**
@@ -97,7 +97,7 @@ public abstract class Log {
      * when the log level is more than fatal. </p>
      * @return 
      */
-    public abstract boolean isFatalEnabled();
+    protected abstract boolean isFatalEnabled();
 
 
     /**
@@ -108,7 +108,7 @@ public abstract class Log {
      * when the log level is more than info. </p>
      * @return 
      */
-    public abstract boolean isInfoEnabled();
+    protected abstract boolean isInfoEnabled();
 
 
     /**
@@ -119,7 +119,7 @@ public abstract class Log {
      * when the log level is more than trace. </p>
      * @return 
      */
-    public abstract boolean isTraceEnabled();
+    protected abstract boolean isTraceEnabled();
 
 
     /**
@@ -130,7 +130,7 @@ public abstract class Log {
      * when the log level is more than warn. </p>
      * @return 
      */
-    public abstract boolean isWarnEnabled();
+    protected abstract boolean isWarnEnabled();
 
 
     // -------------------------------------------------------- Logging Methods
@@ -147,7 +147,6 @@ public abstract class Log {
     public void log(LEVEL level, Object ... msg) {
     	
     	if (levelMapper != null) level = levelMapper.map(this, level,msg);
-    	if (parameterMapper != null) msg = parameterMapper.map(this, msg);
     	
     	switch (level) {
 		case DEBUG:
@@ -172,6 +171,8 @@ public abstract class Log {
 			return;
     	}
 
+    	if (parameterMapper != null) msg = parameterMapper.map(this, msg);
+    	
     	StringBuffer sb = new StringBuffer();
     	prepare(sb);
     	Throwable error = null;
@@ -393,11 +394,11 @@ public abstract class Log {
      */
     protected abstract void fatal(Object message, Throwable t);
 
-	public void setTrace(boolean localTrace) {
+	public void setLocalTrace(boolean localTrace) {
 		this.localTrace = localTrace;
 	}
 
-	public boolean isTrace() {
+	public boolean isLocalTrace() {
 		return localTrace;
 	}
 
@@ -449,7 +450,12 @@ public abstract class Log {
 	 * @return
 	 */
 	public boolean isLevelEnabled(LEVEL level) {
-    	if (levelMapper != null) level = levelMapper.map(this, level);
+    	
+		if (localTrace)
+			level = LEVEL.INFO;
+		else
+		if (levelMapper != null) 
+			level = levelMapper.map(this, level);
     	
     	switch (level) {
 		case DEBUG:
