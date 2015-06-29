@@ -43,7 +43,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		prepareMessage(msg);
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
-		log().d("sendJmsOneWay",msg);
+		log().d("sendJmsOneWay",dest,msg);
 		producer.send(msg);
 	}
 	
@@ -71,7 +71,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
 		try {
-			log().d("sendJms",msg);
+			log().d("sendJms",dest,msg);
 			producer.send(msg);
 	
 			long start = System.currentTimeMillis();
@@ -86,7 +86,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					Message answer = responses.get(id);
 					if (answer != null) {
 						responses.remove(id);
-						log().d("sendJmsAnswer",answer);
+						log().d("sendJmsAnswer",dest,answer);
 						return answer;
 					}
 				}
@@ -129,7 +129,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
 		try {
-			log().d("sendJmsBroadcast",msg);
+			log().d("sendJmsBroadcast",dest,msg);
 			producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
 	
 			long start = System.currentTimeMillis();
@@ -154,7 +154,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					break;
 			}
 			
-			log().d("sendJmsBroadcastAnswer",res);
+			log().d("sendJmsBroadcastAnswer",dest,res);
 			return res.toArray(new Message[res.size()]);
 		} catch (JMSException e) {
 			reset();

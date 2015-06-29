@@ -116,7 +116,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	
 	public void processMessage(final Message message) {
 
-		log().d("received",message);
+		log().d("received",dest,message);
 
 		boolean releaseLog = false;
 		try {
@@ -142,7 +142,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 				try {
 					if (message.getJMSReplyTo() != null) {
 						TextMessage answer = createErrorAnswer(t);
-						log().d("errorAnswer",answer);
+						log().d("errorAnswer",dest,answer);
 						sendAnswer(message, answer);
 					}
 				} catch (Throwable tt) {
@@ -162,10 +162,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 						log().i(t);
 						answer = createErrorAnswer(t);
 					}
-					log().d("receivedAnswer",answer);
+					log().d("receivedAnswer",dest,answer);
 					sendAnswer(message, answer);
 				} else {
-					log().d("receivedOneWay",message);
+					log().d("receivedOneWay",dest,message);
 					receivedOneWay(message);
 				}
 			} catch (JMSException t) {
