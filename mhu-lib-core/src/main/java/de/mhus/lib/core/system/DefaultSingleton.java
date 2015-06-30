@@ -19,11 +19,13 @@ import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.StreamToLogAdapter;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.service.ConfigProvider;
 
 public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	
-	private ConsoleFactory logFactory;
+	private LogFactory logFactory;
 	private File baseDir;
 	private IConfig config;
 	private BaseControl baseControl;
@@ -55,13 +57,28 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 		String logFactoryClassName = System.getProperty("mhu.lib.log.factory.class");
 		if (MString.isSet(logFactoryClassName))
 			try {
-				logFactory = (ConsoleFactory) getClass().getClassLoader().loadClass(logFactoryClassName).newInstance();
+				logFactory = (LogFactory) getClass().getClassLoader().loadClass(logFactoryClassName).newInstance();
 			} catch (Throwable t) {
 				System.out.println("MHU-Singleton: " + logFactoryClassName + " " + t.toString());
 			}
 		if (logFactory == null)
 			logFactory = new ConsoleFactory();
-		baseDir = new File(".");
+		
+		
+		String baseDirName = System.getProperty("mhu.lib.base.dir");
+		if (baseDirName == null) baseDirName = ".";
+		baseDir = new File(baseDirName);
+		
+		String consoleRedirect = System.getProperty("mhu.lib.log.console.redirect");
+		if ("true".equals(consoleRedirect)) {
+			System.setErr(null);
+			System.setOut(null);
+			System.setErr(new StreamToLogAdapter(LEVEL.ERROR, System.err));
+			System.setOut(new StreamToLogAdapter(LEVEL.INFO, System.out));
+		}
+		
+		
+		
 	}
 
 	public synchronized IConfig getConfig() {
