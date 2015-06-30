@@ -7,9 +7,12 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
+import de.mhus.lib.core.MActivator;
+
 public class MObjectInputStream extends ObjectInputStream {
 
 	private ClassLoader cl = getClass().getClassLoader();
+	private MActivator act = null;
 
 	public MObjectInputStream() throws IOException, SecurityException {
 		super();
@@ -17,6 +20,10 @@ public class MObjectInputStream extends ObjectInputStream {
 
 	public MObjectInputStream(InputStream in) throws IOException {
 		super(in);
+	}
+	
+	public void setActivator(MActivator activator) {
+		act = activator;
 	}
 	
 	public void setClassLoader(ClassLoader cl) {
@@ -27,9 +34,15 @@ public class MObjectInputStream extends ObjectInputStream {
 	protected Class<?> resolveClass(ObjectStreamClass desc)
             throws IOException, ClassNotFoundException
     {
-        String name = desc.getName();
+    	String name = desc.getName();
+    	try {
+	    	if (act != null)
+	    		return act.loadClass(name);
+        } catch (ClassNotFoundException ex) {
+        }
+    	
         try {
-            return Class.forName(name, false, cl );
+            return Class.forName(name, true, cl );
         } catch (ClassNotFoundException ex) {
         	return super.resolveClass(desc);
         }

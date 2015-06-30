@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
@@ -12,16 +13,22 @@ import de.mhus.lib.core.activator.ActivatorImpl;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
+import de.mhus.lib.core.directory.EmptyResourceNode;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
+import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.MutableParameterMapper;
+import de.mhus.lib.core.logging.ParameterEntryMapper;
+import de.mhus.lib.core.logging.ParameterMapper;
 import de.mhus.lib.core.logging.StreamToLogAdapter;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.util.TimerIfc;
 
 public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	
@@ -30,7 +37,6 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	private IConfig config;
 	private BaseControl baseControl;
 	private ConfigProvider configProvider;
-	private boolean fullTrace;
 	private HashSet<String> logTrace = new HashSet<>();
 	private FileWatch fileWatch;
 	private boolean needFileWatch = false;
@@ -52,37 +58,20 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
-		needFileWatch = "true".equals(System.getProperty(MSystem.PROP_FILE_WATCH));
-		configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, "mhus-config.xml");
-		String logFactoryClassName = System.getProperty("mhu.lib.log.factory.class");
-		if (MString.isSet(logFactoryClassName))
-			try {
-				logFactory = (LogFactory) getClass().getClassLoader().loadClass(logFactoryClassName).newInstance();
-			} catch (Throwable t) {
-				System.out.println("MHU-Singleton: " + logFactoryClassName + " " + t.toString());
-			}
-		if (logFactory == null)
-			logFactory = new ConsoleFactory();
+		configFile = System.getProperty(MConstants.PROP_CONFIG_FILE);
+		if (configFile == null)
+			configFile = MConstants.DEFAULT_MHUS_CONFIG_FILE;
+		else
+			needFileWatch = true;
 		
-		
-		String baseDirName = System.getProperty("mhu.lib.base.dir");
-		if (baseDirName == null) baseDirName = ".";
-		baseDir = new File(baseDirName);
-		
-		String consoleRedirect = System.getProperty("mhu.lib.log.console.redirect");
-		if ("true".equals(consoleRedirect)) {
-			System.setErr(null);
-			System.setOut(null);
-			System.setErr(new StreamToLogAdapter(LEVEL.ERROR, System.err));
-			System.setOut(new StreamToLogAdapter(LEVEL.INFO, System.out));
-		}
-		
-		
+		reConfigure();
 		
 	}
 
 	public synchronized IConfig getConfig() {
 		if (config == null) {
+			
+			config = new HashConfig();
 			
 			if (fileWatch != null) {
 				fileWatch.doStop();
@@ -92,17 +81,18 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 			File f = new File(baseDir,configFile);
 			if (MSingleton.isDirtyTrace())
 				System.out.println("--- Try to load mhus config from " + f.getAbsolutePath());
-			internalLoadConfig(f);
+			if (!internalLoadConfig(f))
+				return config;
 			
 			if (needFileWatch) {
-				MTimer timer = baseControl.getCurrentBase().base(MTimer.class);
+				TimerIfc timer = baseControl.getCurrentBase().base(TimerIfc.class);
 				fileWatch = new FileWatch(f, timer, new FileWatch.Listener() {
 	
 					@Override
 					public void onFileChanged(FileWatch fileWatch) {
 						File file = fileWatch.getFile();
-						internalLoadConfig(file);
-						logFactory.updateLoggers();
+						if (internalLoadConfig(file))
+							reConfigure();
 					}
 	
 					@Override
@@ -117,37 +107,109 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 		return config;
 	}
 	
-	private void internalLoadConfig(File file) {
+	private boolean internalLoadConfig(File file) {
 		if (file.exists() && file.isFile())
 			try {
-				config = new XmlConfigFile(file);
+				XmlConfigFile c = new XmlConfigFile(file);
+				config = c;
+				return true;
 			} catch (Exception e) {
-				if (fullTrace)
+				if (MSingleton.isDirtyTrace())
 					e.printStackTrace();
 			}
-		if (config == null)
-			config = new HashConfig();
-		loadConfig();
+		
+		if (MSingleton.isDirtyTrace())
+			System.out.println("*** MHUS Config file not found" + file);
+		
+		return false;
 	}
 	
-	private void loadConfig() {
-		ResourceNode system = config.getNode("system");
-		if (system == null) return;
+	@Override
+	public void reConfigure() {
+		ResourceNode system = getConfig().getNode("system");
 		
-		fullTrace = system.getBoolean("TRACE",false);
+		
+		if (system == null) system = new EmptyResourceNode();
+		
 		logTrace.clear();
 		for (String p : system.getPropertyKeys()) {
 			if (p.startsWith("TRACE."))
 				logTrace.add(p.substring(6));
 		}
+
 		try {
-			String factoryClassName = system.getString("log.factory.class");
-			if (MString.isSet(factoryClassName)) {
-				logFactory = (ConsoleFactory) Class.forName(factoryClassName).newInstance();
+			String key = MConstants.PROP_BASE_DIR;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			String baseDirName = ".";
+			if (MString.isSet(name)) 
+				baseDirName = name;
+			baseDir = new File(baseDirName);
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}	
+
+		try {
+			String key = MConstants.PROP_LOG_FACTORY_CLASS;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				logFactory = (LogFactory) Class.forName(name.trim()).newInstance();
 			}
-		} catch (Throwable t) {
-			if (fullTrace) t.printStackTrace();
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}	
+		if (logFactory == null)
+			logFactory = new ConsoleFactory();
+
+		try {
+			String key = MConstants.PROP_LOG_LEVEL_MAPPER_CLASS;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		try {
+			String key = MConstants.PROP_LOG_LEVEL_MAPPER_CLASS;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}	
+		try {
+			String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).newInstance() );
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		
+		if (logFactory.getParameterMapper() != null && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
+			try {
+				ResourceNode[] mappers = system.getNodes(MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS);
+				if (mappers.length > 0) ((MutableParameterMapper)logFactory.getParameterMapper()).clear();
+				for (ResourceNode mapper : mappers) {
+					String name = mapper.getString("name");
+					String clazz = mapper.getString("class");
+					if (MString.isSet(name) && MString.isSet(clazz))
+						((MutableParameterMapper)logFactory.getParameterMapper()).put(name, (ParameterEntryMapper) Class.forName(clazz.trim()).newInstance() );
+				}
+			} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
 		}
+			
+		try {
+			String key = MConstants.PROP_LOG_CONSOLE_REDIRECT;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				if ("true".equals(name)) {
+					System.setErr(null);
+					System.setOut(null);
+					System.setErr(new StreamToLogAdapter(LEVEL.ERROR, System.err));
+					System.setOut(new StreamToLogAdapter(LEVEL.INFO, System.out));
+				}
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		
 	}
 
 	@Override
@@ -178,7 +240,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 
 	@Override
 	public boolean isTrace(String name) {
-		return fullTrace || logTrace.contains(name);
+		return logTrace.contains(name);
 	}
 
 	@Override

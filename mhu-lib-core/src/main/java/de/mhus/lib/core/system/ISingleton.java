@@ -22,4 +22,6 @@ public interface ISingleton {
 	boolean isTrace(String name);
 	
 	Base base();
+
+	void reConfigure();
 }

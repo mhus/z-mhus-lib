@@ -182,7 +182,8 @@ public class FieldPersistent extends Field {
 											if (st != null) {
 												@SuppressWarnings("resource")
 												MObjectInputStream ois = new MObjectInputStream(st);
-												ois.setClassLoader(manager.getActivator());
+												ois.setActivator(manager.getActivator());
+//												ois.setClassLoader(manager.getActivator());
 
 												Object o = ois.readObject();
 												set(obj, o );

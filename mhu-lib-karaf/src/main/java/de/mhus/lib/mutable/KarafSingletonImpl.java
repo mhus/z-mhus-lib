@@ -5,6 +5,7 @@ import java.util.Dictionary;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
@@ -65,7 +66,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	public IConfig getConfig() { //TODO load from service
 		synchronized (this) {
 			if (config == null) {
-				String configFile = System.getProperty(MSystem.PROP_CONFIG_FILE, configFileName );
+				String configFile = System.getProperty(MConstants.PROP_CONFIG_FILE, configFileName );
 				File file = new File(baseDir,configFile);
 				if (MSingleton.isDirtyTrace())
 					System.out.println("--- Try to load mhus config from " + file.getAbsolutePath());
@@ -172,6 +173,12 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 	@Override
 	public Base base() {
 		return getBaseControl().getCurrentBase();
+	}
+
+	@Override
+	public void reConfigure() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -4,10 +4,12 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.mhus.lib.core.util.TimerIfc;
+
 public class FileWatch {
 
 	private File file;
-	private Timer timer;
+	private TimerIfc timer;
 	private long period = 30 * 1000;
 	private long modified = -2;
 	private Listener listener;
@@ -20,7 +22,7 @@ public class FileWatch {
 		this(fileToWatch, null, 30000, true, listener);
 	}
 	
-	public FileWatch(File fileToWatch, Timer timer, Listener listener) {
+	public FileWatch(File fileToWatch, TimerIfc timer, Listener listener) {
 		this(fileToWatch, timer, 30000, true, listener);
 	}
 	/**
@@ -35,7 +37,7 @@ public class FileWatch {
 	 * @param startHook
 	 * @param listener
 	 */
-	public FileWatch(File fileToWatch, Timer timer, long period, boolean startHook, Listener listener) {
+	public FileWatch(File fileToWatch, TimerIfc timer, long period, boolean startHook, Listener listener) {
 		file = fileToWatch;
 		this.timer = timer;
 		this.period = period;
