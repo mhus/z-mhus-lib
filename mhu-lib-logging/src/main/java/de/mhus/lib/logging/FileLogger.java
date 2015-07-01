@@ -9,11 +9,13 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.LogEngine;
+import de.mhus.lib.core.logging.LogFactory;
 
 public class FileLogger extends Log {
 	
 	private File file;
-	private LEVEL level = LEVEL.INFO;
+	private Log.LEVEL level = Log.LEVEL.INFO;
 	private boolean printTime = true;
 	private boolean traces = true;
 	private PrintStream out;
@@ -32,54 +34,123 @@ public class FileLogger extends Log {
 		this.level = level;
 	}
 	
-	@Override
-	public void debug(Object message) {
-		if (!isDebugEnabled()) return;
-		print("DEBUG",message,null);
-	}
+	private class MyEngine extends LogEngine {
 
-	@Override
-	public void debug(Object message, Throwable t) {
-		if (!isDebugEnabled()) return;
-		print("DEBUG",message, t);
-	}
+		public MyEngine(String name) {
+			super(name);
+		}
 
-	@Override
-	public void error(Object message) {
-		if (!isErrorEnabled()) return;
-		print("ERROR",message,null);
-	}
+			@Override
+		public void debug(Object message) {
+			if (!isDebugEnabled()) return;
+			print("DEBUG",message,null);
+		}
+	
+		@Override
+		public void debug(Object message, Throwable t) {
+			if (!isDebugEnabled()) return;
+			print("DEBUG",message, t);
+		}
+	
+		@Override
+		public void error(Object message) {
+			if (!isErrorEnabled()) return;
+			print("ERROR",message,null);
+		}
+	
+		@Override
+		public void error(Object message, Throwable t) {
+			if (!isErrorEnabled()) return;
+			print("ERROR",message,t);
+		}
+	
+		@Override
+		public void fatal(Object message) {
+			if (!isFatalEnabled()) return;
+			print("FATAL",message,null);
+		}
+	
+		@Override
+		public void fatal(Object message, Throwable t) {
+			if (!isFatalEnabled()) return;
+			print("FATAL",message,t);
+		}
+		
+		@Override
+		public void info(Object message) {
+			if (!isInfoEnabled()) return;
+			print("INFO",message,null);
+		}
+	
+		@Override
+		public void info(Object message, Throwable t) {
+			if (!isInfoEnabled()) return;
+			print("INFO",message,t);
+		}
 
-	@Override
-	public void error(Object message, Throwable t) {
-		if (!isErrorEnabled()) return;
-		print("ERROR",message,t);
-	}
+		@Override
+		public boolean isDebugEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.DEBUG.ordinal();
+		}
 
-	@Override
-	public void fatal(Object message) {
-		if (!isFatalEnabled()) return;
-		print("FATAL",message,null);
-	}
+		@Override
+		public boolean isErrorEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.ERROR.ordinal();
+		}
 
-	@Override
-	public void fatal(Object message, Throwable t) {
-		if (!isFatalEnabled()) return;
-		print("FATAL",message,t);
+		@Override
+		public boolean isFatalEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.FATAL.ordinal();
+		}
+
+		@Override
+		public boolean isInfoEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.INFO.ordinal();
+		}
+
+		@Override
+		public boolean isTraceEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.TRACE.ordinal();
+		}
+
+		@Override
+		public boolean isWarnEnabled() {
+			return getLevel().ordinal() <= Log.LEVEL.WARN.ordinal();
+		}
+
+		@Override
+		public void trace(Object message) {
+			if (isTraceEnabled()) {
+				print("TRACE",message,null);
+			}
+		}
+
+		@Override
+		public void trace(Object message, Throwable t) {
+			if (!isTraceEnabled()) return;
+			print("TRACE",message,t);
+		}
+
+		@Override
+		public void warn(Object message) {
+			if (!isWarnEnabled()) return;
+			print("WARN",message,null);
+		}
+
+		@Override
+		public void warn(Object message, Throwable t) {
+			if (!isWarnEnabled()) return;
+			print("WARN",message,t);
+		}
+
+		@Override
+		public void doInitialize(LogFactory logFactory) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
-	@Override
-	public void info(Object message) {
-		if (!isInfoEnabled()) return;
-		print("INFO",message,null);
-	}
-
-	@Override
-	public void info(Object message, Throwable t) {
-		if (!isInfoEnabled()) return;
-		print("INFO",message,t);
-	}
-
 	protected synchronized void print(String level, Object message, Throwable t) {
 		if (!check()) return;
 		out.println(printTime() + "," + level + "," + getInfo() + "," + message);
@@ -119,61 +190,6 @@ public class FileLogger extends Log {
 		if (file.exists() && file.isFile())
 			file.renameTo(new File(file.getParentFile(), MDate.toFileFormat(new Date()) + "." + file.getName() ));
 	}
-
-	@Override
-	public boolean isDebugEnabled() {
-		return getLevel().ordinal() <= LEVEL.DEBUG.ordinal();
-	}
-
-	@Override
-	public boolean isErrorEnabled() {
-		return getLevel().ordinal() <= LEVEL.ERROR.ordinal();
-	}
-
-	@Override
-	public boolean isFatalEnabled() {
-		return getLevel().ordinal() <= LEVEL.FATAL.ordinal();
-	}
-
-	@Override
-	public boolean isInfoEnabled() {
-		return getLevel().ordinal() <= LEVEL.INFO.ordinal();
-	}
-
-	@Override
-	public boolean isTraceEnabled() {
-		return getLevel().ordinal() <= LEVEL.TRACE.ordinal();
-	}
-
-	@Override
-	public boolean isWarnEnabled() {
-		return getLevel().ordinal() <= LEVEL.WARN.ordinal();
-	}
-
-	@Override
-	public void trace(Object message) {
-		if (isTraceEnabled()) {
-			print("TRACE",message,null);
-		}
-	}
-
-	@Override
-	public void trace(Object message, Throwable t) {
-		if (!isTraceEnabled()) return;
-		print("TRACE",message,t);
-	}
-
-	@Override
-	public void warn(Object message) {
-		if (!isWarnEnabled()) return;
-		print("WARN",message,null);
-	}
-
-	@Override
-	public void warn(Object message, Throwable t) {
-		if (!isWarnEnabled()) return;
-		print("WARN",message,t);
-	}
 	
 	public String printTime() {
 		if (printTime) {
@@ -204,6 +220,15 @@ public class FileLogger extends Log {
 
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
+	}
+	
+	@Override
+	public void update() {
+		engine = new MyEngine(getName());
+	}
+	
+	@Override
+	public void register() {
 	}
 	
 }

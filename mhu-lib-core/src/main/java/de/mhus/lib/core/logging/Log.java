@@ -11,126 +11,39 @@ import de.mhus.lib.core.util.Stringifier;
  * @author mikehummel
  *
  */
-public abstract class Log {
+public class Log {
 
 	public enum LEVEL {TRACE,DEBUG,INFO,WARN,ERROR,FATAL};
 
 	protected boolean localTrace = true;
-	private String name;
+	protected String name;
 	protected LevelMapper levelMapper;
-    private ParameterMapper parameterMapper;
+    protected ParameterMapper parameterMapper;
+    protected LogEngine engine = null;
 	
-	public Log(String name) {
+	public Log(Object owner) {
+		
+		
+		String name = null;
+		if (owner == null) {
+			name = "?";
+		} else
+		if (owner instanceof Class) {
+			name = ((Class<?>)owner).getName();
+		} else
+			name = String.valueOf(owner);
+		
 		this.name = name;
 		localTrace = MSingleton.isTrace(name);
+		
+		update();
+		
+		register();
 	}
 
-    /**
-     * Convenience method to return a named logger, without the application
-     * having to care about factories.
-     *
-     * @param clazz Class from which a log name will be derived
-     */
-//    public static Log getLog(Class<?> clazz) {
-//
-//    	Log log;
-//		try {
-//			log = MSingleton.instance().getLogFactory(clazz).getInstance(clazz);
-//		} catch (Exception e) {
-//			log = new ConsoleFactory();
-//		}
-//		log.name = clazz.getCanonicalName();
-//		log.update(null, null);
-//		MSingleton.instance().registerConfigListener(log);
-//		return log;
-//    }
-
-    /**
-     * Convenience method to return a named logger, without the application
-     * having to care about factories.
-     *
-     * @param name Logical name of the <code>Log</code> instance to be
-     *  returned (the meaning of this name is only known to the underlying
-     *  logging implementation that is being wrapped)
-     */
-//    public static Log getLog(String name) {
-//
-//    	Log log;
-//		try {
-//			log = MSingleton.instance().getLogFactory(name).getInstance(name);
-//		} catch (Exception e) {
-//			log = new ConsoleFactory();
-//		}
-//        log.name = name;
-//        log.update(null, null);
-//        MSingleton.instance().registerConfigListener(log);
-//        return log;
-//    }
-    
-    /**
-     * <p> Is debug logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than debug. </p>
-     * @return 
-     */
-	protected abstract boolean isDebugEnabled();
-
-
-    /**
-     * <p> Is error logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than error. </p>
-     * @return 
-     */
-    protected abstract boolean isErrorEnabled();
-
-
-    /**
-     * <p> Is fatal logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than fatal. </p>
-     * @return 
-     */
-    protected abstract boolean isFatalEnabled();
-
-
-    /**
-     * <p> Is info logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than info. </p>
-     * @return 
-     */
-    protected abstract boolean isInfoEnabled();
-
-
-    /**
-     * <p> Is trace logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than trace. </p>
-     * @return 
-     */
-    protected abstract boolean isTraceEnabled();
-
-
-    /**
-     * <p> Is warn logging currently enabled? </p>
-     *
-     * <p> Call this method to prevent having to perform expensive operations
-     * (for example, <code>String</code> concatenation)
-     * when the log level is more than warn. </p>
-     * @return 
-     */
-    protected abstract boolean isWarnEnabled();
+    protected void register() {
+		MSingleton.registerLogger(this);
+	}
 
 
     // -------------------------------------------------------- Logging Methods
@@ -150,22 +63,22 @@ public abstract class Log {
     	
     	switch (level) {
 		case DEBUG:
-			if (!isDebugEnabled()) return;
+			if (!engine.isDebugEnabled()) return;
 			break;
 		case ERROR:
-			if (!isErrorEnabled()) return;
+			if (!engine.isErrorEnabled()) return;
 			break;
 		case FATAL:
-			if (!isFatalEnabled()) return;
+			if (!engine.isFatalEnabled()) return;
 			break;
 		case INFO:
-			if (!isInfoEnabled()) return;
+			if (!engine.isInfoEnabled()) return;
 			break;
 		case TRACE:
-			if (!isTraceEnabled()) return;
+			if (!engine.isTraceEnabled()) return;
 			break;
 		case WARN:
-			if (!isWarnEnabled()) return;
+			if (!engine.isWarnEnabled()) return;
 			break;
 		default:
 			return;
@@ -184,22 +97,22 @@ public abstract class Log {
     	
     	switch (level) {
 		case DEBUG:
-	    	debug(sb.toString(),error);
+			engine.debug(sb.toString(),error);
 			break;
 		case ERROR:
-	    	error(sb.toString(),error);
+			engine.error(sb.toString(),error);
 			break;
 		case FATAL:
-	    	fatal(sb.toString(),error);
+			engine.fatal(sb.toString(),error);
 			break;
 		case INFO:
-	    	info(sb.toString(),error);
+			engine.info(sb.toString(),error);
 			break;
 		case TRACE:
-	    	trace(sb.toString(),error);
+			engine.trace(sb.toString(),error);
 			break;
 		case WARN:
-	    	warn(sb.toString(),error);
+			engine.warn(sb.toString(),error);
 			break;
 		default:
 			break;
@@ -293,107 +206,6 @@ public abstract class Log {
     	}
 	}
 
-	/**
-     * <p> Log a message with trace log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void trace(Object message);
-
-
-    /**
-     * <p> Log an error with trace log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void trace(Object message, Throwable t);
-
-
-    /**
-     * <p> Log a message with debug log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void debug(Object message);
-
-
-    /**
-     * <p> Log an error with debug log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void debug(Object message, Throwable t);
-
-
-    /**
-     * <p> Log a message with info log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void info(Object message);
-
-
-    /**
-     * <p> Log an error with info log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void info(Object message, Throwable t);
-
-
-    /**
-     * <p> Log a message with warn log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void warn(Object message);
-
-
-    /**
-     * <p> Log an error with warn log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void warn(Object message, Throwable t);
-
-
-    /**
-     * <p> Log a message with error log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void error(Object message);
-
-
-    /**
-     * <p> Log an error with error log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void error(Object message, Throwable t);
-
-
-    /**
-     * <p> Log a message with fatal log level. </p>
-     *
-     * @param message log this message
-     */
-    protected abstract void fatal(Object message);
-
-
-    /**
-     * <p> Log an error with fatal log level. </p>
-     *
-     * @param message log this message
-     * @param t log this cause
-     */
-    protected abstract void fatal(Object message, Throwable t);
-
 	public void setLocalTrace(boolean localTrace) {
 		this.localTrace = localTrace;
 	}
@@ -424,10 +236,12 @@ public abstract class Log {
 	
 	public static Log getLog(Object owner) {
 		// return new StaticBase(owner).log();
-		return MSingleton.get().createLog(owner);
+//		return MSingleton.get().createLog(owner);
+		return new Log(owner);
 	}
 
 	public void update() {
+		engine = MSingleton.get().getLogFactory().getInstance(getName());
 		localTrace = MSingleton.isTrace(name);
 		levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
 		parameterMapper = MSingleton.get().getLogFactory().getParameterMapper();
@@ -435,11 +249,6 @@ public abstract class Log {
 
 	public ParameterMapper getParameterMapper() {
 		return parameterMapper;
-	}
-
-	public void doInitialize(LogFactory logFactory) {
-		levelMapper = logFactory.getLevelMapper();
-		parameterMapper = logFactory.getParameterMapper();
 	}
 	
 	/**
@@ -459,17 +268,17 @@ public abstract class Log {
     	
     	switch (level) {
 		case DEBUG:
-			return isDebugEnabled();
+			return engine.isDebugEnabled();
 		case ERROR:
-			return isErrorEnabled();
+			return engine.isErrorEnabled();
 		case FATAL:
-			return isFatalEnabled();
+			return engine.isFatalEnabled();
 		case INFO:
-			return isInfoEnabled();
+			return engine.isInfoEnabled();
 		case TRACE:
-			return isTraceEnabled();
+			return engine.isTraceEnabled();
 		case WARN:
-			return isWarnEnabled();
+			return engine.isWarnEnabled();
 		default:
 			return false;
     	}

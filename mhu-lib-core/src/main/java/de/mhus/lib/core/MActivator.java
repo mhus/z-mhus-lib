@@ -117,6 +117,11 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		if (defaultImplementation != null) {
 			clazz = defaultImplementation.value();
 		}
+		DefaultFactory defaultFactory = clazz.getAnnotation(DefaultFactory.class);
+		if (defaultFactory != null) {
+			ObjectFactory factory = getObject(defaultFactory.value());
+			return factory.create(orgClazz, null, null);
+		}
 
 		Object obj = clazz.newInstance();
 		if (injector != null) injector.doInject(obj);

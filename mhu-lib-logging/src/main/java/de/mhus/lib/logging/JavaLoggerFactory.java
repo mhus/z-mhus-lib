@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
 public class JavaLoggerFactory extends LogFactory {
@@ -15,17 +16,17 @@ public class JavaLoggerFactory extends LogFactory {
 	}
 
 	@Override
-	public Log createInstance(String name) {
-		return new JLLog(Logger.getLogger(name));
+	public LogEngine createInstance(String name) {
+		return new JLLog(Logger.getLogger(name), name);
 	}
 
-	private class JLLog extends Log {
+	private class JLLog extends LogEngine {
 		private Logger logger;
 		
 	    /** For use with a log4j factory.
 	     */
-	    private JLLog(Logger logger ) {
-	        super(logger.getName());
+	    private JLLog(Logger logger, String name ) {
+	        super(name);
 	        this.logger=logger;
 	    }
 	    
@@ -83,7 +84,10 @@ public class JavaLoggerFactory extends LogFactory {
 	     */
 	    @Override
 		public void info(Object message, Throwable t) {
-            getLogger().log(Level.INFO, String.valueOf(message), t );
+	    	if (t == null)
+	    		getLogger().info(String.valueOf(message));
+	    	else
+	    		getLogger().log(Level.INFO, String.valueOf(message), t );
 	    }
 	
 	
@@ -149,7 +153,7 @@ public class JavaLoggerFactory extends LogFactory {
 	        if (logger == null) {
 	            logger = Logger.getLogger(getName());
 	        }
-	        return (this.logger);
+	        return logger;
 	    }
 	
 	
@@ -205,5 +209,10 @@ public class JavaLoggerFactory extends LogFactory {
 		public boolean isWarnEnabled() {
 	        return getLogger().isLoggable(Level.WARNING);
 	    }
+
+		@Override
+		public void doInitialize(LogFactory logFactory) {
+			
+		}
 	}
 }

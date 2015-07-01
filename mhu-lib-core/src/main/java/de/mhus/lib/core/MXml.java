@@ -63,7 +63,7 @@ import de.mhus.lib.core.logging.Log;
 
 public class MXml {
 
-	private static Log log = Log.getLog(MXml.class);
+	//private static Log log = Log.getLog(MXml.class);
 	
 	/**
 	 * Returns the text value of a node.
@@ -680,7 +680,7 @@ public class MXml {
 		    }
 		    return sb.toString();
 		} catch (Throwable t) {
-		   log.t(dump(childChild),t);
+		   //log.t(dump(childChild),t);
 		}
 		return "";
 	}

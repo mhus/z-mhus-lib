@@ -1,6 +1,8 @@
 package de.mhus.lib.logging.parameter;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.util.SoftHashMap;
@@ -33,7 +35,7 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 		while (c != null) {
 
 			String n = c.getCanonicalName();
-			ParameterEntryMapper mapper = cache.get(n);
+			ParameterEntryMapper mapper = mapping.get(n);
 			if (mapper != null) {
 				synchronized (this) {
 					cache.put(name, mapper);
@@ -41,15 +43,21 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 				}
 			}
 			
-			for (Class<?> i : c.getInterfaces()) {
+			List<Class<?>> l = new LinkedList<>();
+			findInterfaces(c, l);
+			for (Class<?> i : l) {
+				
 				n = i.getCanonicalName();
-				mapper = cache.get(n);
+				mapper = mapping.get(n);
+				
 				if (mapper != null) {
 					synchronized (this) {
 						cache.put(name, mapper);
 						return mapper.map(o);
 					}
 				}
+				
+								
 			}
 			
 			c = c.getSuperclass();
@@ -59,6 +67,13 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 			cache.put(name, noMapper);
 		}
 		return null;
+	}
+
+	private void findInterfaces(Class<?> c, List<Class<?>> list) {
+		for (Class<?> i : c.getInterfaces()) {
+			list.add(i);
+			findInterfaces(i, list);
+		}
 	}
 
 	@Override

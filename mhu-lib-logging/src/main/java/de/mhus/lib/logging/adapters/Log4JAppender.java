@@ -25,8 +25,7 @@ public class Log4JAppender extends AppenderSkeleton {
 		if (throwableInfo != null)
 			t = throwableInfo.getThrowable();
 		
-		LogFactory factory = MSingleton.get().getLogFactory();
-		Log logger = factory.getInstance(loggerName);
+		Log logger = Log.getLog(loggerName);
 		
 		String method = location.getClassName() + "." + location.getMethodName() + ":" + location.getLineNumber();
 		

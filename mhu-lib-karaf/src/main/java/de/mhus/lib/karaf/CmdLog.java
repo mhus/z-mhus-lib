@@ -38,12 +38,12 @@ public class CmdLog implements Action {
 		case "clear": {
 			singleton.clearTrace();
 			singleton.setFullTrace(false);
-			singleton.getLogFactory().updateLoggers();
+			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "full": {
 			singleton.setFullTrace(MCast.toboolean(parameters.length > 1 ? parameters[0] : "1", false));
-			singleton.getLogFactory().updateLoggers();
+			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "dirty": {
@@ -53,7 +53,7 @@ public class CmdLog implements Action {
 		case "add": {
 			for (String p : parameters)
 				singleton.setTrace(p);
-			singleton.getLogFactory().updateLoggers();
+			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "list": {
@@ -74,12 +74,12 @@ public class CmdLog implements Action {
 		} break;
 		case "reloadconfig": { //TODO need single command class
 			singleton.reloadConfig();
-			singleton.getLogFactory().updateLoggers();
+			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "level": {
 			singleton.getLogFactory().setDefaultLevel(Log.LEVEL.valueOf(parameters[0].toUpperCase()));
-			singleton.getLogFactory().updateLoggers();
+			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "settrail": {

@@ -46,20 +46,6 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize {
 
 	private String configFileName = "mhus-config.xml";
 
-	@Override
-	public Log createLog(Object owner) {
-		String name = null;
-		if (owner == null) {
-			name = "?";
-		} else
-		if (owner instanceof Class) {
-			name = ((Class<?>)owner).getName();
-		} else
-			name = owner.getClass().getName();
-//			name = String.valueOf(owner);
-		return logFactory.getInstance(name);
-	}
-
 	public IConfig getConfig() { //TODO load from service
 		synchronized (this) {
 			if (config == null) {

@@ -9,7 +9,7 @@ import de.mhus.lib.core.service.ConfigProvider;
 
 public interface ISingleton {
 
-	Log createLog(Object owner);
+	//Log createLog(Object owner);
 
 	ConfigProvider getConfigProvider();
 

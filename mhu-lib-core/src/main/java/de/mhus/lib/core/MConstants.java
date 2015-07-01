@@ -15,8 +15,8 @@ public class MConstants {
 	
 	public static final String PROP_DIRTY_TRACE = "mhu.lib.singleton.trace";
 	public static final String PROP_SINGLETON_FACTORY_CLASS = "mhus.singleton.factory";
-	public static final String PROP_FILE_WATCH = "mhus.config.watch";
-	public static final String PROP_CONFIG_FILE = "mhus.config.file";
+//	public static final String PROP_FILE_WATCH = "mhus.config.watch";
+	public static final String PROP_CONFIG_FILE = "config.file";
 
 	public static final String DEFAULT_MHUS_CONFIG_FILE = "mhus-config.xml";
 

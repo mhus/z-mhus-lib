@@ -1,6 +1,7 @@
 package de.mhus.lib.core.system;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.HashSet;
 
 import de.mhus.lib.core.MActivator;
@@ -32,7 +33,10 @@ import de.mhus.lib.core.util.TimerIfc;
 
 public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	
-	private LogFactory logFactory;
+	private static PrintStream stdOut = System.out;
+	private static PrintStream stdErr = System.err;
+	
+	private LogFactory logFactory = new ConsoleFactory();
 	private File baseDir;
 	private IConfig config;
 	private BaseControl baseControl;
@@ -44,21 +48,8 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 	private String configFile;
 
 	@Override
-	public Log createLog(Object owner) {
-		String name = null;
-		if (owner == null) {
-			name = "?";
-		} else
-		if (owner instanceof Class) {
-			name = ((Class<?>)owner).getName();
-		} else
-			name = String.valueOf(owner);
-		return logFactory.getInstance(name);
-	}
-
-	@Override
 	public void doInitialize(ClassLoader coreLoader) {
-		configFile = System.getProperty(MConstants.PROP_CONFIG_FILE);
+		configFile = System.getProperty(MConstants.PROP_PREFIX + MConstants.PROP_CONFIG_FILE);
 		if (configFile == null)
 			configFile = MConstants.DEFAULT_MHUS_CONFIG_FILE;
 		else
@@ -167,14 +158,6 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 			}
 		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
 		try {
-			String key = MConstants.PROP_LOG_LEVEL_MAPPER_CLASS;
-			String name = system.getString(key);
-			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
-			if (MString.isSet(name)) {
-				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
-			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}	
-		try {
 			String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
@@ -202,13 +185,13 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
 				if ("true".equals(name)) {
-					System.setErr(null);
-					System.setOut(null);
-					System.setErr(new StreamToLogAdapter(LEVEL.ERROR, System.err));
-					System.setOut(new StreamToLogAdapter(LEVEL.INFO, System.out));
+					System.setErr(new SecureStreamToLogAdapter(LEVEL.ERROR, stdErr));
+					System.setOut(new SecureStreamToLogAdapter(LEVEL.INFO, stdOut));
 				}
 			}
 		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		
+		MSingleton.updateLoggers();
 		
 	}
 

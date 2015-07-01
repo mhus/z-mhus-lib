@@ -26,7 +26,7 @@ public class ConsoleFactory extends LogFactory {
 	}
 	
 	@Override
-	public Log createInstance(String name) {
+	public LogEngine createInstance(String name) {
 		return new ConsoleLog(name);
 	}
 
@@ -93,18 +93,8 @@ public class ConsoleFactory extends LogFactory {
 	public void setLevel(Log.LEVEL level) {
 		this.level = level;
 	}
-
-	@Override
-	public void updateLoggers() {
-		try {
-			init();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		super.updateLoggers();
-	}
 	
-	private class ConsoleLog extends Log {
+	private class ConsoleLog extends LogEngine {
 		
 		private String name;
 
@@ -174,32 +164,32 @@ public class ConsoleFactory extends LogFactory {
 	
 		@Override
 		public boolean isDebugEnabled() {
-			return getLevel().ordinal() <= LEVEL.DEBUG.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.DEBUG.ordinal();
 		}
 	
 		@Override
 		public boolean isErrorEnabled() {
-			return getLevel().ordinal() <= LEVEL.ERROR.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.ERROR.ordinal();
 		}
 	
 		@Override
 		public boolean isFatalEnabled() {
-			return getLevel().ordinal() <= LEVEL.FATAL.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.FATAL.ordinal();
 		}
 	
 		@Override
 		public boolean isInfoEnabled() {
-			return getLevel().ordinal() <= LEVEL.INFO.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.INFO.ordinal();
 		}
 	
 		@Override
 		public boolean isTraceEnabled() {
-			return getLevel().ordinal() <= LEVEL.TRACE.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.TRACE.ordinal();
 		}
 	
 		@Override
 		public boolean isWarnEnabled() {
-			return getLevel().ordinal() <= LEVEL.WARN.ordinal();
+			return getLevel().ordinal() <= Log.LEVEL.WARN.ordinal();
 		}
 	
 		@Override
@@ -230,6 +220,11 @@ public class ConsoleFactory extends LogFactory {
 			if (!isWarnEnabled()) return;
 			out.println(printTime() + "WARN : " + name + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
+		}
+
+		@Override
+		public void doInitialize(LogFactory logFactory) {
+			
 		}
 	}
 	

@@ -8,45 +8,57 @@ import de.mhus.lib.core.logging.Log.LEVEL;
 
 public class StreamToLogAdapter extends PrintStream {
 
-	private static Log log = Log.getLog("Console");
+	protected static Log log = Log.getLog("Console");
+
+	protected LEVEL level;
+	protected StringBuffer line = new StringBuffer();
+	protected PrintStream forward;
 
 	public StreamToLogAdapter(LEVEL level, PrintStream forward) {
-		super(new MyOutputStream(level, forward));
+		super(new MyOutputStream());
+		this.level = level;
+		this.forward = forward;
+		((MyOutputStream)out).setAdapter(this);
 	}
 
 	private static class MyOutputStream extends OutputStream {
 
-		private LEVEL level;
-		StringBuffer line = new StringBuffer();
-		private PrintStream forward;
+		private StreamToLogAdapter adapter;
 		
-		public MyOutputStream(LEVEL level, PrintStream forward) {
-			this.level = level;
-			this.forward = forward; 
+		public MyOutputStream() {
+		}
+
+		public void setAdapter(StreamToLogAdapter adapter) {
+			this.adapter = adapter;
 		}
 
 		@Override
 		public synchronized void write(int b) throws IOException {
-			
-			if (forward != null) 
-				forward.write(b);
-			
-			if (b == '\n') {
-				writeLine();
-			} else
-			if ( b == '\r') {
-				// ignore characters
-			} else
-				line.append((char)b);
-			if (line.length() > 1000) {
-				writeLine();
-			}
-		}
-
-		private void writeLine() {
-			log.log(level, line);
-			line.setLength(0);
+			if (adapter == null) return;
+			adapter.writeByte(b);
 		}
 		
 	}
+
+	protected void writeByte(int b) {
+		if (forward != null) 
+			forward.write(b);
+		
+		if (b == '\n') {
+			writeLine();
+		} else
+		if ( b == '\r') {
+			// ignore characters
+		} else
+			line.append((char)b);
+		if (line.length() > 1000) {
+			writeLine();
+		}
+	}
+
+	protected void writeLine() {
+		log.log(level, line);
+		line.setLength(0);
+	}
+
 }

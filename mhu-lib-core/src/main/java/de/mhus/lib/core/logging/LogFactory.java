@@ -12,7 +12,7 @@ import de.mhus.lib.core.service.ConfigProvider;
 @DefaultImplementation(ConsoleFactory.class)
 public abstract class LogFactory implements IBase {
 
-	WeakHashMap<String, Log> buffer = new WeakHashMap<String, Log>();
+	WeakHashMap<String, LogEngine> buffer = new WeakHashMap<String, LogEngine>();
 	protected LEVEL level = LEVEL.INFO;
 	protected LevelMapper levelMapper;
     private ParameterMapper parameterMapper;
@@ -24,7 +24,7 @@ public abstract class LogFactory implements IBase {
      * @param clazz Class for which a suitable Log name will be derived
      * @return 
      *     */
-    public Log getInstance(Class<?> clazz) {
+    public LogEngine getInstance(Class<?> clazz) {
     	return getInstance(clazz.getCanonicalName());
     }
 
@@ -51,8 +51,8 @@ public abstract class LogFactory implements IBase {
      *  logging implementation that is being wrapped)
      * @return 
      */
-    public synchronized Log getInstance(String name) {
-		Log inst = buffer.get(name);
+    public synchronized LogEngine getInstance(String name) {
+		LogEngine inst = buffer.get(name);
 		if (inst == null) {
 			inst = createInstance(name);
 			inst.doInitialize(this);
@@ -76,9 +76,9 @@ public abstract class LogFactory implements IBase {
      *  logging implementation that is being wrapped)
      * @return 
      */
-    public abstract Log createInstance(String name);
+    public abstract LogEngine createInstance(String name);
 
-	public Log getLog(Class<?> class1) {
+	public LogEngine getLog(Class<?> class1) {
 		return getInstance(class1);
 	}
 
@@ -88,14 +88,6 @@ public abstract class LogFactory implements IBase {
 	
 	public LEVEL getDefaultLevel() {
 		return level;
-	}
-
-	public void updateLoggers() {
-		synchronized (buffer) {
-			for (Log log : buffer.values()) {
-				log.update();
-			}
-		}
 	}
 
 //	public synchronized LevelMapper getLevelMapper(Class<? extends LevelMapper> defaultMapper) {

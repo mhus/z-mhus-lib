@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
 public class SLF4JFactory extends LogFactory {
 
 	@Override
-	public Log createInstance(String name) {
+	public LogEngine createInstance(String name) {
 		return new SLF4JLog(LoggerFactory.getLogger(name));
 	}
 
@@ -19,7 +20,7 @@ public class SLF4JFactory extends LogFactory {
 	public void init(ResourceNode config) throws Exception {
 		
 	}
-	private class SLF4JLog extends Log {
+	private class SLF4JLog extends LogEngine {
 
 		private Logger logger;
 		
@@ -204,6 +205,11 @@ public class SLF4JFactory extends LogFactory {
 		public boolean isWarnEnabled() {
 	        return getLogger().isWarnEnabled();
 	    }
+
+		@Override
+		public void doInitialize(LogFactory logFactory) {
+			
+		}
 	}
 
 }

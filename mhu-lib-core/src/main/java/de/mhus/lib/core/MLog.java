@@ -17,7 +17,7 @@ public class MLog {
 	
 	protected synchronized Log log() {
 		if (log == null) {
-			log = MSingleton.get().createLog(this);
+			log = Log.getLog(this);
 		}
 		return log;
 	}

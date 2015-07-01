@@ -25,6 +25,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
 /**
@@ -78,13 +79,13 @@ public final class Log4JFactory extends LogFactory {
      */
 
     @Override
-	public Log createInstance(String name)
+	public LogEngine createInstance(String name)
     {
     	Log4JLog instance = new Log4JLog( Logger.getLogger( name ));
         return instance;
     }
 
-	public class Log4JLog extends Log {
+	public class Log4JLog extends LogEngine {
 	
 	 //   private String name;
 		private Logger logger;
@@ -332,5 +333,10 @@ public final class Log4JFactory extends LogFactory {
 	            return getLogger().isEnabledFor(Level.WARN);
 	        }
 	    }
+
+		@Override
+		public void doInitialize(LogFactory logFactory) {
+			
+		}
 	}
 }

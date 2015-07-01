@@ -25,8 +25,7 @@ public class JavaLoggerHandler extends Handler {
 		String srcMethod = record.getSourceMethodName();
 		Throwable t = record.getThrown();
 
-		LogFactory factory = MSingleton.get().getLogFactory();
-		Log logger = factory.getInstance(loggerName);
+		Log logger = Log.getLog(loggerName);
 		
 		String method = srcClass + "." + srcMethod;
 		
@@ -65,7 +64,7 @@ public class JavaLoggerHandler extends Handler {
 		try {
 			LogManager.getLogManager().readConfiguration(ins);
 		} catch (Throwable t) {
-			MSingleton.get().createLog(JavaLoggerHandler.class).e("configure",t);
+			Log.getLog(JavaLoggerHandler.class).e("configure",t);
 		}
 		
 //		Handler handler = new JavaLoggerHandler();

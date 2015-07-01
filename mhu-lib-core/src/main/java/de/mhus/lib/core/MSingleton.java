@@ -1,6 +1,9 @@
 package de.mhus.lib.core;
 
+import java.util.WeakHashMap;
+
 import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.DefaultSingleton;
 import de.mhus.lib.core.system.DummyClass;
@@ -12,6 +15,7 @@ public class MSingleton {
 
 	private static ISingleton singleton;
 	protected static Boolean trace;
+	private static WeakHashMap<String, Log> loggers = new WeakHashMap<>();
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -71,4 +75,16 @@ public class MSingleton {
 			((TrailLevelMapper)mapper).doResetTrail();
 	}
 
+	public static void registerLogger(Log log) {
+		synchronized (loggers) {
+			loggers.put(log.getName(), log);
+		}
+	}
+
+	public static void updateLoggers() {
+		synchronized (loggers) {
+			for (Log log : loggers.values().toArray(new Log[0]))
+				log.update();
+		}
+	}
 }
