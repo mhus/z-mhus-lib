@@ -41,6 +41,17 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 				}
 			}
 			
+			for (Class<?> i : c.getInterfaces()) {
+				n = i.getCanonicalName();
+				mapper = cache.get(n);
+				if (mapper != null) {
+					synchronized (this) {
+						cache.put(name, mapper);
+						return mapper.map(o);
+					}
+				}
+			}
+			
 			c = c.getSuperclass();
 		}
 
