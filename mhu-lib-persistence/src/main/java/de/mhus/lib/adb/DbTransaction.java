@@ -1,6 +1,5 @@
 package de.mhus.lib.adb;
 
-import de.mhus.lib.adb.transaction.TransactionEncapsulation;
 import de.mhus.lib.adb.transaction.TransactionLock;
 import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.core.MTimeInterval;

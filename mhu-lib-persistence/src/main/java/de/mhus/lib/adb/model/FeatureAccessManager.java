@@ -1,9 +1,7 @@
 package de.mhus.lib.adb.model;
 
 import de.mhus.lib.adb.DbAccessManager;
-import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.sql.DbConnection;
-import de.mhus.lib.sql.DbResult;
 
 public class FeatureAccessManager extends Feature {
 

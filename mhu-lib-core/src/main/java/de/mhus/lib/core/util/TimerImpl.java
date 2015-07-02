@@ -8,7 +8,6 @@ import java.util.TimerTask;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class TimerImpl extends MLog implements TimerIfc {

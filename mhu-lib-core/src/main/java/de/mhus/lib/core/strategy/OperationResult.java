@@ -1,7 +1,6 @@
 package de.mhus.lib.core.strategy;
 
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.pojo.ObjectWrapperPojo;
 
 public class OperationResult {
 

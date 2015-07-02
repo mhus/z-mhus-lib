@@ -1,7 +1,6 @@
 package de.mhus.lib.core;
 
 import java.util.Locale;
-import java.util.UUID;
 
 import de.mhus.lib.errors.NotSupportedException;
 

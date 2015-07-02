@@ -1,8 +1,6 @@
 package de.mhus.lib.core.pojo;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -12,7 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;

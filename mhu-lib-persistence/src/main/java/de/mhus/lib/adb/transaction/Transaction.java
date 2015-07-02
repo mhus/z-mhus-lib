@@ -2,11 +2,8 @@ package de.mhus.lib.adb.transaction;
 
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 

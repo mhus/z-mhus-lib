@@ -1,7 +1,7 @@
 package de.mhus.lib.logging.level;
 
-import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class ThreadBasedMapper implements TrailLevelMapper {

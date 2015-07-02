@@ -6,10 +6,8 @@ import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.config.MConfigFactory;
 import de.mhus.lib.core.directory.WritableResourceNode;
-import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
-import de.mhus.lib.core.pojo.PojoParser;
 
 public class TableAnnotations extends Table {
 

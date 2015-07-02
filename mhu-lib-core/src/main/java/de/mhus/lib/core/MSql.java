@@ -25,8 +25,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 
-import de.mhus.lib.core.util.Table;
-import de.mhus.lib.core.util.TableRow;
 import de.mhus.lib.errors.MException;
 
 public class MSql {

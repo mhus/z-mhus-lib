@@ -2,7 +2,6 @@ package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.util.Stringifier;
 
 /**
  * Got the interface from apache-commons-logging. I need to switch because its not working

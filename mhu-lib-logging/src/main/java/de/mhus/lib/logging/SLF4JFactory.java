@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 

@@ -7,9 +7,7 @@ import org.apache.log4j.spi.LocationInfo;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.LogFactory;
 
 public class Log4JAppender extends AppenderSkeleton {
 

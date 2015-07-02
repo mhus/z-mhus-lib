@@ -7,9 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.LogFactory;
 
 public class JavaLoggerHandler extends Handler {
 

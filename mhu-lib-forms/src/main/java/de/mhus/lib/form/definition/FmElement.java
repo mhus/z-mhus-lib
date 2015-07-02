@@ -2,7 +2,6 @@ package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
-import de.mhus.lib.errors.MException;
 
 public class FmElement extends DefComponent {
 

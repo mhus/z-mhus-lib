@@ -1,19 +1,16 @@
 package de.mhus.lib.jms;
 
-import javax.jms.DeliveryMode;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
-import javax.jms.Queue;
 import javax.jms.TextMessage;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 
 

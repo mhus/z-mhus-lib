@@ -13,7 +13,6 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
-import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 

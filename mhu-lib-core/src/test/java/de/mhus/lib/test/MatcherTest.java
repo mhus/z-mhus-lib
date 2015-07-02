@@ -1,8 +1,8 @@
 package de.mhus.lib.test;
 
+import junit.framework.TestCase;
 import de.mhus.lib.core.matcher.Matcher;
 import de.mhus.lib.errors.MException;
-import junit.framework.TestCase;
 
 public class MatcherTest extends TestCase {
 

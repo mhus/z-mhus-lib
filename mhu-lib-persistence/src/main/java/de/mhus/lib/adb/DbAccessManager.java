@@ -3,7 +3,6 @@ package de.mhus.lib.adb;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.sql.DbConnection;
-import de.mhus.lib.sql.DbResult;
 
 /**
  * Skeleton to allow the validation of access rights. It's created in DbSchema.

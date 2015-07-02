@@ -60,8 +60,6 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import de.mhus.lib.core.logging.Log;
-
 public class MXml {
 
 	//private static Log log = Log.getLog(MXml.class);

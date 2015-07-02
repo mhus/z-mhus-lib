@@ -1,7 +1,5 @@
 package de.mhus.lib.core.io;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 

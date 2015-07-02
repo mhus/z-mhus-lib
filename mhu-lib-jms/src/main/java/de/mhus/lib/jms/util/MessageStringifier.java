@@ -5,7 +5,6 @@ import java.util.Enumeration;
 import javax.jms.BytesMessage;
 import javax.jms.MapMessage;
 import javax.jms.Message;
-import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 
 public class MessageStringifier {

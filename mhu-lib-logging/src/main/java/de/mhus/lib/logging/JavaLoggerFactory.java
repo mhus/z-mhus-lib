@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 

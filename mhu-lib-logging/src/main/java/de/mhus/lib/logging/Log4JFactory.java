@@ -24,7 +24,6 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 

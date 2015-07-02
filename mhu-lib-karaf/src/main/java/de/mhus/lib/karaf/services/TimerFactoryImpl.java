@@ -14,9 +14,9 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.TimerTaskSelfControl;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
+import de.mhus.lib.core.util.TimerTaskSelfControl;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
 public class TimerFactoryImpl implements TimerFactory {
