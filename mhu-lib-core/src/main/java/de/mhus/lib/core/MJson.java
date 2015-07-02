@@ -254,138 +254,6 @@ public class MJson {
 		return mapper.createObjectNode();
 	}
 	
-//	@SuppressWarnings("unchecked")
-//	public static Object jsonToPojo(JsonNode from, Object to, TransformHelper helper) throws IOException, IllegalAccessException {
-//		if (helper == null) helper = DEFAULT_HELPER;
-//		if (to == null) {
-//			to = helper.createObject(from);
-//		}
-//		if (to == null) return null;
-//		
-//		if (from.size() == 1) {
-//			String singleName = from.getFieldNames().next();
-//			if ("_collection".equals(singleName)) {
-//				LinkedList<Object> out = new LinkedList<>();
-//				for (JsonNode n : from.get(0)) {
-//					out.add(jsonToPojo(n, null, helper.incLevel()));
-//				}
-//				helper.decLevel();
-//				return out;
-//			} else
-//			if ("_map".equals(singleName)) {
-//				HashMap<Object, Object> out = new HashMap<>();
-//				Iterator<String> nameIter = from.getFieldNames();
-//				while(nameIter.hasNext()) {
-//					String name = nameIter.next();
-//					JsonNode on = from.get(name);
-//					out.put(name, jsonToPojo(on, null, helper.incLevel()));
-//				}
-//				helper.decLevel();
-//				return out;
-//			}
-//		}
-//		
-//		
-//		PojoModel model = helper.createPojoModel(to);
-//		for (PojoAttribute<Object> attr : model) {
-//			String name = attr.getName();
-//			Class<?> type = attr.getType();
-//			JsonNode json = from.get(helper.getPrefix() + name);
-//			
-//			try {
-//				if (json == null || !attr.canWrite() ) {
-//					
-//				} else
-//				if (type == Boolean.class || type == boolean.class)
-//					attr.set(to, json.getValueAsBoolean(false));
-//				else
-//				if (type == Integer.class || type == int.class)
-//					attr.set(to, json.getValueAsInt(0));
-//				else
-//				if (type == String.class)
-//					attr.set(to, json.getValueAsText());
-//				else
-//				if (type == UUID.class)
-//					try {
-//						attr.set(to, UUID.fromString(json.getValueAsText()));
-//					} catch (IllegalArgumentException e) {
-//						attr.set(to, null);
-//					}
-//				else
-//				if (type.isEnum()) {
-//					Object[] cons=type.getEnumConstants();
-//					int ord = json.getValueAsInt(0);
-//					Object c = cons.length > 0 ? cons[0] : null;
-//					if (ord >=0 && ord < cons.length) c = cons[ord];
-//					attr.set(to, c );
-//				}
-//				else
-//				if (type == Date.class) {
-//					try {
-//						attr.set(to, new Date(json.getValueAsLong(0)) );
-//					} catch (IllegalArgumentException e) {
-//						attr.set(to, null);
-//					}
-//				}
-//				else
-//				if (Map.class.isAssignableFrom(type)) {
-//
-//					HashMap<String, Object> map = new HashMap<>();
-//					for (Iterator<String> iter = json.getFieldNames(); iter.hasNext();) {
-//						String n = iter.next();
-//						map.put(n, getValue(json.get(name), helper) );
-//					}
-//					attr.set(to, map );
-//
-//				} else
-//				if (Collection.class.isAssignableFrom(type) && json instanceof ArrayNode) {
-//					LinkedList<Object> list = new LinkedList<>();
-//					ArrayNode array = (ArrayNode)json;
-//					for (JsonNode a : array) {
-//						list.add( getValue(a, helper) );
-//					}
-//				} else
-//				if (type == String[].class) {
-//					try {
-//						LinkedList<String> l = new LinkedList<String>();
-//						for (JsonNode i : json) {
-//							l.add(i.getValueAsText());
-//						}
-//						attr.set(to, l.toArray(new String[l.size()]));
-//					} catch (IllegalArgumentException e) {
-//						attr.set(to, null);
-//					}
-//				} 
-//				else
-//				if (type.isArray()) {
-//					try {
-//						LinkedList<Object> l = new LinkedList<Object>();
-//						for (JsonNode i : json) {
-//							Object obj = helper.createObject(type);
-//							if (obj != null) {
-//								jsonToPojo(i, obj, helper);
-//								l.add(obj);
-//							}
-//						}
-//						attr.set(to, l.toArray( (Object[])Array.newInstance(type, l.size()) ));
-//					} catch (IllegalArgumentException e) {
-//						attr.set(to, null);
-//					}
-//				}
-//				else {
-//					Object obj = helper.createObject(type);
-//					if (obj != null)
-//						jsonToPojo(json, obj, helper);
-//					attr.set(to, obj);
-//				}
-//			} catch (Throwable t) {
-//				helper.log("ERROR " + name,t);
-//			}
-//			
-//		}
-//		return to;
-//	}
-
 	public static JsonNode pojoToJson(Object from, TransformHelper helper) {
 		if (helper == null) helper = DEFAULT_HELPER;
 		JsonNode to = helper.getStrategy().pojoToJson(from, helper);
@@ -428,6 +296,10 @@ public class MJson {
 			return String.valueOf( ((Date)in).getTime() );
 		return
 				'"' + encode(String.valueOf(in)) + '"';
+	}
+
+	public static String toString(JsonNode to) throws JsonGenerationException, JsonMappingException, IOException {
+		return mapper.writeValueAsString(to);
 	}
 	
 }
