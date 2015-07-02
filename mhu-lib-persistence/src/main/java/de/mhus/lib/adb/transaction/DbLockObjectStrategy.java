@@ -15,7 +15,7 @@ public class DbLockObjectStrategy extends LockStrategy {
 	@Override
 	public void lock(Persistable object, String key,
 			Transaction transaction, long timeout) {
-		DbLockObject lock = transaction.getDbManager().injectObject(new DbLockObject());
+		DbLockObject lock = transaction.getDbManager().inject(new DbLockObject());
 //		if (key.length() > 760) key = key.substring(0, 760); // not really a good solution ...!
 		lock.setKey(key);
 		lock.setOwner(transaction.getName());

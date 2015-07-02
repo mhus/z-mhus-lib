@@ -159,6 +159,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	public void doPostDelete(DbConnection con) {
 	}
 
+	@Override
 	public DbManager getDbManager() {
 		return manager;
 	}

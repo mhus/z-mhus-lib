@@ -36,7 +36,7 @@ public class CmdCreate implements Action {
 		String regName = service.getManager().getRegistryName(type);
 		Table tableInfo = service.getManager().getTable(regName);
 
-		Object object = service.getManager().injectObject(type.newInstance());
+		Object object = service.getManager().inject(type.newInstance());
 		
 		
 		

@@ -24,7 +24,6 @@ import de.mhus.lib.core.util.Base64;
 
 public class MPojo {
 
-	private static final String MAGIC = "\n\t\t\r[[";
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
 
@@ -57,6 +56,7 @@ public class MPojo {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		
@@ -115,6 +115,7 @@ public class MPojo {
 		}		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		if (value == null)

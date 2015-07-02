@@ -18,6 +18,7 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 		timer = new MTimer(true);
 	}
 	
+	@Override
 	public void register(MHousekeeperTask task, long sleep, boolean weak) {
 		timer.schedule(new MyTimerTask(task,weak), sleep, sleep);
 	}
