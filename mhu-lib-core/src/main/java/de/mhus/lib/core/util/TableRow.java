@@ -55,7 +55,7 @@ public class TableRow {
 				String clazzName = in.readUTF();
 				Object obj;
 				try {
-					obj = MSingleton.get().base().base(MActivator.class).createObject(clazzName);
+					obj = MSingleton.get().base().lookup(MActivator.class).createObject(clazzName);
 				} catch (Exception e) {
 					throw new IOException(e);
 				}

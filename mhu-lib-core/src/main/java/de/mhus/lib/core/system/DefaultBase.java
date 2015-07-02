@@ -34,16 +34,16 @@ public class DefaultBase extends Base {
 	}
 
 	@Override
-	public <T> T base(Class<T> ifc) {
+	public <T> T lookup(Class<T> ifc) {
 		try {
 			if (activator == null) {
 				if (parent != null)
-					return parent.base(ifc);
+					return parent.lookup(ifc);
 				return null;
 			}
 			
 			if (parent != null && !activator.isInstance(ifc) && ( local == null || !local.contains(ifc.getCanonicalName()) ) )
-				return parent.base(ifc);
+				return parent.lookup(ifc);
 			
 			return activator.getObject(ifc);
 		} catch (Exception e) {

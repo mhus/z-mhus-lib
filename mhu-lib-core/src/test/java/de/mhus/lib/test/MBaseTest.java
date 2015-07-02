@@ -23,7 +23,7 @@ public class MBaseTest extends TestCase {
 		MSingleton.get().getBaseControl().setFindStrategy(new BaseByThreadStrategy());
 		MSingleton.get().getBaseControl().setInjectStrategy(new AnnotationInjectStrategy());
 		@SuppressWarnings("unchecked")
-		LinkedList<String> list = MSingleton.get().getBaseControl().base(null).base(LinkedList.class);
+		LinkedList<String> list = MSingleton.get().getBaseControl().base(null).lookup(LinkedList.class);
 		list.add("TestString");
 		new MBaseTestInjectionObject().test();
 		new MBaseTestInjectionObjectExtended().test();

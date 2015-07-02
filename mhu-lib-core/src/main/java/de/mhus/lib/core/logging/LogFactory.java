@@ -31,7 +31,7 @@ public abstract class LogFactory implements IBase {
     public abstract void init(ResourceNode config) throws Exception;
 
 	public void init() throws Exception {
-		ResourceNode config = MSingleton.get().getBaseControl().base(this).base(ConfigProvider.class).getConfig(this, null);
+		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigProvider.class).getConfig(this, null);
 		init(config);
 	}
 	

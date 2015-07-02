@@ -17,7 +17,7 @@ public class JmxConsole extends VirtualConsole {
 		width = 80;
 		height = 40;
 		echo = true;
-		ResourceNode config = MSingleton.get().getBaseControl().base(this).base(ConfigProvider.class).getConfig(this, null);
+		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigProvider.class).getConfig(this, null);
 		if (config != null) {
 			width = config.getInt("width",width);
 			height = config.getInt("height", height);

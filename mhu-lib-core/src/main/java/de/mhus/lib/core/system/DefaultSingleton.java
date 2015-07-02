@@ -76,7 +76,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize {
 				return config;
 			
 			if (needFileWatch) {
-				TimerIfc timer = baseControl.getCurrentBase().base(TimerIfc.class);
+				TimerIfc timer = baseControl.getCurrentBase().lookup(TimerIfc.class);
 				fileWatch = new FileWatch(f, timer, new FileWatch.Listener() {
 	
 					@Override

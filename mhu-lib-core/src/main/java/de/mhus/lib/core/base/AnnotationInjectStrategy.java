@@ -30,7 +30,7 @@ public class AnnotationInjectStrategy extends InjectStrategy {
 					Class<?> ifc = attr.getType();
 					if (bind.name() != Class.class)
 						ifc = bind.name();
-					Object obj = base.base(ifc);
+					Object obj = base.lookup(ifc);
 						attr.set(object, obj);
 				}
 			} catch (Throwable e) {

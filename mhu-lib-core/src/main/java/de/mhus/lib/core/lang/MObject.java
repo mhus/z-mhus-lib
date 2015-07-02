@@ -30,7 +30,7 @@ public class MObject extends MLog {
 	protected <T> T base(Class<T> ifc) {
 		try {
 //			initBase();
-			return base.base(ifc);
+			return base.lookup(ifc);
 		} catch (Exception e) {
 			if (MSingleton.isDirtyTrace())
 				e.printStackTrace();

@@ -22,7 +22,7 @@ public class ConfigProvider extends MLog {
 	public ResourceNode getConfig(Object owner, ResourceNode def) {
 		if (config == null) {
 			if (owner instanceof MObject) {
-				config = MSingleton.get().getBaseControl().getBaseOf(((MObject)owner)).base(IConfig.class);
+				config = MSingleton.get().getBaseControl().getBaseOf(((MObject)owner)).lookup(IConfig.class);
 			}
 		}
 		if (config != null) {

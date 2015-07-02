@@ -17,7 +17,7 @@ public abstract class Base {
 	
 	public abstract boolean isDestroyed();
 	
-	public abstract <T> T base(Class<T> ifc);
+	public abstract <T> T lookup(Class<T> ifc);
 
 	public abstract boolean isBase(Class<?> ifc);
 

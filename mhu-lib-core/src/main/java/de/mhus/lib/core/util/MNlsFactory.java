@@ -101,7 +101,7 @@ public class MNlsFactory extends MObject {
 	public static MNlsFactory lookup(Object owner) {
 		Base base = Base.lookup(owner);
 		if (base != null) {
-			return base.base(MNlsFactory.class);
+			return base.lookup(MNlsFactory.class);
 		}
 		return null;
 	}
