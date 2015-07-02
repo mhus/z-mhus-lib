@@ -2,6 +2,9 @@ package de.mhus.lib.core.util;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +15,26 @@ public class Table implements Serializable {
 	private String name;
 	LinkedList<TableColumn> columns = new LinkedList<>();
 	LinkedList<TableRow> rows = new LinkedList<>();
+	
+	public Table() {
+	}
+	
+	public Table(ResultSet res) throws SQLException {
+		ResultSetMetaData meta = res.getMetaData();
+		int count = meta.getColumnCount();
+		for (int i = 0; i < count; i++) {
+			addHeader(meta.getColumnName(i+1), meta.getColumnTypeName(i+1));
+		}
+		
+		while (res.next()) {
+			TableRow row = new TableRow();
+			for (int i = 0; i < count; i++) {
+				row.appendData(res.getObject(i+1));
+			}
+			getRows().add(row);
+		}
+		res.close();
+	}
 	
 	public List<TableColumn> getColumns() {
 		return columns;

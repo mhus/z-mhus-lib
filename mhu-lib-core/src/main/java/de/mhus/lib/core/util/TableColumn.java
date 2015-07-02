@@ -7,7 +7,7 @@ public class TableColumn implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String type;
-	private int size;
+	private String note;
 	
 	public String getName() {
 		return name;
@@ -21,10 +21,10 @@ public class TableColumn implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getSize() {
-		return size;
+	public String getNote() {
+		return note;
 	}
-	public void setSize(int size) {
-		this.size = size;
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

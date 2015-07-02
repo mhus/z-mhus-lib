@@ -266,24 +266,5 @@ public class MSql {
 		}
 		
 	}
-	
-	public Table resultToTable(ResultSet res) throws SQLException {
-		Table out = new Table();
-		ResultSetMetaData meta = res.getMetaData();
-		int count = meta.getColumnCount();
-		for (int i = 0; i < count; i++) {
-			out.addHeader(meta.getColumnName(i+1), meta.getColumnTypeName(i+1));
-		}
 		
-		while (res.next()) {
-			TableRow row = new TableRow();
-			for (int i = 0; i < count; i++) {
-				row.appendData(res.getObject(i+1));
-			}
-			out.getRows().add(row);
-		}
-		res.close();
-		return out;
-	}
-	
 }
