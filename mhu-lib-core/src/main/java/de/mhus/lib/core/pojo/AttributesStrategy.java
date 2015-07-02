@@ -182,5 +182,10 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 			return field.getAnnotation(annotationClass);
 		}
 		
+		@Override
+		public String toString() {
+			return name;
+		}
+		
 	}
 }

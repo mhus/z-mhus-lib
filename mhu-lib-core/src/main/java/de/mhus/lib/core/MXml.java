@@ -45,6 +45,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -822,6 +823,15 @@ public class MXml {
 		Element ele = getElementByPath(root, path);
 		if (ele == null) return def;
 		return getValue(ele, false);
+	}
+
+	public static CDATASection findCDataSection(Element a) {
+		NodeList list = a.getChildNodes();
+		for (int i = 0; i < list.getLength(); i++) {
+			Node child = list.item(i);
+			if (child instanceof CDATASection) return (CDATASection)child;
+		}
+		return null;
 	}
 	
 }

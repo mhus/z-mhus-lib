@@ -53,8 +53,8 @@
             <action class="de.mhus.lib.karaf.adb.CmdUpdate">
             </action>
         </command>
-        <command name="adb/remove">
-            <action class="de.mhus.lib.karaf.adb.CmdRemove">
+        <command name="adb/delete">
+            <action class="de.mhus.lib.karaf.adb.CmdDelete">
             </action>
         </command>
         <command name="adb/clone">

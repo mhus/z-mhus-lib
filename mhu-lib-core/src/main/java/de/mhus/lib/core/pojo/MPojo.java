@@ -1,6 +1,9 @@
 package de.mhus.lib.core.pojo;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -9,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
@@ -270,21 +274,30 @@ public class MPojo {
 			if (value instanceof UUID) {
 				a.setAttribute("uuid", ((UUID)value).toString() );
 			}
-			else {
+			else 
+			if (value instanceof Serializable) {
+				a.setAttribute("serializable","true");
+				
+				CDATASection cdata = a.getOwnerDocument().createCDATASection("");
+				String data = MCast.toBinaryString( MCast.toBinary(value) );
+				cdata.setData(data);
+				a.appendChild(cdata);
+			} else
+			{
 				a.setAttribute("type", value.getClass().getCanonicalName());
 				pojoToXml(value, a, factory, level+1);
 			}
 		}
 	}
 
-	private static String fromAttribute(String value) {
-		if (value == null) return null;
-		if (value.equals(MAGIC + "null")) return null;
-		if (value.startsWith(MAGIC)) {
-			new String( Base64.decode( value.substring(MAGIC.length()) ) );
-		}
-		return value;
-	}
+//	private static String fromAttribute(String value) {
+//		if (value == null) return null;
+//		if (value.equals(MAGIC + "null")) return null;
+//		if (value.startsWith(MAGIC)) {
+//			new String( Base64.decode( value.substring(MAGIC.length()) ) );
+//		}
+//		return value;
+//	}
 	
 	private static boolean hasValidChars(String value) {
 		for (int i = 0; i < value.length(); i++) {
@@ -318,12 +331,12 @@ public class MPojo {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		
 		HashMap<String, Element> index = new HashMap<>();
-		for (Element e : MXml.getLocalElementIterator(from, "parameter"))
+		for (Element e : MXml.getLocalElementIterator(from, "attribute"))
 			index.put(e.getAttribute("name"), e);
 		
 		for (PojoAttribute<Object> attr : model) {
 			String name = attr.getName();
-			Class<?> type = attr.getType();
+//			Class<?> type = attr.getType();
 			Element a = index.get(name);
 			if (a == null) {
 				log.d("attribute not found",name,to.getClass());
@@ -382,6 +395,18 @@ public class MPojo {
 				String value = a.getAttribute("enum");
 				attr.set(to, MCast.toint(value, 0));
 				continue;
+			}
+			if ("true".equals(a.getAttribute("serializable"))) {
+				CDATASection cdata = MXml.findCDataSection(a);
+				if (cdata != null) {
+					String data = cdata.getData();
+					try {
+						Object obj = MCast.fromBinary( MCast.fromBinaryString(data) );
+						attr.set(to, obj);
+					} catch (ClassNotFoundException e1) {
+						throw new IOException(e1);
+					}
+				}
 			}
 			if (a.hasAttribute("type")) {
 				String value = a.getAttribute("type");

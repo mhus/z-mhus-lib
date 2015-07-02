@@ -6,8 +6,8 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 import org.apache.karaf.shell.commands.Option;
 
-@Command(scope = "adb", name = "remove", description = "Remove a single object from database")
-public class CmdRemove implements Action {
+@Command(scope = "adb", name = "delete", description = "Delete a single object from database")
+public class CmdDelete implements Action {
 
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
     String serviceName;

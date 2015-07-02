@@ -19,6 +19,11 @@
 
 package de.mhus.lib.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -45,6 +50,7 @@ import de.mhus.lib.core.cast.ObjectToShort;
 import de.mhus.lib.core.cast.ObjectToSqlDate;
 import de.mhus.lib.core.cast.ObjectToString;
 import de.mhus.lib.core.cast.ObjectToUUID;
+import de.mhus.lib.core.io.MObjectInputStream;
 import de.mhus.lib.core.util.VectorMap;
 
 
@@ -672,6 +678,24 @@ public final class MCast {
 		if (type == boolean.class)
 			return (Boolean)false;
 		return null;
+	}
+
+	public static byte[] toBinary(Object value) throws IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+		oos.writeObject(value);
+		oos.close();
+		bos.close();
+		return bos.toByteArray();
+	}
+
+	public static Object fromBinary(byte[] bin) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream bis = new ByteArrayInputStream(bin);
+		MObjectInputStream ois = new MObjectInputStream(bis);
+		Object obj = ois.readObject();
+		ois.close();
+		bis.close();
+		return obj;
 	}
 
 }

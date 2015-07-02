@@ -8,10 +8,11 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 
 public class MObjectInputStream extends ObjectInputStream {
 
-	private ClassLoader cl = getClass().getClassLoader();
+	private ClassLoader cl = null;
 	private MActivator act = null;
 
 	public MObjectInputStream() throws IOException, SecurityException {
@@ -35,6 +36,11 @@ public class MObjectInputStream extends ObjectInputStream {
             throws IOException, ClassNotFoundException
     {
     	String name = desc.getName();
+    	
+    	if (act == null && cl == null) {
+    		act = MSingleton.get().base().lookup(MActivator.class); // load default activator
+    	}
+    	
     	try {
 	    	if (act != null)
 	    		return act.loadClass(name);
