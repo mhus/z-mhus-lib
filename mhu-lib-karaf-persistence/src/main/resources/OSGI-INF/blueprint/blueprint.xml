@@ -66,6 +66,11 @@
             </action>
         </command>
 
+        <command name="mhus/log">
+            <action class="de.mhus.lib.karaf.CmdLog">
+            </action>
+        </command>
+
     </command-bundle>
 
 </blueprint>

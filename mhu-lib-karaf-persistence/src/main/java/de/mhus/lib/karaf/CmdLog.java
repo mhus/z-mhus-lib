@@ -61,6 +61,7 @@ public class CmdLog implements Action {
 			System.out.println("Trace          : " + singleton.isFullTrace());
 			System.out.println("LogFoctory     : " + singleton.getLogFactory().getClass().getSimpleName());
 			System.out.println("DirtyTrace     : " + MSingleton.isDirtyTrace());
+			
 			LevelMapper lm = singleton.getLogFactory().getLevelMapper();
 			if (lm != null) {
 			System.out.println("LevelMapper    : " + lm.getClass().getSimpleName());

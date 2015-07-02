@@ -152,7 +152,7 @@ public class MStopWatch extends MJmx {
 	
 	@Override
 	public String toString() {
-		return name + "=" + getCurrentTimeAsString() + "@MStopWatch";
+		return name + "=" + getCurrentTimeAsString();
 	}
 	
 }
