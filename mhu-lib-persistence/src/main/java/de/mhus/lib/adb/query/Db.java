@@ -163,4 +163,12 @@ public class Db {
 		
 	}
 
+	public static AOperation isNull(AAttribute attr) {
+		return new ANull(attr, true);
+	}
+
+	public static AOperation isNotNull(AAttribute attr) {
+		return new ANull(attr, false);
+	}
+
 }

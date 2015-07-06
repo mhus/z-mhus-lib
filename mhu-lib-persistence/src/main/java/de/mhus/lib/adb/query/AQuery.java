@@ -178,4 +178,14 @@ public class AQuery<T> extends APrint {
 		operations.add(Db.limit(limit));
 		return this;
 	}
+	
+	public AQuery<T> isNull(AAttribute attr) {
+		operations.add(Db.isNull(attr));
+		return this;
+	}
+	
+	public AQuery<T> isNotNull(AAttribute attr) {
+		operations.add(Db.isNotNull(attr));
+		return this;
+	}
 }
