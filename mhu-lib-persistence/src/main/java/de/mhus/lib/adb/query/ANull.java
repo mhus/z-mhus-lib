@@ -17,7 +17,7 @@ public class ANull extends APart {
 		attr.print(query, buffer);
 		buffer.append(" is ");
 		if (!is) buffer.append("not ");
-		buffer.append(" null");
+		buffer.append("null");
 	}
 
 	@Override
