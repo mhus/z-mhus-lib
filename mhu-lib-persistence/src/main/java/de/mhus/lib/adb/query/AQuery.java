@@ -188,4 +188,15 @@ public class AQuery<T> extends APrint {
 		operations.add(Db.isNotNull(attr));
 		return this;
 	}
+	
+	public AQuery<T> isNull(String attr) {
+		operations.add(Db.isNull(Db.attr(attr)));
+		return this;
+	}
+	
+	public AQuery<T> isNotNull(String attr) {
+		operations.add(Db.isNotNull(Db.attr(attr)));
+		return this;
+	}
+
 }

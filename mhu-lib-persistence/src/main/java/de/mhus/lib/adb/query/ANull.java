@@ -2,7 +2,7 @@ package de.mhus.lib.adb.query;
 
 import de.mhus.lib.core.parser.AttributeMap;
 
-public class ANull extends AOperation {
+public class ANull extends APart {
 
 	private AAttribute attr;
 	private boolean is;

@@ -354,6 +354,32 @@ public class AdbTest extends TestCase {
 		timer.stop();
 		System.out.println("Time: " + timer.getCurrentTimeAsString(true));
 	}
+	
+	public void testDbQuery() throws Exception {
+		
+		DbPool pool = createPool("testModel2").getPool("test");
+
+		BookStoreSchema schema = new BookStoreSchema();
+
+		MStopWatch timer = new MStopWatch();
+		timer.start();
+
+		DbManager manager = new DbManager(pool, schema);
+		
+		Store store = manager.inject(new Store());
+		store.save();
+		
+		{
+			List<Store> res = manager.getByQualification(Db.query(Store.class).isNull("name")).toCacheAndClose();
+			assertEquals(1, res.size());
+		}
+		{
+			List<Store> res = manager.getByQualification(Db.query(Store.class).isNotNull("name")).toCacheAndClose();
+			assertEquals(0, res.size());
+		}
+		
+		
+	}
 
 	public void testReconnect() throws Exception {
 		DbPool pool = createPool("testReconnect").getPool("test");
