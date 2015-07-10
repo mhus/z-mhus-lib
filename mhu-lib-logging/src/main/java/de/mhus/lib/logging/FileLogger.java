@@ -22,7 +22,12 @@ public class FileLogger extends Log {
 	private long maxFileSize = 1024 * 1024 * 500; // 500 MB
 
 	public FileLogger(String name, File file) {
+		this(name,file,Log.LEVEL.INFO);
+	}
+	
+	public FileLogger(String name, File file, Log.LEVEL level) {
 		super(name);
+		this.level = level;
 		this.file = file;
 	}
 
@@ -167,6 +172,8 @@ public class FileLogger extends Log {
 
 	protected synchronized boolean check() {
 		
+		if (file == null) return false;
+		
 		if (out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
 			out.close();
 			out = null;
@@ -231,4 +238,11 @@ public class FileLogger extends Log {
 	public void register() {
 	}
 	
+	public void close() {
+		if (out != null) {
+			out.close();
+			file = null;
+			out = null;
+		}
+	}
 }
