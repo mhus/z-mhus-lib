@@ -59,6 +59,7 @@
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>de.mhus.lib.logging*;version=${project.version}</Export-Package>
 	            <Import-Package>*</Import-Package>
+	            <DynamicImport-Package>*</DynamicImport-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
