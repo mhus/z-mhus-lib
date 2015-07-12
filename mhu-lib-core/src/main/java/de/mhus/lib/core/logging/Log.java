@@ -293,6 +293,7 @@ public class Log {
 	public void close() {
 		if (engine == null) return;
 		unregister();
+		engine.close();
 		engine = null;
 	}
 	

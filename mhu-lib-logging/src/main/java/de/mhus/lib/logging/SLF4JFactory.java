@@ -209,6 +209,10 @@ public class SLF4JFactory extends LogFactory {
 		public void doInitialize(LogFactory logFactory) {
 			
 		}
+
+		@Override
+		public void close() {
+		}
 	}
 
 }

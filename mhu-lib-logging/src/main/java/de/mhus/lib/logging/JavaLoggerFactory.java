@@ -213,5 +213,9 @@ public class JavaLoggerFactory extends LogFactory {
 		public void doInitialize(LogFactory logFactory) {
 			
 		}
+
+		@Override
+		public void close() {
+		}
 	}
 }

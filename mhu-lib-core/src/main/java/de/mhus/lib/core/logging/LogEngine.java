@@ -180,4 +180,6 @@ public abstract class LogEngine {
 
 	public abstract void doInitialize(LogFactory logFactory);
 
+	public abstract void close();
+
 }

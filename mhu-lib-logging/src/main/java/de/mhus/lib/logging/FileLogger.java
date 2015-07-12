@@ -150,8 +150,10 @@ public class FileLogger extends Log {
 
 		@Override
 		public void doInitialize(LogFactory logFactory) {
-			// TODO Auto-generated method stub
-			
+		}
+
+		@Override
+		public void close() {
 		}
 		
 	}

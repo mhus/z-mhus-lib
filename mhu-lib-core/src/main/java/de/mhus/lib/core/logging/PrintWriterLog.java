@@ -149,6 +149,10 @@ public class PrintWriterLog extends Log {
 		@Override
 		public void doInitialize(LogFactory logFactory) {
 		}
+
+		@Override
+		public void close() {
+		}
 	
 	}
 	
