@@ -43,6 +43,10 @@ public class Log {
     protected void register() {
 		MSingleton.registerLogger(this);
 	}
+    
+    protected void unregister() {
+		MSingleton.unregisterLogger(this);
+    }
 
 
     // -------------------------------------------------------- Logging Methods
@@ -57,7 +61,8 @@ public class Log {
     }
 
     public void log(LEVEL level, Object ... msg) {
-    	
+		if (engine == null) return;
+
     	if (levelMapper != null) level = levelMapper.map(this, level,msg);
     	
     	switch (level) {
@@ -258,7 +263,8 @@ public class Log {
 	 * @return
 	 */
 	public boolean isLevelEnabled(LEVEL level) {
-    	
+		if (engine == null) return false;
+
 		if (localTrace)
 			level = LEVEL.INFO;
 		else
@@ -282,6 +288,12 @@ public class Log {
 			return false;
     	}
 
+	}
+	
+	public void close() {
+		if (engine == null) return;
+		unregister();
+		engine = null;
 	}
 	
 }

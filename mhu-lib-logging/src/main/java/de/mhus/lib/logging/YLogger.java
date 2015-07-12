@@ -22,8 +22,22 @@ public class YLogger extends Log {
 	}
 	
 	@Override
+	public void register() {
+	}
+	
+	@Override
+	public void unregister() {
+	}
+
+	@Override
 	public boolean isLevelEnabled(LEVEL level) {
 		return targets[0].isLevelEnabled(level);
+	}
+	
+	@Override
+	public void close() {
+    	for (Log target : targets)
+    		target.close();
 	}
 	
 }

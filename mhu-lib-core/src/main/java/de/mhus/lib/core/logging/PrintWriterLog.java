@@ -188,4 +188,8 @@ public class PrintWriterLog extends Log {
 	protected void register() {
     }
     
+	@Override
+	public void unregister() {
+	}
+
 }

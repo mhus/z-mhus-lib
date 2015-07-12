@@ -238,6 +238,11 @@ public class FileLogger extends Log {
 	public void register() {
 	}
 	
+	@Override
+	public void unregister() {
+	}
+	
+	@Override
 	public void close() {
 		if (out != null) {
 			out.close();

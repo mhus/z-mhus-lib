@@ -15,7 +15,7 @@ public class MSingleton {
 
 	private static ISingleton singleton;
 	protected static Boolean trace;
-	private static WeakHashMap<String, Log> loggers = new WeakHashMap<>();
+	private static WeakHashMap<Log, Log> loggers = new WeakHashMap<>();
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -77,13 +77,19 @@ public class MSingleton {
 
 	public static void registerLogger(Log log) {
 		synchronized (loggers) {
-			loggers.put(log.getName(), log);
+			loggers.put(log, log);
 		}
 	}
 
+	public static void unregisterLogger(Log log) {
+		synchronized (loggers) {
+			loggers.remove(log);
+		}
+	}
+	
 	public static void updateLoggers() {
 		synchronized (loggers) {
-			for (Log log : loggers.values().toArray(new Log[0]))
+			for (Log log : loggers.keySet().toArray(new Log[0]))
 				log.update();
 		}
 	}
