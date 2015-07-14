@@ -11,7 +11,7 @@ public class GeneralMapper implements LevelMapper {
 	@Override
 	public LEVEL map(Log log, LEVEL level, Object... msg) {
 		if (config == null) return level;
-		return null;
+		return config.map(log, level, msg);
 	}
 
 	@Override
