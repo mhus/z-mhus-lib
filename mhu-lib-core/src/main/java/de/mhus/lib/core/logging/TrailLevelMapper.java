@@ -4,7 +4,7 @@ public interface TrailLevelMapper extends LevelMapper {
 
 	String doSerializeTrail();
 	void doConfigureTrail(String backup);
-	void doResetTrail();
+	void doResetTrail(); //TODO change to doReleaseTrail
 	boolean isLocalTrail();
 	String getTrailId();
 

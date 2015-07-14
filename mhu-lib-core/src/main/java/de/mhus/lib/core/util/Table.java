@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class Table implements Serializable {
 
 	private String name;
 	LinkedList<TableColumn> columns = new LinkedList<>();
+	HashMap<String, Integer> columnsIndex = new HashMap<>();
 	LinkedList<TableRow> rows = new LinkedList<>();
 	
 	public Table() {
@@ -28,6 +30,7 @@ public class Table implements Serializable {
 		
 		while (res.next()) {
 			TableRow row = new TableRow();
+			row.setTable(this);
 			for (int i = 0; i < count; i++) {
 				row.appendData(res.getObject(i+1));
 			}
@@ -48,12 +51,14 @@ public class Table implements Serializable {
 		TableColumn col = new TableColumn();
 		col.setName(name);
 		col.setType(type);
+		columnsIndex.put(name, columns.size());
 		columns.add(col);
 		return col;
 	}
 	
 	public TableRow addRow(Object ... data) {
 		TableRow row = new TableRow();
+		row.setTable(this);
 		row.setData(data);
 		rows.add(row);
 		return row;
@@ -79,8 +84,10 @@ public class Table implements Serializable {
 		{
 			int size = in.readInt();
 			columns.clear();
+			columnsIndex.clear();
 			for (int i = 0; i < size; i++) {
 				TableColumn col = (TableColumn) in.readObject();
+				columnsIndex.put(col.getName(), columns.size());
 				columns.add(col);
 			}
 		}
@@ -89,6 +96,7 @@ public class Table implements Serializable {
 			rows.clear();
 			for (int i = 0; i < size; i++) {
 				TableRow row = (TableRow) in.readObject();
+				row.setTable(this);
 				rows.add(row);
 			}
 		}
@@ -106,5 +114,15 @@ public class Table implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getColumnIndex(String name) {
+		Integer ret = columnsIndex.get(name);
+		return ret == null ? -1 : ret;
+	}
+	
+	@Override
+	public String toString() {
+		return columns.toString() + rows.toString();
 	}
 }

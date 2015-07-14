@@ -15,6 +15,7 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class ClientJms extends JmsChannel implements MessageListener {
@@ -51,12 +52,9 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		
 		msg.setJMSMessageID(createMessageId());
 		
-		LevelMapper levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
-		if (levelMapper != null && levelMapper instanceof TrailLevelMapper && !((TrailLevelMapper)levelMapper).isLocalTrail() ) {
-			String config = ((TrailLevelMapper)levelMapper).doSerializeTrail();
-			if (config != null)
-				msg.setStringProperty(MConstants.LOG_MAPPER, config);
-		}
+		String config = MLogUtil.getTrailConfig();
+		if (config != null)
+			msg.setStringProperty(MConstants.LOG_MAPPER, config);
 	}
 
 	public Message sendJms(Message msg) throws JMSException {

@@ -9,6 +9,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
@@ -74,7 +75,7 @@ public class CmdLog implements Action {
 				System.out.println(name);
 		} break;
 		case "reloadconfig": { //TODO need single command class
-			singleton.reloadConfig();
+			singleton.reConfigure();
 			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;
@@ -85,31 +86,24 @@ public class CmdLog implements Action {
 		} break;
 		case "settrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
-			if (mapper != null && mapper instanceof ThreadBasedMapper) {
-				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
-				ThreadMapperConfig config = new ThreadMapperConfig();
-				if (parameters != null && parameters.length == 1) {
-					config.doConfigure(parameters[0]);
-				}
-				m.set(config);
+			if (MLogUtil.isTrailLevelMapper()) {
+				MLogUtil.setTrailConfig(parameters[0]);
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
 		case "istrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
-			if (mapper != null && mapper instanceof ThreadBasedMapper) {
-				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
-				System.out.println("LevelMapper: " + m.get());
+			if (MLogUtil.isTrailLevelMapper()) {
+				System.out.println("LevelMapper: " + MLogUtil.getTrailConfig());
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
 		case "releasetrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
-			if (mapper != null && mapper instanceof ThreadBasedMapper) {
-				ThreadBasedMapper m = (ThreadBasedMapper)mapper;
-				m.release();
+			if (MLogUtil.isTrailLevelMapper()) {
+				MLogUtil.releaseTrailConfig();
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}

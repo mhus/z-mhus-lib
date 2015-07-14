@@ -12,10 +12,12 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.errors.NotFoundException;
 
 public class TableRow {
 
 	LinkedList<Object> data = new LinkedList<>();
+	private Table table;
 	
 	public List<Object> getData() {
 		return data;
@@ -77,6 +79,23 @@ public class TableRow {
 		data.clear();
 		for (Object o : d)
 			data.add(o);
+	}
+
+	public void setTable(Table table) {
+		this.table = table;
+	}
+	
+	public Object get(int index) {
+		if (index < 0 || index >= data.size())
+			throw new NotFoundException("column index not found",index);
+		return data.get(index);
+	}
+	
+	public Object get(String name) {
+		int index = table.getColumnIndex(name);
+		if (index == -1)
+			throw new NotFoundException("column not found",name);
+		return get(index);
 	}
 	
 }
