@@ -1,5 +1,7 @@
 package de.mhus.lib.core.logging;
 
+import java.util.UUID;
+
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 
@@ -19,6 +21,7 @@ public class Log {
 	protected LevelMapper levelMapper;
     protected ParameterMapper parameterMapper;
     protected LogEngine engine = null;
+    protected UUID id = UUID.randomUUID();
 	
 	public Log(Object owner) {
 		
@@ -295,6 +298,10 @@ public class Log {
 		unregister();
 		engine.close();
 		engine = null;
+	}
+	
+	public UUID getId() {
+		return id;
 	}
 	
 }

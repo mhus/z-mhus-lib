@@ -1,5 +1,6 @@
 package de.mhus.lib.core;
 
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.core.logging.LevelMapper;
@@ -15,7 +16,7 @@ public class MSingleton {
 
 	private static ISingleton singleton;
 	protected static Boolean trace;
-	private static WeakHashMap<Log, Log> loggers = new WeakHashMap<>();
+	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -77,13 +78,13 @@ public class MSingleton {
 
 	public static void registerLogger(Log log) {
 		synchronized (loggers) {
-			loggers.put(log, log);
+			loggers.put(log.getId(), log);
 		}
 	}
 
 	public static void unregisterLogger(Log log) {
 		synchronized (loggers) {
-			loggers.remove(log);
+			loggers.remove(log.getId());
 		}
 	}
 	
