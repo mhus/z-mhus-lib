@@ -12,6 +12,7 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ISingleton;
+import de.mhus.lib.logging.level.GeneralMapper;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
 import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafSingletonImpl;
@@ -107,6 +108,19 @@ public class CmdLog implements Action {
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
+		} break;
+		case "to-general": {
+			ThreadMapperConfig config = new ThreadMapperConfig();
+			config.doConfigure(parameters[0]);
+			GeneralMapper mapper = new GeneralMapper();
+			mapper.setConfig(config);
+			singleton.getLogFactory().setLevelMapper(mapper);
+		} break;
+		case "to-threadbased": {
+			singleton.getLogFactory().setLevelMapper(new ThreadBasedMapper());
+		} break;
+		case "to-none": {
+			singleton.getLogFactory().setLevelMapper(null);
 		} break;
 		}
 		
