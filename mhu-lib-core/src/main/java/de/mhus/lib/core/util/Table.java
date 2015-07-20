@@ -83,8 +83,10 @@ public class Table implements Serializable {
 		name = in.readUTF();
 		{
 			int size = in.readInt();
-			columns.clear();
-			columnsIndex.clear();
+			//columns.clear();
+			columns = new LinkedList<>();
+			// columnsIndex.clear();
+			columnsIndex = new HashMap<>();
 			for (int i = 0; i < size; i++) {
 				TableColumn col = (TableColumn) in.readObject();
 				columnsIndex.put(col.getName(), columns.size());
@@ -93,7 +95,8 @@ public class Table implements Serializable {
 		}
 		{
 			int size = in.readInt();
-			rows.clear();
+			// rows.clear();
+			rows = new LinkedList<>();
 			for (int i = 0; i < size; i++) {
 				TableRow row = (TableRow) in.readObject();
 				row.setTable(this);

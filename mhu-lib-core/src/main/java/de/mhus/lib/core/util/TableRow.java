@@ -14,8 +14,9 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundException;
 
-public class TableRow {
+public class TableRow implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	LinkedList<Object> data = new LinkedList<>();
 	private Table table;
 	
@@ -46,7 +47,8 @@ public class TableRow {
 	private void readObject(java.io.ObjectInputStream in)
 		     throws IOException, ClassNotFoundException {
 		int size = in.readInt();
-		data.clear();
+		// data.clear(); Create new one because of concurrent modifications
+		data = new LinkedList<>();
 		for (int i = 0; i < size; i++) {
 			int code = in.readInt();
 			if (code == 0) {
