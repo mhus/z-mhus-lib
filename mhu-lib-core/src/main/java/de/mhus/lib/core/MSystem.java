@@ -194,7 +194,9 @@ public class MSystem {
 	
 	public static String toString(Object sender, Object ... attributes) {
 		StringBuffer sb = new StringBuffer();
-		sb.append('[').append(sender == null ? "?" : sender.getClass().getSimpleName()).append(':');
+		sb.append('[');
+		if (sender != null)
+			sb.append(sender instanceof String ? sender : sender.getClass().getSimpleName()  ).append(':');
 		boolean first = true;
 		for (Object a : attributes) {
 			if (!first) sb.append(','); else first = false;

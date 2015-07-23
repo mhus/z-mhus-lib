@@ -5,6 +5,7 @@ import de.mhus.lib.errors.MException;
 
 public class FeatureCut extends Feature {
 
+	public static final Object NAME = "cut";
 	private boolean cutAll;
 
 	@Override

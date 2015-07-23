@@ -4,6 +4,8 @@ import de.mhus.lib.adb.DbManager;
 
 public class AttributeFeatureCut implements AttributeFeature {
 
+	public final static String NAME = "cut";
+	
 	//	private Field field;
 	private int size;
 

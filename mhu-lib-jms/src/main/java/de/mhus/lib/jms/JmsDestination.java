@@ -50,7 +50,7 @@ public class JmsDestination extends JmsObject {
 		if (con == null || destination == null) return;
 		if (jmsDestination == null || getSession() == null) {
 			con.open();
-			log().i("destination",destination);
+			log().d("destination",destination);
 			if (destinantionTopic)
 	            jmsDestination = getSession().createTopic(destination);
 			else

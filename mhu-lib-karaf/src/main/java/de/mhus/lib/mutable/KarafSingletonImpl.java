@@ -83,6 +83,8 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		housekeeper = new KarafHousekeeper();
 		getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
 		
+		reConfigure();
+
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );
 	}
 

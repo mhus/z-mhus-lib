@@ -328,7 +328,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 			if (name.equals("accesscontrol"))
 				feature = new FeatureAccessManager();
 			else
-				if (name.equals("cut"))
+				if (name.equals(FeatureCut.NAME))
 					feature = new FeatureCut();
 
 			if (feature != null)
@@ -348,7 +348,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 		try {
 			AttributeFeature feature = null;
 
-			if (name.equals("cut")) {
+			if (name.equals(AttributeFeatureCut.NAME)) {
 				feature = new AttributeFeatureCut();
 			}
 

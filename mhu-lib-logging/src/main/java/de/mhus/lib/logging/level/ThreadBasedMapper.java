@@ -63,7 +63,7 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 	@Override
 	public boolean isLocalTrail() {
 		ThreadMapperConfig c = get();
-		return c == null ? true : c.isLocal();
+		return c == null ? false : c.isLocal();
 	}
 
 	@Override

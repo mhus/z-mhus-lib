@@ -167,7 +167,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		if (isClosed()) throw new JMSException("client closed");
 		if (producer == null || getSession() == null) {
 			dest.open();
-			log().i("open",dest);
+			log().d("open",dest);
 			producer = dest.getConnection().getSession().createProducer(dest.getDestination());
 		}
 	}
@@ -202,7 +202,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 
 	@Override
 	public void reset() {
-		log().i("reset",dest);
+		log().d("reset",dest);
 		try {
 			producer.close();
 		} catch (Throwable t) {log().d(t);}

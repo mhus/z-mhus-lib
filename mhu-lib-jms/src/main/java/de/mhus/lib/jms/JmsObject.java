@@ -21,7 +21,7 @@ public abstract class JmsObject extends MLog {
 	}
 	
 	public void close() {
-		log().i("close");
+		log().d("close");
 		reset();
 		setClosed();
 	}
