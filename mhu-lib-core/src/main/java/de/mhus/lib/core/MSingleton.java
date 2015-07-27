@@ -89,9 +89,13 @@ public class MSingleton {
 	}
 	
 	public static void updateLoggers() {
-		synchronized (loggers) {
-			for (Log log : loggers.keySet().toArray(new Log[0]))
-				log.update();
+		try {
+			synchronized (loggers) {
+				for (UUID logId : loggers.keySet().toArray(new UUID[loggers.size()]))
+					loggers.get(logId).update();
+			}
+		} catch(Throwable t) {
+			if (MSingleton.isDirtyTrace()) t.printStackTrace();
 		}
 	}
 }
