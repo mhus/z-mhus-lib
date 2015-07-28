@@ -15,8 +15,10 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.logging.Log;
@@ -26,9 +28,11 @@ public class MPojo {
 
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
+	private static PojoModelFactory defaultModelFactory;
 
-	private static PojoModelFactory createModelFactory() {
-		return new PojoModelFactory() {
+	public static synchronized PojoModelFactory getDefaultModelFactory() {
+		if (defaultModelFactory == null)
+			defaultModelFactory = new PojoModelFactory() {
 			
 			@Override
 			public PojoModel createPojoModel(Class<?> pojoClass) {
@@ -36,10 +40,11 @@ public class MPojo {
 				return model;
 			}
 		};
+		return defaultModelFactory;
 	}
 	
 	public static void pojoToJson(Object from, ObjectNode to) throws IOException {
-		pojoToJson(from, to, createModelFactory());
+		pojoToJson(from, to, getDefaultModelFactory());
 	}
 	
 	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory) throws IOException {
@@ -174,7 +179,7 @@ public class MPojo {
 	}
 
 	public static void jsonToPojo(JsonNode from, Object to) throws IOException {
-		jsonToPojo(from, to, createModelFactory());
+		jsonToPojo(from, to, getDefaultModelFactory());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -222,7 +227,7 @@ public class MPojo {
 	}
 
 	public static void pojoToXml(Object from, Element to) throws IOException {
-		pojoToXml(from, to, createModelFactory());
+		pojoToXml(from, to, getDefaultModelFactory());
 	}
 
 	public static void pojoToXml(Object from, Element to, PojoModelFactory factory) throws IOException {
@@ -321,7 +326,7 @@ public class MPojo {
 	}
 */
 	public static void xmlToPojo(Element from, Object to, MActivator act) throws IOException {
-		xmlToPojo(from, to, createModelFactory(), act);
+		xmlToPojo(from, to, getDefaultModelFactory(), act);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -454,6 +459,45 @@ public class MPojo {
 		return out.toString();
 	}
 	
+	public static IProperties pojoToProperties(Object from) throws IOException {
+		return pojoToProperties(from, getDefaultModelFactory());
+	}
 	
+	public static IProperties pojoToProperties(Object from, PojoModelFactory factory) throws IOException {
+		MProperties out = new MProperties();
+		PojoModel model = factory.createPojoModel(from.getClass());
+
+		for (PojoAttribute<?> attr : model) {
+			Object value = attr.get(from);
+			String name = attr.getName();
+			Class<?> type = attr.getType();
+			if (type == int.class) out.setInt(name, (int)value);
+			else
+			if (type == Integer.class) out.setInt(name, (Integer)value);
+			else
+			if (type == long.class)  out.setLong(name, (long)value);
+			else
+			if (type == Long.class)  out.setLong(name, (Long)value);
+			else
+			if (type == float.class)  out.setFloat(name, (float)value);
+			else
+			if (type == Float.class)  out.setFloat(name, (Float)value);
+			else
+			if (type == double.class)  out.setDouble(name, (double)value);
+			else
+			if (type == Double.class)  out.setDouble(name, (Double)value);
+			else
+			if (type == boolean.class)  out.setBoolean(name, (boolean)value);
+			else
+			if (type == Boolean.class)  out.setBoolean(name, (Boolean)value);
+			else
+			if (type == String.class)  out.setString(name, (String)value);
+			else
+			if (type == Date.class)  out.setDate(name, (Date)value);
+			else
+				out.setString(name, String.valueOf(value));
+		}
+		return out;
+	}
 	
 }
