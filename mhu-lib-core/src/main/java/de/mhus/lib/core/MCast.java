@@ -697,4 +697,116 @@ public final class MCast {
 		return obj;
 	}
 
+	/**
+	 * Return a interval based of the the definition string. Allowed are lists separated by comma (1,2,3,4) and intervals
+	 * (6/2 => 0,2,4,6 or 3-7/2 => 3,5,7) or '*' for null
+	 * TODO also allow mixed lists and intervals like 4,6-10/2
+	 * @param def
+	 * @return the values for the interval or null if should be ignored (*)
+	 */
+	public static long[] toLongIntervalValues(String def) {
+		if (def == null) return null;
+		def = def.trim();
+		if (def.equals("*")) return null;
+		int p1 = def.indexOf('/');
+		if (p1 > 0) {
+			String left = def.substring(0,p1);
+			String right = def.substring(p1+1);
+			int p2 = left.indexOf('-',1);
+			long start = 0;
+			long stop = 0;
+			if (p2 > 0) {
+				start = tolong(left.substring(0, p2), 0);
+				stop  = tolong(left.substring(p2+1),0);
+			} else {
+				stop = tolong(left,0);
+			}
+			long interval = Math.max(1, Math.abs(tolong(right,0)) );
+			long len = (stop - start) / interval;
+			long[] out = new long[(int) len];
+			for (int i = 0; i < len; i++) {
+				out[i] = start;
+				start+=interval;
+			}
+			return out;
+		}
+		
+		p1 = def.indexOf(',');
+		if (p1 > 0) {
+			String[] parts = def.split(",");
+			long[] out = new long[parts.length];
+			boolean needOrder = false;
+			for (int i = 0; i < out.length; i++) {
+				out[i] = tolong(parts[i],0);
+				if (i != 0 && out[i-1] >= out[1]) needOrder = true;
+			}
+			if (needOrder) out = MCollection.order(out, false);
+			return out;
+		}
+		
+		try {
+			return new long[] { Long.valueOf(def) };
+		} catch (NumberFormatException e) {
+			return new long[0];
+		}
+		
+	}
+
+	/**
+	 * Return a interval based of the the definition string. Allowed are lists separated by comma (1,2,3,4) and intervals
+	 * (6/2 => 0,2,4,6 or 3-7/2 => 3,5,7) or '*' for null
+	 * TODO also allow mixed lists and intervals like 4,6-10/2
+	 * @param def
+	 * @param defStart 
+	 * @param defStop 
+	 * @return the values for the interval or null if should be ignored (*)
+	 */
+	public static int[] toIntIntervalValues(String def, int defStart, int defStop) {
+		if (def == null) return null;
+		def = def.trim();
+		if (def.equals("*")) return null;
+		int p1 = def.indexOf('/');
+		if (p1 > 0) {
+			String left = def.substring(0,p1);
+			String right = def.substring(p1+1);
+			int p2 = left.indexOf('-',1);
+			int start = defStart;
+			int stop = defStop;
+			if (p2 > 0) {
+				start = toint(left.substring(0, p2), defStart);
+				stop  = toint(left.substring(p2+1),defStop);
+			} else {
+				stop = toint(left,defStop);
+			}
+			int interval = Math.max(1, Math.abs(toint(right,0)) );
+			int len = (stop - start) / interval;
+			int[] out = new int[len];
+			for (int i = 0; i < len; i++) {
+				out[i] = start;
+				start+=interval;
+			}
+			return out;
+		}
+		
+		p1 = def.indexOf(',');
+		if (p1 > 0) {
+			String[] parts = def.split(",");
+			int[] out = new int[parts.length];
+			boolean needOrder = false;
+			for (int i = 0; i < out.length; i++) {
+				out[i] = toint(parts[i],0);
+				if (i != 0 && out[i-1] >= out[1]) needOrder = true;
+			}
+			
+			if (needOrder) out = MCollection.order(out, false);
+			return out;
+		}
+		
+		try {
+			return new int[] { Integer.valueOf(def) };
+		} catch (NumberFormatException e) {
+			return new int[0];
+		}
+		
+	}
 }

@@ -5,10 +5,10 @@ import de.mhus.lib.core.config.IConfig;
 
 public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 
-	private IConfig config;
-	private boolean test;
-	private IProperties parameters;
-	private String errorMessage;
+	protected IConfig config;
+	protected boolean test;
+	protected IProperties parameters;
+	protected String errorMessage;
 
 	public void setTestOnly(boolean test) {
 		this.test = test;

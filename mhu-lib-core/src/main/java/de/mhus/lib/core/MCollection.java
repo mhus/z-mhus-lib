@@ -2,11 +2,14 @@ package de.mhus.lib.core;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class MCollection {
 
@@ -91,6 +94,52 @@ public class MCollection {
 		System.arraycopy(newElements, 0, newArray, array.length, newElements.length);
 		
 		return newArray;
+	}
+
+	public static int[] order(int[] array, boolean unique) {
+		if (unique) {
+			HashSet<Integer> set = new HashSet<>();
+			for (int i : array)
+				set.add(i);
+			int[] out = new int[set.size()];
+			Iterator<Integer> iter = set.iterator();
+			for (int i = 0; i < out.length; i++)
+				out[i] = iter.next();
+			return out;
+		}
+		
+		LinkedList<Integer> list = new LinkedList<>();
+		for (int i : array)
+			list.add(i);
+		Collections.sort(list);
+		int[] out = new int[list.size()];
+		Iterator<Integer> iter = list.iterator();
+		for (int i = 0; i < out.length; i++)
+			out[i] = iter.next();
+		return out;
+	}
+
+	public static long[] order(long[] array, boolean unique) {
+		if (unique) {
+			HashSet<Long> set = new HashSet<>();
+			for (long i : array)
+				set.add(i);
+			long[] out = new long[set.size()];
+			Iterator<Long> iter = set.iterator();
+			for (int i = 0; i < out.length; i++)
+				out[i] = iter.next();
+			return out;
+		}
+		
+		LinkedList<Long> list = new LinkedList<>();
+		for (long i : array)
+			list.add(i);
+		Collections.sort(list);
+		long[] out = new long[list.size()];
+		Iterator<Long> iter = list.iterator();
+		for (int i = 0; i < out.length; i++)
+			out[i] = iter.next();
+		return out;
 	}
 	
 }

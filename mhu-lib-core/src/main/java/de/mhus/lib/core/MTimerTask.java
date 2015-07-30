@@ -18,9 +18,11 @@
 
 package de.mhus.lib.core;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.TimerTask;
 
-public abstract class MTimerTask extends TimerTask {
+public abstract class MTimerTask extends TimerTask implements Observer {
 
 	@Override
 	final public void run() {
@@ -48,4 +50,10 @@ public abstract class MTimerTask extends TimerTask {
 	}
 
 	public abstract void doit() throws Exception;
+	
+    @Override
+	public void update(Observable o, Object arg) {
+    	run();
+    }
+
 }
