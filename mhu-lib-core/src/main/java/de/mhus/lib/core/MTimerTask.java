@@ -24,6 +24,8 @@ import java.util.TimerTask;
 
 public abstract class MTimerTask extends TimerTask implements Observer {
 
+	private boolean canceled = false;
+	
 	@Override
 	final public void run() {
 		boolean error = false;
@@ -55,5 +57,19 @@ public abstract class MTimerTask extends TimerTask implements Observer {
 	public void update(Observable o, Object arg) {
     	run();
     }
+
+    @Override
+    public boolean cancel() {
+    	setCanceled(true);
+    	return super.cancel();
+    }
+    
+	public boolean isCanceled() {
+		return canceled;
+	}
+
+	protected void setCanceled(boolean canceled) {
+		this.canceled = canceled;
+	}
 
 }

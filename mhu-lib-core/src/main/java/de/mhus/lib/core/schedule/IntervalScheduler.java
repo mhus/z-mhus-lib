@@ -1,4 +1,4 @@
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 

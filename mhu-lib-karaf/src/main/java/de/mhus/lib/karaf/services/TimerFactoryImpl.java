@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -13,7 +14,9 @@ import org.osgi.service.component.ComponentContext;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
+import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.schedule.Scheduler;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
@@ -23,6 +26,7 @@ public class TimerFactoryImpl implements TimerFactory {
 	
 	private Log log = Log.getLog(TimerFactoryImpl.class);
 	private Timer myTimer;
+//	private TreeMap<Long, MTimerTask> queue = new TreeMap<>();
 	
 	public TimerFactoryImpl() {
 	}
@@ -38,9 +42,21 @@ public class TimerFactoryImpl implements TimerFactory {
 	void doActivate(ComponentContext ctx) {
 		log.i("start common timer");
 		myTimer = new Timer("de.mhus.lib.karaf.Timer", true);
+//		myTimer.schedule(new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				doTick();
+//			}
+//		}, 1000, 1000); // tick every second
 	}
 
 	
+//	protected void doTick() {
+//		
+//	}
+
+
 	private class TimerWrap implements TimerIfc {
 		
 		LinkedList<TimerTaskWrap> tasks = new LinkedList<>();
@@ -73,6 +89,11 @@ public class TimerFactoryImpl implements TimerFactory {
 		@Override
 		public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
 			myTimer.scheduleAtFixedRate(new TimerTaskWrap(this, task), firstTime, period);
+		}
+		
+		@Override
+		public void schedule(Scheduler scheduler) {
+			schedule(scheduler, 1000, 1000);
 		}
 
 		@Override

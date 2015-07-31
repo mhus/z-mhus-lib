@@ -4,10 +4,13 @@ import java.util.Date;
 import java.util.TimerTask;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
+import de.mhus.lib.core.schedule.Scheduler;
 
 @DefaultFactory(DefaultTimerFactory.class)
 public interface TimerIfc {
 
+	public void schedule(Scheduler scheduler);
+	
 	public void schedule(TimerTask task, long delay);
 
 	public void schedule(TimerTask task, Date time);

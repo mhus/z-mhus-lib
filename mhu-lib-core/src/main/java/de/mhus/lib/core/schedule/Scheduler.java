@@ -1,8 +1,9 @@
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 import java.util.TimerTask;
 
+import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.strategy.DefaultTaskContext;
 import de.mhus.lib.core.strategy.NotSuccessful;
@@ -11,7 +12,7 @@ import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
 
-public abstract class Scheduler extends TimerTask implements Operation {
+public abstract class Scheduler extends MTimerTask implements Operation {
 
 	public static final long CALCULATE_NEXT = 0;
 	public static final long DISABLED_TIME = -1;
@@ -150,10 +151,14 @@ public abstract class Scheduler extends TimerTask implements Operation {
 	public void setTask(Observer task) {
 		this.task = task;
 	}
-	
+
 	@Override
-    public void run() {
-    	doTick();
-    }
+	public void doit() throws Exception {
+		doTick();
+	}
+
+	public long getNextExecutionTime() {
+		return nextExecutionTime;
+	}
 
 }
