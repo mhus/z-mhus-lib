@@ -96,7 +96,6 @@ public class ConsoleFactory extends LogFactory {
 	
 	private class ConsoleLog extends LogEngine {
 		
-		private String name;
 
 		public ConsoleLog(String name) {
 			super(name);
@@ -105,7 +104,7 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void debug(Object message) {
 			if (!isDebugEnabled()) return;
-			out.println(printTime() + "DEBUG: " + name + " " + message);
+			out.println(printTime() + "DEBUG: " + getName() + " " + message);
 			if (message != null && message instanceof Throwable)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -113,14 +112,14 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void debug(Object message, Throwable t) {
 			if (!isDebugEnabled()) return;
-			out.println(printTime() + "DEBUG: " + name + " " + message);
+			out.println(printTime() + "DEBUG: " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 	
 		@Override
 		public void error(Object message) {
 			if (!isErrorEnabled()) return;
-			out.println(printTime() + "ERROR: " + name + " " + message);
+			out.println(printTime() + "ERROR: " + getName() + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -128,14 +127,14 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void error(Object message, Throwable t) {
 			if (!isErrorEnabled()) return;
-			out.println(printTime() + "ERROR: " + name + " " + message);
+			out.println(printTime() + "ERROR: " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 	
 		@Override
 		public void fatal(Object message) {
 			if (!isFatalEnabled()) return;
-			out.println(printTime() + "FATAL: " + name + " " + message);
+			out.println(printTime() + "FATAL: " + getName() + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -143,14 +142,14 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void fatal(Object message, Throwable t) {
 			if (!isFatalEnabled()) return;
-			out.println(printTime() + "FATAL: " + name + " " + message);
+			out.println(printTime() + "FATAL: " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 		
 		@Override
 		public void info(Object message) {
 			if (!isInfoEnabled()) return;
-			out.println(printTime() + "INFO : " + name + " " + message);
+			out.println(printTime() + "INFO : " + getName() + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -158,7 +157,7 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void info(Object message, Throwable t) {
 			if (!isInfoEnabled()) return;
-			out.println(printTime() + "INFO : " + name + " " + message);
+			out.println(printTime() + "INFO : " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 	
@@ -195,7 +194,7 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void trace(Object message) {
 			if (!isTraceEnabled()) return;
-			out.println(printTime() + "TRACE: " + name + " " + message);
+			out.println(printTime() + "TRACE: " + getName() + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -203,14 +202,14 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void trace(Object message, Throwable t) {
 			if (!isTraceEnabled()) return;
-			out.println(printTime() + "TRACE: " + name + " " + message);
+			out.println(printTime() + "TRACE: " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 	
 		@Override
 		public void warn(Object message) {
 			if (!isWarnEnabled()) return;
-			out.println(printTime() + "WARN : " + name + " " + message);
+			out.println(printTime() + "WARN : " + getName() + " " + message);
 			if (message != null && message instanceof Throwable && traces)
 				((Throwable)message).printStackTrace(out);
 		}
@@ -218,7 +217,7 @@ public class ConsoleFactory extends LogFactory {
 		@Override
 		public void warn(Object message, Throwable t) {
 			if (!isWarnEnabled()) return;
-			out.println(printTime() + "WARN : " + name + " " + message);
+			out.println(printTime() + "WARN : " + getName() + " " + message);
 			if (t!=null && traces) t.printStackTrace(out);
 		}
 

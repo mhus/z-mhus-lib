@@ -32,9 +32,15 @@ public class Log {
 		} else
 		if (owner instanceof Class) {
 			name = ((Class<?>)owner).getName();
-		} else
+		} else {
 			name = String.valueOf(owner);
-		
+			if (name == null) 
+				name = owner.getClass().getCanonicalName();
+//			else {
+//				int p = name.indexOf('@');
+//				if (p > 0) name = name.substring(0,p);
+//			}
+		}
 		this.name = name;
 		localTrace = MSingleton.isTrace(name);
 		

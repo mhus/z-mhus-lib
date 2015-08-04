@@ -29,7 +29,9 @@ public class MessageStringifier {
 			
 			for (@SuppressWarnings("unchecked")Enumeration<String> e = msg.getPropertyNames();e.hasMoreElements();) {
 				String key = e.nextElement();
-				sb.append("  ").append(key).append('=').append(msg.getStringProperty(key)).append('\n');
+				String val = msg.getStringProperty(key);
+				if (key.contains("assword")) val = "[***]";
+				sb.append("  ").append(key).append('=').append(val).append('\n');
 			}
 			
 			if (msg instanceof MapMessage) {
@@ -37,7 +39,9 @@ public class MessageStringifier {
 				MapMessage m = (MapMessage)msg;
 				for (@SuppressWarnings("unchecked")Enumeration<String> e = m.getMapNames();e.hasMoreElements();) {
 					String key = e.nextElement();
-					sb.append("  ").append(key).append('=').append(((MapMessage) msg).getString(key)).append('\n');
+					String val = ((MapMessage) msg).getString(key);
+					if (key.contains("assword")) val = "[***]";
+					sb.append("  ").append(key).append('=').append(val).append('\n');
 				}
 			} else
 			if (msg instanceof TextMessage) {
