@@ -1,19 +1,24 @@
 package de.mhus.lib.core.schedule;
 
+import java.util.Date;
 import java.util.Observer;
 
-public class OnceScheduler extends Scheduler {
+public class OnceJob extends SchedulerJob {
 
 	private long time;
 
-	public OnceScheduler(long time, Observer task) {
+	public OnceJob(Date time, Observer task) {
+		this(time.getTime(), task);
+	}
+	
+	public OnceJob(long time, Observer task) {
 		super(task);
 		this.time = time;
 	}
 
 	@Override
 	public void doCaclulateNextExecution() {
-		if (isDone()) 
+		if (isDone())
 			nextExecutionTime = DISABLED_TIME;
 		else
 			nextExecutionTime = time;

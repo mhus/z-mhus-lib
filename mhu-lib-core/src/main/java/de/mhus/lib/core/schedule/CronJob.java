@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MTimeInterval;
 
 /**
  * Schedule tasks like Crontab (man -S 5 crontab). Next scheduling is done after execution of a task. Example * * * * * every minute,
@@ -18,29 +19,65 @@ import de.mhus.lib.core.MCast;
  * @author mikehummel
  *
  */
-public class CronScheduler extends Scheduler {
+public class CronJob extends SchedulerJob {
 
 	private Definition definition;
+	private boolean restrictive = true; // if not executed in the minute of scheduled time, a new time is scheduled
 
 
-	public CronScheduler(Definition definition, Observer task) {
-		super(task);
+	public CronJob(String name, Definition definition, boolean restrictive, Observer task) {
+		super(name, task);
+		setRestrictive(restrictive);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = definition;
 	}
 	
-	public CronScheduler(String definition, Observer task) {
+	public CronJob(String definition, Observer task) {
 		super(task);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = new Definition(definition);
 	}
 
+	public CronJob(String name, String definition, Observer task) {
+		super(name, task);
+		if (definition == null) throw new NullPointerException("definition is null");
+		this.definition = new Definition(definition);
+	}
+	
+	public CronJob(String name, String definition, boolean restrictive, Observer task) {
+		super(name, task);
+		setRestrictive(restrictive);
+		if (definition == null) throw new NullPointerException("definition is null");
+		this.definition = new Definition(definition);
+	}
+	
 	@Override
 	public void doCaclulateNextExecution() {
 		nextExecutionTime = definition.calculateNext( System.currentTimeMillis() );
 	}
 
-	
+	@Override
+	protected boolean isExecutionTimeReached() {
+		if (restrictive) {
+			if (nextExecutionTime > 0 && System.currentTimeMillis() + MTimeInterval.MINUTE_IN_MILLISECOUNDS <= nextExecutionTime) {
+				log.d("cron restrictive over time, reschedule job",getName(),getTask());
+				doCaclulateNextExecution();
+			}
+		}
+			
+		return super.isExecutionTimeReached();
+		
+	}
+
+	public boolean isRestrictive() {
+		return restrictive;
+	}
+
+	public void setRestrictive(boolean restrictive) {
+		this.restrictive = restrictive;
+	}
+
+
 	public static class Definition {
 
 		private int[] allowedMinutes;

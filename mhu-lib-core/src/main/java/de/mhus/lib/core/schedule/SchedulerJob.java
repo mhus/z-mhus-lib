@@ -1,8 +1,8 @@
 package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
-import java.util.TimerTask;
 
+import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.strategy.DefaultTaskContext;
@@ -12,27 +12,39 @@ import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
 
-public abstract class Scheduler extends MTimerTask implements Operation {
+public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	public static final long CALCULATE_NEXT = 0;
 	public static final long DISABLED_TIME = -1;
 	
-	protected static Log log = Log.getLog(Scheduler.class);
+	protected static Log log = Log.getLog(SchedulerJob.class);
 	private Object owner;
 	protected long nextExecutionTime = CALCULATE_NEXT;
 	protected MyTaskContext context = new MyTaskContext();
 	private boolean done = false;
 	private Observer task;
+	private String name;
+	private long lastExecutionStart;
+	private long lastExecutionStop;
+	private long scheduledTime;
 	
-	public Scheduler(Observer task) {
+	public SchedulerJob(Observer task) {
 		setTask(task);
+		setName(task.toString());
+	}
+	
+	public SchedulerJob(String name,  Observer task) {
+		setTask(task);
+		setName(name);
 	}
 	
 	/**
 	 * Call this method to fire ticks to the scheduler. If the time is come the scheduler will execute the operation and set 'done' to true.
 	 */
 	public void doTick() {
-
+		
+		if (isCanceled()) return;
+		
 		if (nextExecutionTime == CALCULATE_NEXT) {
 			synchronized (this) {
 				doCaclulateNextExecution();
@@ -40,11 +52,13 @@ public abstract class Scheduler extends MTimerTask implements Operation {
 		}
 		
 		if (isExecutionTimeReached()) {
+			lastExecutionStart = System.currentTimeMillis();
 			try {
 				doExecute(context);
-			} catch (Exception e) {
-				log.e(e);
+			} catch (Throwable e) {
+				doError(e);
 			}
+			lastExecutionStop = System.currentTimeMillis();
 			context.clear();
 			synchronized (this) {
 				doCaclulateNextExecution();
@@ -56,7 +70,7 @@ public abstract class Scheduler extends MTimerTask implements Operation {
 	/**
 	 * Calculate the next executionTime and store it into nextExecutionTime
 	 */
-	public abstract void doCaclulateNextExecution();
+	protected abstract void doCaclulateNextExecution();
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
@@ -118,7 +132,7 @@ public abstract class Scheduler extends MTimerTask implements Operation {
 		return done;
 	}
 
-	public void setDone(boolean done) {
+	protected void setDone(boolean done) {
 		this.done = done;
 	}
 
@@ -148,7 +162,7 @@ public abstract class Scheduler extends MTimerTask implements Operation {
 		return task;
 	}
 
-	public void setTask(Observer task) {
+	protected void setTask(Observer task) {
 		this.task = task;
 	}
 
@@ -157,8 +171,49 @@ public abstract class Scheduler extends MTimerTask implements Operation {
 		doTick();
 	}
 
-	public long getNextExecutionTime() {
+	protected long getNextExecutionTime() {
 		return nextExecutionTime;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	protected void setName(String name) {
+		this.name = name;
+	}
+
+	protected void doError(Throwable t) {
+		log.e(getName(),t);
+	}
+
+	protected void doSchedule(SchedulerQueue queue) {
+		if (isCanceled()) return;
+		if (nextExecutionTime == DISABLED_TIME) {
+			setScheduledTime(System.currentTimeMillis() + MTimeInterval.DAY_IN_MILLISECOUNDS); // schedule tomorrow
+			queue.doSchedule(this);
+			return;
+		}
+		if (nextExecutionTime == CALCULATE_NEXT)
+			doCaclulateNextExecution();
+		setScheduledTime(nextExecutionTime);
+		queue.doSchedule(this);
+	}
+
+	public long getLastExecutionStart() {
+		return lastExecutionStart;
+	}
+
+	public long getLastExecutionStop() {
+		return lastExecutionStop;
+	}
+
+	public long getScheduledTime() {
+		return scheduledTime;
+	}
+
+	private void setScheduledTime(long scheduledTime) {
+		this.scheduledTime = scheduledTime;
 	}
 
 }

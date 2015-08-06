@@ -9,7 +9,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.schedule.Scheduler;
+import de.mhus.lib.core.schedule.SchedulerJob;
 
 public class TimerImpl extends MLog implements TimerIfc {
 	
@@ -145,7 +145,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 	}
 
 	@Override
-	public void schedule(Scheduler scheduler) {
+	public void schedule(SchedulerJob scheduler) {
 		schedule(scheduler, 1000, 1000);
 	}
 

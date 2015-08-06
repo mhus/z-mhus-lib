@@ -16,7 +16,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.schedule.Scheduler;
+import de.mhus.lib.core.schedule.SchedulerJob;
+import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
@@ -25,7 +26,7 @@ import de.mhus.lib.core.util.TimerTaskSelfControl;
 public class TimerFactoryImpl implements TimerFactory {
 	
 	private Log log = Log.getLog(TimerFactoryImpl.class);
-	private Timer myTimer;
+	private SchedulerTimer myTimer;
 //	private TreeMap<Long, MTimerTask> queue = new TreeMap<>();
 	
 	public TimerFactoryImpl() {
@@ -41,7 +42,7 @@ public class TimerFactoryImpl implements TimerFactory {
 	@Activate
 	void doActivate(ComponentContext ctx) {
 		log.i("start common timer");
-		myTimer = new Timer("de.mhus.lib.karaf.Timer", true);
+		myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
 //		myTimer.schedule(new TimerTask() {
 //			
 //			@Override
@@ -92,8 +93,8 @@ public class TimerFactoryImpl implements TimerFactory {
 		}
 		
 		@Override
-		public void schedule(Scheduler scheduler) {
-			schedule(scheduler, 1000, 1000);
+		public void schedule(SchedulerJob job) {
+			schedule(job);
 		}
 
 		@Override

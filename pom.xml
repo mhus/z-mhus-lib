@@ -96,7 +96,6 @@
       <module>mhu-lib-framework</module>
       <module>mhu-lib-jms</module>
       <module>mhu-lib-karaf</module>
-      <module>mhu-lib-karaf-persistence</module>
     </modules>
 
   <repositories>

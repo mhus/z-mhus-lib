@@ -31,6 +31,7 @@
         <artifactId>mhu-lib</artifactId>
         <version>3.2.9-SNAPSHOT</version>
   </parent>
+    <version>3.2.9-SNAPSHOT</version>
 
     <build>
         <plugins>

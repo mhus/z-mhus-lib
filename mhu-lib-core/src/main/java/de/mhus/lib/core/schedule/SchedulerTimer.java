@@ -1,51 +1,54 @@
 package de.mhus.lib.core.schedule;
 
-import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.Timer;
+import java.util.Date;
+import java.util.Observer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
-public class SchedulerTimer {
+import de.mhus.lib.core.util.TimerIfc;
 
-	private Timer timer;
-	private LinkedList<Scheduler> queue = new LinkedList<>();
-	
-	public void start() {
-		if (timer != null) return;
-		timer = new Timer(true);
-		timer.scheduleAtFixedRate(new TimerTask() {
-			
-			@Override
-			public void run() {
-				doTick();
-			}
-		}, 1000, 1000);
-	}
-	
-	protected void doTick() {
-		while (true) {
-			synchronized (queue) {
-				Scheduler first = queue.getFirst();
-				if (first.getNextExecutionTime() < System.currentTimeMillis()) {
-					queue.removeFirst();
-				} else {
-					first = null;
-				}
-			}
-		}
+public class SchedulerTimer extends Scheduler implements TimerIfc {
+
+	public SchedulerTimer() {
+		super();
 	}
 
-	public void stop() {
-		if (timer == null) return;
-		timer.cancel();
-		timer = null;
+	public SchedulerTimer(String name) {
+		super(name);
 	}
-	
-	public void schedule(Scheduler scheduler) {
-		synchronized (queue) {
-			queue.add(0, scheduler);
-		}
+
+	@Override
+	public void schedule(TimerTask task, long delay) {
+		schedule(new OnceJob(System.currentTimeMillis() + delay, new ObserverTimerTaskAdapter(task) ));
 	}
-	
+
+	@Override
+	public void schedule(TimerTask task, Date time) {
+		schedule(new OnceJob(time, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void schedule(TimerTask task, long delay, long period) {
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void schedule(TimerTask task, Date firstTime, long period) {
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void cancel() {
+		stop();
+	}
+
 }

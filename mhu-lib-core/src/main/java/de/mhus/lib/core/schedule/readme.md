@@ -19,7 +19,7 @@ public class TestScheduler {
 		
 		
 		// schedule filter
-		Scheduler s = new CronScheduler("0,15,30,45 * * * *", task);
+		SchedulerJob s = new CronJob("0,15,30,45 * * * *", task);
 		
 		// timer
 		Timer t = new Timer();

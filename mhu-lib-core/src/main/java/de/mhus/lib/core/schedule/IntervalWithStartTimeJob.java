@@ -7,12 +7,12 @@ import java.util.Observer;
  * @author mikehummel
  *
  */
-public class IntervalWithStartTimeScheduler extends Scheduler {
+public class IntervalWithStartTimeJob extends SchedulerJob {
 
 	private long interval;
 	private long start;
 
-	public IntervalWithStartTimeScheduler(long start, long interval, Observer task) {
+	public IntervalWithStartTimeJob(long start, long interval, Observer task) {
 		super(task);
 		this.start = start;
 		this.interval = interval;
