@@ -12,6 +12,13 @@ public interface SchedulerQueue {
 
 	List<SchedulerJob> removeJobs(long toTime);
 
-	void doSchedule(SchedulerJob schedulerJob);
+	void doSchedule(SchedulerJob job);
 
+	void removeJob(SchedulerJob job);
+
+	int size();
+	
+	List<SchedulerJob> getJobs();
+	
+	
 }

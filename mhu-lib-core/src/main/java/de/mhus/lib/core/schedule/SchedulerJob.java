@@ -2,6 +2,7 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
@@ -27,6 +28,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long lastExecutionStart;
 	private long lastExecutionStop;
 	private long scheduledTime;
+	private boolean running = false;
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
@@ -197,6 +199,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		if (nextExecutionTime == CALCULATE_NEXT)
 			doCaclulateNextExecution();
 		setScheduledTime(nextExecutionTime);
+		queue.removeJob(this);
 		queue.doSchedule(this);
 	}
 
@@ -214,6 +217,32 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	private void setScheduledTime(long scheduledTime) {
 		this.scheduledTime = scheduledTime;
+	}
+
+	protected final synchronized boolean startRunning() {
+		if (running) return false;
+		running = true;
+		return true;
+	}
+	
+	protected void stopRunning() {
+		running = false;
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+
+	@Override
+	public String toString() {
+		return task.getClass().getName() + "," + 
+				getClass().getName() + "," + 
+				MDate.toIsoDateTime(scheduledTime) + "," + 
+				MDate.toIsoDateTime(nextExecutionTime) + "," + 
+				isCanceled() + "," + 
+				isRunning() + ","+
+				MDate.toIsoDateTime(getLastExecutionStart()) + "," + 
+				MDate.toIsoDateTime(getLastExecutionStop());
 	}
 
 }

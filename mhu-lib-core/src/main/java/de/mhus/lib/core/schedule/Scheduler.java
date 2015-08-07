@@ -1,5 +1,6 @@
 package de.mhus.lib.core.schedule;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,6 +12,7 @@ public class Scheduler {
 	private Timer timer;
 	SchedulerQueue queue = new QueueList();
 	private String name = Scheduler.class.getCanonicalName();
+	private LinkedList<SchedulerJob> running = new LinkedList<>();
 	
 	public Scheduler() {}
 	
@@ -43,12 +45,12 @@ public class Scheduler {
 				} catch (Throwable t) {
 					job.doError(t);
 				}
-				job.doSchedule(queue);
 			}
 	}
 
 	protected void doExecuteJob(SchedulerJob job) {
-		new MThread(job).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
+		if (!job.startRunning()) return;
+		new MThread(new MyExecutor(job)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
 
 	public void stop() {
@@ -59,6 +61,48 @@ public class Scheduler {
 	
 	public void schedule(SchedulerJob scheduler) {
 		scheduler.doSchedule(queue);
+	}
+	
+	private class MyExecutor implements Runnable {
+
+		private SchedulerJob job;
+
+		public MyExecutor(SchedulerJob job) {
+			this.job = job;
+		}
+
+		@Override
+		public void run() {
+			synchronized (running) {
+				running.add(job);
+			}
+			try {
+				doExecuteJob(job);
+			} catch (Throwable t) {
+				job.doError(t);
+			}
+			try {
+				job.doSchedule(queue);
+			} catch (Throwable t) {
+				job.doError(t);
+			}
+			synchronized (running) {
+				running.remove(job);
+			}
+			job.stopRunning();
+		}
+		
+	}
+
+	
+	public List<SchedulerJob> getRunningJobs() {
+		synchronized (running) {
+			return new LinkedList<>(running);
+		}
+	}
+	
+	public List<SchedulerJob> getScheduledJobs() {
+		return queue.getJobs();
 	}
 	
 }

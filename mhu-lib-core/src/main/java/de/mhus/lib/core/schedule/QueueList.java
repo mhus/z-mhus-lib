@@ -48,4 +48,29 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	@Override
+	public void removeJob(SchedulerJob job) {
+		synchronized (this) {
+			Iterator<SchedulerJob> iter = list.iterator();
+			while (iter.hasNext()) {
+				SchedulerJob item = iter.next();
+				if (job.equals(item)) iter.remove();
+			}
+		}
+	}
+
+	@Override
+	public int size() {
+		synchronized (this) {
+			return list.size();
+		}
+	}
+
+	@Override
+	public List<SchedulerJob> getJobs() {
+		synchronized (this) {
+			return new LinkedList<SchedulerJob>( list );
+		}
+	}
+
 }
