@@ -49,7 +49,7 @@ public class Scheduler {
 	}
 
 	protected void doExecuteJob(SchedulerJob job) {
-		if (!job.startRunning()) return;
+		if (!job.setBusy(this)) return;
 		new MThread(new MyExecutor(job)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
 
@@ -77,19 +77,20 @@ public class Scheduler {
 				running.add(job);
 			}
 			try {
-				doExecuteJob(job);
-			} catch (Throwable t) {
-				job.doError(t);
-			}
-			try {
-				job.doSchedule(queue);
+				if (job != null && !job.isCanceled())
+					job.doTick();
 			} catch (Throwable t) {
 				job.doError(t);
 			}
 			synchronized (running) {
 				running.remove(job);
 			}
-			job.stopRunning();
+			job.releaseBusy(Scheduler.this);
+			try {
+				job.doSchedule(queue);
+			} catch (Throwable t) {
+				job.doError(t);
+			}
 		}
 		
 	}

@@ -28,7 +28,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long lastExecutionStart;
 	private long lastExecutionStop;
 	private long scheduledTime;
-	private boolean running = false;
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
@@ -121,6 +120,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return true;
 	}
 
+	public Object getOwner() {
+		return owner;
+	}
+	
 	/**
 	 * By default the function will compare the nextExecutionTime with the current time. If the time is come it will return
 	 * true. If nextExecutionTime is 0 or less it will return false in every case.
@@ -219,20 +222,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		this.scheduledTime = scheduledTime;
 	}
 
-	protected final synchronized boolean startRunning() {
-		if (running) return false;
-		running = true;
-		return true;
-	}
-	
-	protected void stopRunning() {
-		running = false;
-	}
-	
-	public boolean isRunning() {
-		return running;
-	}
-
 	@Override
 	public String toString() {
 		return task.getClass().getName() + "," + 
@@ -240,7 +229,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 				MDate.toIsoDateTime(scheduledTime) + "," + 
 				MDate.toIsoDateTime(nextExecutionTime) + "," + 
 				isCanceled() + "," + 
-				isRunning() + ","+
+				owner + ","+
 				MDate.toIsoDateTime(getLastExecutionStart()) + "," + 
 				MDate.toIsoDateTime(getLastExecutionStop());
 	}
