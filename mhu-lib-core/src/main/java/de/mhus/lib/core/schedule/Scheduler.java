@@ -1,5 +1,6 @@
 package de.mhus.lib.core.schedule;
 
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -40,29 +41,35 @@ public class Scheduler {
 	
 	protected void doTick() {
 		List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
-		if (pack == null) return;
-		for (SchedulerJob job : pack) {
-			try {
-				doExecuteJob(job);
-			} catch (Throwable t) {
-				job.doError(t);
+		if (pack != null) {
+			for (SchedulerJob job : pack) {
+				try {
+					doExecuteJob(job);
+				} catch (Throwable t) {
+					job.doError(t);
+				}
 			}
 		}
 		
 		long time = System.currentTimeMillis();
 		if (nextTimeoutCheck < time) {
-			for (SchedulerJob job : queue.getJobs()) {
-				long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
-				if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
-					try {
-						if (job.isBusy())
-							job.doTimeoutReached();
-					} catch (Throwable t) {
-						job.doError(t);
+			synchronized (running) {
+				try {
+					for (SchedulerJob job : running) {
+						long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+						if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
+							try {
+								if (job.isBusy())
+									job.doTimeoutReached();
+							} catch (Throwable t) {
+								job.doError(t);
+							}
+						}
 					}
-				}
+				} catch (ConcurrentModificationException cme) {}
+				nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+					
 			}
-			nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 		}
 	}
 
