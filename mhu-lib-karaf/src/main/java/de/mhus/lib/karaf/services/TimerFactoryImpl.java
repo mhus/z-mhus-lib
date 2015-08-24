@@ -94,7 +94,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		
 		@Override
 		public void schedule(SchedulerJob job) {
-			schedule(job);
+			myTimer.schedule(job);
 		}
 
 		@Override
