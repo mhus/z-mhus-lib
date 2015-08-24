@@ -243,6 +243,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		this.timeoutInMinutes = timeoutInMinutes;
 	}
 
+	/**
+	 * If you have defined a timeout, the event will be called every minute. Be carefully with the execution time of this
+	 * event, it can hem the hole scheduler.
+	 */
 	public void doTimeoutReached() {
 		
 	}
