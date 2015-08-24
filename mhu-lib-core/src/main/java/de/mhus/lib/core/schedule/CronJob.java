@@ -95,11 +95,13 @@ public class CronJob extends SchedulerJob {
 		private int[] allowedDaysMonth;
 		private int[] allowedMonthes;
 		private int[] allowedDaysWeek;
+		private String definition;
 
 		public Definition() {
 		}
 		
 		public Definition(String definition) {
+			this.definition = definition;
 			String[] parts = definition.split(" ");
 			allowedMinutes = MCast.toIntIntervalValues(parts[0], 0, 59);
 			allowedHours = MCast.toIntIntervalValues(parts[1], 0, 23);
@@ -161,5 +163,16 @@ public class CronJob extends SchedulerJob {
 			return new int[] {0,allowed[0], 1};
 		}
 		
+		@Override
+		public String toString() {
+			return definition;
+		}
+		
 	}
+	
+	@Override
+	public String toString() {
+		return CronJob.class.getSimpleName()  + "," + definition;
+	}
+
 }

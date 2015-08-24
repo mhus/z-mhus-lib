@@ -21,4 +21,10 @@ public class IntervalJob extends SchedulerJob {
 		nextExecutionTime = System.currentTimeMillis() + interval;
 	}
 
+	@Override
+	public String toString() {
+		return 
+			IntervalJob.class.getSimpleName() + "," + interval;
+	}
+
 }

@@ -71,6 +71,11 @@
             </action>
         </command>
 
+        <command name="mhus/timer">
+            <action class="de.mhus.lib.karaf.services.CmdTimer">
+            </action>
+        </command>
+        
         <command name="jms/connection-add">
             <action class="de.mhus.lib.karaf.jms.CmdConnectionAdd">
             </action>

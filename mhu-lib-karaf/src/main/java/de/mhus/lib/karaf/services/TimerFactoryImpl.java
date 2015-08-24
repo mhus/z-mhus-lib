@@ -58,6 +58,13 @@ public class TimerFactoryImpl implements TimerFactory {
 //		
 //	}
 
+	public static SchedulerTimer getScheduler(TimerFactory factory) {
+		TimerIfc timer = factory.getTimer();
+		if (timer instanceof TimerWrap) {
+			return ((TimerWrap)timer).getScheduler();
+		}
+		return null;
+	}
 
 	private class TimerWrap implements TimerIfc {
 		
@@ -68,6 +75,10 @@ public class TimerFactoryImpl implements TimerFactory {
 			myTimer.schedule(new TimerTaskWrap(this, task), delay);
 		}
 	
+		public SchedulerTimer getScheduler() {
+			return myTimer;
+		}
+
 		@Override
 		public void schedule(TimerTask task, Date time) {
 			myTimer.schedule(new TimerTaskWrap(this, task), time);
@@ -159,7 +170,12 @@ public class TimerFactoryImpl implements TimerFactory {
 			super.cancel();
 		}
 		
+		@Override
+		public String toString() {
+			return task == null ? "null" : task.toString();
+		}
 	}
+	
 
 	@Override
 	public TimerIfc getTimer() {

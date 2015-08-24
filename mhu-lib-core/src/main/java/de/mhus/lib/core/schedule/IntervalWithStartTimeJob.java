@@ -2,6 +2,8 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.core.MDate;
+
 /**
  * Executes the task every 'interval' milliseconds after execution finished.
  * @author mikehummel
@@ -24,6 +26,12 @@ public class IntervalWithStartTimeJob extends SchedulerJob {
 			nextExecutionTime = System.currentTimeMillis() + interval;
 		else
 			nextExecutionTime = start;
+	}
+
+	@Override
+	public String toString() {
+		return 
+			IntervalWithStartTimeJob.class.getSimpleName() + "," + MDate.toIsoDateTime(start) + "," + interval;
 	}
 
 }

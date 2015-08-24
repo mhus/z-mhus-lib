@@ -3,6 +3,8 @@ package de.mhus.lib.core.schedule;
 import java.util.Date;
 import java.util.Observer;
 
+import de.mhus.lib.core.MDate;
+
 public class OnceJob extends SchedulerJob {
 
 	private long time;
@@ -19,7 +21,7 @@ public class OnceJob extends SchedulerJob {
 	@Override
 	public void doCaclulateNextExecution() {
 		if (isDone())
-			nextExecutionTime = DISABLED_TIME;
+			nextExecutionTime =  REMOVE_TIME;
 		else
 			nextExecutionTime = time;
 	}
@@ -29,6 +31,11 @@ public class OnceJob extends SchedulerJob {
 		super.setDone(done);
 		if(done)
 			cancel();
+	}
+
+	@Override
+	public String toString() {
+		return OnceJob.class.getSimpleName() + "," + isDone() + "," + MDate.toIsoDateTime(time);
 	}
 
 }

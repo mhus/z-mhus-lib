@@ -17,6 +17,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	public static final long CALCULATE_NEXT = 0;
 	public static final long DISABLED_TIME = -1;
+	public static final long REMOVE_TIME = -2;
 	
 	protected static Log log = Log.getLog(SchedulerJob.class);
 	private Object owner;
@@ -29,6 +30,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long lastExecutionStop;
 	private long scheduledTime;
 	private long timeoutInMinutes;
+	private Thread thread;
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
@@ -55,17 +57,19 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		
 		if (isExecutionTimeReached()) {
 			lastExecutionStart = System.currentTimeMillis();
+			thread = Thread.currentThread();
 			try {
 				doExecute(context);
 			} catch (Throwable e) {
 				doError(e);
 			}
+			thread = null;
 			lastExecutionStop = System.currentTimeMillis();
 			context.clear();
+			setDone(true);
 			synchronized (this) {
 				doCaclulateNextExecution();
 			}
-			done = true;
 		}
 	}
 
@@ -195,6 +199,9 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	protected void doSchedule(SchedulerQueue queue) {
 		if (isCanceled()) return;
+		if (nextExecutionTime == REMOVE_TIME) {
+			return;
+		}
 		if (nextExecutionTime == DISABLED_TIME) {
 			setScheduledTime(System.currentTimeMillis() + MTimeInterval.DAY_IN_MILLISECOUNDS); // schedule tomorrow
 			queue.doSchedule(this);
@@ -225,14 +232,16 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	@Override
 	public String toString() {
-		return task.getClass().getName() + "," + 
-				getClass().getName() + "," + 
-				MDate.toIsoDateTime(scheduledTime) + "," + 
-				MDate.toIsoDateTime(nextExecutionTime) + "," + 
-				isCanceled() + "," + 
-				owner + ","+
-				MDate.toIsoDateTime(getLastExecutionStart()) + "," + 
-				MDate.toIsoDateTime(getLastExecutionStop());
+//		return task.getClass().getName() + "," + 
+//				getClass().getName() + "," + 
+//				MDate.toIsoDateTime(scheduledTime) + "," + 
+//				MDate.toIsoDateTime(nextExecutionTime) + "," + 
+//				isCanceled() + "," + 
+//				owner + ","+
+//				MDate.toIsoDateTime(getLastExecutionStart()) + "," + 
+//				MDate.toIsoDateTime(getLastExecutionStop());
+		return 
+			getClass().getName();
 	}
 
 	public long getTimeoutInMinutes() {
@@ -250,4 +259,9 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	public void doTimeoutReached() {
 		
 	}
+
+	public Thread getThread() {
+		return thread;
+	}
+
 }

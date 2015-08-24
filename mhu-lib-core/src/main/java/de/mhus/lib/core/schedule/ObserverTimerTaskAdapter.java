@@ -16,4 +16,8 @@ public class ObserverTimerTaskAdapter implements Observer {
 		task.run();
 	}
 
+	@Override
+	public String toString() {
+		return task == null ? "null" : task.toString();
+	}
 }
