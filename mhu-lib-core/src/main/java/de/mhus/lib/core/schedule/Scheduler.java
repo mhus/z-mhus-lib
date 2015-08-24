@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.MTimeInterval;
 
 public class Scheduler {
 
@@ -13,6 +14,7 @@ public class Scheduler {
 	SchedulerQueue queue = new QueueList();
 	private String name = Scheduler.class.getCanonicalName();
 	private LinkedList<SchedulerJob> running = new LinkedList<>();
+	private long nextTimeoutCheck;
 	
 	public Scheduler() {}
 	
@@ -37,15 +39,31 @@ public class Scheduler {
 	}
 	
 	protected void doTick() {
-			List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
-			if (pack == null) return;
-			for (SchedulerJob job : pack) {
-				try {
-					doExecuteJob(job);
-				} catch (Throwable t) {
-					job.doError(t);
+		List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
+		if (pack == null) return;
+		for (SchedulerJob job : pack) {
+			try {
+				doExecuteJob(job);
+			} catch (Throwable t) {
+				job.doError(t);
+			}
+		}
+		
+		long time = System.currentTimeMillis();
+		if (nextTimeoutCheck < time) {
+			for (SchedulerJob job : queue.getJobs()) {
+				long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+				if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
+					try {
+						if (job.isBusy())
+							job.doTimeoutReached();
+					} catch (Throwable t) {
+						job.doError(t);
+					}
 				}
 			}
+			nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+		}
 	}
 
 	protected void doExecuteJob(SchedulerJob job) {

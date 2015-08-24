@@ -28,6 +28,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long lastExecutionStart;
 	private long lastExecutionStop;
 	private long scheduledTime;
+	private long timeoutInMinutes;
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
@@ -234,4 +235,15 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 				MDate.toIsoDateTime(getLastExecutionStop());
 	}
 
+	public long getTimeoutInMinutes() {
+		return timeoutInMinutes;
+	}
+
+	public void setTimeoutInMinutes(long timeoutInMinutes) {
+		this.timeoutInMinutes = timeoutInMinutes;
+	}
+
+	public void doTimeoutReached() {
+		
+	}
 }

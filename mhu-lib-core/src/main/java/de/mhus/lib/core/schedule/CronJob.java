@@ -32,6 +32,16 @@ public class CronJob extends SchedulerJob {
 		this.definition = definition;
 	}
 	
+	public CronJob(String minute, String hour, String dayOfMonth, String month, String dayOfWeek, Observer task) {
+		super(task);
+		if (minute == null) minute = "*";
+		if (hour == null) hour = "*";
+		if (dayOfMonth == null) dayOfMonth = "*";
+		if (month == null) month = "*";
+		if (dayOfWeek == null) dayOfWeek = "*";
+		this.definition = new Definition(minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek);
+	}
+	
 	public CronJob(String definition, Observer task) {
 		super(task);
 		if (definition == null) throw new NullPointerException("definition is null");

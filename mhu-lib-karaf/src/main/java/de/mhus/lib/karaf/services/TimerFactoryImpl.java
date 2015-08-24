@@ -43,6 +43,7 @@ public class TimerFactoryImpl implements TimerFactory {
 	void doActivate(ComponentContext ctx) {
 		log.i("start common timer");
 		myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
+		myTimer.start();
 //		myTimer.schedule(new TimerTask() {
 //			
 //			@Override
