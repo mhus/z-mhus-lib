@@ -74,7 +74,7 @@ public class CmdTimer extends MLog implements Action {
 				Thread thread = job.getThread();
 				if (thread != null) {
 					StackTraceElement[] stack = thread.getStackTrace();
-					System.out.println( MCast.toString(job.getName(),stack) );
+					System.out.println( MCast.toString(job.getName() + " (threadId=" + thread.getId() + ")",stack) );
 				}
 			}
 		}
@@ -87,7 +87,7 @@ public class CmdTimer extends MLog implements Action {
 					Thread thread = job.getThread();
 					if (thread != null) {
 						StackTraceElement[] stack = thread.getStackTrace();
-						System.out.println( MCast.toString(job.getName(),stack) );
+						System.out.println( MCast.toString(job.getName() + " (threadId=" + thread.getId() + ")",stack) );
 					}
 				}
 			}
