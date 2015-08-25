@@ -7,7 +7,7 @@ import java.util.Observer;
  * @author mikehummel
  *
  */
-public class IntervalJob extends SchedulerJob {
+public class IntervalJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private long interval;
 
@@ -25,6 +25,16 @@ public class IntervalJob extends SchedulerJob {
 	public String toString() {
 		return 
 			IntervalJob.class.getSimpleName() + "," + interval;
+	}
+
+	@Override
+	public void doReschedule(Scheduler queue, long time) {
+		super.doReschedule(queue, time);
+	}
+
+	@Override
+	public void setDone(boolean done) {
+		super.setDone(done);
 	}
 
 }

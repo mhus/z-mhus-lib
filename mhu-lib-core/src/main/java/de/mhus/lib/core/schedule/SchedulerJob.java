@@ -181,7 +181,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		doTick();
 	}
 
-	protected long getNextExecutionTime() {
+	public long getNextExecutionTime() {
 		return nextExecutionTime;
 	}
 
@@ -197,21 +197,27 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		log.e(getName(),t);
 	}
 
-	protected void doSchedule(SchedulerQueue queue) {
+	protected void doSchedule(Scheduler scheduler) {
+		doReschedule(scheduler, nextExecutionTime);
+	}
+
+	protected void doReschedule(Scheduler scheduler, long time) {
+		nextExecutionTime = time;
 		if (isCanceled()) return;
 		if (nextExecutionTime == REMOVE_TIME) {
 			return;
 		}
 		if (nextExecutionTime == DISABLED_TIME) {
 			setScheduledTime(System.currentTimeMillis() + MTimeInterval.DAY_IN_MILLISECOUNDS); // schedule tomorrow
-			queue.doSchedule(this);
+			scheduler.getQueue().removeJob(this);
+			scheduler.getQueue().doSchedule(this);
 			return;
 		}
 		if (nextExecutionTime == CALCULATE_NEXT)
 			doCaclulateNextExecution();
 		setScheduledTime(nextExecutionTime);
-		queue.removeJob(this);
-		queue.doSchedule(this);
+		scheduler.getQueue().removeJob(this);
+		scheduler.getQueue().doSchedule(this);
 	}
 
 	public long getLastExecutionStart() {

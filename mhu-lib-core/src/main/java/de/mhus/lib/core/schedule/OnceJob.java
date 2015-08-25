@@ -5,7 +5,7 @@ import java.util.Observer;
 
 import de.mhus.lib.core.MDate;
 
-public class OnceJob extends SchedulerJob {
+public class OnceJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private long time;
 
@@ -38,4 +38,9 @@ public class OnceJob extends SchedulerJob {
 		return OnceJob.class.getSimpleName() + "," + isDone() + "," + MDate.toIsoDateTime(time);
 	}
 
+	@Override
+	public void doReschedule(Scheduler queue, long time) {
+		super.doReschedule(queue, time);
+	}
+	
 }

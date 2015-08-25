@@ -20,4 +20,5 @@ public class ObserverTimerTaskAdapter implements Observer {
 	public String toString() {
 		return task == null ? "null" : task.toString();
 	}
+	
 }

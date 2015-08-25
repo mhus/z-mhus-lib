@@ -19,7 +19,7 @@ import de.mhus.lib.core.MTimeInterval;
  * @author mikehummel
  *
  */
-public class CronJob extends SchedulerJob {
+public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private Definition definition;
 	private boolean restrictive = true; // if not executed in the minute of scheduled time, a new time is scheduled
@@ -173,6 +173,16 @@ public class CronJob extends SchedulerJob {
 	@Override
 	public String toString() {
 		return CronJob.class.getSimpleName()  + "," + definition;
+	}
+
+	@Override
+	public void doReschedule(Scheduler queue, long time) {
+		super.doReschedule(queue, time);
+	}
+
+	@Override
+	public void setDone(boolean done) {
+		super.setDone(done);
 	}
 
 }

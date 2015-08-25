@@ -85,7 +85,7 @@ public class Scheduler {
 	}
 	
 	public void schedule(SchedulerJob scheduler) {
-		scheduler.doSchedule(queue);
+		scheduler.doSchedule(this);
 	}
 	
 	private class MyExecutor implements Runnable {
@@ -112,7 +112,7 @@ public class Scheduler {
 			}
 			job.releaseBusy(Scheduler.this);
 			try {
-				job.doSchedule(queue);
+				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
 				job.doError(t);
 			}
@@ -131,4 +131,8 @@ public class Scheduler {
 		return queue.getJobs();
 	}
 	
+	public SchedulerQueue getQueue() {
+		return queue;
+	}
+
 }

@@ -9,7 +9,7 @@ import de.mhus.lib.core.MDate;
  * @author mikehummel
  *
  */
-public class IntervalWithStartTimeJob extends SchedulerJob {
+public class IntervalWithStartTimeJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private long interval;
 	private long start;
@@ -32,6 +32,16 @@ public class IntervalWithStartTimeJob extends SchedulerJob {
 	public String toString() {
 		return 
 			IntervalWithStartTimeJob.class.getSimpleName() + "," + MDate.toIsoDateTime(start) + "," + interval;
+	}
+
+	@Override
+	public void doReschedule(Scheduler queue, long time) {
+		super.doReschedule(queue, time);
+	}
+
+	@Override
+	public void setDone(boolean done) {
+		super.setDone(done);
 	}
 
 }
