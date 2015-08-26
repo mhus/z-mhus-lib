@@ -17,7 +17,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.schedule.MutableSchedulerJob;
 import de.mhus.lib.core.schedule.OnceJob;
 import de.mhus.lib.core.schedule.SchedulerJob;
@@ -44,14 +43,14 @@ public class CmdTimer extends MLog implements Action {
 			List<SchedulerJob> running = scheduler.getRunningJobs();
 			
 			ConsoleTable table = new ConsoleTable();
+			table.setLineSpacer(true);
 			table.setHeaderValues(
+					"Name",
 					"Task",
 					"Job",
 					"Started",
 					"Stopped", 
-					"Description",
-					"Name",
-					"Scheduled",
+					"Scheduled/Thread",
 					"Timeout",
 					"Canceled",
 					"Done",
@@ -60,13 +59,12 @@ public class CmdTimer extends MLog implements Action {
 			
 			for (SchedulerJob job : running) {
 				table.addRowValues(
+						job.getName(),
 						job.getTask(),
 						job,
 						MDate.toIsoDateTime(job.getLastExecutionStart()),
 						"Running",
-						job.getDescription(),
-						job.getName(),
-						"Running",
+						job.getThread(),
 						job.getTimeoutInMinutes(),
 						job.isCanceled(),
 						job.isDone(),
@@ -75,12 +73,11 @@ public class CmdTimer extends MLog implements Action {
 			}
 			for (SchedulerJob job : scheduled) {
 				table.addRowValues(
+						job.getName(),
 						job.getTask(),
 						job,
 						MDate.toIsoDateTime(job.getLastExecutionStart()),
 						MDate.toIsoDateTime(job.getLastExecutionStop()),
-						job.getDescription(),
-						job.getName(),
 						MDate.toIsoDateTime(job.getScheduledTime()), 
 						job.getTimeoutInMinutes(),
 						job.isCanceled(),

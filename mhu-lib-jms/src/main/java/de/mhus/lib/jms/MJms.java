@@ -10,8 +10,13 @@ import javax.jms.Message;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.directory.EmptyResourceNode;
+import de.mhus.lib.core.directory.ResourceNode;
 
 public class MJms {
+
+	private static ResourceNode config;
 
 	public static void setProperties(IProperties prop, Message msg) throws JMSException {
 		setProperties("",prop, msg);
@@ -122,6 +127,12 @@ public class MJms {
 		if (in.getClass().isPrimitive()) return in;
 		if (in instanceof Date) return ((Date)in).getTime();
 		return String.valueOf(in);
+	}
+
+	public synchronized static ResourceNode getConfig() {
+		if (config == null)
+			config = MSingleton.get().getConfigProvider().getConfig("jms", new EmptyResourceNode());
+		 return config;
 	}
 	
 }

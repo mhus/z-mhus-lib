@@ -5,10 +5,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.mhus.lib.core.MString;
+
 public class ConsoleTable {
-    public List<String> header = new ArrayList<String>();
+    
+	public static final String SEPARATOR_LINE = "---";
+    
+	public List<String> header = new ArrayList<String>();
     public List<List<String>> content = new ArrayList<List<String>>();
     private int maxColSize = -1;
+    private boolean lineSpacer = false;
     
     public List<String> addRow() {
         List<String> row = new ArrayList<String>();
@@ -47,8 +53,11 @@ public class ConsoleTable {
         String headerLine = getRow(sizes, header, " | ");
         out.println(headerLine);
         out.println(underline(headerLine.length()));
+        boolean first = true;
         for (List<String> row : content) {
+        	if (!first && lineSpacer) out.println();
             out.println(getRow(sizes, row, " | "));
+            first = false;
         }
     }
 
@@ -59,6 +68,16 @@ public class ConsoleTable {
     }
 
     private String getRow(int[] sizes, List<String> row, String separator) {
+    	
+    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
+    		int s = 0;
+    		for (int i : sizes) {
+    			if (s != 0) s+=separator.length();
+    			s+=i;
+    		}
+    		return MString.rep('-', s );
+    	}
+    	
         StringBuilder line = new StringBuilder();
         int c = 0;
         for (String cell : row) {
@@ -96,5 +115,13 @@ public class ConsoleTable {
 
 	public void setMaxColSize(int maxColSize) {
 		this.maxColSize = maxColSize;
+	}
+
+	public boolean isLineSpacer() {
+		return lineSpacer;
+	}
+
+	public void setLineSpacer(boolean lineSpacer) {
+		this.lineSpacer = lineSpacer;
 	}
 }

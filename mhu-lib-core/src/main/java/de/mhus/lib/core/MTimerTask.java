@@ -22,10 +22,17 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.TimerTask;
 
-public abstract class MTimerTask extends TimerTask implements Observer {
+import de.mhus.lib.basics.Named;
+
+public abstract class MTimerTask extends TimerTask implements Observer, Named {
 
 	private boolean canceled = false;
+	private String name;
 	
+	public MTimerTask() {
+		setName(MSystem.getObjectId(this));
+	}
+		
 	@Override
 	final public void run() {
 		boolean error = false;
@@ -68,8 +75,17 @@ public abstract class MTimerTask extends TimerTask implements Observer {
 		return canceled;
 	}
 
-	protected void setCanceled(boolean canceled) {
+	public void setCanceled(boolean canceled) {
 		this.canceled = canceled;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

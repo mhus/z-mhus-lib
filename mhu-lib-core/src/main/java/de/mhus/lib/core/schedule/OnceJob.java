@@ -21,9 +21,9 @@ public class OnceJob extends SchedulerJob implements MutableSchedulerJob {
 	@Override
 	public void doCaclulateNextExecution() {
 		if (isDone())
-			nextExecutionTime =  REMOVE_TIME;
+			setNextExecutionTime(REMOVE_TIME);
 		else
-			nextExecutionTime = time;
+			setNextExecutionTime(time);
 	}
 
 	@Override

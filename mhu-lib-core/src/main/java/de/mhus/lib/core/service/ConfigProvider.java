@@ -26,14 +26,30 @@ public class ConfigProvider extends MLog {
 			}
 		}
 		if (config != null) {
-			String name = owner.getClass().getCanonicalName();
-			ResourceNode cClass = config.getNode(name);
-			if (cClass != null) {
-				log().t("found",name);
-				return cClass;
+			Class<?> c = null;
+			if (owner instanceof String) {
+				String name = (String)owner;
+				ResourceNode cClass = config.getNode(name);
+				if (cClass != null) {
+					log().t("found",name);
+					return cClass;
+				}
+			} else
+			if (owner instanceof Class) {
+				c = (Class<?>) owner;
 			} else {
-				log().t("not found",name);
+				c = owner.getClass();
 			}
+			while (c != null) {
+				String name = c.getCanonicalName();
+				ResourceNode cClass = config.getNode(name);
+				if (cClass != null) {
+					log().t("found",owner.getClass(),name);
+					return cClass;
+				}
+				c = c.getSuperclass();
+			}
+			log().t("not found",owner.getClass());
 		}
 		return def;
 	}

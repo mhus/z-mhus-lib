@@ -14,6 +14,7 @@ import javax.jms.TemporaryQueue;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
@@ -28,7 +29,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	
 	private HashMap<String, Message> responses = null;
 	private HashSet<String> allowedIds = new HashSet<>();
-	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
+	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 5;
 	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 	private long broadcastTimeout = 100;
 
@@ -37,6 +38,14 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	
 	public ClientJms(JmsDestination dest) {
 		super(dest);
+		try {
+			ResourceNode cfg = MJms.getConfig();
+			timeout = cfg.getLong("answerTimeout", timeout);
+			warnTimeout = cfg.getLong("answerWarnTimeout", warnTimeout);
+			broadcastTimeout = cfg.getLong("broadcastTimeout", broadcastTimeout);
+		} catch (Throwable t) {
+			log().t(t);
+		}
 	}
 	
 	public void sendJmsOneWay(Message msg) throws JMSException {
@@ -78,7 +87,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					synchronized (this) {
 						this.wait(10000);
 					}
-				} catch (InterruptedException e) {log().d(e);}
+				} catch (InterruptedException e) {log().t(e);}
 				
 				synchronized (responses) {
 					Message answer = responses.get(id);

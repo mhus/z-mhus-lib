@@ -3,9 +3,7 @@ package de.mhus.lib.karaf.services;
 
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -14,9 +12,12 @@ import org.osgi.service.component.ComponentContext;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
+import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.schedule.SchedulerJob;
+import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
@@ -68,7 +69,7 @@ public class TimerFactoryImpl implements TimerFactory {
 
 	private class TimerWrap implements TimerIfc {
 		
-		LinkedList<TimerTaskWrap> tasks = new LinkedList<>();
+		LinkedList<Wrap> tasks = new LinkedList<>();
 		
 		@Override
 		public void schedule(TimerTask task, long delay) {
@@ -106,20 +107,26 @@ public class TimerFactoryImpl implements TimerFactory {
 		
 		@Override
 		public void schedule(SchedulerJob job) {
-			myTimer.schedule(job);
+			myTimer.schedule(new SchedulerJobWrap(this, job) );
 		}
 
 		@Override
 		public void cancel() {
 			synchronized (this) {
-				for (TimerTaskWrap task : tasks)
+				for (Wrap task : tasks)
 					task.cancelDirect();
 			}
 		}
 
 	}
+
+	private interface Wrap {
+
+		void cancelDirect();
+		
+	}
 	
-	private class TimerTaskWrap extends TimerTask {
+	private class TimerTaskWrap extends MTimerTask implements Wrap {
 
 		private TimerTask task;
 		private Bundle bundle;
@@ -127,6 +134,12 @@ public class TimerFactoryImpl implements TimerFactory {
 		private TimerWrap timer;
 		
 		public TimerTaskWrap(TimerWrap timer, TimerTask task) {
+			
+			if (task != null && task instanceof Named)
+				setName(((Named)task).getName());
+			else
+				setName(MSystem.getObjectId(task));
+			
 			this.task = task;
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
 			this.modified = bundle.getLastModified();
@@ -136,14 +149,14 @@ public class TimerFactoryImpl implements TimerFactory {
 			}
 		}
 		@Override
-		public void run() {
+		public void doit() {
 			try {
 //				if (DefaultTimerFactory.isCancelled(task)) {
 //					cancel();
 //					return;
 //				}
 				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified) {
-					log.d("stop task",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+					log.d("stop timertask",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 					cancel();
 					return;
 				}
@@ -166,19 +179,68 @@ public class TimerFactoryImpl implements TimerFactory {
 			return super.cancel();
 		}
 		
-		private void cancelDirect() {
+		@Override
+		public void cancelDirect() {
 			super.cancel();
 		}
 		
 		@Override
 		public String toString() {
-			return task == null ? "null" : task.toString();
+			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + (task == null ? "null" : task.toString());
 		}
 	}
 	
+	private class SchedulerJobWrap extends SchedulerJobProxy implements Wrap {
+
+		private Bundle bundle;
+		private long modified = 0;
+		private TimerWrap timer;
+
+		public SchedulerJobWrap(TimerWrap timer, SchedulerJob task) {
+			super(task);
+			this.bundle = FrameworkUtil.getBundle(task.getClass());
+			this.modified = bundle.getLastModified();
+			this.timer = timer;
+			synchronized (timer) {
+				timer.tasks.add(this);
+			}
+		}
+
+		@Override
+		public void doTick() {
+			
+			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified) {
+				log.d("stop scheduled task",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
+				cancel();
+				return;
+			}
+
+			super.doTick();
+		}
+		
+		@Override
+		public void cancelDirect() {
+			cancel();
+		}
+		
+		@Override
+		public void setCanceled(boolean canceled) {
+			synchronized (timer) {
+				timer.tasks.remove(this);
+			}
+			super.setCanceled(canceled);
+		}
+
+		@Override
+		public String toString() {
+			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + super.toString();
+		}
+
+	}
 
 	@Override
 	public TimerIfc getTimer() {
 		return new TimerWrap();
 	}
+	
 }

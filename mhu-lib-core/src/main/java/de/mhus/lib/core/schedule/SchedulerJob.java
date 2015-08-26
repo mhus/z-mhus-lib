@@ -2,7 +2,9 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
@@ -21,11 +23,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	
 	protected static Log log = Log.getLog(SchedulerJob.class);
 	private Object owner;
-	protected long nextExecutionTime = CALCULATE_NEXT;
+	private long nextExecutionTime = CALCULATE_NEXT;
 	protected MyTaskContext context = new MyTaskContext();
 	private boolean done = false;
 	private Observer task;
-	private String name;
 	private long lastExecutionStart;
 	private long lastExecutionStop;
 	private long scheduledTime;
@@ -34,7 +35,12 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
-		setName(task.toString());
+		if (task == null)
+			setName("null");
+		if (task instanceof Named)
+			setName(((Named)task).getName());
+		else
+			setName(MSystem.getObjectId(task));
 	}
 	
 	public SchedulerJob(String name,  Observer task) {
@@ -47,9 +53,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	 */
 	public void doTick() {
 		
+		if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
+			cancel();
 		if (isCanceled()) return;
 		
-		if (nextExecutionTime == CALCULATE_NEXT) {
+		if (getNextExecutionTime() == CALCULATE_NEXT) {
 			synchronized (this) {
 				doCaclulateNextExecution();
 			}
@@ -135,7 +143,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	 * @return
 	 */
 	protected boolean isExecutionTimeReached() {
-		return nextExecutionTime > 0 && System.currentTimeMillis() >= nextExecutionTime;
+		return getNextExecutionTime() > 0 && System.currentTimeMillis() >= getNextExecutionTime();
 	}
 	
 	public boolean isDone() {
@@ -185,37 +193,29 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return nextExecutionTime;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	protected void setName(String name) {
-		this.name = name;
-	}
-
 	protected void doError(Throwable t) {
 		log.e(getName(),t);
 	}
 
 	protected void doSchedule(Scheduler scheduler) {
-		doReschedule(scheduler, nextExecutionTime);
+		doReschedule(scheduler, getNextExecutionTime());
 	}
 
 	protected void doReschedule(Scheduler scheduler, long time) {
-		nextExecutionTime = time;
+		setNextExecutionTime(time);
 		if (isCanceled()) return;
-		if (nextExecutionTime == REMOVE_TIME) {
+		if (getNextExecutionTime() == REMOVE_TIME) {
 			return;
 		}
-		if (nextExecutionTime == DISABLED_TIME) {
+		if (getNextExecutionTime() == DISABLED_TIME) {
 			setScheduledTime(System.currentTimeMillis() + MTimeInterval.DAY_IN_MILLISECOUNDS); // schedule tomorrow
 			scheduler.getQueue().removeJob(this);
 			scheduler.getQueue().doSchedule(this);
 			return;
 		}
-		if (nextExecutionTime == CALCULATE_NEXT)
+		if (getNextExecutionTime() == CALCULATE_NEXT)
 			doCaclulateNextExecution();
-		setScheduledTime(nextExecutionTime);
+		setScheduledTime(getNextExecutionTime());
 		scheduler.getQueue().removeJob(this);
 		scheduler.getQueue().doSchedule(this);
 	}
@@ -232,7 +232,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return scheduledTime;
 	}
 
-	private void setScheduledTime(long scheduledTime) {
+	protected void setScheduledTime(long scheduledTime) {
 		this.scheduledTime = scheduledTime;
 	}
 
@@ -268,6 +268,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	public Thread getThread() {
 		return thread;
+	}
+
+	public void setNextExecutionTime(long nextExecutionTime) {
+		this.nextExecutionTime = nextExecutionTime;
 	}
 
 }

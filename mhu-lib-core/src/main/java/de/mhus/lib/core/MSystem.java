@@ -262,4 +262,9 @@ public class MSystem {
 		return getHostname() + ":" + getPid();
 	}
 	
+	public static String getObjectId(Object o) {
+		if (o == null) return "null";
+		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
+	}
+	
 }

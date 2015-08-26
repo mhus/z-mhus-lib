@@ -23,9 +23,9 @@ public class IntervalWithStartTimeJob extends SchedulerJob implements MutableSch
 	@Override
 	public void doCaclulateNextExecution() {
 		if (isDone())
-			nextExecutionTime = System.currentTimeMillis() + interval;
+			setNextExecutionTime(System.currentTimeMillis() + interval);
 		else
-			nextExecutionTime = start;
+			setNextExecutionTime(start);
 	}
 
 	@Override

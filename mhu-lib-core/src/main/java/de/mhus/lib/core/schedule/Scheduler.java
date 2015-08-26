@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 
-public class Scheduler {
+public class Scheduler implements Named {
 
 	private Timer timer;
 	SchedulerQueue queue = new QueueList();
@@ -23,6 +24,7 @@ public class Scheduler {
 		this.name = name;
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -106,11 +108,12 @@ public class Scheduler {
 					job.doTick();
 			} catch (Throwable t) {
 				job.doError(t);
+			} finally {
+				synchronized (running) {
+					running.remove(job);
+				}
+				job.releaseBusy(Scheduler.this);
 			}
-			synchronized (running) {
-				running.remove(job);
-			}
-			job.releaseBusy(Scheduler.this);
 			try {
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {

@@ -18,7 +18,7 @@ public class IntervalJob extends SchedulerJob implements MutableSchedulerJob {
 
 	@Override
 	public void doCaclulateNextExecution() {
-		nextExecutionTime = System.currentTimeMillis() + interval;
+		setNextExecutionTime(System.currentTimeMillis() + interval);
 	}
 
 	@Override
