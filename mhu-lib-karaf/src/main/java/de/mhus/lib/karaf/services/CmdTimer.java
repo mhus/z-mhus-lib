@@ -1,6 +1,7 @@
 package de.mhus.lib.karaf.services;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,7 +28,7 @@ import de.mhus.lib.karaf.MOsgi;
 @Command(scope = "mhus", name = "timer", description = "Default Timer Handling")
 public class CmdTimer extends MLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="list,timeout,stacktrace,timeoutstacktrace, schedule <name> <time>, done <name> <done>, remove <name>, disable <name>, cancel <name>", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="list,timeout,stacktrace,timeoutstacktrace, schedule <name> <time>, done <name> <done>, disable/enable/cancel/remove <name>", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -151,45 +152,58 @@ public class CmdTimer extends MLog implements Action {
 			);
 		}
 		if (cmd.equals("schedule")) {
-			SchedulerJob job = getScheduledJob(scheduler, parameters[0]);
-			if (job != null && job instanceof MutableSchedulerJob) {
-				Date time = MCast.toDate(parameters[1], null);
-				if (time == null) {
-					System.out.println("Malformet time");
-					return null;
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null && job instanceof MutableSchedulerJob) {
+					Date time = MCast.toDate(parameters[1], null);
+					if (time == null) {
+						System.out.println("Malformet time");
+						return null;
+					}
+					((MutableSchedulerJob)job).doReschedule(scheduler, time.getTime());
+					
+					System.out.println("OK, Scheduled " + job.getName() +" to " + MDate.toIsoDateTime( time ) );
 				}
-				((MutableSchedulerJob)job).doReschedule(scheduler, time.getTime());
-				
-				System.out.println("OK, Schedulet to " + MDate.toIsoDateTime( time ) );
 			}
 		}
 		if (cmd.equals("done")) {
-			SchedulerJob job = getScheduledJob(scheduler, parameters[0]);
-			if (job != null && job instanceof MutableSchedulerJob) {
-				((MutableSchedulerJob)job).setDone( MCast.toboolean(parameters[1], false));
-				
-				System.out.println("OK");
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null && job instanceof MutableSchedulerJob) {
+					((MutableSchedulerJob)job).setDone( MCast.toboolean(parameters[1], false));
+					
+					System.out.println("OK " + job.getName());
+				}
 			}
 		}
 		if (cmd.equals("remove")) {
-			SchedulerJob job = getScheduledJob(scheduler, parameters[0]);
-			if (job != null) {
-				scheduler.getQueue().removeJob(job);
-				System.out.println("OK");
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					scheduler.getQueue().removeJob(job);
+					System.out.println("OK " + job.getName());
+				}
 			}
 		}
 		if (cmd.equals("disable")) {
-			SchedulerJob job = getScheduledJob(scheduler, parameters[0]);
-			if (job != null && job instanceof MutableSchedulerJob) {
-				((MutableSchedulerJob)job).doReschedule(scheduler, SchedulerJob.DISABLED_TIME);
-				System.out.println("OK");
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null && job instanceof MutableSchedulerJob) {
+					((MutableSchedulerJob)job).doReschedule(scheduler, SchedulerJob.DISABLED_TIME);
+					System.out.println("OK " + job.getName());
+				}
+			}
+		}
+		if (cmd.equals("enable")) {
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null && job instanceof MutableSchedulerJob) {
+					((MutableSchedulerJob)job).doReschedule(scheduler, SchedulerJob.CALCULATE_NEXT);
+					System.out.println("OK " + job.getName());
+				}
 			}
 		}
 		if (cmd.equals("cancel")) {
-			SchedulerJob job = getScheduledJob(scheduler, parameters[0]);
-			if (job != null) {
-				job.cancel();
-				System.out.println("OK");
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					job.cancel();
+					System.out.println("OK " + job.getName());
+				}
 			}
 		}
 		return null;
@@ -203,12 +217,13 @@ public class CmdTimer extends MLog implements Action {
 		return "OK";
 	}
 
-	private SchedulerJob getScheduledJob(SchedulerTimer scheduler, String jobId) {
+	private List<SchedulerJob> getScheduledJob(SchedulerTimer scheduler, String jobId) {
 		List<SchedulerJob> jobs = scheduler.getScheduledJobs();
+		LinkedList<SchedulerJob> out = new LinkedList<>();
 		for (SchedulerJob job : jobs) {
-			if (MString.compareFsLikePattern(job.getName(),jobId)) return job;
+			if (MString.compareFsLikePattern(job.getName(),jobId)) out.add(job);
 		}
-		return null;
+		return out;
 	}
 
 }

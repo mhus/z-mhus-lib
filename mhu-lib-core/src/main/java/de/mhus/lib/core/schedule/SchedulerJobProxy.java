@@ -7,7 +7,7 @@ import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
 
-public class SchedulerJobProxy extends SchedulerJob {
+public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJob {
 
 	private SchedulerJob instance;
 
@@ -155,13 +155,13 @@ public class SchedulerJobProxy extends SchedulerJob {
 	
 //	@Override
 //	protected void doSchedule(Scheduler scheduler) {
-//		instance.doSchedule(scheduler);
+//		super.doSchedule(scheduler);
 //	}
 
-//	@Override
-//	protected void doReschedule(Scheduler scheduler, long time) {
-//		instance.doReschedule(scheduler, time);
-//	}
+	@Override
+	public void doReschedule(Scheduler scheduler, long time) {
+		super.doReschedule(scheduler, time);
+	}
 	
 	@Override
 	protected void doError(Throwable t) {
@@ -169,7 +169,7 @@ public class SchedulerJobProxy extends SchedulerJob {
 	}
 	
 	@Override
-	protected void setDone(boolean done) {
+	public void setDone(boolean done) {
 		instance.setDone(done);
 	}
 	
