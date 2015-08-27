@@ -26,10 +26,18 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LT,left,right);
 	}
 
+	public static APart le(AAttribute left, AAttribute right) {
+		return new ACompare(ACompare.TYPE.LE,left,right);
+	}
+	
 	public static APart gt(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.GT,left,right);
 	}
 
+	public static APart ge(AAttribute left, AAttribute right) {
+		return new ACompare(ACompare.TYPE.GE,left,right);
+	}
+	
 	public static APart el(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.EL,left,right);
 	}
@@ -48,6 +56,11 @@ public class Db {
 	
 	public static APart in(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.IN,left,right);
+	}
+
+	public static AOperation in(AAttribute left, AAttribute projection,
+			AQuery<?> subQuery) {
+		return new ASubQuery(left, projection, subQuery);
 	}
 
 	public static APart and(APart ... operations) {

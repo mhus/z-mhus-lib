@@ -8,9 +8,12 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.config.NodeConfig;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -19,6 +22,7 @@ import de.mhus.lib.test.adb.model.Book;
 import de.mhus.lib.test.adb.model.BookStoreSchema;
 import de.mhus.lib.test.adb.model.Finances;
 import de.mhus.lib.test.adb.model.Person;
+import de.mhus.lib.test.adb.model.Person2;
 import de.mhus.lib.test.adb.model.Regal;
 import de.mhus.lib.test.adb.model.Store;
 
@@ -27,7 +31,7 @@ public class AdbTest extends TestCase {
 	public AdbTest(String name) {
 		super(name);
 		try {
-			//			MSingleton.instance().getConfig().setBoolean("TRACE", true);
+			MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -366,8 +370,8 @@ public class AdbTest extends TestCase {
 
 		DbManager manager = new DbManager(pool, schema);
 		
-		Store store = manager.inject(new Store());
-		store.save();
+		Store store1 = manager.inject(new Store());
+		store1.save();
 		
 		{
 			List<Store> res = manager.getByQualification(Db.query(Store.class).isNull("name")).toCacheAndClose();
@@ -378,6 +382,39 @@ public class AdbTest extends TestCase {
 			assertEquals(0, res.size());
 		}
 		
+		// Test of sub queries - first create a scenario
+		
+		Person2 p1 = manager.inject(new Person2());
+		p1.setName("Max");
+		p1.save();
+		Person2 p2 = manager.inject(new Person2());
+		p2.setName("Moritz");
+		p2.save();
+		
+		store1.setName("NYC");
+		store1.setPrincipal(p1.getId());
+		store1.save();
+		
+		Store store2 = manager.inject(new Store());
+		store2.setName("LA");
+		store2.setPrincipal(p2.getId());
+		store2.save();
+		
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
+			AQuery<Store> q2 = Db.query(Store.class).in("principal", "id", q1);
+			List<Store> res = manager.getByQualification(q2).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("NYC",res.get(0).getName());
+		}
+		
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Moritz");
+			AQuery<Store> q2 = Db.query(Store.class).in("principal", "id", q1);
+			List<Store> res = manager.getByQualification(q2).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("LA",res.get(0).getName());
+		}
 		
 	}
 

@@ -68,6 +68,7 @@ public class BookStoreSchema extends DbSchema {
 	public void findObjectTypes(List<Class<? extends Persistable>> list) {
 		list.add(Book.class);
 		list.add(Person.class);
+		list.add(Person2.class);
 		list.add(Store.class);
 		list.add(Finances.class);
 		list.add(Regal.class);

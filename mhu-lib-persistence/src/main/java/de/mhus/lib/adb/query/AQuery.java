@@ -104,16 +104,51 @@ public class AQuery<T> extends APrint {
 		return this;
 	}
 
+	public AQuery<T> ne(String left, Object right) {
+		operations.add(Db.ne(Db.attr(left), Db.value(right)));
+		return this;
+	}
+	
 	public AQuery<T> lt(AAttribute left, AAttribute right) {
 		operations.add(Db.lt(left, right));
 		return this;
 	}
 
+	public AQuery<T> lt(String left, Object right) {
+		operations.add(Db.lt(Db.attr(left), Db.value(right)));
+		return this;
+	}
+	
+	public AQuery<T> le(AAttribute left, AAttribute right) {
+		operations.add(Db.le(left, right));
+		return this;
+	}
+
+	public AQuery<T> le(String left, Object right) {
+		operations.add(Db.le(Db.attr(left), Db.value(right)));
+		return this;
+	}
+	
 	public AQuery<T> gt(AAttribute left, AAttribute right) {
 		operations.add(Db.gt(left, right));
 		return this;
 	}
 
+	public AQuery<T> gt(String left, Object right) {
+		operations.add(Db.gt(Db.attr(left), Db.value(right)));
+		return this;
+	}
+	
+	public AQuery<T> ge(AAttribute left, AAttribute right) {
+		operations.add(Db.ge(left, right));
+		return this;
+	}
+
+	public AQuery<T> ge(String left, Object right) {
+		operations.add(Db.ge(Db.attr(left), Db.value(right)));
+		return this;
+	}
+	
 	public AQuery<T> el(AAttribute left, AAttribute right) {
 		operations.add(Db.el(left, right));
 		return this;
@@ -124,11 +159,16 @@ public class AQuery<T> extends APrint {
 		return this;
 	}
 
+	public AQuery<T> like(String left, String right) {
+		operations.add(Db.like(Db.attr(left), Db.value(right)));
+		return this;
+	}
+
 	public AQuery<T> like(AAttribute left, AAttribute right) {
 		operations.add(Db.like(left, right));
 		return this;
 	}
-
+	
 	public AQuery<T> and(APart ... parts) {
 		operations.add(Db.and(parts));
 		return this;
@@ -174,6 +214,24 @@ public class AQuery<T> extends APrint {
 		return this;
 	}
 
+	/**
+	 * Append a sub query compare element.
+	 * 
+	 * @param left Name of the Attribute in the base query (WHERE [left] IN (...) )
+	 * @param projection Name of the attribute in the sub query (select [projection] FROM)
+	 * @param subQuery The subquery itself
+	 * @return
+	 */
+	public AQuery<T> in(AAttribute left, AAttribute projection, AQuery<?> subQuery) {
+		operations.add(Db.in(left, projection, subQuery ));
+		return this;
+	}
+	
+	public AQuery<T> in(String left, String projection, AQuery<?> subQuery) {
+		operations.add(Db.in(Db.attr(left), Db.attr(projection), subQuery ));
+		return this;
+	}
+	
 	public AQuery<T> limit(int limit) {
 		operations.add(Db.limit(limit));
 		return this;

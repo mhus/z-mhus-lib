@@ -104,8 +104,8 @@ public class JdbcConnection extends InternalDbConnection {
 			this.used = used;
 			if (!used) // for security reasons - remove old garbage in the session
 				try {
-					rollback();
-				} catch (Exception e) {
+					if (connection != null) connection.rollback();
+				} catch (Throwable e) {
 					log().d(e);
 					close();
 				}

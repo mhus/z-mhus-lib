@@ -14,7 +14,7 @@ public class ACompare extends APart {
 		this.right = right;
 	}
 
-	public enum TYPE {EQ,LT,GT,EL, EG, LIKE, NE, IN}
+	public enum TYPE {EQ,LT,GT,EL, EG, LIKE, NE, IN, LE, GE}
 
 	@Override
 	public void print(AQuery<?> query, StringBuffer buffer) {
@@ -32,11 +32,17 @@ public class ACompare extends APart {
 		case GT:
 			buffer.append(" > ");
 			break;
+		case GE:
+			buffer.append(" >= ");
+			break;
 		case LIKE:
 			buffer.append(" like ");
 			break;
 		case LT:
 			buffer.append(" < ");
+			break;
+		case LE:
+			buffer.append(" <= ");
 			break;
 		case NE:
 			buffer.append(" <> ");

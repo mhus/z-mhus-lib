@@ -44,9 +44,12 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private VerticalLayout detailsPanelContent;
 	private MNls nls;
 	private boolean modified = false;
+	private boolean initialized = false;
 	
 	@SuppressWarnings("serial")
 	public void initUI() {
+		if (isInitialized()) return;
+		setInitialized(true);
 		
     	if (fullSize) setSizeFull();
 		setSpacing(true);
@@ -463,6 +466,14 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	public void setModified(boolean modified) {
 		this.modified = modified;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
+	}
+
+	public void setInitialized(boolean initialized) {
+		this.initialized = initialized;
 	}
 	
 }
