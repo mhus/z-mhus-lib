@@ -119,18 +119,23 @@ public class DbManager extends MJmx {
 		reloadLock.waitWithException(MAX_LOCK);
 
 		Class<?> clazz = schema.findClassForObject(object,this);
+		String s = createSqlSelect(clazz, "*",qualification);
+		log().d("getByQualification",registryName,s,attributes);
+		return executeQuery(con, object, registryName, s, attributes);
+	}
+	
+	public String createSqlSelect(Class<?> clazz, String columns, String qualification) {
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT * FROM $db.").append(getMappingName(clazz)).append("$ ");
+		sql.append("SELECT ").append(columns).append(" FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
-			String low = qualification.trim().toLowerCase();
-			if (low.startsWith("order"))
+			String low = qualification.trim().substring(0, Math.min(qualification.length(), 6)).toLowerCase();
+			if (low.startsWith("order") || low.startsWith("limit"))
 				sql.append(qualification);
 			else
 				sql.append("WHERE ").append(qualification);
 		}
 		String s = sql.toString();
-		log().d("getByQualification",registryName,s,attributes);
-		return executeQuery(con, object, registryName, s, attributes);
+		return s;
 	}
 
 

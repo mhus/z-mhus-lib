@@ -21,17 +21,13 @@ public class ASubQuery extends APart {
 		String qualification = subQuery.toQualification(query.getManager()).trim();
 		
 		left.print(query, buffer);
-		buffer.append(" in (SELECT DISTINCT ");
-		projection.print(subQuery, buffer);
-		buffer.append(" FROM $db.").append(query.getManager().getMappingName( subQuery.getType() )).append("$ ");
+		buffer.append(" IN (");
 		
-		if (MString.isSet(qualification)) {
-			String low = qualification.trim().toLowerCase();
-			if (low.startsWith("order"))
-				buffer.append(qualification);
-			else
-				buffer.append("WHERE ").append(qualification);
-		}
+		StringBuffer buffer2 = new StringBuffer().append("DISTINCT ");
+		projection.print(subQuery, buffer2);
+		
+		buffer.append(query.getManager().createSqlSelect(subQuery.getType(), buffer2.toString() , qualification));
+
 		buffer.append(")");
 	}
 

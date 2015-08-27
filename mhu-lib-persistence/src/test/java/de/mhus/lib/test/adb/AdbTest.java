@@ -387,9 +387,14 @@ public class AdbTest extends TestCase {
 		Person2 p1 = manager.inject(new Person2());
 		p1.setName("Max");
 		p1.save();
+		
 		Person2 p2 = manager.inject(new Person2());
 		p2.setName("Moritz");
 		p2.save();
+		
+		Person2 p3 = manager.inject(new Person2());
+		p3.setName("Witwe Bolte");
+		p3.save();
 		
 		store1.setName("NYC");
 		store1.setPrincipal(p1.getId());
@@ -399,6 +404,11 @@ public class AdbTest extends TestCase {
 		store2.setName("LA");
 		store2.setPrincipal(p2.getId());
 		store2.save();
+		
+		Store store3 = manager.inject(new Store());
+		store3.setName("LA West");
+		store3.setPrincipal(p3.getId());
+		store3.save();
 		
 		{
 			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
@@ -414,6 +424,20 @@ public class AdbTest extends TestCase {
 			List<Store> res = manager.getByQualification(q2).toCacheAndClose();
 			assertEquals(1, res.size());
 			assertEquals("LA",res.get(0).getName());
+		}
+		
+		// test limit
+		
+		{
+			AQuery<Store> q = Db.query(Store.class).limit(1);
+			List<Store> res = manager.getByQualification(q).toCacheAndClose();
+			assertEquals(1, res.size());
+		}
+		
+		{
+			AQuery<Store> q = Db.query(Store.class).like("name","LA%").limit(1);
+			List<Store> res = manager.getByQualification(q).toCacheAndClose();
+			assertEquals(1, res.size());
 		}
 		
 	}
