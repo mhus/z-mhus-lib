@@ -193,5 +193,11 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 		instance.setScheduledTime(scheduledTime);
 	}
 
+	@Override
+	public boolean doReconfigure(String config) {
+		if (instance instanceof MutableSchedulerJob)
+			return ((MutableSchedulerJob)instance).doReconfigure(config);
+		return false;
+	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MTimeInterval;
 
 /**
@@ -96,21 +97,53 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		private int[] allowedMonthes;
 		private int[] allowedDaysWeek;
 		private String definition;
+		private boolean disabled = false;
 
 		public Definition() {
 		}
 		
 		public Definition(String definition) {
-			this.definition = definition;
-			String[] parts = definition.split(" ");
-			allowedMinutes = MCast.toIntIntervalValues(parts[0], 0, 59);
-			allowedHours = MCast.toIntIntervalValues(parts[1], 0, 23);
-			allowedDaysMonth = MCast.toIntIntervalValues(parts[2], 1, 31);
-			allowedMonthes = MCast.toIntIntervalValues(parts[3], 0, 11);
-			allowedDaysWeek = MCast.toIntIntervalValues(parts[4], 1, 7);
+			this.definition = definition.trim();
+			String[] parts = this.definition.split(" ");
+			if (parts.length == 1) {
+				if (parts[0].equals("disabled"))
+					parts = new String[] {"*","*","*","*","*","disabled"};
+				else {
+					int i = MCast.toint(parts[0], 0);
+					if (i > 0) {
+						int m = 60 / i % 60;
+						int h = 24 / (i / 60) % 24;
+						parts = new String[] { m > 0 ? "*/" + m: "*", h > 0 ? "*/" + h : "*","*","*","*"};
+					}
+				}
+					
+			}
+			
+			if (parts.length > 0)
+				allowedMinutes = MCast.toIntIntervalValues(parts[0], 0, 59);
+			
+			if (parts.length > 1)
+				allowedHours = MCast.toIntIntervalValues(parts[1], 0, 23);
+			
+			if (parts.length > 2)
+				allowedDaysMonth = MCast.toIntIntervalValues(parts[2], 1, 31);
+			
+			if (parts.length > 3)
+				allowedMonthes = MCast.toIntIntervalValues(parts[3], 0, 11);
+
+			if (parts.length > 4)
+				allowedDaysWeek = MCast.toIntIntervalValues(parts[4], 1, 7);
+			
+			if (parts.length > 5) {
+				if (parts[5].equals("disabled"))
+					disabled = true;
+			}
+			
 		}
 		
 		public long calculateNext(long start) {
+			
+			if (disabled) return DISABLED_TIME;
 			
 			Calendar next = Calendar.getInstance();
 			
@@ -183,6 +216,12 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 	@Override
 	public void setDone(boolean done) {
 		super.setDone(done);
+	}
+
+	@Override
+	public boolean doReconfigure(String config) {
+		this.definition = new Definition(config);
+		return true;
 	}
 
 }

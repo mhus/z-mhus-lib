@@ -204,6 +204,8 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	protected void doReschedule(Scheduler scheduler, long time) {
 		setNextExecutionTime(time);
 		if (isCanceled()) return;
+		if (getNextExecutionTime() == CALCULATE_NEXT)
+			doCaclulateNextExecution();
 		if (getNextExecutionTime() == REMOVE_TIME) {
 			return;
 		}
@@ -213,8 +215,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			scheduler.getQueue().doSchedule(this);
 			return;
 		}
-		if (getNextExecutionTime() == CALCULATE_NEXT)
-			doCaclulateNextExecution();
 		setScheduledTime(getNextExecutionTime());
 		scheduler.getQueue().removeJob(this);
 		scheduler.getQueue().doSchedule(this);

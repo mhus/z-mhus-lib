@@ -42,5 +42,10 @@ public class OnceJob extends SchedulerJob implements MutableSchedulerJob {
 	public void doReschedule(Scheduler queue, long time) {
 		super.doReschedule(queue, time);
 	}
+
+	@Override
+	public boolean doReconfigure(String config) {
+		return false;
+	}
 	
 }

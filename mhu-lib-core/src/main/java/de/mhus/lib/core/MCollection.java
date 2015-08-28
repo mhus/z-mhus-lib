@@ -141,5 +141,12 @@ public class MCollection {
 			out[i] = iter.next();
 		return out;
 	}
+
+	public static int[] fillIntArray(int from, int to) {
+		int[] out = new int[to-from];
+		for (int l = 0; l < out.length; l++)
+			out[l] = l+from;
+		return out;
+	}
 	
 }

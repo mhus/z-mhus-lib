@@ -206,6 +206,18 @@ public class CmdTimer extends MLog implements Action {
 				}
 			}
 		}
+		if (cmd.equals("configure")) {
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					if (job instanceof MutableSchedulerJob) {
+						boolean ret = ((MutableSchedulerJob)job).doReconfigure(parameters[1]);
+						System.out.println("OK " + job.getName() + " " + ret);
+						if (ret)
+							((MutableSchedulerJob) job).doReschedule(scheduler, SchedulerJob.CALCULATE_NEXT);
+					}
+				}
+			}
+		}
 		return null;
 	}
 

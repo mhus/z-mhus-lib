@@ -2,6 +2,7 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 
 /**
@@ -42,6 +43,16 @@ public class IntervalWithStartTimeJob extends SchedulerJob implements MutableSch
 	@Override
 	public void setDone(boolean done) {
 		super.setDone(done);
+	}
+
+	@Override
+	public boolean doReconfigure(String config) {
+		long l = MCast.tolong(config, -1);
+		if (l > 0 ) {
+			interval = l;
+			return true;
+		}
+		return false;
 	}
 
 }

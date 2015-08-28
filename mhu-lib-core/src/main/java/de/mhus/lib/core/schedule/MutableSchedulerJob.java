@@ -4,5 +4,12 @@ public interface MutableSchedulerJob {
 
 	void setDone(boolean done);
 	void doReschedule(Scheduler scheduler, long time);
+	/**
+	 * Reconfigure the scheduler. Returns true if it was successful.
+	 * 
+	 * @param config
+	 * @return
+	 */
+	boolean doReconfigure(String config);
 	
 }
