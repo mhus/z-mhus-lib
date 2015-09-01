@@ -34,11 +34,6 @@
     <name>mhu-lib-annotations</name>
     <description>mhu-lib-annotations OSGi bundle project.</description>
 
-    <properties>
-        <maven-bundle-plugin.version>2.4.0</maven-bundle-plugin.version>
-        <osgi.version>5.0.0</osgi.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -53,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>${maven-bundle-plugin.version}</version>
+                <version>${bundle.plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>

@@ -105,6 +105,9 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		public Definition(String definition) {
 			this.definition = definition.trim();
 			String[] parts = this.definition.split(" ");
+			if (parts.length == 0) {
+				parts = new String[] {"disabled"};
+			}
 			if (parts.length == 1) {
 				if (parts[0].equals("disabled"))
 					parts = new String[] {"*","*","*","*","*","disabled"};

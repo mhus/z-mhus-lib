@@ -38,7 +38,7 @@ public class QueueList implements SchedulerQueue {
 			int pos = 0;
 			while (iter.hasNext()) {
 				SchedulerJob item = iter.next();
-				if (item.getNextExecutionTime() >= time) {
+				if (item.getScheduledTime() >= time) {
 					list.add(pos, schedulerJob);
 					return;
 				}

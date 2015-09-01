@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.TimerTask;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.ComponentContext;
 
@@ -132,6 +133,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		private Bundle bundle;
 		private long modified = 0;
 		private TimerWrap timer;
+		private BundleContext bundleContext;
 		
 		public TimerTaskWrap(TimerWrap timer, TimerTask task) {
 			
@@ -142,6 +144,7 @@ public class TimerFactoryImpl implements TimerFactory {
 			
 			this.task = task;
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
+			this.bundleContext = bundle.getBundleContext();
 			this.modified = bundle.getLastModified();
 			this.timer = timer;
 			synchronized (timer) {
@@ -155,7 +158,7 @@ public class TimerFactoryImpl implements TimerFactory {
 //					cancel();
 //					return;
 //				}
-				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified) {
+				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
 					log.d("stop timertask",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 					cancel();
 					return;
@@ -195,11 +198,13 @@ public class TimerFactoryImpl implements TimerFactory {
 		private Bundle bundle;
 		private long modified = 0;
 		private TimerWrap timer;
+		private BundleContext bundleContext;
 
 		public SchedulerJobWrap(TimerWrap timer, SchedulerJob task) {
 			super(task);
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
 			this.modified = bundle.getLastModified();
+			this.bundleContext = bundle.getBundleContext();
 			this.timer = timer;
 			synchronized (timer) {
 				timer.tasks.add(this);
@@ -209,7 +214,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		@Override
 		public void doTick() {
 			
-			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified) {
+			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
 				log.d("stop scheduled task",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
 				cancel();
 				return;
