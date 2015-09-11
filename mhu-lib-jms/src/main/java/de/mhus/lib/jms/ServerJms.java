@@ -121,8 +121,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			if (message != null) {
 				try {
 					String logMapper = message.getStringProperty(MConstants.LOG_MAPPER);
-					if (logMapper != null)
+					if (logMapper != null) {
+						releaseLog = true;
 						MLogUtil.setTrailConfig(logMapper);
+					}
 				} catch (Throwable t) {}
 			}
 		
