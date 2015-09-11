@@ -210,8 +210,18 @@ public class MXml {
 
 			String part = parts[i].trim();
 			int index = 0;
+			String key = null;
+			String value = null;
 
-			int pos = part.indexOf('[');
+			int pos = part.indexOf('@');
+			if (pos >= 0) {
+				String kv = part.substring(pos+1);
+				key = MString.beforeIndex(kv, '=');
+				value = MString.afterIndex(kv, '=');
+				part = part.substring(0, pos);
+			}
+			
+			pos = part.indexOf('[');
 			if (pos >= 0) {
 
 				int pos2 = part.indexOf(']', pos);
@@ -226,9 +236,24 @@ public class MXml {
 			}
 
 			NodeList list = getLocalElements(root, part);
-			if (list.getLength() <= index)
-				return null;
-			root = (Element) list.item(index);
+			
+			if (key != null) {
+				root = null;
+				for (int j = 0; j < list.getLength(); j++) {
+					Node e = list.item(j);
+					if (e instanceof Element) {
+						if ( value.equals( ((Element)e).getAttribute(key) ) ) {
+							root = (Element) e;
+							break;
+						}
+					}
+				}
+				if (root == null) return null;
+			} else {
+				if (list.getLength() <= index)
+					return null;
+				root = (Element) list.item(index);
+			}
 		}
 
 		return root;
