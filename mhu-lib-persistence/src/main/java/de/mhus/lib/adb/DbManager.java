@@ -175,7 +175,7 @@ public class DbManager extends MJmx {
 		sql.append("SELECT count(*) AS count FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();
-			if (low.startsWith("order"))
+			if (low.startsWith("order") || low.startsWith("limit"))
 				sql.append(qualification);
 			else
 				sql.append("WHERE ").append(qualification);
@@ -185,6 +185,40 @@ public class DbManager extends MJmx {
 
 	}
 
+	public <T> long getMax(Class<T> clazz, String field) throws MException {
+		return getMaxByQualification(null, (Object)clazz, null, field, "", null);
+	}
+
+	public <T> long getMaxByQualification(Class<T> clazz, String field, String qualification, Map<String,Object> attributes) throws MException {
+		return getMaxByQualification(null, (Object)clazz, null, field, qualification, attributes);
+	}
+
+	public <T> long getMaxByQualification(T object, String field, String qualification, Map<String,Object> attributes) throws MException {
+		return getMaxByQualification(null, object, null, field, qualification, attributes);
+	}
+
+	public <T> long getMaxByQualification(String field, AQuery<T> qualification) throws MException {
+		return getMaxByQualification(null, qualification.getType(), null, field, qualification.toQualification(this), qualification.getAttributes(this));
+	}
+
+	public <T> long getMaxByQualification(DbConnection con, T object, String registryName, String field, String qualification, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+		
+		Class<?> clazz = schema.findClassForObject(object,this);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT max($db.").append(getMappingName(clazz)).append(".").append(field).append("$) AS max FROM $db.").append(getMappingName(clazz)).append("$ ");
+		if (MString.isSet(qualification)) {
+			String low = qualification.trim().toLowerCase();
+			if (low.startsWith("order") || low.startsWith("limit"))
+				sql.append(qualification);
+			else
+				sql.append("WHERE ").append(qualification);
+		}
+
+		return executeCountQuery(con, "max", sql.toString(), attributes);
+
+	}
+	
 	public <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException {
 
 		return executeQuery(null, clazz, null, query, attributes);

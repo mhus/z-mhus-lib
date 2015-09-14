@@ -1,5 +1,6 @@
 package de.mhus.lib.adb;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -148,9 +149,28 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @param name
 	 * @param manager
 	 * @return
+	 * @throws Exception 
 	 */
-	public long getUniqueId(Table table,Field field,Object obj, String name, DbManager manager) {
-		return base(UniqueId.class).nextUniqueId();
+	public void doCreateUniqueIdFor(Table table,Field field,Object obj, String name, DbManager manager) {
+		
+		// Ask Object-Class/Object to create an unique Id
+		try {
+			Method helperMethod = field.getType().getMethod("doCreateUniqueIdFor_" + field.getName(), new Class[] { DbManager.class});
+			Object res = helperMethod.invoke(obj, new Object[] { manager });
+			if (res == null) return;
+			field.set(obj, res);
+			return;
+		} catch (NoSuchMethodException nsme) {
+			log().t(field,nsme);
+		} catch (Throwable t) {
+			log().t(field,t);
+			return;
+		}
+		
+		
+		
+//		long id = base(UniqueId.class).nextUniqueId();
+//		field.set(obj , id);
 	}
 
 	/**

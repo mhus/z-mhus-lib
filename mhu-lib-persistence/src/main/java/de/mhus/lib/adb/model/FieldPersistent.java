@@ -101,23 +101,21 @@ public class FieldPersistent extends Field {
 					set(obj,uuid);
 				}
 			} else
-				if (attribute.getType() == String.class) {
-					Object curVal = get(obj);
-					if (curVal == null) {
-						UUID uuid = UUID.randomUUID();
-						String uidStr = uuid.toString();
-						if (MString.isSet(autoPrefix)) {
-							uidStr = autoPrefix + uidStr.substring(autoPrefix.length());
-						}
-						set(obj, uidStr );
+			if (attribute.getType() == String.class) {
+				Object curVal = get(obj);
+				if (curVal == null) {
+					UUID uuid = UUID.randomUUID();
+					String uidStr = uuid.toString();
+					if (MString.isSet(autoPrefix)) {
+						uidStr = autoPrefix + uidStr.substring(autoPrefix.length());
 					}
-				} else
-					if (attribute.getType() == long.class) {
-						long id = manager.getSchema().getUniqueId(table,this,obj,name,manager);
-						set(obj, id );
-					}
-					else
-						log().i("can't set uuid to object",name);
+					set(obj, uidStr );
+				}
+			} else
+			if (attribute.getType() == long.class || attribute.getType() == int.class) {
+				manager.getSchema().doCreateUniqueIdFor(table,this,obj,name,manager);
+			} else
+				log().i("can't set auto_id to object",name);
 		}
 	}
 
