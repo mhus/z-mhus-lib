@@ -1,5 +1,8 @@
 package de.mhus.lib.karaf.jms;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.osgi.framework.FrameworkUtil;
 
 import de.mhus.lib.core.MLog;
@@ -26,6 +29,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	private boolean initialized = false;
 	
 	public JmsDataChannelImpl() {
+		name = getClass().getCanonicalName();
 	}
 	
 	public JmsDataChannelImpl(String name, String connectionName, JmsChannel channel) {
@@ -121,6 +125,10 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 
 	@Override
 	public void reset(JmsManagerService service) {
+		if (service == null) {
+			log().i("JMS Service not found");
+			return;
+		}
 		JmsConnection con = service.getConnection(connectionName);
 		
 		if (channel == null) {
@@ -151,7 +159,12 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 				} catch (Throwable e) {
 					log().w(e);
 				}
+			} else {
+				channel = new ChannelWrapper(this);
 			}
+//			} else {
+//				log().w("No channel defined for",getClass().getCanonicalName());
+//			}
 		}
 		if (channel != null) {
 			if (!initialized || channel.getDestination() == null) {
@@ -180,6 +193,15 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		if (c != null)
 			return c.toString();
 		return "";
+	}
+
+	protected void receivedOneWay(Message msg) throws JMSException {
+		received(msg);
+	}
+
+	protected Message received(Message msg) throws JMSException {
+		log().i("received not processed msg",msg);
+		return null;
 	}
 	
 }

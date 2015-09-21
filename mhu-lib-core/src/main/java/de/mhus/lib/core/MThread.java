@@ -193,10 +193,10 @@ public class MThread extends MObject implements Runnable {
 						log.d("Leave Thread Task");
 					} catch (Throwable t) {
 						try {
-							log.i("Thread Task Error", t);
+							log.i("Thread Task Error", getName(), t);
 							currentTask.taskError(t);
 						} catch (Throwable t2) {
-							log.i("Thread Task Finish Error", t2);
+							log.i("Thread Task Finish Error", getName(), t2);
 						}
 					}
 					log.d("###: LEAVE THREAD");

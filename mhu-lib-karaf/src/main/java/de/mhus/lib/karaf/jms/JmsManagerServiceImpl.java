@@ -153,7 +153,8 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 				ServiceReference<JmsDataChannel> reference) {
 
 			JmsDataChannel service = context.getService(reference);
-			addChannel(service);
+			if (service != null)
+				addChannel(service);
 			return service;
 		}
 

@@ -218,8 +218,13 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		try {
 			responseConsumer.close();
 		} catch (Throwable t) {log().d(t);}
+		try {
+			if (answerQueue != null)
+				answerQueue.delete();
+		} catch (Throwable t) {log().d(t);}
 		producer = null;
 		responseConsumer = null;
+		answerQueue = null;
 	}
 
 	@Override

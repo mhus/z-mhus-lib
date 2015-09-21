@@ -106,7 +106,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 							processMessage(message);
 						}
 					}
-					).start();
+					, getDestination().getName()).start();
 		} else
 			processMessage(message);
 			
@@ -165,9 +165,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 				}
 			} catch (JMSException t) {
 				reset();
-				log().w(t);
+				log().w(Thread.currentThread().getName(),t);
 			} catch (Throwable t) {
-				log().w(t);
+				log().w(Thread.currentThread().getName(),t);
 			} finally {
 				if (interceptorIn != null) {
 					interceptorIn.end(message);

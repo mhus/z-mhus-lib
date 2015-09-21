@@ -26,6 +26,7 @@ public class CmdHeartbeat implements Action {
 		}
 
 		if (enable == null) {
+			System.out.println("Send Heartbeat ...");
 			service.sendHeartbeat();
 		} else {
 			service.setEnabled(enable);

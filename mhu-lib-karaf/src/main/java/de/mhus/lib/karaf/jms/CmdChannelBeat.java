@@ -19,9 +19,25 @@ public class CmdChannelBeat implements Action {
 			System.out.println("Service not found");
 			return null;
 		}
-		
-		service.getChannel(name).getChannel().doBeat();
-		
+
+		if (name.equals("*")) {
+			for (String cName : service.listChannels()) {
+				try {
+					System.out.println(cName);
+					JmsDataChannel c = service.getChannel(cName);
+					if (c.getChannel() == null)
+						c.reset();
+					c.getChannel().doBeat();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		} else {
+			if (service.getChannel(name).getChannel() == null)
+				service.getChannel(name).reset();
+			service.getChannel(name).getChannel().doBeat();
+		}
+		System.out.println("OK");
 		return null;
 	}
 
