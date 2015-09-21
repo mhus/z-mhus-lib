@@ -8,7 +8,7 @@ import org.apache.karaf.shell.commands.Command;
 @Command(scope = "jms", name = "channel-reset", description = "Reset channels")
 public class CmdChannelReset implements Action {
 
-	@Argument(index=0, name="name", required=false, description="ID of the channel", multiValued=false)
+	@Argument(index=0, name="name", required=true, description="ID of the channel or * for all", multiValued=false)
     String name;
 
 	@Override
@@ -20,7 +20,7 @@ public class CmdChannelReset implements Action {
 			return null;
 		}
 
-		if (name == null)
+		if (name == null || name.equals("*"))
 			for (String cName : service.listChannels()) {
 				System.out.println(cName);
 				JmsDataChannel c = service.getChannel(cName);
