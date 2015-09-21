@@ -69,14 +69,14 @@ public class TestJmsServiceImp implements TestJmsService, JmsServiceListener {
 	@Override
 	public Message sendMessage(String text) throws JMSException {
 		lastAction = "sendMessage " + text;
-		return channel.getSession().createTextMessage(text);
+		return channel.createTextMessage(text);
 	}
 
 	@Override
 	public List<Message> messageBroadcast(String text) throws JMSException {
 		lastAction = "messageBroadcast " + text;
 		LinkedList<Message> out = new LinkedList<>();
-		out.add(channel.getSession().createTextMessage(text));
+		out.add(channel.createTextMessage(text));
 		return out;
 	}
 

@@ -7,8 +7,8 @@ import org.apache.karaf.shell.commands.Command;
 
 import de.mhus.lib.jms.JmsConnection;
 
-@Command(scope = "jms", name = "connection-beat", description = "Beat all channels")
-public class CmdConnectionBeat implements Action {
+@Command(scope = "jms", name = "connection-reset", description = "Reset connection")
+public class CmdConnectionReset implements Action {
 
 	@Argument(index=0, name="name", required=true, description="ID of the connection or * for all", multiValued=false)
     String name;
@@ -26,7 +26,7 @@ public class CmdConnectionBeat implements Action {
 			for (String conName : service.listConnections()) {
 				System.out.println(conName);
 				JmsConnection con = service.getConnection(conName);
-				con.doChannelBeat();
+				con.reset();
 			}
 		} else {
 			JmsConnection con = service.getConnection(name);
@@ -35,7 +35,7 @@ public class CmdConnectionBeat implements Action {
 				return null;
 			}
 			
-			con.doChannelBeat();
+			con.reset();
 		}
 		System.out.println("OK");
 

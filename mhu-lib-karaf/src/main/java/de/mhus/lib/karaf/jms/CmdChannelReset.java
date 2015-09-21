@@ -21,12 +21,18 @@ public class CmdChannelReset implements Action {
 		}
 
 		if (name == null)
-			service.resetChannels();
+			for (String cName : service.listChannels()) {
+				System.out.println(cName);
+				JmsDataChannel c = service.getChannel(cName);
+				c.getChannel().reset();
+				c.getChannel().open();
+			}
 		else {
 			JmsDataChannel channel = service.getChannel(name);
 			channel.getChannel().reset();
 			channel.getChannel().open();
 		}
+		System.out.println("OK");
 		return null;
 	}
 

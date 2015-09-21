@@ -218,7 +218,7 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 		}
 		
 		open();
-		BytesMessage msg = getDestination().getConnection().getSession().createBytesMessage();
+		BytesMessage msg = getDestination().getConnection().createBytesMessage();
 		MJms.setProperties(prop, msg);
 		msg.writeBytes(w.toByteArray());
 		sendJmsOneWay(msg);

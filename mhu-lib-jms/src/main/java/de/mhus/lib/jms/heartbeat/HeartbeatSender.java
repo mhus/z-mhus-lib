@@ -25,6 +25,7 @@ public class HeartbeatSender extends ClientJms {
 	public void sendHeartbeat() {
 		if (getSession() == null) {
 			log().i("heartbeat has no session");
+			reset();
 			return;
 		}
 		try {

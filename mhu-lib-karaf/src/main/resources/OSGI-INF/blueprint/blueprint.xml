@@ -84,6 +84,10 @@
             <action class="de.mhus.lib.karaf.jms.CmdConnectionBeat">
             </action>
         </command>
+        <command name="jms/connection-reset">
+            <action class="de.mhus.lib.karaf.jms.CmdConnectionReset">
+            </action>
+        </command>
         <command name="jms/connection-list">
             <action class="de.mhus.lib.karaf.jms.CmdConnectionList">
             </action>

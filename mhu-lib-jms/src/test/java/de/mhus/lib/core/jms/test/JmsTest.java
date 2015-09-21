@@ -47,13 +47,13 @@ public class JmsTest extends TestCase {
 		client.open();
 		server.open();
 		
-		client.sendJmsOneWay(con1.getSession().createTextMessage("aloa"));
+		client.sendJmsOneWay(con1.createTextMessage("aloa"));
 
 		while(requestMessage.getObject() == null)
 			MThread.sleep(100);
 		assertEquals("aloa", ((TextMessage)requestMessage.getObject()).getText() );
 		
-		Message res = client.sendJms(con1.getSession().createTextMessage("ping"));
+		Message res = client.sendJms(con1.createTextMessage("ping"));
 		assertEquals("ping", ((TextMessage)requestMessage.getObject()).getText() );
 		assertEquals("pong", ((TextMessage)res).getText() );
 

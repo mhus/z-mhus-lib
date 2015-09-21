@@ -91,7 +91,7 @@ public class JmsServiceTest extends TestCase {
 
 		{
 			impl.lastAction = null;
-			TextMessage msg = client.getSession().createTextMessage("works");
+			TextMessage msg = client.createTextMessage("works");
 			ifc.receiveMessage(msg);
 			assertEquals("receiveMessage works", impl.lastAction);
 		}
