@@ -10,12 +10,12 @@ public class SimpleService extends MLog implements SimpleServiceIfc{
 	}
 
 	@Override
-	public void setSimpleServiceConfiguration(String in) {
+	public String getSimpleServiceInfo() {
+		return getClass().getCanonicalName();
 	}
 
 	@Override
-	public String getSimpleServiceInfo() {
-		return getClass().getCanonicalName();
+	public void doSimpleServiceCommand(String cmd, Object... param) {
 	}
 
 }

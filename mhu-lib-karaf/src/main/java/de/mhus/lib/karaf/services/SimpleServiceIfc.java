@@ -4,6 +4,6 @@ public interface SimpleServiceIfc {
 
 	String getSimpleServiceInfo();
 	String getSimpleServiceStatus();
-	void setSimpleServiceConfiguration(String in);
+	void doSimpleServiceCommand(String cmd, Object ... param);
 	
 }

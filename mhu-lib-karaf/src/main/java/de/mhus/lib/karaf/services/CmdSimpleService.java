@@ -15,11 +15,17 @@ import de.mhus.lib.karaf.MOsgi;
 @Command(scope = "mhus", name = "simpleservice", description = "Simple Service Interaction")
 public class CmdSimpleService extends MLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="list,configure", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="list,cmd", multiValued=false)
     String cmd;
 
-	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
-    String[] parameters;
+	@Argument(index=1, name="service", required=false, description="Service Name", multiValued=false)
+    String serviceName;
+	
+	@Argument(index=2, name="service cmd", required=false, description="Cmd to the service", multiValued=false)
+    String serviceCmd;
+
+	@Argument(index=3, name="paramteters", required=false, description="Parameters", multiValued=true)
+    Object[] parameters;
 
 	@Override
 	public Object execute(CommandSession session) throws Exception {
@@ -34,13 +40,13 @@ public class CmdSimpleService extends MLog implements Action {
 			}
 			table.print(System.out);
 		} else
-		if (cmd.equals("configure")) {
+		if (cmd.equals("cmd")) {
 			BundleContext context = FrameworkUtil.getBundle(CmdSimpleService.class).getBundleContext();
 			for (ServiceReference<SimpleServiceIfc> ref : context.getServiceReferences(SimpleServiceIfc.class, null)) {
 				SimpleServiceIfc service = context.getService(ref);
-				if (parameters[0].equals(service.getSimpleServiceInfo())) {
-					System.out.println("SET");
-					service.setSimpleServiceConfiguration(parameters[1]);
+				if (serviceName.equals(service.getSimpleServiceInfo())) {
+					System.out.println("CMD " + serviceCmd);
+					service.doSimpleServiceCommand(serviceCmd, parameters);
 				}
 			}
 		}
