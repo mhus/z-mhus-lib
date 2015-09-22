@@ -27,7 +27,7 @@ public class ObjectToString implements Caster<Object,String>{
 		if (in instanceof Calendar) return MDate.toIso8601((Calendar)in);
 		if (in instanceof Throwable) return MCast.toString((Throwable)in);
 		if (in instanceof byte[]) return MCast.toString((byte[])in);
-		if (in.getClass().isArray()) Arrays.toString((long[]) in);
+		if (in.getClass().isArray()) Arrays.asList(in).toString();
 		return String.valueOf(in);
 	}
 

@@ -2,7 +2,8 @@ package de.mhus.lib.karaf.services;
 
 public interface SimpleServiceIfc {
 
-	String getStatus();
-	void setConfiguration(String in);
+	String getSimpleServiceInfo();
+	String getSimpleServiceStatus();
+	void setSimpleServiceConfiguration(String in);
 	
 }

@@ -76,6 +76,11 @@
             </action>
         </command>
         
+        <command name="mhus/simpleservice">
+            <action class="de.mhus.lib.karaf.services.CmdSimpleService">
+            </action>
+        </command>
+        
         <command name="jms/connection-add">
             <action class="de.mhus.lib.karaf.jms.CmdConnectionAdd">
             </action>

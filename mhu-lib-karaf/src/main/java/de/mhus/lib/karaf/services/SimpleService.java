@@ -5,12 +5,17 @@ import de.mhus.lib.core.MLog;
 public class SimpleService extends MLog implements SimpleServiceIfc{
 
 	@Override
-	public String getStatus() {
+	public String getSimpleServiceStatus() {
 		return "";
 	}
 
 	@Override
-	public void setConfiguration(String in) {
+	public void setSimpleServiceConfiguration(String in) {
+	}
+
+	@Override
+	public String getSimpleServiceInfo() {
+		return getClass().getCanonicalName();
 	}
 
 }

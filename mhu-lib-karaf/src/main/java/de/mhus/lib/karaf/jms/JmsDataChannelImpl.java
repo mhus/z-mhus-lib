@@ -5,6 +5,7 @@ import javax.jms.Message;
 
 import org.osgi.framework.FrameworkUtil;
 
+import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.NotFoundException;
@@ -27,6 +28,11 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	private String destination;
 	private boolean destinationTopic;
 	private boolean initialized = false;
+	
+	@Reference
+	public void setJmsManagerService(JmsManagerService manager) {
+		reset(manager);
+	}
 	
 	public JmsDataChannelImpl() {
 		name = getClass().getCanonicalName();
@@ -126,7 +132,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	@Override
 	public void reset(JmsManagerService service) {
 		if (service == null) {
-			log().i("JMS Service not found");
+			log().d("JmsManagerService not found");
 			return;
 		}
 		JmsConnection con = service.getConnection(connectionName);
@@ -175,6 +181,10 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 			channel.getDestination().setConnection(con);
 			channel.checkConnection();
 		}
+		doAfterReset();
+	}
+
+	protected void doAfterReset() {
 	}
 
 	@Override

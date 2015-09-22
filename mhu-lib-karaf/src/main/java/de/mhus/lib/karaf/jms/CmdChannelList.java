@@ -33,7 +33,7 @@ public class CmdChannelList implements Action {
 					chd.getName(), 
 					(con == null ? "(" : "" ) + chd.getConnectionName() + (con == null ? ")" : "" ),
 					ch == null ? "" : ch.getDestination() ,
-					ch == null ? "" : ch.getClass().getCanonicalName(),
+					ch == null ? "" : (ch instanceof ChannelWrapper ? ((ChannelWrapper)ch).getType() : ch.getClass().getCanonicalName()),
 					i,
 					ch == null ? ""  : ch.isConnected(),
 					ch == null ? "" : ch.isClosed()

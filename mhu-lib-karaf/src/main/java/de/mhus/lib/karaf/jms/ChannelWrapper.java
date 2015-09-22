@@ -25,5 +25,9 @@ public class ChannelWrapper extends ServerJms {
 		return forward.received(msg);
 	}
 
+	public String getType() {
+		return forward == null ? "" : forward.getClass().getCanonicalName();
+	}
+
 
 }
