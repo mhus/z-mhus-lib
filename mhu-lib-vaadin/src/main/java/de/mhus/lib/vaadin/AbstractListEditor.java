@@ -17,6 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.form2.VaadinPojoForm;
@@ -110,7 +111,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         	
 	        model = createForm();
 	        model.setInformationContainer(informationPane);
-	        model.doBuild(detailsPanelContent);
+	        model.doBuild(detailsPanelContent, getActivator());
         } catch (Exception e) {
         	e.printStackTrace();
         }   
@@ -157,6 +158,10 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         
         updateEnabled();
 
+	}
+
+	protected MActivator getActivator() {
+		return null;
 	}
 
 	protected void createCustomButtons(HorizontalLayout buttonBar) {

@@ -7,12 +7,12 @@ import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.annotations.activator.ObjectFactory;
 import de.mhus.lib.annotations.lang.Prototype;
-import de.mhus.lib.core.activator.ActivatorImpl;
+import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.Injector;
 import de.mhus.lib.core.lang.InjectorList;
 
-@DefaultImplementation(ActivatorImpl.class)
+@DefaultImplementation(DefaultActivator.class)
 public abstract class MActivator extends ClassLoader implements IBase {
 
 //	protected static StaticBase base = new StaticBase();

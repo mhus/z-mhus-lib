@@ -14,6 +14,7 @@ public class LayoutFactory extends MObject {
 	public static final String ELEMENT_SPLIT = "split";
 	public static final String ELEMENT_OVERLAY = "overlay";
 	public static final String ELEMENT_ACTIONS = "actions";
+	private MActivator activator;
 	
 		
 	public LayoutFactory() {
@@ -37,13 +38,19 @@ public class LayoutFactory extends MObject {
 		if (subConfig.getName().equals(ELEMENT_ACTIONS))
 			out = new LayoutActions();
 		else
-			out = (LayoutElement)base(MActivator.class).createObject(LayoutElement.class,subConfig.getName());
+			out = getActivator().createObject(LayoutElement.class,subConfig.getName());
 		if (out != null) out.init(parent, subConfig);
 		return out;
 	}
 
+	public void setActivator(MActivator acivator) {
+		this.activator = acivator;
+	}
+	
 	public MActivator getActivator() {
-		return base(MActivator.class);
+		if (activator == null)
+			activator = base(MActivator.class);
+		return activator;
 	}
 
 	public UiElement doBuildUi(LayoutElement element) throws Exception {
@@ -51,12 +58,12 @@ public class LayoutFactory extends MObject {
 			UiElement out = null;
 			if (MString.isEmpty(element.getType())) {
 				try {
-					out = base(MActivator.class).createObject(UiElement.class,element.getConfig().getName());
-				} catch (ClassNotFoundException cnf) {
+					out = getActivator().createObject(UiElement.class,element.getConfig().getName());
+				} catch (ClassNotFoundException | InstantiationException cnf) {
 					log().i(element.getConfig().getName(),cnf.toString());
 				}
 			} else {
-				out = base(MActivator.class).createObject(UiElement.class,element.getType());
+				out = getActivator().createObject(UiElement.class,element.getType());
 			}
 			return out;
 		} catch (Throwable t) {

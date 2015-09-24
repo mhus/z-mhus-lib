@@ -10,7 +10,7 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.activator.ActivatorImpl;
+import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
@@ -58,7 +58,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 
 	@Override
 	public MActivator createActivator() {
-		return new ActivatorImpl();
+		return new DefaultActivator();
 	}
 
 	@Override

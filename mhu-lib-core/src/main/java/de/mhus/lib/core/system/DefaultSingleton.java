@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.activator.ActivatorImpl;
+import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
@@ -46,7 +46,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 
 	@Override
 	public MActivator createActivator() {
-		return new ActivatorImpl();
+		return new DefaultActivator();
 	}
 
 	@Override

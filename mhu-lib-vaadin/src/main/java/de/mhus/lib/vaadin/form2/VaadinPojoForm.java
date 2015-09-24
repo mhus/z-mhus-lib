@@ -3,6 +3,7 @@ package de.mhus.lib.vaadin.form2;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.ComponentContainer;
 
+import de.mhus.lib.core.MActivator;
 import de.mhus.lib.form.LayoutFactory;
 import de.mhus.lib.form.control.ActivatorControl;
 import de.mhus.lib.form.control.InformationFocus;
@@ -17,9 +18,15 @@ public class VaadinPojoForm {
 	private ComponentContainer informationPane;
 
 	public void doBuild(AbstractComponentContainer mainWindow) {
+		doBuild(mainWindow, null);
+	}
+	
+	public void doBuild(AbstractComponentContainer mainWindow, MActivator activator) {
 		try {
 			builder = new VaadinFormBuilder();
-			builder.setFormFactory(new LayoutFactory());
+			LayoutFactory lf = new LayoutFactory();
+			lf.setActivator(activator);
+			builder.setFormFactory(lf);
 			builder.setInformationPane(informationPane);
 			
 			control = new ActivatorControl();

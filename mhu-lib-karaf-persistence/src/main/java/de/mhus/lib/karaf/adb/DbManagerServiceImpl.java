@@ -10,7 +10,7 @@ import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.activator.ActivatorImpl;
+import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.karaf.DataSourceUtil;
@@ -63,7 +63,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 
 	protected MActivator doCreateActivator() {
 		try {
-			return new ActivatorImpl(null, getClass().getClassLoader());
+			return new DefaultActivator(null, getClass().getClassLoader());
 		} catch (MException e) {
 			log().e(e);
 		}

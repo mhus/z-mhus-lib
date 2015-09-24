@@ -8,15 +8,19 @@ import de.mhus.lib.core.config.IFlatConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
-public class ActivatorImpl extends MActivator implements MutableActivator {
+public class DefaultActivator extends MActivator implements MutableActivator {
 
 	protected HashMap<String, Object> mapper = new HashMap<String, Object>();
 	protected HashMap<String, Object> instances = new HashMap<String, Object>();
 
-	public ActivatorImpl() {
+	public DefaultActivator() {
 	}
 	
-	public ActivatorImpl(ResourceNode cactivator, ClassLoader loader) throws MException {
+	public DefaultActivator(ClassLoader loader) {
+		super(loader);
+	}
+	
+	public DefaultActivator(ResourceNode cactivator, ClassLoader loader) throws MException {
 		super(loader);
 		if (cactivator != null) {
 			if (cactivator instanceof IFlatConfig) {
