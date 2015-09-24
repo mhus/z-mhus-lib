@@ -9,6 +9,11 @@ public class FmWizzard extends DefAttribute {
 
 	private DefAttribute[] options;
 
+	public FmWizzard(String handler, DefAttribute ... options) {
+		super("wizzard", handler);
+		this.options = options;
+	}
+	
 	public FmWizzard(Class<? extends Wizzard> handler, DefAttribute ... options) {
 		super("wizzard", handler.getCanonicalName());
 		this.options = options;

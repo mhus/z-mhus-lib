@@ -60,13 +60,18 @@ public abstract class UiVaadin extends UiElement {
 			if (getElement().getConfig().isProperty("wizzard")) {
 				label = new Button(((LayoutDataElement)getElement()).getTitle());
 				((Button)label).setStyleName(BaseTheme.BUTTON_LINK);
-				((Button)label).addListener(new Button.ClickListener() {
+				((Button)label).addClickListener(new Button.ClickListener() {
 					
 					private static final long serialVersionUID = 1L;
 
 					@Override
 					public void buttonClick(ClickEvent event) {
-						getElement().getFormControl().wizzard(getElement());
+						try {
+							getElement().getFormControl().wizzard(getElement());
+						} catch (Throwable t) {
+							log().w(t);
+							t.printStackTrace();
+						}
 					}
 				});
 			} else
