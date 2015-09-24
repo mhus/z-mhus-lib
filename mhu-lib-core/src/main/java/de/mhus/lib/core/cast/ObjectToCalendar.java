@@ -2,6 +2,7 @@ package de.mhus.lib.core.cast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import de.mhus.lib.core.MCast;
@@ -24,6 +25,10 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	@Override
 	public Calendar cast(Object in, Calendar def) {
+		return cast(in, def, Locale.getDefault());
+	}
+	
+	public Calendar cast(Object in, Calendar def, Locale locale) {
 		if (in == null) return def;
 		if (in instanceof Calendar) return (Calendar)in;
 		if (in instanceof Date) {
@@ -33,7 +38,7 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 		}
 		try {
 			String ins = MCast.toString(in);
-			Calendar ret = toCalendar(ins);
+			Calendar ret = toCalendar(ins, locale);
 			if (ret == null) return def;
 			return ret;
 		} catch (Throwable t) {
@@ -41,7 +46,7 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 		}
 	}
 
-	public static Calendar toCalendar(String in) {
+	public static Calendar toCalendar(String in, Locale locale) {
 		if (in == null) return null;
 		try {
 			
@@ -115,35 +120,45 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 				if (parts.length == 3) {
 						int year = Integer.parseInt(parts[0]);
 						if (parts[0].length()==2) year = year + 2000; // will this lib life for 100 years ???
-						int month = Integer.parseInt(parts[1])-1;
+						int month = toMonth(parts[1]);
 						int day   = Integer.parseInt(parts[2]);
 						c.set(year,month, day);
 				} else if (parts.length == 2) {
-					c.set(Calendar.MONTH, Integer.parseInt(parts[0]) - 1);
+					c.set(Calendar.MONTH, toMonth(parts[0]));
 					c.set(Calendar.DATE, Integer.parseInt(parts[1]));
 				} else {
 					parts = date.split("\\.");
 					if (parts.length == 3) {
 						int year = Integer.parseInt(parts[2]);
 						if (parts[2].length()==2) year = year + 2000; // will this lib life for 100 years ???
-						int month = Integer.parseInt(parts[1])-1;
+						int month = toMonth(parts[1]);
 						int day   = Integer.parseInt(parts[0]);
 						c.set(year,month,day);
 					} else if (parts.length == 2) {
 						int year = Integer.parseInt(parts[1]);
 						if (parts[1].length()==2) year = year + 2000; // will this lib life for 100 years ???
-						int month = Integer.parseInt(parts[0])-1;					
+						int month = toMonth(parts[0]);					
 						c.set(Calendar.MONTH, month);
 						c.set(Calendar.YEAR, year);
 					} else {
 						parts = date.split("/");
-						if (parts.length == 3)
-							c.set(Integer.parseInt(parts[2]), Integer
-											.parseInt(parts[0])-1, Integer
-											.parseInt(parts[1]));
-	
+						if (parts.length == 3) {
+							if (Locale.US.equals(locale)) {
+								c.set(
+										Integer.parseInt(parts[2]),
+									  toMonth(parts[0]),
+									  Integer.parseInt(parts[1])
+									  );
+							} else {
+								c.set(
+										Integer.parseInt(parts[2]),
+										toMonth(parts[1]),
+										Integer.parseInt(parts[0])
+										);
+							}
+						}
 						if (parts.length == 2) {
-							c.set(Calendar.MONTH, Integer.parseInt(parts[0]) - 1);
+							c.set(Calendar.MONTH, toMonth(parts[0]) );
 							c.set(Calendar.YEAR, Integer.parseInt(parts[1]));
 						}
 					}
@@ -198,6 +213,69 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 		// return unknown - timestamp is 0
 		return null;
+	}
+
+	/**
+	 * Return the value of the month 0 = Januar
+	 * @param in name or number of the month 1 or 'jan' or 'january' is 0
+	 * @return
+	 */
+	public static int toMonth(String in) {
+		try {
+			int out = Integer.parseInt(in);
+			if (out > 0 && out < 13) return out-1;
+		} catch (Throwable t) {
+		}
+		in = in.toLowerCase();
+		switch (in) {
+		case "jan":
+		case "januar":
+		case "january":
+			return 0;
+		case "feb":
+		case "februar":
+		case "february":
+			return 1;
+		case "mrz":
+		case "march":
+		case "märz":
+			return 2;
+		case "apr":
+		case "april":
+			return 3;
+		case "mai":
+		case "may":
+			return 4;
+		case "jun":
+		case "juni":
+		case "june":
+			return 5;
+		case "jul":
+		case "juli":
+		case "july":
+			return 6;
+		case "aug":
+		case "august":
+			return 7;
+		case "sep":
+		case "september":
+		case "septembre":
+			return 8;
+		case "okt":
+		case "oct":
+		case "oktober":
+		case "october":
+			return 9;
+		case "nov":
+		case "november":
+			return 10;
+		case "dez":
+		case "dec":
+		case "dezember":
+		case "december":
+			return 11;
+		}
+		throw new NumberFormatException(in);
 	}
 
 	private static int toint(String in, int def) {

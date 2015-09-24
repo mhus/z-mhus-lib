@@ -72,7 +72,7 @@ public class VaadinPojoForm {
 	}
 
 	public void setEnabled(boolean b) {
-		if (builder != null) getBuilder().getRootComposit().setEnabled(b);
+		if (builder != null && builder.getRootComposit() != null) builder.getRootComposit().setEnabled(b);
 	}
 
 	public void setInformationContainer(ComponentContainer informationPane) {

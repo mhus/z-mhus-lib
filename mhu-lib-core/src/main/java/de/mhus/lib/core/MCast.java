@@ -164,6 +164,10 @@ public final class MCast {
 		return OBJECT_TO_DATE.cast(in, def);
 	}
 
+	public static Date toDate(Object in,Date def, Locale locale) {
+		return OBJECT_TO_DATE.cast(in, def, locale);
+	}
+	
 	public static Calendar toCalendar(Object in) {
 		return OBJECT_TO_CALENDAR.cast(in, null);
 	}

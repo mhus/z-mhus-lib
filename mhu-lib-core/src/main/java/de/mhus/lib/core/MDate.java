@@ -2,9 +2,11 @@ package de.mhus.lib.core;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MDate extends Date {
 
@@ -79,6 +81,16 @@ public class MDate extends Date {
 	 */
 	public static String toIso8601(Date date) {
 		return iso8601DateFormat.format(date);
+	}
+	
+	public static String toLocaleString(Date date, boolean longFormat) {
+		return toLocaleString(date, Locale.getDefault(), longFormat);
+	}
+	
+	public static String toLocaleString(Date date, Locale locale, boolean longFormat) {
+	    int style = longFormat ? DateFormat.LONG : DateFormat.MEDIUM;
+	    DateFormat df = DateFormat.getDateInstance(style, locale);
+	    return df.format(date);
 	}
 	
 	/**
@@ -169,5 +181,9 @@ public class MDate extends Date {
 	public static String toFileFormat(Calendar date) {
 		return fileDateFormat.format(date);
 	}
-	
+
+	public static Date toDate(Object in,Date def) {
+		return MCast.toDate(in, def);
+	}
+
 }

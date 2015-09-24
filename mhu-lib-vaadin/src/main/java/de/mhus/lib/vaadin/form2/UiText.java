@@ -10,6 +10,7 @@ import com.vaadin.ui.TextField;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataConnector;
 import de.mhus.lib.form.DataSource;
+import de.mhus.lib.form.DataValidationException;
 
 public class UiText extends UiVaadin {
 
@@ -104,8 +105,12 @@ public class UiText extends UiVaadin {
 				public void valueChange(ValueChangeEvent event) {
 					try {
 						setValueToDataSource(getElement().getDataConnector(DataSource.CONNECTOR_TASK_DATA));
-					} catch (MException e) {
-						e.printStackTrace();
+					} catch (Throwable e) {
+						log().i(getElement(), e);  // TODO d()
+						if (e instanceof DataValidationException)
+							((DataValidationException)e).setErroMessage(getElement());
+						else
+							getElement().setErrorMessage("error", e.toString());
 					}
 				}
 			});
