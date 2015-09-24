@@ -51,6 +51,7 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 		try {
 			
 			Calendar c = Calendar.getInstance();
+			boolean retOk = false;
 			c.clear();
 
 			String date = in.trim();
@@ -60,7 +61,7 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 			int sec = 0;
 			int millies = 0;
 			String zone = null;
-
+			
 			// check if date and time
 			char sep = '?';
 			if ( MString.isIndex(date, '_' ) )
@@ -69,6 +70,28 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 			if ( MString.isIndex(date, ' ' ) )
 				sep = ' ';
 			
+			// TODO can't read DE: '1. Januar 2000 13:00:00'
+			
+			{
+				// US Format: 'Jan 1, 2000 1:00 am'
+				if (sep == ' ' && MString.isIndex(date, ',')) {
+					int p1 = date.indexOf(' ');
+					int p2 = date.indexOf(',');
+					try {
+						int month = toMonth(date.substring(0, p1));
+						int day = Integer.parseInt(date.substring(p1+1, p2).trim());
+						date = date.substring(p2+1).trim();
+						p1 = date.indexOf(' ');
+						int year = Integer.parseInt(date.substring(0,p1).trim());
+						c.set(year, month, day);
+						
+						date = " " + date.substring(p1+1).trim(); // rest is time
+						sep = ' ';
+						retOk = true;
+					} catch (NumberFormatException e) {}
+				}
+			}
+
 			if (sep != '?') {
 				// found also time ... parse it !
 				String time = MString.afterIndex(date, sep).trim();
@@ -106,6 +129,8 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 				c.set(Calendar.MILLISECOND, sec * 1000 + millies);
 				
 			}
+			
+			if (retOk) return c;
 
 			// parse the date
 			if ( date.indexOf('-') > 0) {

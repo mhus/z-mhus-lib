@@ -16,6 +16,8 @@ public class MDate extends Date {
 			"yyyy-MM-dd'T'HH:mm:ss");
 	private static SimpleDateFormat fileDateFormat = new SimpleDateFormat(
 			"yyyyMMddHHmmss");
+	private static SimpleDateFormat timeFormat = new SimpleDateFormat(
+			"HH:mm:ss");
 
 	public MDate() {
 		super();
@@ -83,14 +85,14 @@ public class MDate extends Date {
 		return iso8601DateFormat.format(date);
 	}
 	
-	public static String toLocaleString(Date date, boolean longFormat) {
-		return toLocaleString(date, Locale.getDefault(), longFormat);
+	public static String toLocaleDateTime(Date date, boolean longFormat) {
+		return toLocaleDateTime(date, Locale.getDefault(), longFormat);
 	}
 	
-	public static String toLocaleString(Date date, Locale locale, boolean longFormat) {
+	public static String toLocaleDateTime(Date date, Locale locale, boolean longFormat) {
 	    int style = longFormat ? DateFormat.LONG : DateFormat.MEDIUM;
 	    DateFormat df = DateFormat.getDateInstance(style, locale);
-	    return df.format(date);
+	    return df.format(date) + " " + timeFormat.format(date);
 	}
 	
 	/**

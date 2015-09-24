@@ -47,7 +47,8 @@ public class UiDate extends UiText {
 		try {
 			
 			if (arg instanceof Date) {
-				arg = MDate.toLocaleString( (Date)arg, false);
+//				arg = MDate.toLocaleDateTime( (Date)arg, true); // TODO can't read 1. Januar 2000
+				arg = MDate.toIsoDateTime( (Date)arg);
 				if (arg == null) arg = "";
 			} else {
 				arg = "";
