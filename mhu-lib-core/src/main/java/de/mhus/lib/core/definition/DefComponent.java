@@ -18,9 +18,15 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 		addDefinition(definitions);
 	}
 	
-	public void addDefinition(IDefDefinition ... def) {
+	public DefComponent addAttribute(String name, Object value) {
+		return addDefinition(new DefAttribute(name, value));
+	}
+	
+	public DefComponent addDefinition(IDefDefinition ... def) {
+		if (def == null) return this;
 		for (IDefDefinition d : def)
 			if (d != null) definitions.add(d);
+		return this;
 	}
 	
 	public LinkedList<IDefDefinition> definitions() {

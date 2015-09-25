@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import java.util.UUID;
 
 import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -53,13 +56,18 @@ public abstract class AbstractBeanListEditor<E> extends AbstractListEditor<E> {
 		for (String colId : columns.values()) {
 			PojoAttribute<?> descriptor = beanModel.getAttribute(colId);
 			Column columnDef = descriptor.getAnnotation(Column.class);
-			ColumnDefinition def = new ColumnDefinition(colId, descriptor.getType(), createDefaultvalue(descriptor), MNls.find(this, columnDef.nls() + "=" + columnDef.title()),columnDef.elapsed());
+			ColumnDefinition def = new ColumnDefinition(colId, descriptor.getType(), createDefaultvalue(descriptor), MNls.find(this, columnDef.nls() + "=" + columnDef.title()),columnDef.elapsed(), createProperties(columnDef));
 			columnDefinitions.add(def);
 		}
 		
 
 	}
 	
+	private Properties createProperties(Column columnDef) {
+		if (columnDef.properties() == null || columnDef.properties().length == 0) return null;
+		return MProperties.explodeToProperties( columnDef.properties() );
+	}
+
 	@Override
 	public void initUI() {
 		super.initUI();

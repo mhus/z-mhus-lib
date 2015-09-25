@@ -145,21 +145,21 @@ public class MCastTest extends TestCase {
 		Date date = MDate.toDate("1.2.2003 04:05:00", null, Locale.GERMANY);
 		System.out.println(date);
 		{
-			String str = MDate.toLocaleDateTime(date, Locale.GERMANY);
+			String str = MDate.toDateTimeString(date, Locale.GERMANY);
 			System.out.println(str);
 			Date ret = MDate.toDate(str, null, Locale.GERMANY);
 			System.out.println(ret);
 			assertEquals(date, ret);
 		}
 		{
-			String str = MDate.toLocaleDateTime(date, Locale.UK);
+			String str = MDate.toDateTimeString(date, Locale.UK);
 			System.out.println(str);
 			Date ret = MDate.toDate(str, null, Locale.UK);
 			System.out.println(ret);
 			assertEquals(date, ret);
 		}
 		{
-			String str = MDate.toLocaleDateTime(date, Locale.US);
+			String str = MDate.toDateTimeString(date, Locale.US);
 			System.out.println(str);
 			Date ret = MDate.toDate(str, null, Locale.US);
 			System.out.println(ret);

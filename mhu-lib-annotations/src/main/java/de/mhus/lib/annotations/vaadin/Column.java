@@ -15,4 +15,5 @@ public @interface Column {
 	boolean collapsible() default true;
 	boolean editable() default true;
 	Class<?> converter() default Object.class;
+	String[] properties() default {};
 }

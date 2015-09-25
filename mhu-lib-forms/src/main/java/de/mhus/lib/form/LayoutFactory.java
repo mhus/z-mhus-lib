@@ -67,7 +67,7 @@ public class LayoutFactory extends MObject {
 			}
 			return out;
 		} catch (Throwable t) {
-			throw new MException("build failed", element.getConfig().getName(), t);
+			throw new MException("build failed", element.getConfig().getName(), element.getType(), t);
 		}
 	}
 }

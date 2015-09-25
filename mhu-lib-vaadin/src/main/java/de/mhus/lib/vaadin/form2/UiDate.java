@@ -48,17 +48,26 @@ public class UiDate extends UiText {
 		try {
 			
 			if (arg instanceof Date) {
-				switch (getElement().getConfig().getExtracted(FmDate.FORMAT, FmDate.FORMAT_DATE)) {
-				case FmDate.FORMAT_DATETIME:
-					arg = MDate.toLocaleDateTime( (Date)arg);
+				FmDate.FORMATS current = MCast.toEnum(getElement().getConfig().getExtracted(FmDate.FORMAT, ""), FmDate.FORMATS.DATE );
+				switch (current) {
+				case DATE:
+					arg = MDate.toDateString( (Date)arg);
 					break;
-				case FmDate.FORMAT_DATETIMESECONDS:
-					arg = MDate.toLocaleDateTimeSeconds( (Date)arg);
+				case DATETIME:
+					arg = MDate.toDateTimeString( (Date)arg);
+					break;
+				case DATETIMESECONDS:
+					arg = MDate.toDateTimeSecondsString( (Date)arg);
+					break;
+				case TIME:
+					arg = MDate.toTimeString( (Date)arg);
+					break;
+				case TIMESECONDS:
+					arg = MDate.toTimeSecondsString( (Date)arg);
 					break;
 				default:
-					arg = MDate.toLocaleDate( (Date)arg);
+					break;
 				}
-				arg = MDate.toLocaleDateTime( (Date)arg);
 				if (arg == null) arg = "";
 			} else {
 				arg = "";

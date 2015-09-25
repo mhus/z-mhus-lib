@@ -1,8 +1,7 @@
 package de.mhus.lib.vaadin.converter;
 
-import java.text.DateFormat;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.data.util.converter.Converter;
@@ -10,7 +9,7 @@ import com.vaadin.data.util.converter.Converter;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 
-public class DateConverter implements Converter<String, Date> {
+public class SqlTimeConverter implements Converter<String, Date> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,7 +18,7 @@ public class DateConverter implements Converter<String, Date> {
 			Class<? extends Date> targetType, Locale locale)
 			throws com.vaadin.data.util.converter.Converter.ConversionException {
 		
-			return MCast.toDate(value, null);
+			return new Date(MCast.toDate(value, null).getTime());
 	}
 
 	@Override
@@ -28,7 +27,8 @@ public class DateConverter implements Converter<String, Date> {
 			throws com.vaadin.data.util.converter.Converter.ConversionException {
 		
     	if (value == null || ((Date) value).getTime() == 0) return "-";
-        return MDate.toDateString( ((Date) value) );
+
+        return  MDate.toTimeString( ((Date) value) );
 
 	}
 

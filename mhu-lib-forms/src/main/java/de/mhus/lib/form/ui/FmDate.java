@@ -1,5 +1,6 @@
 package de.mhus.lib.form.ui;
 
+import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.form.definition.FmDefaultSources;
 import de.mhus.lib.form.definition.FmElement;
@@ -7,19 +8,20 @@ import de.mhus.lib.form.definition.FmNls;
 
 public class FmDate extends FmElement {
 
+	public enum FORMATS {DATE,DATETIME,DATETIMESECONDS,TIME,TIMESECONDS};
+	
 	public static final String FORMAT = "format";
-	public static final String FORMAT_DATE = "date";
-	public static final String FORMAT_DATETIME = "datetime";
-	public static final String FORMAT_DATETIMESECONDS = "datetimesec";
-	public static final String TYPE_DATE = "date";
 
-	public FmDate(String name, String title, String description) {
-		this(name, new FmNls(title, description), new FmDefaultSources());
+	public FmDate(String name, FORMATS format, String title, String description) {
+		this(name, new DefAttribute(FORMAT, format.name()), new FmNls(title, description), new FmDefaultSources());
 	}
+//	public FmDate(String name, String title, String description) {
+//		this(name, new FmNls(title, description), new FmDefaultSources());
+//	}
 
 	public FmDate(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
-		setString(FmElement.TYPE, TYPE_DATE);
+		setString(FmElement.TYPE, FORMATS.DATE.name());
 	}
 
 

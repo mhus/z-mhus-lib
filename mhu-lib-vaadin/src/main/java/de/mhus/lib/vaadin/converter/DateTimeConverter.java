@@ -10,7 +10,7 @@ import com.vaadin.data.util.converter.Converter;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 
-public class DateConverter implements Converter<String, Date> {
+public class DateTimeConverter implements Converter<String, Date> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,8 +28,7 @@ public class DateConverter implements Converter<String, Date> {
 			throws com.vaadin.data.util.converter.Converter.ConversionException {
 		
     	if (value == null || ((Date) value).getTime() == 0) return "-";
-        return MDate.toDateString( ((Date) value) );
-
+        return MDate.toDateTimeString( ((Date) value) );
 	}
 
 	@Override

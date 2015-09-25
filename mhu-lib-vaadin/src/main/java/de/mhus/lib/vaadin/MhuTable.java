@@ -1,8 +1,11 @@
 package de.mhus.lib.vaadin;
 
+import java.sql.Time;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import javax.print.attribute.standard.DateTimeAtCreation;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.converter.Converter;
@@ -22,14 +25,17 @@ import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.lang.DateTime;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.vaadin.converter.BooleanPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.DateConverter;
+import de.mhus.lib.vaadin.converter.DateTimeConverter;
 import de.mhus.lib.vaadin.converter.DoublePrimitiveConverter;
 import de.mhus.lib.vaadin.converter.FloatPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.IntPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.LongPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.SqlDateConverter;
+import de.mhus.lib.vaadin.converter.SqlTimeConverter;
 
 @SuppressWarnings("serial")
 public class MhuTable extends Table {
@@ -160,10 +166,14 @@ public class MhuTable extends Table {
 		
 		if (type == Integer.class)
 			return StringToIntegerConverter.class;
-		if (type == java.util.Date.class)
-			return DateConverter.class;
+		if (type == Time.class)
+			return SqlTimeConverter.class;
+		if (type == DateTime.class)
+			return DateTimeConverter.class;
 		if (type == java.sql.Date.class)
 			return SqlDateConverter.class;
+		if (type == java.util.Date.class)
+			return DateConverter.class;
 		if (type == Boolean.class)
 			return StringToBooleanConverter.class;
 		if (type == Long.class)

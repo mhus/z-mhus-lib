@@ -20,6 +20,8 @@ public class MDate extends Date {
 			"HH:mm");
 	private static SimpleDateFormat timeSecFormat = new SimpleDateFormat(
 			"HH:mm:ss");
+	private static SimpleDateFormat germanDateFormat = new SimpleDateFormat(
+			"dd.MM.yyyy");
 
 	public MDate() {
 		super();
@@ -87,48 +89,49 @@ public class MDate extends Date {
 		return iso8601DateFormat.format(date);
 	}
 	
-	public static String toLocaleDateTime(Date date) {
-		return toLocaleDateTime(date, Locale.getDefault(), false);
+	public static String toDateTimeString(Date date) {
+		return toDateTimeString(date, null);
 	}
 	
-	public static String toLocaleDateTime(Date date, Locale locale) {
-		return toLocaleDateTime(date, locale, false);
-	}
-	
-	public static String toLocaleDateTime(Date date, Locale locale, boolean longFormat) {
-	    int style = longFormat ? DateFormat.LONG : DateFormat.SHORT;
-	    DateFormat df = DateFormat.getDateInstance(style, locale);
+	public static String toDateTimeString(Date date, Locale locale) {
+	    DateFormat df = getLocaleDateFormater(locale);
 	    return df.format(date) + " " + timeFormat.format(date);
 	}
 	
-	public static String toLocaleDateTimeSeconds(Date date) {
-		return toLocaleDateTimeSeconds(date, Locale.getDefault(), false);
+
+	public static String toDateTimeSecondsString(Date date) {
+		return toDateTimeSecondsString(date, null);
 	}
 	
-	public static String toLocaleDateTimeSeconds(Date date, Locale locale) {
-		return toLocaleDateTimeSeconds(date, locale, false);
-	}
-	
-	public static String toLocaleDateTimeSeconds(Date date, Locale locale, boolean longFormat) {
-	    int style = longFormat ? DateFormat.LONG : DateFormat.SHORT;
-	    DateFormat df = DateFormat.getDateInstance(style, locale);
+	public static String toDateTimeSecondsString(Date date, Locale locale) {
+	    DateFormat df = getLocaleDateFormater(locale);
 	    return df.format(date) + " " + timeSecFormat.format(date);
 	}
 
-	public static String toLocaleDate(Date date) {
-		return toLocaleDate(date, Locale.getDefault(), false);
+	public static String toDateString(Date date) {
+		return toDateString(date, null);
 	}
 	
-	public static String toLocaleDate(Date date, Locale locale) {
-		return toLocaleDate(date, locale, false);
-	}
-	
-	public static String toLocaleDate(Date date, Locale locale, boolean longFormat) {
-	    int style = longFormat ? DateFormat.LONG : DateFormat.SHORT;
-	    DateFormat df = DateFormat.getDateInstance(style, locale);
+	public static String toDateString(Date date, Locale locale) {
+	    DateFormat df = getLocaleDateFormater(locale);
 	    return df.format(date);
 	}
 
+	/**
+	 * Returns a locale specific date formatter.
+	 * @param locale the locale or null for default locale
+	 * @return
+	 */
+	public static DateFormat getLocaleDateFormater(Locale locale) {
+	    
+		if (locale == null) locale = Locale.getDefault();
+		if (locale == null || Locale.GERMANY.equals(locale))
+	    	return germanDateFormat;
+	    
+	    int style = DateFormat.SHORT;
+	    return DateFormat.getDateInstance(style, locale);
+	}
+	
 	/**
 	 * yyyyMMddHHmmss
 	 * @param date
@@ -224,6 +227,14 @@ public class MDate extends Date {
 	
 	public static Date toDate(Object in,Date def) {
 		return MCast.toDate(in, def);
+	}
+
+	public static String toTimeString(Date date) {
+		return timeFormat.format(date);
+	}
+	
+	public static String toTimeSecondsString(Date date) {
+		return timeSecFormat.format(date);
 	}
 
 }

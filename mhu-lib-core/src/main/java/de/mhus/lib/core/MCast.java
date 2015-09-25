@@ -813,4 +813,14 @@ public final class MCast {
 		}
 		
 	}
+
+	public static <E extends Enum<E>> E toEnum(Object value, E def) {
+		if (value == null) return def;
+		String str = String.valueOf(value).trim().toUpperCase();
+		try {
+			return Enum.valueOf(def.getDeclaringClass(), str);
+		} catch (Throwable t) {
+		}
+		return def;
+	}
 }

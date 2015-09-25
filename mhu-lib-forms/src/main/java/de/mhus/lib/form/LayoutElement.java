@@ -127,6 +127,7 @@ public class LayoutElement extends MObject implements Observer {
 		title = find(FmElement.TITLE);
 		description = find(FmElement.DESCRIPTION);
 		type = config.getExtracted(FmElement.TYPE);
+		if (type != null) type = type.toLowerCase();
 		name = config.getExtracted(FmElement.NAME);
 		
 		setUi(getLayoutFactory().doBuildUi(this));
