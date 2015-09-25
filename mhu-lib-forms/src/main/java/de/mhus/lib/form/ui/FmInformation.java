@@ -8,9 +8,9 @@ public class FmInformation extends FmElement {
 
 	public FmInformation(IDefAttribute ... definitions) {
 		super(DataSource.NAME_INFORMATION, definitions);
-		setString("type", "information");
-		setString("fullwidth", "true");
-		setString("titleinside", "true");
+		setString(FmElement.TYPE, "information");
+		setString(FmElement.FULLWIDTH, FmElement.TRUE);
+		setString(FmElement.TITLEINSIDE, FmElement.TRUE);
 	}
 
 

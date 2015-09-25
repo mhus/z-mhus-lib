@@ -7,13 +7,15 @@ import de.mhus.lib.form.definition.FmNls;
 
 public class FmCombobox extends FmElement {
 
+	public static final String TYPE_COMBOBOX = "combobox";
+
 	public FmCombobox(String name, String title, String description) {
 		this(name, new FmNls(title, description), new FmDefaultSources());
 	}
 
 	public FmCombobox(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
-		setString("type", "combobox");
+		setString(FmElement.TYPE, TYPE_COMBOBOX);
 	}
 
 

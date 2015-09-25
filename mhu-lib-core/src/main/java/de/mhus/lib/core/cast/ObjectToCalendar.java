@@ -210,17 +210,30 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 					return null;
 			} else
 			if ( date.indexOf('/') > 0) {
-				// france or UK 31/12/2000
 				String[] parts = date.split("/");
-				if (parts.length == 3) {
-					int year = Integer.parseInt(parts[2]);
-					if (parts[2].length()==2) year = year + 2000; // will this lib life for 100 years ???
-					int month = Integer.parseInt(parts[1])-1;
-					int day   = Integer.parseInt(parts[0]);
-					c.set(year,month, day);
-					return c;
-				} else
-					return null;
+				if (Locale.US.equals(locale)) {
+					// US 12/31/2000
+					if (parts.length == 3) {
+						int year = Integer.parseInt(parts[2]);
+						if (parts[2].length()==2) year = year + 2000; // will this lib life for 100 years ???
+						int month = Integer.parseInt(parts[0])-1;
+						int day   = Integer.parseInt(parts[1]);
+						c.set(year,month, day);
+						return c;
+					} else
+						return null;
+				} else {
+					// france or UK 31/12/2000
+					if (parts.length == 3) {
+						int year = Integer.parseInt(parts[2]);
+						if (parts[2].length()==2) year = year + 2000; // will this lib life for 100 years ???
+						int month = Integer.parseInt(parts[1])-1;
+						int day   = Integer.parseInt(parts[0]);
+						c.set(year,month, day);
+						return c;
+					} else
+						return null;
+				}
 			}
 			
 			try {

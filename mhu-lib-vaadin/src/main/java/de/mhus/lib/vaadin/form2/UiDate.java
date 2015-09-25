@@ -11,6 +11,7 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataConnector;
 import de.mhus.lib.form.DataValidationException;
+import de.mhus.lib.form.ui.FmDate;
 
 public class UiDate extends UiText {
 
@@ -47,8 +48,17 @@ public class UiDate extends UiText {
 		try {
 			
 			if (arg instanceof Date) {
-//				arg = MDate.toLocaleDateTime( (Date)arg, true); // TODO can't read 1. Januar 2000
-				arg = MDate.toIsoDateTime( (Date)arg);
+				switch (getElement().getConfig().getExtracted(FmDate.FORMAT, FmDate.FORMAT_DATE)) {
+				case FmDate.FORMAT_DATETIME:
+					arg = MDate.toLocaleDateTime( (Date)arg);
+					break;
+				case FmDate.FORMAT_DATETIMESECONDS:
+					arg = MDate.toLocaleDateTimeSeconds( (Date)arg);
+					break;
+				default:
+					arg = MDate.toLocaleDate( (Date)arg);
+				}
+				arg = MDate.toLocaleDateTime( (Date)arg);
 				if (arg == null) arg = "";
 			} else {
 				arg = "";

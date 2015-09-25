@@ -18,6 +18,7 @@ import de.mhus.lib.form.DataConnector;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.LayoutDataElement;
 import de.mhus.lib.form.UiElement;
+import de.mhus.lib.form.definition.FmElement;
 
 public abstract class UiVaadin extends UiElement {
 
@@ -57,7 +58,7 @@ public abstract class UiVaadin extends UiElement {
 	@SuppressWarnings("deprecation")
 	protected AbstractComponent getLabel() {
 		if (label == null) {
-			if (getElement().getConfig().isProperty("wizard")) {
+			if (getElement().getConfig().isProperty(FmElement.WIZARD)) {
 				label = new Button(((LayoutDataElement)getElement()).getTitle());
 				((Button)label).setStyleName(BaseTheme.BUTTON_LINK);
 				((Button)label).addClickListener(new Button.ClickListener() {

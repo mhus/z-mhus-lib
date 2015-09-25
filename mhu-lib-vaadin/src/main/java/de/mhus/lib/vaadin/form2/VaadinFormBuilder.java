@@ -12,6 +12,7 @@ import de.mhus.lib.form.LayoutDataElement;
 import de.mhus.lib.form.LayoutElement;
 import de.mhus.lib.form.LayoutRoot;
 import de.mhus.lib.form.UiElement;
+import de.mhus.lib.form.ui.FmText;
 
 public class VaadinFormBuilder extends LayoutBuilderWithStack<UiVaadinComposite> {
 

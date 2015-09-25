@@ -18,7 +18,7 @@ public class UiInformation extends UiVaadin {
 	public void doUpdate(DataConnector data) throws MException {
 		if (field == null) return;
 		if (data.getTaskName().equals(DataSource.CONNECTOR_TASK_DATA)) {
-			description.setValue(data.getString("sdf"));
+			description.setValue(data.getString(""));
 			return;
 		}
 	}

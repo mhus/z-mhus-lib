@@ -5,6 +5,7 @@ import com.vaadin.ui.CheckBox;
 
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataConnector;
+import de.mhus.lib.form.definition.FmElement;
 
 public class UiCheckbox extends UiText {
 
@@ -13,7 +14,7 @@ public class UiCheckbox extends UiText {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected AbstractField createTextField() throws MException {
-		def = getElement().getConfig().getBoolean("default",false);
+		def = getElement().getConfig().getBoolean(FmElement.DEFAULT,false);
 
 		return new CheckBox();
 	}

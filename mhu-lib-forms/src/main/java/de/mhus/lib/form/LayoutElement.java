@@ -13,6 +13,7 @@ import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.form.definition.FmDataSource;
+import de.mhus.lib.form.definition.FmElement;
 
 public class LayoutElement extends MObject implements Observer {
 
@@ -96,11 +97,11 @@ public class LayoutElement extends MObject implements Observer {
 	
 	protected void doInit() throws Exception {
 		
-		isFullWidth = config.getBoolean("fullwidth", false);
-		isTitleInside = config.getBoolean("titleinside", false);
+		isFullWidth = config.getBoolean(FmElement.FULLWIDTH, false);
+		isTitleInside = config.getBoolean(FmElement.TITLEINSIDE, false);
 		
 		try {
-			ResourceNode cSource = config.getNode("sources");
+			ResourceNode cSource = config.getNode(FmElement.SOURCES);
 			if (cSource != null) {
 				for ( ResourceNode srcConf : cSource.getNodes()) {
 					DataConnector con = getDataSource().createDataConnector(this,srcConf);
@@ -110,8 +111,8 @@ public class LayoutElement extends MObject implements Observer {
 						con.addObserver(this);
 						
 						// element enabled
-						if (con.getTaskName().equals(DataSource.CONNECTOR_TASK_ENABLED) && config.isProperty("enabled")) {
-							con.setBoolean(config.getBoolean("enabled", true));
+						if (con.getTaskName().equals(DataSource.CONNECTOR_TASK_ENABLED) && config.isProperty(FmElement.ENABLED)) {
+							con.setBoolean(config.getBoolean(FmElement.ENABLED, true));
 						}
 						
 					}
@@ -123,10 +124,10 @@ public class LayoutElement extends MObject implements Observer {
 		
 		nlsPrefix = config.getExtracted("nls");
 		
-		title = find("title");
-		description = find("description");
-		type = config.getExtracted("type");
-		name = config.getExtracted("name");
+		title = find(FmElement.TITLE);
+		description = find(FmElement.DESCRIPTION);
+		type = config.getExtracted(FmElement.TYPE);
+		name = config.getExtracted(FmElement.NAME);
 		
 		setUi(getLayoutFactory().doBuildUi(this));
 
@@ -148,8 +149,8 @@ public class LayoutElement extends MObject implements Observer {
 			}
 			if (nlsPrefix == null) {
 				nlsPrefix = name;
-				title = find("title");
-				description = find("description");
+				title = find(FmElement.TITLE);
+				description = find(FmElement.DESCRIPTION);
 			}
 			if (title == null) {
 				title = "[" + name + "]";

@@ -5,6 +5,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.TextArea;
 
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.form.definition.FmElement;
 
 public class UiTextArea extends UiText {
 
@@ -12,7 +13,7 @@ public class UiTextArea extends UiText {
 	@Override
 	protected AbstractField createTextField() throws MException {
 		TextArea out = new TextArea();
-		out.setHeight(getElement().getConfig().getInt("height", 200),Unit.PIXELS);
+		out.setHeight(getElement().getConfig().getInt(FmElement.HEIGHT, 200),Unit.PIXELS);
 		return out;
 	}
 

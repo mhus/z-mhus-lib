@@ -3,6 +3,7 @@ package de.mhus.lib.test;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -140,4 +141,30 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	public void testLocalFormating() {
+		Date date = MDate.toDate("1.2.2003 04:05:00", null, Locale.GERMANY);
+		System.out.println(date);
+		{
+			String str = MDate.toLocaleDateTime(date, Locale.GERMANY);
+			System.out.println(str);
+			Date ret = MDate.toDate(str, null, Locale.GERMANY);
+			System.out.println(ret);
+			assertEquals(date, ret);
+		}
+		{
+			String str = MDate.toLocaleDateTime(date, Locale.UK);
+			System.out.println(str);
+			Date ret = MDate.toDate(str, null, Locale.UK);
+			System.out.println(ret);
+			assertEquals(date, ret);
+		}
+		{
+			String str = MDate.toLocaleDateTime(date, Locale.US);
+			System.out.println(str);
+			Date ret = MDate.toDate(str, null, Locale.US);
+			System.out.println(ret);
+			assertEquals(date, ret);
+		}
+		
+	}
 }

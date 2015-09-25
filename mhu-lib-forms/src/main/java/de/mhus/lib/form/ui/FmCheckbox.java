@@ -8,17 +8,19 @@ import de.mhus.lib.form.definition.FmNls;
 
 public class FmCheckbox extends FmElement {
 
+	public static final String TYPE_CHECKBOX = "checkbox";
+
 	public FmCheckbox(String name, String title, String description) {
 		this(name, new FmNls(title, description), new FmDefaultSources());
 	}
 
 	public FmCheckbox(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
-		setString("type","checkbox");
+		setString(FmElement.TYPE,TYPE_CHECKBOX);
 	}
 	
 	public FmCheckbox defaultValue(boolean in) throws MException {
-		setBoolean("default", in);
+		setBoolean(FmElement.DEFAULT, in);
 		return this;
 	}
 	

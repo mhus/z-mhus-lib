@@ -4,6 +4,7 @@ import com.vaadin.ui.AbstractField;
 
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataConnector;
+import de.mhus.lib.form.ui.FmNumber;
 import de.mhus.lib.vaadin.aqua.SpinnerNumberField;
 
 public class UiNumber extends UiText {
@@ -17,14 +18,14 @@ public class UiNumber extends UiText {
 
 		SpinnerNumberField<?> spinner = null;
 		
-		type = getElement().getConfig().getString("number","integer").toLowerCase();
-		if (type.equals("double"))
+		type = getElement().getConfig().getString(FmNumber.NUMBER_TYPE,"").toUpperCase();
+		if (type.equals(FmNumber.TYPES.DOUBLE.name()))
 			spinner = new SpinnerNumberField<Double>(Double.class);
 		else
-		if (type.equals("float"))
+		if (type.equals(FmNumber.TYPES.FLOAT.name()))
 			spinner = new SpinnerNumberField<Float>(Float.class);
 		else
-		if (type.equals("long"))
+		if (type.equals(FmNumber.TYPES.LONG.name()))
 			spinner = new SpinnerNumberField<Long>(Long.class);
 		else
 			spinner = new SpinnerNumberField<Integer>(Integer.class);
