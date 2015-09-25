@@ -56,7 +56,7 @@ public abstract class UiVaadin extends UiElement {
 
 	protected AbstractComponent getLabel() {
 		if (label == null) {
-			if (getElement().getConfig().isProperty("wizzard")) {
+			if (getElement().getConfig().isProperty("wwizard")) {
 				label = new Button(((LayoutDataElement)getElement()).getTitle());
 				((Button)label).setStyleName(BaseTheme.BUTTON_LINK);
 				((Button)label).addListener(new Button.ClickListener() {
@@ -65,7 +65,7 @@ public abstract class UiVaadin extends UiElement {
 
 					@Override
 					public void buttonClick(ClickEvent event) {
-						getElement().getFormControl().wizzard(getElement());
+						getElement().getFormControl().wwizard(getElement());
 					}
 				});
 			} else

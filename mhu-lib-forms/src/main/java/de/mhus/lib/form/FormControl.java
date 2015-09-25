@@ -8,7 +8,7 @@ public interface FormControl {
 	
 	void action(FormAction action);
 
-	void wizzard(LayoutElement element);
+	void wizard(LayoutElement element);
 
 	boolean validate(LayoutElement element, DataConnector dataConnector, Object value) throws MException;
 	

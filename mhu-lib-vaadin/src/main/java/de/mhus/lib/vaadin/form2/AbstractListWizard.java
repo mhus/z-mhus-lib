@@ -7,20 +7,20 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.form.control.AbstractWizzard;
-import de.mhus.lib.form.control.WizzardCall;
+import de.mhus.lib.form.control.AbstractWizard;
+import de.mhus.lib.form.control.WizardCall;
 import de.mhus.lib.vaadin.ColumnDefinition;
 import de.mhus.lib.vaadin.FilterRequest;
 import de.mhus.lib.vaadin.ModalDialog;
 import de.mhus.lib.vaadin.SearchField;
 import de.mhus.lib.vaadin.SimpleTable;
 
-public abstract class AbstractListWizzard extends AbstractWizzard {
+public abstract class AbstractListWizard extends AbstractWizard {
 
 	private boolean showSearchField = true;
 
 	@Override
-	protected void doExecute(WizzardCall call) {
+	protected void doExecute(WizardCall call) {
 		UI window = ((UiVaadin)call.getElement().getUi()).getWindow();
 
 		try {
@@ -35,14 +35,14 @@ public abstract class AbstractListWizzard extends AbstractWizzard {
 	private class ListDialog extends ModalDialog {
 
 		private static final long serialVersionUID = 1L;
-		private WizzardCall call;
+		private WizardCall call;
 		private ResourceNode options;
 		private Action confirm;
 		private Action cancel;
 		private SimpleTable table;
 		private SearchField filter;
 
-		private ListDialog(WizzardCall call) throws Exception {
+		private ListDialog(WizardCall call) throws Exception {
 			this.call = call;
 			this.options = call.getOptions();
 			if (options == null) options = new HashConfig(); // empty config as default
@@ -92,20 +92,20 @@ public abstract class AbstractListWizzard extends AbstractWizzard {
 						confirm.doAction(ListDialog.this);
 				}
 			});
-			table.createDataSource(AbstractListWizzard.this.createColumnDefinitions());
-			AbstractListWizzard.this.fillTable(call, table, new FilterRequest(""));
+			table.createDataSource(AbstractListWizard.this.createColumnDefinitions());
+			AbstractListWizard.this.fillTable(call, table, new FilterRequest(""));
 		}
 
 		protected void doFilter() {
 			table.removeAllItems();
-			AbstractListWizzard.this.fillTable(call, table, filter.createFilterRequest() );			
+			AbstractListWizard.this.fillTable(call, table, filter.createFilterRequest() );			
 		}
 
 		@Override
 		protected boolean doAction(Action action) {
 			if (action.equals(cancel)) return true;
 			Object selected = table.getValue();
-			return AbstractListWizzard.this.setSelected(call, selected);
+			return AbstractListWizard.this.setSelected(call, selected);
 		}
 
 	}
@@ -120,10 +120,10 @@ public abstract class AbstractListWizzard extends AbstractWizzard {
 	}
 	
 
-	public abstract boolean setSelected(WizzardCall call, Object selected);
+	public abstract boolean setSelected(WizardCall call, Object selected);
 
 	public abstract ColumnDefinition[] createColumnDefinitions();
 	
-	public abstract void fillTable(WizzardCall call, SimpleTable table, FilterRequest filter);
+	public abstract void fillTable(WizardCall call, SimpleTable table, FilterRequest filter);
 
 }

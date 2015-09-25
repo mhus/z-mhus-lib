@@ -1,4 +1,4 @@
-package de.mhus.lib.liferay.wizzards;
+package de.mhus.lib.liferay.wizards;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,14 +13,14 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.control.WizzardCall;
+import de.mhus.lib.form.control.WizardCall;
 import de.mhus.lib.liferay.MLiferayUtil;
 import de.mhus.lib.vaadin.ColumnDefinition;
 import de.mhus.lib.vaadin.FilterRequest;
 import de.mhus.lib.vaadin.SimpleTable;
-import de.mhus.lib.vaadin.form2.AbstractListWizzard;
+import de.mhus.lib.vaadin.form2.AbstractListWizard;
 
-public class UserSelector extends AbstractListWizzard {
+public class UserSelector extends AbstractListWizard {
 
 	@Override
 	public ColumnDefinition[] createColumnDefinitions() {
@@ -33,7 +33,7 @@ public class UserSelector extends AbstractListWizzard {
 	}
 
 	@Override
-	public void fillTable(WizzardCall arg0, SimpleTable table,	FilterRequest filter) {
+	public void fillTable(WizardCall arg0, SimpleTable table,	FilterRequest filter) {
 		
 		List<String> roles = null;
 		String namePattern = null;
@@ -77,7 +77,7 @@ public class UserSelector extends AbstractListWizzard {
 	}
 
 	@Override
-	public boolean setSelected(WizzardCall call, Object selected) {
+	public boolean setSelected(WizardCall call, Object selected) {
 		if (selected == null) return false;
 		try {
 			call.setString("(" + String.valueOf(selected) + ")");

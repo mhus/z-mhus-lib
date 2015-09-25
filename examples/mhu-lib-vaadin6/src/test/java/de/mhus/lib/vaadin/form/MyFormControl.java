@@ -9,7 +9,7 @@ import de.mhus.lib.form.SimpleFormControl;
 public class MyFormControl extends SimpleFormControl {
 
 	@Override
-	public void wizzard(LayoutElement element) {
+	public void wwizard(LayoutElement element) {
 		System.out.println("error .. now");
 		element.setErrorMessage("error_mist", new Date());
 	}

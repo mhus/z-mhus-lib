@@ -15,7 +15,7 @@ public class SimpleFormControl implements FormControl {
 	}
 
 	@Override
-	public void wizzard(LayoutElement element) {
+	public void wizard(LayoutElement element) {
 		// TODO Auto-generated method stub
 		
 	}

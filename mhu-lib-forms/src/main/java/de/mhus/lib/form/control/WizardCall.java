@@ -8,12 +8,12 @@ import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.FormControl;
 import de.mhus.lib.form.LayoutElement;
 
-public class WizzardCall {
+public class WizardCall {
 
 	private FormControl control;
 	private LayoutElement element;
 
-	public WizzardCall(FormControl control, LayoutElement element) {
+	public WizardCall(FormControl control, LayoutElement element) {
 		this.control = control;
 		this.element = element;
 	}
@@ -79,7 +79,7 @@ public class WizzardCall {
 	}
 	
 	public ResourceNode getOptions() {
-		return element.getConfig().getNode("wizzard");
+		return element.getConfig().getNode("wizard");
 	}
 
 }

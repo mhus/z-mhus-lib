@@ -1,4 +1,4 @@
-package de.mhus.lib.liferay.wizzards;
+package de.mhus.lib.liferay.wizards;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.control.WizzardCall;
+import de.mhus.lib.form.control.WizardCall;
 import de.mhus.lib.vaadin.ColumnDefinition;
 import de.mhus.lib.vaadin.FilterRequest;
 import de.mhus.lib.vaadin.SimpleTable;
-import de.mhus.lib.vaadin.form2.AbstractListWizzard;
+import de.mhus.lib.vaadin.form2.AbstractListWizard;
 
-public class OrganizationSelector extends AbstractListWizzard {
+public class OrganizationSelector extends AbstractListWizard {
 
 	@Override
 	public ColumnDefinition[] createColumnDefinitions() {
@@ -29,7 +29,7 @@ public class OrganizationSelector extends AbstractListWizzard {
 	}
 
 	@Override
-	public void fillTable(WizzardCall arg0, SimpleTable table,	FilterRequest filter) {
+	public void fillTable(WizardCall arg0, SimpleTable table,	FilterRequest filter) {
 		
 		String namePattern = null;
 		long parentOrganization = 0;
@@ -66,7 +66,7 @@ public class OrganizationSelector extends AbstractListWizzard {
 	}
 
 	@Override
-	public boolean setSelected(WizzardCall call, Object selected) {
+	public boolean setSelected(WizardCall call, Object selected) {
 		if (selected == null) return false;
 		try {
 			call.setString("(" + String.valueOf(selected) + ")");

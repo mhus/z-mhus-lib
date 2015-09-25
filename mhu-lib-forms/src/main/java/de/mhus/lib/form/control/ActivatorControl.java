@@ -11,7 +11,7 @@ import de.mhus.lib.form.validation.Validator;
 public class ActivatorControl implements FormControl {
 
 	private FocusManager focusManager;
-//	private MActivator wizzards;
+//	private MActivator wizards;
 //	private MActivator validators;
 //	private MActivator actions;
 	
@@ -23,7 +23,7 @@ public class ActivatorControl implements FormControl {
 
 	@Override
 	public void action(FormAction action) {
-//		MActivator a = wizzards;
+//		MActivator a = wizards;
 //		if (a == null) a = action.getParent().getLayoutFactory().getActivator();
 		MActivator a = action.getParent().getLayoutFactory().getActivator();
 		Action act;
@@ -39,20 +39,20 @@ public class ActivatorControl implements FormControl {
 	}
 
 	@Override
-	public void wizzard(LayoutElement element) {
-//		MActivator a = wizzards;
+	public void wizard(LayoutElement element) {
+//		MActivator a = wizards;
 //		if (a == null) a = element.getLayoutFactory().getActivator();
 		MActivator a = element.getLayoutFactory().getActivator();
-		Wizzard wizzard;
+		Wizard wizard;
 		try {
-//			wizzard = (Wizzard) a.getObject(Wizzard.class,element.getConfig().getString("wizzard", null));
-			wizzard = (Wizzard) a.getObject(element.getConfig().getString("wizzard", null));
+//			wizard = (Wizard) a.getObject(Wizard.class,element.getConfig().getString("wizard", null));
+			wizard = (Wizard) a.getObject(element.getConfig().getString("wizard", null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		if (wizzard != null)
-			wizzard.openWizzard(this,element);
+		if (wizard != null)
+			wizard.openWizard(this,element);
 	}
 
 	@Override
@@ -88,29 +88,5 @@ public class ActivatorControl implements FormControl {
 	public void setFocusManager(FocusManager focusManager) {
 		this.focusManager = focusManager;
 	}
-
-//	public MActivator getWizzards() {
-//		return wizzards;
-//	}
-//
-//	public void setWizzards(MActivator wizzards) {
-//		this.wizzards = wizzards;
-//	}
-//
-//	public MActivator getValidators() {
-//		return validators;
-//	}
-//
-//	public void setValidators(MActivator validators) {
-//		this.validators = validators;
-//	}
-//
-//	public MActivator getActions() {
-//		return actions;
-//	}
-//
-//	public void setActions(MActivator actions) {
-//		this.actions = actions;
-//	}
 
 }
