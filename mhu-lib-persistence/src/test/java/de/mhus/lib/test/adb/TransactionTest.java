@@ -18,12 +18,10 @@ public class TransactionTest extends TestCase {
 	public DbPoolBundle createPool(String name) {
 		NodeConfig cdb = new NodeConfig();
 		NodeConfig cconfig = new NodeConfig();
-		NodeConfig ccon = new NodeConfig();
-		ccon.setProperty("driver", "org.hsqldb.jdbcDriver");
-		ccon.setProperty("url", "jdbc:hsqldb:mem:" + name);
-		ccon.setProperty("user", "sa");
-		ccon.setProperty("pass", "");
-		cdb.setConfig("connection", ccon);
+		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
+		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
+		cdb.setProperty("user", "sa");
+		cdb.setProperty("pass", "");
 		cconfig.setConfig("test", cdb);
 		DbPoolBundle pool = new DbPoolBundle(cconfig,null);
 		return pool;

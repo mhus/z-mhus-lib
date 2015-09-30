@@ -71,6 +71,8 @@ public abstract class DbProvider extends MObject {
 	public String[] getQuery(String name) {
 		try {
 			ResourceNode query = config.getNode("queries");
+			if (query == null) return new String[0];
+			
 			String queryLanguage = null;
 			String queryString = query.getString(name,null);
 			String[] out = new String[] { queryLanguage, queryString };

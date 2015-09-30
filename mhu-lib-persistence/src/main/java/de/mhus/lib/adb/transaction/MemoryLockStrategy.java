@@ -30,7 +30,13 @@ public class MemoryLockStrategy extends LockStrategy {
 				if (current == null) {
 					locks.put(key, new LockObject(transaction));
 					return;
+				} else {
+					log().t("wait for lock",key);
 				}
+//				if (current != null && current.equals(transaction)) {
+//					// already locked by me
+//					return;
+//				}
 			}
 
 			if (System.currentTimeMillis() - start > timeout)

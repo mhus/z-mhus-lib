@@ -107,7 +107,9 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @throws Exception
 	 */
 	public Object createObject(Class<?> clazz, String registryName, DbResult ret, DbManager manager, boolean isPersistent) throws Exception {
-		Object object = manager.getActivator().createObject(clazz.getCanonicalName());
+		Object object = manager
+				.getActivator()
+				.createObject(clazz.getCanonicalName());
 		if (object instanceof DbObject) {
 			((DbObject)object).doInit(manager, registryName, isPersistent);
 		}

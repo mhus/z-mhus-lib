@@ -16,12 +16,12 @@ public class TransactionPool {
 	 * @return
 	 */
 	public Transaction get() {
-		synchronized (pool) {
+//		synchronized (pool) {
 			Transaction out = pool.get();
 			Transaction nested = out.getNested();
 			if (nested != null) return nested;
 			return out;
-		}
+//		}
 	}
 	
 	/**
@@ -29,14 +29,14 @@ public class TransactionPool {
 	 * @return
 	 */
 	public Transaction getBase() {
-		synchronized (pool) {
+//		synchronized (pool) {
 			Transaction out = pool.get();
 			return out;
-		}
+//		}
 	}
 	
 	public void release() {
-		synchronized (pool) {
+//		synchronized (pool) {
 			Transaction out = pool.get();
 			if (out == null) return;
 			Transaction nested = out.popNestedLock();
@@ -44,11 +44,11 @@ public class TransactionPool {
 				pool.remove();
 				out.release();
 			}
-		}
+//		}
 	}
 	
 	public void lock(long timeout, Transaction transaction) {
-		synchronized (pool) {
+//		synchronized (pool) {
 			Transaction current = pool.get();
 			if (current != null)
 				current.pushNestedLock(transaction);
@@ -56,7 +56,7 @@ public class TransactionPool {
 				pool.set(transaction);
 				transaction.lock(timeout);
 			}
-		}
+//		}
 	}
 
 //	public void commit() {

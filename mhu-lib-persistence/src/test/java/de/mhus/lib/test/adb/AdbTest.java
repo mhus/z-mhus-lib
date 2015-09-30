@@ -49,20 +49,17 @@ public class AdbTest extends TestCase {
 	public DbPoolBundle createPool(String name) {
 		NodeConfig cdb = new NodeConfig();
 		NodeConfig cconfig = new NodeConfig();
-		NodeConfig ccon = new NodeConfig();
 
 		//    	ccon.setProperty("driver", "com.mysql.jdbc.Driver");
 		//    	ccon.setProperty("url", "jdbc:mysql://localhost:3306/test");
 		//    	ccon.setProperty("user", "test");
 		//    	ccon.setProperty("pass", "test");
 
-		ccon.setProperty("driver", "org.hsqldb.jdbcDriver");
-		ccon.setProperty("url", "jdbc:hsqldb:mem:" + name);
-		ccon.setProperty("user", "sa");
-		ccon.setProperty("pass", "");
+		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
+		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
+		cdb.setProperty("user", "sa");
+		cdb.setProperty("pass", "");
 
-
-		cdb.setConfig("connection", ccon);
 
 		//    	NodeConfig cqueries = new NodeConfig();
 		//    	cqueries.setProperty("create", "create table test (a_text varchar(100))");

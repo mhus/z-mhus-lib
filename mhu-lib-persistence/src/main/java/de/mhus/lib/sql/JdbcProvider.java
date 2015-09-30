@@ -24,8 +24,8 @@ public class JdbcProvider extends DbProvider {
 	public synchronized Dialect getDialect() {
 		try {
 			if (dialect == null) {
-				ResourceNode concon = config.getNode("connection");
-				String dialectName = concon.getExtracted("dialect");
+				// ResourceNode concon = config.getNode("connection");
+				String dialectName = config.getExtracted("dialect");
 				if (dialect != null) {
 					try {
 						dialect = (Dialect)activator.getObject(dialectName);
@@ -34,7 +34,7 @@ public class JdbcProvider extends DbProvider {
 					}
 				}
 				if (dialect == null) {
-					String driver = concon.getExtracted("driver");
+					String driver = config.getExtracted("driver");
 					if (driver != null) {
 						if (driver.indexOf("hsqldb") > 0)
 							dialect = new DialectHsqldb();
@@ -56,11 +56,11 @@ public class JdbcProvider extends DbProvider {
 
 	@Override
 	public InternalDbConnection createConnection() throws Exception {
-		ResourceNode concon = config.getNode("connection");
-		String driver = concon.getExtracted("driver");
-		String url = concon.getExtracted("url");
-		String user = concon.getExtracted("user");
-		String pass = concon.getExtracted("pass");
+		// ResourceNode concon = config.getNode("connection");
+		String driver = config.getExtracted("driver");
+		String url = config.getExtracted("url");
+		String user = config.getExtracted("user");
+		String pass = config.getExtracted("pass");
 
 		if (!MString.isEmpty(driver)) {
 			//			activator.getClazz(driver);
