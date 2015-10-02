@@ -1,5 +1,7 @@
 package de.mhus.lib.jms;
 
+import java.io.IOException;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
@@ -29,10 +31,10 @@ public class JmsDestination extends JmsObject {
 	public JmsDestination setConnection(JmsConnection con) {
 		if (MSystem.equals(this.con, con)) return this;
 		this.con = con;
-		reset();
 		try {
+			reset();
 			open();
-		} catch (JMSException e) {
+		} catch (Exception e) {
 			log().t(e);
 		}
 		return this;
