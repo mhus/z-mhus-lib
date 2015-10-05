@@ -1,6 +1,7 @@
 package de.mhus.lib.logging.level;
 
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -50,9 +51,10 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 	}
 
 	@Override
-	public void doConfigureTrail(String backup) {
-		if (backup == null) return;
-		set(backup);
+	public void doConfigureTrail(String config) {
+		//if (backup == null) return;
+		if (MString.isEmpty(config)) config = ThreadMapperConfig.MAP_LABEL;
+		set(config);
 	}
 
 	@Override

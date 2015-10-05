@@ -5,6 +5,10 @@ import de.mhus.lib.core.system.ISingleton;
 
 public class MLogUtil {
 
+	public static void setTrailConfig() {
+		setTrailConfig(null);
+	}
+	
 	public static void setTrailConfig(String parameters) {
 		ISingleton singleton = MSingleton.get();
 		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
