@@ -16,10 +16,10 @@ import de.mhus.lib.core.system.SingletonInitialize;
 
 public class MSingleton {
 
-	private static final ResourceNode EMPTY_CONFIG = new HashConfig();
 	private static ISingleton singleton;
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
+	private static ResourceNode emptyConfig = null;
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -103,6 +103,7 @@ public class MSingleton {
 	}
 
 	public static ResourceNode getConfig(Object owner) {
-		return get().getConfigProvider().getConfig(owner, EMPTY_CONFIG);
+		if (emptyConfig == null) emptyConfig = new HashConfig();
+		return get().getConfigProvider().getConfig(owner, emptyConfig);
 	}
 }
