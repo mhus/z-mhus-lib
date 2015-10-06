@@ -3,6 +3,8 @@ package de.mhus.lib.core;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
@@ -14,6 +16,7 @@ import de.mhus.lib.core.system.SingletonInitialize;
 
 public class MSingleton {
 
+	private static final ResourceNode EMPTY_CONFIG = new HashConfig();
 	private static ISingleton singleton;
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
@@ -97,5 +100,9 @@ public class MSingleton {
 		} catch(Throwable t) {
 			if (MSingleton.isDirtyTrace()) t.printStackTrace();
 		}
+	}
+
+	public static ResourceNode getConfig(Object owner) {
+		return get().getConfigProvider().getConfig(owner, EMPTY_CONFIG);
 	}
 }

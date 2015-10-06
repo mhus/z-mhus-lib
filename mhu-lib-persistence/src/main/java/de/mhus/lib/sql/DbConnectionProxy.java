@@ -1,5 +1,6 @@
 package de.mhus.lib.sql;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.service.UniqueId;
@@ -14,12 +15,13 @@ import de.mhus.lib.errors.MException;
  */
 public class DbConnectionProxy extends MObject implements DbConnection {
 
+	private static boolean stackTrace = MSingleton.getConfig(DbConnection.class).getBoolean("stackTrace", false);
 	private DbConnection instance;
 	private long id = base(UniqueId.class).nextUniqueId();
 	private StackTraceElement[] createStackTrace;
 
 	public DbConnectionProxy(DbConnection instance) {
-		if (log().isLocalTrace()) {
+		if (stackTrace) {
 			createStackTrace = Thread.currentThread().getStackTrace();
 			instance.setUsedTrace(createStackTrace);
 		}
