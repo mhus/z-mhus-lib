@@ -23,7 +23,7 @@ public class VectorMap<K1,K2,V> extends HashMap<K1, HashMap<K2, V>> {
 		}
 	}
 	
-	public V remove(K1 k1, K2 k2) {
+	public V removeValue(K1 k1, K2 k2) {
 		synchronized (this) {
 			HashMap<K2, V> map = get(k1, false);
 			if (map == null) return null;
