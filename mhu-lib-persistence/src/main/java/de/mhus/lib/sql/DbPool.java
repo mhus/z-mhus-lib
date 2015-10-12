@@ -237,10 +237,7 @@ public abstract class DbPool extends MJmx {
 			Collections.sort(list);
 			log().f("Connection Usage",list.size());
 			for (ConnectionTrace trace :list) {
-				log().f("Connection",trace);
-				for (StackTraceElement element : trace.getStackTrace()) {
-					log().f("  " + element);
-				}
+				trace.log(log());
 			}
 		}
 	}

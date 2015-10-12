@@ -26,7 +26,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	public DbConnectionProxy(DbPool pool, DbConnection instance) {
 		if (traceCaller.value()) {
 			this.pool = pool;
-			pool.getStackTraces().put(MSystem.getObjectId(this), new ConnectionTrace());
+			pool.getStackTraces().put(MSystem.getObjectId(this), new ConnectionTrace(this));
 //			instance.setUsedTrace(createStackTrace);
 		}
 		this.instance = instance;
@@ -85,7 +85,12 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	protected void finalize() throws Throwable {
 		log().t(id,"finalized",instance.getInstanceId());
 		if (instance != null) {
-			log().i(id,"final closed",instance.getInstanceId(),pool.getStackTraces().get(MSystem.getObjectId(this)));
+			log().i(id,"final closed",
+					instance.getInstanceId()
+				);
+			ConnectionTrace trace = pool.getStackTraces().get(MSystem.getObjectId(this));
+			if (trace != null)
+				trace.log(log());
 			setUsed(false);
 		}
 		if (traceCaller.value())
