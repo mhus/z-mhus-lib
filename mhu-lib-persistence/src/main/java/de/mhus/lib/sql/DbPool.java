@@ -18,9 +18,17 @@
 
 package de.mhus.lib.sql;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.configupdater.ConfigBoolean;
+import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.ConfigProvider;
@@ -38,6 +46,18 @@ import de.mhus.lib.errors.MException;
 @JmxManaged(descrition="Database pool")
 public abstract class DbPool extends MJmx {
 
+	// Trace parameters
+	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
+	private long lastStackTracePrint = 0;
+	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "trace", false) {
+		@Override
+		protected void onUpdate(Boolean newValue) {
+			if (stackTraces != null)
+				stackTraces.clear();
+		}
+	};
+	private ConfigLong traceWait = new ConfigLong(DbConnection.class, "traceWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	
 	private DbProvider provider;
 	private String name;
 	private ResourceNode config;
@@ -205,5 +225,21 @@ public abstract class DbPool extends MJmx {
 	public abstract String dumpUsage(boolean used);
 
 	public abstract boolean isClosed();
+
+	public Map<String,ConnectionTrace> getStackTraces() {
+		return stackTraces ;
+	}
+	
+	public void printStackTrace() {
+		if (traceCaller.value() && lastStackTracePrint + traceWait.value() < System.currentTimeMillis()) {
+			lastStackTracePrint = System.currentTimeMillis();
+			LinkedList<ConnectionTrace> list = new LinkedList<ConnectionTrace>(getStackTraces().values());
+			Collections.sort(list);
+			log().f("Connection Usage",list.size());
+			for (ConnectionTrace trace :list) {
+				trace.log(log());
+			}
+		}
+	}
 
 }

@@ -305,5 +305,16 @@ public abstract class ResourceNode extends IProperties {
 	public abstract boolean isValide();
 	
 	public abstract boolean hasContent();
+
+	public ResourceNode getNodeByPath(String path) {
+		if (path == null) return null;
+		while (path.startsWith("/")) path = path.substring(1);
+		if (path.length() == 0) return this;
+		int p = path.indexOf('/');
+		if (p < 0) return getNode(path);
+		ResourceNode next = getNode(path.substring(0, p));
+		if (next == null) return null;
+		return next.getNodeByPath(path.substring(p+1));
+	}
 	
 }

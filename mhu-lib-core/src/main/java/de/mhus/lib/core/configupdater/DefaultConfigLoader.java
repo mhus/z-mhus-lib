@@ -1,4 +1,4 @@
-package de.mhus.lib.core.system;
+package de.mhus.lib.core.configupdater;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -19,6 +19,8 @@ import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MutableParameterMapper;
 import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.logging.ParameterMapper;
+import de.mhus.lib.core.system.ISingletonInternal;
+import de.mhus.lib.core.system.SecureStreamToLogAdapter;
 import de.mhus.lib.core.util.TimerIfc;
 
 public class DefaultConfigLoader {
@@ -121,6 +123,8 @@ public class DefaultConfigLoader {
 		
 		internal.setLogFactory(logFactory);
 		MSingleton.updateLoggers();
+		MSingleton.getConfigUpdater().doUpdate();
+		
 	}
 
 	private boolean internalLoadConfig(File file) {

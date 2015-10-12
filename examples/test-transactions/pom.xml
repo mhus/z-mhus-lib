@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.mhus.tests</groupId>
+  <artifactId>test-transactions</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>mhu-lib-core</artifactId>
+  		<version>3.2.9-SNAPSHOT</version>
+  		<type>jar</type>
+  	</dependency>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>mhu-lib-persistence</artifactId>
+  		<version>3.2.9-SNAPSHOT</version>
+  		<type>jar</type>
+  	</dependency>
+  	    <dependency>
+    	<groupId>org.hsqldb</groupId>
+    	<artifactId>hsqldb</artifactId>
+    	<version>2.3.2</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -34,10 +34,19 @@ public class PseudoDbPool extends DbPool {
 	@Override
 	public DbConnection getConnection() throws Exception {
 		if (closed) throw new Exception("Pool is closed");
-		InternalDbConnection out = getProvider().createConnection();
-		out.setPool(this);
-		out.setUsed(true);
-		return out;
+		try {
+			InternalDbConnection out = getProvider().createConnection();
+			out.setPool(this);
+			out.setUsed(true);
+			return out;
+		} catch (Exception e) {
+			// special behavior for e.g. mysql, retry to get a connection after gc()
+			// Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Too many connections
+			if (e.getMessage().indexOf("Too many connections") > -1) {
+				printStackTrace();
+			}
+			throw e;
+		}
 	}
 
 	@Override

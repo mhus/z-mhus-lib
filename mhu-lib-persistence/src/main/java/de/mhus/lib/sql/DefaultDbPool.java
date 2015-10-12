@@ -99,16 +99,25 @@ public class DefaultDbPool extends DbPool {
 					} else
 						if (!con.isUsed()) {
 							con.setUsed(true);
-							return new DbConnectionProxy(con);
+							return new DbConnectionProxy(this, con);
 						}
 				}
-				InternalDbConnection con = getProvider().createConnection();
-				if (con == null) return null;
-				con.setPool(this);
-				pool.add(con);
-				con.setUsed(true);
-				//getDialect().initializeConnection(con, this);
-				return new DbConnectionProxy(con);
+				try {
+					InternalDbConnection con = getProvider().createConnection();
+					if (con == null) return null;
+					con.setPool(this);
+					pool.add(con);
+					con.setUsed(true);
+					//getDialect().initializeConnection(con, this);
+					return new DbConnectionProxy(this, con);
+				} catch (Exception e) {
+					// special behavior for e.g. mysql, retry to get a connection after gc()
+					// Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Too many connections
+					if (e.getMessage().indexOf("Too many connections") > -1) {
+						printStackTrace();
+					}
+					throw e;
+				}
 			}
 		} finally {
 			if (foundClosed) cleanup(false);
@@ -182,18 +191,9 @@ public class DefaultDbPool extends DbPool {
 	public String dumpUsage(boolean used) {
 		StringBuffer out = new StringBuffer();
 		synchronized (pool) {
-			for (DbConnection con : pool) {
-				if (!used || con.isUsed()) {
-					out.append("--- ").append(con.getClass().getCanonicalName()).append("(").append(con.isUsed() ? "used" : "unused" ).append(")\n");
-					StackTraceElement[] trace = con.getUsedTrace();
-					if (trace != null) {
-						for (StackTraceElement ste : trace)
-							out.append(ste.getClassName()).append(" ").append(ste.getMethodName())
-							.append("(").append(ste.getFileName()).append(":").append(ste.getLineNumber()).append(")\n");
-					}
-				}
+			for (ConnectionTrace trace : getStackTraces().values()) {
+				out.append(trace.toString()).append("\n");
 			}
-			pool = null;
 		}
 		return out.toString();
 	}
