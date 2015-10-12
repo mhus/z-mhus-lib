@@ -101,6 +101,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		try {
 			doOpen(false);
 		} catch (Exception e) {
+			log().t(e);
 		}
 		return manager;
 	}

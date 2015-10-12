@@ -22,6 +22,8 @@ import de.mhus.lib.core.service.ConfigProvider;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
+import de.mhus.lib.core.util.TimerIfc;
+import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.logging.JavaLoggerFactory;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
 
@@ -82,6 +84,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		
 		housekeeper = new KarafHousekeeper();
 		getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
+
+		TimerIfc timerIfc = MOsgi.getService(TimerIfc.class);
+		getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
 		
 		reConfigure();
 

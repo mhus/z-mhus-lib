@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.HashConfig;
@@ -23,7 +24,7 @@ import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SecureStreamToLogAdapter;
 import de.mhus.lib.core.util.TimerIfc;
 
-public class DefaultConfigLoader {
+public class DefaultConfigLoader extends MLog {
 
 	private IConfig config;
 	private FileWatch fileWatch;
@@ -41,11 +42,13 @@ public class DefaultConfigLoader {
 		configFile = System.getProperty(MConstants.PROP_PREFIX + MConstants.PROP_CONFIG_FILE);
 		if (configFile == null)
 			configFile = MConstants.DEFAULT_MHUS_CONFIG_FILE;
-		else
-			needFileWatch = true;
+		
+		needFileWatch = true;
 	}
 
 	public void reConfigure() {
+		
+		log().i("Load mhu-lib configuration");
 		ResourceNode system = getConfig().getNode("system");
 		
 		
