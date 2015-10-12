@@ -1,6 +1,5 @@
 package de.mhus.lib.sql;
 
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.configupdater.ConfigBoolean;
 import de.mhus.lib.core.lang.MObject;
