@@ -121,6 +121,8 @@ public class DefaultConfigLoader {
 		
 		internal.setLogFactory(logFactory);
 		MSingleton.updateLoggers();
+		MSingleton.getConfigUpdater().doUpdate();
+		
 	}
 
 	private boolean internalLoadConfig(File file) {

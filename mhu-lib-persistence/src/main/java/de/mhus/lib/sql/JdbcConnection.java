@@ -160,16 +160,6 @@ public class JdbcConnection extends InternalDbConnection {
 		return new JdbcStatement(this, dbPrepared);
 	}
 
-	@Override
-	public void setUsedTrace(StackTraceElement[] createStackTrace) {
-		this.createStackTrace = createStackTrace;
-	}
-
-	@Override
-	public StackTraceElement[] getUsedTrace() {
-		return createStackTrace;
-	}
-
 	public void setTimeoutUnused(long timeoutUnused) {
 		this.timeoutUnused = timeoutUnused;
 	}

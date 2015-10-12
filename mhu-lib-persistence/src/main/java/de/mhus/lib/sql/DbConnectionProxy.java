@@ -1,6 +1,8 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.configupdater.ConfigBoolean;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.service.UniqueId;
@@ -15,15 +17,18 @@ import de.mhus.lib.errors.MException;
  */
 public class DbConnectionProxy extends MObject implements DbConnection {
 
-	private static boolean stackTrace = MSingleton.getConfig(DbConnection.class).getBoolean("stackTrace", false);
+	private static ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "trace", false);
+	
 	private DbConnection instance;
 	private long id = base(UniqueId.class).nextUniqueId();
-	private StackTraceElement[] createStackTrace;
+//	private StackTraceElement[] createStackTrace;
+	private DbPool pool;
 
-	public DbConnectionProxy(DbConnection instance) {
-		if (stackTrace) {
-			createStackTrace = Thread.currentThread().getStackTrace();
-			instance.setUsedTrace(createStackTrace);
+	public DbConnectionProxy(DbPool pool, DbConnection instance) {
+		if (traceCaller.value()) {
+			this.pool = pool;
+			pool.getStackTraces().put(MSystem.getObjectId(this), new ConnectionTrace());
+//			instance.setUsedTrace(createStackTrace);
 		}
 		this.instance = instance;
 		log().t(id,"created",instance.getInstanceId());
@@ -73,15 +78,19 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 		if (instance == null) return;
 		log().t(id,"close",instance.getInstanceId());
 		setUsed(false); // close of the proxy will free the connection
+		if (traceCaller.value())
+			pool.getStackTraces().remove(MSystem.getObjectId(this));
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		log().t(id,"finalized",instance.getInstanceId());
 		if (instance != null) {
-			log().i(id,"final closed",instance.getInstanceId(),createStackTrace);
+			log().i(id,"final closed",instance.getInstanceId(),pool.getStackTraces().get(MSystem.getObjectId(this)));
 			setUsed(false);
 		}
+		if (traceCaller.value())
+			pool.getStackTraces().remove(MSystem.getObjectId(this));
 		super.finalize();
 	}
 
@@ -108,16 +117,6 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	@Override
 	public DbStatement createStatement(DbPrepared dbPrepared) {
 		return instance.createStatement(dbPrepared);
-	}
-
-	@Override
-	public void setUsedTrace(StackTraceElement[] createStackTrace) {
-
-	}
-
-	@Override
-	public StackTraceElement[] getUsedTrace() {
-		return createStackTrace;
 	}
 
 	@Override

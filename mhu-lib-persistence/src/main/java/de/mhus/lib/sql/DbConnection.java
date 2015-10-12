@@ -121,9 +121,9 @@ public interface DbConnection {
 	 */
 	public DbConnection instance();
 
-	public void setUsedTrace(StackTraceElement[] createStackTrace);
+//	public void setUsedTrace(StackTraceElement[] createStackTrace);
 
-	public StackTraceElement[] getUsedTrace();
+//	public StackTraceElement[] getUsedTrace();
 
 	/**
 	 * Return the default used language for this kind of connection.

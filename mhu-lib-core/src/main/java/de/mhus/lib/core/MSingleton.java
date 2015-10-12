@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.configupdater.ConfigUpdater;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -20,6 +21,7 @@ public class MSingleton {
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	private static ResourceNode emptyConfig = null;
+	private static ConfigUpdater configUpdater;
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -106,4 +108,11 @@ public class MSingleton {
 		if (emptyConfig == null) emptyConfig = new HashConfig();
 		return get().getConfigProvider().getConfig(owner, emptyConfig);
 	}
+	
+	public static synchronized ConfigUpdater getConfigUpdater() {
+		if (configUpdater == null)
+			configUpdater = new ConfigUpdater();
+		return configUpdater;
+	}
+		
 }

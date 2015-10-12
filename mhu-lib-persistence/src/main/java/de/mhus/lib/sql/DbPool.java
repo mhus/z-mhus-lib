@@ -18,6 +18,10 @@
 
 package de.mhus.lib.sql;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.config.HashConfig;
@@ -41,6 +45,7 @@ public abstract class DbPool extends MJmx {
 	private DbProvider provider;
 	private String name;
 	private ResourceNode config;
+	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
 
 
 	/**
@@ -205,5 +210,14 @@ public abstract class DbPool extends MJmx {
 	public abstract String dumpUsage(boolean used);
 
 	public abstract boolean isClosed();
+
+	public Map<String,ConnectionTrace> getStackTraces() {
+		return stackTraces ;
+	}
+	
+	public void printStackTrace() {
+		LinkedList<ConnectionTrace> list = new LinkedList<ConnectionTrace>(getStackTraces().values());
+		log().f("Connection Usage",list.size(),list);
+	}
 
 }
