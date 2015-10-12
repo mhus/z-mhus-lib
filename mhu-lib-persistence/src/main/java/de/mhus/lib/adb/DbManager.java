@@ -991,6 +991,7 @@ public class DbManager extends MJmx {
 
 		}
 
+		con.close();
 	}
 
 	protected void addClass(String tableName, String registryName, Class<? extends Persistable> clazz, DbConnection con, boolean cleanup) throws Exception {
