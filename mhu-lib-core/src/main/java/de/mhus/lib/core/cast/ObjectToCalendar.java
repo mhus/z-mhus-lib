@@ -48,9 +48,15 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	public static Calendar toCalendar(String in, Locale locale) {
 		if (in == null) return null;
+		
+		
 		try {
 			
 			Calendar c = Calendar.getInstance();
+			if (in.equals("now") || in.equals("jetzt")) {
+				return c;
+			}
+			
 			boolean retOk = false;
 			c.clear();
 
