@@ -17,7 +17,10 @@ public class MOsgi {
 
 	public static <T> T getService(Class<T> ifc) {
 		BundleContext context = FrameworkUtil.getBundle(ifc).getBundleContext();
-		if (context == null) throw new NotFoundException("service context not found", ifc);
+		if (context == null)
+			context = FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
+		if (context == null)
+			throw new NotFoundException("service context not found", ifc);
 		ServiceReference<T> ref = context.getServiceReference(ifc);
 		if (ref == null) throw new NotFoundException("service reference not found", ifc);
 		T obj = context.getService(ref);

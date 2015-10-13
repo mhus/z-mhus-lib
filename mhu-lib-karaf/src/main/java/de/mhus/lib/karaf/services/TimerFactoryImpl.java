@@ -14,6 +14,7 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
@@ -23,6 +24,7 @@ import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
+import de.mhus.lib.karaf.MOsgi;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
 public class TimerFactoryImpl implements TimerFactory {
@@ -46,6 +48,17 @@ public class TimerFactoryImpl implements TimerFactory {
 		log.i("start common timer");
 		myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
 		myTimer.start();
+		
+		// set to base
+		try {
+			TimerFactory timerFactory = this;
+			TimerIfc timerIfc = timerFactory.getTimer();
+			MSingleton.get().getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+		} catch (Throwable t) {
+			System.out.println("Can't initialize timer base: " + t);
+		}
+
+		
 //		myTimer.schedule(new TimerTask() {
 //			
 //			@Override
