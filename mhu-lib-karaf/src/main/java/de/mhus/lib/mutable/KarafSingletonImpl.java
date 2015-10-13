@@ -82,12 +82,18 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		logFactory = new JavaLoggerFactory();
 		cl.doInitialize(this);
 		
-		housekeeper = new KarafHousekeeper();
-		getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
-
-		TimerIfc timerIfc = MOsgi.getService(TimerIfc.class);
-		getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
-		
+		try {
+			housekeeper = new KarafHousekeeper();
+			getBaseControl().getCurrentBase().addObject(MHousekeeper.class, housekeeper);
+		} catch (Throwable t) {
+			System.out.println("Can't initialize housekeeper " + t);
+		}
+		try {
+			TimerIfc timerIfc = MOsgi.getService(TimerIfc.class);
+			getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+		} catch (Throwable t) {
+			System.out.println("Can't initialize timer");
+		}
 		reConfigure();
 
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );
