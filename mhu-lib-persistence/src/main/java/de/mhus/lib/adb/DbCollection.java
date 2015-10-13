@@ -65,6 +65,7 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 							try {
 								out = (O)manager.getSchema().createObject(object instanceof Class<?> ? (Class<?>)object : object.getClass(),registryName,res,manager, true);
 							} catch (Throwable t) {
+								close();
 								throw new MException(con,t);
 							}
 						}
@@ -78,6 +79,7 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 				} catch (AccessDeniedException ade) {
 					// next one
 				} catch (Throwable ade) {
+					close();
 					throw ade;
 				}
 			}
@@ -90,18 +92,22 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	}
 
 	public void close() {
-		if (res == null) return;
-		try {
-			res.close();
-		} catch (Exception e) {
-			log().w(e);
+		if (res != null) {
+			try {
+				res.close();
+			} catch (Exception e) {
+				log().w(e);
+			}
+			res = null;
+			next = null;
+			hasNext = false;
+			object = null;
 		}
-		if (ownConnection)
-			manager.getSchema().closeConnection(con);
-		res = null;
-		next = null;
-		hasNext = false;
-		object = null;
+		if (con != null) {
+			if (ownConnection)
+				manager.getSchema().closeConnection(con);
+			con = null;
+		}
 	}
 
 	/**
