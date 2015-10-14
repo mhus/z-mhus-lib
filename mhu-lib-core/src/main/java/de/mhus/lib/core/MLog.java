@@ -10,12 +10,13 @@ import de.mhus.lib.core.logging.Log;
  * @author mikehummel
  *
  */
-public class MLog {
+public class MLog implements ILog {
 	
 	@Hidden
 	private Log log;
 	
-	protected synchronized Log log() {
+	@Override
+	public synchronized Log log() {
 		if (log == null) {
 			log = Log.getLog(this);
 		}
