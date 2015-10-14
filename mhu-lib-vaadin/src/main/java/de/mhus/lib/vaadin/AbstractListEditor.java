@@ -1,7 +1,9 @@
 package de.mhus.lib.vaadin;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -12,23 +14,35 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.Reindeer;
 
+import de.mhus.lib.annotations.pojo.Hidden;
+import de.mhus.lib.core.ILog;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.form2.VaadinPojoForm;
 
-public abstract class AbstractListEditor<E> extends VerticalLayout implements MNlsProvider {
+public abstract class AbstractListEditor<E> extends VerticalLayout implements MNlsProvider, ILog {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Object MY_NEW_MARKER = new Object();
+
+	public static final String LABEL_SAVED_NEW = "new";
+	public static final String LABEL_SAVED = "saved";
+	public static final String LABEL_DELETED = "deleted";
+	public static final String LABEL_CANELED = "canceled";
+
 	protected SimpleTable table;
 	private Button bNew;
 	private Button bUpdate;
@@ -46,6 +60,21 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private MNls nls;
 	private boolean modified = false;
 	private boolean initialized = false;
+	
+	
+	private Map<String, String> labels = new HashMap<String, String>() {
+		private static final long serialVersionUID = 1L;
+		{
+			put(LABEL_SAVED_NEW,"Saved");
+			put(LABEL_SAVED,"Saved");
+			put(LABEL_DELETED,"Deleted");
+			put(LABEL_CANELED,"Canceled");
+			
+		}
+	};
+	
+	@Hidden
+	private Log log;
 	
 	@SuppressWarnings("serial")
 	public void initUI() {
@@ -244,8 +273,13 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		            @Override
 					public void onClose(ConfirmDialog dialog) {
 		                if (dialog.isConfirmed()) {
-		                	doDelete(selectedObj);
-
+		                	try {
+			                	doDelete(selectedObj);
+								showInformation(labels.get(LABEL_DELETED));
+		                	} catch (Throwable e) {
+		        				log().i(e);
+		        				showError(e);
+		                	}
 		                	model.setPojo(createTarget());
 	
 		                	updateDataSource();
@@ -259,16 +293,23 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	protected void doCancel() {
 		if (editMode == null) return;
-		if (!MY_NEW_MARKER.equals(editMode))
-			doCancel(getTarget(editMode));
+		try {
+			if (!MY_NEW_MARKER.equals(editMode)) {
+				doCancel(getTarget(editMode));
+				showInformation(labels.get(LABEL_CANELED));
+			}
+		} catch (Throwable t) {
+			log().i(t);
+			showError(t);
+		}
 		editMode = null;
     	model.setPojo(createTarget());
 		updateEnabled();
 	}
 
-	protected abstract void doCancel(E entry);
+	protected abstract void doCancel(E entry) throws Exception;
 
-	protected abstract void doDelete(E entry);
+	protected abstract void doDelete(E entry) throws Exception;
 	
 	protected void doUpdate() {
 		if (editMode == null) {
@@ -283,20 +324,24 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			// fill 
 		} else {
 			// save
-			try { 
+			try {
 				if (!canUpdate(editMode)) return;
 				@SuppressWarnings("unchecked")
 				E entity = (E) model.getPojo();
-				if (MY_NEW_MARKER.equals(editMode)) 
+				if (MY_NEW_MARKER.equals(editMode)) {
 					doSaveNew(entity);
-				else
+					showInformation(labels.get(LABEL_SAVED_NEW));
+				} else {
 					doSave(entity);
+					showInformation(labels.get(LABEL_SAVED));
+				}
 				
 				updateDataSource();
             	modified = true;
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Throwable e) {
+				log().i(e);
+				showError(e);
 			}
 			editMode = null;
 		}
@@ -305,7 +350,16 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		
 	}
 
-	protected void doSaveNew(E entity) {
+	public void showError(Throwable e) {
+		Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+	}
+
+	public void showInformation(String msg) {
+		if (MString.isEmpty(msg)) return;
+		Notification.show(msg, Notification.Type.HUMANIZED_MESSAGE);
+	}
+	
+	protected void doSaveNew(E entity) throws Exception {
 		doSave(entity);
 	}
 
@@ -318,7 +372,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		
 	}
 
-	protected abstract void doSave(E entry);
+	protected abstract void doSave(E entry) throws Exception;
 
 	protected E getEditableTarget(Object id) {
 		return getTarget(id);
@@ -481,4 +535,12 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		this.initialized = initialized;
 	}
 	
+	@Override
+	public synchronized Log log() {
+		if (log == null) {
+			log = Log.getLog(this);
+		}
+		return log;
+	}
+
 }
