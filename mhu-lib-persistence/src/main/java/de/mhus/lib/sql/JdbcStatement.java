@@ -3,10 +3,15 @@ package de.mhus.lib.sql;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
+import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.configupdater.ConfigBoolean;
+import de.mhus.lib.core.configupdater.ConfigLong;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.errors.MException;
 
@@ -19,6 +24,9 @@ import de.mhus.lib.errors.MException;
 public class JdbcStatement extends DbStatement {
 
 
+	private static ConfigBoolean traceRuntime = new ConfigBoolean(DbConnection.class, "traceRuntime", false);
+	private static ConfigLong traceMaxRuntime = new ConfigLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+	
 	private JdbcConnection dbCon;
 	private Statement sth;
 
@@ -97,7 +105,10 @@ public class JdbcStatement extends DbStatement {
 		log().t(query);
 		try {
 			preparedSth = prepareStatement(attributes, sth, query);
-			return preparedSth == null ? sth.execute(query) : preparedSth.execute();
+			long start = System.currentTimeMillis();
+			boolean result = preparedSth == null ? sth.execute(query) : preparedSth.execute();
+			trace(query,start);
+			return result;
 		} catch (Exception e) {
 			log().e(query);
 			throw e;
@@ -127,7 +138,10 @@ public class JdbcStatement extends DbStatement {
 		String query = this.query.execute(attributes);
 		log().t(query);
 		preparedSth = prepareStatement(attributes, sth, query);
-		return new JdbcResult(this, preparedSth == null ? sth.executeQuery(query) : preparedSth.executeQuery() );
+		long start = System.currentTimeMillis();
+		ResultSet result = preparedSth == null ? sth.executeQuery(query) : preparedSth.executeQuery();
+		trace(query,start);
+		return new JdbcResult(this, result );
 	}
 
 	/**
@@ -143,9 +157,20 @@ public class JdbcStatement extends DbStatement {
 		String query = this.query.execute(attributes);
 		log().t(query);
 		preparedSth = prepareStatement(attributes, sth, query);
-		return preparedSth == null ? sth.executeUpdate(query) : preparedSth.executeUpdate();
+		long start = System.currentTimeMillis();
+		int result = preparedSth == null ? sth.executeUpdate(query) : preparedSth.executeUpdate();
+		trace(query,start);
+		return result;
 	}
 
+	protected void trace(String query, long start) {
+		if (!traceRuntime.value()) return;
+		long stop = System.currentTimeMillis();
+		if (stop - start > traceMaxRuntime.value()) {
+			log().f(getConnection().getInstanceId(),"Query Runtime Warning",stop-start,query);
+			MLogUtil.logStackTrace(log(), ""+getConnection().getInstanceId(), Thread.currentThread().getStackTrace());
+		}
+	}
 
 	/**
 	 * Return the used connection.

@@ -396,4 +396,12 @@ public class MTimeInterval {
 		return getAllMilliseconds() / 1000 / 60 / 24 / 7;
 	}
 
+	public static boolean isTimeOut(long start, long stop, long timeout) {
+		return stop - start > timeout;
+	}
+	
+	public static boolean isTimeOut(long start, long timeout) {
+		return System.currentTimeMillis() - start > timeout;
+	}
+
 }

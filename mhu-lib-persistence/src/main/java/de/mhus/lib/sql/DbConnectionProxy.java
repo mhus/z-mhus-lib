@@ -16,7 +16,7 @@ import de.mhus.lib.errors.MException;
  */
 public class DbConnectionProxy extends MObject implements DbConnection {
 
-	private static ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "trace", false);
+	private static ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false);
 	
 	private DbConnection instance;
 	private long id = base(UniqueId.class).nextUniqueId();

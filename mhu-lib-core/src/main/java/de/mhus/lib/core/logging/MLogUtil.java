@@ -47,4 +47,11 @@ public class MLogUtil {
 		return (mapper != null && mapper instanceof TrailLevelMapper);
 	}
 	
+	public static void logStackTrace(Log log, String prefix, StackTraceElement[] stackTrace) {
+		for (StackTraceElement element : stackTrace) {
+			log.w(prefix,"  " + element);
+		}
+		
+	}
+
 }

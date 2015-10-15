@@ -142,32 +142,16 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 		StringBuffer sb = new StringBuffer();
 
-//		int mode = 0;
-		int buffer = 0;
 		for (int i = 0; i < _in.length(); i++) {
 
 			char c = _in.charAt(i);
 
 			if (c == '%' || c == '&' || c == '=' || c == '+' || c == '\n'
-					|| c == '\r' || c == '?') {
+					|| c == '\r' || c == '?' || c == ' ') {
 
-				sb.append('%');
-
-				int cc = c;
-				buffer = cc / 16;
-				if (buffer < 10)
-					sb.append((char) ((int) '0' + buffer));
-				else
-					sb.append((char) ((int) 'A' - 10 + buffer));
-
-				buffer = cc % 16;
-				if (buffer < 10)
-					sb.append((char) ((int) '0' + buffer));
-				else
-					sb.append((char) ((int) 'A' - 10 + buffer));
-
-			} else if (c == ' ')
-				sb.append('+');
+				encode(sb, c);
+				
+			}
 			else
 				sb.append(c);
 		}
@@ -176,6 +160,38 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	}
 
+	public static String encode(char c) {
+		StringBuffer sb = new StringBuffer();
+		encode(sb, c);
+		return sb.toString();
+	}
+	
+	public static void encode(StringBuffer sb, char c) {
+		
+		if (c == ' ' ) {
+			sb.append('+');
+			return;
+		}
+		
+		sb.append('%');
+
+		int buffer = 0;
+
+		int cc = c;
+		buffer = cc / 16;
+		if (buffer < 10)
+			sb.append((char) ((int) '0' + buffer));
+		else
+			sb.append((char) ((int) 'A' - 10 + buffer));
+
+		buffer = cc % 16;
+		if (buffer < 10)
+			sb.append((char) ((int) '0' + buffer));
+		else
+			sb.append((char) ((int) 'A' - 10 + buffer));
+
+	}
+	
 	/**
 	 * Transfor the elements of an array to a string using the rfc1738 sprec.
 	 * @param in

@@ -49,14 +49,14 @@ public abstract class DbPool extends MJmx {
 	// Trace parameters
 	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
 	private long lastStackTracePrint = 0;
-	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "trace", false) {
+	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false) {
 		@Override
 		protected void onUpdate(Boolean newValue) {
 			if (stackTraces != null)
 				stackTraces.clear();
 		}
 	};
-	private ConfigLong traceWait = new ConfigLong(DbConnection.class, "traceWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private ConfigLong traceWait = new ConfigLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
 	
 	private DbProvider provider;
 	private String name;

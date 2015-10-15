@@ -4,10 +4,13 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -146,6 +149,32 @@ public class MCollection {
 		int[] out = new int[to-from];
 		for (int l = 0; l < out.length; l++)
 			out[l] = l+from;
+		return out;
+	}
+	
+	public static Map<String,String> toStringMap(Map<Object,Object> in, boolean ignoreNull) {
+		HashMap<String, String> out = new HashMap<String,String>();
+		for (Entry<Object, Object> e : in.entrySet()) {
+			if (e.getValue() == null) {
+				if (!ignoreNull)
+					out.put(e.getKey().toString(), "");
+			} else {
+				out.put(e.getKey().toString(), e.getValue().toString());
+			}
+		}
+		return out;
+	}
+	
+	public static Map<String,String> toStringMap(IProperties in, boolean ignoreNull) {
+		HashMap<String, String> out = new HashMap<String,String>();
+		for (Map.Entry<String,Object> e : in) {
+			if (e.getValue() == null) {
+				if (!ignoreNull)
+					out.put(e.getKey(), "");
+			} else {
+				out.put(e.getKey(), e.getValue().toString());
+			}
+		}
 		return out;
 	}
 	

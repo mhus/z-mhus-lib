@@ -4,6 +4,7 @@ import java.util.Date;
 
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public class ConnectionTrace implements Comparable<ConnectionTrace> {
 	
@@ -33,10 +34,7 @@ public class ConnectionTrace implements Comparable<ConnectionTrace> {
 
 	public void log(Log log) {
 		log.w(id,"Connection",this);
-		for (StackTraceElement element : stackTrace) {
-			log.w(id,"  " + element);
-		}
-		
+		MLogUtil.logStackTrace(log, ""+id, stackTrace);
 	}
 	
 }
