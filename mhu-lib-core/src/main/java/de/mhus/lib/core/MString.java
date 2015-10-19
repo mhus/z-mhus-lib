@@ -1511,4 +1511,20 @@ public class MString {
 		}
 		return out.toString();
 	}
+	
+	/**
+	 * Check a string against all characters in another string. If the first string is not build from
+	 * characters of the other one the method returns false.
+	 * @param in
+	 * @param composed
+	 * @return
+	 */
+	public static boolean isComposedOf(String in, String composed) {
+		if (in == null || composed == null) return false;
+		for (int p = 0; p < in.length(); p++) {
+			char c = in.charAt(p);
+			if (composed.indexOf(c) < 0) return false;
+		}
+		return true;
+	}
 }
