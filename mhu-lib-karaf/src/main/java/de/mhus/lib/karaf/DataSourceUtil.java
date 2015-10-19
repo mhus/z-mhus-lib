@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import javax.sql.DataSource;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
@@ -13,6 +14,10 @@ public class DataSourceUtil {
 	
 	public static final String SERVICE_JNDI_NAME_KEY = "osgi.jndi.service.name";
 	private BundleContext context;
+	
+	public DataSourceUtil() {
+		this.context = FrameworkUtil.getBundle(DataSourceUtil.class).getBundleContext();
+	}
 	
 	public DataSourceUtil(BundleContext context) {
 		this.context = context;
