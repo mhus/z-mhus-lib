@@ -499,5 +499,52 @@ public class MPojo {
 		}
 		return out;
 	}
+
 	
+	public static void propertiesToPojo(IProperties from, Object to) throws IOException {
+		propertiesToPojo(from, to, getDefaultModelFactory());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory) throws IOException {
+		PojoModel model = factory.createPojoModel(to.getClass());
+		for (PojoAttribute<Object> attr : model) {
+			String name = attr.getName();
+			Class<?> type = attr.getType();
+			try {
+				if (!from.isProperty(name) || !attr.canWrite() ) {
+					
+				} else
+				if (type == Boolean.class || type == boolean.class)
+					attr.set(to, from.getBoolean(name, false));
+				else
+				if (type == Integer.class || type == int.class)
+					attr.set(to, from.getInt(name, 0));
+				else
+				if (type == String.class)
+					attr.set(to, from.getString(name, null));
+				else
+				if (type == UUID.class)
+					try {
+						attr.set(to, UUID.fromString(from.getString(name)));
+					} catch (IllegalArgumentException e) {
+						attr.set(to, null);
+					}
+				else
+				if (type.isEnum()) {
+					Object[] cons=type.getEnumConstants();
+					int ord = from.getInt(name, 0);
+					Object c = cons.length > 0 ? cons[0] : null;
+					if (ord >=0 && ord < cons.length) c = cons[ord];
+					attr.set(to, c );
+				}
+				else
+					attr.set(to, from.getString(name));
+			} catch (Throwable t) {
+				System.out.println("ERROR " + name);
+				t.printStackTrace();
+			}
+		}
+	}
+
 }
