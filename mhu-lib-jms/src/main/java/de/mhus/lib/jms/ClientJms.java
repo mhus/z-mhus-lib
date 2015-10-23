@@ -213,10 +213,10 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	public void reset() {
 		log().d("reset",dest);
 		try {
-			producer.close();
+			if (producer != null) producer.close();
 		} catch (Throwable t) {log().d(t);}
 		try {
-			responseConsumer.close();
+			if (responseConsumer != null) responseConsumer.close();
 		} catch (Throwable t) {log().d(t);}
 		try {
 			if (answerQueue != null)

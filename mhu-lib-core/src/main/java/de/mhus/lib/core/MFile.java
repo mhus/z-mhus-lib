@@ -20,6 +20,7 @@
 package de.mhus.lib.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -30,6 +31,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
@@ -110,29 +112,35 @@ public class MFile {
 
 	/**
 	 * Open and read a file. It returns the content of the file as string.
-	 * Be aware of special characters.
 	 * @param _f 
 	 * @return 
 	 */
 	public static String readFile(File _f) {
+		return readFile(_f, MString.CHARSET_UTF_8);
+	}
+	
+	/**
+	 * Open and read a file. It returns the content of the file as string.
+	 * @param _f 
+	 * @param encoding 
+	 * @return 
+	 */
+	public static String readFile(File _f, String encoding) {
 
-		StringBuffer sb = new StringBuffer();
 		try {
-			InputStream fis = new FileInputStream(_f);
-			while (fis.available() != 0)
-				sb.append((char) fis.read());
+			FileInputStream fis = new FileInputStream(_f);
+			InputStreamReader fr = new InputStreamReader(fis, encoding);
+			String ret = readFile(fr);
 			fis.close();
+			return ret;
 		} catch (Exception e) {
 			log.d(_f, e);
 		}
-
-		return sb.toString();
-
+		return null;
 	}
 
 	/**
 	 * Open and read a file. It returns the content of the file as string.
-	 * Be aware of special characters.
 	 * @param _is 
 	 * @return 
 	 */
@@ -147,7 +155,8 @@ public class MFile {
 					return sb.toString();
 				if (size > 0) {
 					sb.append(buffer, 0, size);
-				}
+				} else
+					MThread.sleep(50);
 			}
 		} catch (EOFException eofe) {
 		} catch (Exception e) {
@@ -158,27 +167,6 @@ public class MFile {
 
 	}
 
-	public static String readUTF8(InputStream _is) throws IOException {
-		return readUCF(_is,Charset.forName(MString.CHARSET_DEFAULT));
-	}
-	
-	/**
-	 * Read a stream. It returns the content of the file as string.
-	 * It will not read byte ofter byte. it will read the hole content as
-	 * binary and translate it to a string. This will also create UCF
-	 * characters. But be aware of big files. It will cost the double lot of memory
-	 * for a short time.
-	 * 
-	 * @param _is
-	 * @param charset The charset to be used or null for the default charset
-	 * @return
-	 * @throws IOException 
-	 */
-	public static String readUCF(InputStream _is, Charset charset) throws IOException {
-		byte[] buffer = readBinary(_is);
-		return new String(buffer, charset);
-	}
-	
 	/**
 	 * Open and read a stream. It returns the content of the file as string.
 	 * Be aware of special characters.
@@ -186,22 +174,18 @@ public class MFile {
 	 * @return 
 	 */
 	public static String readFile(InputStream _is) {
-
-		StringBuffer sb = new StringBuffer();
+		return readFile(_is, MString.CHARSET_UTF_8);
+	}
+	
+	public static String readFile(InputStream _is, String encoding) {
 		try {
-			while (true) {
-				int ret = _is.read();
-				if (ret < 0)
-					break;
-				sb.append((char) ret);
-			}
-		} catch (EOFException eofe) {
+			InputStreamReader fr = new InputStreamReader(_is, encoding);
+			String ret = readFile(fr);
+			return ret;
 		} catch (Exception e) {
 			log.d(e);
 		}
-
-		return sb.toString();
-
+		return null;
 	}
 
 	/**
@@ -212,12 +196,7 @@ public class MFile {
 	 */
 	public static byte[] readBinaryFile(File in) throws IOException {
 		InputStream fis = new FileInputStream(in);
-		int size = (int) in.length();
-		byte[] buffer = new byte[size];
-		for (int i = 0; i < size; i++)
-			buffer[i] = (byte) fis.read();
-		fis.close();
-		return buffer;
+		return readBinary(fis, false);
 	}
 
 	/**
@@ -239,19 +218,20 @@ public class MFile {
 	 */
 	public static byte[] readBinary(InputStream is, boolean close)
 			throws IOException {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream(1024);
-		byte buffer[] = new byte[1024];
-		do {
-			int j = is.read(buffer, 0, buffer.length);
-			if (j >= 0) {
-				stream.write(buffer, 0, j);
-			} else {
-				if ( close ) is.close();
-				return stream.toByteArray();
-
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		try {
+			while (true) {
+				int size = is.read(buffer);
+				if (size < 0 ) break;
+				if (size == 0)
+					MThread.sleep(50);
+				else
+					baos.write(buffer, 0, size);
 			}
-		} while (true);
-
+		} catch (EOFException e) {}
+		if (close) is.close();
+		return baos.toByteArray();
 	}
 
 	/**
