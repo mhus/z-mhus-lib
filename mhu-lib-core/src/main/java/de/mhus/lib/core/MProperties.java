@@ -30,17 +30,18 @@ public class MProperties extends IProperties implements Externalizable {
 		}
 	}
 	
-	public MProperties(Dictionary<String, ?> config) {
+	public MProperties(Dictionary<?, ?> config) {
 		this.properties = new Properties();
-		for (Enumeration<String> enu = config.keys(); enu.hasMoreElements();) {
-			String next = enu.nextElement();
-			this.properties.put(next, config.get(next));
+		for (Enumeration<?> enu = config.keys(); enu.hasMoreElements();) {
+			Object next = enu.nextElement();
+			this.properties.put(String.valueOf( next ), config.get(next));
 		}
 	}
 	
-	public MProperties(Map<String, Object> in) {
+	public MProperties(Map<?, ?> in) {
 		this.properties = new Properties();
-		this.properties.putAll(in);
+		for (Map.Entry<?, ?> e : in.entrySet())
+			this.properties.put(String.valueOf( e.getKey() ), e.getValue());
 	}
 	
 	public MProperties(Properties properties) {
