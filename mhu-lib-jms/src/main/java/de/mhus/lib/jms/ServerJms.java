@@ -109,6 +109,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			}
 			
 			usedThreads++;
+			log().t(">>> userThreads",usedThreads);
 			
 			new MThread(
 					new Runnable() {
@@ -119,6 +120,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 								processMessage(message);
 							} finally {
 								usedThreads--;
+								log().t("<<< userThreads",usedThreads);
 							}
 						}
 					}
