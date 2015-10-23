@@ -10,6 +10,7 @@ import javax.jms.TextMessage;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -19,7 +20,8 @@ import de.mhus.lib.core.logging.TrailLevelMapper;
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	private static long usedThreads = 0;
-	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", 100);
+	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", 500);
+	private static ConfigLong maxThreadCountTimeout = new ConfigLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
 	
     public ServerJms(JmsDestination dest) {
 		super(dest);
@@ -103,13 +105,19 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		
 		if (fork) {
 			
+			long timeout = maxThreadCountTimeout.value();
 			while (usedThreads > maxThreadCount.value()) {
-				log().i("Too mouch JMS Threads ... wait!",usedThreads);
+				log().i("Too many JMS Threads ... wait!",usedThreads);
 				MThread.sleep(100);
+				timeout-=100;
+				if (timeout < 0) {
+					log().i("Too many JMS Threads ... timeout",usedThreads);
+					break;
+				}
 			}
 			
 			usedThreads++;
-			log().t(">>> userThreads",usedThreads);
+			log().t(">>> usedThreads",usedThreads);
 			
 			new MThread(
 					new Runnable() {
@@ -120,7 +128,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 								processMessage(message);
 							} finally {
 								usedThreads--;
-								log().t("<<< userThreads",usedThreads);
+								log().t("<<< usedThreads",usedThreads);
 							}
 						}
 					}
