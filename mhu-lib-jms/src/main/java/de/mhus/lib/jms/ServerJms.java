@@ -107,6 +107,27 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			
 			long timeout = maxThreadCountTimeout.value();
 			while (usedThreads > maxThreadCount.value()) {
+				
+				/*
+"AT100[232] de.mhus.lib.jms.ServerJms$1" Id=232 in BLOCKED on lock=de....aaa.AccessApiImpl@48781daa
+     owned by AT92[224] de.mhus.lib.jms.ServerJms$1 Id=224
+     ...
+    at de.mhus.lib.karaf.jms.JmsDataChannelImpl.receivedOneWay(JmsDataChannelImpl.java:209)
+    at de.mhus.lib.karaf.jms.ChannelWrapper.receivedOneWay(ChannelWrapper.java:20)
+    at de.mhus.lib.jms.ServerJms.processMessage(ServerJms.java:182)
+    at de.mhus.lib.jms.ServerJms$1.run(ServerJms.java:120)
+    at de.mhus.lib.core.MThread$ThreadContainer.run(MThread.java:192)
+
+do not block jms driven threads !!! This will cause a deadlock
+
+				 */
+				for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+					if (element.getClassName().equals(ServerJms.class.getCanonicalName())) {
+						log().i("Too many JMS Threads ... ignore, it's a JMS call",usedThreads);
+						break;
+					}
+				}
+				
 				log().i("Too many JMS Threads ... wait!",usedThreads);
 				MThread.sleep(100);
 				timeout-=100;
