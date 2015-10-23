@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 
@@ -140,16 +141,22 @@ public class Rfc1738 extends TreeMap<String,String> {
 			//TODO log
 		}
 
+		return encodeNoUTF8(_in);
+	}
+	
+	public static String encodeNoUTF8(String _in) {
+	
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < _in.length(); i++) {
 
 			char c = _in.charAt(i);
 
-			if (c == '%' || c == '&' || c == '=' || c == '+' || c == '\n'
-					|| c == '\r' || c == '?' || c == ' ') {
+//			if (c == '%' || c == '&' || c == '=' || c == '+' || c == '\n'
+//					|| c == '\r' || c == '?' || c == ' ' )
+			if (! (c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || c == ',' || c == '.' ) ) {
 
-				encode(sb, c);
+				encodeNoUTF8(sb, c);
 				
 			}
 			else
@@ -162,11 +169,11 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	public static String encode(char c) {
 		StringBuffer sb = new StringBuffer();
-		encode(sb, c);
+		encodeNoUTF8(sb, c);
 		return sb.toString();
 	}
 	
-	public static void encode(StringBuffer sb, char c) {
+	public static void encodeNoUTF8(StringBuffer sb, char c) {
 		
 		if (c == ' ' ) {
 			sb.append('+');
@@ -294,4 +301,37 @@ public class Rfc1738 extends TreeMap<String,String> {
 		return sb.toString();
 	}
 
+	/**
+	 * Encode a list of attributes in a single string
+	 * @param _in
+	 * @return
+	 */
+	public static String implode(IProperties _in) {
+
+		if (_in == null)
+			return "";
+
+		StringBuffer sb = new StringBuffer();
+
+		boolean first = true;
+
+		for (Iterator<String> e = _in.keys().iterator(); e.hasNext();) {
+
+			String key = e.next();
+			String value = _in.getString(key, null);
+
+			if (value != null) {
+				if (!first)
+					sb.append('&');
+				sb.append(encode(key));
+				sb.append('=');
+				sb.append(encode(value));
+				first = false;
+			}
+
+		}
+
+		return sb.toString();
+	}
+	
 }
