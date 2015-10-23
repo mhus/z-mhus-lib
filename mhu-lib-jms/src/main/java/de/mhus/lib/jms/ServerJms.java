@@ -10,6 +10,7 @@ import javax.jms.TextMessage;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
@@ -17,6 +18,9 @@ import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
+	private static long usedThreads = 0;
+	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", 100);
+	
     public ServerJms(JmsDestination dest) {
 		super(dest);
 	}
@@ -98,12 +102,24 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	public void onMessage(final Message message) {
 		
 		if (fork) {
+			
+			while (usedThreads > maxThreadCount.value()) {
+				log().i("Too mouch JMS Threads ... wait!",usedThreads);
+				MThread.sleep(100);
+			}
+			
+			usedThreads++;
+			
 			new MThread(
 					new Runnable() {
 						
 						@Override
 						public void run() {
-							processMessage(message);
+							try {
+								processMessage(message);
+							} finally {
+								usedThreads--;
+							}
 						}
 					}
 					, getDestination().getName()).start();
