@@ -109,17 +109,17 @@ public class CmdLog implements Action {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
-		case "to-general": {
+		case "general": {
 			ThreadMapperConfig config = new ThreadMapperConfig();
 			config.doConfigure(parameters[0]);
 			GeneralMapper mapper = new GeneralMapper();
 			mapper.setConfig(config);
 			singleton.getLogFactory().setLevelMapper(mapper);
 		} break;
-		case "to-threadbased": {
+		case "trail": {
 			singleton.getLogFactory().setLevelMapper(new ThreadBasedMapper());
 		} break;
-		case "to-none": {
+		case "off": {
 			singleton.getLogFactory().setLevelMapper(null);
 		} break;
 		}
