@@ -21,6 +21,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
 
@@ -502,11 +503,15 @@ public class MPojo {
 
 	
 	public static void propertiesToPojo(IProperties from, Object to) throws IOException {
-		propertiesToPojo(from, to, getDefaultModelFactory());
+		propertiesToPojo(from, to, getDefaultModelFactory(), null);
+	}
+	
+	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory) throws IOException {
+		propertiesToPojo(from, to, factory, null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory) throws IOException {
+	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory, Caster<Object,Object> unknownHadler) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
 			String name = attr.getName();
@@ -539,7 +544,7 @@ public class MPojo {
 					attr.set(to, c );
 				}
 				else
-					attr.set(to, from.getString(name));
+					attr.set(to, unknownHadler == null ? from.getString(name) : unknownHadler.cast(from.getProperty(name), null) );
 			} catch (Throwable t) {
 				System.out.println("ERROR " + name);
 				t.printStackTrace();

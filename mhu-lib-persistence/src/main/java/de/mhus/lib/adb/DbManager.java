@@ -828,6 +828,75 @@ public class DbManager extends MJmx {
 		}
 	}
 
+	public void saveObjectForce(Object object) throws MException {
+		saveObjectForce(null, null, object);
+	}
+
+	public void saveObjectForce(String registryName, Object object) throws MException {
+		saveObjectForce(null,registryName,object);
+	}
+
+	public void saveObjectForce(DbConnection con, Object object) throws MException {
+		saveObjectForce(con, null, object);
+	}
+
+	/**
+	 * Update the data of the object in the database. This will not create an object.
+	 * This update will also update read-only fields.
+	 * 
+	 * @param con The connection to use or null
+	 * @param registryName The registryName or null
+	 * @param object The object to save
+	 * @throws MException
+	 */
+	public void saveObjectForce(DbConnection con, String registryName, Object object) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+
+		DbConnection myCon = null;
+		if (con == null) {
+			try {
+				myCon = schema.getConnection(pool);
+				con = myCon;
+			} catch (Throwable t) {
+				throw new MException(t);
+			}
+		}
+
+		if (registryName==null) {
+			Class<?> clazz = schema.findClassForObject(object,this);
+			if (clazz == null)
+				throw new MException("class definition not found for object",object.getClass().getCanonicalName());
+			registryName = getRegistryName(clazz);
+		}
+		log().d("save",registryName,object);
+		Table c = cIndex.get(registryName);
+		if (c == null)
+			throw new MException("class definition not found in schema",registryName);
+
+		try {
+			// prepare object
+			schema.doPreSave(c,object,con,this);
+
+			//save object
+			c.saveObjectForce(con,object);
+		} catch (Throwable t) {
+			throw new MException(registryName,t);
+		} finally {
+			try {
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
+			}
+		}
+	}
+	
 	public void deleteObject(Object object) throws MException {
 		deleteObject(null, null, object);
 	}

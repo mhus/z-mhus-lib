@@ -30,6 +30,9 @@ public class CmdUpdate implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 
+	@Option(name="-f", description="Force",required=false)
+	boolean force = false;
+	
 	@Override
 	public Object execute(CommandSession session) throws Exception {
 		
@@ -64,7 +67,10 @@ public class CmdUpdate implements Action {
 			}
 			
 			System.out.println("*** SAVE");
-			service.getManager().saveObject(regName, object);
+			if (force)
+				service.getManager().saveObjectForce(regName, object);
+			else
+				service.getManager().saveObject(regName, object);
 			output = object;
 		}	
 		if (outputParam != null)

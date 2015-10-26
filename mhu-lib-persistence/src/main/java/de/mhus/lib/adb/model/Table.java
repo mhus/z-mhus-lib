@@ -51,6 +51,7 @@ public abstract class Table extends MObject {
 	private DbPrepared sqlPrimary;
 	private DbPrepared sqlInsert;
 	private DbPrepared sqlUpdate;
+	private DbPrepared sqlUpdateForce;
 	private DbPrepared sqlDelete;
 	private LinkedList<Feature> features = new LinkedList<Feature>();
 	protected ResourceNode attributes;
@@ -198,6 +199,35 @@ public abstract class Table extends MObject {
 
 	}
 
+	public void saveObjectForce(DbConnection con, Object object) throws Exception {
+
+		for (Feature f : features)
+			f.preSaveObject(con,object);
+
+		HashMap<String, Object> attributes = new HashMap<String, Object>();
+		for (Field f : fList) {
+			attributes.put(f.name, f.getFromTarget(object));
+		}
+
+		for (FieldRelation f : relationList) {
+			f.prepareSave(con,object);
+		}
+
+		schema.internalSaveObject(con, name, object, attributes);
+
+		int c = sqlUpdateForce.getStatement(con).executeUpdate(attributes);
+		if ( c != 1)
+			throw new MException("update failed, updated objects " + c);
+
+		for (Feature f : features)
+			f.postSaveObject(con,object);
+		
+		for (FieldRelation f : relationList) {
+			f.saved(con,object);
+		}
+
+	}
+	
 	protected void postInit() throws MException {
 
 		Collections.sort(pk, new Comparator<Field>() {
@@ -261,6 +291,26 @@ public abstract class Table extends MObject {
 		}
 
 		sqlUpdate = manager.getPool().createStatement(sql);
+
+		// ------
+
+		sql = "UPDATE " + tableName + " SET ";
+		nr = 0;
+		for (Field f : fList) {
+			if (!f.isPrimary && f.isPersistent() ) {
+				if (nr > 0) sql += ",";
+				sql += f.name + "=$" + f.name + "$";
+				nr++;
+			}
+		}
+		sql+= " WHERE ";
+		nr = 0;
+		for (Field f : pk) {
+			sql+= (nr > 0 ? " AND " : "" ) + f.name + "=$" + f.name + "$";
+			nr++;
+		}
+
+		sqlUpdateForce = manager.getPool().createStatement(sql);
 
 		// ------
 
