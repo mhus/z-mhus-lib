@@ -899,6 +899,67 @@ public class DbManager extends MJmx {
 		}
 	}
 	
+	public void updateAttributes(Object object, boolean raw, String ... attributeNames) throws MException {
+		updateAttributes(null, null, object, raw, attributeNames);
+	}
+
+	public void updateAttributes(String registryName, Object object, boolean raw, String ... attributeNames) throws MException {
+		updateAttributes(null,registryName,object, raw, attributeNames);
+	}
+
+	public void updateAttributes(DbConnection con, Object object, boolean raw, String ... attributeNames) throws MException {
+		updateAttributes(con, null, object, raw, attributeNames);
+	}
+
+	public void updateAttributes(DbConnection con, String registryName, Object object, boolean raw, String ... attributeNames) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+
+		DbConnection myCon = null;
+		if (con == null) {
+			try {
+				myCon = schema.getConnection(pool);
+				con = myCon;
+			} catch (Throwable t) {
+				throw new MException(t);
+			}
+		}
+
+		if (registryName==null) {
+			Class<?> clazz = schema.findClassForObject(object,this);
+			if (clazz == null)
+				throw new MException("class definition not found for object",object.getClass().getCanonicalName());
+			registryName = getRegistryName(clazz);
+		}
+		log().d("save force",registryName,object);
+		Table c = cIndex.get(registryName);
+		if (c == null)
+			throw new MException("class definition not found in schema",registryName);
+
+		try {
+			// prepare object
+			if (!raw)
+				schema.doPreSave(c,object,con,this);
+
+			//save object
+			c.updateAttributes(con,object, raw, attributeNames);
+		} catch (Throwable t) {
+			throw new MException(registryName,t);
+		} finally {
+			try {
+				if (myCon != null) {
+					try {
+						schema.commitConnection(myCon);
+					} catch (Throwable t) {
+						throw new MException(t);
+					}
+					schema.closeConnection(myCon);
+				}
+			} catch (Throwable t) {		
+				log().w(t);
+			}
+		}
+	}
+
 	public void deleteObject(Object object) throws MException {
 		deleteObject(null, null, object);
 	}

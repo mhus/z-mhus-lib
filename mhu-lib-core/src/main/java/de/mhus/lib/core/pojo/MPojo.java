@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
@@ -145,6 +146,10 @@ public class MPojo {
 		if (value instanceof Float)
 			to.put(name, (Float)value);
 		else
+		if (value instanceof Date) {
+			to.put(name, ((Date)value).getTime() );
+			to.put(name + "_", MDate.toIso8601((Date)value) );
+		} else
 		if (value instanceof BigDecimal)
 			to.put(name, (BigDecimal)value);
 		else

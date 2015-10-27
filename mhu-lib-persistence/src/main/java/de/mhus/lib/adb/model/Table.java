@@ -28,6 +28,7 @@ import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.util.Rfc1738;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPrepared;
 import de.mhus.lib.sql.DbResult;
@@ -229,6 +230,70 @@ public abstract class Table extends MObject {
 		for (FieldRelation f : relationList) {
 			f.saved(con,object);
 		}
+
+	}
+	
+	public void updateAttributes(DbConnection con, Object object, boolean raw, String ... attributeNames ) throws Exception {
+		
+		manager.getSchema().authorizeUpdateAttributes(con, this, object, raw, attributeNames);
+
+		HashMap<String, Object> attributes = new HashMap<String, Object>();
+		
+		// prepare object
+		if (!raw)
+			for (Feature f : features)
+				f.preSaveObject(con,object);
+
+		// create query and collect values
+		
+		StringBuffer sql = new StringBuffer().append("UPDATE ").append(tableName).append(" SET ");
+		int nr = 0;
+		for (String aname : attributeNames) {
+			Field f = fIndex.get(aname);
+			if (f == null)
+				throw new NotFoundException("field not found", name, aname);
+				
+			if (!f.isPrimary && f.isPersistent()) {
+				if (nr > 0) sql.append(",");
+				sql.append(f.name).append("=$").append(f.name).append("$");
+				nr++;
+				attributes.put(f.name,  f.getFromTarget(object)); // collect values
+			}
+		}
+		if (nr == 0)
+			throw new NotFoundException("no valid fields found");
+			
+		sql.append(" WHERE ");
+		nr = 0;
+		for (Field f : pk) {
+			sql.append( (nr > 0 ? " AND " : "" ) ).append(f.name).append("=$").append(f.name).append("$");
+			nr++;
+			attributes.put(f.name, f.getFromTarget(object)); // collect values
+		}
+
+		DbPrepared query = manager.getPool().createStatement(sql.toString());
+		
+		// execute query 
+
+		// not needed - object itself is not saved
+//		for (FieldRelation f : relationList) {
+//			f.prepareSave(con,object);
+//		}
+
+		schema.internalSaveObject(con, name, object, attributes);
+
+		int c = query.getStatement(con).executeUpdate(attributes);
+		if ( c != 1)
+			throw new MException("update failed, updated objects " + c);
+
+		if (!raw)
+			for (Feature f : features)
+				f.postSaveObject(con,object);
+		
+		// not needed - object itself is not saved
+//		for (FieldRelation f : relationList) {
+//			f.saved(con,object);
+//		}
 
 	}
 	

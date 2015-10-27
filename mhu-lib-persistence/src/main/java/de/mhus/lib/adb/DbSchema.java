@@ -451,6 +451,12 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	}
 
 	public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw) throws AccessDeniedException {
+		throw new AccessDeniedException();
+	}
+
+	public void authorizeUpdateAttributes(DbConnection con, Table table,
+			Object object, boolean raw, String ... attributeNames) throws AccessDeniedException {
+		throw new AccessDeniedException();
 	}
 
 }
