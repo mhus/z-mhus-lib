@@ -6,6 +6,7 @@ import org.osgi.framework.ServiceReference;
 
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsConnection;
+import de.mhus.lib.jms.JmsDestination;
 
 public class JmsUtil {
 
@@ -43,5 +44,11 @@ public class JmsUtil {
 		
 		return c.getObject(ifc);
 	}
-	
+/*	
+	public static long getDestinationStatistic(JmsDestination dest) {
+		JmsConnection con = dest.getConnection();
+		url = con.getUrl();
+		new URL(url);
+	}
+*/	
 }

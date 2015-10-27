@@ -199,10 +199,13 @@ public abstract class Table extends MObject {
 
 	}
 
-	public void saveObjectForce(DbConnection con, Object object) throws Exception {
+	public void saveObjectForce(DbConnection con, Object object, boolean raw) throws Exception {
 
-		for (Feature f : features)
-			f.preSaveObject(con,object);
+		manager.getSchema().authorizeSaveForceAllowed(con, this, object, raw);
+		
+		if (!raw)
+			for (Feature f : features)
+				f.preSaveObject(con,object);
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
 		for (Field f : fList) {
@@ -219,8 +222,9 @@ public abstract class Table extends MObject {
 		if ( c != 1)
 			throw new MException("update failed, updated objects " + c);
 
-		for (Feature f : features)
-			f.postSaveObject(con,object);
+		if (!raw)
+			for (Feature f : features)
+				f.postSaveObject(con,object);
 		
 		for (FieldRelation f : relationList) {
 			f.saved(con,object);

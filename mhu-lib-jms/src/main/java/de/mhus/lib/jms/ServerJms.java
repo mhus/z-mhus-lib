@@ -20,7 +20,7 @@ import de.mhus.lib.core.logging.TrailLevelMapper;
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	private static long usedThreads = 0;
-	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", 500);
+	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", -1);
 	private static ConfigLong maxThreadCountTimeout = new ConfigLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
 	
     public ServerJms(JmsDestination dest) {
@@ -106,7 +106,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		if (fork) {
 			
 			long timeout = maxThreadCountTimeout.value();
-			while (usedThreads > maxThreadCount.value()) {
+			while (maxThreadCount.value() > 0 && usedThreads > maxThreadCount.value()) {
 				
 				/*
 "AT100[232] de.mhus.lib.jms.ServerJms$1" Id=232 in BLOCKED on lock=de....aaa.AccessApiImpl@48781daa

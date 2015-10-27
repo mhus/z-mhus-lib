@@ -828,16 +828,16 @@ public class DbManager extends MJmx {
 		}
 	}
 
-	public void saveObjectForce(Object object) throws MException {
-		saveObjectForce(null, null, object);
+	public void saveObjectForce(Object object, boolean raw) throws MException {
+		saveObjectForce(null, null, object, raw);
 	}
 
-	public void saveObjectForce(String registryName, Object object) throws MException {
-		saveObjectForce(null,registryName,object);
+	public void saveObjectForce(String registryName, Object object, boolean raw) throws MException {
+		saveObjectForce(null,registryName,object, raw);
 	}
 
-	public void saveObjectForce(DbConnection con, Object object) throws MException {
-		saveObjectForce(con, null, object);
+	public void saveObjectForce(DbConnection con, Object object, boolean raw) throws MException {
+		saveObjectForce(con, null, object, raw);
 	}
 
 	/**
@@ -847,9 +847,10 @@ public class DbManager extends MJmx {
 	 * @param con The connection to use or null
 	 * @param registryName The registryName or null
 	 * @param object The object to save
+	 * @param raw If true no events like preSave are called
 	 * @throws MException
 	 */
-	public void saveObjectForce(DbConnection con, String registryName, Object object) throws MException {
+	public void saveObjectForce(DbConnection con, String registryName, Object object, boolean raw) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
 		DbConnection myCon = null;
@@ -868,17 +869,18 @@ public class DbManager extends MJmx {
 				throw new MException("class definition not found for object",object.getClass().getCanonicalName());
 			registryName = getRegistryName(clazz);
 		}
-		log().d("save",registryName,object);
+		log().d("save force",registryName,object);
 		Table c = cIndex.get(registryName);
 		if (c == null)
 			throw new MException("class definition not found in schema",registryName);
 
 		try {
 			// prepare object
-			schema.doPreSave(c,object,con,this);
+			if (!raw)
+				schema.doPreSave(c,object,con,this);
 
 			//save object
-			c.saveObjectForce(con,object);
+			c.saveObjectForce(con,object, raw);
 		} catch (Throwable t) {
 			throw new MException(registryName,t);
 		} finally {

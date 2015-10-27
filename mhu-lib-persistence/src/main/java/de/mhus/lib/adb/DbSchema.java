@@ -29,6 +29,7 @@ import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.service.UniqueId;
+import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -447,6 +448,9 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 
 	public LockStrategy getLockStrategy() {
 		return lockStrategy;
+	}
+
+	public void authorizeSaveForceAllowed(DbConnection con, Table table, Object object, boolean raw) throws AccessDeniedException {
 	}
 
 }
