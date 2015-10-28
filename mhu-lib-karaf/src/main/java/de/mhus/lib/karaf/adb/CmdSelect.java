@@ -1,5 +1,6 @@
 package de.mhus.lib.karaf.adb;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -116,7 +117,7 @@ public class CmdSelect implements Action {
 		for (Object item : res) {
 			List<String> row = out.addRow();
 			for (Field f : fieldList) {
-				String value = String.valueOf(f.get(item));
+				String value = toString(f.get(item));
 				if (!full && value.length() > max) value = MString.truncateNice(value, max);
 				row.add(value);
 			}
@@ -129,6 +130,13 @@ public class CmdSelect implements Action {
 		if (outputParam != null)
 			session.put(outputParam, output);
 		return null;
+	}
+
+	private String toString(Object object) {
+		if (object == null) return "null";
+		if (object.getClass().isArray())
+			return Arrays.deepToString((Object[]) object);
+		return String.valueOf(object);
 	}
 	
 
