@@ -22,14 +22,16 @@ public class AdbUtil {
 	 * @param query The query to extend
 	 * @param search The search string
 	 * @param helper The helper or null for the default helper
+	 * @return The query
 	 */
-	public static void extendObjectQueryFromSearch(AQuery<?> query, String search, SearchHelper helper) {
-		if (MString.isEmpty(search)) return;
+	public static <T> AQuery<T> extendObjectQueryFromSearch(AQuery<T> query, String search, SearchHelper helper) {
+		if (MString.isEmpty(search)) return query;
 		if (helper == null) helper = DEFAULT_HELPER;
 		String[] parts = search.split(",");
 		for (String part : parts) {
 			extendObjectQueryFromParameter(query, part, helper);
 		}
+		return query;
 	}
 
 	public static void extendObjectQueryFromParameter(AQuery<?> query, String part, SearchHelper helper) {
