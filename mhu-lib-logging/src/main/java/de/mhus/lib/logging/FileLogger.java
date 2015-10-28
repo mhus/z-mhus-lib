@@ -1,7 +1,9 @@
 package de.mhus.lib.logging;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
@@ -177,6 +179,7 @@ public class FileLogger extends Log {
 		if (file == null) return false;
 		
 		if (out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
+			out.flush();
 			out.close();
 			out = null;
 		}
@@ -185,7 +188,7 @@ public class FileLogger extends Log {
 			if (file.exists() && file.isFile())
 				rotate();
 			try {
-				out = new PrintStream(file);
+				out = new PrintStream(new BufferedOutputStream(new FileOutputStream(file)));
 			} catch (FileNotFoundException e) {
 				if (MSingleton.isDirtyTrace())
 					e.printStackTrace();
@@ -247,6 +250,7 @@ public class FileLogger extends Log {
 	@Override
 	public void close() {
 		if (out != null) {
+			out.flush();
 			out.close();
 			file = null;
 			out = null;
