@@ -1,7 +1,6 @@
-package de.mhus.lib.adb.util;
+package de.mhus.lib.adb.query;
 
 
-import de.mhus.lib.adb.query.AQuery;
 
 public class SearchHelper {
 
