@@ -256,4 +256,12 @@ public class FileLogger extends Log {
 			out = null;
 		}
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		close();
+		super.finalize();
+	}
+	
+	
 }
