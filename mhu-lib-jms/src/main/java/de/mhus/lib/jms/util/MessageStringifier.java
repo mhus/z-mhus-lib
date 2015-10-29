@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import javax.jms.BytesMessage;
 import javax.jms.MapMessage;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 public class MessageStringifier {
@@ -49,6 +50,9 @@ public class MessageStringifier {
 			} else
 			if (msg instanceof BytesMessage) {
 				sb.append("Size: " + ((BytesMessage)msg).getBodyLength() );
+			} else
+			if (msg instanceof ObjectMessage) {
+				sb.append("Object: ").append( ((ObjectMessage)msg).getObject() ).append('\n');
 			}
 		} catch (Throwable t) {
 			sb.append(t);
