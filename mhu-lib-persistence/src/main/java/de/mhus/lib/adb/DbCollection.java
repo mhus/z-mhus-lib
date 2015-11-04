@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.Table;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
@@ -169,6 +171,38 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	public O[] toArrayAndClose(O[] dummy) {
 		List<O> list = toCacheAndClose();
 		return list.toArray(dummy);
+	}
+	
+	/**
+	 * Transfer Objects to a table view.
+	 * 
+	 * @param maxSize More the zero, zero or less will disable the parameter
+	 * @return
+	 */
+	public Table toTableAndClose(int maxSize) {
+		Table out = new Table();
+		
+		de.mhus.lib.adb.model.Table dbt = manager.getTable(registryName);
+		for (Field dbf : dbt.getFields())
+			out.addHeader(dbf.getName(), dbf.getType().getCanonicalName());
+
+		Object[] row = new Object[out.getColumnSize()];
+		for (O o : this) {
+			int cnt = 0;
+			try {
+				for (Field dbf : dbt.getFields()) {
+					row[cnt] = dbf.get(o);
+					cnt++;
+				}
+				out.addRow(row);
+				if (maxSize > 0 && out.getRowSize() >= maxSize) break;
+			} catch (Throwable t) {
+				log().d(t,cnt);
+			}
+		}
+		close();
+		
+		return out;
 	}
 
 	public O getNextAndClose() {

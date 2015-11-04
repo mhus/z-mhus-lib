@@ -128,4 +128,13 @@ public class Table implements Serializable {
 	public String toString() {
 		return columns.toString() + rows.toString();
 	}
+
+	public int getColumnSize() {
+		return columns.size();
+	}
+	
+	public int getRowSize() {
+		return rows.size();
+	}
+	
 }

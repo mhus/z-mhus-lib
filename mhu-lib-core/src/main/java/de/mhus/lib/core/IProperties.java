@@ -1,5 +1,6 @@
 package de.mhus.lib.core;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +13,9 @@ import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
-public abstract class IProperties extends MObject implements Iterable<Map.Entry<String,Object>> {
+public abstract class IProperties extends MObject implements Iterable<Map.Entry<String,Object>>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Overwrite this function to provide values in string format.
