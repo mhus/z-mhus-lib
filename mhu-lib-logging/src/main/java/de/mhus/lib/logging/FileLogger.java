@@ -16,7 +16,7 @@ import de.mhus.lib.core.logging.LogFactory;
 
 public class FileLogger extends Log {
 	
-	private File file;
+	protected File file;
 	private Log.LEVEL level = Log.LEVEL.INFO;
 	private boolean printTime = true;
 	private boolean traces = true;
