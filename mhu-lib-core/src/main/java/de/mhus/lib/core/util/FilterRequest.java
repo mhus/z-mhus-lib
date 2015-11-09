@@ -1,4 +1,4 @@
-package de.mhus.lib.vaadin;
+package de.mhus.lib.core.util;
 
 import java.util.HashMap;
 import java.util.LinkedList;

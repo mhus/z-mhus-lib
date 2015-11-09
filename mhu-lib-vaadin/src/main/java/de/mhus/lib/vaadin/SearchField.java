@@ -8,6 +8,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 
+import de.mhus.lib.core.util.FilterRequest;
+
 public class SearchField extends HorizontalLayout {
 
 	private static final long serialVersionUID = 1L;

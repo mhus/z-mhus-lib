@@ -26,6 +26,7 @@ import de.mhus.lib.core.ILog;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.form2.VaadinPojoForm;

@@ -7,10 +7,10 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.form.control.AbstractWizard;
 import de.mhus.lib.form.control.WizardCall;
 import de.mhus.lib.vaadin.ColumnDefinition;
-import de.mhus.lib.vaadin.FilterRequest;
 import de.mhus.lib.vaadin.ModalDialog;
 import de.mhus.lib.vaadin.SearchField;
 import de.mhus.lib.vaadin.SimpleTable;

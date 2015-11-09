@@ -17,6 +17,7 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
+import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 
 public abstract class AbstractBeanListEditor<E> extends AbstractListEditor<E> {
