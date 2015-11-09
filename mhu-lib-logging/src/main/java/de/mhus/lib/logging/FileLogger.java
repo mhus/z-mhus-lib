@@ -176,6 +176,8 @@ public class FileLogger extends Log {
 
 	protected synchronized boolean check() {
 		
+		doUpdateFile();
+		
 		if (file == null) return false;
 		
 		if (out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
@@ -198,7 +200,19 @@ public class FileLogger extends Log {
 		return out != null;
 	}
 
+	protected void doUpdateFile() {
+	}
+
 	protected void rotate() {
+		File oldFile = file;
+		doUpdateFile();
+		if (file == null) {
+			if (oldFile != null && out != null) {
+				out.close();
+				out = null;
+			}
+			return;
+		}
 		if (file.exists() && file.isFile())
 			file.renameTo(new File(file.getParentFile(), MDate.toFileFormat(new Date()) + "." + file.getName() ));
 	}
