@@ -1,6 +1,10 @@
 package de.mhus.lib.core.util;
 
+import java.io.Externalizable;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -9,7 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Table implements Serializable {
+public class Table implements Serializable, Externalizable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -67,6 +71,7 @@ public class Table implements Serializable {
 	private void writeObject(java.io.ObjectOutputStream out)
 		     throws IOException {
 		
+		if (name == null) name="";
 		out.writeUTF(name);
 		
 		out.writeInt(columns.size());
@@ -135,6 +140,48 @@ public class Table implements Serializable {
 	
 	public int getRowSize() {
 		return rows.size();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		if (name == null) name="";
+		out.writeUTF(name);
+		
+		out.writeInt(columns.size());
+		for (TableColumn col : columns)
+			out.writeObject(col);
+		
+		out.writeInt(rows.size());
+		for (TableRow row : rows)
+			out.writeObject(row);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		name = in.readUTF();
+		{
+			int size = in.readInt();
+			//columns.clear();
+			columns = new LinkedList<>();
+			// columnsIndex.clear();
+			columnsIndex = new HashMap<>();
+			for (int i = 0; i < size; i++) {
+				TableColumn col = (TableColumn) in.readObject();
+				columnsIndex.put(col.getName(), columns.size());
+				columns.add(col);
+			}
+		}
+		{
+			int size = in.readInt();
+			// rows.clear();
+			rows = new LinkedList<>();
+			for (int i = 0; i < size; i++) {
+				TableRow row = (TableRow) in.readObject();
+				row.setTable(this);
+				rows.add(row);
+			}
+		}
 	}
 	
 }
