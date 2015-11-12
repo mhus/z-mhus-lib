@@ -120,7 +120,7 @@ public class DbManager extends MJmx {
 
 		Class<?> clazz = schema.findClassForObject(object,this);
 		String s = createSqlSelect(clazz, "*",qualification);
-		log().d("getByQualification",registryName,s,attributes);
+		log().d("getByQualification",registryName == null? clazz : registryName,s,attributes);
 		return executeQuery(con, object, registryName, s, attributes);
 	}
 	

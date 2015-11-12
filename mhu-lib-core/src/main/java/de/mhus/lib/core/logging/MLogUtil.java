@@ -5,6 +5,12 @@ import de.mhus.lib.core.system.ISingleton;
 
 public class MLogUtil {
 
+	private static Log log = Log.getLog(MLogUtil.class);
+	
+	public static Log log() {
+		return log;
+	}
+	
 	public static void setTrailConfig() {
 		setTrailConfig(null);
 	}

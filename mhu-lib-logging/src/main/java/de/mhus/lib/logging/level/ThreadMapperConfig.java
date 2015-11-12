@@ -9,6 +9,7 @@ import de.mhus.lib.core.logging.Log.LEVEL;
 public class ThreadMapperConfig implements LevelMapper {
 
 	public static final String MAP_LABEL = "MAP";
+	private static long nextId = 0;
 
 	private LEVEL debug = LEVEL.INFO;
 	private LEVEL error = LEVEL.ERROR;
@@ -20,7 +21,7 @@ public class ThreadMapperConfig implements LevelMapper {
 	private long timeout = 0;
 	private long timetout = 0;
 
-	private String id = MMath.toBasis36( (long) (Math.random() * 36 * 36 * 36 * 36), 4 );
+	private String id = MMath.toBasis36WithIdent( (long) (Math.random() * 36 * 36 * 36 * 36), ++nextId, 8 );
 
 	public boolean isTimedOut() {
 		if (timetout <= 0)

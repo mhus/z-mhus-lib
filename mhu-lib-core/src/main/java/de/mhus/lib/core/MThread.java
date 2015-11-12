@@ -95,6 +95,13 @@ public class MThread extends MObject implements Runnable {
 		tc.stop();
 	}
 
+	@SuppressWarnings("deprecation")
+	public void throwException(Throwable throwable) {
+		if (tc == null)
+			return;
+		tc.stop(throwable);
+	}
+	
 	/**
 	 * Sleeps _millisec milliseconds. On Error (e.g. a break), it prints a
 	 * stacktrace dump.
