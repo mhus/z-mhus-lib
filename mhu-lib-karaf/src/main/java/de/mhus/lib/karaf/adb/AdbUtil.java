@@ -100,6 +100,12 @@ public class AdbUtil {
 		if (type == Date.class )
 			return MCast.toDate(String.valueOf(value), null);
 		
+		if (type == java.sql.Date.class ) {
+			Date data = MCast.toDate(String.valueOf(value), null);
+			if (data == null) return null;
+			return new java.sql.Date( data.getTime() );
+		}
+		
 		if (type == UUID.class )
 			return UUID.fromString(String.valueOf(value));
 		
