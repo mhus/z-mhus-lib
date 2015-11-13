@@ -250,7 +250,7 @@ public class Db {
 		if (value.indexOf('\\') > -1) value = value.replace("\\", "\\\\");
 		if (value.indexOf('%') > -1) value = value.replace("%", "\\%");
 		if (value.startsWith("*")) value = "%" + value.substring(1);
-		if (value.endsWith("*")) value = value.substring(0, value.length()-1) + "*";
+		if (value.endsWith("*")) value = value.substring(0, value.length()-1) + "%";
 		return value;
 	}
 	
