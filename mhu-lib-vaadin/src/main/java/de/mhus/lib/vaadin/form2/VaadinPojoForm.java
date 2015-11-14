@@ -4,9 +4,9 @@ import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.ComponentContainer;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.form.ActivatorControl;
+import de.mhus.lib.form.InformationFocus;
 import de.mhus.lib.form.LayoutFactory;
-import de.mhus.lib.form.control.ActivatorControl;
-import de.mhus.lib.form.control.InformationFocus;
 import de.mhus.lib.form.pojo.LayoutModelByPojo;
 
 public class VaadinPojoForm {

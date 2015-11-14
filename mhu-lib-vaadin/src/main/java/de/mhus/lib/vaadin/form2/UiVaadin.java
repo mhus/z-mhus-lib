@@ -17,10 +17,10 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataConnector;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.LayoutDataElement;
-import de.mhus.lib.form.UiElement;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.definition.FmElement;
 
-public abstract class UiVaadin extends UiElement {
+public abstract class UiVaadin extends UiComponent {
 
 	private AbstractComponent label;
 

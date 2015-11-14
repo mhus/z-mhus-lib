@@ -7,8 +7,8 @@ import junit.framework.TestSuite;
 
 import org.junit.Test;
 
+import de.mhus.lib.form.ActivatorControl;
 import de.mhus.lib.form.LayoutFactory;
-import de.mhus.lib.form.control.ActivatorControl;
 import de.mhus.lib.form.pojo.LayoutModelByPojo;
 import de.mhus.lib.vaadin.form2.VaadinFormBuilder;
 

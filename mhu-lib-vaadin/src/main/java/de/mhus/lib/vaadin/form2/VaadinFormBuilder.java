@@ -11,7 +11,7 @@ import de.mhus.lib.form.LayoutComposite;
 import de.mhus.lib.form.LayoutDataElement;
 import de.mhus.lib.form.LayoutElement;
 import de.mhus.lib.form.LayoutRoot;
-import de.mhus.lib.form.UiElement;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.ui.FmText;
 
 public class VaadinFormBuilder extends LayoutBuilderWithStack<UiVaadinComposite> {
@@ -62,7 +62,7 @@ public class VaadinFormBuilder extends LayoutBuilderWithStack<UiVaadinComposite>
 			log().w(e);
 		}
 
-		UiElement ui = composite.getUi();
+		UiComponent ui = composite.getUi();
 		if (ui != null) {
 			if ( ((UiVaadinComposite)ui).isTransparent()) return;
 		}
@@ -100,26 +100,26 @@ public class VaadinFormBuilder extends LayoutBuilderWithStack<UiVaadinComposite>
 	@Override
 	public void initActivator(MutableActivator act) {
 
-		act.addMap(UiElement.class,"text", UiText.class);
-		act.addMap(UiElement.class,"password", UiPassword.class);
-		act.addMap(UiElement.class,"richtext", UiRichText.class);
-		act.addMap(UiElement.class,"textarea", UiTextArea.class);
-		act.addMap(UiElement.class,"checkbox", UiCheckbox.class);
-		act.addMap(UiElement.class,"combobox", UiCombobox.class);
-		act.addMap(UiElement.class,"date", UiDate.class);
-		act.addMap(UiElement.class,"number", UiNumber.class);
+		act.addMap(UiComponent.class,"text", UiText.class);
+		act.addMap(UiComponent.class,"password", UiPassword.class);
+		act.addMap(UiComponent.class,"richtext", UiRichText.class);
+		act.addMap(UiComponent.class,"textarea", UiTextArea.class);
+		act.addMap(UiComponent.class,"checkbox", UiCheckbox.class);
+		act.addMap(UiComponent.class,"combobox", UiCombobox.class);
+		act.addMap(UiComponent.class,"date", UiDate.class);
+		act.addMap(UiComponent.class,"number", UiNumber.class);
 
-		act.addMap(UiElement.class,"information", UiInformation.class);
+		act.addMap(UiComponent.class,"information", UiInformation.class);
 		
 		act.addMap(LayoutElement.class,"composite", UiVaadinComposite.class);
 		act.addMap(LayoutElement.class,"split", UiVaadinSplit.class);
 		act.addMap(LayoutElement.class,"actions", UiVaadinActions.class);
 		
-		act.addMap(UiElement.class,"group", UiGroup.class);
-		act.addMap(UiElement.class,"tabsheet", UiTabsheet.class);
-		act.addMap(UiElement.class,"accordion", UiAccordion.class);
+		act.addMap(UiComponent.class,"group", UiGroup.class);
+		act.addMap(UiComponent.class,"tabsheet", UiTabsheet.class);
+		act.addMap(UiComponent.class,"accordion", UiAccordion.class);
 		
-		act.addMap(UiElement.class,"root", UiVaadinComposite.class);
+		act.addMap(UiComponent.class,"root", UiVaadinComposite.class);
 		
 	}
 

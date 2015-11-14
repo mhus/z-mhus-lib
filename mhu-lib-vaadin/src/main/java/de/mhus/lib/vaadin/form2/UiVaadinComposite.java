@@ -10,9 +10,9 @@ import de.mhus.lib.form.DataConnector;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.LayoutComposite;
 import de.mhus.lib.form.LayoutElement;
-import de.mhus.lib.form.UiElement;
+import de.mhus.lib.form.UiComponent;
 
-public class UiVaadinComposite extends UiElement {
+public class UiVaadinComposite extends UiComponent {
 
 	protected GridLayout layout;
 
