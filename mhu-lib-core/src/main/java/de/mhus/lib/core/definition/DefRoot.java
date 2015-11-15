@@ -18,24 +18,11 @@ public class DefRoot extends DefComponent {
 	}
 	public DefRoot(String name, IDefDefinition ... definitions) {
 		super(name, definitions);
-		setString("columns", "8");
 	}
 
 	@Override
 	public void inject(DefComponent parent) throws MException {
 		throw new MException("can't link root into another container");
-	}
-
-	public MNls createNls() throws MException {
-		Properties p = new Properties();
-		fillNls(p);
-		ByteArrayOutputStream o = new ByteArrayOutputStream();
-		try {
-			p.store(o, "");
-			return base(MNlsFactory.class).load(new ByteArrayInputStream(o.toByteArray()));
-		} catch (IOException e) {
-			throw new MException(e);
-		}
 	}
 	
 	public DefRoot build() throws MException {

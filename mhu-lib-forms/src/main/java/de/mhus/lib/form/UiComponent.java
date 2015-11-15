@@ -1,6 +1,7 @@
 package de.mhus.lib.form;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.errors.MException;
 
 public abstract class UiComponent {
 
@@ -20,14 +21,14 @@ public abstract class UiComponent {
 		return config;
 	}
 
-	public abstract void doUpdate();
+	public abstract void doUpdate() throws MException;
 
-	public abstract void setVisible(boolean visible);
+	public abstract void setVisible(boolean visible) throws MException;
 	
-	public abstract boolean isVisible();
+	public abstract boolean isVisible() throws MException;
 	
-	public abstract void setEnabled(boolean enabled);
+	public abstract void setEnabled(boolean enabled) throws MException;
 	
-	public abstract boolean isEnabled();
+	public abstract boolean isEnabled() throws MException;
 	
 }
