@@ -3,6 +3,9 @@ package de.mhus.lib.vaadin.form;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
+import de.mhus.lib.form.UiComponent;
+import de.mhus.lib.form.UiWizard;
+
 /**
  * | 1       | 2     | 3     | 4      |
  * | Caption | Error | Field | Wizard |
@@ -60,8 +63,10 @@ public class UiRow {
 		return wizard;
 	}
 
-	public void setWizard(boolean wizard) {
-		this.wizard = wizard;
+	public void setWizard(Component wizard) {
+		this.wizard = wizard != null;
+		if (wizard == null) return;
+		layout.addComponent(wizard, 4, row );
 	}
 	
 }

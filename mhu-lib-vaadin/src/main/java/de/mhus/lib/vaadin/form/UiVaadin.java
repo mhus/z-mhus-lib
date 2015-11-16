@@ -11,6 +11,11 @@ import de.mhus.lib.form.UiComponent;
 
 public abstract class UiVaadin extends UiComponent {
 
+	private Component componentWizard;
+	private Component componentError;
+	private Component componentLabel;
+	private Component componentEditor;
+	
 	public UiVaadin(Form form, IConfig config) {
 		super(form, config);
 	}
@@ -30,8 +35,10 @@ public abstract class UiVaadin extends UiComponent {
 
 	@Override
 	public void setVisible(boolean visible) throws MException {
-		for (Component c : getComponents())
-			c.setVisible(visible);
+		if (componentLabel != null) componentLabel.setVisible(visible);
+		if (componentError != null) componentError.setVisible(visible);
+		if (componentEditor != null) componentEditor.setVisible(visible);
+		if (componentWizard != null) componentWizard.setVisible(visible);
 	}
 
 	@Override
@@ -41,9 +48,41 @@ public abstract class UiVaadin extends UiComponent {
 		return false;
 	}
 
-	protected abstract Component[] getComponents() throws MException;
 	protected abstract void setValue(Object value) throws MException;
 	protected abstract void setCaption(String value) throws MException;
 	protected abstract Component create(UiLayout grid) throws MException;
 
+	public abstract Component createEditor();
+
+	public Component getComponentWizard() {
+		return componentWizard;
+	}
+
+	public void setComponentWizard(Component componentWizard) {
+		this.componentWizard = componentWizard;
+	}
+
+	public Component getComponentError() {
+		return componentError;
+	}
+
+	public void setComponentError(Component componentError) {
+		this.componentError = componentError;
+	}
+
+	public Component getComponentLabel() {
+		return componentLabel;
+	}
+
+	public void setComponentLabel(Component componentLabel) {
+		this.componentLabel = componentLabel;
+	}
+
+	public Component getComponentEditor() {
+		return componentEditor;
+	}
+
+	public void setComponentEditor(Component componentEditor) {
+		this.componentEditor = componentEditor;
+	}
 }

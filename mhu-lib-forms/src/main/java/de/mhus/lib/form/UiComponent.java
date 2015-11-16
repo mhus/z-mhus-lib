@@ -5,6 +5,9 @@ import de.mhus.lib.errors.MException;
 
 public abstract class UiComponent {
 
+	public static final String FULL_SIZE = "fullSize";
+	public static final String FULL_SIZE_DEFAULT = "fullSizeDefault";
+	
 	private Form form;
 	private IConfig config;
 
@@ -30,5 +33,13 @@ public abstract class UiComponent {
 	public abstract void setEnabled(boolean enabled) throws MException;
 	
 	public abstract boolean isEnabled() throws MException;
+
+	public boolean isFullSize() {
+		return config.getBoolean(FULL_SIZE, config.getBoolean(FULL_SIZE_DEFAULT, false));
+	}
+
+	public UiWizard getWizard() {
+		return null; // TODO
+	}
 	
 }
