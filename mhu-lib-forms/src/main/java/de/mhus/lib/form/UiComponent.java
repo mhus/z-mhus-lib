@@ -7,6 +7,7 @@ public abstract class UiComponent {
 
 	public static final String FULL_SIZE = "fullSize";
 	public static final String FULL_SIZE_DEFAULT = "fullSizeDefault";
+	private static final String WIZARD = null;
 	
 	private Form form;
 	private IConfig config;
@@ -24,7 +25,7 @@ public abstract class UiComponent {
 		return config;
 	}
 
-	public abstract void doUpdate() throws MException;
+	public abstract void doRevert() throws MException;
 
 	public abstract void setVisible(boolean visible) throws MException;
 	
@@ -39,6 +40,10 @@ public abstract class UiComponent {
 	}
 
 	public UiWizard getWizard() {
+		Object obj = config.getProperty(WIZARD);
+		if (obj == null) return null;
+		if (obj instanceof UiWizard) return (UiWizard)obj;
+		if (obj instanceof String) return getForm().getAdapterProvider().createWizard((String)obj);
 		return null; // TODO
 	}
 	

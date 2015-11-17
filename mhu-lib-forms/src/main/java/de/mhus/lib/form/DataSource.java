@@ -6,6 +6,7 @@ public class DataSource {
 	public static final String VISIBLE = "visible";
 	public static final String VALUE = "";
 	public static final String CAPTION = "caption";
+	public static final String EDITOR_EDITABLE = "editor_editable";
 	
 	public boolean getBoolean(UiComponent component, String name, boolean def) {
 		return def;

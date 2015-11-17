@@ -71,8 +71,4 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 		}
 	}
 
-	public IDefDefinition transform(IDefTransformer transformer) throws MException {
-		return (IDefDefinition) transformer.transform(this);
-	}
-
 }

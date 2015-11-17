@@ -1,7 +1,7 @@
 package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.TextField;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
@@ -24,27 +24,8 @@ public class UiText extends UiVaadin {
 	}
 
 	@Override
-	protected Component[] getComponents() throws MException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setEnabled(boolean enabled) throws MException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isEnabled() throws MException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected Component create(UiLayout grid) throws MException {
-		UiRow row = grid.createRow();
-		return null;
+	public Component createEditor() {
+		return new TextField();
 	}
 
 }

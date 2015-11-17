@@ -1,7 +1,6 @@
 package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
@@ -15,18 +14,22 @@ public abstract class UiVaadin extends UiComponent {
 	private Component componentError;
 	private Component componentLabel;
 	private Component componentEditor;
+	private boolean editorEditable = true;
 	
 	public UiVaadin(Form form, IConfig config) {
 		super(form, config);
 	}
 
 	@Override
-	public void doUpdate() throws MException {
+	public void doRevert() throws MException {
 		DataSource ds = getForm().getDataSource();
 		setEnabled( ds.getBoolean(this, DataSource.ENABLED, true) );
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
 		setValue(ds.getObject(this, DataSource.VALUE, null));
 		setCaption(ds.getString(this, DataSource.CAPTION, getName()));
+		if (componentError != null) componentError.setVisible(false);
+		editorEditable = ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
+		if (componentEditor != null && !editorEditable) componentEditor.setEnabled(false);
 	}
 
 	public String getName() throws MException {
@@ -36,21 +39,42 @@ public abstract class UiVaadin extends UiComponent {
 	@Override
 	public void setVisible(boolean visible) throws MException {
 		if (componentLabel != null) componentLabel.setVisible(visible);
-		if (componentError != null) componentError.setVisible(visible);
+		if (componentError != null && componentError.isVisible()) componentError.setVisible(visible);
 		if (componentEditor != null) componentEditor.setVisible(visible);
 		if (componentWizard != null) componentWizard.setVisible(visible);
 	}
 
 	@Override
 	public boolean isVisible() throws MException {
-		for (Component c : getComponents())
-			if (c.isVisible()) return true;
+		if (componentLabel != null && componentLabel.isVisible()) return true;
+		if (componentError != null && componentError.isVisible()) return true;
+		if (componentEditor != null && componentEditor.isVisible()) return true;
+		if (componentWizard != null && componentWizard.isVisible()) return true;
 		return false;
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) throws MException {
+		if (componentEditor != null && editorEditable) componentEditor.setEnabled(enabled);
+		if (componentWizard != null) componentWizard.setEnabled(enabled);
+	}
+
+	@Override
+	public boolean isEnabled() throws MException {
+		if (componentEditor != null && componentEditor.isVisible()) return true;
+		if (componentWizard != null && componentWizard.isVisible()) return true;
+		return false;
+	}
+
+
 	protected abstract void setValue(Object value) throws MException;
 	protected abstract void setCaption(String value) throws MException;
-	protected abstract Component create(UiLayout grid) throws MException;
+
+	protected Component create(UiLayout grid) throws MException {
+		grid.createRow(this);
+		
+		return getComponentEditor();
+	}
 
 	public abstract Component createEditor();
 
@@ -85,4 +109,5 @@ public abstract class UiVaadin extends UiComponent {
 	public void setComponentEditor(Component componentEditor) {
 		this.componentEditor = componentEditor;
 	}
+	
 }

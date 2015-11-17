@@ -3,17 +3,16 @@ package de.mhus.lib.vaadin.form;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
-import de.mhus.lib.form.UiComponent;
-import de.mhus.lib.form.UiWizard;
-
 /**
- * | 1       | 2     | 3     | 4      |
- * | Caption | Error | Field | Wizard |
- * | Caption | Error | Field          |
+ * | 0       | 1     | 2      |
+ * | Caption | Field | Wizard |
+ * | Caption | Field          |
  * 
- * | Caption                 | Error  |
- * | Field                            |
- * | Field                   | Wizard |
+ * | Error                    |
+ * 
+ * | Caption                  |
+ * | Field                    |
+ * | Field           | Wizard |
  * 
  * @author mikehummel
  *
@@ -38,17 +37,17 @@ public class UiRow {
 	public void setRight(Component component) {
 		if (full) return;
 		if (wizard)
-			layout.addComponent(component, 3, row);
+			layout.addComponent(component, 1, row);
 		else
-			layout.addComponent(component, 3, row, 4, row);
+			layout.addComponent(component, 1, row, 2, row);
 	}
 	
 	public void setComponent(Component component) {
 		if (!full) return;
 		if (wizard)
-			layout.addComponent(component, 0, row, 3, row);
+			layout.addComponent(component, 0, row, 1, row);
 		else
-			layout.addComponent(component, 0, row, 4, row);
+			layout.addComponent(component, 0, row, 2, row);
 	}
 
 	public boolean isFull() {
@@ -66,7 +65,7 @@ public class UiRow {
 	public void setWizard(Component wizard) {
 		this.wizard = wizard != null;
 		if (wizard == null) return;
-		layout.addComponent(wizard, 4, row );
+		layout.addComponent(wizard, 2, row );
 	}
 	
 }
