@@ -29,7 +29,7 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
-import de.mhus.lib.vaadin.form2.VaadinPojoForm;
+import de.mhus.lib.vaadin.form.VaadinPojoForm;
 
 public abstract class AbstractListEditor<E> extends VerticalLayout implements MNlsProvider, ILog {
 

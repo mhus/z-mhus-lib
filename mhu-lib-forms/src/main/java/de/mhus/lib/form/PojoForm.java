@@ -11,10 +11,11 @@ import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.util.MNls;
 
-public class FormByPojo extends Form {
+public class PojoForm extends Form {
 
-	public FormByPojo(Locale locale, ComponentAdapterProvider adapterProvider, Object pojo) throws Exception {
+	public PojoForm(Locale locale, ComponentAdapterProvider adapterProvider, Object pojo) throws Exception {
 		super(locale, adapterProvider, createModel(pojo));
+		setDataSource(new PojoDataSource(pojo));
 	}
 
 	private static IConfig createModel(Object pojo) throws Exception {
