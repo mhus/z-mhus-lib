@@ -19,6 +19,16 @@ public class MObjectInputStream extends ObjectInputStream {
 		super();
 	}
 
+	public MObjectInputStream(InputStream in, MActivator act) throws IOException {
+		super(in);
+		setActivator(act);
+	}
+	
+	public MObjectInputStream(InputStream in, ClassLoader cl) throws IOException {
+		super(in);
+		setClassLoader(cl);
+	}
+	
 	public MObjectInputStream(InputStream in) throws IOException {
 		super(in);
 	}

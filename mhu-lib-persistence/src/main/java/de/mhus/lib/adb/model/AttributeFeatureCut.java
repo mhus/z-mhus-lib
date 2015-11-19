@@ -24,6 +24,8 @@ public class AttributeFeatureCut implements AttributeFeature {
 
 	@Override
 	public Object get(Object pojo, Object value) {
+		if (value != null && value instanceof String && ((String)value).length() > size)
+			value = ((String)value).substring(0, size);
 		return value;
 	}
 
