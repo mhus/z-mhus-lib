@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.io.PipedStream;
 import de.mhus.lib.core.io.TextReader;
 
@@ -321,4 +322,12 @@ public class VirtualConsole extends Console {
 		
 	}
 	
+	@Override
+	public void cleanup() {
+		bold = false;
+		blink = false;
+		foreground = COLOR.WHITE;
+		background = COLOR.BLACK;
+	}
+
 }

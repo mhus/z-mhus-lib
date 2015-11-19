@@ -1,17 +1,36 @@
 package de.mhus.lib.core.console;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import de.mhus.lib.core.io.TextReader;
 
-public class Simple extends Console {
+public class SimpleConsole extends Console {
 
-	private TextReader reader = new TextReader(System.in);
+	private TextReader reader;
 	private COLOR foreground;
 	private COLOR background;
 	private boolean blink;
 	private boolean bold;
 	
+	public SimpleConsole() {
+		super();
+		reader = new TextReader(System.in);
+	}
+
+	public SimpleConsole(InputStream in, PrintStream out, boolean flush, String charset)
+			throws UnsupportedEncodingException {
+		super(out, flush, charset);
+		reader = new TextReader(in);
+	}
+
+	public SimpleConsole(InputStream in, PrintStream out) {
+		super(out);
+		reader = new TextReader(in);
+	}
+
 	@Override
 	public String readLine(LinkedList<String> history) {
 		return reader.readLine();
@@ -101,6 +120,14 @@ public class Simple extends Console {
 	@Override
 	public boolean isBold() {
 		return bold;
+	}
+
+	@Override
+	public void cleanup() {
+		bold = false;
+		blink = false;
+		foreground = COLOR.WHITE;
+		background = COLOR.BLACK;
 	}
 
 }
