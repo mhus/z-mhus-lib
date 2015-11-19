@@ -90,6 +90,7 @@ public class CmdLog extends MLog implements Action {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				MLogUtil.setTrailConfig(parameters == null || parameters.length < 1 ? "" : parameters[0]);
+				System.out.println("Trail Config: " + MLogUtil.getTrailConfig() );
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
@@ -117,7 +118,7 @@ public class CmdLog extends MLog implements Action {
 			GeneralMapper mapper = new GeneralMapper();
 			mapper.setConfig(config);
 			singleton.getLogFactory().setLevelMapper(mapper);
-			System.out.println("Sel Global Mapper: OK " + singleton.getLogFactory().getLevelMapper() );
+			System.out.println("Sel Global Mapper: OK " + singleton.getLogFactory().getLevelMapper() + " " + config.getTrailId());
 		} break;
 		case "trail": {
 			singleton.getLogFactory().setLevelMapper(new ThreadBasedMapper());
