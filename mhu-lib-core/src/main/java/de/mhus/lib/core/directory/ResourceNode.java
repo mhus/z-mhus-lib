@@ -317,4 +317,23 @@ public abstract class ResourceNode extends IProperties {
 		return next.getNodeByPath(path.substring(p+1));
 	}
 	
+	public String dump() throws MException {
+		StringBuffer sb = new StringBuffer();
+		dump(sb,0);
+		return sb.toString();
+	}
+
+	private void dump(StringBuffer sb, int level) throws MException {
+		sb.append(MString.getRepeatig(level, ' '));
+		sb.append('<').append(getName());
+		for (String key : keys())
+			sb.append('\n').append(MString.getRepeatig(level+1, ' ')).append(key).append("='").append(getString(key)).append("'");
+		sb.append(">\n");
+		for (String key : getNodeKeys())
+			getNode(key).dump(sb, level+1);
+		sb.append(MString.getRepeatig(level, ' '));
+		sb.append("</").append(getName()).append(">\n");
+		
+	}
+	
 }

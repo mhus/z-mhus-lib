@@ -68,7 +68,11 @@ public abstract class UiVaadin extends UiComponent {
 
 
 	protected abstract void setValue(Object value) throws MException;
-	protected abstract void setCaption(String value) throws MException;
+	protected abstract Object getValue() throws MException;
+
+	protected void setCaption(String value) throws MException {
+		if (componentLabel != null) componentLabel.setCaption(value);
+	}
 
 	protected Component create(UiLayout grid) throws MException {
 		grid.createRow(this);
@@ -108,6 +112,10 @@ public abstract class UiVaadin extends UiComponent {
 
 	public void setComponentEditor(Component componentEditor) {
 		this.componentEditor = componentEditor;
+	}
+
+	public UiLayout getLayout() {
+		return null;
 	}
 	
 }

@@ -4,7 +4,7 @@ import de.mhus.lib.core.config.IConfig;
 
 public interface ComponentAdapterProvider {
 
-	UiComponent createComponent(IConfig config);
+	UiComponent createComponent(String id, IConfig config);
 
 	ComponentAdapter getAdapter(String id);
 

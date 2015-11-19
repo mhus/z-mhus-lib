@@ -36,11 +36,7 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 	@Override
 	public void inject(DefComponent parent) throws MException {
 		if (parent != null) {
-			HashConfig layout = (HashConfig) parent.getNode("layout");
-			if (layout == null) {
-				layout = (HashConfig) parent.createConfig("layout");
-			}
-			layout.setConfig(tag, this);
+			parent.setConfig(tag, this);
 		}
 		for (IDefDefinition d : definitions) {
 			d.inject(this);
