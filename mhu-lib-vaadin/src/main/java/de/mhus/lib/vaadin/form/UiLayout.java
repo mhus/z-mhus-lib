@@ -91,5 +91,9 @@ public class UiLayout {
 		layout.setRows(row+1);
 		return new UiRow(layout, row);
 	}
+
+	public Component getComponent() {
+		return layout;
+	}
 	
 }
