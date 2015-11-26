@@ -60,8 +60,9 @@ public class Forms02UI extends UI {
 			
 			Form form = new Form(model);
 			System.out.println( form.getModel().dump() );
-			form.setDataSource(new DummyDataSource());
-			
+			DummyDataSource ds = new DummyDataSource();
+			form.setDataSource(ds);
+			form.setControl(ds);
 			
 			VaadinForm vf = new VaadinForm(form);
 		

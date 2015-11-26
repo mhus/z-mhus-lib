@@ -3,7 +3,7 @@ package de.mhus.lib.form;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.UiComponent;
 
-public class DummyDataSource extends DataSource {
+public class DummyDataSource implements DataSource, FormControl {
 
 	public boolean getBoolean(UiComponent component, String name, boolean def) {
 		System.out.println("getBoolean " + component.getName() + "." + name);
@@ -28,6 +28,26 @@ public class DummyDataSource extends DataSource {
 	@Override
 	public void setObject(UiComponent component, String name, Object value) {
 		System.out.println("setObject " + component.getName() + "." + name + ": " + value);
+	}
+
+	@Override
+	public void focus(UiComponent component) {
+		System.out.println("Focus " + component.getName());
+	}
+
+	@Override
+	public boolean newValue(UiComponent component, Object newValue) {
+		return true;
+	}
+
+	@Override
+	public void reverted(UiComponent component) {
+		System.out.println("Reverted " + component.getName());
+	}
+
+	@Override
+	public void attachedForm(Form form) {
+		System.out.println("Attached " + form.getClass());
 	}
 
 }

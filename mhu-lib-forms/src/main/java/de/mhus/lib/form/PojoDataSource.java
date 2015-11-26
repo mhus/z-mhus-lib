@@ -5,7 +5,7 @@ import java.io.IOException;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.core.pojo.PojoModel;
 
-public class PojoDataSource extends DataSource {
+public class PojoDataSource implements DataSource {
 
 	private Object pojo;
 	private PojoModel model;

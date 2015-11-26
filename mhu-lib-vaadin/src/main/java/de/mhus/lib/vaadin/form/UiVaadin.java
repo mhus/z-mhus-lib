@@ -27,11 +27,8 @@ public abstract class UiVaadin extends UiComponent {
 		if (componentError != null) componentError.setVisible(false);
 		editorEditable = ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
 		if (componentEditor != null && !editorEditable) componentEditor.setEnabled(false);
+		getForm().getControl().reverted(this);
 	}
-
-//	public String getName() throws MException {
-//		return getConfig().getName();
-//	}
 
 	@Override
 	public void setVisible(boolean visible) throws MException {
@@ -133,8 +130,15 @@ public abstract class UiVaadin extends UiComponent {
 		Component e = getComponentEditor();
 		DataSource ds = getForm().getDataSource();
 		if (e == null || ds == null) return;
-		if (e instanceof AbstractField)
-			ds.setObject(this, DataSource.VALUE, ((AbstractField)e).getValue() );
+		if (e instanceof AbstractField) {
+			Object newValue = ((AbstractField)e).getValue();
+			if (getForm().getControl().newValue(this, newValue))
+				ds.setObject(this, DataSource.VALUE, newValue );
+		}
+	}
+
+	public void focusEvent() {
+		getForm().getControl().focus(this);
 	}
 	
 }

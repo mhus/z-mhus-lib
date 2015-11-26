@@ -14,6 +14,7 @@ public class Form {
 	private IConfig model;
 	private DataSource dataSource;
 	private MNls nls;
+	private FormControl control;
 	
 	public Form() {
 		
@@ -63,5 +64,15 @@ public class Form {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-
+	
+	public FormControl getControl() {
+		if (control == null) setControl(new FormControlAdapter());
+		return control;
+	}
+	
+	public void setControl(FormControl control) {
+		this.control = control;
+		if (control != null) control.attachedForm(this);
+	}
+	
 }

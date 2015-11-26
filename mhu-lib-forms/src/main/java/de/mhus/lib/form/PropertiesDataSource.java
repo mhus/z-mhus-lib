@@ -2,7 +2,7 @@ package de.mhus.lib.form;
 
 import de.mhus.lib.core.MProperties;
 
-public class PropertiesDataSource extends DataSource {
+public class PropertiesDataSource implements DataSource {
 
 	private MProperties properties;
 

@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -51,7 +54,15 @@ public class UiLayout {
 					c.valueChangedEvent();
 				}
 			});
-//			((AbstractField)e).add
+		}
+		if (e instanceof FocusNotifier) {
+			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
+				
+				@Override
+				public void focus(FocusEvent event) {
+					c.focusEvent();
+				}
+			});
 		}
 		
 		c.setComponentEditor(e);
@@ -114,7 +125,7 @@ public class UiLayout {
 		UiRow row3 = createRow();
 		row3.setFull(c.isFullSize());
 		Label le = new Label();
-		le.setStyleName("v-textfield-error");
+		le.setStyleName("error-text");
 		le.setWidth("100%");
 		c.setComponentError(le);
 		row3.setComponent(le);
