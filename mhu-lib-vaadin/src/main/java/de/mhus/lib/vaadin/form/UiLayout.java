@@ -2,6 +2,9 @@ package de.mhus.lib.vaadin.form;
 
 import java.util.LinkedList;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -36,7 +39,21 @@ public class UiLayout {
 		if (e == null) return;
 		
 		e.setWidth("100%");
-		e.setHeight("30px");
+		//e.setHeight("30px");
+		
+		
+		if (e instanceof AbstractField) {
+			((AbstractField)e).setImmediate(true);
+			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
+				
+				@Override
+				public void valueChange(ValueChangeEvent event) {
+					c.valueChangedEvent();
+				}
+			});
+//			((AbstractField)e).add
+		}
+		
 		c.setComponentEditor(e);
 
 		if (c.isFullSize()) {
@@ -95,8 +112,9 @@ public class UiLayout {
 		}
 		
 		UiRow row3 = createRow();
-		row3.setFull(true);
+		row3.setFull(c.isFullSize());
 		Label le = new Label();
+		le.setStyleName("v-textfield-error");
 		le.setWidth("100%");
 		c.setComponentError(le);
 		row3.setComponent(le);

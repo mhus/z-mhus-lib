@@ -21,7 +21,9 @@ public class UiTextArea extends UiVaadin {
 
 	@Override
 	public Component createEditor() {
-		return new TextArea();
+		TextArea ret = new TextArea();
+		ret.setHeight("100px");
+		return ret;
 	}
 
 	@Override

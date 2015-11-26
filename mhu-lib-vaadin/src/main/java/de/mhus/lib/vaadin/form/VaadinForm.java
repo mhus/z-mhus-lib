@@ -1,5 +1,6 @@
 package de.mhus.lib.vaadin.form;
 
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MActivator;
@@ -15,6 +16,7 @@ public class VaadinForm extends VerticalLayout {
 	private SHOW showInformation = SHOW.MODEL;
 	private UiInformation informationPane;
 	private UiLayout layout;
+	private Panel formPanel;
 	
 	public VaadinForm() {}
 	
@@ -45,8 +47,14 @@ public class VaadinForm extends VerticalLayout {
 		builder.doBuild();
 		builder.doRevert();
 		
+		formPanel = new Panel();
+		formPanel.setWidth("100%");
+
 		layout = builder.getLayout();
-		addComponent(layout.getComponent());
+		formPanel.setContent(layout.getComponent());
+		
+		addComponent(formPanel);
+		
 	}
 
 	public boolean isShowInformation() {

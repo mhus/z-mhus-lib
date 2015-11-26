@@ -67,4 +67,10 @@ public class PojoDataSource extends DataSource {
 		return def;
 	}
 
+	@Override
+	public void setObject(UiComponent component, String name, Object value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

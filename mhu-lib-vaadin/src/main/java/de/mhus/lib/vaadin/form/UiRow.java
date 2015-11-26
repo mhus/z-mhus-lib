@@ -8,11 +8,12 @@ import com.vaadin.ui.GridLayout;
  * | Caption | Field | Wizard |
  * | Caption | Field          |
  * 
- * | Error                    |
+ * |         | Error          |
  * 
  * | Caption                  |
  * | Field                    |
  * | Field           | Wizard |
+ * | Error                    |
  * 
  * @author mikehummel
  *
@@ -43,7 +44,10 @@ public class UiRow {
 	}
 	
 	public void setComponent(Component component) {
-		if (!full) return;
+		if (!full) {
+			setRight(component);
+			return;
+		}
 		if (wizard)
 			layout.addComponent(component, 0, row, 1, row);
 		else

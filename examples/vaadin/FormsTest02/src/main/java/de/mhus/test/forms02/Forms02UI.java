@@ -13,11 +13,19 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.form.DummyDataSource;
 import de.mhus.lib.form.Form;
+import de.mhus.lib.form.ui.FmCheckbox;
+import de.mhus.lib.form.ui.FmDate;
+import de.mhus.lib.form.ui.FmNumber;
+import de.mhus.lib.form.ui.FmNumber.TYPES;
+import de.mhus.lib.form.ui.FmRichText;
+import de.mhus.lib.form.ui.FmDate.FORMATS;
 import de.mhus.lib.form.ui.FmText;
+import de.mhus.lib.form.ui.FmTextArea;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
 @Title("Forms02")
@@ -32,12 +40,22 @@ public class Forms02UI extends UI {
 			VerticalLayout mainLayout = new VerticalLayout();
 	        mainLayout.setSizeFull();
 	        
-	        mainLayout.addComponent(new Label("Moin"));
+	        VerticalSplitPanel split = new VerticalSplitPanel();
+	        split.setSizeFull();
+	        
+	        split.addComponent(new Label("Moin"));
+
+	        mainLayout.addComponent(split);
 			setContent(mainLayout);
 			
 			DefRoot model = new DefRoot(
 					new FmText("firstName", "Vorname", "Dein Vorname"),
-					new FmText("lastName", "Nachname", "Dein Nachname")
+					new FmText("lastName", "Nachname", "Dein Nachname"),
+					new FmTextArea("n1", "N1", "Dein Nachname"),
+					new FmDate("n2", FORMATS.DATETIME, "N1", "Dein Nachname"),
+					new FmNumber("n3", TYPES.INTEGER ,"N1", "Dein Nachname"),
+					new FmRichText("n4", "N1", "Dein Nachname"),
+					new FmCheckbox("n5", "N1", "Dein Nachname")
 					);
 			
 			Form form = new Form(model);
@@ -51,7 +69,11 @@ public class Forms02UI extends UI {
 			//vf.setSizeFull();
 			vf.setWidth("100%");
 			
-			mainLayout.addComponent(vf);
+			split.addComponent(vf);
+			
+			vf.getBuilder().getComponent("firstName").setError("Error Message");
+			
+			
 			
 /*			
 			GridLayout grid = new GridLayout(3,1);

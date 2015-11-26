@@ -16,5 +16,7 @@ public abstract class DataSource {
 	
 	public abstract Object getObject(UiComponent component, String name, Object def);
 
+	public abstract void setObject(UiComponent component, String name, Object value);
+
 	
 }

@@ -35,5 +35,11 @@ public class PropertiesDataSource extends DataSource {
 		if (val == null) return def;
 		return val;
 	}
+
+	@Override
+	public void setObject(UiComponent component, String name, Object value) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

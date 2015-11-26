@@ -11,18 +11,23 @@ public class DummyDataSource extends DataSource {
 	}
 
 	public int getInt(UiComponent component, String name, int def) {
-		System.out.println("getInt " + name);
+		System.out.println("getInt " + component.getName() + "." + name);
 		return def;
 	}
 	
 	public String getString(UiComponent component, String name, String def) {
-		System.out.println("getString " + name);
+		System.out.println("getString " + component.getName() + "." + name);
 		return name;
 	}
 	
 	public Object getObject(UiComponent component, String name, Object def) {
-		System.out.println("getObject " + name);
+		System.out.println("getObject " + component.getName() + "." + name);
 		return def;
+	}
+
+	@Override
+	public void setObject(UiComponent component, String name, Object value) {
+		System.out.println("setObject " + component.getName() + "." + name + ": " + value);
 	}
 
 }

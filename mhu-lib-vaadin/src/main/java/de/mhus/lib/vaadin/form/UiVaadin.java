@@ -1,5 +1,6 @@
 package de.mhus.lib.vaadin.form;
 
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.config.IConfig;
@@ -112,6 +113,28 @@ public abstract class UiVaadin extends UiComponent {
 
 	public UiLayout getLayout() {
 		return null;
+	}
+
+	public void setError(String error) {
+		Component el = getComponentError();
+		if (el == null) return;
+		el.setCaption(error);
+		el.setVisible(true);
+	}
+
+	public void clearError() {
+		Component el = getComponentError();
+		if (el == null) return;
+		el.setCaption("");
+		el.setVisible(false);
+	}
+
+	public void valueChangedEvent() {
+		Component e = getComponentEditor();
+		DataSource ds = getForm().getDataSource();
+		if (e == null || ds == null) return;
+		if (e instanceof AbstractField)
+			ds.setObject(this, DataSource.VALUE, ((AbstractField)e).getValue() );
 	}
 	
 }
