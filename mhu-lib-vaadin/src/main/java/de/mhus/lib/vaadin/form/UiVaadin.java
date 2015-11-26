@@ -16,10 +16,6 @@ public abstract class UiVaadin extends UiComponent {
 	private Component componentEditor;
 	private boolean editorEditable = true;
 	
-	public UiVaadin(Form form, IConfig config) {
-		super(form, config);
-	}
-
 	@Override
 	public void doRevert() throws MException {
 		DataSource ds = getForm().getDataSource();
@@ -32,9 +28,9 @@ public abstract class UiVaadin extends UiComponent {
 		if (componentEditor != null && !editorEditable) componentEditor.setEnabled(false);
 	}
 
-	public String getName() throws MException {
-		return getConfig().getName();
-	}
+//	public String getName() throws MException {
+//		return getConfig().getName();
+//	}
 
 	@Override
 	public void setVisible(boolean visible) throws MException {

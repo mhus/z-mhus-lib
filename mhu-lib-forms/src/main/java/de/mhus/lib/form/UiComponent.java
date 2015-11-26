@@ -1,6 +1,7 @@
 package de.mhus.lib.form;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 
 public abstract class UiComponent {
@@ -12,7 +13,7 @@ public abstract class UiComponent {
 	private Form form;
 	private IConfig config;
 
-	public UiComponent(Form form, IConfig config) {
+	public void doInit(Form form, IConfig config) {
 		this.form = form;
 		this.config = config;
 	}
@@ -43,8 +44,16 @@ public abstract class UiComponent {
 		Object obj = config.getProperty(WIZARD);
 		if (obj == null) return null;
 		if (obj instanceof UiWizard) return (UiWizard)obj;
-		if (obj instanceof String) return getForm().getAdapterProvider().createWizard((String)obj);
+		try {
+			if (obj instanceof String) return getForm().getAdapterProvider().createWizard((String)obj);
+		} catch (Exception e) {
+			MLogUtil.log().d(e);
+		}
 		return null; // TODO
+	}
+
+	public String getName() {
+		return config.getString("name", "");
 	}
 	
 }

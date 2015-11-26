@@ -21,6 +21,7 @@ public class FmDate extends FmElement {
 	public FmDate(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString(FmElement.TYPE, FORMATS.DATE.name());
+		setString("type", "date");
 	}
 
 

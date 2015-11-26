@@ -6,7 +6,10 @@ import com.vaadin.ui.TextField;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.form.ComponentAdapter;
+import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.Form;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.ui.FmNumber;
 import de.mhus.lib.vaadin.aqua.SpinnerNumberField;
 
@@ -14,13 +17,9 @@ public class UiNumber extends UiVaadin {
 
 	private String type;
 
-	public UiNumber(Form form, IConfig config) {
-		super(form, config);
-	}
-
 	@Override
 	protected void setValue(Object value) throws MException {
-		((SpinnerNumberField)getComponentError()).setValue(MCast.toString(value));
+		((SpinnerNumberField)getComponentEditor()).setValue(MCast.toString(value));
 	}
 
 	@Override
@@ -53,6 +52,21 @@ public class UiNumber extends UiVaadin {
 	@Override
 	protected Object getValue() throws MException {
 		return ((SpinnerNumberField)getComponentEditor()).getValue();
+	}
+
+	public static class Adapter implements ComponentAdapter {
+
+		@Override
+		public UiComponent createAdapter(IConfig config) {
+			return new UiNumber();
+		}
+
+		@Override
+		public ComponentDefinition getDefinition() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 
 }

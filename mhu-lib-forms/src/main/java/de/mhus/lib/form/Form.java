@@ -3,6 +3,9 @@ package de.mhus.lib.form;
 import java.util.Locale;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.errors.MException;
 
 public class Form {
 
@@ -10,14 +13,22 @@ public class Form {
 	private ComponentAdapterProvider adapterProvider;
 	private IConfig model;
 	private DataSource dataSource;
-	private NlsProvider nlsProvider;
+	private MNls nls;
 	
+	public Form() {
+		
+	}
 	public Form(Locale locale, ComponentAdapterProvider adapterProvider, IConfig model) {
 		this.locale = locale;
 		this.adapterProvider = adapterProvider;
 		this.model = model;
 	}
 
+	public Form(DefRoot model) throws MException {
+		this.model	= model;
+		model.build();
+	}
+	
 	public Locale getLocale() {
 		return locale;
 	}
@@ -38,12 +49,19 @@ public class Form {
 		this.dataSource = dataSource;
 	}
 
-	public NlsProvider getNlsProvider() {
-		return nlsProvider;
+	public MNls getNls() {
+		return nls;
 	}
 
-	public void setNlsProvider(NlsProvider nlsProvider) {
-		this.nlsProvider = nlsProvider;
+	public void setNls(MNls nls) {
+		this.nls = nls;
+	}
+
+	public void setAdapterProvider(ComponentAdapterProvider adapterProvider) {
+		this.adapterProvider = adapterProvider;
+	}
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 }

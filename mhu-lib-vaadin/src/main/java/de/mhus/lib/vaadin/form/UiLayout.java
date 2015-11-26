@@ -10,13 +10,24 @@ import com.vaadin.ui.Button.ClickEvent;
 
 import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.UiWizard;
+import de.mhus.lib.form.ui.FmText;
 
 public class UiLayout {
 
 	private GridLayout layout;
+	private int rows;
 	
 	public UiLayout() {
-		this.layout = new GridLayout(3,0);
+		this.layout = new GridLayout(3,1);
+		layout.setMargin(true);
+		layout.setSpacing(true);
+		layout.setHideEmptyRowsAndColumns(true);
+		layout.setColumnExpandRatio(0, 0.3f);
+		layout.setColumnExpandRatio(1, 0.7f);
+		layout.setColumnExpandRatio(2, 0);
+//		layout.setSizeFull();
+		layout.setWidth("100%");
+		rows = 0;
 	}
 	
 	public void createRow(final UiVaadin c) {
@@ -24,11 +35,16 @@ public class UiLayout {
 		Component e = c.createEditor();
 		if (e == null) return;
 		
+		e.setWidth("100%");
+		e.setHeight("30px");
+		c.setComponentEditor(e);
+
 		if (c.isFullSize()) {
 			UiRow row1 = createRow();
 			row1.setFull(true);
 			
 			Label l = new Label();
+			l.setWidth("100%");
 			c.setComponentLabel(l);
 			row1.setComponent(l);
 
@@ -49,7 +65,6 @@ public class UiLayout {
 				c.setComponentWizard(b);
 			}
 			
-			c.setComponentEditor(e);
 			row2.setComponent(e);
 			
 		} else {
@@ -57,6 +72,7 @@ public class UiLayout {
 			UiRow row1 = createRow();
 			
 			Label l = new Label();
+			l.setWidth("100%");
 			c.setComponentLabel(l);
 			row1.setLeft(l);
 
@@ -81,15 +97,16 @@ public class UiLayout {
 		UiRow row3 = createRow();
 		row3.setFull(true);
 		Label le = new Label();
+		le.setWidth("100%");
 		c.setComponentError(le);
 		row3.setComponent(le);
 		
 	}
 	
 	protected UiRow createRow() {
-		int row = layout.getRows();
-		layout.setRows(row+1);
-		return new UiRow(layout, row);
+		rows++;
+		layout.setRows(rows);
+		return new UiRow(layout, rows-1);
 	}
 
 	public Component getComponent() {

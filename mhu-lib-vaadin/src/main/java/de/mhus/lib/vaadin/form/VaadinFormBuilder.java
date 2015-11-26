@@ -1,5 +1,8 @@
 package de.mhus.lib.vaadin.form;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.ui.AbstractLayout;
 
 import de.mhus.lib.core.config.IConfig;
@@ -13,30 +16,50 @@ public class VaadinFormBuilder {
 	private Form form;
 	private UiLayout layout;
 	private AbstractLayout informationPane;
-
-	public VaadinFormBuilder(Form form) {
-		this.form = form;
+	private HashMap<String, UiVaadin> index = new HashMap<>();
+	
+	public VaadinFormBuilder() {
 	}
 
-	public void doBuild() throws MException {
+	public void doBuild() throws Exception {
+		
+		index.clear();
+		
 		IConfig model = form.getModel();
 		layout = new UiLayout();
 		build(layout, model);
 	}
 
-	private void build(UiLayout layout, IConfig model) throws MException {
+	private void build(UiLayout layout, IConfig model) throws Exception {
 		
 		for (ResourceNode node : model.getNodes()) {
 			String name = node.getName();
 			if (name.equals("element")) name = node.getString("type");
 			UiComponent comp = form.getAdapterProvider().createComponent(name, (IConfig) node);
+			comp.doInit(form, (IConfig) node);
 			
 			layout.createRow((UiVaadin) comp);
+			
+			index.put(node.getString("name"), (UiVaadin)comp);
 			
 			UiLayout nextLayout = ((UiVaadin)comp).getLayout();
 			if (nextLayout != null)
 				build(nextLayout, (IConfig) node);
 		}
+	}
+	
+	public void doRevert() {
+		for (Map.Entry<String, UiVaadin> entry : index.entrySet())
+			try {
+				entry.getValue().doRevert();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	public UiVaadin getComponent(String name) {
+		return index.get(name);
 	}
 	
 	public UiLayout getLayout() {
@@ -45,6 +68,14 @@ public class VaadinFormBuilder {
 
 	public void setInformationPane(AbstractLayout informationPane) {
 		this.informationPane = informationPane;
+	}
+
+	public Form getForm() {
+		return form;
+	}
+
+	public void setForm(Form form) {
+		this.form = form;
 	}
 	
 }

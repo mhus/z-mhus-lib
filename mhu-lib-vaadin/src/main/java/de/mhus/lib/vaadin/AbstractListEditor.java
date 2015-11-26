@@ -53,8 +53,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	protected SearchField filter;
 	private boolean showSearchField = true;
 	private Panel detailsPanel;
-	private boolean showInformation = true;
-	private VerticalLayout informationPane;
 	private Panel modelPanel;
 	private boolean fullSize;
 	private VerticalLayout detailsPanelContent;
@@ -126,11 +124,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
     	if (fullSize) detailsPanel.setSizeFull();
     	// detailsPanel.setScrollable(false);
         
-        if (showInformation) {
-        	informationPane = new VerticalLayout();
-        	detailsPanelContent.addComponent(informationPane);
-        	informationPane.setWidth("100%");
-        }
         try {
         	modelPanel = new Panel();
         	modelPanel.setWidth("100%");
@@ -140,8 +133,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         	detailsPanelContent.addComponent(modelPanel);
         	
 	        model = createForm();
-	        model.setInformationContainer(informationPane);
-	        model.doBuild(detailsPanelContent, getActivator());
+	        model.doBuild(getActivator());
+	        detailsPanelContent.addComponent(model);
         } catch (Exception e) {
         	e.printStackTrace();
         }   
@@ -493,14 +486,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		Object selectedId = table.getValue();
 		if (selectedId == null) return null;
 		return getTarget(selectedId);
-	}
-
-	public boolean isShowInformation() {
-		return showInformation;
-	}
-
-	public void setShowInformation(boolean showInformation) {
-		this.showInformation = showInformation;
 	}
 
 	public boolean isFullSize() {

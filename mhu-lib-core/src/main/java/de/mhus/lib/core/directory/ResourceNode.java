@@ -329,8 +329,8 @@ public abstract class ResourceNode extends IProperties {
 		for (String key : keys())
 			sb.append('\n').append(MString.getRepeatig(level+1, ' ')).append(key).append("='").append(getString(key)).append("'");
 		sb.append(">\n");
-		for (String key : getNodeKeys())
-			getNode(key).dump(sb, level+1);
+		for (ResourceNode node : getNodes())
+			node.dump(sb, level+1);
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append("</").append(getName()).append(">\n");
 		
