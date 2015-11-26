@@ -15,6 +15,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
+import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.form.DummyDataSource;
 import de.mhus.lib.form.Form;
@@ -48,7 +49,7 @@ public class Forms02UI extends UI {
 	        mainLayout.addComponent(split);
 			setContent(mainLayout);
 			
-			DefRoot model = new DefRoot(
+			DefRoot model = new DefRoot( new DefAttribute("showInformation", true),
 					new FmText("firstName", "Vorname", "Dein Vorname"),
 					new FmText("lastName", "Nachname", "Dein Nachname"),
 					new FmTextArea("n1", "N1", "Dein Nachname"),

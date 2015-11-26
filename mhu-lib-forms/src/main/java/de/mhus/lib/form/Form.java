@@ -11,10 +11,11 @@ public class Form {
 
 	private Locale locale = Locale.getDefault();
 	private ComponentAdapterProvider adapterProvider;
-	private IConfig model;
+	protected IConfig model;
 	private DataSource dataSource;
 	private MNls nls;
 	private FormControl control;
+	private UiInformation informationPane;
 	
 	public Form() {
 		
@@ -73,6 +74,12 @@ public class Form {
 	public void setControl(FormControl control) {
 		this.control = control;
 		if (control != null) control.attachedForm(this);
+	}
+	public UiInformation getInformationPane() {
+		return informationPane;
+	}
+	public void setInformationPane(UiInformation informationPane) {
+		this.informationPane = informationPane;
 	}
 	
 }

@@ -232,9 +232,14 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	protected abstract E createTarget();
 	
 	protected VaadinPojoForm createForm() {
-		VaadinPojoForm form = new VaadinPojoForm();
-		form.setPojo(createTarget());
-		return form;
+		try {
+			VaadinPojoForm form = new VaadinPojoForm(createTarget());
+			form.setPojo(createTarget());
+			return form;
+		} catch (Throwable t) {
+			log.w(t);
+		}
+		return null;
 	}
 	
 	protected void doSelectionChanged() {

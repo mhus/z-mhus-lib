@@ -1,7 +1,5 @@
 package de.mhus.lib.form;
 
-import java.util.Locale;
-
 import de.mhus.lib.annotations.form.ALayoutModel;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
@@ -13,15 +11,25 @@ import de.mhus.lib.core.util.MNls;
 
 public class PojoForm extends Form {
 
-	public PojoForm(Locale locale, ComponentAdapterProvider adapterProvider, Object pojo) throws Exception {
-		super(locale, adapterProvider, createModel(pojo));
-		setDataSource(new PojoDataSource(pojo));
+	public PojoForm(Object pojo) throws Exception {
+		this(pojo, "");
+	}
+	
+	public PojoForm(Object pojo, String modelName) throws Exception {
+		model = createModel(pojo, modelName);
+		
+		if (pojo instanceof FormControl)
+			setControl((FormControl) pojo);
+
+		if (pojo instanceof DataSource)
+			setDataSource((DataSource) pojo);
+		else
+			setDataSource(new PojoDataSource(pojo));
+			
 	}
 
-	private static IConfig createModel(Object pojo) throws Exception {
+	private IConfig createModel(Object pojo, String modelName) throws Exception {
 		
-		String modelName = "";
-
 		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter()).getModel();
 
 		DefRoot definition = null;
@@ -37,8 +45,9 @@ public class PojoForm extends Form {
 					nls = (MNls) action.doExecute(pojo);
 				}
 			}
-		}		
-		return null;
+		}
+		if (nls != null) setNls(nls);
+		return definition;
 	}
 
 }

@@ -7,13 +7,14 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataSource;
+import de.mhus.lib.form.UiInformation;
 
-public class UiInformation extends Panel {
+public class VaadinUiInformation extends Panel implements UiInformation {
 
 	private Label description;
 
-	public void doUpdate(String desc) throws MException {
-		description.setValue(desc);
+	public VaadinUiInformation() {
+		initUI();
 	}
 	
 	protected void initUI() {
@@ -26,6 +27,12 @@ public class UiInformation extends Panel {
 		layout.addComponent(description);
 		layout.setWidth("100%");
 		setContent(layout);
+	}
+
+	@Override
+	public void setInformation(String name, String description) {
+		if (this.description == null) return;
+		this.description.setValue("<b>" + name + "</b><br/>" + description);
 	}
 	
 }

@@ -14,7 +14,7 @@ public class VaadinForm extends VerticalLayout {
 	private VaadinFormBuilder builder;
 	private Form form;
 	private SHOW showInformation = SHOW.MODEL;
-	private UiInformation informationPane;
+	private VaadinUiInformation informationPane;
 	private UiLayout layout;
 	private Panel formPanel;
 	
@@ -37,7 +37,8 @@ public class VaadinForm extends VerticalLayout {
 			form.setAdapterProvider(new DefaultAdapterProvider());
 
 		if (isShowInformation()) {
-			informationPane = new UiInformation();
+			informationPane = new VaadinUiInformation();
+			getForm().setInformationPane(informationPane);
 			addComponent(informationPane);
 		}
 		if (builder == null)

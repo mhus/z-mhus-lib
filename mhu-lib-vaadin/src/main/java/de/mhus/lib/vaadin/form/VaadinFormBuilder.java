@@ -15,7 +15,6 @@ public class VaadinFormBuilder {
 
 	private Form form;
 	private UiLayout layout;
-	private AbstractLayout informationPane;
 	private HashMap<String, UiVaadin> index = new HashMap<>();
 	
 	public VaadinFormBuilder() {
@@ -64,10 +63,6 @@ public class VaadinFormBuilder {
 	
 	public UiLayout getLayout() {
 		return layout;
-	}
-
-	public void setInformationPane(AbstractLayout informationPane) {
-		this.informationPane = informationPane;
 	}
 
 	public Form getForm() {
