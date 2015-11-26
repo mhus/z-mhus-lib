@@ -6,7 +6,7 @@ public abstract class DataSource {
 	public static final String VISIBLE = "visible";
 	public static final String VALUE = "";
 	public static final String CAPTION = "caption";
-	public static final String EDITOR_EDITABLE = "editor_editable";
+	public static final String EDITOR_EDITABLE = "editable";
 	
 	public abstract boolean getBoolean(UiComponent component, String name, boolean def);
 
