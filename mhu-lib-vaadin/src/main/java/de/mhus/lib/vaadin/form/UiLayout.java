@@ -51,7 +51,7 @@ public class UiLayout {
 				
 				@Override
 				public void valueChange(ValueChangeEvent event) {
-					c.valueChangedEvent();
+					c.fieldValueChangedEvent();
 				}
 			});
 		}

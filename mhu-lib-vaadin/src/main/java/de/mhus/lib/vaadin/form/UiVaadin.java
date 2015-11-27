@@ -5,6 +5,7 @@ import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.ValidationException;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
@@ -126,14 +127,19 @@ public abstract class UiVaadin extends UiComponent {
 		el.setVisible(false);
 	}
 
-	public void valueChangedEvent() {
+	public void fieldValueChangedEvent() {
 		Component e = getComponentEditor();
 		DataSource ds = getForm().getDataSource();
 		if (e == null || ds == null) return;
 		if (e instanceof AbstractField) {
 			Object newValue = ((AbstractField)e).getValue();
-			if (getForm().getControl().newValue(this, newValue))
-				ds.setObject(this, DataSource.VALUE, newValue );
+			if (getForm().getControl().newValue(this, newValue)) {
+				try {
+					ds.setObject(this, DataSource.VALUE, newValue );
+				} catch (Throwable t) {
+					getForm().getControl().newValueError(this, newValue, t);
+				}
+			}
 		}
 	}
 

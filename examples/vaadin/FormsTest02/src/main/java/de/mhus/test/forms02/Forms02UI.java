@@ -15,10 +15,14 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DummyDataSource;
 import de.mhus.lib.form.Form;
+import de.mhus.lib.form.ModelDataSource;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.ui.FmCheckbox;
 import de.mhus.lib.form.ui.FmDate;
 import de.mhus.lib.form.ui.FmNumber;
@@ -55,21 +59,34 @@ public class Forms02UI extends UI {
 					new FmTextArea("n1", "N1", "Dein Nachname"),
 					new FmDate("n2", FORMATS.DATETIME, "N1", "Dein Nachname"),
 					new FmNumber("n3", TYPES.INTEGER ,"N1", "Dein Nachname"),
+					new FmCheckbox("n5", "N1", "Dein Nachname"),
 					new FmRichText("n4", "N1", "Dein Nachname"),
-					new FmCheckbox("n5", "N1", "Dein Nachname")
+					null
 					);
 			
 			Form form = new Form(model);
+			VaadinForm vf = new VaadinForm(form);
 			System.out.println( form.getModel().dump() );
-			DummyDataSource ds = new DummyDataSource();
-			form.setDataSource(ds);
+			DummyDataSource ds = new DummyDataSource() {
+				@Override
+				public boolean newValue(UiComponent component, Object newValue) {
+					if (component.getName().equals("n5"))
+						try {
+							vf.getBuilder().getComponent("n4").setVisible( MCast.toboolean(newValue, true));
+						} catch (MException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					return true;
+				}
+			};
+			form.setDataSource(new ModelDataSource(ds));
 			form.setControl(ds);
 			
-			VaadinForm vf = new VaadinForm(form);
 		
 			vf.doBuild();
-			//vf.setSizeFull();
-			vf.setWidth("100%");
+			vf.setSizeFull();
+			//vf.setWidth("100%");
 			
 			split.addComponent(vf);
 			

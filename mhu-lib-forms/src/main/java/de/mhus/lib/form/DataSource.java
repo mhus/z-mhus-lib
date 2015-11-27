@@ -19,5 +19,6 @@ public interface DataSource {
 
 	void setObject(UiComponent component, String name, Object value);
 
+	DataSource getNext();
 	
 }

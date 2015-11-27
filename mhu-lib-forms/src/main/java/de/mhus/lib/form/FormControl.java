@@ -9,5 +9,7 @@ public interface FormControl {
 	boolean newValue(UiComponent component, Object newValue);
 
 	void reverted(UiComponent component);
+
+	void newValueError(UiComponent component, Object newValue, Throwable t);
 	
 }

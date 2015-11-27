@@ -4,6 +4,7 @@ public class FormControlAdapter implements FormControl {
 
 	@Override
 	public void focus(UiComponent component) {
+		component.clearError();
 		UiInformation info = component.getForm().getInformationPane();
 		DataSource ds = component.getForm().getDataSource();
 		if (info == null || ds == null) return;
@@ -22,6 +23,16 @@ public class FormControlAdapter implements FormControl {
 	@Override
 	public void attachedForm(Form form) {
 		
+	}
+
+	@Override
+	public void newValueError(UiComponent component, Object newValue, Throwable t) {
+		if (t == null) {
+			component.clearError();
+			return;
+		}
+		//TODO Special NLS enabled exception
+		component.setError(t.getMessage());
 	}
 
 }

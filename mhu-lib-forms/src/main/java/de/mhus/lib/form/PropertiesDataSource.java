@@ -41,5 +41,10 @@ public class PropertiesDataSource implements DataSource {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public DataSource getNext() {
+		return null;
+	}
 	
 }

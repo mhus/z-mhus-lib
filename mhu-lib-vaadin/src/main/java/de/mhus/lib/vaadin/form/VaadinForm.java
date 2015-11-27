@@ -40,6 +40,9 @@ public class VaadinForm extends VerticalLayout {
 			informationPane = new VaadinUiInformation();
 			getForm().setInformationPane(informationPane);
 			addComponent(informationPane);
+			setExpandRatio(informationPane, 0);
+			informationPane.setHeight("100px");
+			informationPane.setWidth("100%");
 		}
 		if (builder == null)
 			builder = new VaadinFormBuilder();
@@ -50,11 +53,13 @@ public class VaadinForm extends VerticalLayout {
 		
 		formPanel = new Panel();
 		formPanel.setWidth("100%");
+		formPanel.setHeight("100%");
 
 		layout = builder.getLayout();
 		formPanel.setContent(layout.getComponent());
 		
 		addComponent(formPanel);
+		setExpandRatio(formPanel, 1);
 		
 	}
 

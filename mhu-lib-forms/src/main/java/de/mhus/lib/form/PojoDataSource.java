@@ -73,4 +73,9 @@ public class PojoDataSource implements DataSource {
 		
 	}
 
+	@Override
+	public DataSource getNext() {
+		return null;
+	}
+
 }

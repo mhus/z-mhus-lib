@@ -24,11 +24,11 @@ public class PojoForm extends Form {
 		if (pojo instanceof DataSource)
 			setDataSource((DataSource) pojo);
 		else
-			setDataSource(new PojoDataSource(pojo));
+			setDataSource(new ModelDataSource( new PojoDataSource(pojo)) );
 			
 	}
 
-	private IConfig createModel(Object pojo, String modelName) throws Exception {
+	protected IConfig createModel(Object pojo, String modelName) throws Exception {
 		
 		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter()).getModel();
 

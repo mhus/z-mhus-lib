@@ -56,4 +56,8 @@ public abstract class UiComponent {
 		return config.getString("name", "");
 	}
 	
+	public abstract void setError(String error);
+	
+	public abstract void clearError();
+
 }

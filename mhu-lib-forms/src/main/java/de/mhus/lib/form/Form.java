@@ -44,6 +44,7 @@ public class Form {
 	}
 
 	public DataSource getDataSource() {
+		if (dataSource == null) dataSource = new ModelDataSource();
 		return dataSource;
 	}
 
