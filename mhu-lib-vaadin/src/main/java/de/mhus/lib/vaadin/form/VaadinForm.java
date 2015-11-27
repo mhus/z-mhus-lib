@@ -64,7 +64,7 @@ public class VaadinForm extends VerticalLayout {
 	}
 
 	public boolean isShowInformation() {
-		return showInformation == SHOW.YES || showInformation == SHOW.MODEL && form.getModel().getBoolean("showInformation", false);
+		return showInformation == SHOW.YES || showInformation == SHOW.MODEL && form != null && form.getModel() != null && form.getModel().getBoolean("showInformation", false);
 	}
 
 	public void setShowInformation(boolean showInformation) {

@@ -32,6 +32,14 @@ public abstract class UiVaadin extends UiComponent {
 	}
 
 	@Override
+	public void doUpdateValue() throws MException {
+		DataSource ds = getForm().getDataSource();
+		setValue(ds.getObject(this, DataSource.VALUE, null));
+		getForm().getControl().valueSet(this);
+	}
+	
+	
+	@Override
 	public void setVisible(boolean visible) throws MException {
 		if (componentLabel != null) componentLabel.setVisible(visible);
 		if (componentError != null && componentError.isVisible()) componentError.setVisible(visible);

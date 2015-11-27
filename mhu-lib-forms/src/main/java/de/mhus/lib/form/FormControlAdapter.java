@@ -35,4 +35,9 @@ public class FormControlAdapter implements FormControl {
 		component.setError(t.getMessage());
 	}
 
+	@Override
+	public void valueSet(UiComponent component) {
+		
+	}
+
 }

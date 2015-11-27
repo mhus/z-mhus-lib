@@ -56,7 +56,17 @@ public class VaadinFormBuilder {
 				e.printStackTrace();
 			}
 	}
-	
+
+	public void doUpdateValues() {
+		for (Map.Entry<String, UiVaadin> entry : index.entrySet())
+			try {
+				entry.getValue().doUpdateValue();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+
 	public UiVaadin getComponent(String name) {
 		return index.get(name);
 	}
@@ -72,5 +82,6 @@ public class VaadinFormBuilder {
 	public void setForm(Form form) {
 		this.form = form;
 	}
+
 	
 }

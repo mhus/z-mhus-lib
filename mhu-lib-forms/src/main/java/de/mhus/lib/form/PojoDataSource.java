@@ -7,18 +7,18 @@ import de.mhus.lib.core.pojo.PojoModel;
 
 public class PojoDataSource implements DataSource {
 
-	private Object pojo;
+	private PojoProvider pojo;
 	private PojoModel model;
 
-	public PojoDataSource(Object pojo) {
+	public PojoDataSource(PojoProvider pojo) {
 		this.pojo = pojo;
-		model = MPojo.getDefaultModelFactory().createPojoModel(pojo.getClass());
+		model = MPojo.getDefaultModelFactory().createPojoModel(pojo.getPojo().getClass());
 	}
 
 	@Override
 	public boolean getBoolean(UiComponent component, String name, boolean def) {
 		try {
-			return (boolean)model.getAttribute(getName(component,name)).get(pojo);
+			return (boolean)model.getAttribute(getName(component,name)).get(pojo.getPojo());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -27,13 +27,14 @@ public class PojoDataSource implements DataSource {
 	}
 
 	protected String getName(UiComponent component, String name) {
-		return (component.getName() + name).toLowerCase();
+		String ret = (component.getName() + name).toLowerCase();
+		return ret;
 	}
 
 	@Override
 	public int getInt(UiComponent component, String name, int def) {
 		try {
-			return (int) model.getAttribute(getName(component,name)).get(pojo);
+			return (int) model.getAttribute(getName(component,name)).get(pojo.getPojo());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,7 +45,7 @@ public class PojoDataSource implements DataSource {
 	@Override
 	public String getString(UiComponent component, String name, String def) {
 		try {
-			String ret = (String) model.getAttribute(getName(component,name)).get(pojo);
+			String ret = (String) model.getAttribute(getName(component,name)).get(pojo.getPojo());
 			if (ret == null) return def;
 			return ret;
 		} catch (IOException e) {
@@ -57,7 +58,7 @@ public class PojoDataSource implements DataSource {
 	@Override
 	public Object getObject(UiComponent component, String name, Object def) {
 		try {
-			Object ret = model.getAttribute(getName(component,name)).get(pojo);
+			Object ret = model.getAttribute(getName(component,name)).get(pojo.getPojo());
 			if (ret == null) return def;
 			return ret;
 		} catch (IOException e) {

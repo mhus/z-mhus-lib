@@ -56,4 +56,9 @@ public class DummyDataSource extends FormControlAdapter implements DataSource {
 		return null;
 	}
 
+	@Override
+	public void valueSet(UiComponent component) {
+		System.out.println("valueSet " + component.getName());
+	}
+
 }

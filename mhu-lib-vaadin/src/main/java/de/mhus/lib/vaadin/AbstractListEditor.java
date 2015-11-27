@@ -73,7 +73,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	};
 	
 	@Hidden
-	private Log log;
+	private Log log = Log.getLog(this);
 	
 	@SuppressWarnings("serial")
 	public void initUI() {
@@ -133,7 +133,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         	detailsPanelContent.addComponent(modelPanel);
         	
 	        model = createForm();
-	        model.doBuild(getActivator());
+//	        model.doBuild(getActivator());
+	        model.doBuild();
 	        detailsPanelContent.addComponent(model);
         } catch (Exception e) {
         	e.printStackTrace();
@@ -397,7 +398,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			bUpdate.setCaption(MNls.find(this, "button.edit=Edit"));
 			bDelete.setEnabled(selectedId != null && canDelete(selectedId));
 			bDelete.setCaption(MNls.find(this, "button.delete=Delete"));
-			model.setEnabled(false);
+			if (model != null) model.setEnabled(false);
 			table.setEnabled(true);
 		} else {
 			bNew.setEnabled(false);

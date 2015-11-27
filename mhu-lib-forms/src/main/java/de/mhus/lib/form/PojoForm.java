@@ -11,13 +11,13 @@ import de.mhus.lib.core.util.MNls;
 
 public class PojoForm extends Form {
 
-	public PojoForm(Object pojo) throws Exception {
+	public PojoForm(PojoProvider pojo) throws Exception {
 		this(pojo, "");
 	}
 	
-	public PojoForm(Object pojo, String modelName) throws Exception {
-		model = createModel(pojo, modelName);
-		
+	public PojoForm(PojoProvider  pojo, String modelName) throws Exception {
+		model = createModel(pojo.getPojo(), modelName);
+
 		if (pojo instanceof FormControl)
 			setControl((FormControl) pojo);
 
@@ -30,7 +30,7 @@ public class PojoForm extends Form {
 
 	protected IConfig createModel(Object pojo, String modelName) throws Exception {
 		
-		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter()).getModel();
+		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter(true, false, true, false, false)).getModel();
 
 		DefRoot definition = null;
 		MNls nls = null;
@@ -47,6 +47,8 @@ public class PojoForm extends Form {
 			}
 		}
 		if (nls != null) setNls(nls);
+		
+		if (definition != null) definition.build();
 		return definition;
 	}
 
