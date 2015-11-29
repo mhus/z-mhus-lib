@@ -68,7 +68,7 @@ public class ModelDataSource implements DataSource {
 	}
 
 	@Override
-	public void setObject(UiComponent component, String name, Object value) {
+	public void setObject(UiComponent component, String name, Object value) throws Exception {
 		if (next != null)
 			next.setObject(component, name, value);
 	}

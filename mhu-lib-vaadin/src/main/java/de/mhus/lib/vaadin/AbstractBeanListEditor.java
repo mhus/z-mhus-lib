@@ -125,10 +125,14 @@ public abstract class AbstractBeanListEditor<E> extends AbstractListEditor<E> {
 	
 	@Override
 	protected List<E> createDataList(FilterRequest filter) {
-		return filterDataList(createFullDataList(), filter);
+		return filterDataList(createBeanDataList(), filter);
 	}
-
-	protected abstract List<E> createFullDataList();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected abstract List<E> createBeanDataList();
 
 	protected List<E> filterDataList(List<E> list, FilterRequest filter) {
 		if (filter == null || !filter.isFiltering())

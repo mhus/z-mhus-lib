@@ -1,5 +1,7 @@
 package de.mhus.lib.form;
 
+import java.io.IOException;
+
 public interface DataSource {
 
 	public static final String ENABLED = "enabled";
@@ -17,7 +19,7 @@ public interface DataSource {
 	
 	Object getObject(UiComponent component, String name, Object def);
 
-	void setObject(UiComponent component, String name, Object value);
+	void setObject(UiComponent component, String name, Object value) throws Exception;
 
 	DataSource getNext();
 	

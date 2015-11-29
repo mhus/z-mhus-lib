@@ -13,9 +13,11 @@ import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Table.HeaderClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -24,6 +26,7 @@ import com.vaadin.ui.themes.Reindeer;
 import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.core.ILog;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.FilterRequest;
@@ -52,6 +55,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private VaadinPojoForm model;
 	protected SearchField filter;
 	private boolean showSearchField = true;
+	private boolean needSortUpdate = false;
 	private Panel detailsPanel;
 	private Panel modelPanel;
 	private boolean fullSize;
@@ -59,7 +63,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private MNls nls;
 	private boolean modified = false;
 	private boolean initialized = false;
-	
 	
 	private Map<String, String> labels = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
@@ -74,6 +77,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	
 	@Hidden
 	private Log log = Log.getLog(this);
+	private String sortedColumn;
+	private boolean sortedAscending;
 	
 	@SuppressWarnings("serial")
 	public void initUI() {
@@ -114,6 +119,22 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			public void itemClick(ItemClickEvent event) {
 				if (editMode == null && event.isDoubleClick())
 					doUpdate();
+			}
+		});
+        
+        table.addHeaderClickListener(new Table.HeaderClickListener() {
+			
+			@Override
+			public void headerClick(HeaderClickEvent event) {
+				
+				String name = String.valueOf( event.getPropertyId() );
+				if (name.equals(sortedColumn))
+					sortedAscending = ! sortedAscending;
+				else
+					sortedAscending = true;
+				sortedColumn = name;
+				if (needSortUpdate)
+					updateDataSource();
 			}
 		});
         
@@ -534,5 +555,29 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		}
 		return log;
 	}
+
+	public boolean isNeedSortUpdate() {
+		return needSortUpdate;
+	}
+
+	public void setNeedSortUpdate(boolean needSortUpdate) {
+		this.needSortUpdate = needSortUpdate;
+	}
+
+	public String getSortedColumn() {
+		return sortedColumn;
+	}
+
+//	public void setSortedColumn(String sortedColumn) {
+//		this.sortedColumn = sortedColumn;
+//	}
+
+	public boolean isSortedAscending() {
+		return sortedAscending;
+	}
+
+//	public void setSortedAscending(boolean sortedAscending) {
+//		this.sortedAscending = sortedAscending;
+//	}
 
 }

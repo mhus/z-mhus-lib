@@ -42,14 +42,14 @@ public class DemoEntity {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	@Column(order=1)
+	@Column(order=1,title="First Name")
 	public String getFirstName() {
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	@Column(order=2)
+	@Column(order=2,title="Last Name")
 	public String getLastName() {
 		return lastName;
 	}

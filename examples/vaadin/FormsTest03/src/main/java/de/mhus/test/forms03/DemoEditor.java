@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.vaadin.AbstractBeanListEditor;
 
 public class DemoEditor extends AbstractBeanListEditor<DemoEntity>{
 
 	public DemoEditor(Class<DemoEntity> beanClass, String schema) {
 		super(beanClass, schema);
+		setNeedSortUpdate(true);
 	}
 
 	HashMap<String, DemoEntity> index = new HashMap<>();
@@ -24,7 +26,7 @@ public class DemoEditor extends AbstractBeanListEditor<DemoEntity>{
 	}
 	
 	@Override
-	protected List<DemoEntity> createFullDataList() {
+	protected List<DemoEntity> createBeanDataList() {
 		LinkedList<DemoEntity> list = new LinkedList<>();
 		for (DemoEntity e : index.values())
 			list.add(e);
