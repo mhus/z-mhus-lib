@@ -8,11 +8,14 @@ import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsBundle;
+import de.mhus.lib.core.util.MNlsFactory;
 
 public class PojoForm extends Form {
 
 	public PojoForm(PojoProvider pojo) throws Exception {
 		this(pojo, "");
+		//setNlsBundle(new MNlsFactory().setOwner(pojo.getPojo()));
 	}
 	
 	public PojoForm(PojoProvider  pojo, String modelName) throws Exception {
@@ -33,7 +36,8 @@ public class PojoForm extends Form {
 		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter(true, false, true, false, false)).getModel();
 
 		DefRoot definition = null;
-		MNls nls = null;
+		MNlsBundle nls = null;
+		FormControl control = null;
 		// looking for models
 		for (String actionName : pojoModel.getActionNames()) {
 			PojoAction action = pojoModel.getAction(actionName);
@@ -41,13 +45,17 @@ public class PojoForm extends Form {
 				if (((ALayoutModel)action.getAnnotation(ALayoutModel.class)).value().equals(modelName) && action.getReturnType().equals(DefRoot.class)) {
 					definition = ((DefRoot) action.doExecute(pojo));
 				} else
-				if (((ALayoutModel)action.getAnnotation(ALayoutModel.class)).value().equals(modelName) && action.getReturnType() == MNls.class) {
-					nls = (MNls) action.doExecute(pojo);
+				if (((ALayoutModel)action.getAnnotation(ALayoutModel.class)).value().equals(modelName) && action.getReturnType() == MNlsBundle.class) {
+					nls = (MNlsBundle) action.doExecute(pojo);
+				} else
+				if (((ALayoutModel)action.getAnnotation(ALayoutModel.class)).value().equals(modelName) && action.getReturnType() == FormControl.class) {
+					control = (FormControl) action.doExecute(pojo);
 				}
+					
 			}
 		}
-		if (nls != null) setNls(nls);
-		
+		if (nls != null) setNlsBundle(nls);
+		if (control != null) setControl(control);
 		if (definition != null) definition.build();
 		return definition;
 	}

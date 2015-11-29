@@ -42,14 +42,14 @@ public class DemoEntity {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	@Column(order=1,title="First Name")
+	@Column(order=1,title="First Name",nls="firstname")
 	public String getFirstName() {
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	@Column(order=2,title="Last Name")
+	@Column(order=2,title="Last Name",nls="lastname")
 	public String getLastName() {
 		return lastName;
 	}
@@ -60,8 +60,8 @@ public class DemoEntity {
 	@ALayoutModel
 	public DefRoot model() {
 		return new DefRoot(
-				new FmText("firstName","Vorname","Bla bla..."),
-				new FmText("lastName","Nachname","Bla bla...")
+				new FmText("firstName","firstname=First name","Bla bla..."),
+				new FmText("lastName","lastname=Last name","Bla bla...")
 				);
 	}
 	public String getId() {

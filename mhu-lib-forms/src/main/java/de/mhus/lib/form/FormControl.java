@@ -1,5 +1,8 @@
 package de.mhus.lib.form;
 
+import de.mhus.lib.annotations.activator.DefaultImplementation;
+
+@DefaultImplementation(FormControlAdapter.class)
 public interface FormControl {
 
 	void attachedForm(Form form);

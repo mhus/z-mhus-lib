@@ -31,6 +31,8 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsBundle;
+import de.mhus.lib.core.util.MNlsFactory;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.form.VaadinPojoForm;
 
@@ -42,10 +44,10 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private static final long serialVersionUID = 1L;
 	private static final Object MY_NEW_MARKER = new Object();
 
-	public static final String LABEL_SAVED_NEW = "new";
-	public static final String LABEL_SAVED = "saved";
-	public static final String LABEL_DELETED = "deleted";
-	public static final String LABEL_CANELED = "canceled";
+	public static final String LABEL_SAVED_NEW = "entity.new=new";
+	public static final String LABEL_SAVED = "entity.saved=saved";
+	public static final String LABEL_DELETED = "entity.deleted=deleted";
+	public static final String LABEL_CANELED = "entity.canceled=canceled";
 
 	protected SimpleTable table;
 	private Button bNew;
@@ -57,24 +59,12 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private boolean showSearchField = true;
 	private boolean needSortUpdate = false;
 	private Panel detailsPanel;
-	private Panel modelPanel;
 	private boolean fullSize;
 	private VerticalLayout detailsPanelContent;
-	private MNls nls;
+	private MNlsBundle nlsBundle;
 	private boolean modified = false;
 	private boolean initialized = false;
-	
-	private Map<String, String> labels = new HashMap<String, String>() {
-		private static final long serialVersionUID = 1L;
-		{
-			put(LABEL_SAVED_NEW,"Saved");
-			put(LABEL_SAVED,"Saved");
-			put(LABEL_DELETED,"Deleted");
-			put(LABEL_CANELED,"Canceled");
-			
-		}
-	};
-	
+		
 	@Hidden
 	private Log log = Log.getLog(this);
 	private String sortedColumn;
@@ -89,7 +79,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		setSpacing(true);
 		setMargin(true);
 		
-		filter = new SearchField();
+		filter = new SearchField(this);
 		filter.setListener(new SearchField.Listener() {
 			
 			@Override
@@ -146,14 +136,10 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
     	// detailsPanel.setScrollable(false);
         
         try {
-        	modelPanel = new Panel();
-        	modelPanel.setWidth("100%");
-        	if (fullSize) modelPanel.setSizeFull();
-        	modelPanel.setStyleName(Reindeer.PANEL_LIGHT);
-        	// modelPanel.setScrollable(true);
-        	detailsPanelContent.addComponent(modelPanel);
         	
 	        model = createForm();
+	        if (model.getForm().getNlsBundle() == null)
+	        	model.getForm().setNlsBundle(new MNlsFactory().setOwner(this));
 //	        model.doBuild(getActivator());
 	        model.doBuild();
 	        detailsPanelContent.addComponent(model);
@@ -296,7 +282,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		                if (dialog.isConfirmed()) {
 		                	try {
 			                	doDelete(selectedObj);
-								showInformation(labels.get(LABEL_DELETED));
+								showInformation(MNls.find(AbstractListEditor.this, LABEL_DELETED));
 		                	} catch (Throwable e) {
 		        				log().i(e);
 		        				showError(e);
@@ -317,7 +303,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		try {
 			if (!MY_NEW_MARKER.equals(editMode)) {
 				doCancel(getTarget(editMode));
-				showInformation(labels.get(LABEL_CANELED));
+				showInformation(MNls.find(AbstractListEditor.this,LABEL_CANELED));
 			}
 		} catch (Throwable t) {
 			log().i(t);
@@ -351,10 +337,10 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 				E entity = (E) model.getPojo();
 				if (MY_NEW_MARKER.equals(editMode)) {
 					doSaveNew(entity);
-					showInformation(labels.get(LABEL_SAVED_NEW));
+					showInformation(MNls.find(AbstractListEditor.this,LABEL_SAVED_NEW));
 				} else {
 					doSave(entity);
-					showInformation(labels.get(LABEL_SAVED));
+					showInformation(MNls.find(AbstractListEditor.this,LABEL_SAVED));
 				}
 				
 				updateDataSource();
@@ -525,11 +511,11 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	@Override
 	public MNls getNls() {
-		return nls;
-	}
-
-	public void setNls(MNls nls) {
-		this.nls = nls;
+		if (nlsBundle == null) {
+			nlsBundle = new MNlsFactory();
+			nlsBundle.setOwner(this);
+		}
+		return nlsBundle.getNls(UI.getCurrent().getLocale());
 	}
 
 	public boolean isModified() {
@@ -574,6 +560,14 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	public boolean isSortedAscending() {
 		return sortedAscending;
+	}
+
+	public MNlsBundle getNlsBundle() {
+		return nlsBundle;
+	}
+
+	public void setNlsBundle(MNlsBundle nlsBundle) {
+		this.nlsBundle = nlsBundle;
 	}
 
 //	public void setSortedAscending(boolean sortedAscending) {

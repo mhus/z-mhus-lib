@@ -1,5 +1,7 @@
 package de.mhus.lib.form;
 
+import de.mhus.lib.core.util.MNls;
+
 public class ModelDataSource implements DataSource {
 
 	private DataSource next;
@@ -47,9 +49,11 @@ public class ModelDataSource implements DataSource {
 
 	@Override
 	public String getString(UiComponent component, String name, String def) {
-		if (isHandled(name) && component.getConfig().isProperty(name))
-			return component.getConfig().getString(name, def);
-		
+		if (isHandled(name) && component.getConfig().isProperty(name)) {
+			
+			String expression = component.getConfig().getString(name, def);
+			return MNls.find(component.getForm(), expression );
+		}
 		if (next != null)
 			return next.getString(component, name, def);
 		

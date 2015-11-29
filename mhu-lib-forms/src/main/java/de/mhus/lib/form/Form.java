@@ -4,22 +4,27 @@ import java.util.Locale;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsBundle;
+import de.mhus.lib.core.util.MNlsFactory;
+import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.errors.MException;
 
-public class Form {
+public class Form extends MObject implements MNlsProvider {
 
 	private Locale locale = Locale.getDefault();
 	private ComponentAdapterProvider adapterProvider;
 	protected IConfig model;
 	private DataSource dataSource;
-	private MNls nls;
+	private MNlsBundle nlsBundle;
 	private FormControl control;
 	private UiInformation informationPane;
 	
 	public Form() {
 		
 	}
+	
 	public Form(Locale locale, ComponentAdapterProvider adapterProvider, IConfig model) {
 		this.locale = locale;
 		this.adapterProvider = adapterProvider;
@@ -44,7 +49,7 @@ public class Form {
 	}
 
 	public DataSource getDataSource() {
-		if (dataSource == null) dataSource = new ModelDataSource();
+		if (dataSource == null) dataSource = base(DataSource.class);
 		return dataSource;
 	}
 
@@ -52,12 +57,16 @@ public class Form {
 		this.dataSource = dataSource;
 	}
 
-	public MNls getNls() {
-		return nls;
+	public synchronized MNls getNls() {
+		if (nlsBundle == null) {
+//			nlsBundle = base(MNlsBundle.class);
+			return null;
+		}
+		return nlsBundle.getNls(locale);
 	}
 
-	public void setNls(MNls nls) {
-		this.nls = nls;
+	public void setNlsBundle(MNlsBundle bundle) {
+		this.nlsBundle = bundle;
 	}
 
 	public void setAdapterProvider(ComponentAdapterProvider adapterProvider) {
@@ -68,7 +77,7 @@ public class Form {
 	}
 	
 	public FormControl getControl() {
-		if (control == null) setControl(new FormControlAdapter());
+		if (control == null) setControl(base(FormControl.class));
 		return control;
 	}
 	
@@ -81,6 +90,10 @@ public class Form {
 	}
 	public void setInformationPane(UiInformation informationPane) {
 		this.informationPane = informationPane;
+	}
+	
+	public MNlsBundle getNlsBundle() {
+		return nlsBundle;
 	}
 	
 }

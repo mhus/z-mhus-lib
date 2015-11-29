@@ -33,7 +33,7 @@ import de.mhus.lib.form.ui.FmText;
 import de.mhus.lib.form.ui.FmTextArea;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
-@Title("Forms02")
+@Title("Forms03")
 @Theme("valo")
 public class Forms03UI extends UI {
 

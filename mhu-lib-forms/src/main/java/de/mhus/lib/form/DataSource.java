@@ -1,7 +1,8 @@
 package de.mhus.lib.form;
 
-import java.io.IOException;
+import de.mhus.lib.annotations.activator.DefaultImplementation;
 
+@DefaultImplementation(ModelDataSource.class)
 public interface DataSource {
 
 	public static final String ENABLED = "enabled";
