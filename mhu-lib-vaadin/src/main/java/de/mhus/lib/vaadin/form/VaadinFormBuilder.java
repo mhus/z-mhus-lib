@@ -25,7 +25,7 @@ public class VaadinFormBuilder {
 		index.clear();
 		
 		IConfig model = form.getModel();
-		layout = new UiLayout();
+		layout = new UiLayout100(); //TODO configurable
 		build(layout, model);
 	}
 
