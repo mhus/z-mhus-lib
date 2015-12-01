@@ -25,8 +25,16 @@ public class VaadinFormBuilder {
 		index.clear();
 		
 		IConfig model = form.getModel();
-		layout = new UiLayout100(); //TODO configurable
+		layout = createLayout(model);
 		build(layout, model);
+	}
+
+	public UiLayout createLayout(IConfig model) {
+		switch (model.getString("layout", "100")) {
+		case "50x50": return new UiLayout50x50();
+		case "100": return new UiLayout100();
+		default: return new UiLayout100();
+		}
 	}
 
 	private void build(UiLayout layout, IConfig model) throws Exception {

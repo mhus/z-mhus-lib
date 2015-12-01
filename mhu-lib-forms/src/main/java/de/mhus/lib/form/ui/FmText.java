@@ -6,8 +6,9 @@ import de.mhus.lib.form.definition.FmNls;
 
 public class FmText extends FmElement {
 
-	public FmText(String name, String title, String description) {
+	public FmText(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
+		addDefinition(definitions);
 	}
 	
 	public FmText(String name, IDefAttribute ... definitions) {

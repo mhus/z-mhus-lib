@@ -11,6 +11,7 @@ public interface DataSource {
 	public static final String CAPTION = "caption";
 	public static final String EDITOR_EDITABLE = "editable";
 	public static final String DESCRIPTION = "description";
+	public static final String ITEMS = "items";
 	
 	boolean getBoolean(UiComponent component, String name, boolean def);
 

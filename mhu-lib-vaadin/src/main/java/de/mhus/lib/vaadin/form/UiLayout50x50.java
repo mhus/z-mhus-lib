@@ -5,6 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -43,19 +44,23 @@ import de.mhus.lib.form.UiWizard;
  *
  */
 
-public class UiLayout50I50 extends UiLayout {
+public class UiLayout50x50 extends UiLayout {
 
 	private GridLayout layout;
 	private int rows;
+	private UiSlot slot;
 	
-	public UiLayout50I50() {
-		this.layout = new GridLayout(3,1);
+	public UiLayout50x50() {
+		this.layout = new GridLayout(6,1);
 		layout.setMargin(true);
 		layout.setSpacing(true);
 		layout.setHideEmptyRowsAndColumns(true);
 		layout.setColumnExpandRatio(0, 0.3f);
 		layout.setColumnExpandRatio(1, 0.7f);
 		layout.setColumnExpandRatio(2, 0);
+		layout.setColumnExpandRatio(3, 0.3f);
+		layout.setColumnExpandRatio(4, 0.7f);
+		layout.setColumnExpandRatio(5, 0);
 //		layout.setSizeFull();
 		layout.setWidth("100%");
 		rows = 0;
@@ -66,102 +71,25 @@ public class UiLayout50I50 extends UiLayout {
 		final UiWizard wizard = c.getWizard();
 		Component e = c.createEditor();
 		if (e == null) return;
+		c.setComponentEditor(e);
 		
 		e.setWidth("100%");
 		//e.setHeight("30px");
 		
-		
-		if (e instanceof AbstractField) {
-			((AbstractField)e).setImmediate(true);
-			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
-				
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					c.fieldValueChangedEvent();
-				}
-			});
-		}
-		if (e instanceof FocusNotifier) {
-			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
-				
-				@Override
-				public void focus(FocusEvent event) {
-					c.focusEvent();
-				}
-			});
+		c.setListeners();
+
+		if (slot == null) {
+			slot = new UiSlot();
 		}
 		
-		c.setComponentEditor(e);
-
-		if (c.isFullSize()) {
-			UiRow row1 = createRow();
-			row1.setFull(true);
-			
-			Label l = new Label();
-			l.setWidth("100%");
-			c.setComponentLabel(l);
-			row1.setComponent(l);
-
-			UiRow row2 = createRow();
-			row2.setFull(true);
-			
-			if (wizard != null) {
-				Button b = new Button("W");
-				b.addClickListener(new Button.ClickListener() {
-					
-					@Override
-					public void buttonClick(ClickEvent event) {
-						wizard.showWizard(c);
-					}
-				});
-				b.setWidth("100%");
-				row2.setWizard(b);
-				c.setComponentWizard(b);
-			}
-			
-			row2.setComponent(e);
-			
-		} else {
-			
-			UiRow row1 = createRow();
-			
-			Label l = new Label();
-			l.setWidth("100%");
-			c.setComponentLabel(l);
-			row1.setLeft(l);
-
-			if (wizard != null) {
-				Button b = new Button("W");
-				b.addClickListener(new Button.ClickListener() {
-					
-					@Override
-					public void buttonClick(ClickEvent event) {
-						wizard.showWizard(c);
-					}
-				});
-				b.setWidth("100%");
-				row1.setWizard(b);
-				c.setComponentWizard(b);
-			}
-
-			row1.setRight(e);
-			
-		}
+		slot.add(c, wizard, e);
 		
-		UiRow row3 = createRow();
-		row3.setFull(c.isFullSize());
-		Label le = new Label();
-		le.setStyleName("error-text");
-		le.setWidth("100%");
-		c.setComponentError(le);
-		row3.setComponent(le);
+		if (slot.isFull()) slot = null;
 		
 	}
 	
-	protected UiRow createRow() {
-		rows++;
-		layout.setRows(rows);
-		return new UiRow(layout, rows-1);
+	protected UiRow createRow(int col, int size, int row) {
+		return new UiRow(layout, col, row, size);
 	}
 
 	public Component getComponent() {
@@ -174,23 +102,27 @@ public class UiLayout50I50 extends UiLayout {
 		private int row;
 		private boolean full;
 		private boolean wizard;
+		private int col;
+		private int size;
 
-		public UiRow(GridLayout layout, int row) {
+		public UiRow(GridLayout layout, int col, int row, int size) {
 			this.layout = layout;
 			this.row = row;
+			this.col = col;
+			this.size = size;
 		}
 		
 		public void setLeft(Component component) {
 			if (full) return;
-			layout.addComponent(component, 0, row);
+			layout.addComponent(component, col, row);
 		}
 
 		public void setRight(Component component) {
 			if (full) return;
 			if (wizard)
-				layout.addComponent(component, 1, row);
+				layout.addComponent(component, col+1, row, col+size-1, row);
 			else
-				layout.addComponent(component, 1, row, 2, row);
+				layout.addComponent(component, col+1, row, col+size, row);
 		}
 		
 		public void setComponent(Component component) {
@@ -199,9 +131,9 @@ public class UiLayout50I50 extends UiLayout {
 				return;
 			}
 			if (wizard)
-				layout.addComponent(component, 0, row, 1, row);
+				layout.addComponent(component, 0, row, col+size-1, row);
 			else
-				layout.addComponent(component, 0, row, 2, row);
+				layout.addComponent(component, 0, row, col+size, row);
 		}
 
 		public boolean isFull() {
@@ -219,9 +151,100 @@ public class UiLayout50I50 extends UiLayout {
 		public void setWizard(Component wizard) {
 			this.wizard = wizard != null;
 			if (wizard == null) return;
-			layout.addComponent(wizard, 2, row );
+			layout.addComponent(wizard, col+size, row );
 		}
 		
 	}
-	
+
+	private class UiSlot {
+
+		private int startRow;
+		private int col;
+
+		public UiSlot() {
+			startRow = rows;
+			rows+=3;
+			layout.setRows(rows);
+			col = 0;
+		}
+		
+		public void add(final UiVaadin c, final UiWizard wizard, final Component e) {
+
+			int size = 2;
+			if (c.getConfig().getInt("columns", 1) == 2) {
+				size = 5;
+			}
+			UiRow row1 = createRow(col, size, startRow);
+			UiRow row2 = createRow(col, size, startRow+1);
+			UiRow row3 = createRow(col, size, startRow+2);
+			
+			if (c.isFullSize()) {
+				
+				row1.setFull(true);
+				
+				Label l = new Label();
+				l.setStyleName("form-label");
+				l.setWidth("100%");
+				c.setComponentLabel(l);
+				row1.setComponent(l);
+
+				row2.setFull(true);
+				
+				if (wizard != null) {
+					Button b = new Button();
+					b.setIcon(FontAwesome.COG);
+					b.addClickListener(new Button.ClickListener() {
+						
+						@Override
+						public void buttonClick(ClickEvent event) {
+							wizard.showWizard(c);
+						}
+					});
+					b.setWidth("100%");
+					row2.setWizard(b);
+					c.setComponentWizard(b);
+				}
+				
+				row2.setComponent(e);
+				
+			} else {
+				
+				Label l = new Label();
+				l.setWidth("100%");
+				c.setComponentLabel(l);
+				row1.setLeft(l);
+
+				if (wizard != null) {
+					Button b = new Button("W");
+					b.addClickListener(new Button.ClickListener() {
+						
+						@Override
+						public void buttonClick(ClickEvent event) {
+							wizard.showWizard(c);
+						}
+					});
+					b.setWidth("100%");
+					row1.setWizard(b);
+					c.setComponentWizard(b);
+				}
+
+				row1.setRight(e);
+				
+			}
+			
+			row3.setFull(c.isFullSize());
+			Label le = new Label();
+			le.setStyleName("error-text");
+			le.setWidth("100%");
+			c.setComponentError(le);
+			row3.setComponent(le);
+			
+			col+=1 + size;
+		}
+
+		public boolean isFull() {
+			return col >= 6;
+		}
+		
+	}
 }

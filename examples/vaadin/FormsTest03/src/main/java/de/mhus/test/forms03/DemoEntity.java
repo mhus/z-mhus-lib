@@ -4,7 +4,10 @@ import java.util.Date;
 
 import de.mhus.lib.annotations.form.ALayoutModel;
 import de.mhus.lib.annotations.vaadin.Column;
+import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.form.Item;
+import de.mhus.lib.form.ui.FmCombobox;
 import de.mhus.lib.form.ui.FmText;
 
 public class DemoEntity {
@@ -14,6 +17,7 @@ public class DemoEntity {
 	private Date date;
 	private String firstName;
 	private String lastName;
+	private String gender;
 	
 	public DemoEntity() {
 		
@@ -59,9 +63,11 @@ public class DemoEntity {
 
 	@ALayoutModel
 	public DefRoot model() {
-		return new DefRoot(
-				new FmText("firstName","firstname=First name","Bla bla..."),
-				new FmText("lastName","lastname=Last name","Bla bla...")
+		return new DefRoot( 
+				new DefAttribute("layout","50x50"),
+				new FmText("firstName","firstname=First name","Bla bla...", new DefAttribute("columns", "2") ),
+				new FmText("lastName","lastname=Last name","Bla bla..."),
+				new FmCombobox("gender", "gender=Geschlecht","Bla bla")
 				);
 	}
 	public String getId() {
@@ -69,6 +75,21 @@ public class DemoEntity {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public Item[] getGenderItems() {
+		return new Item[] {
+				new Item("m","male=Male"),
+				new Item("f","female=Female")
+		};
+	}
+	
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	
 }

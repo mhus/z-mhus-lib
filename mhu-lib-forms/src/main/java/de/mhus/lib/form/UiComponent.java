@@ -30,6 +30,8 @@ public abstract class UiComponent {
 
 	public abstract void doUpdateValue() throws MException;
 	
+	public abstract void doUpdateMetadata() throws MException;
+	
 	public abstract void setVisible(boolean visible) throws MException;
 	
 	public abstract boolean isVisible() throws MException;

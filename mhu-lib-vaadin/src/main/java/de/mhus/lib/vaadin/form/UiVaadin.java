@@ -1,5 +1,10 @@
 package de.mhus.lib.vaadin.form;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.event.FieldEvents;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 
@@ -23,6 +28,7 @@ public abstract class UiVaadin extends UiComponent {
 		DataSource ds = getForm().getDataSource();
 		setEnabled( ds.getBoolean(this, DataSource.ENABLED, true) );
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
+		doUpdateMetadata();
 		setValue(ds.getObject(this, DataSource.VALUE, null));
 		setCaption(ds.getString(this, DataSource.CAPTION, getName()));
 		if (componentError != null) componentError.setVisible(false);
@@ -154,5 +160,34 @@ public abstract class UiVaadin extends UiComponent {
 	public void focusEvent() {
 		getForm().getControl().focus(this);
 	}
+
+	public void setListeners() {
+		Component e = getComponentEditor();
+		if (e == null) return;
+		
+		if (e instanceof AbstractField) {
+			((AbstractField)e).setImmediate(true);
+			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
+				
+				@Override
+				public void valueChange(ValueChangeEvent event) {
+					fieldValueChangedEvent();
+				}
+			});
+		}
+		if (e instanceof FocusNotifier) {
+			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
+				
+				@Override
+				public void focus(FocusEvent event) {
+					focusEvent();
+				}
+			});
+		}
+	}
 	
+	@Override
+	public void doUpdateMetadata() throws MException {
+	}
+
 }
