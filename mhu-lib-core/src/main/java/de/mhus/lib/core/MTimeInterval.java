@@ -404,4 +404,23 @@ public class MTimeInterval {
 		return System.currentTimeMillis() - start > timeout;
 	}
 
+	public static long toTime(String in, long def) {
+		long out = def;
+		if (in == null) return out;
+		in = in.trim().toLowerCase();
+		if (in.endsWith("m") || in.endsWith("min") || in.endsWith("minutes") || in.endsWith("minute"))
+			return MCast.tolong( MString.integerPart(in) , 0) * MINUTE_IN_MILLISECOUNDS;
+
+		if (in.endsWith("h") || in.endsWith("hour") || in.endsWith("hours")) 
+			return MCast.tolong( MString.integerPart(in) , 0) * HOUR_IN_MILLISECOUNDS;
+		
+		if (in.endsWith("s") || in.endsWith("sec") || in.endsWith("secound") || in.endsWith("secounds")) 
+			return MCast.tolong( MString.integerPart(in) , 0) * SECOUND_IN_MILLISECOUNDS;
+		
+		if (in.endsWith("d") || in.endsWith("day") || in.endsWith("days")) 
+			return MCast.tolong( MString.integerPart(in) , 0) * DAY_IN_MILLISECOUNDS;
+		
+		return MCast.tolong(in, def);
+	}
+	
 }

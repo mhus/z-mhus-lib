@@ -1527,4 +1527,17 @@ public class MString {
 		}
 		return true;
 	}
+
+	public static String integerPart(String in) {
+		if (in == null) return in;
+		in = in.trim();
+		for (int p = 0; p < in.length(); p++) {
+			char c = in.charAt(p);
+			if (! (c >= '0' && c <= '9' || (p == 0 && (c == '-' || c == '+') ) )  ) {
+				if (p == 0) return null;
+				return in.substring(0,p);
+			}
+		}
+		return null;
+	}
 }

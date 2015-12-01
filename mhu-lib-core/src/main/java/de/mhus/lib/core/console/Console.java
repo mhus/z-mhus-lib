@@ -7,10 +7,10 @@ import java.util.LinkedList;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.IBase;
 
-@DefaultImplementation(Simple.class)
+@DefaultImplementation(SimpleConsole.class)
 public abstract class Console extends PrintStream implements IBase {
 
-	public enum COLOR {WHITE,BLACK,RED,GREEN,BLUE,YELLOW};
+	public enum COLOR {UNKNOWN,WHITE,BLACK,RED,GREEN,BLUE,YELLOW,MAGENTA,CYAN};
 	
 	public static final int DEFAULT_WIDTH = 40;
 	public static final int DEFAULT_HEIGHT = 25;
@@ -34,7 +34,7 @@ public abstract class Console extends PrintStream implements IBase {
 	 * @return
 	 */
 	public static Console create() {
-		return new Simple();
+		return new SimpleConsole();
 	}
 
 //	public void initializeAsDefault() {
@@ -95,6 +95,8 @@ public abstract class Console extends PrintStream implements IBase {
 	public abstract void setBold(boolean bold);
 	
 	public abstract boolean isBold();
+	
+	public abstract void cleanup();
 	
 	public void printLine() {
 		printLine('-');

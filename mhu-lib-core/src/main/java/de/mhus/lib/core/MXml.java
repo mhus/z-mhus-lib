@@ -199,7 +199,7 @@ public class MXml {
 		if (root == null || path == null) return null;
 		
 		if (path.startsWith("/")) {
-			while (root.getParentNode() != null)
+			while (root.getParentNode() != null && root.getParentNode() instanceof Element)
 				root = (Element) root.getParentNode();
 			path = path.substring(1);
 		}

@@ -6,6 +6,7 @@ import org.apache.karaf.shell.commands.Argument;
 import org.apache.karaf.shell.commands.Command;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -18,9 +19,9 @@ import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
-public class CmdLog implements Action {
+public class CmdLog extends MLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="Command:\n clear - reset all loggers,\n add <path> - add a trace log,\n full - enable full trace logging,\n dirty - enable dirty logging,\n level - set log level (console logger),\n reloadconfig,\n settrail [<config>] - enable trail logging for this thread,\n istrail - output the traillog config,\n releasetrail - unset the current trail log config\n general - enable general logging\n off - log mapping off", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command:\n clear - reset all loggers,\n add <path> - add a trace log,\n full - enable full trace logging,\n dirty - enable dirty logging,\n level - set log level (console logger),\n reloadconfig,\n settrail [<config>] - enable trail logging for this thread,\n istrail - output the traillog config,\n releasetrail - unset the current trail log config\n general - enable general logging\n off - log mapping off\n trace,debug,info,warn,error,fatal <msg>", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -88,7 +89,8 @@ public class CmdLog implements Action {
 		case "settrail": {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
-				MLogUtil.setTrailConfig(parameters[0]);
+				MLogUtil.setTrailConfig(parameters == null || parameters.length < 1 ? "" : parameters[0]);
+				System.out.println("Trail Config: " + MLogUtil.getTrailConfig() );
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
@@ -105,22 +107,44 @@ public class CmdLog implements Action {
 			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				MLogUtil.releaseTrailConfig();
+				System.out.println("OK");
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
 		case "general": {
 			ThreadMapperConfig config = new ThreadMapperConfig();
-			config.doConfigure(parameters[0]);
+			config.doConfigure(parameters == null || parameters.length < 1 ? "" : parameters[0]);
 			GeneralMapper mapper = new GeneralMapper();
 			mapper.setConfig(config);
 			singleton.getLogFactory().setLevelMapper(mapper);
+			System.out.println("Sel Global Mapper: OK " + singleton.getLogFactory().getLevelMapper() + " " + config.getTrailId());
 		} break;
 		case "trail": {
 			singleton.getLogFactory().setLevelMapper(new ThreadBasedMapper());
+			System.out.println("Set Trail Mapper OK " + singleton.getLogFactory().getLevelMapper() );
 		} break;
 		case "off": {
 			singleton.getLogFactory().setLevelMapper(null);
+			System.out.println("Remove Mapper OK " + singleton.getLogFactory().getLevelMapper() );
+		} break;
+		case "trace": {
+			log().t((Object[])parameters);
+		} break;
+		case "debug": {
+			log().d((Object[])parameters);
+		} break;
+		case "info": {
+			log().i((Object[])parameters);
+		} break;
+		case "warn": {
+			log().w((Object[])parameters);
+		} break;
+		case "error": {
+			log().e((Object[])parameters);
+		} break;
+		case "fatal": {
+			log().f((Object[])parameters);
 		} break;
 		}
 		
