@@ -12,6 +12,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Button.ClickEvent;
 
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.form.ComponentAdapter;
+import de.mhus.lib.form.ComponentDefinition;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.UiWizard;
 
 public class UiLayout100 extends UiLayout {
@@ -206,6 +210,21 @@ public class UiLayout100 extends UiLayout {
 			this.wizard = wizard != null;
 			if (wizard == null) return;
 			layout.addComponent(wizard, 2, row );
+		}
+		
+	}
+	
+	public static class Adapter implements ComponentAdapter {
+
+		@Override
+		public UiComponent createAdapter(IConfig config) {
+			return new UiLayout100();
+		}
+
+		@Override
+		public ComponentDefinition getDefinition() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 		
 	}

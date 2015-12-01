@@ -29,12 +29,9 @@ public class VaadinFormBuilder {
 		build(layout, model);
 	}
 
-	public UiLayout createLayout(IConfig model) {
-		switch (model.getString("layout", "100")) {
-		case "50x50": return new UiLayout50x50();
-		case "100": return new UiLayout100();
-		default: return new UiLayout100();
-		}
+	public UiLayout createLayout(IConfig model) throws Exception {
+		String name = "layout" + model.getString("layout", "100");
+		return (UiLayout)form.getAdapterProvider().createComponent(name, model);
 	}
 
 	private void build(UiLayout layout, IConfig model) throws Exception {

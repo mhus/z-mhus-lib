@@ -13,6 +13,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Button.ClickEvent;
 
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.form.ComponentAdapter;
+import de.mhus.lib.form.ComponentDefinition;
+import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.UiWizard;
 
 /**
@@ -80,6 +84,9 @@ public class UiLayout50x50 extends UiLayout {
 
 		if (slot == null) {
 			slot = new UiSlot();
+		} else {
+			if (c.getConfig().getInt("columns", 1) > 1)
+				slot = new UiSlot();
 		}
 		
 		slot.add(c, wizard, e);
@@ -171,7 +178,7 @@ public class UiLayout50x50 extends UiLayout {
 		public void add(final UiVaadin c, final UiWizard wizard, final Component e) {
 
 			int size = 2;
-			if (c.getConfig().getInt("columns", 1) == 2) {
+			if (c.getConfig().getInt("columns", 1) > 1) {
 				size = 5;
 			}
 			UiRow row1 = createRow(col, size, startRow);
@@ -247,4 +254,20 @@ public class UiLayout50x50 extends UiLayout {
 		}
 		
 	}
+	
+	public static class Adapter implements ComponentAdapter {
+
+		@Override
+		public UiComponent createAdapter(IConfig config) {
+			return new UiLayout50x50();
+		}
+
+		@Override
+		public ComponentDefinition getDefinition() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
 }

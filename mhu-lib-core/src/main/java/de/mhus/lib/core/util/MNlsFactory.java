@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import de.mhus.lib.core.MString;
@@ -53,6 +54,11 @@ public class MNlsFactory extends MNlsBundle {
 	}
 	
 	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale, boolean searchAlternatives) {
+		return load(res,owner,resourceName,locale,searchAlternatives,0);
+	}
+	
+	protected MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale, boolean searchAlternatives, int level) {
+		if (level > 50) return null;
 		try {
 			// if (res == null) res = base(MDirectory.class);
 			
@@ -87,6 +93,18 @@ public class MNlsFactory extends MNlsBundle {
 				InputStreamReader r = new InputStreamReader(is, MString.CHARSET_UTF_8);
 				properties.load(r);
 				is.close();
+				
+				for (String include : properties.getProperty(".include", "").split(",")) {
+					include = include.trim();
+					MNls parent = load(null, null, include, locale, false, level+1);
+					if (parent != null) {
+						for ( Map.Entry<Object, Object> entry : parent.properties.entrySet()) {
+							if (!properties.containsKey(entry.getKey()))
+								properties.put(entry.getKey(), entry.getValue());
+						}
+					}
+				}
+				
 				return new MNls(properties,"");
 			} else {
 				log().d("Resource not found",resourceName,locale);

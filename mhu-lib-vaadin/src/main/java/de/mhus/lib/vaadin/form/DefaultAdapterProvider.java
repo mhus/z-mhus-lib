@@ -19,6 +19,8 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 		a.addMap("textarea", UiTextArea.Adapter.class);
 		a.addMap("richtext", UiRichTextArea.Adapter.class);
 		a.addMap("combobox", UiCombobox.Adapter.class);
+		a.addMap("layout100", UiLayout100.Adapter.class);
+		a.addMap("layout50x50", UiLayout50x50.Adapter.class);
 		
 	}
 
