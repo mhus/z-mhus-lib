@@ -51,6 +51,10 @@ public class Table implements Serializable, Externalizable {
 		return rows;
 	}
 
+	public TableColumn addHeader(String name, Class<?> type) {
+		return addHeader(name, type.getCanonicalName());
+	}
+	
 	public TableColumn addHeader(String name, String type) {
 		TableColumn col = new TableColumn();
 		col.setName(name);

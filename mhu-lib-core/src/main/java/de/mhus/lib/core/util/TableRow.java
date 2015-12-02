@@ -99,5 +99,14 @@ public class TableRow implements Serializable {
 			throw new NotFoundException("column not found",name);
 		return get(index);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public <T> T get(String name, T def) {
+		int index = table.getColumnIndex(name);
+		if (index == -1) return def;
+		Object val = get(index);
+		if (val == null) return def;
+		return (T)val;
+	}
+
 }
