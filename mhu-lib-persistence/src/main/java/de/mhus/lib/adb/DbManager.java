@@ -129,7 +129,7 @@ public class DbManager extends MJmx {
 		sql.append("SELECT ").append(columns).append(" FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().substring(0, Math.min(qualification.length(), 6)).toLowerCase();
-			if (low.startsWith("order") || low.startsWith("limit"))
+			if (low.startsWith("order ") || low.startsWith("limit "))
 				sql.append(qualification);
 			else
 				sql.append("WHERE ").append(qualification);
@@ -175,7 +175,7 @@ public class DbManager extends MJmx {
 		sql.append("SELECT count(*) AS count FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();
-			if (low.startsWith("order") || low.startsWith("limit"))
+			if (low.startsWith("order ") || low.startsWith("limit "))
 				sql.append(qualification);
 			else
 				sql.append("WHERE ").append(qualification);
@@ -209,7 +209,7 @@ public class DbManager extends MJmx {
 		sql.append("SELECT max($db.").append(getMappingName(clazz)).append(".").append(field).append("$) AS max FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();
-			if (low.startsWith("order") || low.startsWith("limit"))
+			if (low.startsWith("order ") || low.startsWith("limit "))
 				sql.append(qualification);
 			else
 				sql.append("WHERE ").append(qualification);
