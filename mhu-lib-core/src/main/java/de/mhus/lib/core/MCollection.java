@@ -178,4 +178,11 @@ public class MCollection {
 		return out;
 	}
 	
+	public static <T> List<T> toList(T[] array) {
+		LinkedList<T> out = new LinkedList<>();
+		for (T item : array)
+			out.add(item);
+		return out;
+	}
+	
 }

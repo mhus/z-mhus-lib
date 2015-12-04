@@ -21,6 +21,7 @@ package de.mhus.lib.core;
 
 import java.awt.Color;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -622,7 +623,11 @@ public class MString {
 		return sb.toString();
 	}
 
-	public static String join(Iterator<String> src, String glue) {
+	public static String join(List<?> src, String glue) {
+		return join(src.iterator(), glue);
+	}
+	
+	public static String join(Iterator<?> src, String glue) {
 		if (src == null)
 			return null;
 		StringBuffer sb = new StringBuffer();
