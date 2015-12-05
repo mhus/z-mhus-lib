@@ -1,10 +1,11 @@
 package de.mhus.lib.core;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.configupdater.ConfigUpdater;
+import de.mhus.lib.core.configupdater.Updater;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -21,7 +22,7 @@ public class MSingleton {
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	private static ResourceNode emptyConfig = null;
-	private static ConfigUpdater configUpdater;
+	private static Updater configUpdater;
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -104,15 +105,29 @@ public class MSingleton {
 		}
 	}
 
-	public static ResourceNode getConfig(Object owner) {
-		if (emptyConfig == null) emptyConfig = new HashConfig();
-		return get().getConfigProvider().getConfig(owner, emptyConfig);
+	public static ResourceNode getConfig(Object owner, ResourceNode def) {
+		return get().getConfigManager().getConfig(owner, def);
 	}
 	
-	public static synchronized ConfigUpdater getConfigUpdater() {
+	/**
+	 * Returns the config or an empty config as default.
+	 * 
+	 * @param owner
+	 * @return
+	 */
+	public static ResourceNode getConfig(Object owner) {
+		if (emptyConfig == null) emptyConfig = new HashConfig();
+		return get().getConfigManager().getConfig(owner, emptyConfig);
+	}
+	
+	public static synchronized Updater getConfigUpdater() {
 		if (configUpdater == null)
-			configUpdater = new ConfigUpdater();
+			configUpdater = new Updater();
 		return configUpdater;
+	}
+	
+	public static File getFile(String path) {
+		return get().getFile(path);
 	}
 		
 }

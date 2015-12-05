@@ -7,7 +7,7 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.ConfigManager;
 
 @DefaultImplementation(ConsoleFactory.class)
 public abstract class LogFactory implements IBase {
@@ -31,7 +31,7 @@ public abstract class LogFactory implements IBase {
     public abstract void init(ResourceNode config) throws Exception;
 
 	public void init() throws Exception {
-		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigProvider.class).getConfig(this, null);
+		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigManager.class).getConfig(this, null);
 		init(config);
 	}
 	

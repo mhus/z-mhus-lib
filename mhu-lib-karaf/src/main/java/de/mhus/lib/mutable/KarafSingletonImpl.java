@@ -14,11 +14,11 @@ import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
-import de.mhus.lib.core.configupdater.DefaultConfigLoader;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.ConfigManager;
+import de.mhus.lib.core.system.DefaultConfigLoader;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
@@ -39,14 +39,18 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	
 	private LogFactory logFactory;
 	private BaseControl baseControl;
-	private ConfigProvider configProvider;
+	private ConfigManager configProvider;
 	private boolean fullTrace = false;
 	private HashSet<String> logTrace = new HashSet<>();
 
 	private KarafHousekeeper housekeeper;
 	
 	private DefaultConfigLoader cl = new DefaultConfigLoader();
-
+	private File baseDir = new File("data/mhus");
+	{
+		baseDir.mkdirs();
+	}
+	
 	public IConfig getConfig() {
 		return cl.getConfig();
 	}
@@ -70,9 +74,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	}
 
 	@Override
-	public synchronized ConfigProvider getConfigProvider() {
+	public synchronized ConfigManager getConfigManager() {
 		if (configProvider == null) {
-			configProvider = new ConfigProvider(getConfig());
+			configProvider = new ConfigManager(cl);
 		}
 		return configProvider;
 	}
@@ -126,22 +130,6 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		return fullTrace;
 	}
 
-//	public void updateOsgiConfig(Dictionary<String, ?> config) {
-//		synchronized (this) {
-//			MProperties p = new MProperties(config);
-//			setFullTrace(p.getBoolean(CONFIG_FULL_TRACE, isFullTrace()));
-//			MSingleton.setDirtyTrace(p.getBoolean(CONFIG_DIRTY_TRACE, isFullTrace()));
-//			clearTrace();
-//			for (String name : p.keys()) {
-//				if (name.startsWith(CONFIG_TRACE) && p.getBoolean(name, false)) {
-//					setTrace(name.substring(CONFIG_TRACE.length()+1));
-//				}
-//			}
-//			configFileName = p.getString(CONFIG_FILE_NAME,configFileName);
-//			reloadConfig();
-//		}
-//	}
-
 	@Override
 	public Base base() {
 		return getBaseControl().getCurrentBase();
@@ -160,6 +148,17 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public Set<String> getLogTrace() {
 		return logTrace;
+	}
+
+	@Override
+	public void setBaseDir(File file) {
+		baseDir = file;
+		baseDir.mkdirs();
+	}
+
+	@Override
+	public File getFile(String dir) {
+		return new File(baseDir, dir);
 	}
 	
 }

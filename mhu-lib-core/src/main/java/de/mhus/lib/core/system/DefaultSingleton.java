@@ -1,25 +1,25 @@
 package de.mhus.lib.core.system;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.configupdater.DefaultConfigLoader;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.service.ConfigProvider;
 
 public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingletonInternal {
 	
 	private LogFactory logFactory = new ConsoleFactory();
 	private BaseControl baseControl;
-	private ConfigProvider configProvider;
+	private ConfigManager configProvider;
 	private HashSet<String> logTrace = new HashSet<>();
 	private DefaultConfigLoader cl = new DefaultConfigLoader();
+	private File baseDir = new File(".");
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
@@ -56,9 +56,9 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	}
 
 	@Override
-	public synchronized ConfigProvider getConfigProvider() {
+	public synchronized ConfigManager getConfigManager() {
 		if (configProvider == null) {
-			configProvider = new ConfigProvider(getConfig());
+			configProvider = new ConfigManager(cl);
 		}
 		return configProvider;
 	}
@@ -83,4 +83,15 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 		return logTrace;
 	}
 
+	@Override
+	public void setBaseDir(File file) {
+		baseDir  = file;
+		baseDir.mkdirs();
+	}
+
+	@Override
+	public File getFile(String dir) {
+		return new File(baseDir, dir);
+	}
+	
 }

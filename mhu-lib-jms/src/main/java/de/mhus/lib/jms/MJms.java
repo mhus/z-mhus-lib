@@ -131,7 +131,7 @@ public class MJms {
 
 	public synchronized static ResourceNode getConfig() {
 		if (config == null)
-			config = MSingleton.get().getConfigProvider().getConfig("jms", new EmptyResourceNode());
+			config = MSingleton.get().getConfigManager().getConfig("jms", new EmptyResourceNode());
 		 return config;
 	}
 	

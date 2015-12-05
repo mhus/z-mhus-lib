@@ -31,8 +31,8 @@ import de.mhus.lib.core.configupdater.ConfigBoolean;
 import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.service.ConfigProvider;
 import de.mhus.lib.core.service.UniqueId;
+import de.mhus.lib.core.system.ConfigManager;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -51,7 +51,7 @@ public abstract class DbPool extends MJmx {
 	private long lastStackTracePrint = 0;
 	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false) {
 		@Override
-		protected void onUpdate(Boolean newValue) {
+		protected void onPreUpdate(Boolean newValue) {
 			if (stackTraces != null)
 				stackTraces.clear();
 		}
@@ -113,7 +113,7 @@ public abstract class DbPool extends MJmx {
 
 	protected void doCreateConfig() {
 		try {
-			config = base(ConfigProvider.class).getConfig(this,null);
+			config = base(ConfigManager.class).getConfig(this,null);
 		} catch (Throwable t) {
 		}
 		if (config == null) config = new HashConfig();

@@ -555,7 +555,7 @@ public class MFile {
 		extension = extension.trim().toLowerCase();
 		
 		String mime = null;
-		ResourceNode config = MSingleton.get().getConfigProvider().getConfig(MFile.class, null);
+		ResourceNode config = MSingleton.get().getConfigManager().getConfig(MFile.class, null);
 		if (config != null) {
 			ResourceNode map = config.getNode("mapping");
 			if (map != null)

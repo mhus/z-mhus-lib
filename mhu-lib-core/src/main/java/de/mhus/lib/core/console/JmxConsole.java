@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.ConfigManager;
 import de.mhus.lib.errors.MException;
 
 public class JmxConsole extends VirtualConsole {
@@ -17,7 +17,7 @@ public class JmxConsole extends VirtualConsole {
 		width = 80;
 		height = 40;
 		echo = true;
-		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigProvider.class).getConfig(this, null);
+		ResourceNode config = MSingleton.get().getBaseControl().base(this).lookup(ConfigManager.class).getConfig(this, null);
 		if (config != null) {
 			width = config.getInt("width",width);
 			height = config.getInt("height", height);

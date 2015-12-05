@@ -37,14 +37,23 @@ public abstract class ConfigValue<T> {
 	void update() {
 		T newValue = loadValue();
 		if (MSystem.equals(value, newValue)) return;
-		onUpdate(newValue);
+		onPreUpdate(newValue);
 		this.value = newValue;
+		onPostUpdate(value);
 	}
 
 	protected abstract T loadValue();
 	
-	protected void onUpdate(T newValue) {
+	protected void onPreUpdate(T newValue) {
 		
+	}
+	
+	protected void onPostUpdate(T newValue) {
+		
+	}
+
+	public boolean isOwner(String name) {
+		return MSingleton.get().getConfigManager().isOwner(owner, name);
 	}
 	
 }

@@ -16,7 +16,7 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.ConfigManager;
 import de.mhus.lib.errors.MException;
 
 public class MRemoteManager extends MObject implements IBase {
@@ -28,7 +28,7 @@ public class MRemoteManager extends MObject implements IBase {
 
 	public MRemoteManager() throws MException {
 		housekeeper = new Housekeeper(this);
-		ResourceNode config = base(ConfigProvider.class).getConfig(this,new HashConfig());
+		ResourceNode config = base(ConfigManager.class).getConfig(this,new HashConfig());
 		base(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
 	}
 	
