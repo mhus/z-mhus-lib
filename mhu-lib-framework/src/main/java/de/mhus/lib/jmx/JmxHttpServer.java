@@ -7,10 +7,11 @@ import com.sun.jdmk.comm.HtmlAdaptorServer;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.jmx.MRemoteManager;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.ConfigProvider;
 import de.mhus.lib.errors.MException;
 
 @JmxManaged(descrition = "Jmx Http Server")
@@ -26,7 +27,7 @@ public class JmxHttpServer extends MJmx {
 	@JmxManaged
 	public void openServer() throws MException {
 		if (config == null) { // auto load config
-			config = base(ConfigProvider.class).getConfig(this, null);
+			config = MSingleton.getConfig(this);
 		}
 		if (config == null || server != null) return;
 		server = new HtmlAdaptorServer(config.getInt("port", 1098));
