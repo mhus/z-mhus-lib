@@ -3,6 +3,7 @@ package de.mhus.lib.core.system;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
@@ -31,11 +32,11 @@ public class DefaultConfigLoader extends MLog implements ConfigProvider {
 	private boolean needFileWatch = false;
 	private String configFile;
 	private ISingletonInternal internal;
-	private HashMap<String,ConfigInitiator> initiators = new HashMap<>();
+	private TreeMap<String,ConfigInitiator> initiators = new TreeMap<>(); // execute in an ordered way
 	{
 		// default
-		initiators.put("system", new SystemConfigInitiator());
-		initiators.put("logger", new LogConfigInitiator());
+		initiators.put("001_system", new SystemConfigInitiator());
+		initiators.put("002_logger", new LogConfigInitiator());
 	}
 
 	public void doInitialize(ISingletonInternal internal) {
@@ -61,6 +62,8 @@ public class DefaultConfigLoader extends MLog implements ConfigProvider {
 					if ("initiator".equals(node.getName())) {
 						String clazzName = node.getString("class");
 						String name = node.getString("name", clazzName);
+						String level = node.getString("level", "100");
+						name = level + "_" + name;
 						
 						if ("none".equals(clazzName)) {
 							log().t("remove initiator",name);
