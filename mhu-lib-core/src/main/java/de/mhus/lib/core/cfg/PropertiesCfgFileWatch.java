@@ -16,6 +16,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 	private FileWatch fileWatch;
 	private File file;
 	private IConfig config;
+	private String name;
 	
 	public PropertiesCfgFileWatch() {
 	}
@@ -24,8 +25,8 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		setFile(file);
 	}
 	
-	public void doStart() {
-
+	public void doStart(final String name) {
+		this.name = name;
 		load();
 		
 		TimerIfc timer = MSingleton.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
@@ -33,7 +34,9 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
 			@Override
 			public void onFileChanged(FileWatch fileWatch) {
+				log().d("update cfg properties file",file);
 				load();
+				MSingleton.getCfgUpdater().doUpdate(name);
 			}
 
 			@Override

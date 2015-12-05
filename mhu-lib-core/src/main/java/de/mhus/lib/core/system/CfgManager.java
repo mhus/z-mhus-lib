@@ -30,7 +30,7 @@ public class CfgManager extends MLog {
 			if (old != null) old.doStop();
 		} else {
 			configurations.put(name, provider);
-			provider.doStart();
+			provider.doStart(name);
 		}
 	}
 	

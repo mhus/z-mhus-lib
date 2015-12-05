@@ -6,7 +6,7 @@ public interface CfgProvider {
 
 	public IConfig getConfig();
 	
-	public void doStart();
+	public void doStart(String name);
 	public void doStop();
 	
 }

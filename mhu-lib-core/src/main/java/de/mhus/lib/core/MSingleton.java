@@ -120,7 +120,7 @@ public class MSingleton {
 		return get().getCfgManager().getCfg(owner, emptyConfig);
 	}
 	
-	public static synchronized UpdaterCfg getConfigUpdater() {
+	public static synchronized UpdaterCfg getCfgUpdater() {
 		if (configUpdater == null)
 			configUpdater = new UpdaterCfg();
 		return configUpdater;

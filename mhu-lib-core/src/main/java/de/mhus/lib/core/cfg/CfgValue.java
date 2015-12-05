@@ -14,7 +14,7 @@ public abstract class CfgValue<T> {
 		this.owner = owner;
 		this.path = path;
 		this.def = def;
-		MSingleton.getConfigUpdater().register(this);
+		MSingleton.getCfgUpdater().register(this);
 		update();
 	}
 	

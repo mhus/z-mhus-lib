@@ -97,7 +97,7 @@ public class CentralMhusCfgProvider extends MLog implements CfgProvider {
 				t.printStackTrace();
 			}
 		}
-		MSingleton.getConfigUpdater().doUpdate(null);
+		MSingleton.getCfgUpdater().doUpdate(null);
 		
 	}
 
@@ -156,7 +156,7 @@ public class CentralMhusCfgProvider extends MLog implements CfgProvider {
 	}
 
 	@Override
-	public void doStart() {
+	public void doStart(String name) {
 		
 	}
 
