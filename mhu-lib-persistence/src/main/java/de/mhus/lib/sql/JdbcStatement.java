@@ -9,8 +9,8 @@ import java.sql.Statement;
 import java.util.Map;
 
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.configupdater.ConfigBoolean;
-import de.mhus.lib.core.configupdater.ConfigLong;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.errors.MException;
@@ -24,8 +24,8 @@ import de.mhus.lib.errors.MException;
 public class JdbcStatement extends DbStatement {
 
 
-	private static ConfigBoolean traceRuntime = new ConfigBoolean(DbConnection.class, "traceRuntime", false);
-	private static ConfigLong traceMaxRuntime = new ConfigLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+	private static CfgBoolean traceRuntime = new CfgBoolean(DbConnection.class, "traceRuntime", false);
+	private static CfgLong traceMaxRuntime = new CfgLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
 	
 	private JdbcConnection dbCon;
 	private Statement sth;

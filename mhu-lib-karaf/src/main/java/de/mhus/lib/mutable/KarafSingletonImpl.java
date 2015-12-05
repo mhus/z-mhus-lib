@@ -17,8 +17,8 @@ import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.system.ConfigManager;
-import de.mhus.lib.core.system.DefaultConfigLoader;
+import de.mhus.lib.core.system.CfgManager;
+import de.mhus.lib.core.system.CentralMhusCfgProvider;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
@@ -39,13 +39,13 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	
 	private LogFactory logFactory;
 	private BaseControl baseControl;
-	private ConfigManager configProvider;
+	private CfgManager configProvider;
 	private boolean fullTrace = false;
 	private HashSet<String> logTrace = new HashSet<>();
 
 	private KarafHousekeeper housekeeper;
 	
-	private DefaultConfigLoader cl = new DefaultConfigLoader();
+	private CentralMhusCfgProvider cl = new CentralMhusCfgProvider();
 	private File baseDir = new File("data/mhus");
 	{
 		baseDir.mkdirs();
@@ -74,9 +74,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	}
 
 	@Override
-	public synchronized ConfigManager getConfigManager() {
+	public synchronized CfgManager getCfgManager() {
 		if (configProvider == null) {
-			configProvider = new ConfigManager(cl);
+			configProvider = new CfgManager(cl);
 		}
 		return configProvider;
 	}
@@ -100,7 +100,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		} catch (Throwable t) {
 			System.out.println("Can't initialize timer base: " + t);
 		}
-		reConfigure();
+		getCfgManager().reConfigure();
 
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );
 	}
@@ -133,11 +133,6 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public Base base() {
 		return getBaseControl().getCurrentBase();
-	}
-
-	@Override
-	public void reConfigure() {
-		cl.reConfigure();
 	}
 
 	@Override

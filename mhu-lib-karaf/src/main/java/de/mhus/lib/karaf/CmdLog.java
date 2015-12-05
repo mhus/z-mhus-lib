@@ -77,7 +77,7 @@ public class CmdLog extends MLog implements Action {
 				System.out.println(name);
 		} break;
 		case "reloadconfig": { //TODO need single command class
-			singleton.reConfigure();
+			singleton.getCfgManager().reConfigure();
 			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;

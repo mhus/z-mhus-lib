@@ -26,13 +26,13 @@ import java.util.Map;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.configupdater.ConfigBoolean;
-import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.UniqueId;
-import de.mhus.lib.core.system.ConfigManager;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -49,14 +49,14 @@ public abstract class DbPool extends MJmx {
 	// Trace parameters
 	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
 	private long lastStackTracePrint = 0;
-	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false) {
+	private CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false) {
 		@Override
 		protected void onPreUpdate(Boolean newValue) {
 			if (stackTraces != null)
 				stackTraces.clear();
 		}
 	};
-	private ConfigLong traceWait = new ConfigLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private CfgLong traceWait = new CfgLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
 	
 	private DbProvider provider;
 	private String name;
@@ -113,7 +113,7 @@ public abstract class DbPool extends MJmx {
 
 	protected void doCreateConfig() {
 		try {
-			config = base(ConfigManager.class).getConfig(this,null);
+			config = base(CfgManager.class).getCfg(this,null);
 		} catch (Throwable t) {
 		}
 		if (config == null) config = new HashConfig();

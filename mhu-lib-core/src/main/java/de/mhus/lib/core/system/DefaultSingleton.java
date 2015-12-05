@@ -16,15 +16,15 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	
 	private LogFactory logFactory = new ConsoleFactory();
 	private BaseControl baseControl;
-	private ConfigManager configProvider;
+	private CfgManager configProvider;
 	private HashSet<String> logTrace = new HashSet<>();
-	private DefaultConfigLoader cl = new DefaultConfigLoader();
+	private CentralMhusCfgProvider cl = new CentralMhusCfgProvider();
 	private File baseDir = new File(".");
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
 		cl.doInitialize(this);
-		reConfigure();
+		getCfgManager().reConfigure();
 		
 	}
 
@@ -32,11 +32,6 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 		return cl.getConfig();
 	}
 		
-	@Override
-	public void reConfigure() {
-		cl.reConfigure();
-	}
-
 	@Override
 	public synchronized BaseControl getBaseControl() {
 		if (baseControl == null) {
@@ -56,9 +51,9 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	}
 
 	@Override
-	public synchronized ConfigManager getConfigManager() {
+	public synchronized CfgManager getCfgManager() {
 		if (configProvider == null) {
-			configProvider = new ConfigManager(cl);
+			configProvider = new CfgManager(cl);
 		}
 		return configProvider;
 	}

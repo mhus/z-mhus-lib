@@ -7,7 +7,7 @@ import java.util.Map;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.system.ConfigManager;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -41,7 +41,7 @@ public class DbPoolBundle extends MObject {
 	 */
 	public DbPoolBundle(ResourceNode config, MActivator activator) {
 
-		if (config == null) config = base(ConfigManager.class).getConfig(DbPoolBundle.class, null);
+		if (config == null) config = base(CfgManager.class).getCfg(DbPoolBundle.class, null);
 		if (activator == null) activator = base(MActivator.class);
 
 		this.config = config;

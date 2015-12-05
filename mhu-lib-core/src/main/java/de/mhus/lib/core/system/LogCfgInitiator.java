@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.directory.EmptyResourceNode;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.ConsoleFactory;
@@ -16,12 +17,12 @@ import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.logging.ParameterMapper;
 import de.mhus.lib.core.logging.Log.LEVEL;
 
-public class LogConfigInitiator implements ConfigInitiator {
+public class LogCfgInitiator implements CfgInitiator {
 
 	@Override
-	public void doInitialize(ISingletonInternal internal, ConfigManager manager) {
+	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
 
-		ResourceNode system = manager.getConfig("system");
+		ResourceNode system = manager.getCfg("system");
 		
 		
 		if (system == null) system = new EmptyResourceNode();

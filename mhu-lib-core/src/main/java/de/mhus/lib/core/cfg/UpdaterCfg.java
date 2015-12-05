@@ -1,26 +1,26 @@
-package de.mhus.lib.core.configupdater;
+package de.mhus.lib.core.cfg;
 
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-public class Updater {
+public class UpdaterCfg {
 
 	@SuppressWarnings("rawtypes")
-	private WeakHashMap<ConfigValue, String> registry = new WeakHashMap<>();
+	private WeakHashMap<CfgValue, String> registry = new WeakHashMap<>();
 	
 	@SuppressWarnings("rawtypes")
-	public void register(ConfigValue configValue) {
+	public void register(CfgValue configValue) {
 		synchronized (registry) {
 			registry.put(configValue,"");
 		}
 	}
 
 	public void doUpdate(String owner) {
-		LinkedList<ConfigValue> list = null;
+		LinkedList<CfgValue> list = null;
 		synchronized (registry) {
-			list = new LinkedList<ConfigValue>(registry.keySet());
+			list = new LinkedList<CfgValue>(registry.keySet());
 		}
-		for (ConfigValue<?> item : list)
+		for (CfgValue<?> item : list)
 		if (owner == null || item.isOwner(owner)) // is not working at all, owner could be a super class
 			item.update();
 	}

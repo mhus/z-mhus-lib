@@ -1,16 +1,16 @@
-package de.mhus.lib.core.configupdater;
+package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 
-public abstract class ConfigValue<T> {
+public abstract class CfgValue<T> {
 
 	private String path;
 	private T def;
 	private T value;
 	private Object owner;
 	
-	public ConfigValue(Object owner, String path, T def) {
+	public CfgValue(Object owner, String path, T def) {
 		this.owner = owner;
 		this.path = path;
 		this.def = def;
@@ -53,7 +53,7 @@ public abstract class ConfigValue<T> {
 	}
 
 	public boolean isOwner(String name) {
-		return MSingleton.get().getConfigManager().isOwner(owner, name);
+		return MSingleton.get().getCfgManager().isOwner(owner, name);
 	}
 	
 }

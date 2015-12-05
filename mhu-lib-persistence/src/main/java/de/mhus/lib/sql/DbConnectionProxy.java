@@ -1,7 +1,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.configupdater.ConfigBoolean;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.service.UniqueId;
@@ -16,7 +16,7 @@ import de.mhus.lib.errors.MException;
  */
 public class DbConnectionProxy extends MObject implements DbConnection {
 
-	private static ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false);
+	private static CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false);
 	
 	private DbConnection instance;
 	private long id = base(UniqueId.class).nextUniqueId();

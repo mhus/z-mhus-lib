@@ -11,7 +11,7 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.configupdater.ConfigLong;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
@@ -20,8 +20,8 @@ import de.mhus.lib.core.logging.TrailLevelMapper;
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	private static long usedThreads = 0;
-	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", -1);
-	private static ConfigLong maxThreadCountTimeout = new ConfigLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
+	private static CfgLong maxThreadCount = new CfgLong(ServerJms.class, "maxThreadCount", -1);
+	private static CfgLong maxThreadCountTimeout = new CfgLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
 	
     public ServerJms(JmsDestination dest) {
 		super(dest);

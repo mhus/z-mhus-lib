@@ -11,7 +11,7 @@ public interface ISingleton {
 
 	//Log createLog(Object owner);
 
-	ConfigManager getConfigManager();
+	CfgManager getCfgManager();
 
 	BaseControl getBaseControl();
 
@@ -22,8 +22,6 @@ public interface ISingleton {
 	boolean isTrace(String name);
 	
 	Base base();
-
-	void reConfigure();
 
 	/**
 	 * Return a File inside the current application context.

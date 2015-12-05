@@ -4,39 +4,43 @@ import java.util.HashMap;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
 
-public class ConfigManager extends MLog {
+public class CfgManager extends MLog {
 
-	private HashMap<String, ConfigProvider> configurations = new HashMap<>();
-	private ConfigProvider provider;
+	private HashMap<String, CfgProvider> configurations = new HashMap<>();
+	private CentralMhusCfgProvider provider;
 	
-	public ConfigManager() {
+	public CfgManager() {
 		//defaultConfig = new HashConfig();
 	}
 	
-	public ConfigManager(ConfigProvider provider) {
+	public CfgManager(CentralMhusCfgProvider provider) {
 		this.provider = provider;
 	}
 	
-	public void registerConfigProvider(String name, ConfigProvider provider) {
+	public void registerCfgProvider(String name, CfgProvider provider) {
 		if (name == null) return;
-		if (provider == null)
-			configurations.remove(name);
-		else
+		if (provider == null) {
+			CfgProvider old = configurations.remove(name);
+			if (old != null) old.doStop();
+		} else {
 			configurations.put(name, provider);
+			provider.doStart();
+		}
 	}
 	
-	public ResourceNode getConfig(Object owner, ResourceNode def) {
-		initConfig();
+	public ResourceNode getCfg(Object owner, ResourceNode def) {
+		initCfg();
 		
 		Class<?> c = null;
 		if (owner instanceof String) {
 			String name = (String)owner;
-			ResourceNode cClass = getConfig(name);
+			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
 				log().t("found (1)",name);
 				return cClass;
@@ -49,7 +53,7 @@ public class ConfigManager extends MLog {
 		}
 		while (c != null) {
 			String name = c.getCanonicalName();
-			ResourceNode cClass = getConfig(name);
+			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
 				log().t("found (2)",owner.getClass(),name);
 				return cClass;
@@ -61,14 +65,14 @@ public class ConfigManager extends MLog {
 		return def;
 	}
 	
-	private void initConfig() {
+	private void initCfg() {
 		
 	}
 
-	public ResourceNode getConfig(String owner) {
-		initConfig();
+	public ResourceNode getCfg(String owner) {
+		initCfg();
 		
-		ConfigProvider p = configurations.get(owner);
+		CfgProvider p = configurations.get(owner);
 		if (p != null) {
 			ResourceNode cOwner = p.getConfig();
 			if (cOwner != null) return cOwner;
@@ -79,10 +83,10 @@ public class ConfigManager extends MLog {
 		return cOwner;
 	}
 	
-	public ResourceNode getConfig(String owner, ResourceNode def) {
-		initConfig();
+	public ResourceNode getCfg(String owner, ResourceNode def) {
+		initCfg();
 
-		ResourceNode cClass = getConfig(owner);
+		ResourceNode cClass = getCfg(owner);
 		if (cClass != null) {
 			log().t("found (3)",owner.getClass(),owner);
 			return cClass;
@@ -96,7 +100,7 @@ public class ConfigManager extends MLog {
 		Class<?> c = null;
 		if (owner instanceof String) {
 			String name = (String)owner;
-			ResourceNode cClass = getConfig(name);
+			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (1)",name);
 				return name.equals(n);
@@ -109,7 +113,7 @@ public class ConfigManager extends MLog {
 		}
 		while (c != null) {
 			String name = c.getCanonicalName();
-			ResourceNode cClass = getConfig(name);
+			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (2)",owner.getClass(),name);
 				return name.equals(n);
@@ -119,5 +123,10 @@ public class ConfigManager extends MLog {
 		
 		return false;
 	}
+
+	public void reConfigure() {
+		provider.reConfigure();
+	}
+
 
 }
