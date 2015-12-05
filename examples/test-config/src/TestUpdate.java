@@ -55,6 +55,7 @@ public class TestUpdate {
 		
 		System.out.println("*** Test extra properties ");
 		File fp = new File("../testprop.properties");
+		if (fp.exists()) fp.delete();
 		String configData2 = "prop=abc";
 		MSingleton.get().getCfgManager().registerCfgProvider(TestUpdate.class.getCanonicalName(), new PropertiesCfgFileWatch(fp));
 		
