@@ -5,7 +5,7 @@ import de.mhus.lib.core.definition.IDefDefinition;
 
 public class FmSplit extends DefComponent {
 
-	public FmSplit(IDefDefinition[] definitions) {
+	public FmSplit(IDefDefinition ... definitions) {
 		super("split", definitions);
 	}
 

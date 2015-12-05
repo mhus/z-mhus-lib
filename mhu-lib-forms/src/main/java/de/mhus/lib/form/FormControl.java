@@ -1,15 +1,20 @@
 package de.mhus.lib.form;
 
-import de.mhus.lib.errors.MException;
+import de.mhus.lib.annotations.activator.DefaultImplementation;
 
+@DefaultImplementation(FormControlAdapter.class)
 public interface FormControl {
 
-	void focused(LayoutElement element);
+	void attachedForm(Form form);
 	
-	void action(FormAction action);
+	void focus(UiComponent component);
+	
+	boolean newValue(UiComponent component, Object newValue);
 
-	void wizard(LayoutElement element);
+	void reverted(UiComponent component);
 
-	boolean validate(LayoutElement element, DataConnector dataConnector, Object value) throws MException;
+	void newValueError(UiComponent component, Object newValue, Throwable t);
+
+	void valueSet(UiComponent component);
 	
 }

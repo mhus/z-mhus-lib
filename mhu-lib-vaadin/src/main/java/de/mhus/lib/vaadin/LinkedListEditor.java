@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.util.FilterRequest;
 
 public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 
@@ -109,7 +110,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	}
 
 	@Override
-	protected List<E> createFullDataList() {
+	protected List<E> createBeanDataList() {
 		return list;
 	}
 	

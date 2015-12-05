@@ -29,7 +29,7 @@ public class FmNls extends DefAttribute {
 	@Override
 	public void inject(DefComponent root) throws MException {
 		super.inject(root);
-		if (title != null) root.setString("title", title);
+		if (title != null) root.setString("caption", title);
 		if (descritpion != null) root.setString("description", descritpion);
 	}
 

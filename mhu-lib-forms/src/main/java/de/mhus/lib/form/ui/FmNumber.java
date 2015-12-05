@@ -2,7 +2,6 @@ package de.mhus.lib.form.ui;
 
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.definition.FmDefaultSources;
 import de.mhus.lib.form.definition.FmElement;
 import de.mhus.lib.form.definition.FmNls;
 
@@ -18,7 +17,7 @@ public class FmNumber extends FmElement {
 	public static final String NUMBER_TYPE = "number";
 
 	public FmNumber(String name, TYPES type, String title, String description) {
-		this(name, type, new FmNls(title, description), new FmDefaultSources());
+		this(name, type, new FmNls(title, description));
 	}
 
 	public FmNumber(String name, TYPES type, IDefAttribute ... definitions) {

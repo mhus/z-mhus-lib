@@ -7,11 +7,14 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 
+import de.mhus.lib.core.MProperties;
+
 public class SimpleTable extends Table {
 
 	private static final long serialVersionUID = 1L;
 	private IndexedContainer dataSource;
 	private ColumnDefinition[] columns;
+	//protected MProperties status = new MProperties();
 
 	public SimpleTable() {
 		super();
@@ -53,6 +56,7 @@ public class SimpleTable extends Table {
         
         for (Object col : colapsedByDefault)
         	setColumnCollapsed(col, true);
+                
 	}
 
 	public IndexedContainer getDataSource() {
