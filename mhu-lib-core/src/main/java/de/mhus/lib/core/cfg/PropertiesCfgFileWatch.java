@@ -28,6 +28,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 	public void doStart(final String name) {
 		this.name = name;
 		load();
+		MSingleton.getCfgUpdater().doUpdate(name);
 		
 		TimerIfc timer = MSingleton.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
 		fileWatch = new FileWatch(file, timer, new FileWatch.Listener() {

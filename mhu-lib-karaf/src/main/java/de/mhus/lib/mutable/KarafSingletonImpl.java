@@ -18,7 +18,6 @@ import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.system.CfgManager;
-import de.mhus.lib.core.system.CentralMhusCfgProvider;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
@@ -45,14 +44,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 
 	private KarafHousekeeper housekeeper;
 	
-	private CentralMhusCfgProvider cl = new CentralMhusCfgProvider();
 	private File baseDir = new File("data/mhus");
 	{
 		baseDir.mkdirs();
-	}
-	
-	public IConfig getConfig() {
-		return cl.getConfig();
 	}
 	
 	@Override
@@ -76,7 +70,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public synchronized CfgManager getCfgManager() {
 		if (configProvider == null) {
-			configProvider = new CfgManager(cl);
+			configProvider = new CfgManager(this);
 		}
 		return configProvider;
 	}
@@ -85,7 +79,8 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
 		logFactory = new JavaLoggerFactory();
-		cl.doInitialize(this);
+		
+		getCfgManager(); // init
 		
 		try {
 			housekeeper = new KarafHousekeeper();

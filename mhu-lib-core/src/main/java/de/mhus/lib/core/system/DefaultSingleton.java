@@ -18,18 +18,11 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	private BaseControl baseControl;
 	private CfgManager configProvider;
 	private HashSet<String> logTrace = new HashSet<>();
-	private CentralMhusCfgProvider cl = new CentralMhusCfgProvider();
 	private File baseDir = new File(".");
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
-		cl.doInitialize(this);
 		getCfgManager().reConfigure();
-		
-	}
-
-	public synchronized IConfig getConfig() {
-		return cl.getConfig();
 	}
 		
 	@Override
@@ -53,7 +46,7 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	@Override
 	public synchronized CfgManager getCfgManager() {
 		if (configProvider == null) {
-			configProvider = new CfgManager(cl);
+			configProvider = new CfgManager(this);
 		}
 		return configProvider;
 	}

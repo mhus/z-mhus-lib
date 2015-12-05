@@ -1,6 +1,5 @@
 package de.mhus.lib.core.system;
 
-import java.io.File;
 import java.io.PrintStream;
 
 import de.mhus.lib.core.MConstants;
@@ -19,6 +18,13 @@ import de.mhus.lib.core.logging.Log.LEVEL;
 
 public class LogCfgInitiator implements CfgInitiator {
 
+	private static PrintStream err;
+	private static PrintStream out;
+	static {
+		err = System.err;
+		out = System.out;
+	}
+	
 	@Override
 	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
 
@@ -81,10 +87,8 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
 				if ("true".equals(name)) {
-					System.setErr(null);
-					System.setOut(null);
-					System.setErr(new SecureStreamToLogAdapter(LEVEL.ERROR, System.err));
-					System.setOut(new SecureStreamToLogAdapter(LEVEL.INFO, System.out));
+					System.setErr(new SecureStreamToLogAdapter(LEVEL.ERROR, err));
+					System.setOut(new SecureStreamToLogAdapter(LEVEL.INFO, out));
 				}
 			}
 		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
