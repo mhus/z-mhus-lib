@@ -41,7 +41,8 @@ public class MProperties extends IProperties implements Externalizable {
 	public MProperties(Map<?, ?> in) {
 		this.properties = new Properties();
 		for (Map.Entry<?, ?> e : in.entrySet())
-			this.properties.put(String.valueOf( e.getKey() ), e.getValue());
+			if (e.getKey() != null && e.getValue() != null)
+				this.properties.put(String.valueOf( e.getKey() ), e.getValue());
 	}
 	
 	public MProperties(Properties properties) {
