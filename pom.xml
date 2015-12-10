@@ -89,23 +89,14 @@
     <modules>
       <module>mhu-lib-annotations</module>
       <module>mhu-lib-core</module>
-      <module>mhu-lib-logging</module>
-      <module>mhu-lib-forms</module>
       <module>mhu-lib-j2ee</module>
       <module>mhu-lib-persistence</module>
       <module>mhu-lib-vaadin</module>
       <module>mhu-lib-liferay</module>
-      <module>mhu-lib-framework</module>
+      <module>mhu-lib-standalone</module>
       <module>mhu-lib-jms</module>
       <module>mhu-lib-karaf</module>
     </modules>
-
-  <repositories>
-	<repository>
-	   <id>vaadin-addons</id>
-	   <url>http://maven.vaadin.com/vaadin-addons</url>
-	</repository>  
-  </repositories>
 
 	<distributionManagement>
 	  <snapshotRepository>

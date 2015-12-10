@@ -1,10 +1,10 @@
 package de.mhus.lib.cao;
 
 import de.mhus.lib.core.directory.MResourceProvider;
-import de.mhus.lib.core.form.MForm;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsFactory;
+import de.mhus.lib.form.MForm;
 
 /**
  * A action is doing something with one or more objects. The main

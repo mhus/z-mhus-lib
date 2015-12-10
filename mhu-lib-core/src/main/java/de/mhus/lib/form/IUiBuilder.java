@@ -1,4 +1,4 @@
-package de.mhus.lib.core.form;
+package de.mhus.lib.form;
 
 public interface IUiBuilder {
 

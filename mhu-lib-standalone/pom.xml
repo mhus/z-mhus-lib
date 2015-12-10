@@ -18,7 +18,7 @@
     -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mhu-lib-framework</artifactId>
+  <artifactId>mhu-lib-standalone</artifactId>
 
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
@@ -133,17 +133,6 @@
     <dependency>
     	<groupId>de.mhus.lib</groupId>
     	<artifactId>mhu-lib-persistence</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>de.mhus.inka</groupId>
-    	<artifactId>constgenerator</artifactId>
-    	<version>1.0.0</version>
-    	<type>maven-plugin</type>
-    </dependency>
-    <dependency>
-    	<groupId>de.mhus.lib</groupId>
-    	<artifactId>mhu-lib-logging</artifactId>
     	<version>${project.version}</version>
     </dependency>
     <dependency>

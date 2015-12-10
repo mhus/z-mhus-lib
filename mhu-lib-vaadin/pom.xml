@@ -50,11 +50,6 @@
 		<artifactId>mhu-lib-core</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-	<dependency>
-		<groupId>de.mhus.lib</groupId>
-		<artifactId>mhu-lib-forms</artifactId>
-		<version>${project.version}</version>
-	</dependency>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
   		<artifactId>mhu-lib-annotations</artifactId>

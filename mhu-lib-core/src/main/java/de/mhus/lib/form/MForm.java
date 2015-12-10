@@ -1,4 +1,4 @@
-package de.mhus.lib.core.form;
+package de.mhus.lib.form;
 
 import de.mhus.lib.core.util.MNls;
 

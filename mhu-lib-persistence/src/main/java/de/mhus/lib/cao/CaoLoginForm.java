@@ -2,7 +2,7 @@ package de.mhus.lib.cao;
 
 import java.net.URI;
 
-import de.mhus.lib.core.form.MForm;
+import de.mhus.lib.form.MForm;
 
 public abstract class CaoLoginForm extends MForm {
 

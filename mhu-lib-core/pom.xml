@@ -39,10 +39,14 @@
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            	de.mhus.lib.core*;version=${project.version}
+	            	de.mhus.lib.core*;version=${project.version},
+	            	de.mhus.lib.form*;version=${project.version},
+	            	de.mhus.lib.logging*;version=${project.version}
 	            	</Export-Package>
 	            <Import-Package>
 	            *,
+	            org.apache.log4j*;version=1.2.14;resolution:=optional,
+	            org.slf4j*;version=1.7.5;resolution:=optional,
 	            de.mhus.lib.mutable;version=${project.version};resolution:=optional</Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 	          </instructions>
@@ -97,6 +101,22 @@
   		<artifactId>mhu-lib-annotations</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	
+    <dependency>
+    	<groupId>log4j</groupId>
+    	<artifactId>log4j</artifactId>
+    	<version>1.2.14</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.slf4j</groupId>
+    	<artifactId>slf4j-api</artifactId>
+    	<version>1.7.5</version>
+    	<scope>compile</scope>
+    </dependency>
+  	
   </dependencies>
+  
   
 </project>

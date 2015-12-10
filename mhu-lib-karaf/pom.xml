@@ -103,11 +103,6 @@
         </dependency>
         <dependency>
         	<groupId>de.mhus.lib</groupId>
-        	<artifactId>mhu-lib-logging</artifactId>
-        	<version>${project.version}</version>
-        </dependency>
-        <dependency>
-        	<groupId>de.mhus.lib</groupId>
         	<artifactId>mhu-lib-persistence</artifactId>
         	<version>${project.version}</version>
         </dependency>
