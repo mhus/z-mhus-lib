@@ -3,6 +3,7 @@ package de.mhus.lib.vaadin.layouter;
 import java.util.HashMap;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -49,7 +50,7 @@ public class LayoutBuilder extends MObject {
 	}
 	
 	public MActivator getActivator() {
-		return base(MActivator.class);
+		return MSingleton.getService(MActivator.class);
 	}
 
 	protected void build(XLayElement parent, ResourceNode layout) throws Exception {

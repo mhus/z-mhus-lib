@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
@@ -38,7 +39,7 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				if (f.isDirectory() && f.getName().equals(key) ||
 					!f.isDirectory() && f.getName().startsWith(keyDot))
-					return base(MConfigFactory.class).createConfigFor(f);
+					return MSingleton.getService(MConfigFactory.class).createConfigFor(f);
 		} catch (Throwable e) {
 			
 		}
@@ -53,7 +54,7 @@ public class DirConfig extends PropertiesConfig {
 				try {
 					if (f.isDirectory() && f.getName().equals(key) ||
 						!f.isDirectory() && f.getName().startsWith(keyDot))
-						out.add(base(MConfigFactory.class).createConfigFor(f));
+						out.add(MSingleton.getService(MConfigFactory.class).createConfigFor(f));
 				} catch (Throwable e) {
 					
 				}
@@ -67,10 +68,10 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				try {
 					if (f.isDirectory() && !f.getName().startsWith(".") && !f.isHidden())
-						out.add(base(MConfigFactory.class).createConfigFor(f));
+						out.add(MSingleton.getService(MConfigFactory.class).createConfigFor(f));
 					else
 					if (!f.isDirectory() && !f.isHidden()) {
-						WritableResourceNode conf = base(MConfigFactory.class).createConfigFor(f);
+						WritableResourceNode conf = MSingleton.getService(MConfigFactory.class).createConfigFor(f);
 						if (conf != null)
 							out.add(conf);
 					}

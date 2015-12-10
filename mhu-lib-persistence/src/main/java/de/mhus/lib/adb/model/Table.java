@@ -18,6 +18,7 @@ import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.adb.DbType;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
@@ -78,7 +79,7 @@ public abstract class Table extends MObject {
 			}
 
 		if (table != null &&!MString.isEmptyTrim(table.attributes())) {
-			attributes = base(MConfigFactory.class).toConfig(table.attributes());
+			attributes = MSingleton.getService(MConfigFactory.class).toConfig(table.attributes());
 		} else {
 			attributes = new HashConfig();
 		}

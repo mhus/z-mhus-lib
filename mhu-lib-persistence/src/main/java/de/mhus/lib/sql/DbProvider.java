@@ -19,6 +19,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
@@ -56,7 +57,7 @@ public abstract class DbProvider extends MObject {
 	 */
 	public void doInitialize(ResourceNode config,MActivator activator) {
 		if (config == null) config = new HashConfig();
-		if (activator == null) activator = base(MActivator.class);
+		if (activator == null) activator = MSingleton.getService(MActivator.class);
 		this.config = config;
 		this.activator = activator;
 	}

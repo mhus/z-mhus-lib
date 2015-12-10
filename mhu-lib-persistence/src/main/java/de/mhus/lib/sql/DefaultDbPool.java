@@ -26,6 +26,7 @@ import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 
 /**
@@ -77,7 +78,7 @@ public class DefaultDbPool extends DbPool {
 	protected void initHousekeeper() {
 
 		Housekeeper housekeeper = new Housekeeper(this);
-		base(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
+		MSingleton.getService(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
 	}
 
 	/**

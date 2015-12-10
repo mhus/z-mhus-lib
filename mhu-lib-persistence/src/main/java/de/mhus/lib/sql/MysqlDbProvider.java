@@ -1,6 +1,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.NodeConfig;
 
 public class MysqlDbProvider extends JdbcProvider {
@@ -16,7 +17,7 @@ public class MysqlDbProvider extends JdbcProvider {
 		config.setProperty("user", user);
 		config.setProperty("pass", pass);
 		config.setProperty("name", url);
-		activator = base(MActivator.class);
+		activator = MSingleton.getService(MActivator.class);
 	}
 		
 }

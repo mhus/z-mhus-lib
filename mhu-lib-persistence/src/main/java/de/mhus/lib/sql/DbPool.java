@@ -25,6 +25,7 @@ import java.util.Map;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -85,7 +86,7 @@ public abstract class DbPool extends MJmx {
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
-		if (activator == null) activator = base(MActivator.class);
+		if (activator == null) activator = MSingleton.getService(MActivator.class);
 
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
@@ -113,7 +114,7 @@ public abstract class DbPool extends MJmx {
 
 	protected void doCreateConfig() {
 		try {
-			config = base(CfgManager.class).getCfg(this,null);
+			config = MSingleton.get().getCfgManager().getCfg(this,null);
 		} catch (Throwable t) {
 		}
 		if (config == null) config = new HashConfig();
@@ -128,7 +129,7 @@ public abstract class DbPool extends MJmx {
 		this.provider = provider;
 		name = provider.getName();
 		if (name == null) name = "pool";
-		name = name + base(UniqueId.class).nextUniqueId();
+		name = name + MSingleton.getService(UniqueId.class).nextUniqueId();
 	}
 
 	/**

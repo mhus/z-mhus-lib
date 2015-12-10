@@ -40,14 +40,5 @@ public abstract class Base {
 		local.add(ifc.getCanonicalName());
 	}
 	
-	public static Base lookup(Object owner) {
-		Base base = null;
-		if (owner instanceof MObject)
-			base = MSingleton.get().getBaseControl().getBaseOf((MObject) owner);
-		else
-			base = MSingleton.get().getBaseControl().base(owner);
-		return base;
-	}
-
 	
 }

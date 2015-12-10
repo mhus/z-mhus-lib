@@ -13,7 +13,7 @@ import de.mhus.lib.core.lang.Injector;
 import de.mhus.lib.core.lang.InjectorList;
 
 @DefaultImplementation(DefaultActivator.class)
-public abstract class MActivator extends ClassLoader implements IBase {
+public abstract class MActivator extends ClassLoader  {
 
 //	protected static StaticBase base = new StaticBase();
 	

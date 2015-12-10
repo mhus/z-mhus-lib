@@ -18,7 +18,7 @@ import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.TimerIfc;
 
-public class CfgManager extends MLog {
+public class CfgManager {
 
 	private HashMap<String, CfgProvider> configurations = new HashMap<>();
 	private CentralMhusCfgProvider provider;
@@ -67,7 +67,7 @@ public class CfgManager extends MLog {
 			String name = (String)owner;
 			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
-				log().t("found (1)",name);
+//				log().t("found (1)",name);
 				return cClass;
 			}
 		} else
@@ -80,12 +80,12 @@ public class CfgManager extends MLog {
 			String name = c.getCanonicalName();
 			ResourceNode cClass = getCfg(name);
 			if (cClass != null) {
-				log().t("found (2)",owner.getClass(),name);
+//				log().t("found (2)",owner.getClass(),name);
 				return cClass;
 			}
 			c = c.getSuperclass();
 		}
-		log().t("not found",owner.getClass());			
+//		log().t("not found",owner.getClass());			
 	
 		return def;
 	}
@@ -113,7 +113,7 @@ public class CfgManager extends MLog {
 
 		ResourceNode cClass = getCfg(owner);
 		if (cClass != null) {
-			log().t("found (3)",owner.getClass(),owner);
+//			log().t("found (3)",owner.getClass(),owner);
 			return cClass;
 		}
 
@@ -153,7 +153,7 @@ public class CfgManager extends MLog {
 		provider.reConfigure();
 	}
 
-	class CentralMhusCfgProvider extends MLog implements CfgProvider {
+	class CentralMhusCfgProvider implements CfgProvider {
 
 		public void doInitialize() {
 			
@@ -165,7 +165,7 @@ public class CfgManager extends MLog {
 
 		public void reConfigure() {
 			
-			log().i("Load mhu-lib configuration");
+			MSingleton.dirtyLog("Load mhu-lib configuration");
 			
 			// init initiators
 			try {
@@ -180,11 +180,11 @@ public class CfgManager extends MLog {
 							name = level + "_" + name;
 							
 							if ("none".equals(clazzName)) {
-								log().t("remove initiator",name);
+								MSingleton.dirtyLog("remove initiator",name);
 								initiators.remove(name);
 							} else
 							if (clazzName != null && !initiators.containsKey(name)) {
-								log().t("add initiator",name);
+								MSingleton.dirtyLog("add initiator",name);
 								CfgInitiator initiator = activator.createObject(CfgInitiator.class, clazzName);
 								initiators.put(name, initiator);
 							}
@@ -194,10 +194,10 @@ public class CfgManager extends MLog {
 				
 				for (CfgInitiator initiator : initiators.values())
 					try {
-						log().t("run initiator",initiator.getClass());
+						MSingleton.dirtyLog("run initiator",initiator.getClass());
 						initiator.doInitialize(internal, MSingleton.get().getCfgManager() );
 					} catch (Throwable t) {
-						log().t("Can't initiate",initiator.getClass(),t);
+						MSingleton.dirtyLog("Can't initiate",initiator.getClass(),t);
 						if (MSingleton.isDirtyTrace()) {
 							System.out.println("Can't initiate " + initiator.getClass() + " Error: " + t);
 							t.printStackTrace();
@@ -205,7 +205,7 @@ public class CfgManager extends MLog {
 					}
 				
 			} catch (Throwable t) {
-				log().t("Can't initiate config",t);
+				MSingleton.dirtyLog("Can't initiate config",t);
 				if (MSingleton.isDirtyTrace()) {
 					System.out.println("Can't initiate config " + t);
 					t.printStackTrace();

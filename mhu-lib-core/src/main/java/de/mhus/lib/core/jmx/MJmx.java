@@ -1,5 +1,6 @@
 package de.mhus.lib.core.jmx;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 
 public class MJmx extends JmxObject {
@@ -13,10 +14,10 @@ public class MJmx extends JmxObject {
 	}
 	
 	protected void jmxRegister(boolean weak,String name) {
-		if (isBase(MRemoteManager.class) && !isJmxRegistered()) {
+		if (!isJmxRegistered()) {
 			try {
 				setJmxName(name);
-				base(MRemoteManager.class).register(this,weak);
+				MSingleton.getService(MRemoteManager.class).register(this,weak);
 			} catch (Exception e) {
 				log().t(e);
 			}

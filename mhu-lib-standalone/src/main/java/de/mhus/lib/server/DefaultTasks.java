@@ -1,5 +1,6 @@
 package de.mhus.lib.server;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.server.service.Command;
 import de.mhus.lib.server.service.GarbageCollectionTrigger;
@@ -11,7 +12,7 @@ public class DefaultTasks extends MObject {
 
 	@SuppressWarnings("unchecked")
 	public DefaultTasks() {
-		Main main = base(Main.class);
+		Main main = MSingleton.getService(Main.class);
 		main.appendList(new TaskListDefinition("q","Quit", new Class[] {
 				Quit.class
 		}));

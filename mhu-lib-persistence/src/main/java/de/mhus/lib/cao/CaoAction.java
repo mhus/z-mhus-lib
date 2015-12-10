@@ -1,5 +1,6 @@
 package de.mhus.lib.cao;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.MNls;
@@ -23,7 +24,7 @@ public abstract class CaoAction extends MObject {
 	}
 
 	public CaoAction(MResourceProvider<?> res, String resourceName) {
-		resourceBundle = base(MNlsFactory.class).load(res,this.getClass(), resourceName, null);
+		resourceBundle = MSingleton.getService(MNlsFactory.class).load(res,this.getClass(), resourceName, null);
 	}
 
 	public abstract String getName();

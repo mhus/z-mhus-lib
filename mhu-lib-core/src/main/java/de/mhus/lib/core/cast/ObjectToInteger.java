@@ -1,11 +1,12 @@
 package de.mhus.lib.core.cast;
 
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToInteger implements Caster<Object,Integer> {
 
-	private final static Log log = Log.getLog(ObjectToInteger.class);
+//	private final static Log log = Log.getLog(ObjectToInteger.class);
 	
 	@Override
 	public Class<? extends Integer> getToClass() {
@@ -65,7 +66,7 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 			if (ret != null) ret.setObject(r);
 			return r;
 		} catch (Throwable e) {
-			log.t(_in, e.toString());
+			MLogUtil.log().t(_in, e.toString());
 			return def;
 		}
 	}

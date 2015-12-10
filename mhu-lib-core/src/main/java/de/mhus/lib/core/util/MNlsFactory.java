@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
 import de.mhus.lib.core.directory.MResourceProvider;
@@ -28,12 +29,7 @@ public class MNlsFactory extends MNlsBundle {
 	}
 	
 	public MNls create(Object owner) {
-		try {
-			installBase();
-			return load(null, null, toResourceName(owner), null);
-		} finally {
-			leaveBase();
-		}
+		return load(null, null, toResourceName(owner), null);
 	}
 	
 	public MNls load(Class<?> owner) {
@@ -134,11 +130,7 @@ public class MNlsFactory extends MNlsBundle {
 	}
 	
 	public static MNlsFactory lookup(Object owner) {
-		Base base = Base.lookup(owner);
-		if (base != null) {
-			return base.lookup(MNlsFactory.class);
-		}
-		return null;
+		return MSingleton.getService(MNlsFactory.class);
 	}
 
 	@Override

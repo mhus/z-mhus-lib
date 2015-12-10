@@ -10,6 +10,7 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
+import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.core.system.DefaultSingleton;
 import de.mhus.lib.core.system.DummyClass;
 import de.mhus.lib.core.system.ISingleton;
@@ -128,6 +129,15 @@ public class MSingleton {
 	
 	public static File getFile(String path) {
 		return get().getFile(path);
+	}
+
+	public static <T> T getService(Class<T> class1) {
+		return get().getBaseControl().base().lookup(class1);
+	}
+
+	public static void dirtyLog(Object ... string) {
+		if (isDirtyTrace())
+			System.out.println(string);
 	}
 		
 }

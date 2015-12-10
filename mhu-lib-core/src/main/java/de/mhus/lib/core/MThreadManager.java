@@ -31,7 +31,7 @@ public class MThreadManager extends MObject implements IBase {
 		synchronized (pool) {
 			if (housekeeper == null) {
 				housekeeper = new ThreadHousekeeper();
-				base(MHousekeeper.class).register(housekeeper, SLEEP_TIME, true);
+				MSingleton.getService(MHousekeeper.class).register(housekeeper, SLEEP_TIME, true);
 			}
 			// search free thread
 

@@ -2,6 +2,7 @@ package de.mhus.lib.form;
 
 import java.util.Locale;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.lang.MObject;
@@ -49,7 +50,7 @@ public class Form extends MObject implements MNlsProvider {
 	}
 
 	public DataSource getDataSource() {
-		if (dataSource == null) dataSource = base(DataSource.class);
+		if (dataSource == null) dataSource = MSingleton.getService(DataSource.class);
 		return dataSource;
 	}
 
@@ -77,7 +78,7 @@ public class Form extends MObject implements MNlsProvider {
 	}
 	
 	public FormControl getControl() {
-		if (control == null) setControl(base(FormControl.class));
+		if (control == null) setControl(MSingleton.getService(FormControl.class));
 		return control;
 	}
 	

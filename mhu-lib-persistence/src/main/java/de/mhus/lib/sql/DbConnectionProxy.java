@@ -1,5 +1,6 @@
 package de.mhus.lib.sql;
 
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.lang.MObject;
@@ -19,7 +20,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	private static CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false);
 	
 	private DbConnection instance;
-	private long id = base(UniqueId.class).nextUniqueId();
+	private long id = MSingleton.getService(UniqueId.class).nextUniqueId();
 //	private StackTraceElement[] createStackTrace;
 	private DbPool pool;
 

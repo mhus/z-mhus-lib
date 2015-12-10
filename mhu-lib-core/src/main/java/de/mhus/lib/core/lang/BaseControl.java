@@ -12,8 +12,8 @@ public class BaseControl {
 	private BaseFindStrategy findStrategy = null;
 	private InjectStrategy injectStrategy = null;
 	
-	public Base base(Object owner) {
-		return getFindStrategy().find(owner);
+	public Base base() {
+		return getFindStrategy().find();
 	}
 
 	public void setFindStrategy(BaseFindStrategy strategy) {
@@ -46,10 +46,6 @@ public class BaseControl {
 
 	public Base installBase(Base base) {
 		return getFindStrategy().install(base);
-	}
-	
-	public Base getBaseOf(MObject obj) {
-		return obj.base();
 	}
 	
 	public Base getCurrentBase() {

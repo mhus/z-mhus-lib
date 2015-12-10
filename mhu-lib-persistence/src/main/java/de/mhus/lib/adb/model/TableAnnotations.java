@@ -4,6 +4,7 @@ import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.MConfigFactory;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -49,7 +50,7 @@ public class TableAnnotations extends Table {
 
 				} else {
 					log().t("field",mName);
-					WritableResourceNode attr = base(MConfigFactory.class).toConfig(toAttributes(p,pk));
+					WritableResourceNode attr = MSingleton.getService(MConfigFactory.class).toConfig(toAttributes(p,pk));
 					boolean v = (p !=null && p.virtual());
 
 					// check for doubled
