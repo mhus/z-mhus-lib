@@ -65,7 +65,7 @@ public class ConsoleFactory extends LogFactory {
 			out = new PrintStream(f,true);
 		} else
 		if ("console".equals(io)) {
-			out = MSingleton.getService(Console.class);
+			out = MSingleton.baseLookup(this,Console.class);
 		} else
 		if ("err".equals(io))
 		{

@@ -130,7 +130,7 @@ public class MNlsFactory extends MNlsBundle {
 	}
 	
 	public static MNlsFactory lookup(Object owner) {
-		return MSingleton.getService(MNlsFactory.class);
+		return MSingleton.baseLookup(owner,MNlsFactory.class);
 	}
 
 	@Override

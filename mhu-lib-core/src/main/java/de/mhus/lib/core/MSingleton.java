@@ -131,8 +131,8 @@ public class MSingleton {
 		return get().getFile(path);
 	}
 
-	public static <T> T getService(Class<T> class1) {
-		return get().getBaseControl().base().lookup(class1);
+	public static <T> T baseLookup(Object owner, Class<T> class1) {
+		return get().getBaseControl().base(owner).lookup(class1);
 	}
 
 	public static void dirtyLog(Object ... string) {

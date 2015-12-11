@@ -15,7 +15,7 @@ public class MCount extends MJmx {
 	
 	public MCount() {
 		cnt = 0;
-		name = "Counter " + MSingleton.getService(UniqueId.class).nextUniqueId();
+		name = "Counter " + MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
 	}
 	
 	public MCount(String name) {

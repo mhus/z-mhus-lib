@@ -50,7 +50,7 @@ public class Form extends MObject implements MNlsProvider {
 	}
 
 	public DataSource getDataSource() {
-		if (dataSource == null) dataSource = MSingleton.getService(DataSource.class);
+		if (dataSource == null) dataSource = MSingleton.baseLookup(this,DataSource.class);
 		return dataSource;
 	}
 
@@ -78,7 +78,7 @@ public class Form extends MObject implements MNlsProvider {
 	}
 	
 	public FormControl getControl() {
-		if (control == null) setControl(MSingleton.getService(FormControl.class));
+		if (control == null) setControl(MSingleton.baseLookup(this,FormControl.class));
 		return control;
 	}
 	

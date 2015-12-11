@@ -41,12 +41,12 @@ public class Main extends MJmx {
 
 		boolean exitOnEnd = false;
 		
-		((MutableActivator)((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator()).addObject(Main.class, null, this);
+		((MutableActivator)((DefaultBase)MSingleton.get().getBaseControl().base(this)).getActivator()).addObject(Main.class, null, this);
 		lists = new TreeMap<String, TaskListDefinition>();
 		
-		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator() ).initialize();
+		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MSingleton.get().getBaseControl().base(this)).getActivator() ).initialize();
 		
-		Console console = MSingleton.getService(Console.class);
+		Console console = MSingleton.baseLookup(this,Console.class);
 		while (true) {
 			// menu 
 			//console.printLine();

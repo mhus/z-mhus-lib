@@ -79,7 +79,7 @@ public abstract class Table extends MObject {
 			}
 
 		if (table != null &&!MString.isEmptyTrim(table.attributes())) {
-			attributes = MSingleton.getService(MConfigFactory.class).toConfig(table.attributes());
+			attributes = MSingleton.baseLookup(this,MConfigFactory.class).toConfig(table.attributes());
 		} else {
 			attributes = new HashConfig();
 		}

@@ -43,7 +43,7 @@ public class DbPoolBundle extends MObject {
 	public DbPoolBundle(ResourceNode config, MActivator activator) {
 
 		if (config == null) config = MSingleton.get().getCfgManager().getCfg(DbPoolBundle.class, null);
-		if (activator == null) activator = MSingleton.getService(MActivator.class);
+		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
 
 		this.config = config;
 		this.activator = activator;

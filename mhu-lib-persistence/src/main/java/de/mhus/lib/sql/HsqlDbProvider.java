@@ -19,7 +19,7 @@ public class HsqlDbProvider extends JdbcProvider {
 		config.setProperty("user", "sa");
 		config.setProperty("pass", "");
 		config.setProperty("name", memoryDbName);
-		activator = MSingleton.getService(MActivator.class);
+		activator = MSingleton.baseLookup(this,MActivator.class);
 	}
 	
 	public HsqlDbProvider(String file, String user, String pass) {
@@ -29,7 +29,7 @@ public class HsqlDbProvider extends JdbcProvider {
 		config.setProperty("user", user);
 		config.setProperty("pass", pass);
 		config.setProperty("name", file);
-		activator = MSingleton.getService(MActivator.class);
+		activator = MSingleton.baseLookup(this,MActivator.class);
 	}
 	
 }

@@ -24,7 +24,7 @@ public abstract class CaoAction extends MObject {
 	}
 
 	public CaoAction(MResourceProvider<?> res, String resourceName) {
-		resourceBundle = MSingleton.getService(MNlsFactory.class).load(res,this.getClass(), resourceName, null);
+		resourceBundle = MSingleton.baseLookup(this,MNlsFactory.class).load(res,this.getClass(), resourceName, null);
 	}
 
 	public abstract String getName();

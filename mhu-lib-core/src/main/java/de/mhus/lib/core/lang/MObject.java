@@ -8,7 +8,7 @@ public class MObject extends MLog {
 	
 	public MObject() {
 		BaseControl control = MSingleton.get().getBaseControl();
-		control.inject(this, MSingleton.get().getBaseControl().base() );
+		control.inject(this, MSingleton.get().getBaseControl().base(this) );
 	}
 
 	@Override

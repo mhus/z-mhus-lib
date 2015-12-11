@@ -78,7 +78,7 @@ public class DefaultDbPool extends DbPool {
 	protected void initHousekeeper() {
 
 		Housekeeper housekeeper = new Housekeeper(this);
-		MSingleton.getService(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
+		MSingleton.baseLookup(this,MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
 	}
 
 	/**

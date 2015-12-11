@@ -50,7 +50,7 @@ public class LayoutBuilder extends MObject {
 	}
 	
 	public MActivator getActivator() {
-		return MSingleton.getService(MActivator.class);
+		return MSingleton.baseLookup(this,MActivator.class);
 	}
 
 	protected void build(XLayElement parent, ResourceNode layout) throws Exception {

@@ -17,7 +17,7 @@ public class MysqlDbProvider extends JdbcProvider {
 		config.setProperty("user", user);
 		config.setProperty("pass", pass);
 		config.setProperty("name", url);
-		activator = MSingleton.getService(MActivator.class);
+		activator = MSingleton.baseLookup(this,MActivator.class);
 	}
 		
 }

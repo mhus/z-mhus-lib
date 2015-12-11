@@ -50,7 +50,7 @@ public class TableAnnotations extends Table {
 
 				} else {
 					log().t("field",mName);
-					WritableResourceNode attr = MSingleton.getService(MConfigFactory.class).toConfig(toAttributes(p,pk));
+					WritableResourceNode attr = MSingleton.baseLookup(this,MConfigFactory.class).toConfig(toAttributes(p,pk));
 					boolean v = (p !=null && p.virtual());
 
 					// check for doubled

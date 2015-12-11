@@ -12,8 +12,8 @@ public class BaseControl {
 	private BaseFindStrategy findStrategy = null;
 	private InjectStrategy injectStrategy = null;
 	
-	public Base base() {
-		return getFindStrategy().find();
+	public Base base(Object owner) {
+		return getFindStrategy().find(owner);
 	}
 
 	public void setFindStrategy(BaseFindStrategy strategy) {
