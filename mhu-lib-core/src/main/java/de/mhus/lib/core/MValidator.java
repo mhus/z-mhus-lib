@@ -14,22 +14,46 @@ public class MValidator {
         return m.matches();
 	}
 	
+	// http://stackoverflow.com/questions/2385701/regular-expression-for-first-and-last-name
+	/**
+	 * International name. This is a simple test and should be extended ...
+	 * 
+	 * What about:
+	 * - names with only upper chars.
+	 * - Ann-Sophie
+	 *
+	 * 
+	 * @param in
+	 * @return
+	 */
 	public static boolean isFirstName(String in) {
 		if (in == null) return false;
 		if (in.length() < 2) return false;
-		return in.matches( "[A-Z][a-zA-Z]*" );
+		return in.matches( "[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-].*" );
 	}
 	
+	/**
+	 * International name. This is a simple test and should be extended ...
+	 * What about:
+	 * - DIETER-FILSINGER (should fail, only upper chars)
+	 * - "King, Jr." (Allowed in a strict matter?, "Jr" is not part of the name.)
+	 * - Dieter-Filsinger (should pass, Not only upper chars but more then the first one)
+	 * - DieTer-Filsinger (Should fail)
+	 * - Van Gerben (Space in the name)
+	 *
+	 * @param in
+	 * @return
+	 */
 	public static boolean isLastName(String in) {
 		if (in == null) return false;
 		if (in.length() < 2) return false;
-		return in.matches( "[a-zA-z]+([ '-][a-zA-Z]+)*" );
+		return in.matches( "[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-].*" );
 	}
 	
 	public static boolean isAddress( String in ) {
 		if (in == null) return false;
 		if (in.length() < 2) return false;
-	      return in.matches( "\\d+\\s+([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-Z]+)" );
+	      return in.matches( "\\d+\\s+([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+|[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+\\s[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+)" );
 	}
 	
 	public static boolean isPassword(String in, int maxLen, boolean needNumbers, boolean needSpecials) {
