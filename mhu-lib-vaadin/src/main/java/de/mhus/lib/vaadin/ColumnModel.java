@@ -4,6 +4,9 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Table;
 
 import de.mhus.lib.annotations.vaadin.Column;
+import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.vaadin.converter.ObjectConverter;
+import de.mhus.lib.vaadin.converter.StringConverter;
 
 public class ColumnModel {
 
@@ -55,9 +58,9 @@ public class ColumnModel {
 			converter = MhuTable.findDefaultConverter(this, type);
 			if (converter != null) return (Converter<String, ?>) converter.newInstance();
 		} catch (Throwable t) {
-			//TODO log output
+			MLogUtil.log().d(t);
 		}
-		return null;
+		return new ObjectConverter();
 	}
 
 	public void configureByAnnotation(Column columnDef, boolean canWrite) {
