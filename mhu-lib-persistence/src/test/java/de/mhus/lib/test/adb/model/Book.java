@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbObject;
+import de.mhus.lib.adb.DbObjectHandler;
 import de.mhus.lib.adb.relation.RelSingle;
 import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;
@@ -22,7 +23,7 @@ public class Book implements DbObject {
 	private int pages;
 	private UUID lendToId;
 	private RelSingle<Person> lendTo = new RelSingle<Person>();
-	private DbManager manager;
+	private DbObjectHandler manager;
 
 	@DbPrimaryKey
 	public UUID getId() {
@@ -66,7 +67,7 @@ public class Book implements DbObject {
 	}
 	public Person getLendToPerson() throws MException {
 		if (lendToId == null) return null;
-		return manager.getObject(Person.class, getLendToId());
+		return ((DbManager)manager).getObject(Person.class, getLendToId());
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class Book implements DbObject {
 
 	}
 	@Override
-	public void doInit(DbManager manager, String registryName, boolean isPersistent) {
+	public void doInit(DbObjectHandler manager, String registryName, boolean isPersistent) {
 		this.manager = manager;
 	}
 	@Override
@@ -115,7 +116,7 @@ public class Book implements DbObject {
 
 	}
 	@Override
-	public DbManager getDbManager() {
+	public DbObjectHandler getDbHandler() {
 		return manager;
 	}
 

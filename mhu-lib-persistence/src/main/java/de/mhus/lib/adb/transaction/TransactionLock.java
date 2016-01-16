@@ -29,7 +29,7 @@ public class TransactionLock extends Transaction {
 		manager = null;
 		for (Persistable o : objects)
 			if (o instanceof DbObject) {
-				manager = ((DbObject)o).getDbManager();
+				manager = (DbManager) ((DbObject)o).getDbHandler();
 				break;
 			}
 	}
@@ -65,7 +65,7 @@ public class TransactionLock extends Transaction {
 	protected String createKey(Persistable o) {
 		// find db manager of the object, fallback is my manager
 		DbManager m = manager;
-		if (o instanceof DbObject) m = ((DbObject)o).getDbManager();
+		if (o instanceof DbObject) m = (DbManager) ((DbObject)o).getDbHandler();
 		
 		String regName = m.getRegistryName(o);
 		Table table = m.getTable(regName);

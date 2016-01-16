@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.core.MSingleton;
@@ -88,7 +89,7 @@ public class AdbTest extends TestCase {
 		timer.start();
 
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
-		DbManager manager = new DbManager(pool, schema);
+		DbManager manager = new DbManagerJdbc(pool, schema);
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
 		// create persons
@@ -365,7 +366,7 @@ public class AdbTest extends TestCase {
 		MStopWatch timer = new MStopWatch();
 		timer.start();
 
-		DbManager manager = new DbManager(pool, schema);
+		DbManager manager = new DbManagerJdbc(pool, schema);
 		
 		Store store1 = manager.inject(new Store());
 		store1.save();
@@ -444,10 +445,10 @@ public class AdbTest extends TestCase {
 
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
-		DbManager manager1 = new DbManager(pool, schema1);
+		DbManager manager1 = new DbManagerJdbc(pool, schema1);
 
 		BookStoreSchema schema2 = new BookStoreSchema();
-		DbManager manager2 = new DbManager(pool, schema2);
+		DbManager manager2 = new DbManagerJdbc(pool, schema2);
 
 		manager1.reconnect();
 		manager2.reconnect();

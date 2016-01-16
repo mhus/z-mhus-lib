@@ -13,7 +13,7 @@ import de.mhus.lib.sql.DbConnection;
  */
 public class DbComfortableObject extends MObject implements DbObject {
 
-	protected DbManager manager;
+	protected DbObjectHandler manager;
 	protected boolean persistent = false;
 	protected String registryName;
 	protected DbConnection con;
@@ -39,7 +39,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * @param manager
 	 * @throws MException
 	 */
-	public void save(DbManager manager) throws MException {
+	public void save(DbObjectHandler manager) throws MException {
 		if (isAdbManaged() && persistent)
 			save();
 		else
@@ -91,7 +91,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * @param manager
 	 * @throws MException
 	 */
-	public void create(DbManager manager) throws MException {
+	public void create(DbObjectHandler manager) throws MException {
 		manager.createObject(con, this);
 		persistent = true;
 	}
@@ -123,13 +123,13 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * to store the data.
 	 */
 	@Override
-	public void doInit(DbManager manager, String registryName, boolean isPersistent) {
+	public void doInit(DbObjectHandler manager, String registryName, boolean isPersistent) {
 		this.manager = manager;
 		this.registryName = registryName;
 		persistent = isPersistent;
 	}
 
-	public void setDbManager(DbManager manager) {
+	public void setDbManager(DbObjectHandler manager) {
 		this.manager = manager;
 	}
 
@@ -160,7 +160,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	@Override
-	public DbManager getDbManager() {
+	public DbObjectHandler getDbHandler() {
 		return manager;
 	}
 

@@ -14,7 +14,7 @@ public interface DbObject extends Persistable {
 
 	void doPreSave(DbConnection con);
 
-	void doInit(DbManager manager, String registryName, boolean isPersistent);
+	void doInit(DbObjectHandler manager, String registryName, boolean isPersistent);
 
 	void doPreDelete(DbConnection con);
 
@@ -26,5 +26,5 @@ public interface DbObject extends Persistable {
 
 	boolean isAdbPersistent();
 
-	DbManager getDbManager();
+	DbObjectHandler getDbHandler();
 }

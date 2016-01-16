@@ -6,6 +6,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MLog;
@@ -52,7 +53,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		
 		DbPool pool = doCreateDataPool();
 		DbSchema schema = doCreateSchema();
-		return new DbManager(pool, schema, clean);
+		return new DbManagerJdbc(pool, schema, clean); //TODO configurable
 	}
 
 	protected abstract DbSchema doCreateSchema();
