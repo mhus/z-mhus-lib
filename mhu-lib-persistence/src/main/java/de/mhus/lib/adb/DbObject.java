@@ -27,4 +27,14 @@ public interface DbObject extends Persistable {
 	boolean isAdbPersistent();
 
 	DbObjectHandler getDbHandler();
+	
+	/**
+	 * Handler can be set only one time. Return true if the hander is set. Or false if
+	 * the handler was already present.
+	 * 
+	 * @param manager
+	 * @return
+	 */
+	boolean setDbHandler(DbObjectHandler manager);
+	
 }

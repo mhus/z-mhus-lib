@@ -1194,14 +1194,9 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
-	@Deprecated
-	public <T extends Persistable> T injectObject(T object) {
-		return inject(object);
-	}
-
 	public <T extends Persistable> T inject(T object) {
 		reloadLock.waitWithException(MAX_LOCK);
-		getTable(getRegistryName(object)).injectObject(object);
+		schema.injectObject(object, this, getTable(getRegistryName(object)));
 		return object;
 	}
 	

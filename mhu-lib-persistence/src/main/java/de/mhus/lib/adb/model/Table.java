@@ -446,9 +446,8 @@ public abstract class Table extends MObject {
 
 		return true;
 	}
+	
 	public void injectObject(Object obj) {
-		if (obj instanceof DbComfortableObject) // TODO Use DbObject interface
-			((DbComfortableObject)obj).setDbManager(manager);
 		for (FieldRelation f : relationList) {
 			f.inject(obj);
 		}

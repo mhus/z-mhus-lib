@@ -119,6 +119,10 @@ public class Book implements DbObject {
 	public DbObjectHandler getDbHandler() {
 		return manager;
 	}
+	@Override
+	public boolean setDbHandler(DbObjectHandler manager) {
+		return false;
+	}
 
 
 

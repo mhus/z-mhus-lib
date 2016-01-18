@@ -13,10 +13,10 @@ import de.mhus.lib.sql.DbConnection;
  */
 public class DbComfortableObject extends MObject implements DbObject {
 
-	protected DbObjectHandler manager;
-	protected boolean persistent = false;
-	protected String registryName;
-	protected DbConnection con;
+	private DbObjectHandler manager;
+	private boolean persistent = false;
+	private String registryName;
+	private DbConnection con;
 
 	public boolean isAdbManaged() {
 		return manager != null;
@@ -129,8 +129,10 @@ public class DbComfortableObject extends MObject implements DbObject {
 		persistent = isPersistent;
 	}
 
-	public void setDbManager(DbObjectHandler manager) {
+	public boolean setDbHandler(DbObjectHandler manager) {
+		if (this.manager != null) return false;
 		this.manager = manager;
+		return true;
 	}
 
 	@Override

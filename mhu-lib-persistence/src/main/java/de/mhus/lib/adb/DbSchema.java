@@ -459,4 +459,10 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 		throw new AccessDeniedException();
 	}
 
+	public void injectObject(Object object, DbManager manager, Table table) {
+		if (object instanceof DbObject)
+			((DbObject)object).setDbHandler(manager);
+		table.injectObject(object);
+	}
+
 }
