@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.mhus.lib.core.logging.MLogUtil;
+
 public class Table implements Serializable, Externalizable {
 
 	private static final long serialVersionUID = 1L;
@@ -36,7 +38,12 @@ public class Table implements Serializable, Externalizable {
 			TableRow row = new TableRow();
 			row.setTable(this);
 			for (int i = 0; i < count; i++) {
-				row.appendData(res.getObject(i+1));
+				try {
+					row.appendData(res.getObject(i+1));
+				} catch (Throwable t) {
+					MLogUtil.log().t(t);
+					row.appendData((String)null);
+				}
 			}
 			getRows().add(row);
 		}
