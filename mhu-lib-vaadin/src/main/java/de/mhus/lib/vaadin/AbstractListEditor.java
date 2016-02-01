@@ -63,7 +63,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private boolean initialized = false;
 	
 	
-	private Map<String, String> labels = new HashMap<String, String>() {
+	protected Map<String, String> labels = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 		{
 			put(LABEL_SAVED_NEW,"Saved");
