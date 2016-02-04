@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Observer;
 import java.util.TimerTask;
 
+import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.TimerIfc;
 
 public class SchedulerTimer extends Scheduler implements TimerIfc {
@@ -44,6 +46,35 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
 		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
+	}
+
+	@Override
+	public void schedule(SchedulerJob job) {
+		super.schedule(job);
+		configureDefault(job);
+	}
+	
+	public void configureDefault(SchedulerJob job) {
+		MProperties properties = loadConfiguration();
+		String n = job.getName();
+		for (String key : properties.keys()) {
+			if (MString.compareFsLikePattern(n, key)) {
+				String v = properties.getString(key, null);
+				if (v == null) continue;
+				log().d("confiure by config file",n,key,v);
+				if (v.equals("disabled"))
+					job.doReschedule(this, SchedulerJob.DISABLED_TIME);
+				else
+					((MutableSchedulerJob)job).doReconfigure(v);
+				job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
+				return;
+			}
+		}
+	}
+
+	private MProperties loadConfiguration() {
+		MProperties properties = MProperties.load("etc/mhus_timer.properties"); // TODO configurabe via mhu-config
+		return properties;
 	}
 
 	@Override

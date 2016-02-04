@@ -189,7 +189,7 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 	}
 
 	@Override
-	protected void setScheduledTime(long scheduledTime) {
+	public void setScheduledTime(long scheduledTime) {
 		instance.setScheduledTime(scheduledTime);
 	}
 
@@ -199,5 +199,6 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 			return ((MutableSchedulerJob)instance).doReconfigure(config);
 		return false;
 	}
+
 	
 }

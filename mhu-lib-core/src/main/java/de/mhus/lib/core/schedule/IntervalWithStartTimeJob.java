@@ -55,4 +55,9 @@ public class IntervalWithStartTimeJob extends SchedulerJob implements MutableSch
 		return false;
 	}
 
+	@Override
+	public void setScheduledTime(long scheduledTime) {
+		super.setScheduledTime(scheduledTime);
+	}
+
 }

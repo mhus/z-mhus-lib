@@ -254,6 +254,11 @@ public class TimerFactoryImpl implements TimerFactory {
 			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + super.toString();
 		}
 
+		@Override
+		public void setScheduledTime(long scheduledTime) {
+			super.setScheduledTime(scheduledTime);
+		}
+
 	}
 
 	@Override
