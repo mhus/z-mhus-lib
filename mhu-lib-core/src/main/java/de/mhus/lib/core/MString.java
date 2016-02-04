@@ -980,24 +980,6 @@ public class MString {
 	} // end penniesToString
 
 	/**
-	 * Extracts a number from a string, returns 0 if malformed.
-	 * 
-	 * @param s
-	 *            String containing the integer.
-	 * 
-	 * @return binary integer.
-	 */
-	public static int pluck(String s) {
-		int result = 0;
-		try {
-			result = Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			// leave result at 0
-		}
-		return result;
-	} // end pluck
-
-	/**
 	 * Produce a String of a given repeating character.
 	 * 
 	 * @param c
