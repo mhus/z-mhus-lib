@@ -1,5 +1,6 @@
 package de.mhus.lib.logging.level;
 
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -27,4 +28,9 @@ public class GeneralMapper implements LevelMapper {
 		this.config = config;
 	}
 
+	@Override
+	public String toString() {
+		return MSystem.toString(this, config);
+	}
+	
 }

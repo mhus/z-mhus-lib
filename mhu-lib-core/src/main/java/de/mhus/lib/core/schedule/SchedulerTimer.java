@@ -73,7 +73,7 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 	}
 
 	private MProperties loadConfiguration() {
-		MProperties properties = MProperties.load("etc/mhus_timer.properties"); // TODO configurabe via mhu-config
+		MProperties properties = MProperties.load("etc/mhus_timer.properties"); // TODO configurable via mhu-config
 		return properties;
 	}
 

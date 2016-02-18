@@ -161,6 +161,7 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 	@Override
 	public void doReschedule(Scheduler scheduler, long time) {
 		super.doReschedule(scheduler, time);
+//		instance.doReschedule(scheduler, time);
 	}
 	
 	@Override
