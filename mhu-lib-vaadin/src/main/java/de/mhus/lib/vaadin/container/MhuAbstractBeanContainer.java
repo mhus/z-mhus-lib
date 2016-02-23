@@ -868,9 +868,14 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
             if (negativeList != null) negativeList.remove(itemId);
 
             if (comparator != null) {
+            	boolean found = false;
 	            for (IDTYPE id : getAllItemIds())
-	            	if (comparator.compare(id, itemId) == 0)
-	            		continue;
+	            	if (comparator.compare(id, itemId) == 0) {
+	            		found = true;
+	            		break;
+	            	}
+	            if (found)
+	            	continue;
             } else {
 	            if (getAllItemIds().contains(itemId)) {
 	            	continue;
