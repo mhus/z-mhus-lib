@@ -145,14 +145,19 @@ public class FieldPersistent extends Field {
 					set(obj, res.getBoolean(name) );
 				else
 					if (retDbType.equals(DbType.TYPE.DATETIME.name())) {
-						if (attribute.getType() == Date.class)
-							set(obj, res.getTimestamp(name) );
-						else
+						try {
+							if (attribute.getType() == Date.class)
+								set(obj, res.getTimestamp(name) );
+							else
 							if (attribute.getType() == java.sql.Date.class) {
 								Timestamp time = res.getTimestamp(name);
 								set(obj, time == null ? null : new java.sql.Date( time.getTime() ) );
 							} else
 								set(obj, new MDate( res.getTimestamp(name) ).toCalendar() );
+						} catch (java.sql.SQLException sqle) {
+							// Caused by: java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
+							set(obj, null );
+						}
 					} else
 						if (retDbType.equals(DbType.TYPE.DOUBLE.name()))
 							set(obj, res.getDouble(name) );
