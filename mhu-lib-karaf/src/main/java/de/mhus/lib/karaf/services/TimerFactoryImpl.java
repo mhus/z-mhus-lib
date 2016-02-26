@@ -153,7 +153,7 @@ public class TimerFactoryImpl implements TimerFactory {
 			if (task != null && task instanceof Named)
 				setName(((Named)task).getName());
 			else
-				setName(task.getClass().getCanonicalName());
+				setName(MSystem.getClassName(task));
 			
 			this.task = task;
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
