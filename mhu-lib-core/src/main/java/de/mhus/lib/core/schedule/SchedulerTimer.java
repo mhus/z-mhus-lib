@@ -64,9 +64,10 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 				log().d("confiure by config file",n,key,v);
 				if (v.equals("disabled"))
 					job.doReschedule(this, SchedulerJob.DISABLED_TIME);
-				else
+				else {
 					((MutableSchedulerJob)job).doReconfigure(v);
-				job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
+					job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
+				}
 				return;
 			}
 		}

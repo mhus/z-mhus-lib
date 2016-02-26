@@ -243,10 +243,16 @@ public class TimerFactoryImpl implements TimerFactory {
 		
 		@Override
 		public void setCanceled(boolean canceled) {
-			synchronized (timer) {
-				timer.tasks.remove(this);
-			}
 			super.setCanceled(canceled);
+			if (canceled) {
+				synchronized (timer) {
+					timer.tasks.remove(this);
+					if (timer.getScheduler() != null) {
+						//while (timer.getScheduler().getScheduledJobs().contains(this))
+							timer.getScheduler().getQueue().removeJob(this);
+					}
+				}
+			}
 		}
 
 		@Override
