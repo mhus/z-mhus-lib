@@ -30,7 +30,7 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 	private String name;
 	
 	public MTimerTask() {
-		setName(MSystem.getObjectId(this));
+		setName(this.getClass().getCanonicalName());
 	}
 		
 	@Override
