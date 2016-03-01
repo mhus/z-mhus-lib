@@ -131,5 +131,5 @@ public class ThreadMapperConfig implements LevelMapper {
 	public String getTrailId() {
 		return id;
 	}
-	
+
 }

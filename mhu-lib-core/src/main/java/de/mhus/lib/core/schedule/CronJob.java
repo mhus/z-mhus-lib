@@ -227,4 +227,9 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		return true;
 	}
 
+	@Override
+	public void setScheduledTime(long scheduledTime) {
+		super.setScheduledTime(scheduledTime);
+	}
+
 }

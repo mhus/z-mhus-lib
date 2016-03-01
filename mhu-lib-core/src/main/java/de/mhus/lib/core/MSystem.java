@@ -12,6 +12,7 @@ import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimerTask;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -265,6 +266,19 @@ public class MSystem {
 	public static String getObjectId(Object o) {
 		if (o == null) return "null";
 		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String getClassName(Object obj) {
+		if (obj == null) return "null";
+		Class<? extends Object> clazz = obj.getClass();
+		if (obj instanceof Class)
+			clazz = (Class)obj;
+		while (clazz != null && clazz.isAnonymousClass())
+			clazz = clazz.getEnclosingClass();
+		if (clazz == null) return "null";
+		
+		return clazz.getCanonicalName();
 	}
 	
 }

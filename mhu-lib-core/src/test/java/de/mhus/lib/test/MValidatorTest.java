@@ -29,5 +29,11 @@ public class MValidatorTest extends TestCase {
 			assertEquals(true, false);
 		} catch (Throwable t) {
 		}
+		
+		assertEquals(true, MValidator.isFirstName("Güven"));
+		assertEquals(true, MValidator.isFirstName("André"));
+		
+		assertEquals(true, MValidator.isLastName("Müller"));
+		
 	}
 }

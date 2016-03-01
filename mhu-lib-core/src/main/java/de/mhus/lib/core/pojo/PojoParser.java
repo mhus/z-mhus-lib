@@ -31,6 +31,10 @@ public class PojoParser {
 		return this;
 	}
 	
+	public PojoParser filter(boolean removeHidden, boolean removeEmbedded, boolean removeWriteOnly, boolean removeReadOnly, boolean removeNoActions ) {
+		return filter(new DefaultFilter(removeHidden, removeEmbedded, removeWriteOnly, removeReadOnly, removeNoActions));
+	}
+	
 	public PojoParser filter(PojoFilter filter) {
 		filter.filter(model);
 		return this;

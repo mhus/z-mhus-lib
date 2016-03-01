@@ -40,7 +40,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		if (task instanceof Named)
 			setName(((Named)task).getName());
 		else
-			setName(MSystem.getObjectId(task));
+			setName(MSystem.getClassName(task));
 	}
 	
 	public SchedulerJob(String name,  Observer task) {

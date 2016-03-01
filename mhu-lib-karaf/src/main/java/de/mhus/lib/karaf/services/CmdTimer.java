@@ -152,15 +152,15 @@ public class CmdTimer extends MLog implements Action {
 			);
 		}
 		if (cmd.equals("schedule")) {
+			Date time = MCast.toDate(parameters[1], null);
+			if (time == null) {
+				System.out.println("Malformed time");
+				return null;
+			}
 			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
 				if (job != null && job instanceof MutableSchedulerJob) {
-					Date time = MCast.toDate(parameters[1], null);
-					if (time == null) {
-						System.out.println("Malformet time");
-						return null;
-					}
-					((MutableSchedulerJob)job).doReschedule(scheduler, time.getTime());
-					
+					((MutableSchedulerJob)job).setScheduledTime(time.getTime());
+
 					System.out.println("OK, Scheduled " + job.getName() +" to " + MDate.toIsoDateTime( time ) );
 				}
 			}

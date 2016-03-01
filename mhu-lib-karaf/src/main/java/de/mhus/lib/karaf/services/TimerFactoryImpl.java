@@ -153,7 +153,7 @@ public class TimerFactoryImpl implements TimerFactory {
 			if (task != null && task instanceof Named)
 				setName(((Named)task).getName());
 			else
-				setName(MSystem.getObjectId(task));
+				setName(MSystem.getClassName(task));
 			
 			this.task = task;
 			this.bundle = FrameworkUtil.getBundle(task.getClass());
@@ -243,15 +243,26 @@ public class TimerFactoryImpl implements TimerFactory {
 		
 		@Override
 		public void setCanceled(boolean canceled) {
-			synchronized (timer) {
-				timer.tasks.remove(this);
-			}
 			super.setCanceled(canceled);
+			if (canceled) {
+				synchronized (timer) {
+					timer.tasks.remove(this);
+					if (timer.getScheduler() != null) {
+						//while (timer.getScheduler().getScheduledJobs().contains(this))
+							timer.getScheduler().getQueue().removeJob(this);
+					}
+				}
+			}
 		}
 
 		@Override
 		public String toString() {
 			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + super.toString();
+		}
+
+		@Override
+		public void setScheduledTime(long scheduledTime) {
+			super.setScheduledTime(scheduledTime);
 		}
 
 	}

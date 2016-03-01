@@ -186,8 +186,54 @@ public class MString {
 	 * @return 
 	 */
 
+	public static boolean isIndex(String _s, String _c) {
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Return the string before _c in _s. If _c is not found in _s, return is an
+	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
+	 */
+	public static String beforeIndex(String _s, String _c) {
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return "";
+
+		return _s.substring(0, p);
+	}
+
+	/**
+	 * Return the string after _c in _s. If _c is not found in _s, return is an
+	 * empty string.
+	 * @param _s 
+	 * @param _c 
+	 * @return 
+	 */
+	public static String afterIndex(String _s, String _c) {
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return "";
+
+		return _s.substring(p + _c.length());
+	}
+
+	/**
+	 * Return, if the char is located in the string (indexOf).
+	 * @param _s 
+	 * @param _c 
+	 * @return 
+	 */
+
 	public static boolean isIndex(String _s, char _c) {
-		if (_s.indexOf(_c) < 0)
+		int p = _s.indexOf(_c);
+		if (p < 0)
 			return false;
 		else
 			return true;
@@ -201,10 +247,11 @@ public class MString {
 	 * @return 
 	 */
 	public static String beforeIndex(String _s, char _c) {
-		if (!isIndex(_s, _c))
+		int p = _s.indexOf(_c);
+		if (p < 0)
 			return "";
 
-		return _s.substring(0, _s.indexOf(_c));
+		return _s.substring(0, p);
 	}
 
 	/**
@@ -215,12 +262,13 @@ public class MString {
 	 * @return 
 	 */
 	public static String afterIndex(String _s, char _c) {
-		if (!isIndex(_s, _c))
+		int p = _s.indexOf(_c);
+		if (p < 0)
 			return "";
 
-		return _s.substring(_s.indexOf(_c) + 1);
+		return _s.substring(p + 1);
 	}
-
+	
 	/**
 	 * Returns true if one of the chars is found in the string.
 	 * 
@@ -980,24 +1028,6 @@ public class MString {
 	} // end penniesToString
 
 	/**
-	 * Extracts a number from a string, returns 0 if malformed.
-	 * 
-	 * @param s
-	 *            String containing the integer.
-	 * 
-	 * @return binary integer.
-	 */
-	public static int pluck(String s) {
-		int result = 0;
-		try {
-			result = Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			// leave result at 0
-		}
-		return result;
-	} // end pluck
-
-	/**
 	 * Produce a String of a given repeating character.
 	 * 
 	 * @param c
@@ -1294,6 +1324,36 @@ public class MString {
 	 * @return
 	 */
 	public static String afterLastIndex(String string, char c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(pos+1);
+	}
+	
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return
+	 */
+	public static String beforeLastIndex(String string, String c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(0,pos);
+	}
+
+	/**
+	 * Return the part after the last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return
+	 */
+	public static String afterLastIndex(String string, String c) {
 		if (string == null) return null;
 		int pos = string.lastIndexOf(c);
 		if (pos < 0) return string;

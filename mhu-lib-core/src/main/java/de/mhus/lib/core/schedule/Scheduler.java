@@ -7,10 +7,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 
-public class Scheduler implements Named {
+public class Scheduler extends MLog implements Named {
 
 	private Timer timer;
 	SchedulerQueue queue = new QueueList();

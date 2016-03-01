@@ -11,5 +11,6 @@ public interface MutableSchedulerJob {
 	 * @return
 	 */
 	boolean doReconfigure(String config);
-	
+	void setScheduledTime(long scheduledTime);
+
 }

@@ -63,19 +63,18 @@ public class MFile {
 	 * @return 
 	 */
 	public static String getFileSuffix(File _file) {
-
+		if (_file == null) return null;
 		return getFileSuffix(_file.getAbsolutePath());
 	}
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot or an empty string.
-	 * @param _name 
+	 * @param name 
 	 * @return 
 	 */
-	public static String getFileSuffix(String _name) {
-
-		String name = _name;
-
+	public static String getFileSuffix(String name) {
+		if (name == null) return null;
+		
 		if (!MString.isIndex(name, '.')) return "";
 		name = MString.afterLastIndex(name, '.');
 
@@ -86,17 +85,16 @@ public class MFile {
 	/**
 	 * Returns the name of the file in a path name. Using the OS specific
 	 * separator.
-	 * @param _path 
+	 * @param path 
 	 * @return 
 	 */
-	public static String getFileName(String _path) {
+	public static String getFileName(String path) {
+		if (path == null) return null;
+		
+		while (MString.isIndex(path, File.separatorChar))
+			path = MString.afterIndex(path, File.separatorChar);
 
-		String name = _path;
-
-		while (MString.isIndex(name, File.separatorChar))
-			name = MString.afterIndex(name, File.separatorChar);
-
-		return name;
+		return path;
 
 	}
 
@@ -126,7 +124,9 @@ public class MFile {
 	 * @return 
 	 */
 	public static String readFile(File _f, String encoding) {
-
+		if (_f == null) return null;
+		if (encoding == null) encoding = MString.CHARSET_UTF_8;
+		
 		try {
 			FileInputStream fis = new FileInputStream(_f);
 			InputStreamReader fr = new InputStreamReader(fis, encoding);
@@ -145,7 +145,8 @@ public class MFile {
 	 * @return 
 	 */
 	public static String readFile(Reader _is) {
-
+		if (_is == null) return null;
+		
 		StringBuffer sb = new StringBuffer();
 		char[] buffer = new char[1024];
 		try {
@@ -178,6 +179,9 @@ public class MFile {
 	}
 	
 	public static String readFile(InputStream _is, String encoding) {
+		if (_is == null) return null;
+		if (encoding == null) encoding = MString.CHARSET_UTF_8;
+		
 		try {
 			InputStreamReader fr = new InputStreamReader(_is, encoding);
 			String ret = readFile(fr);
@@ -195,6 +199,8 @@ public class MFile {
 	 * @throws IOException 
 	 */
 	public static byte[] readBinaryFile(File in) throws IOException {
+		if (in == null) return null;
+		
 		InputStream fis = new FileInputStream(in);
 		return readBinary(fis, false);
 	}
@@ -218,6 +224,8 @@ public class MFile {
 	 */
 	public static byte[] readBinary(InputStream is, boolean close)
 			throws IOException {
+		if (is == null) return null;
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		byte[] buffer = new byte[1024];
 		try {
@@ -244,6 +252,8 @@ public class MFile {
 	 */
 	public static void readBinary(InputStream is, byte[] buffer, int offset,
 			int length) throws IOException {
+		if (is == null || buffer == null) return;
+		
 		do {
 			int j = is.read(buffer, offset, length);
 			if (j < 0)
@@ -262,12 +272,14 @@ public class MFile {
 	 * @return 
 	 */
 	public static boolean writeFile(File _f, String _content) {
-
+		if (_f == null) return false;
 		try {
 			OutputStream fos = new FileOutputStream(_f);
-			char[] c = _content.toCharArray();
-			for (int i = 0; i < c.length; i++)
-				fos.write(c[i]);
+			if (_content != null) {
+				char[] c = _content.toCharArray();
+				for (int i = 0; i < c.length; i++)
+					fos.write(c[i]);
+			}
 			fos.close();
 		} catch (Exception e) {
 			log.d(_f, e );
@@ -285,10 +297,12 @@ public class MFile {
 	 * @return
 	 */
 	public static boolean writeFile(File _f, byte[] _content) {
-
+		if (_f == null) return false;
+		
 		try {
 			OutputStream fos = new FileOutputStream(_f);
-			writeFile(fos, _content, 0, _content.length);
+			if (_content != null)
+				writeFile(fos, _content, 0, _content.length);
 			fos.close();
 		} catch (Exception e) {
 			log.d(_f, e );
@@ -309,6 +323,7 @@ public class MFile {
 	 */
 	public static void writeFile(OutputStream fos, byte[] _content, int offset,
 			int length) throws IOException {
+		if (fos == null || _content == null) return;
 		fos.write(_content, offset, length);
 	}
 
@@ -320,7 +335,8 @@ public class MFile {
 	 * @return
 	 */
 	public static boolean copyFile(File _src, File _dest) {
-
+		if (_src == null || _dest == null) return false;
+		
 		if (_src.isDirectory())
 			return false;
 
@@ -344,7 +360,8 @@ public class MFile {
 	 * @param _os 
 	 */
 	public static void copyFile(InputStream _is, OutputStream _os) {
-
+		if (_is == null || _os == null) return;
+		
 		long free = Runtime.getRuntime().freeMemory();
 		if (free < 1024)
 			free = 1024;
@@ -368,7 +385,8 @@ public class MFile {
 	 * @param _os 
 	 */
 	public static void copyFile(Reader _is, Writer _os) {
-
+		if (_is == null || _os == null) return;
+		
 		long free = Runtime.getRuntime().freeMemory();
 		if (free < 1024)
 			free = 1024;
@@ -393,6 +411,7 @@ public class MFile {
 	 * @return
 	 */
 	public static String toFileName(String _name) {
+		if (_name == null) return null;
 		String out = _name.replace('\\', '_');
 		out = out.replace('/', '_');
 		out = out.replace('*', '_');
@@ -419,7 +438,8 @@ public class MFile {
 	 * @param _dir
 	 */
 	public static void deleteDir(File _dir) {
-
+		if (_dir == null) return;
+		
 		if (!_dir.isDirectory()) {
 			_dir.delete();
 			return;
@@ -452,6 +472,8 @@ public class MFile {
 	 * @param _filter
 	 */
 	public static void copyDir(File _src, File _dest, String _filter) {
+		if (_src == null || _dest == null) return;
+		
 		if (_filter == null)
 			copyDir(_src, _dest, (FileFilter)null);
 		else
@@ -461,6 +483,8 @@ public class MFile {
 
 	
 	public static void copyDir(File _src, File _dest, final String[] _filter) {
+		if (_src == null || _dest == null) return;
+
 		if (_filter == null) 
 			copyDir(_src, _dest, (FileFilter)null);
 		else
@@ -478,6 +502,7 @@ public class MFile {
 			});
 	}
 	public static void copyDir(File _src, File _dest, FileFilter _filter) {
+		if (_src == null || _dest == null) return;
 
 		if (_filter != null) {
 			if (!_filter.accept(_src))
@@ -508,6 +533,8 @@ public class MFile {
 	 * @return
 	 */
 	public static String normalize(String name) {
+		if (name == null) return null;
+		
 		if (name.indexOf('\\') >= 0) name = name.replaceAll("\\\\", "_");
 		if (name.indexOf('/') >= 0) name = name.replaceAll("/", "_");
 		if (name.indexOf('*') >= 0) name = name.replaceAll("\\*", "_");
@@ -621,6 +648,7 @@ public class MFile {
 	 * @throws IOException
 	 */
 	public static void writeLines(File file, List<String> lines, boolean append) throws IOException {
+		if (file == null || lines == null) return;
 		FileWriter w = new FileWriter(file,append);
 		writeLines(w,lines);
 		w.close();
@@ -642,6 +670,8 @@ public class MFile {
 	 * @throws IOException
 	 */
 	public static List<String> readLines(File file, boolean removeLastEmpty) throws IOException {
+		if (file == null) return null;
+		
 		final LinkedList<String> out = new LinkedList<>();
 		readLines(file, new Observer() {
 			
@@ -658,12 +688,14 @@ public class MFile {
 	}
 	
 	public static void readLines(File file, Observer lineObserver) throws IOException {
+		if (file == null || lineObserver == null) return;
 		FileReader r = new FileReader(file);
 		readLines(r,lineObserver);
 		r.close();
 	}
 
 	public static void readLines(Reader r, Observer lineObserver) throws IOException {
+		if (r == null || lineObserver == null) return;
 		BufferedReader br = new BufferedReader(r);
 		String line = null;
 		do {

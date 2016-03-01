@@ -48,4 +48,9 @@ public class OnceJob extends SchedulerJob implements MutableSchedulerJob {
 		return false;
 	}
 	
+	@Override
+	public void setScheduledTime(long scheduledTime) {
+		super.setScheduledTime(scheduledTime);
+	}
+
 }

@@ -1,6 +1,8 @@
 package de.mhus.lib.core;
 
 import java.io.Externalizable;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.SetCast;
 
 public class MProperties extends IProperties implements Externalizable {
@@ -41,7 +44,8 @@ public class MProperties extends IProperties implements Externalizable {
 	public MProperties(Map<?, ?> in) {
 		this.properties = new Properties();
 		for (Map.Entry<?, ?> e : in.entrySet())
-			this.properties.put(String.valueOf( e.getKey() ), e.getValue());
+			if (e.getKey() != null && e.getValue() != null)
+				this.properties.put(String.valueOf( e.getKey() ), e.getValue());
 	}
 	
 	public MProperties(Properties properties) {
@@ -125,5 +129,20 @@ public class MProperties extends IProperties implements Externalizable {
 			}
 		}
 		return p;
+	}
+
+	public static MProperties load(String fileName) {
+		Properties p = new Properties();
+		try {
+			File f = new File(fileName);
+			if (f.exists() && f.isFile()) {
+				FileInputStream is = new FileInputStream(f);
+				p.load(is);
+			}
+		} catch (Throwable t) {
+			MLogUtil.log().d(fileName, t);
+		}
+		MProperties out = new MProperties(p);
+		return out;
 	}
 }
