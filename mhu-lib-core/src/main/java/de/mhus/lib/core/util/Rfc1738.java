@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 
@@ -306,7 +306,7 @@ public class Rfc1738 extends TreeMap<String,String> {
 	 * @param _in
 	 * @return
 	 */
-	public static String implode(IProperties _in) {
+	public static String implode(AbstractProperties _in) {
 
 		if (_in == null)
 			return "";

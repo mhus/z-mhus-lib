@@ -1,6 +1,6 @@
 package de.mhus.lib.jms;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 
 public abstract class FunctionDescriptor {
 
@@ -11,7 +11,7 @@ public abstract class FunctionDescriptor {
 		return oneWay;
 	}
 
-	public abstract RequestResult<Object> doExecute(IProperties properties, Object[] obj);
+	public abstract RequestResult<Object> doExecute(AbstractProperties properties, Object[] obj);
 
 	public Class<?> getReturnType() {
 		return returnType;

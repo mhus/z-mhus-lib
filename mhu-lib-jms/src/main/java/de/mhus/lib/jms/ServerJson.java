@@ -10,7 +10,7 @@ import javax.jms.Message;
 
 import org.codehaus.jackson.JsonNode;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MJson;
 
 public abstract class ServerJson extends ServerJms {
@@ -19,9 +19,9 @@ public abstract class ServerJson extends ServerJms {
 		super(dest);
 	}
 
-	public abstract void receivedOneWay(IProperties properties, JsonNode node);
+	public abstract void receivedOneWay(AbstractProperties properties, JsonNode node);
 
-	public abstract RequestResult<JsonNode> received(IProperties properties, JsonNode node);
+	public abstract RequestResult<JsonNode> received(AbstractProperties properties, JsonNode node);
 
 	@Override
 	public void receivedOneWay(Message msg) throws JMSException {
@@ -31,7 +31,7 @@ public abstract class ServerJson extends ServerJms {
 			byte[] b = new byte[len];
 			ba.readBytes(b);
 			ByteArrayInputStream r = new ByteArrayInputStream(b);
-			IProperties properties = MJms.getProperties(msg);
+			AbstractProperties properties = MJms.getProperties(msg);
 			try {
 				JsonNode ja = MJson.load(r);
 				receivedOneWay(properties, ja);
@@ -51,7 +51,7 @@ public abstract class ServerJson extends ServerJms {
 			byte[] b = new byte[len];
 			ba.readBytes(b);
 			ByteArrayInputStream r = new ByteArrayInputStream(b);
-			IProperties properties = MJms.getProperties(msg);
+			AbstractProperties properties = MJms.getProperties(msg);
 			try {
 				JsonNode ja = MJson.load(r);
 				RequestResult<JsonNode> j = received(properties, ja);

@@ -6,9 +6,9 @@ import java.util.Set;
 
 import javax.portlet.ResourceRequest;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 
-public class ResourceProperties extends IProperties {
+public class ResourceProperties extends AbstractProperties {
 
 	ResourceRequest request = null;
 	
@@ -42,6 +42,11 @@ public class ResourceProperties extends IProperties {
 	@Override
 	public Set<String> keys() {
 		return new HashSet<String>(Collections.list(request.getParameterNames()));
+	}
+
+	@Override
+	public int size() {
+		return request.getParameterMap().size();
 	}
 
 }

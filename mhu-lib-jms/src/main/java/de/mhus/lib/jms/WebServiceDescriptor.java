@@ -7,7 +7,7 @@ import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.pojo.FunctionsOnlyStrategy;
 import de.mhus.lib.core.pojo.PojoAction;
@@ -59,7 +59,7 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 		}
 
 		@Override
-		public RequestResult<Object> doExecute(IProperties properties,
+		public RequestResult<Object> doExecute(AbstractProperties properties,
 				Object[] obj) {
 			
 			// TODO check special case for direct handling

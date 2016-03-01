@@ -1,22 +1,22 @@
 package de.mhus.lib.jms;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 
 public class RequestResult<T> {
 
-	public RequestResult(T result, IProperties properies) {
+	public RequestResult(T result, AbstractProperties properies) {
 		this.result = result;
 		this.properties = properies;
 	}
 	
 	private T result;
-	private IProperties properties;
+	private AbstractProperties properties;
 	
 	public T getResult() {
 		return result;
 	}
 	
-	public IProperties getProperties() {
+	public AbstractProperties getProperties() {
 		return properties;
 	}
 	

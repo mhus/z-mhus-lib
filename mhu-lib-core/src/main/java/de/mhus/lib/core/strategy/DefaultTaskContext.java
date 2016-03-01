@@ -1,13 +1,13 @@
 package de.mhus.lib.core.strategy;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.config.IConfig;
 
 public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 
 	protected IConfig config;
 	protected boolean test;
-	protected IProperties parameters;
+	protected AbstractProperties parameters;
 	protected String errorMessage;
 
 	public void setTestOnly(boolean test) {
@@ -18,7 +18,7 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 		this.config = config;
 	}
 
-	public void setParameters(IProperties parameters) {
+	public void setParameters(AbstractProperties parameters) {
 		this.parameters = parameters;
 	}
 
@@ -33,7 +33,7 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 	}
 
 	@Override
-	public IProperties getParameters() {
+	public AbstractProperties getParameters() {
 		return parameters;
 	}
 

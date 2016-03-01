@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.SecurityTransformHelper;
 
@@ -17,12 +17,12 @@ public abstract class ServerJsonObject extends ServerJson {
 		super(dest);
 	}
 
-	public abstract void receivedOneWay(IProperties properties, Object ... obj);
+	public abstract void receivedOneWay(AbstractProperties properties, Object ... obj);
 
-	public abstract RequestResult<Object> received(IProperties properties, Object ... obj);
+	public abstract RequestResult<Object> received(AbstractProperties properties, Object ... obj);
 
 	@Override
-	public void receivedOneWay(IProperties properties, JsonNode node) {
+	public void receivedOneWay(AbstractProperties properties, JsonNode node) {
 		try {
 			JsonNode array = node.get("array");
 			LinkedList<Object> out = new LinkedList<>();
@@ -39,7 +39,7 @@ public abstract class ServerJsonObject extends ServerJson {
 	}
 
 	@Override
-	public RequestResult<JsonNode> received(IProperties properties, JsonNode node) {
+	public RequestResult<JsonNode> received(AbstractProperties properties, JsonNode node) {
 		try {
 //			JsonNode array = node.get("array");
 //			LinkedList<Object> out = new LinkedList<>();

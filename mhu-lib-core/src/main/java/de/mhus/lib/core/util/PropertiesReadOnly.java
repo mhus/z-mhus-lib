@@ -2,14 +2,14 @@ package de.mhus.lib.core.util;
 
 import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class PropertiesReadOnly extends IProperties {
+public class PropertiesReadOnly extends AbstractProperties {
 
-	private IProperties parent;
+	private AbstractProperties parent;
 
-	public PropertiesReadOnly(IProperties parent) {
+	public PropertiesReadOnly(AbstractProperties parent) {
 		this.parent = parent;
 	}
 	
@@ -41,6 +41,11 @@ public class PropertiesReadOnly extends IProperties {
 	@Override
 	public Set<String> keys() {
 		return parent.keys();
+	}
+
+	@Override
+	public int size() {
+		return parent.size();
 	}
 
 }

@@ -11,7 +11,7 @@ import javax.jms.Message;
 
 import org.codehaus.jackson.JsonNode;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MJson;
 
 public class ClientJson extends ClientJms {
@@ -20,7 +20,7 @@ public class ClientJson extends ClientJms {
 		super(dest);
 	}
 
-	public void sendJsonOneWay(IProperties prop, JsonNode json) throws JMSException, IOException {
+	public void sendJsonOneWay(AbstractProperties prop, JsonNode json) throws JMSException, IOException {
 		
 		ByteArrayOutputStream w = new ByteArrayOutputStream();
 		try {
@@ -38,7 +38,7 @@ public class ClientJson extends ClientJms {
 		sendJmsOneWay(msg);
 	}
 	
-	public RequestResult<JsonNode> sendJson(IProperties prop, JsonNode json) throws IOException, JMSException {
+	public RequestResult<JsonNode> sendJson(AbstractProperties prop, JsonNode json) throws IOException, JMSException {
 		
 		ByteArrayOutputStream w = new ByteArrayOutputStream();
 		try {
@@ -62,7 +62,7 @@ public class ClientJson extends ClientJms {
 			ba.readBytes(b);
 			ByteArrayInputStream r = new ByteArrayInputStream(b);
 			JsonNode ja = MJson.load(r);
-			IProperties p = MJms.getProperties(answer);
+			AbstractProperties p = MJms.getProperties(answer);
 			return new RequestResult<JsonNode>(ja,p);
 		}
 		
@@ -70,7 +70,7 @@ public class ClientJson extends ClientJms {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public RequestResult<JsonNode>[] sendJsonBroadcast(IProperties prop, JsonNode json) throws IOException, JMSException {
+	public RequestResult<JsonNode>[] sendJsonBroadcast(AbstractProperties prop, JsonNode json) throws IOException, JMSException {
 		
 		ByteArrayOutputStream w = new ByteArrayOutputStream();
 		try {
@@ -98,7 +98,7 @@ public class ClientJson extends ClientJms {
 				ba.readBytes(b);
 				ByteArrayInputStream r = new ByteArrayInputStream(b);
 				JsonNode ja = MJson.load(r);
-				IProperties p = MJms.getProperties(answer);
+				AbstractProperties p = MJms.getProperties(answer);
 				out.add(new RequestResult<JsonNode>(ja,p));
 			}
 		}

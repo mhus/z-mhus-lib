@@ -2,12 +2,12 @@ package de.mhus.lib.portlet.resource;
 
 import javax.portlet.ResourceRequest;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 
 public abstract class AbstractResource implements Resource {
 
 	@Override
-	public synchronized IProperties createProperties(ResourceRequest request) {
+	public synchronized AbstractProperties createProperties(ResourceRequest request) {
 		ResourceProperties properties = new ResourceProperties(request);
 		return properties;
 	}

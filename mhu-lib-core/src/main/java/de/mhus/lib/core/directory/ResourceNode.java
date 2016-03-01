@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.core.parser.DefaultScriptPart;
@@ -22,7 +22,7 @@ import de.mhus.lib.errors.MException;
  * 
  */
 
-public abstract class ResourceNode extends IProperties {
+public abstract class ResourceNode extends AbstractProperties {
 
 	protected ConfigStringCompiler compiler;
 	protected HashMap<String, CompiledString> compiledCache;
@@ -334,6 +334,12 @@ public abstract class ResourceNode extends IProperties {
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append("</").append(getName()).append(">\n");
 		
+	}
+	
+	public int size() {
+		String[] keys = getPropertyKeys();
+		if (keys == null) return 0;
+		return keys.length;
 	}
 	
 }

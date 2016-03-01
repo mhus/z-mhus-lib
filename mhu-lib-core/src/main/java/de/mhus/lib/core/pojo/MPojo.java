@@ -15,7 +15,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
@@ -465,11 +465,11 @@ public class MPojo {
 		return out.toString();
 	}
 	
-	public static IProperties pojoToProperties(Object from) throws IOException {
+	public static AbstractProperties pojoToProperties(Object from) throws IOException {
 		return pojoToProperties(from, getDefaultModelFactory());
 	}
 	
-	public static IProperties pojoToProperties(Object from, PojoModelFactory factory) throws IOException {
+	public static AbstractProperties pojoToProperties(Object from, PojoModelFactory factory) throws IOException {
 		MProperties out = new MProperties();
 		PojoModel model = factory.createPojoModel(from.getClass());
 
@@ -507,16 +507,16 @@ public class MPojo {
 	}
 
 	
-	public static void propertiesToPojo(IProperties from, Object to) throws IOException {
+	public static void propertiesToPojo(AbstractProperties from, Object to) throws IOException {
 		propertiesToPojo(from, to, getDefaultModelFactory(), null);
 	}
 	
-	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory) throws IOException {
+	public static void propertiesToPojo(AbstractProperties from, Object to, PojoModelFactory factory) throws IOException {
 		propertiesToPojo(from, to, factory, null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory, Caster<Object,Object> unknownHadler) throws IOException {
+	public static void propertiesToPojo(AbstractProperties from, Object to, PojoModelFactory factory, Caster<Object,Object> unknownHadler) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
 			String name = attr.getName();

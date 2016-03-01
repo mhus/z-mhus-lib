@@ -7,7 +7,7 @@ import java.lang.reflect.Proxy;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -88,7 +88,7 @@ public class ClientJsonService<T> extends ClientJsonObject implements JmsChannel
 					if (res == null)
 						throw new MRuntimeException("internal error: result is null",desc.getInterface().getCanonicalName(),method.getName());
 					
-					IProperties p = res.getProperties();
+					AbstractProperties p = res.getProperties();
 					String exceptionType = p.getString("exception");
 					if (exceptionType != null) {
 						Class<?> exceptionClass = getHelper().getClassLoader().loadClass(exceptionType);

@@ -15,7 +15,7 @@ import java.util.Set;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.SetCast;
 
-public class MProperties extends IProperties implements Externalizable {
+public class MProperties extends AbstractProperties implements Externalizable {
 
 	protected Properties properties = null;
 	
@@ -144,5 +144,10 @@ public class MProperties extends IProperties implements Externalizable {
 		}
 		MProperties out = new MProperties(p);
 		return out;
+	}
+
+	@Override
+	public int size() {
+		return properties.size();
 	}
 }

@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.errors.MException;
 
-public class MNls extends IProperties {
+public class MNls extends AbstractProperties {
 	
 	protected Properties properties = null;
 	protected String prefix = "";
@@ -124,6 +124,11 @@ public class MNls extends IProperties {
 		if (factory != null)
 			return factory.load(owner.getClass());
 		return null;
+	}
+
+	@Override
+	public int size() {
+		return properties.size();
 	}
 
 }

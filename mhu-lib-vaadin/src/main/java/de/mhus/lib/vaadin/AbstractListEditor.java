@@ -64,11 +64,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private MNlsBundle nlsBundle;
 	private boolean modified = false;
 	private boolean initialized = false;
-<<<<<<< HEAD
-		
-=======
-	
-	
+
 	protected Map<String, String> labels = new HashMap<String, String>() {
 		private static final long serialVersionUID = 1L;
 		{
@@ -80,7 +76,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		}
 	};
 	
->>>>>>> master
 	@Hidden
 	private Log log = Log.getLog(this);
 	private String sortedColumn;

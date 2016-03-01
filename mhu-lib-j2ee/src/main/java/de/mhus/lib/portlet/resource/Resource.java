@@ -6,7 +6,7 @@ import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.AbstractProperties;
 
 public interface Resource {
 
@@ -14,6 +14,6 @@ public interface Resource {
 			ResourceResponse response) throws IOException,
 			PortletException;
 	
-	public IProperties createProperties(ResourceRequest request);
+	public AbstractProperties createProperties(ResourceRequest request);
 
 }
