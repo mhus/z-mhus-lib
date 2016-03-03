@@ -25,7 +25,7 @@
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with usefull tools to rapide develop a application</description>
-  <url>http://www.mhus.org</url>
+  <url>http://www.mhus.de</url>
 
   <licenses>
     <license>
@@ -35,7 +35,7 @@
     </license>
   </licenses>
   <scm>
-    <url>https://mhu-lib.googlecode.com/svn/trunk/mhu-lib</url>
+    <url>https://github.com/mhus/mhus-lib</url>
     <connection>scm:git:https://github.com/mhus/mhus-lib/</connection>
   </scm>
   <developers>
@@ -82,7 +82,6 @@
 		    </descriptors>
 		  </configuration>
 		</plugin> 
-		
     </plugins>
   </build>
 
@@ -108,13 +107,16 @@
   </repositories>
 
 	<distributionManagement>
-	  
-          <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus release repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-          </repository>
-          	  
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus release repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
 
         <profiles>
@@ -145,6 +147,20 @@
                     </execution>
                   </executions>
                 </plugin>
+				  <plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-source-plugin</artifactId>
+			        <version>2.1.2</version>
+			        <executions>
+			          <execution>
+			            <id>attach-sources</id>
+			            <phase>verify</phase>
+			            <goals>
+			              <goal>jar-no-fork</goal>
+			            </goals>
+			          </execution>
+			        </executions>
+			      </plugin>
               </plugins>
             </build>
           </profile>
