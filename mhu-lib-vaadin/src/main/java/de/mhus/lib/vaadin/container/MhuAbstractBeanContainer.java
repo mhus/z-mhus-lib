@@ -82,9 +82,6 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * Note that beans can also be added with an explicit id even if a resolver
      * has been set.
      * 
-     * @param IDTYPE
-     * @param BEANTYPE
-     * 
      * @since 6.5
      */
     public static interface BeanIdResolver<IDTYPE, BEANTYPE> extends
