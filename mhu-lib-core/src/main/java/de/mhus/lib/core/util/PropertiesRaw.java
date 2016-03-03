@@ -51,44 +51,44 @@ import java.util.Hashtable;
  * character encodings.
  * <p>
  * <p>
- * The {@link #loadFromXML(InputStream)} and
- * {@link #storeToXML(OutputStream, String, String)} methods load and store
  * properties in a simple XML format. By default the UTF-8 character encoding is
  * used, however a specific encoding may be specified if required. An XML
  * properties document has the following DOCTYPE declaration:
- * 
+ *
  * <pre>
  * &lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
  * </pre>
- * 
+ *
  * Note that the system URI (http://java.sun.com/dtd/properties.dtd) is
  * <i>not</i> accessed when exporting or importing properties; it merely serves
  * as a string to uniquely identify the DTD, which is:
- * 
+ *
  * <pre>
  *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
- * 
+ *
  *    &lt;!-- DTD for properties --&gt;
- * 
+ *
  *    &lt;!ELEMENT properties ( comment?, entry* ) &gt;
- * 
+ *
  *    &lt;!ATTLIST properties version CDATA #FIXED &quot;1.0&quot;&gt;
- * 
+ *
  *    &lt;!ELEMENT comment (#PCDATA) &gt;
- * 
+ *
  *    &lt;!ELEMENT entry (#PCDATA) &gt;
- * 
+ *
  *    &lt;!ATTLIST entry key CDATA #REQUIRED&gt;
  * </pre>
- * 
+ *
  * @see <a href="../../../tooldocs/solaris/native2ascii.html">native2ascii tool
- *      for Solaris< /a>
+ *      for Solaris</a>
  * @see <a href="../../../tooldocs/windows/native2ascii.html">native2ascii tool
- *      for Windows< /a>
- * 
+ *      for Windows</a>
+ * @see <a href="../../../tooldocs/solaris/native2ascii.html">native2ascii tool
+ *      for Solaris</a>
+ * @see <a href="../../../tooldocs/windows/native2ascii.html">native2ascii tool
+ *      for Windows</a>
  * @author Arthur van Hoff
  * @author Michael McCloskey
- * @version 1.84, 05/18/04
  * @since JDK1.0
  */
 public class PropertiesRaw extends Hashtable<Object, Object> {
@@ -114,7 +114,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 
 	/**
 	 * Creates an empty property list with the specified defaults.
-	 * 
+	 *
 	 * @param defaults
 	 *            the defaults.
 	 */
@@ -127,7 +127,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * parallelism with the <tt>getProperty</tt> method. Enforces use of strings
 	 * for property keys and values. The value returned is the result of the
 	 * <tt>Hashtable</tt> call to <code>put</code>.
-	 * 
+	 *
 	 * @param key
 	 *            the key to be placed into this property list.
 	 * @param value
@@ -141,10 +141,23 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 		return put(key, value);
 	}
 
+	/**
+	 * <p>load.</p>
+	 *
+	 * @param inStream a {@link java.io.InputStream} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public void load(InputStream inStream) throws IOException {
 		load(inStream, Charset.defaultCharset());
 	}
 
+	/**
+	 * <p>load.</p>
+	 *
+	 * @param inStream a {@link java.io.InputStream} object.
+	 * @param charset a {@link java.nio.charset.Charset} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public void load(InputStream inStream, Charset charset) throws IOException {
 		load(new InputStreamReader(inStream, charset));
 	}
@@ -160,16 +173,16 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * >&sect;3.3</a> and <a href=
 	 * "http://java.sun.com/docs/books/jls/second_edition/html/lexical.doc.html#101089"
 	 * >&sect;3.10.6</a> of the <i>Java Language Specification</i>).
-	 * 
+	 *
 	 * The differences from the character escape sequences used for characters
 	 * and strings are:
-	 * 
+	 *
 	 * <ul>
 	 * <li> Octal escapes are not recognized.
-	 * 
+	 *
 	 * <li> The character sequence <code>\b</code> does <i>not</i> represent a
 	 * backspace character.
-	 * 
+	 *
 	 * <li> The method does not treat a backslash character, <code>\</code>,
 	 * before a non-valid escape character as an error; the backslash is
 	 * silently dropped. For example, in a Java string the sequence <code>"\z"
@@ -177,16 +190,16 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * silently drops the backslash. Therefore, this method treats the two
 	 * character sequence <code>"\b"</code> as equivalent to the single
 	 * character <code>'b'</code>.
-	 * 
+	 *
 	 * <li> Escapes are not necessary for single and double quotes; however, by
 	 * the rule above, single and double quote characters preceded by a
 	 * backslash still yield single and double quote characters, respectively.
-	 * 
+	 *
 	 * </ul>
-	 * 
+	 *
 	 * An <code>IllegalArgumentException</code> is thrown if a malformed Unicode
 	 * escape appears in the input.
-	 * 
+	 *
 	 * <p>
 	 * This method processes input in terms of lines. A natural line of input is
 	 * terminated either by a set of line terminator characters (<code>\n</code>
@@ -201,7 +214,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * several natural lines, the continuation lines receive further processing,
 	 * also described below. Lines are read from the input stream until end of
 	 * file is reached.
-	 * 
+	 *
 	 * <p>
 	 * A natural line that contains only white space characters is considered
 	 * blank and is ignored. A comment line has an ASCII <code>'#'</code> or
@@ -210,7 +223,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * to line terminators, this method considers the characters space (
 	 * <code>' '</code>, <code>'&#92;u0020'</code>), tab (<code>'\t'</code>, <code>'&#92;u0009'</code>), and form feed
 	 * (<code>'\f'</code>, <code>'&#92;u000C'</code>) to be white space.
-	 * 
+	 *
 	 * <p>
 	 * If a logical line is spread across several natural lines, the backslash
 	 * escaping the line terminator sequence, the line terminator sequence, and
@@ -225,7 +238,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * processed from left to right, a non-zero even number of 2<i>n</i>
 	 * contiguous backslashes before a line terminator (or elsewhere) encodes
 	 * <i>n</i> backslashes after escape processing.
-	 * 
+	 *
 	 * <p>
 	 * The key contains all of the characters in the line starting with the
 	 * first non-white space character and up to, but not including, the first
@@ -234,10 +247,10 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * be included in the key by escaping them with a preceding backslash
 	 * character; for example,
 	 * <p>
-	 * 
+	 *
 	 * <code>\:\=</code>
 	 * <p>
-	 * 
+	 *
 	 * would be the two-character key <code>":="</code>. Line terminator
 	 * characters can be included using <code>\r</code> and <code>\n</code>
 	 * escape sequences. Any white space after the key is skipped; if the first
@@ -248,35 +261,35 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * element is the empty string <code>&quot;&quot;</code>. Once the raw
 	 * character sequences constituting the key and element are identified,
 	 * escape processing is performed as described above.
-	 * 
+	 *
 	 * <p>
 	 * As an example, each of the following three lines specifies the key
 	 * <code>"Truth"</code> and the associated element value
 	 * <code>"Beauty"</code>:
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * Truth = Beauty
 	 * Truth:Beauty
 	 * Truth			:Beauty
 	 * </pre>
-	 * 
+	 *
 	 * As another example, the following three lines specify a single property:
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * fruits                           apple, banana, pear, \
 	 *                                  cantaloupe, watermelon, \
 	 *                                  kiwi, mango
 	 * </pre>
-	 * 
+	 *
 	 * The key is <code>"fruits"</code> and the associated element is:
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * &quot;apple, banana, pear, cantaloupe, watermelon, kiwi, mango&quot;
 	 * </pre>
-	 * 
+	 *
 	 * Note that a space appears before each <code>\</code> so that a space will
 	 * appear after each comma in the final result; the <code>\</code>, line
 	 * terminator, and leading white space on the continuation line are merely
@@ -284,22 +297,23 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * <p>
 	 * As a third example, the line:
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * cheeses
 	 * </pre>
-	 * 
+	 *
 	 * specifies that the key is <code>"cheeses"</code> and the associated
 	 * element is the empty string <code>""</code>.
 	 * <p>
-	 * 
+	 *
 	 * @param inStream
 	 *            the input stream.
 	 * @exception IOException
 	 *                if an error occurred when reading from the input stream.
-	 * @throws IllegalArgumentException
+	 * @throws java.lang.IllegalArgumentException
 	 *             if the input stream contains a malformed Unicode escape
 	 *             sequence.
+	 * @throws java.io.IOException if any.
 	 */
 	public synchronized void load(Reader inStream) throws IOException {
 		LineReader lr = new LineReader(inStream);
@@ -569,10 +583,23 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 		return outBuffer.toString();
 	}
 
+	/**
+	 * <p>store.</p>
+	 *
+	 * @param outStream a {@link java.io.OutputStream} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public void store(OutputStream outStream) throws IOException {
 		store(outStream, Charset.defaultCharset());
 	}
 
+	/**
+	 * <p>store.</p>
+	 *
+	 * @param outStream a {@link java.io.OutputStream} object.
+	 * @param charset a {@link java.nio.charset.Charset} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public void store(OutputStream outStream, Charset charset)
 			throws IOException {
 		store(new OutputStreamWriter(outStream, charset));
@@ -617,11 +644,9 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * <p>
 	 * After the entries have been written, the output stream is flushed. The
 	 * output stream remains open after this method returns.
-	 * 
+	 *
 	 * @param out
 	 *            an output stream.
-	 * @param comments
-	 *            a description of the property list.
 	 * @exception IOException
 	 *                if writing this property list to the specified output
 	 *                stream throws an <tt>IOException</tt>.
@@ -631,6 +656,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * @exception NullPointerException
 	 *                if <code>out</code> is null.
 	 * @since 1.2
+	 * @throws java.io.IOException if any.
 	 */
 	public synchronized void store(Writer out) throws IOException {
 		BufferedWriter awriter;
@@ -660,10 +686,12 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * If the key is not found in this property list, the default property list,
 	 * and its defaults, recursively, are then checked. The method returns
 	 * <code>null</code> if the property is not found.
-	 * 
+	 *
 	 * @param key
 	 *            the property key.
 	 * @return the value in this property list with the specified key value.
+	 * @see #setProperty
+	 * @see #defaults
 	 * @see #setProperty
 	 * @see #defaults
 	 */
@@ -679,13 +707,14 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * If the key is not found in this property list, the default property list,
 	 * and its defaults, recursively, are then checked. The method returns the
 	 * default value argument if the property is not found.
-	 * 
+	 *
 	 * @param key
 	 *            the hashtable key.
 	 * @param defaultValue
 	 *            a default value.
-	 * 
 	 * @return the value in this property list with the specified key value.
+	 * @see #setProperty
+	 * @see #defaults
 	 * @see #setProperty
 	 * @see #defaults
 	 */
@@ -698,7 +727,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * Returns an enumeration of all the keys in this property list, including
 	 * distinct keys in the default property list if a key of the same name has
 	 * not already been found from the main properties list.
-	 * 
+	 *
 	 * @return an enumeration of all the keys in this property list, including
 	 *         the keys in the default property list.
 	 * @see java.util.Enumeration
@@ -713,7 +742,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	/**
 	 * Prints this property list out to the specified output stream. This method
 	 * is useful for debugging.
-	 * 
+	 *
 	 * @param out
 	 *            an output stream.
 	 */
@@ -734,7 +763,7 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	/**
 	 * Prints this property list out to the specified output stream. This method
 	 * is useful for debugging.
-	 * 
+	 *
 	 * @param out
 	 *            an output stream.
 	 * @since JDK1.1

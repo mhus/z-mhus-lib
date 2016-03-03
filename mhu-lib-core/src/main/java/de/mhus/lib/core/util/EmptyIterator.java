@@ -20,18 +20,27 @@ package de.mhus.lib.core.util;
 
 import java.util.Iterator;
 
+/**
+ * <p>EmptyIterator class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class EmptyIterator<E> implements Iterator<E> {
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasNext() {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public E next() {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void remove() {
 	}

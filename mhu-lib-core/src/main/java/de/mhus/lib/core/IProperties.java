@@ -13,19 +13,32 @@ import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
+/**
+ * <p>Abstract IProperties class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public abstract class IProperties extends MObject implements Iterable<Map.Entry<String,Object>>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Overwrite this function to provide values in string format.
-	 * 
-	 * @param name
+	 *
+	 * @param name a {@link java.lang.String} object.
 	 * @return null if the property not exists or the property value.
-	 * @throws MException 
 	 */
 	public abstract Object getProperty(String name);
 	
+	/**
+	 * <p>getProperty.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a int.
+	 * @return a int.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	@Deprecated
 	public int getProperty(String name, int def) throws MException {
 		return getInt(name,def);
@@ -43,6 +56,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 //		return String.valueOf(out);
 //	}
 
+	/**
+	 * <p>getString.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getString(String name, String def) {
 		Object out;
 		try {
@@ -54,12 +74,26 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return String.valueOf(out);
 	}
 	
+	/**
+	 * <p>getString.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public String getString(String name) throws MException {
 		Object out = getProperty(name);
 		if (out == null) return null;
 		return String.valueOf(out);
 	}
 	
+	/**
+	 * <p>getBoolean.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a boolean.
+	 * @return a boolean.
+	 */
 	public boolean getBoolean(String name, boolean def) {
 		Object out;
 		try {
@@ -70,12 +104,26 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return MCast.toboolean(out, def);
 	}
 
+	/**
+	 * <p>getBoolean.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a boolean.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public boolean getBoolean(String name) throws MException {
 		Object out = getProperty(name);
 		if (out == null) throw new MException("value not found");
 		return MCast.toboolean(out, false);
 	}
 
+	/**
+	 * <p>getInt.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a int.
+	 * @return a int.
+	 */
 	public int getInt(String name, int def) {
 		Object out;
 		try {
@@ -86,6 +134,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return MCast.toint(out,def);
 	}
 	
+	/**
+	 * <p>getLong.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a long.
+	 * @return a long.
+	 */
 	public long getLong(String name, long def) {
 		Object out;
 		try {
@@ -96,6 +151,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return MCast.tolong(out, def);
 	}
 	
+	/**
+	 * <p>getFloat.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a float.
+	 * @return a float.
+	 */
 	public float getFloat(String name, float def) {
 		Object out;
 		try {
@@ -106,6 +168,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return MCast.tofloat(out, def);
 	}
 	
+	/**
+	 * <p>getDouble.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a double.
+	 * @return a double.
+	 */
 	public double getDouble(String name, double def) {
 		Object out;
 		try {
@@ -116,11 +185,24 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return MCast.todouble(out,def);
 	}
 	
+	/**
+	 * <p>getCalendar.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.util.Calendar} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public Calendar getCalendar(String name) throws MException {
 		Object out = getProperty(name);
 		return MCast.toCalendar(out);
 	}
 	
+	/**
+	 * <p>getDate.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.util.Date} object.
+	 */
 	public Date getDate(String name) {
 		try {
 			Object out = getProperty(name);
@@ -129,38 +211,92 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 		return null;
 	}
 	
+	/**
+	 * <p>setString.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.String} object.
+	 */
 	public void setString(String name, String value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setInt.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a int.
+	 */
 	public void setInt(String name, int value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setLong.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a long.
+	 */
 	public void setLong(String name, long value) {
 		setProperty(name, value);
 	}
 
+	/**
+	 * <p>setDouble.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a double.
+	 */
 	public void setDouble(String name, double value) {
 		setProperty(name, value);
 	}
 
+	/**
+	 * <p>setFloat.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a float.
+	 */
 	public void setFloat(String name, float value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setBoolean.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a boolean.
+	 */
 	public void setBoolean(String name, boolean value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setCalendar.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a {@link java.util.Calendar} object.
+	 */
 	public void setCalendar(String name, Calendar value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setDate.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a {@link java.util.Date} object.
+	 */
 	public void setDate(String name, Date value) {
 		setProperty(name, value);
 	}
 	
+	/**
+	 * <p>setNumber.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Number} object.
+	 */
 	public void setNumber(String name, Number value) {
 		if (value == null) {
 			removeProperty(name);
@@ -182,6 +318,13 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 			
 	}
 
+	/**
+	 * <p>getNumber.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param def a {@link java.lang.Number} object.
+	 * @return a {@link java.lang.Number} object.
+	 */
 	public Number getNumber(String name, Number def) {
 		Object out = getProperty(name);
 		if (out == null) return def;
@@ -195,45 +338,53 @@ public abstract class IProperties extends MObject implements Iterable<Map.Entry<
 	
 	/**
 	 * Return true if the property exists.
-	 * 
-	 * @param name
-	 * @return
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public abstract boolean isProperty(String name);
 
 	/**
 	 * Remove the property field in the list of properties.
-	 * 
-	 * @param key
+	 *
+	 * @param key a {@link java.lang.String} object.
 	 */
 	public abstract void removeProperty(String key);
 	
 	/**
 	 * Overwrite this function to allow changes in properties.
-	 * 
-	 * @param key
-	 * @param value
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
 	 */
 	public abstract void setProperty(String key, Object value);
 	
 	/**
 	 * Overwrite this function and return true if the property set can be edited.
-	 * 
-	 * @return
+	 *
+	 * @return a boolean.
 	 */
 	public abstract boolean isEditable();
 	
 	/**
-	 * @return 
-	 * 
+	 * <p>keys.</p>
+	 *
+	 * @return a {@link java.util.Set} object.
 	 */
 	public abstract Set<String> keys();
 	
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<Map.Entry<String, Object>> iterator() {
 		return new IPIterator();
 	}
 
+	/**
+	 * <p>toMap.</p>
+	 *
+	 * @return a {@link java.util.Map} object.
+	 * @since 3.2.9
+	 */
 	public Map<String, Object> toMap() {
 		Map<String, Object> out = new HashMap<>();
 		for (Map.Entry<String, Object> entry : this) {

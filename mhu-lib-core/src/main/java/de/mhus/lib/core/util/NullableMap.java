@@ -8,21 +8,30 @@ import java.util.Set;
 
 import de.mhus.lib.core.lang.NullValue;
 
+/**
+ * <p>NullableMap class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class NullableMap<K,V> implements Map<K, V> {
 	
 	private static final NullValue NULL_VALUE = new NullValue();
 	private HashMap<K, Object> impl = new HashMap<K, Object>();
 
+	/** {@inheritDoc} */
 	@Override
 	public int size() {
 		return impl.size();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		return impl.isEmpty();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public V get(Object key) {
@@ -32,16 +41,19 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		return impl.equals(o);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsKey(Object key) {
 		return impl.containsKey(key);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public V put(K key, V value) {
@@ -58,21 +70,25 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return impl.hashCode();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return impl.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
 		impl.putAll(m);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public V remove(Object key) {
@@ -82,26 +98,31 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return (V) ret;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		impl.clear();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsValue(Object value) {
 		return impl.containsValue(value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Object clone() {
 		return impl.clone();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<K> keySet() {
 		return impl.keySet();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<V> values() {
@@ -113,6 +134,7 @@ public class NullableMap<K,V> implements Map<K, V> {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public Set<Map.Entry<K, V>> entrySet() {

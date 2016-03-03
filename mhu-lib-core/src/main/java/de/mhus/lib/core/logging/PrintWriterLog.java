@@ -5,6 +5,12 @@ import java.util.Date;
 
 import de.mhus.lib.core.MCast;
 
+/**
+ * <p>PrintWriterLog class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class PrintWriterLog extends Log {
 
 	private PrintWriter out;
@@ -13,6 +19,12 @@ public class PrintWriterLog extends Log {
 	private Log.LEVEL level = Log.LEVEL.TRACE;
 	private boolean traces = true;
 
+	/**
+	 * <p>Constructor for PrintWriterLog.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param writer a {@link java.io.PrintWriter} object.
+	 */
 	public PrintWriterLog(String name, PrintWriter writer) {
 		super(name);
 		out = writer;
@@ -156,6 +168,11 @@ public class PrintWriterLog extends Log {
 	
 	}
 	
+	/**
+	 * <p>printTime.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String printTime() {
 		if (printTime) {
 			return MCast.toString(new Date()) + " "; // TODO maybe more efficient
@@ -163,35 +180,63 @@ public class PrintWriterLog extends Log {
 		return "";
 	}
 
+	/**
+	 * <p>Getter for the field <code>level</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public Log.LEVEL getLevel() {
 		return level;
 	}
 
+	/**
+	 * <p>Setter for the field <code>level</code>.</p>
+	 *
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public void setLevel(Log.LEVEL level) {
 		this.level = level;
 	}
 
+	/**
+	 * <p>isTraces.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTraces() {
 		return traces;
 	}
 
+	/**
+	 * <p>Setter for the field <code>traces</code>.</p>
+	 *
+	 * @param traces a boolean.
+	 */
 	public void setTraces(boolean traces) {
 		this.traces = traces;
 	}
 
+	/**
+	 * <p>getWriter.</p>
+	 *
+	 * @return a {@link java.io.PrintWriter} object.
+	 */
 	public PrintWriter getWriter() {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void update() {
 		
 	}
 
+    /** {@inheritDoc} */
     @Override
 	protected void register() {
     }
     
+	/** {@inheritDoc} */
 	@Override
 	public void unregister() {
 	}

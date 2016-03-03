@@ -5,20 +5,36 @@ import de.mhus.lib.core.definition.IDefDefinition;
 import de.mhus.lib.core.definition.IDefTransformer;
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>FmTransformSetDefaultSources class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FmTransformSetDefaultSources implements IDefTransformer {
 
 	private String dbPackage = null;
 	private String memPackage = null;
 	
+	/**
+	 * <p>Constructor for FmTransformSetDefaultSources.</p>
+	 */
 	public FmTransformSetDefaultSources() {
 		this(null,null);
 	}
 	
+	/**
+	 * <p>Constructor for FmTransformSetDefaultSources.</p>
+	 *
+	 * @param memPackage a {@link java.lang.String} object.
+	 * @param dbPackage a {@link java.lang.String} object.
+	 */
 	public FmTransformSetDefaultSources(String memPackage, String dbPackage) {
 		this.dbPackage = dbPackage;
 		this.memPackage = memPackage;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public IDefDefinition transform(IDefDefinition component) throws MException {
 

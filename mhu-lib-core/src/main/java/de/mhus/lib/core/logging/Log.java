@@ -8,9 +8,9 @@ import de.mhus.lib.core.MSystem;
 /**
  * Got the interface from apache-commons-logging. I need to switch because its not working
  * in eclipse plugins correctly.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class Log {
 
@@ -23,6 +23,11 @@ public class Log {
     protected LogEngine engine = null;
     protected UUID id = UUID.randomUUID();
 	
+	/**
+	 * <p>Constructor for Log.</p>
+	 *
+	 * @param owner a {@link java.lang.Object} object.
+	 */
 	public Log(Object owner) {
 		
 		
@@ -49,10 +54,20 @@ public class Log {
 		register();
 	}
 
+    /**
+     * <p>register.</p>
+     *
+     * @since 3.2.9
+     */
     protected void register() {
 		MSingleton.registerLogger(this);
 	}
     
+    /**
+     * <p>unregister.</p>
+     *
+     * @since 3.2.9
+     */
     protected void unregister() {
 		MSingleton.unregisterLogger(this);
     }
@@ -63,12 +78,19 @@ public class Log {
     /**
      * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.
      * This is the local trace method. The trace will only written if the local trace is switched on.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void t(Object ... msg) {
     	log(LEVEL.TRACE, msg);
     }
 
+    /**
+     * <p>log.</p>
+     *
+     * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+     * @param msg a {@link java.lang.Object} object.
+     */
     public void log(LEVEL level, Object ... msg) {
 		if (engine == null) return;
 
@@ -173,7 +195,8 @@ public class Log {
 
     /**
      * Log a message in debug, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void d(Object ... msg) {
     	log(LEVEL.DEBUG, msg);
@@ -181,7 +204,8 @@ public class Log {
 
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void i(Object ... msg) {
     	log(LEVEL.INFO, msg);
@@ -189,7 +213,8 @@ public class Log {
     
     /**
      * Log a message in warn, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void w(Object ... msg) {
     	log(LEVEL.WARN, msg);
@@ -197,7 +222,8 @@ public class Log {
 
     /**
      * Log a message in error, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void e(Object ... msg) {
     	log(LEVEL.ERROR, msg);
@@ -205,12 +231,18 @@ public class Log {
 
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also add a trace.
-     * @param msg 
+     *
+     * @param msg a {@link java.lang.Object} object.
      */
     public void f(Object ... msg) {
     	log(LEVEL.FATAL, msg);
     }
 
+    /**
+     * <p>prepare.</p>
+     *
+     * @param sb a {@link java.lang.StringBuffer} object.
+     */
     protected void prepare(StringBuffer sb) {
     	if (levelMapper != null) {
     		levelMapper.prepareMessage(this,sb);
@@ -219,40 +251,61 @@ public class Log {
     	}
 	}
 
+	/**
+	 * <p>Setter for the field <code>localTrace</code>.</p>
+	 *
+	 * @param localTrace a boolean.
+	 * @since 3.2.9
+	 */
 	public void setLocalTrace(boolean localTrace) {
 		this.localTrace = localTrace;
 	}
 
+	/**
+	 * <p>isLocalTrace.</p>
+	 *
+	 * @return a boolean.
+	 * @since 3.2.9
+	 */
 	public boolean isLocalTrace() {
 		return localTrace;
 	}
 
 	/**
 	 * Use the name of the caller
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 //	public static Log getLog() {
 //		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 //		// for (StackTraceElement e : stack) System.out.println(e.getClassName());
 //		return getLog(stack[2].getClassName());
 //	}
-
-
 	public String getName() {
 		return name;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return MSystem.toString(this, getName());
 	}
 	
+	/**
+	 * <p>getLog.</p>
+	 *
+	 * @param owner a {@link java.lang.Object} object.
+	 * @return a {@link de.mhus.lib.core.logging.Log} object.
+	 */
 	public static Log getLog(Object owner) {
 		// return new StaticBase(owner).log();
 //		return MSingleton.get().createLog(owner);
 		return new Log(owner);
 	}
 
+	/**
+	 * <p>update.</p>
+	 */
 	public void update() {
 		engine = MSingleton.get().getLogFactory().getInstance(getName());
 		localTrace = MSingleton.isTrace(name);
@@ -260,6 +313,12 @@ public class Log {
 		parameterMapper = MSingleton.get().getLogFactory().getParameterMapper();
 	}
 
+	/**
+	 * <p>Getter for the field <code>parameterMapper</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.logging.ParameterMapper} object.
+	 * @since 3.2.9
+	 */
 	public ParameterMapper getParameterMapper() {
 		return parameterMapper;
 	}
@@ -267,9 +326,9 @@ public class Log {
 	/**
 	 * Return if the given level is enabled. This function also uses the
 	 * levelMapper to find the return value. Instead of the is...Enabled().
-	 * 
-	 * @param level
-	 * @return
+	 *
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 * @return a boolean.
 	 */
 	public boolean isLevelEnabled(LEVEL level) {
 		if (engine == null) return false;
@@ -299,6 +358,11 @@ public class Log {
 
 	}
 	
+	/**
+	 * <p>close.</p>
+	 *
+	 * @since 3.2.9
+	 */
 	public void close() {
 		if (engine == null) return;
 		unregister();
@@ -306,6 +370,12 @@ public class Log {
 		engine = null;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>id</code>.</p>
+	 *
+	 * @return a {@link java.util.UUID} object.
+	 * @since 3.2.9
+	 */
 	public UUID getId() {
 		return id;
 	}

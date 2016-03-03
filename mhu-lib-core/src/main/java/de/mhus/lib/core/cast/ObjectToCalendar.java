@@ -9,25 +9,43 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * <p>ObjectToCalendar class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	private final static Log log = Log.getLog(ObjectToCalendar.class);
 	
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Calendar> getToClass() {
 		return Calendar.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Calendar cast(Object in, Calendar def) {
 		return cast(in, def, Locale.getDefault());
 	}
 	
+	/**
+	 * <p>cast.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a {@link java.util.Calendar} object.
+	 * @param locale a {@link java.util.Locale} object.
+	 * @return a {@link java.util.Calendar} object.
+	 * @since 3.2.9
+	 */
 	public Calendar cast(Object in, Calendar def, Locale locale) {
 		if (in == null) return def;
 		if (in instanceof Calendar) return (Calendar)in;
@@ -46,6 +64,13 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 		}
 	}
 
+	/**
+	 * <p>toCalendar.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param locale a {@link java.util.Locale} object.
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public static Calendar toCalendar(String in, Locale locale) {
 		if (in == null) return null;
 		
@@ -261,8 +286,10 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	/**
 	 * Return the value of the month 0 = Januar
+	 *
 	 * @param in name or number of the month 1 or 'jan' or 'january' is 0
-	 * @return
+	 * @return a int.
+	 * @since 3.2.9
 	 */
 	public static int toMonth(String in) {
 		try {

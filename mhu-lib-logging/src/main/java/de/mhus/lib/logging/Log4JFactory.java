@@ -28,15 +28,17 @@ import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
 /**
- * <p>Concrete subclass of {@link LogFactory} specific to log4j.
+ * <p>Concrete subclass of {@link de.mhus.lib.core.logging.LogFactory} specific to log4j.
  *
  * @author Costin Manolache
+ * @version $Id: $Id
  */
 public final class Log4JFactory extends LogFactory {
 
     private static final boolean is12 = Priority.class.isAssignableFrom(Level.class);
     private static final String FQCN = Log4JFactory.class.getName();
 
+    /** {@inheritDoc} */
     @Override
 	public void init(ResourceNode config) throws Exception {
     	if (config == null) return;
@@ -63,20 +65,19 @@ public final class Log4JFactory extends LogFactory {
 	
     }
     
+	/**
+	 * <p>Constructor for Log4JFactory.</p>
+	 */
 	public Log4JFactory() {
         super();
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Convenience method to derive a name from the specified class and
      * call <code>getInstance(String)</code> with it.
-     *
-     * @param clazz Class for which a suitable Log name will be derived
-     *
-     * @exception LogConfigurationException if a suitable <code>Log</code>
-     *  instance cannot be returned
      */
-
     @Override
 	public LogEngine createInstance(String name)
     {
@@ -258,7 +259,7 @@ public final class Log4JFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return 
+	     * @return Logger 
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

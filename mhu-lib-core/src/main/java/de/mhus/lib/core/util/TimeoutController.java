@@ -38,6 +38,7 @@ import de.mhus.lib.core.MThreadDaemon;
  * <p>
  * Executes a task with a specified timeout.
  * </p>
+ *
  * @author Ortwin Glueck
  * @author <a href="mailto:mbowler@GargoyleSoftware.com">Mike Bowler</a>
  * @version $Revision: 480424 $
@@ -57,9 +58,10 @@ public final class TimeoutController {
      * in time, the thread is interrupted and an Exception is thrown.
      * The caller should override the Thread.interrupt() method to something that
      * quickly makes the thread die or use Thread.isInterrupted().
+     *
      * @param task The thread to execute
      * @param timeout The timeout in milliseconds. 0 means to wait forever.
-     * @throws TimeoutException if the timeout passes and the thread does not return.
+     * @throws de.mhus.lib.core.util.TimeoutController.TimeoutException if the timeout passes and the thread does not return.
      */
     public static void execute(Thread task, long timeout) throws TimeoutException {
         task.start();
@@ -76,9 +78,10 @@ public final class TimeoutController {
 
     /**
      * Executes <code>task</code> in a new deamon Thread and waits for the timeout.
+     *
      * @param task The task to execute
      * @param timeout The timeout in milliseconds. 0 means to wait forever.
-     * @throws TimeoutException if the timeout passes and the thread does not return.
+     * @throws de.mhus.lib.core.util.TimeoutController.TimeoutException if the timeout passes and the thread does not return.
      */
     public static void execute(Runnable task, long timeout) throws TimeoutException {
         MThread t = new MThreadDaemon(task, "Timeout guard");

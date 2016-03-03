@@ -8,15 +8,21 @@ import de.mhus.lib.errors.MException;
 /**
  * Use this class to copy a hole config structure. The target should be an empty
  * config node. And it should support creation of properties and sub configs.
- * 
+ *
  * The main purpose is to create a config of a specified type, e.g. the source is a XmlConfig or
  * unknown and the target a JsonConfig type.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class ConfigBuilder extends MLog {
 	
+	/**
+	 * <p>cloneConfig.</p>
+	 *
+	 * @param src a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 * @param tar a {@link de.mhus.lib.core.directory.WritableResourceNode} object.
+	 */
 	public void cloneConfig(ResourceNode src, WritableResourceNode tar) {
 		
 		preProcess(src,tar);

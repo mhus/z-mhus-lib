@@ -4,8 +4,20 @@ import java.util.Locale;
 
 import de.mhus.lib.errors.NotSupportedException;
 
+/**
+ * <p>MValidator class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MValidator {
 
+	/**
+	 * <p>isEmailAddress.</p>
+	 *
+	 * @param email a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isEmailAddress(String email) {
 		if (email == null) return false;
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
@@ -17,14 +29,13 @@ public class MValidator {
 	// http://stackoverflow.com/questions/2385701/regular-expression-for-first-and-last-name
 	/**
 	 * International name. This is a simple test and should be extended ...
-	 * 
+	 *
 	 * What about:
 	 * - names with only upper chars.
 	 * - Ann-Sophie
 	 *
-	 * 
-	 * @param in
-	 * @return
+	 * @param in a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean isFirstName(String in) {
 		if (in == null) return false;
@@ -41,8 +52,8 @@ public class MValidator {
 	 * - DieTer-Filsinger (Should fail)
 	 * - Van Gerben (Space in the name)
 	 *
-	 * @param in
-	 * @return
+	 * @param in a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean isLastName(String in) {
 		if (in == null) return false;
@@ -50,12 +61,27 @@ public class MValidator {
 		return in.matches( "[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-].*" );
 	}
 	
+	/**
+	 * <p>isAddress.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isAddress( String in ) {
 		if (in == null) return false;
 		if (in.length() < 2) return false;
 	      return in.matches( "\\d+\\s+([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+|[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+\\s[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+)" );
 	}
 	
+	/**
+	 * <p>isPassword.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param maxLen a int.
+	 * @param needNumbers a boolean.
+	 * @param needSpecials a boolean.
+	 * @return a boolean.
+	 */
 	public static boolean isPassword(String in, int maxLen, boolean needNumbers, boolean needSpecials) {
 		if (in == null) return false;
 		if (in.length() < maxLen) return false;
@@ -80,6 +106,13 @@ public class MValidator {
 		
 	}
 	
+	/**
+	 * <p>isZipCode.</p>
+	 *
+	 * @param locale a {@link java.util.Locale} object.
+	 * @param zip a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean isZipCode(Locale locale, String zip) {
 		if (locale == null) {
 		} else
@@ -91,6 +124,13 @@ public class MValidator {
 		throw new NotSupportedException("Country not supported",locale);
 	}
 	
+	/**
+	 * <p>isUUID.</p>
+	 *
+	 * @param id a {@link java.lang.String} object.
+	 * @return a boolean.
+	 * @since 3.2.9
+	 */
 	public static boolean isUUID(String id) {
 		if (id == null || id.length() != 36) return false;
         String[] components = id.split("-");
@@ -111,6 +151,13 @@ public class MValidator {
         return true;
 	}
 	
+	/**
+	 * <p>isPhoneNumber.</p>
+	 *
+	 * @param phone a {@link java.lang.String} object.
+	 * @return a boolean.
+	 * @since 3.2.9
+	 */
 	public static boolean isPhoneNumber(String phone) {
 		if (MString.isEmpty(phone)) return false;
 		//validate phone numbers of format "1234567890"

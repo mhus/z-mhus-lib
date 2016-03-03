@@ -18,6 +18,12 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.portlet.actions.ActionRequestHandler;
 import de.mhus.lib.portlet.resource.ResourceRequestHandler;
 
+/**
+ * <p>MPortlet class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MPortlet extends GenericPortlet {
 
 	protected ResourceRequestHandler resourcesHandler = new ResourceRequestHandler();
@@ -27,12 +33,14 @@ public class MPortlet extends GenericPortlet {
 	protected String editJsp;
 	protected String viewJsp;
 
+	/** {@inheritDoc} */
 	@Override
 	public void init() throws PortletException {
 		editJsp = getInitParameter("edit-template");
 		viewJsp = getInitParameter("view-template");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void doEdit(RenderRequest request, RenderResponse response)
 			throws PortletException, IOException {
@@ -49,6 +57,7 @@ public class MPortlet extends GenericPortlet {
 		include(editJsp,request,response);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void doView(RenderRequest request, RenderResponse response)
 			throws PortletException, IOException {
@@ -59,6 +68,15 @@ public class MPortlet extends GenericPortlet {
 		include(viewJsp,request,response);
 	}
 
+	/**
+	 * <p>include.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 * @param request a {@link javax.portlet.RenderRequest} object.
+	 * @param response a {@link javax.portlet.RenderResponse} object.
+	 * @throws javax.portlet.PortletException if any.
+	 * @throws java.io.IOException if any.
+	 */
 	protected void include(String path, RenderRequest request,
 			RenderResponse response) throws PortletException, IOException {
 
@@ -69,6 +87,7 @@ public class MPortlet extends GenericPortlet {
 			dispatcher.include(request, response);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void processAction(ActionRequest request, ActionResponse response)
 			throws PortletException, IOException {
@@ -86,6 +105,7 @@ public class MPortlet extends GenericPortlet {
 		super.processAction(request, response);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void serveResource(ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,

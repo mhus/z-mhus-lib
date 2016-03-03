@@ -10,30 +10,45 @@ import de.mhus.lib.core.util.FlatteningIterator;
 /**
  * Iterates over all non-directory files contained in some subdirectory of the
  * current one.
- * 
+ *
  * @author david
+ * @version $Id: $Id
  */
 public class FileListIterator implements Iterator<File>, Iterable<File> {
 	private final FlatteningIterator<File> flatteningIterator;
 
+	/** {@inheritDoc} */
 	@Override
 	public void remove() {
 	}
 
+	/**
+	 * <p>Constructor for FileListIterator.</p>
+	 *
+	 * @param file a {@link java.io.File} object.
+	 * @param filter a {@link java.io.FileFilter} object.
+	 */
 	public FileListIterator(File file, FileFilter filter) {
 		this.flatteningIterator = new FlatteningIterator<File>(new FileIterator(file,
 				filter));
 	}
 
+	/**
+	 * <p>Constructor for FileListIterator.</p>
+	 *
+	 * @param file a {@link java.io.File} object.
+	 */
 	public FileListIterator(File file) {
 		this(file, null);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasNext() {
 		return flatteningIterator.hasNext();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public File next() {
 		return flatteningIterator.next();
@@ -73,6 +88,7 @@ public class FileListIterator implements Iterator<File>, Iterable<File> {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<File> iterator() {
 		return this;

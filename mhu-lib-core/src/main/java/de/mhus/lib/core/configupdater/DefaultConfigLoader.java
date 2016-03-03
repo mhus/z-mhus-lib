@@ -24,6 +24,13 @@ import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SecureStreamToLogAdapter;
 import de.mhus.lib.core.util.TimerIfc;
 
+/**
+ * <p>DefaultConfigLoader class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class DefaultConfigLoader extends MLog {
 
 	private IConfig config;
@@ -36,6 +43,11 @@ public class DefaultConfigLoader extends MLog {
 	private static PrintStream stdErr = System.err;
 	
 
+	/**
+	 * <p>doInitialize.</p>
+	 *
+	 * @param internal a {@link de.mhus.lib.core.system.ISingletonInternal} object.
+	 */
 	public void doInitialize(ISingletonInternal internal) {
 		this.internal = internal;
 		
@@ -46,6 +58,9 @@ public class DefaultConfigLoader extends MLog {
 		needFileWatch = true;
 	}
 
+	/**
+	 * <p>reConfigure.</p>
+	 */
 	public void reConfigure() {
 		
 		log().i("Load mhu-lib configuration");
@@ -147,6 +162,11 @@ public class DefaultConfigLoader extends MLog {
 		return false;
 	}
 
+	/**
+	 * <p>Getter for the field <code>config</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.config.IConfig} object.
+	 */
 	public synchronized IConfig getConfig() {
 		if (config == null) {
 			

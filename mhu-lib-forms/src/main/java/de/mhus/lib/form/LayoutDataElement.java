@@ -3,6 +3,12 @@ package de.mhus.lib.form;
 import de.mhus.lib.errors.MException;
 
 
+/**
+ * <p>LayoutDataElement class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class LayoutDataElement extends LayoutElement {
 
 //	@Override
@@ -14,6 +20,7 @@ public class LayoutDataElement extends LayoutElement {
 //		super.dump(out,level);
 //	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void build(UiBuilder builder) throws MException {
 		builder.createDataElement(this);

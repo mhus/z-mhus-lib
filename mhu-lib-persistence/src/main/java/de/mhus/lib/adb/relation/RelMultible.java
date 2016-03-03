@@ -6,12 +6,24 @@ import de.mhus.lib.adb.model.FieldRelation;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.sql.DbConnection;
 
+/**
+ * <p>RelMultible class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class RelMultible <T> implements IRelationObject {
 
 	private FieldRelation field;
 	private Object obj;
 	private RelList<T> relations;
 
+	/**
+	 * <p>Getter for the field <code>relations</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.adb.relation.RelList} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public RelList<T> getRelations() throws Exception {
 		synchronized (this) {
 			if (relations == null) {
@@ -43,17 +55,22 @@ public class RelMultible <T> implements IRelationObject {
 		return relations;
 	}
 
+	/**
+	 * <p>reset.</p>
+	 */
 	public void reset() {
 		synchronized (this) {
 			relations = null;
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void prepareCreate() {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void created(DbConnection con) throws Exception {
 
@@ -74,22 +91,26 @@ public class RelMultible <T> implements IRelationObject {
 		relations.save(field.getManager(), con, tar, id);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void saved(DbConnection con) throws Exception {
 		created(con);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setManager(FieldRelation field, Object obj) {
 		this.field = field;
 		this.obj = obj;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isChanged() {
 		return relations != null && relations.changed();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void loaded(DbConnection con) {
 		synchronized (this) {
@@ -97,6 +118,7 @@ public class RelMultible <T> implements IRelationObject {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void prepareSave(DbConnection con) {
 		// TODO Auto-generated method stub

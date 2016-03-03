@@ -9,9 +9,9 @@ import java.lang.annotation.RetentionPolicy;
  * DbPrimaryKey will have the same effect. If you mark a getter or setter as persistent
  * both functions getter and setter must exist and be public. Fou boolenas the getter
  * can also have a 'is...' notation.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbPersistent {

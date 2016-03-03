@@ -23,25 +23,39 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * <p>MTimeInterval class.</p>
+ *
  * @author hummel
- * 
+ *
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @version $Id: $Id
  */
 public class MTimeInterval {
 
 	
+	/** Constant <code>SECOUND_IN_MILLISECOUNDS=1000</code> */
 	public static final long SECOUND_IN_MILLISECOUNDS = 1000;
+	/** Constant <code>MINUTE_IN_MILLISECOUNDS=SECOUND_IN_MILLISECOUNDS * 60</code> */
 	public static final long MINUTE_IN_MILLISECOUNDS = SECOUND_IN_MILLISECOUNDS * 60;
+	/** Constant <code>HOUR_IN_MILLISECOUNDS=MINUTE_IN_MILLISECOUNDS * 60</code> */
 	public static final long HOUR_IN_MILLISECOUNDS = MINUTE_IN_MILLISECOUNDS * 60;
+	/** Constant <code>DAY_IN_MILLISECOUNDS=HOUR_IN_MILLISECOUNDS * 24</code> */
 	public static final long DAY_IN_MILLISECOUNDS = HOUR_IN_MILLISECOUNDS * 24;
+	/** Constant <code>WEEK_IN_MILLISECOUNDS=DAY_IN_MILLISECOUNDS * 7</code> */
 	public static final long WEEK_IN_MILLISECOUNDS = DAY_IN_MILLISECOUNDS * 7;
 	
+	/** Constant <code>MILLISECOND=1</code> */
 	public final static int MILLISECOND = 1;
+	/** Constant <code>SECOND=2</code> */
 	public final static int SECOND = 2;
+	/** Constant <code>MINUTE=3</code> */
 	public final static int MINUTE = 3;
+	/** Constant <code>HOUR=4</code> */
 	public final static int HOUR = 4;
+	/** Constant <code>DAY=5</code> */
 	public final static int DAY = 5;
+	/** Constant <code>WEEK=6</code> */
 	public final static int WEEK = 6;
 //	public final static int MONTH = 7;
 //	public final static int YEAR = 8;
@@ -58,15 +72,30 @@ public class MTimeInterval {
 	private long seconds = 0;
 	private long millisec = 0;
 
+	/**
+	 * <p>Constructor for MTimeInterval.</p>
+	 */
 	public MTimeInterval() {
 
 	}
 
+	/**
+	 * <p>Constructor for MTimeInterval.</p>
+	 *
+	 * @param _interval a {@link java.lang.String} object.
+	 * @throws java.lang.NumberFormatException if any.
+	 */
 	public MTimeInterval(String _interval) throws NumberFormatException {
 		this();
 		parse(_interval);
 	}
 
+	/**
+	 * <p>parse.</p>
+	 *
+	 * @param _interval a {@link java.lang.String} object.
+	 * @throws java.lang.NumberFormatException if any.
+	 */
 	public void parse(String _interval) throws NumberFormatException {
 
 		if (_interval == null) return;
@@ -143,11 +172,22 @@ public class MTimeInterval {
 		optimize();
 	}
 
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param interval a {@link de.mhus.lib.core.MTimeInterval} object.
+	 */
 	public void add(MTimeInterval interval) {
 		if (interval == null) return;
 		parse(interval.toString());
 	}
 	
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param _type a int.
+	 * @param _value a long.
+	 */
 	public void add(int _type, long _value) {
 
 		switch (_type) {
@@ -189,6 +229,9 @@ public class MTimeInterval {
 
 	}
 
+	/**
+	 * <p>optimize.</p>
+	 */
 	public void optimize() {
 
 		if (millisec >= 100) {
@@ -245,6 +288,12 @@ public class MTimeInterval {
 
 	}
 
+	/**
+	 * <p>join.</p>
+	 *
+	 * @param _date a {@link java.util.Date} object.
+	 * @return a {@link java.util.Date} object.
+	 */
 	public Date join(Date _date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(_date);
@@ -252,6 +301,11 @@ public class MTimeInterval {
 		return cal.getTime();
 	}
 
+	/**
+	 * <p>join.</p>
+	 *
+	 * @param _cal a {@link java.util.Calendar} object.
+	 */
 	public void join(Calendar _cal) {
 
 		_cal.add(Calendar.MILLISECOND, (int)millisec);
@@ -264,6 +318,7 @@ public class MTimeInterval {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "" + weeks + "w " + days + "d "
@@ -280,10 +335,10 @@ public class MTimeInterval {
 	 * Secounds and millis: 12345.123
 	 * Format: Day Hour:Minutes:Secounds.Millis or DD HH:MM:ss.SSS
 	 * or ss, ss.SSS, MM:ss.SSS, HH:MM:ss.SSS, MM:ss, HH:MM:ss
-	 * 
-	 * @param interval
-	 * @param def
-	 * @return
+	 *
+	 * @param interval a {@link java.lang.String} object.
+	 * @param def a int.
+	 * @return a long.
 	 */
 	public static long toMilliseconds(String interval, int def) {
 		if (interval == null) return def;
@@ -344,26 +399,56 @@ public class MTimeInterval {
 		return def;
 	}
 
+	/**
+	 * <p>getMilliseconds.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getMilliseconds() {
 		return (int)millisec;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>seconds</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getSeconds() {
 		return (int)seconds;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>minutes</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getMinutes() {
 		return (int)minutes;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>hours</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getHours() {
 		return (int)hours;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>days</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getDays() {
 		return (int)days;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>weeks</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getWeeks() {
 		return (int)weeks;
 	}
@@ -376,34 +461,84 @@ public class MTimeInterval {
 //		return (int)years;
 //	}
 	
+	/**
+	 * <p>getAllMilliseconds.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAllMilliseconds() {
 		return ( ( ( ( weeks * 7 ) + days * 24 ) + minutes * 60 ) + seconds * 1000 ) + millisec;
 	}
 
+	/**
+	 * <p>getAllSecounds.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAllSecounds() {
 		return getAllMilliseconds() / 1000;
 	}
 
+	/**
+	 * <p>getAllMinutes.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAllMinutes() {
 		return getAllMilliseconds() / 1000 / 60;
 	}
 	
+	/**
+	 * <p>getAllDays.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAllDays() {
 		return getAllMilliseconds() / 1000 / 60 / 24;
 	}
 	
+	/**
+	 * <p>getAllWeeks.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getAllWeeks() {
 		return getAllMilliseconds() / 1000 / 60 / 24 / 7;
 	}
 
+	/**
+	 * <p>isTimeOut.</p>
+	 *
+	 * @param start a long.
+	 * @param stop a long.
+	 * @param timeout a long.
+	 * @return a boolean.
+	 * @since 3.2.9
+	 */
 	public static boolean isTimeOut(long start, long stop, long timeout) {
 		return stop - start > timeout;
 	}
 	
+	/**
+	 * <p>isTimeOut.</p>
+	 *
+	 * @param start a long.
+	 * @param timeout a long.
+	 * @return a boolean.
+	 * @since 3.2.9
+	 */
 	public static boolean isTimeOut(long start, long timeout) {
 		return System.currentTimeMillis() - start > timeout;
 	}
 
+	/**
+	 * <p>toTime.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param def a long.
+	 * @return a long.
+	 * @since 3.2.9
+	 */
 	public static long toTime(String in, long def) {
 		long out = def;
 		if (in == null) return out;

@@ -7,18 +7,27 @@ import java.util.Date;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 
+/**
+ * <p>ObjectToString class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ObjectToString implements Caster<Object,String>{
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends String> getToClass() {
 		return String.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String cast(Object in, String def) {
 		if (in == null) return def;

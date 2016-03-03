@@ -8,9 +8,9 @@ import de.mhus.lib.core.pojo.PojoParser;
 /**
  * Convert a object into string using pojo mechanism. The conversion is
  * done if the method toString is used for the first time.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class Stringifier {
 
@@ -18,15 +18,27 @@ public class Stringifier {
 	private String str;
 	private int level;
 
+	/**
+	 * <p>Constructor for Stringifier.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 */
 	public Stringifier(Object in) {
 		this(in, 1);
 	}
 	
+	/**
+	 * <p>Constructor for Stringifier.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param level a int.
+	 */
 	public Stringifier(Object in, int level) {
 		this.from = in;
 		this.level = level;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public synchronized String toString() {
 		if (str == null) {
@@ -66,12 +78,23 @@ public class Stringifier {
 		return out.toString();
 	}
 
+	/**
+	 * <p>stringifyArray.</p>
+	 *
+	 * @param in an array of {@link java.lang.Object} objects.
+	 */
 	public static void stringifyArray(Object[] in) {
 		if (in == null) return;
 		for (int i = 0; i < in.length; i++)
 			in[i] = stringifyWrap(in[i]);
 	}
 
+	/**
+	 * <p>stringifyWrap.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public static Object stringifyWrap(Object o) {
 		if (o == null) return null;
 		Class<? extends Object> c = o.getClass();

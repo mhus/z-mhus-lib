@@ -5,9 +5,9 @@ import de.mhus.lib.errors.MException;
 
 /**
  * A simple key - value properties implementation.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class DbProperties {
 
@@ -16,17 +16,38 @@ public class DbProperties {
 	@SuppressWarnings("unused")
 	private String dump;
 
+	/**
+	 * <p>Constructor for DbProperties.</p>
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
+	 * @param registryName a {@link java.lang.String} object.
+	 */
 	public DbProperties(DbManager manager, String registryName) {
 		this.manager = manager;
 		this.registryName = registryName;
 	}
 
+	/**
+	 * <p>get.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public String get(String key) throws MException {
 		Property prop = (Property) manager.getObject(registryName,key);
 		if (prop == null) return null;
 		return prop.getValue();
 	}
 
+	/**
+	 * <p>set.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public String set(String key, String value) throws MException {
 		Property prop = (Property) manager.getObject(registryName,key);
 		if (prop == null) {
@@ -43,6 +64,13 @@ public class DbProperties {
 		return oldValue;
 	}
 
+	/**
+	 * <p>remove.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public String remove(String key) throws MException {
 		Property prop = (Property) manager.getObject(registryName,key);
 		if (prop == null) {

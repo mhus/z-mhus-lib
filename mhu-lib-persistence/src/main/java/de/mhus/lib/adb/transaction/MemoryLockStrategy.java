@@ -7,6 +7,13 @@ import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
+/**
+ * <p>MemoryLockStrategy class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class MemoryLockStrategy extends LockStrategy {
 
 	private long maxLockAge = MTimeInterval.HOUR_IN_MILLISECOUNDS;
@@ -14,6 +21,7 @@ public class MemoryLockStrategy extends LockStrategy {
 
 	private HashMap<String, LockObject> locks = new HashMap<>();
 	
+	/** {@inheritDoc} */
 	@Override
 	public void lock(Persistable object, String key, Transaction transaction,
 			long timeout) {
@@ -46,6 +54,7 @@ public class MemoryLockStrategy extends LockStrategy {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void releaseLock(Persistable object, String key,
 			Transaction transaction) {
@@ -59,18 +68,38 @@ public class MemoryLockStrategy extends LockStrategy {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>maxLockAge</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMaxLockAge() {
 		return maxLockAge;
 	}
 
+	/**
+	 * <p>Setter for the field <code>maxLockAge</code>.</p>
+	 *
+	 * @param maxLockAge a long.
+	 */
 	public void setMaxLockAge(long maxLockAge) {
 		this.maxLockAge = maxLockAge;
 	}
 
+	/**
+	 * <p>Getter for the field <code>sleepTime</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getSleepTime() {
 		return sleepTime;
 	}
 
+	/**
+	 * <p>Setter for the field <code>sleepTime</code>.</p>
+	 *
+	 * @param sleepTime a long.
+	 */
 	public void setSleepTime(long sleepTime) {
 		this.sleepTime = sleepTime;
 	}

@@ -22,23 +22,48 @@ import java.util.Timer;
 
 import de.mhus.lib.core.lang.IBase;
 
+/**
+ * <p>MTimer class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MTimer extends Timer implements IBase {
 
+	/**
+	 * <p>Constructor for MTimer.</p>
+	 */
 	public MTimer() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * <p>Constructor for MTimer.</p>
+	 *
+	 * @param isDaemon a boolean.
+	 */
 	public MTimer(boolean isDaemon) {
 		super(isDaemon);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * <p>Constructor for MTimer.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param isDaemon a boolean.
+	 */
 	public MTimer(String name, boolean isDaemon) {
 		super(name, isDaemon);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * <p>Constructor for MTimer.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public MTimer(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub

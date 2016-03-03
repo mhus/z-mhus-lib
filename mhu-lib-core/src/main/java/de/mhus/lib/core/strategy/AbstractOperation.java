@@ -2,10 +2,17 @@ package de.mhus.lib.core.strategy;
 
 import de.mhus.lib.core.MLog;
 
+/**
+ * <p>Abstract AbstractOperation class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public abstract class AbstractOperation extends MLog implements Operation {
 
 	private Object owner;
 
+	/** {@inheritDoc} */
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
 		log().d("execute",context.getParameters());
@@ -22,8 +29,16 @@ public abstract class AbstractOperation extends MLog implements Operation {
 		return ret;
 	}
 	
+	/**
+	 * <p>doExecute2.</p>
+	 *
+	 * @param context a {@link de.mhus.lib.core.strategy.TaskContext} object.
+	 * @return a {@link de.mhus.lib.core.strategy.OperationResult} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	protected abstract OperationResult doExecute2(TaskContext context) throws Exception;
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isBusy() {
 		synchronized (this) {
@@ -31,6 +46,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setBusy(Object owner) {
 		synchronized (this) {
@@ -40,6 +56,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean releaseBusy(Object owner) {
 		synchronized (this) {

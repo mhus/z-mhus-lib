@@ -3,20 +3,29 @@ package de.mhus.lib.core.cast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
+/**
+ * <p>ObjectToInteger class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ObjectToInteger implements Caster<Object,Integer> {
 
 	private final static Log log = Log.getLog(ObjectToInteger.class);
 	
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Integer> getToClass() {
 		return Integer.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Integer cast(Object in, Integer def) {
 		ObjectContainer<Integer> ret = new ObjectContainer<>(def);
@@ -24,6 +33,14 @@ public class ObjectToInteger implements Caster<Object,Integer> {
 		return ret.getObject();
 	}
 
+	/**
+	 * <p>toInt.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a int.
+	 * @param ret a {@link de.mhus.lib.core.util.ObjectContainer} object.
+	 * @return a int.
+	 */
 	public int toInt(Object in, int def, ObjectContainer<Integer> ret) {
 		if (in == null) return def;
 		if (in instanceof Integer) {

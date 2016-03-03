@@ -32,9 +32,9 @@ import de.mhus.lib.core.directory.ResourceNode;
  * The pool handles a bundle of connections. The connections should have the same
  * credentials (url, user access). Unused or closed connections will be freed after a
  * pending period.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class DefaultDbPool extends DbPool {
 
@@ -44,8 +44,8 @@ public class DefaultDbPool extends DbPool {
 	/**
 	 * Create a new pool from central configuration.
 	 * It's used the MSingleton configuration with the key of this class.
-	 * 
-	 * @throws Exception
+	 *
+	 * @throws java.lang.Exception if any.
 	 */
 	public DefaultDbPool() throws Exception {
 		super(null,null);
@@ -54,10 +54,10 @@ public class DefaultDbPool extends DbPool {
 
 	/**
 	 * Create a new pool from a configuration.
-	 * 
+	 *
 	 * @param config Config element or null. null will use the central MSingleton configuration.
 	 * @param activator Activator or null. null will use the central MSingleton Activator.
-	 * @throws Exception
+	 * @throws java.lang.Exception if any.
 	 */
 	public DefaultDbPool(ResourceNode config,MActivator activator) throws Exception {
 		super(config,activator);
@@ -66,14 +66,17 @@ public class DefaultDbPool extends DbPool {
 
 	/**
 	 * Create a pool with the DbProvider.
-	 * 
-	 * @param provider
+	 *
+	 * @param provider a {@link de.mhus.lib.sql.DbProvider} object.
 	 */
 	public DefaultDbPool(DbProvider provider) {
 		super(provider);
 		initHousekeeper();
 	}
 
+	/**
+	 * <p>initHousekeeper.</p>
+	 */
 	protected void initHousekeeper() {
 
 		Housekeeper housekeeper = new Housekeeper(this);
@@ -81,11 +84,9 @@ public class DefaultDbPool extends DbPool {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Look into the pool for an unused DbProvider. If no one find, create one.
-	 * 
-	 * @param jmxName
-	 * @return
-	 * @throws Exception
 	 */
 	@Override
 	public DbConnection getConnection() throws Exception {
@@ -125,9 +126,9 @@ public class DefaultDbPool extends DbPool {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Current pool size.
-	 * 
-	 * @return Current pool size, also pending closed connections.
 	 */
 	@Override
 	@JmxManaged(descrition="Current size of the pool")
@@ -137,6 +138,7 @@ public class DefaultDbPool extends DbPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@JmxManaged(descrition="Current used connections in the pool")
 	public int getUsedSize() {
@@ -150,6 +152,8 @@ public class DefaultDbPool extends DbPool {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Cleanup the connection pool. Unused or closed connections will be removed.
 	 * TODO new strategy to remove unused connections - not prompt, need a timeout time or minimum pool size.
 	 */
@@ -171,8 +175,9 @@ public class DefaultDbPool extends DbPool {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Close the pool and all connections.
-	 * 
 	 */
 	@Override
 	public void close() {
@@ -186,6 +191,7 @@ public class DefaultDbPool extends DbPool {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	@JmxManaged(descrition="Return the usage of the connections")
 	public String dumpUsage(boolean used) {
@@ -222,6 +228,7 @@ public class DefaultDbPool extends DbPool {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isClosed() {
 		return pool == null;

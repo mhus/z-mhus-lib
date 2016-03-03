@@ -10,24 +10,32 @@ import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.parser.StringPart;
 import de.mhus.lib.sql.parser.ICompiler;
 
-/**
-
-<common>
- <select>
-    <from></from>
- 	<where></where>
- </select>
-</common>
-
+/*
+ *
+ *<common>
+ * <select>
+ *    <from></from>
+ * 	<where></where>
+ * </select>
+ *</common>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class Common2SqlCompiler implements Parser {
 
 	protected ICompiler compiler;
 
+	/**
+	 * <p>Constructor for Common2SqlCompiler.</p>
+	 *
+	 * @param compiler a {@link de.mhus.lib.sql.parser.ICompiler} object.
+	 */
 	public Common2SqlCompiler(ICompiler compiler) {
 		this.compiler = compiler;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CompiledString compileString(String in) throws ParseException {
 		try {

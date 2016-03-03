@@ -149,7 +149,7 @@ public class MOsgi {
 	 * bundle, not the context of the current working bundle. Use the context to access services
 	 * in every case.
 	 * 
-	 * @return
+	 * @return BundleContext
 	 */
 	public static BundleContext getBundleContext() {
 		return FrameworkUtil.getBundle(org.apache.felix.service.command.CommandProcessor.class).getBundleContext();

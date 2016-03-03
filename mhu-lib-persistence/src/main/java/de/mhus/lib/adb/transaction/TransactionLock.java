@@ -12,6 +12,13 @@ import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
+/**
+ * <p>TransactionLock class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class TransactionLock extends Transaction {
 
 	private Persistable[] objects;
@@ -19,11 +26,22 @@ public class TransactionLock extends Transaction {
 	private boolean locked;
 	private TreeMap<String, Persistable> orderedKeys;
 
+	/**
+	 * <p>Constructor for TransactionLock.</p>
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
+	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+	 */
 	public TransactionLock(DbManager manager, Persistable ... objects) {
 		this.manager = manager;
 		this.objects = objects;
 	}
 	
+	/**
+	 * <p>Constructor for TransactionLock.</p>
+	 *
+	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+	 */
 	public TransactionLock(Persistable ... objects) {
 		this.objects = objects;
 		manager = null;
@@ -34,6 +52,7 @@ public class TransactionLock extends Transaction {
 			}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void lock(long timeout)  throws TimeoutRuntimeException {
 		if (objects == null) throw new NotSupportedException("Transaction already gone");
@@ -62,6 +81,12 @@ public class TransactionLock extends Transaction {
 		locked = true;
 	}
 
+	/**
+	 * <p>createKey.</p>
+	 *
+	 * @param o a {@link de.mhus.lib.adb.Persistable} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String createKey(Persistable o) {
 		// find db manager of the object, fallback is my manager
 		DbManager m = manager;
@@ -80,6 +105,7 @@ public class TransactionLock extends Transaction {
 		return key.toString();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void release() {
 		if (!locked || objects == null || manager == null) return;
@@ -100,6 +126,7 @@ public class TransactionLock extends Transaction {
 		
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public synchronized void pushNestedLock(Transaction transaction) {
 		// validate lock objects
@@ -115,17 +142,20 @@ public class TransactionLock extends Transaction {
 		super.pushNestedLock(transaction);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void finalize() {
 		//TODO error message !
 		release();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbManager getDbManager() {
 		return manager;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public synchronized Set<String> getLockKeys() {
 		if (orderedKeys == null) {

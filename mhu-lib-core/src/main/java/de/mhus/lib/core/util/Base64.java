@@ -24,12 +24,22 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 
 /**
+ * <p>Base64 class.</p>
+ *
  * @author Brian Wing Shun Chan
+ * @version $Id: $Id
+ * @since 3.2.9
  */
 public class Base64 {
 
 	private static final Log log = Log.getLog(Base64.class);
 	
+	/**
+	 * <p>decode.</p>
+	 *
+	 * @param base64 a {@link java.lang.String} object.
+	 * @return an array of byte.
+	 */
 	public static byte[] decode(String base64) {
 		if (MString.isEmpty(base64)) {
 			return new byte[0];
@@ -64,10 +74,24 @@ public class Base64 {
 		return raw;
 	}
 
+	/**
+	 * <p>encode.</p>
+	 *
+	 * @param raw an array of byte.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encode(byte[] raw) {
 		return encode(raw, 0, raw.length);
 	}
 
+	/**
+	 * <p>encode.</p>
+	 *
+	 * @param raw an array of byte.
+	 * @param offset a int.
+	 * @param length a int.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encode(byte[] raw, int offset, int length) {
 		int lastIndex = Math.min(raw.length, offset + length);
 
@@ -81,6 +105,12 @@ public class Base64 {
 		return sb.toString();
 	}
 
+	/**
+	 * <p>objectToString.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String objectToString(Object o) {
 		if (o == null) {
 			return null;
@@ -103,6 +133,14 @@ public class Base64 {
 		return encode(ubaos.toByteArray(), 0, ubaos.size());
 	}
 
+	/**
+	 * <p>encodeBlock.</p>
+	 *
+	 * @param raw an array of byte.
+	 * @param offset a int.
+	 * @param lastIndex a int.
+	 * @return an array of char.
+	 */
 	protected static char[] encodeBlock(byte[] raw, int offset, int lastIndex) {
 		int block = 0;
 		int slack = lastIndex - offset - 1;
@@ -133,6 +171,12 @@ public class Base64 {
 		return base64;
 	}
 
+	/**
+	 * <p>getChar.</p>
+	 *
+	 * @param sixbit a int.
+	 * @return a char.
+	 */
 	protected static char getChar(int sixbit) {
 		if ((sixbit >= 0) && (sixbit <= 25)) {
 			return (char)(65 + sixbit);
@@ -153,6 +197,12 @@ public class Base64 {
 		return sixbit != 63 ? '?' : '/';
 	}
 
+	/**
+	 * <p>getValue.</p>
+	 *
+	 * @param c a char.
+	 * @return a int.
+	 */
 	protected static int getValue(char c) {
 		if ((c >= 'A') && (c <= 'Z')) {
 			return c - 65;
@@ -177,6 +227,12 @@ public class Base64 {
 		return c != '=' ? -1 : 0;
 	}
 
+	/**
+	 * <p>encode.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encode(String value) {
 		if (value == null) return "";
 		return encode(value.getBytes());

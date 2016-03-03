@@ -3,20 +3,29 @@ package de.mhus.lib.core.cast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
+/**
+ * <p>ObjectToShort class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ObjectToShort implements Caster<Object,Short> {
 
 	private final static Log log = Log.getLog(ObjectToShort.class);
 	
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Short> getToClass() {
 		return Short.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Short cast(Object in, Short def) {
 		ObjectContainer<Short> ret = new ObjectContainer<>(def);
@@ -24,6 +33,14 @@ public class ObjectToShort implements Caster<Object,Short> {
 		return ret.getObject();
 	}
 
+	/**
+	 * <p>toShort.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a short.
+	 * @param ret a {@link de.mhus.lib.core.util.ObjectContainer} object.
+	 * @return a short.
+	 */
 	public short toShort(Object in, short def, ObjectContainer<Short> ret) {
 		if (in == null) return def;
 		if (in instanceof Short) {

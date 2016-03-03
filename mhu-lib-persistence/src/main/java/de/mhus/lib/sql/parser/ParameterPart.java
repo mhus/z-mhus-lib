@@ -17,6 +17,12 @@ import de.mhus.lib.core.parser.StringParsingPart;
 import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.sql.DbStatement;
 
+/**
+ * <p>ParameterPart class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ParameterPart extends StringParsingPart {
 
 
@@ -25,10 +31,16 @@ public class ParameterPart extends StringParsingPart {
 
 	private ICompiler compiler;
 
+	/**
+	 * <p>Constructor for ParameterPart.</p>
+	 *
+	 * @param compiler a {@link de.mhus.lib.sql.parser.ICompiler} object.
+	 */
 	public ParameterPart(ICompiler compiler) {
 		this.compiler = compiler;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute(StringBuffer out, Map<String, Object> attributes) {
 
@@ -115,17 +127,20 @@ public class ParameterPart extends StringParsingPart {
 										log().w("Unknown attribute type:",type);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doPreParse() {
 		buffer = new StringBuffer();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doPostParse() {
 		attribute = MString.split(buffer.toString(), ",");
 		buffer = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean parse(char c, ParseReader str) throws ParseException,
 	IOException {
@@ -141,6 +156,7 @@ public class ParameterPart extends StringParsingPart {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void dump(int level, StringBuffer out) {
 		MString.appendRepeating(level, ' ', out);

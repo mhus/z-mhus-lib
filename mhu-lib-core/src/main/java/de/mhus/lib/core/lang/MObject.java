@@ -5,6 +5,12 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 
+/**
+ * <p>MObject class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MObject extends MLog {
 	
 	@Hidden
@@ -14,6 +20,9 @@ public class MObject extends MLog {
 	@Hidden
 	private Base oldBase;
 
+	/**
+	 * <p>Constructor for MObject.</p>
+	 */
 	public MObject() {
 		initBase();
 	}
@@ -27,6 +36,13 @@ public class MObject extends MLog {
 		return this;
 	}
 	
+	/**
+	 * <p>base.</p>
+	 *
+	 * @param ifc a {@link java.lang.Class} object.
+	 * @param <T> a T object.
+	 * @return a T object.
+	 */
 	protected <T> T base(Class<T> ifc) {
 		try {
 //			initBase();
@@ -38,6 +54,12 @@ public class MObject extends MLog {
 		}
 	}
 	
+	/**
+	 * <p>isBase.</p>
+	 *
+	 * @param ifc a {@link java.lang.Class} object.
+	 * @return a boolean.
+	 */
 	protected boolean isBase(Class<?> ifc) {
 		try {
 //			initBase();
@@ -49,6 +71,9 @@ public class MObject extends MLog {
 		}
 	}
 	
+	/**
+	 * <p>forkBase.</p>
+	 */
 	protected void forkBase() {
 		synchronized (this) {
 			if (originalBase != null) return; // not possible
@@ -58,6 +83,9 @@ public class MObject extends MLog {
 		}
 	}
 	
+	/**
+	 * <p>createBase.</p>
+	 */
 	protected void createBase() {
 		synchronized (this) {
 			if (originalBase != null) return;
@@ -67,12 +95,18 @@ public class MObject extends MLog {
 		}
 	}
 
+	/**
+	 * <p>installBase.</p>
+	 */
 	protected void installBase() {
 		synchronized (this) {
 			oldBase = MSingleton.get().getBaseControl().installBase(base);
 		}
 	}
 	
+	/**
+	 * <p>leaveBase.</p>
+	 */
 	protected void leaveBase() {
 		synchronized (this) {
 			if (oldBase != null) {
@@ -87,10 +121,16 @@ public class MObject extends MLog {
 		}
 	}
 	
+	/**
+	 * <p>base.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.lang.Base} object.
+	 */
 	protected Base base() {
 		return base;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return MSystem.toString(this);

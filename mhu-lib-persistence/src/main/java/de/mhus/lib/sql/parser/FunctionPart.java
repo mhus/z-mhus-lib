@@ -11,17 +11,30 @@ import de.mhus.lib.core.parser.ParsingPart;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
+/**
+ * <p>FunctionPart class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FunctionPart implements ParsingPart {
 
 	private String name;
 	private LinkedList<ParsingPart> parts = new LinkedList<ParsingPart>();
 	private ICompiler compiler;
 
+	/**
+	 * <p>Constructor for FunctionPart.</p>
+	 *
+	 * @param compiler a {@link de.mhus.lib.sql.parser.ICompiler} object.
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public FunctionPart(ICompiler compiler, String name) {
 		this.compiler = compiler;
 		this.name = name;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute(StringBuffer out, Map<String, Object> attributes) {
 		try {
@@ -38,6 +51,7 @@ public class FunctionPart implements ParsingPart {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void dump(int level, StringBuffer out) {
 		MString.appendRepeating(level, ' ', out);
@@ -49,6 +63,7 @@ public class FunctionPart implements ParsingPart {
 		out.append(")").append("\n");
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void parse(ParseReader str) throws ParseException {
 		try {
@@ -81,6 +96,11 @@ public class FunctionPart implements ParsingPart {
 		} while(true);
 	}
 
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param pp a {@link de.mhus.lib.core.parser.ParsingPart} object.
+	 */
 	public void add(ParsingPart pp) {
 		parts.add(pp);
 	}

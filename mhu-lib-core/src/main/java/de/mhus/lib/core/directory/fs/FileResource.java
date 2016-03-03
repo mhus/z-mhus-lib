@@ -12,11 +12,18 @@ import java.util.LinkedList;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>FileResource class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FileResource extends ResourceNode {
 
 	public enum KEYS {NAME, LENGTH, MODIFIED, TYPE, HIDDEN};
 	public enum TYPE {FILE,DIRCTORY,UNKNOWN}
 	
+	/** Constant <code>UNKNOWN_LENGTH=-1</code> */
 	public static final long UNKNOWN_LENGTH = -1;
 	
 	private FileResourceRoot root;
@@ -24,6 +31,13 @@ public class FileResource extends ResourceNode {
 	private FileResource parent;
 	private HashMap<String,FileResource> cache = new HashMap<>();
 
+	/**
+	 * <p>Constructor for FileResource.</p>
+	 *
+	 * @param root a {@link de.mhus.lib.core.directory.fs.FileResourceRoot} object.
+	 * @param parent a {@link de.mhus.lib.core.directory.fs.FileResource} object.
+	 * @param file a {@link java.io.File} object.
+	 */
 	public FileResource(FileResourceRoot root, FileResource parent, File file) {
 		if (root == null) root = (FileResourceRoot) this;
 		this.root = root;
@@ -31,6 +45,7 @@ public class FileResource extends ResourceNode {
 		this.parent = parent;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String[] getPropertyKeys() {
 		
@@ -42,6 +57,7 @@ public class FileResource extends ResourceNode {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ResourceNode getNode(String key) {
 		if (key == null) return null;
@@ -62,6 +78,7 @@ public class FileResource extends ResourceNode {
 		return cached;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ResourceNode[] getNodes() {
 		LinkedList<ResourceNode> out = new LinkedList<>();
@@ -73,6 +90,7 @@ public class FileResource extends ResourceNode {
 		return out.toArray(new ResourceNode[out.size()]);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ResourceNode[] getNodes(String key) {
 		ResourceNode n = getNode(key);
@@ -80,6 +98,7 @@ public class FileResource extends ResourceNode {
 		return new ResourceNode[] {n};
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getNodeKeys() {
 		LinkedList<String> out = new LinkedList<>();
@@ -91,11 +110,13 @@ public class FileResource extends ResourceNode {
 		return out.toArray(new String[out.size()]);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getName() throws MException {
 		return file.getName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InputStream getInputStream(String key) {
 		if (file.isDirectory()) return null;
@@ -108,11 +129,13 @@ public class FileResource extends ResourceNode {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public ResourceNode getParent() {
 		return parent;
 	}
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("deprecation")
 	@Override
 	public URL getUrl() {
@@ -125,6 +148,7 @@ public class FileResource extends ResourceNode {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Object getProperty(String name) {
 		
@@ -158,6 +182,7 @@ public class FileResource extends ResourceNode {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isProperty(String name) {
 		try {
@@ -168,24 +193,29 @@ public class FileResource extends ResourceNode {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeProperty(String key) {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setProperty(String key, Object value) {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEditable() {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isValide() {
 		return file != null && file.exists();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean hasContent() {
 		return file.isFile();

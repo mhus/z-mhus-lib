@@ -7,14 +7,22 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
+/**
+ * <p>SLF4JFactory class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class SLF4JFactory extends LogFactory {
 
+	/** {@inheritDoc} */
 	@Override
 	public LogEngine createInstance(String name) {
 		return new SLF4JLog(LoggerFactory.getLogger(name));
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void init(ResourceNode config) throws Exception {
 		
@@ -142,7 +150,7 @@ public class SLF4JFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return 
+	     * @return Logger
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

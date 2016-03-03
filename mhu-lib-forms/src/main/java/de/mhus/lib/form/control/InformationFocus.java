@@ -4,14 +4,26 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.LayoutElement;
 
+/**
+ * <p>InformationFocus class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class InformationFocus implements FocusManager {
 
 	private String name = DataSource.NAME_INFORMATION;
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void focused(LayoutElement element) {
 		

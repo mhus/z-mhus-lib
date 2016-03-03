@@ -9,9 +9,16 @@ import org.apache.log4j.spi.ThrowableInformation;
 
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * <p>Log4JAppender class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class Log4JAppender extends AppenderSkeleton {
 
 	
+	/** {@inheritDoc} */
 	@Override
 	protected void append(LoggingEvent evt) {
 		Level level = evt.getLevel();
@@ -53,16 +60,21 @@ public class Log4JAppender extends AppenderSkeleton {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean requiresLayout() {
 		return false;
 	}
 
+	/**
+	 * <p>configure.</p>
+	 */
 	public static void configure() {
 		
 		Log4JAppender appender = new Log4JAppender();

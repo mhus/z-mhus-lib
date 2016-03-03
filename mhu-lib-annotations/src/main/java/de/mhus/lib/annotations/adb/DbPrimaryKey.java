@@ -8,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
  * mark more then one getter/setter as primary key to generate combined keys.
  * The names will be ordered alphabetically if you search an object with this
  * key.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbPrimaryKey {

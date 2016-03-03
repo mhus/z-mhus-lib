@@ -14,6 +14,12 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
 
+/**
+ * <p>MainPart class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MainPart extends StringParsingPart {
 
 	private LinkedList<ParsingPart> parts = new LinkedList<ParsingPart>();
@@ -23,11 +29,17 @@ public class MainPart extends StringParsingPart {
 	private boolean parseAttributes = true;
 	private ICompiler compiler;
 
+	/**
+	 * <p>Constructor for MainPart.</p>
+	 *
+	 * @param compiler a {@link de.mhus.lib.sql.parser.ICompiler} object.
+	 */
 	public MainPart(ICompiler compiler) {
 		this.compiler = compiler;
 		setParseAttributes(compiler.isParseAttributes());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void execute(StringBuffer out, Map<String, Object> attributes) {
 		try {
@@ -39,19 +51,27 @@ public class MainPart extends StringParsingPart {
 		}
 	}
 
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param pp a {@link de.mhus.lib.core.parser.ParsingPart} object.
+	 */
 	public void add(ParsingPart pp) {
 		parts.add(pp);
 		last = pp;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doPreParse() {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doPostParse() {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean parse(char c, ParseReader str) throws ParseException, IOException {
 
@@ -154,6 +174,7 @@ public class MainPart extends StringParsingPart {
 		throw new ParseException("unknown character",c,str.getPosition() ); // TODO more info
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void dump(int level, StringBuffer out) {
 		MString.appendRepeating(level, ' ', out);
@@ -165,14 +186,29 @@ public class MainPart extends StringParsingPart {
 		out.append(")").append("\n");
 	}
 
+	/**
+	 * <p>Setter for the field <code>stopOnComma</code>.</p>
+	 *
+	 * @param b a boolean.
+	 */
 	public void setStopOnComma(boolean b) {
 		stopOnComma = b;
 	}
 
+	/**
+	 * <p>Setter for the field <code>parseAttributes</code>.</p>
+	 *
+	 * @param parseAttributes a boolean.
+	 */
 	public void setParseAttributes(boolean parseAttributes) {
 		this.parseAttributes = parseAttributes;
 	}
 
+	/**
+	 * <p>isParseAttributes.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isParseAttributes() {
 		return parseAttributes;
 	}

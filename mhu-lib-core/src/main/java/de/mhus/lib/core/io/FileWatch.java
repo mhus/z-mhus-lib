@@ -5,6 +5,12 @@ import java.util.TimerTask;
 
 import de.mhus.lib.core.util.TimerIfc;
 
+/**
+ * <p>FileWatch class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FileWatch {
 
 	private File file;
@@ -17,10 +23,23 @@ public class FileWatch {
 	private long lastRun;
 	private boolean startHook;
 
+	/**
+	 * <p>Constructor for FileWatch.</p>
+	 *
+	 * @param fileToWatch a {@link java.io.File} object.
+	 * @param listener a {@link de.mhus.lib.core.io.FileWatch.Listener} object.
+	 */
 	public FileWatch(File fileToWatch, Listener listener) {
 		this(fileToWatch, null, 30000, true, listener);
 	}
 	
+	/**
+	 * <p>Constructor for FileWatch.</p>
+	 *
+	 * @param fileToWatch a {@link java.io.File} object.
+	 * @param timer a {@link de.mhus.lib.core.util.TimerIfc} object.
+	 * @param listener a {@link de.mhus.lib.core.io.FileWatch.Listener} object.
+	 */
 	public FileWatch(File fileToWatch, TimerIfc timer, Listener listener) {
 		this(fileToWatch, timer, 30000, true, listener);
 	}
@@ -29,12 +48,12 @@ public class FileWatch {
 	 * a change. It has two ways to work:
 	 * 1. Manual check, every time you use the file, call the checkFile() method.
 	 * 2. Use of a timer.
-	 * 
-	 * @param fileToWatch
-	 * @param timer
-	 * @param period
-	 * @param startHook
-	 * @param listener
+	 *
+	 * @param fileToWatch a {@link java.io.File} object.
+	 * @param timer a {@link de.mhus.lib.core.util.TimerIfc} object.
+	 * @param period a long.
+	 * @param startHook a boolean.
+	 * @param listener a {@link de.mhus.lib.core.io.FileWatch.Listener} object.
 	 */
 	public FileWatch(File fileToWatch, TimerIfc timer, long period, boolean startHook, Listener listener) {
 		file = fileToWatch;
@@ -44,6 +63,11 @@ public class FileWatch {
 		this.listener = listener;
 	}
 	
+	/**
+	 * <p>doStart.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.io.FileWatch} object.
+	 */
 	public FileWatch doStart() {
 		if (started) return this;
 		started = true; // do not need sync...
@@ -62,6 +86,11 @@ public class FileWatch {
 		return this;
 	}
 	
+	/**
+	 * <p>doStop.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.io.FileWatch} object.
+	 */
 	public FileWatch doStop() {
 		if (!started) return this;
 		if (task != null)
@@ -69,6 +98,11 @@ public class FileWatch {
 		return this;
 	}
 
+	/**
+	 * <p>checkFile.</p>
+	 *
+	 * @since 3.2.9
+	 */
 	public void checkFile() {
 		if (System.currentTimeMillis() - lastRun < period) return;
 		lastRun = System.currentTimeMillis();
@@ -100,10 +134,16 @@ public class FileWatch {
 		}
 	}
 	
+	/**
+	 * <p>Getter for the field <code>file</code>.</p>
+	 *
+	 * @return a {@link java.io.File} object.
+	 */
 	public File getFile() {
 		return file;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return file != null ? file.getAbsolutePath() : "?";

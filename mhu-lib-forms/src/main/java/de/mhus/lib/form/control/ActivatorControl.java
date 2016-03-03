@@ -8,6 +8,12 @@ import de.mhus.lib.form.FormControl;
 import de.mhus.lib.form.LayoutElement;
 import de.mhus.lib.form.validation.Validator;
 
+/**
+ * <p>ActivatorControl class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ActivatorControl implements FormControl {
 
 	private FocusManager focusManager;
@@ -15,12 +21,14 @@ public class ActivatorControl implements FormControl {
 //	private MActivator validators;
 //	private MActivator actions;
 	
+	/** {@inheritDoc} */
 	@Override
 	public void focused(LayoutElement element) {
 		if (focusManager != null)
 			focusManager.focused(element);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void action(FormAction action) {
 //		MActivator a = wizards;
@@ -38,6 +46,7 @@ public class ActivatorControl implements FormControl {
 			act.doExecute(this,action);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void wizard(LayoutElement element) {
 //		MActivator a = wizards;
@@ -55,6 +64,7 @@ public class ActivatorControl implements FormControl {
 			wizard.openWizard(this,element);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean validate(LayoutElement element, DataConnector dataConnector,
 			Object value) throws MException {
@@ -81,10 +91,20 @@ public class ActivatorControl implements FormControl {
 		return true;
 	}
 
+	/**
+	 * <p>Getter for the field <code>focusManager</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.form.control.FocusManager} object.
+	 */
 	public FocusManager getFocusManager() {
 		return focusManager;
 	}
 
+	/**
+	 * <p>Setter for the field <code>focusManager</code>.</p>
+	 *
+	 * @param focusManager a {@link de.mhus.lib.form.control.FocusManager} object.
+	 */
 	public void setFocusManager(FocusManager focusManager) {
 		this.focusManager = focusManager;
 	}

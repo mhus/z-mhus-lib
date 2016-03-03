@@ -9,8 +9,15 @@ import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 
+/**
+ * <p>TableAnnotations class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class TableAnnotations extends Table {
 
+	/** {@inheritDoc} */
 	@Override
 	protected void parseFields() throws Exception {
 

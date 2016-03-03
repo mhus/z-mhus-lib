@@ -7,6 +7,12 @@ import java.util.LinkedList;
 
 import de.mhus.lib.core.MThread;
 
+/**
+ * <p>PipedStream class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class PipedStream {
 
 	private Out out = new Out();
@@ -16,38 +22,83 @@ public class PipedStream {
 	private long writeTimeout = -1;
 	private long readTimeout = -1;
 
+	/**
+	 * <p>Getter for the field <code>out</code>.</p>
+	 *
+	 * @return a {@link java.io.OutputStream} object.
+	 */
 	public OutputStream getOut() {
 		return out;
 	}
 	
+	/**
+	 * <p>Getter for the field <code>in</code>.</p>
+	 *
+	 * @return a {@link java.io.InputStream} object.
+	 */
 	public InputStream getIn() {
 		return in;
 	}
 	
+	/**
+	 * <p>getBufferSize.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getBufferSize() {
 		return buffer.size();
 	}
 	
+	/**
+	 * <p>Setter for the field <code>maxBufferSize</code>.</p>
+	 *
+	 * @param maxBufferSize a int.
+	 */
 	public void setMaxBufferSize(int maxBufferSize) {
 		this.maxBufferSize = maxBufferSize;
 	}
 
+	/**
+	 * <p>Getter for the field <code>maxBufferSize</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getMaxBufferSize() {
 		return maxBufferSize;
 	}
 
+	/**
+	 * <p>Setter for the field <code>writeTimeout</code>.</p>
+	 *
+	 * @param writeTimeout a long.
+	 */
 	public void setWriteTimeout(long writeTimeout) {
 		this.writeTimeout = writeTimeout;
 	}
 
+	/**
+	 * <p>Getter for the field <code>writeTimeout</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getWriteTimeout() {
 		return writeTimeout;
 	}
 
+	/**
+	 * <p>Setter for the field <code>readTimeout</code>.</p>
+	 *
+	 * @param readTimeout a long.
+	 */
 	public void setReadTimeout(long readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
+	/**
+	 * <p>Getter for the field <code>readTimeout</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getReadTimeout() {
 		return readTimeout;
 	}

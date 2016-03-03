@@ -29,9 +29,9 @@ import de.mhus.lib.errors.MRuntimeException;
  * Provide the database connections and other db specific stuff.
  * The default implementation is the JdbcProvider. Implement this to
  * create a completely new kind of database for the framework.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public abstract class DbProvider extends MObject {
 
@@ -42,17 +42,17 @@ public abstract class DbProvider extends MObject {
 
 	/**
 	 * Returns a new DbConnection for this kind of database.
-	 * 
-	 * @return
-	 * @throws Exception
+	 *
+	 * @throws java.lang.Exception if any.
+	 * @return a {@link de.mhus.lib.sql.InternalDbConnection} object.
 	 */
 	public abstract InternalDbConnection createConnection() throws Exception;
 
 	/**
 	 * Set configuration element and activator.
-	 * 
-	 * @param config
-	 * @param activator
+	 *
+	 * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 * @param activator a {@link de.mhus.lib.core.MActivator} object.
 	 */
 	public void doInitialize(ResourceNode config,MActivator activator) {
 		if (config == null) config = new HashConfig();
@@ -64,8 +64,8 @@ public abstract class DbProvider extends MObject {
 	/**
 	 * Returns the predefined statement by this name.
 	 * TODO need to manipulate the set of statements from outside.
-	 * 
-	 * @param name
+	 *
+	 * @param name a {@link java.lang.String} object.
 	 * @return The query string or null.
 	 */
 	public String[] getQuery(String name) {
@@ -96,15 +96,15 @@ public abstract class DbProvider extends MObject {
 	/**
 	 * Returns the Dialect object for this database. It contains all deep specific
 	 * abstraction functions to handle the database.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.sql.Dialect} object.
 	 */
 	public abstract Dialect getDialect();
 
 	/**
 	 * Nice name of the connection - from configuration to identify it.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String getName() {
 		try {
@@ -116,8 +116,8 @@ public abstract class DbProvider extends MObject {
 
 	/**
 	 * Returns the used activator.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.core.MActivator} object.
 	 */
 	public MActivator getActivator() {
 		return activator;

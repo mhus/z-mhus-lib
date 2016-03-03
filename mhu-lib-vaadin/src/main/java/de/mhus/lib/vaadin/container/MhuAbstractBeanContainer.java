@@ -59,9 +59,9 @@ import de.mhus.lib.vaadin.container.MhuBeanItem.PojoPropertyDescriptor;
  * {@link #addItemAt(int, Object, Object)}.
  * </p>
  * 
- * @param <IDTYPE>
+ * IDTYPE
  *            The type of the item identifier
- * @param <BEANTYPE>
+ * BEANTYPE
  *            The type of the Bean
  * 
  * @since 6.5
@@ -82,8 +82,8 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * Note that beans can also be added with an explicit id even if a resolver
      * has been set.
      * 
-     * @param <IDTYPE>
-     * @param <BEANTYPE>
+     * @param IDTYPE
+     * @param BEANTYPE
      * 
      * @since 6.5
      */
@@ -93,7 +93,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
          * Return the item identifier for a bean.
          * 
          * @param bean
-         * @return
+         * @return IDTYPE
          */
         public IDTYPE getIdForBean(BEANTYPE bean);
     }
@@ -216,7 +216,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * This comes from the bean type constructor parameter, and bean metadata
      * (including container properties) is based on this.
      * 
-     * @return
+     * @return Class
      */
     public Class<? super BEANTYPE> getBeanType() {
         return type;
@@ -595,7 +595,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @param bean
      *            the bean to add
-     * @return BeanItem<BEANTYPE> item added or null
+     * @return BeanItem BEANTYPE  item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException
@@ -627,7 +627,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            added, null to add to the beginning
      * @param bean
      *            the bean to add
-     * @return BeanItem<BEANTYPE> item added or null
+     * @return BeanItem BEANTYPE  item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException
@@ -659,7 +659,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      *            the index (in the filtered view) at which to add the item
      * @param bean
      *            the bean to add
-     * @return BeanItem<BEANTYPE> item added or null
+     * @return BeanItem BEANTYPE  item added or null
      * @throws IllegalStateException
      *             if no bean identifier resolver has been set
      * @throws IllegalArgumentException

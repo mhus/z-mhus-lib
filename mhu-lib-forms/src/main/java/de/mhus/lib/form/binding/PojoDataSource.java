@@ -11,18 +11,38 @@ import de.mhus.lib.core.util.ArraySet;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.form.DataSource;
 
+/**
+ * <p>PojoDataSource class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class PojoDataSource extends DataSource {
 
 	private Object pojo;
 	private PojoModel model;
 
+	/**
+	 * <p>Constructor for PojoDataSource.</p>
+	 */
 	public PojoDataSource() {
 	}
 
+	/**
+	 * <p>Constructor for PojoDataSource.</p>
+	 *
+	 * @param pojo a {@link java.lang.Object} object.
+	 */
 	public PojoDataSource(Object pojo) {
 		this(pojo, null);
 	}
 	
+	/**
+	 * <p>Constructor for PojoDataSource.</p>
+	 *
+	 * @param pojo a {@link java.lang.Object} object.
+	 * @param model a {@link de.mhus.lib.core.pojo.PojoModel} object.
+	 */
 	public PojoDataSource(Object pojo, PojoModel model) {
 		this.pojo = pojo;
 		if (model != null) {
@@ -31,6 +51,11 @@ public class PojoDataSource extends DataSource {
 			setPojoObject(pojo);
 	}
 		
+	/**
+	 * <p>setPojoObject.</p>
+	 *
+	 * @param pojo a {@link java.lang.Object} object.
+	 */
 	public void setPojoObject(Object pojo) {
 		this.pojo = pojo;
 		if (pojo != null && model == null) {
@@ -46,16 +71,23 @@ public class PojoDataSource extends DataSource {
 		}
 	}
 	
+	/**
+	 * <p>getPojoObject.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object getPojoObject() {
 		return pojo;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void setProperty(String key, Object value) {
 		setPropertyData(key, value);
 		if (isConnected()) fireValueChanged(key);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setPropertyData(String name, Object value) {
 		if (model != null) {
@@ -70,6 +102,7 @@ public class PojoDataSource extends DataSource {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Object getProperty(String name) {
 		if (model != null) {
@@ -86,6 +119,7 @@ public class PojoDataSource extends DataSource {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isProperty(String name) {
 		if (model != null) {
@@ -95,15 +129,18 @@ public class PojoDataSource extends DataSource {
 		return false;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeProperty(String key) {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEditable() {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<String> keys() {
 		if (model != null) {
@@ -112,6 +149,7 @@ public class PojoDataSource extends DataSource {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isPropertyPossible(String name) {
 		return isProperty(name);

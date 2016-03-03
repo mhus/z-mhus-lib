@@ -1,5 +1,12 @@
 package de.mhus.lib.core.util;
 
+/**
+ * <p>ASCII class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class ASCII {
 
 	/*

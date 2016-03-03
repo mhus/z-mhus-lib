@@ -6,21 +6,37 @@ import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.DataSource;
 
+/**
+ * <p>FmDefaultSources class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FmDefaultSources extends DefAttribute {
 
 	private String dbPackage = DataSource.PACKAGE_PERSISTENT;
 	private String memPackage = DataSource.PACKAGE_MEM;
 
+	/**
+	 * <p>Constructor for FmDefaultSources.</p>
+	 */
 	public FmDefaultSources() {
 		this(null,null);
 	}
 	
+	/**
+	 * <p>Constructor for FmDefaultSources.</p>
+	 *
+	 * @param memPackage a {@link java.lang.String} object.
+	 * @param dbPackage a {@link java.lang.String} object.
+	 */
 	public FmDefaultSources(String memPackage, String dbPackage) {
 		super(null, null);
 		if (dbPackage != null) this.dbPackage = dbPackage;
 		if (memPackage != null) this.memPackage = memPackage;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void inject(DefComponent root) throws MException {
 		String name = root.getString("name", null);

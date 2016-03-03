@@ -7,21 +7,47 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>DefComponent class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class DefComponent extends HashConfig implements IDefDefinition {
 
 	private String tag;
 	private LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
 
+	/**
+	 * <p>Constructor for DefComponent.</p>
+	 *
+	 * @param tag a {@link java.lang.String} object.
+	 * @param definitions a {@link de.mhus.lib.core.definition.IDefDefinition} object.
+	 */
 	public DefComponent(String tag, IDefDefinition ... definitions) {
 		super(tag,null);
 		this.tag = tag;
 		addDefinition(definitions);
 	}
 	
+	/**
+	 * <p>addAttribute.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
+	 * @return a {@link de.mhus.lib.core.definition.DefComponent} object.
+	 * @since 3.2.9
+	 */
 	public DefComponent addAttribute(String name, Object value) {
 		return addDefinition(new DefAttribute(name, value));
 	}
 	
+	/**
+	 * <p>addDefinition.</p>
+	 *
+	 * @param def a {@link de.mhus.lib.core.definition.IDefDefinition} object.
+	 * @return a {@link de.mhus.lib.core.definition.DefComponent} object.
+	 */
 	public DefComponent addDefinition(IDefDefinition ... def) {
 		if (def == null) return this;
 		for (IDefDefinition d : def)
@@ -29,10 +55,16 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 		return this;
 	}
 	
+	/**
+	 * <p>definitions.</p>
+	 *
+	 * @return a {@link java.util.LinkedList} object.
+	 */
 	public LinkedList<IDefDefinition> definitions() {
 		return definitions;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void inject(DefComponent parent) throws MException {
 		if (parent != null) {
@@ -48,6 +80,12 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 
 	}
 
+	/**
+	 * <p>fillNls.</p>
+	 *
+	 * @param p a {@link java.util.Properties} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public void fillNls(Properties p) throws MException {
 		
 		String nls = getString("nls",null);
@@ -71,6 +109,13 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 		}
 	}
 
+	/**
+	 * <p>transform.</p>
+	 *
+	 * @param transformer a {@link de.mhus.lib.core.definition.IDefTransformer} object.
+	 * @return a {@link de.mhus.lib.core.definition.IDefDefinition} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public IDefDefinition transform(IDefTransformer transformer) throws MException {
 		return (IDefDefinition) transformer.transform(this);
 	}

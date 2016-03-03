@@ -13,6 +13,12 @@ import de.mhus.lib.form.binding.MemoryDataSource;
 import de.mhus.lib.form.binding.PackagingDataSource;
 import de.mhus.lib.form.binding.PojoDataSource;
 
+/**
+ * <p>LayoutModelByPojo class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class LayoutModelByPojo extends LayoutModelByConfig {
 
 	private Object pojo;
@@ -20,14 +26,23 @@ public class LayoutModelByPojo extends LayoutModelByConfig {
 	private PojoDataSource pojoDS;
 	private PackagingDataSource ds;
 	
+	/**
+	 * <p>Constructor for LayoutModelByPojo.</p>
+	 */
 	public LayoutModelByPojo() {
 		
 	}
 	
+	/**
+	 * <p>Constructor for LayoutModelByPojo.</p>
+	 *
+	 * @param pojo a {@link java.lang.Object} object.
+	 */
 	public LayoutModelByPojo(Object pojo) {
 		setPojo(pojo);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doBuild() throws Exception {
 		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter()).getModel();
@@ -69,10 +84,20 @@ public class LayoutModelByPojo extends LayoutModelByConfig {
 
 	}
 
+	/**
+	 * <p>Getter for the field <code>pojo</code>.</p>
+	 *
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public Object getPojo() {
 		return pojo;
 	}
 
+	/**
+	 * <p>Setter for the field <code>pojo</code>.</p>
+	 *
+	 * @param pojo a {@link java.lang.Object} object.
+	 */
 	public void setPojo(Object pojo) {
 		this.pojo = pojo;
 		if (pojoDS != null) {
@@ -80,10 +105,20 @@ public class LayoutModelByPojo extends LayoutModelByConfig {
 		}
 	}
 
+	/**
+	 * <p>Getter for the field <code>modelName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getModelName() {
 		return modelName;
 	}
 
+	/**
+	 * <p>Setter for the field <code>modelName</code>.</p>
+	 *
+	 * @param modelName a {@link java.lang.String} object.
+	 */
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
 	}

@@ -9,11 +9,21 @@ import java.util.logging.LogRecord;
 
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * <p>JavaLoggerHandler class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class JavaLoggerHandler extends Handler {
 
+	/**
+	 * <p>Constructor for JavaLoggerHandler.</p>
+	 */
 	public JavaLoggerHandler() {
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void publish(LogRecord record) {
 		Level level = record.getLevel();
@@ -45,14 +55,19 @@ public class JavaLoggerHandler extends Handler {
 			logger.t(method,msg,t);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void flush() {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() throws SecurityException {
 	}
 	
+	/**
+	 * <p>configure.</p>
+	 */
 	public static void configure() {
 		
 		String config = "handlers = " + JavaLoggerHandler.class.getCanonicalName() + "\n" + 

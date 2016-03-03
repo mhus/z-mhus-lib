@@ -1,10 +1,22 @@
 package de.mhus.lib.adb.transaction;
 
+/**
+ * <p>TransactionPool class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class TransactionPool {
 
 	private static TransactionPool instance;
 	private ThreadLocal<Transaction> pool = new ThreadLocal<>();
 
+	/**
+	 * <p>instance.</p>
+	 *
+	 * @return a {@link de.mhus.lib.adb.transaction.TransactionPool} object.
+	 */
 	public static synchronized TransactionPool instance() {
 		if (instance == null)
 			instance = new TransactionPool();
@@ -13,7 +25,8 @@ public class TransactionPool {
 	
 	/**
 	 * Return current transaction, if cascaded transactions, return the last/current
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.adb.transaction.Transaction} object.
 	 */
 	public Transaction get() {
 //		synchronized (pool) {
@@ -26,7 +39,8 @@ public class TransactionPool {
 	
 	/**
 	 * Return current transaction, if cascaded transactions, return the base
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.adb.transaction.Transaction} object.
 	 */
 	public Transaction getBase() {
 //		synchronized (pool) {
@@ -35,6 +49,9 @@ public class TransactionPool {
 //		}
 	}
 	
+	/**
+	 * <p>release.</p>
+	 */
 	public void release() {
 //		synchronized (pool) {
 			Transaction out = pool.get();
@@ -47,6 +64,12 @@ public class TransactionPool {
 //		}
 	}
 	
+	/**
+	 * <p>lock.</p>
+	 *
+	 * @param timeout a long.
+	 * @param transaction a {@link de.mhus.lib.adb.transaction.Transaction} object.
+	 */
 	public void lock(long timeout, Transaction transaction) {
 //		synchronized (pool) {
 			Transaction current = pool.get();

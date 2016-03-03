@@ -6,23 +6,38 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
+/**
+ * <p>DelegateClassLoader class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class DelegateClassLoader extends ClassLoader {
 
 	private LinkedList<Package> list = new LinkedList<Package>();
 	
 	
+	/**
+	 * <p>register.</p>
+	 *
+	 * @param loader a {@link java.lang.ClassLoader} object.
+	 */
 	public void register(ClassLoader loader) {
 		synchronized(list) {
 			list.add(new Package(loader));
 		}
 	}
 
+	/**
+	 * <p>clear.</p>
+	 */
 	public void clear() {
 		synchronized(list) {
 			list.clear();
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		synchronized(list) {
@@ -70,6 +85,7 @@ public class DelegateClassLoader extends ClassLoader {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public URL getResource(String name) {
 		synchronized(list) {
@@ -81,6 +97,7 @@ public class DelegateClassLoader extends ClassLoader {
 		return super.getResource(name);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InputStream getResourceAsStream(String name) {
 		synchronized(list) {
@@ -92,6 +109,7 @@ public class DelegateClassLoader extends ClassLoader {
 		return super.getResourceAsStream(name);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Enumeration<URL> getResources(String name) throws IOException {
 		synchronized(list) {

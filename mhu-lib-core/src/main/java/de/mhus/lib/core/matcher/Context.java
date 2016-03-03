@@ -1,5 +1,12 @@
 package de.mhus.lib.core.matcher;
 
+/**
+ * <p>Context class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public class Context {
 
 	public Context parentContext;
@@ -8,6 +15,11 @@ public class Context {
 	ModelComposit parent = null;
 	public boolean not;
 	ModelComposit root = null;
+	/**
+	 * <p>findRoot.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.matcher.ModelComposit} object.
+	 */
 	public ModelComposit findRoot() {
 		if (root == null && first != null) {
 			root = new ModelAnd();
@@ -15,6 +27,11 @@ public class Context {
 		}
 		return root;
 	}
+	/**
+	 * <p>append.</p>
+	 *
+	 * @param next a {@link de.mhus.lib.core.matcher.ModelComposit} object.
+	 */
 	public void append(ModelComposit next) {
 		if (root == null) {
 			root = next;

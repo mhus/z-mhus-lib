@@ -1,8 +1,15 @@
 package de.mhus.lib.form;
 
 
+/**
+ * <p>LayoutSplit class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class LayoutSplit extends LayoutOverlay {
 
+	/** {@inheritDoc} */
 	@Override
 	public void doInit() throws Exception {
 		super.doInit();
@@ -10,11 +17,13 @@ public class LayoutSplit extends LayoutOverlay {
 		setTitleInside(true);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	protected int doCalculateChildColumns(LayoutComposite child) {
 		return getColumns() / elements.size();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected int doCalculateChildOffset(LayoutComposite child) {
 		int idx = elements.indexOf(child);

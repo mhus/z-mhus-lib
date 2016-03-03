@@ -3,8 +3,16 @@ package de.mhus.lib.logging.parameter;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.ParameterMapper;
 
+/**
+ * <p>Abstract AbstractParameterMapper class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.2.9
+ */
 public abstract class AbstractParameterMapper implements ParameterMapper {
 
+	/** {@inheritDoc} */
 	@Override
 	public Object[] map(Log log, Object[] msg) {
 		if (msg == null) return msg;
@@ -17,6 +25,12 @@ public abstract class AbstractParameterMapper implements ParameterMapper {
 		return msg;
 	}
 
+	/**
+	 * <p>map.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	protected abstract Object map(Object o);
 	
 }

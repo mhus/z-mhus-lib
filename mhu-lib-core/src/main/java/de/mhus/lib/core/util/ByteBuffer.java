@@ -21,6 +21,12 @@ package de.mhus.lib.core.util;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+/**
+ * <p>ByteBuffer class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ByteBuffer {
 
 	private int extend = 1024 * 10;
@@ -31,24 +37,49 @@ public class ByteBuffer {
 	private byte[] buffer = new byte[1];
 	private int size = 0;
 
+	/**
+	 * <p>Constructor for ByteBuffer.</p>
+	 */
 	public ByteBuffer() {
 	}
 
+	/**
+	 * <p>Constructor for ByteBuffer.</p>
+	 *
+	 * @param extend a int.
+	 */
 	public ByteBuffer(int extend) {
 		if (extend < 1)
 			throw new RuntimeException("Extend to less");
 		this.extend = extend;
 	}
 
+	/**
+	 * <p>append.</p>
+	 *
+	 * @param in a byte.
+	 */
 	public void append(byte in) {
 		buffer[0] = in;
 		append(buffer, 0, 1);
 	}
 
+	/**
+	 * <p>append.</p>
+	 *
+	 * @param in an array of byte.
+	 */
 	public void append(byte[] in) {
 		append(in, 0, in.length);
 	}
 
+	/**
+	 * <p>append.</p>
+	 *
+	 * @param in an array of byte.
+	 * @param offset a int.
+	 * @param len a int.
+	 */
 	public void append(byte[] in, int offset, int len) {
 
 		if (last == null) {
@@ -74,10 +105,20 @@ public class ByteBuffer {
 
 	}
 
+	/**
+	 * <p>Getter for the field <code>size</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getSize() {
 		return size;
 	}
 
+	/**
+	 * <p>toByte.</p>
+	 *
+	 * @return an array of byte.
+	 */
 	public byte[] toByte() {
 		byte[] out = new byte[size];
 		int pos = 0;
@@ -91,6 +132,9 @@ public class ByteBuffer {
 		return out;
 	}
 
+	/**
+	 * <p>clear.</p>
+	 */
 	public void clear() {
 		list.clear();
 		size = 0;

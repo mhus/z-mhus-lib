@@ -34,6 +34,12 @@ import de.mhus.lib.sql.DbPrepared;
 import de.mhus.lib.sql.DbResult;
 import de.mhus.lib.sql.Dialect;
 
+/**
+ * <p>Abstract Table class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public abstract class Table extends MObject {
 
 	protected Class<?> clazz;
@@ -57,6 +63,14 @@ public abstract class Table extends MObject {
 	private LinkedList<Feature> features = new LinkedList<Feature>();
 	protected ResourceNode attributes;
 
+	/**
+	 * <p>init.</p>
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
+	 * @param clazz a {@link java.lang.Class} object.
+	 * @param registryName a {@link java.lang.String} object.
+	 * @param tableName a {@link java.lang.String} object.
+	 */
 	public void init(DbManager manager, Class<?> clazz, String registryName, String tableName) {
 		this.manager = manager;
 		this.schema = manager.getSchema();
@@ -65,6 +79,13 @@ public abstract class Table extends MObject {
 		this.tableName = tableName;
 	}
 
+	/**
+	 * <p>initDatabase.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param cleanup a boolean.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void initDatabase(DbConnection con, boolean cleanup) throws Exception {
 
 		DbTable table = MSystem.findAnnotation(clazz, DbTable.class);
@@ -102,9 +123,20 @@ public abstract class Table extends MObject {
 		postInit();
 	}
 
+	/**
+	 * <p>parseFields.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	protected abstract void parseFields() throws Exception;
 
 
+	/**
+	 * <p>addToIndex.</p>
+	 *
+	 * @param list an array of {@link java.lang.String} objects.
+	 * @param field a {@link de.mhus.lib.adb.model.Field} object.
+	 */
 	protected void addToIndex(String[] list, Field field) {
 		for (String nr : list) {
 			LinkedList<Field> list2 = iIdx.get(nr);
@@ -116,15 +148,31 @@ public abstract class Table extends MObject {
 		}
 	}
 
+	/**
+	 * <p>addField.</p>
+	 *
+	 * @param field a {@link de.mhus.lib.adb.model.FieldRelation} object.
+	 */
 	protected void addField(FieldRelation field) {
 		relationList.add(field);
 		relationIndex.put(field.getName(), field);
 	}
 
+	/**
+	 * <p>getFieldRelation.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link de.mhus.lib.adb.model.FieldRelation} object.
+	 */
 	public FieldRelation getFieldRelation(String name) {
 		return relationIndex.get(name);
 	}
 
+	/**
+	 * <p>addField.</p>
+	 *
+	 * @param field a {@link de.mhus.lib.adb.model.Field} object.
+	 */
 	protected void addField(Field field) {
 		field.table = this;
 		fIndex.put(field.createName, field);
@@ -132,6 +180,12 @@ public abstract class Table extends MObject {
 		if (field.isPrimary && field.isPersistent()) pk.add(field);
 	}
 
+	/**
+	 * <p>fillNameMapping.</p>
+	 *
+	 * @param nameMapping a {@link java.util.HashMap} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void fillNameMapping(HashMap<String, Object> nameMapping) throws Exception {
 		nameMapping.put("db." + manager.getMappingName(clazz), new Raw(tableName));
 		for (Field f : fList) {
@@ -139,6 +193,12 @@ public abstract class Table extends MObject {
 		}
 	}
 
+	/**
+	 * <p>prepareCreate.</p>
+	 *
+	 * @param object a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void prepareCreate(Object object) throws Exception {
 		for (Field f : fList) {
 			f.prepareCreate(object);
@@ -148,6 +208,13 @@ public abstract class Table extends MObject {
 		}
 	}
 
+	/**
+	 * <p>createObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param object a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void createObject(DbConnection con, Object object) throws Exception {
 
 		for (Feature f : features)
@@ -171,6 +238,13 @@ public abstract class Table extends MObject {
 
 	}
 
+	/**
+	 * <p>saveObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param object a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void saveObject(DbConnection con, Object object) throws Exception {
 
 		for (Feature f : features)
@@ -200,6 +274,15 @@ public abstract class Table extends MObject {
 
 	}
 
+	/**
+	 * <p>saveObjectForce.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param object a {@link java.lang.Object} object.
+	 * @param raw a boolean.
+	 * @throws java.lang.Exception if any.
+	 * @since 3.2.9
+	 */
 	public void saveObjectForce(DbConnection con, Object object, boolean raw) throws Exception {
 
 		manager.getSchema().authorizeSaveForceAllowed(con, this, object, raw);
@@ -233,6 +316,15 @@ public abstract class Table extends MObject {
 
 	}
 	
+	/**
+	 * <p>updateAttributes.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param object a {@link java.lang.Object} object.
+	 * @param raw a boolean.
+	 * @param attributeNames a {@link java.lang.String} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void updateAttributes(DbConnection con, Object object, boolean raw, String ... attributeNames ) throws Exception {
 		
 		manager.getSchema().authorizeUpdateAttributes(con, this, object, raw, attributeNames);
@@ -297,6 +389,11 @@ public abstract class Table extends MObject {
 
 	}
 	
+	/**
+	 * <p>postInit.</p>
+	 *
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	protected void postInit() throws MException {
 
 		Collections.sort(pk, new Comparator<Field>() {
@@ -394,6 +491,14 @@ public abstract class Table extends MObject {
 
 	}
 
+	/**
+	 * <p>getObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param keys an array of {@link java.lang.Object} objects.
+	 * @return a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public Object getObject(DbConnection con, Object[] keys) throws Exception {
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
@@ -428,6 +533,14 @@ public abstract class Table extends MObject {
 		return obj;
 	}
 
+	/**
+	 * <p>existsObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param keys an array of {@link java.lang.Object} objects.
+	 * @return a boolean.
+	 * @throws java.lang.Exception if any.
+	 */
 	public boolean existsObject(DbConnection con, Object[] keys) throws Exception {
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
@@ -445,6 +558,11 @@ public abstract class Table extends MObject {
 
 		return true;
 	}
+	/**
+	 * <p>injectObject.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 */
 	public void injectObject(Object obj) {
 		if (obj instanceof DbComfortableObject) // TODO Use DbObject interface
 			((DbComfortableObject)obj).setDbManager(manager);
@@ -453,6 +571,14 @@ public abstract class Table extends MObject {
 		}
 	}
 
+	/**
+	 * <p>fillObject.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param res a {@link de.mhus.lib.sql.DbResult} object.
+	 * @throws java.lang.Throwable if any.
+	 */
 	public void fillObject(Object obj, DbConnection con, DbResult res) throws Throwable {
 
 		for (Feature f : features)
@@ -475,6 +601,15 @@ public abstract class Table extends MObject {
 
 	}
 
+	/**
+	 * <p>fillObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param keys an array of {@link java.lang.Object} objects.
+	 * @return a {@link java.lang.Object} object.
+	 * @throws java.lang.Throwable if any.
+	 */
 	public Object fillObject(DbConnection con, Object obj, Object[] keys) throws Throwable {
 
 		HashMap<String, Object> attributes = new HashMap<String, Object>();
@@ -513,6 +648,15 @@ public abstract class Table extends MObject {
 		return obj;
 	}
 
+	/**
+	 * <p>objectChanged.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param keys an array of {@link java.lang.Object} objects.
+	 * @return a boolean.
+	 * @throws java.lang.Exception if any.
+	 */
 	public boolean objectChanged(DbConnection con, Object obj, Object[] keys) throws Exception {
 
 		for (FieldRelation field : relationList) {
@@ -547,10 +691,10 @@ public abstract class Table extends MObject {
 
 	/**
 	 * Create the dables in the database.
-	 * 
-	 * @param con
-	 * @param cleanup 
-	 * @throws Exception
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param cleanup a boolean.
+	 * @throws java.lang.Exception if any.
 	 */
 	public void createTable(DbConnection con, boolean cleanup) throws Exception {
 
@@ -604,6 +748,13 @@ public abstract class Table extends MObject {
 
 	}
 
+	/**
+	 * <p>deleteObject.</p>
+	 *
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param object a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void deleteObject(DbConnection con, Object object) throws Exception {
 
 		for (Feature f : features)
@@ -619,26 +770,59 @@ public abstract class Table extends MObject {
 		sqlDelete.getStatement(con).execute(attributes);
 	}
 
+	/**
+	 * <p>Getter for the field <code>registryName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getRegistryName() {
 		return registryName;
 	}
 
+	/**
+	 * <p>Getter for the field <code>clazz</code>.</p>
+	 *
+	 * @return a {@link java.lang.Class} object.
+	 */
 	public Class<?> getClazz() {
 		return clazz;
 	}
 
+	/**
+	 * <p>Getter for the field <code>tableName</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTableName() {
 		return tableNameOrg;
 	}
 
+	/**
+	 * <p>getField.</p>
+	 *
+	 * @param fName a {@link java.lang.String} object.
+	 * @return a {@link de.mhus.lib.adb.model.Field} object.
+	 */
 	public Field getField(String fName) {
 		return fIndex.get(fName);
 	}
 
+	/**
+	 * <p>getPrimaryKeys.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Field> getPrimaryKeys() {
 		return pk;
 	}
 
+	/**
+	 * <p>toAttributes.</p>
+	 *
+	 * @param pa a {@link de.mhus.lib.annotations.adb.DbPersistent} object.
+	 * @param pk a {@link de.mhus.lib.annotations.adb.DbPrimaryKey} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String toAttributes(DbPersistent pa, DbPrimaryKey pk) {
 
 		if (pa == null && pk == null) return "";
@@ -671,6 +855,12 @@ public abstract class Table extends MObject {
 		return out.toString();
 	}
 
+	/**
+	 * <p>getDbRetType.</p>
+	 *
+	 * @param ret a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getDbRetType(Class<?> ret) {
 		String rt = DbType.TYPE.BLOB.name();
 		if (ret == int.class) rt = DbType.TYPE.INT.name();
@@ -694,22 +884,47 @@ public abstract class Table extends MObject {
 		return rt;
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>features</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Feature> getFeatures() {
 		return features;
 	}
 
+	/**
+	 * <p>Getter for the field <code>attributes</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 */
 	public ResourceNode getAttributes() {
 		return attributes;
 	}
 
+	/**
+	 * <p>getFields.</p>
+	 *
+	 * @return an array of {@link de.mhus.lib.adb.model.Field} objects.
+	 */
 	public Field[] getFields() {
 		return fList.toArray(new Field[fList.size()]);
 	}
 
+	/**
+	 * <p>getFieldRelations.</p>
+	 *
+	 * @return an array of {@link de.mhus.lib.adb.model.FieldRelation} objects.
+	 */
 	public FieldRelation[] getFieldRelations() {
 		return relationList.toArray(new FieldRelation[fList.size()]);
 	}

@@ -8,6 +8,12 @@ import de.mhus.lib.adb.model.FieldRelation;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.sql.DbConnection;
 
+/**
+ * <p>RelSingle class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class RelSingle <T> implements IRelationObject {
 
 	private FieldRelation field;
@@ -15,6 +21,12 @@ public class RelSingle <T> implements IRelationObject {
 	private T relation;
 	private boolean changed = false;
 
+	/**
+	 * <p>Getter for the field <code>relation</code>.</p>
+	 *
+	 * @return a T object.
+	 * @throws java.lang.Exception if any.
+	 */
 	@SuppressWarnings("unchecked")
 	public T getRelation() throws Exception {
 		synchronized (this) {
@@ -47,17 +59,30 @@ public class RelSingle <T> implements IRelationObject {
 		return relation;
 	}
 
+	/**
+	 * <p>Setter for the field <code>relation</code>.</p>
+	 *
+	 * @param relation a T object.
+	 */
 	public void setRelation(T relation) {
 		changed = true;
 		this.relation = relation;
 	}
 
+	/**
+	 * <p>reset.</p>
+	 */
 	public void reset() {
 		synchronized (this) {
 			relation = null;
 		}
 	}
 
+	/**
+	 * <p>prepare.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	protected void prepare() throws Exception {
 		if (!field.getConfig().managed() || !isChanged()) return;
 		synchronized (this) {
@@ -83,30 +108,36 @@ public class RelSingle <T> implements IRelationObject {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void prepareCreate() throws Exception{
 		prepare();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void created(DbConnection con) throws Exception{
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void saved(DbConnection con) throws Exception {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setManager(FieldRelation field, Object obj) {
 		this.field = field;
 		this.obj = obj;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isChanged() {
 		return changed;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void loaded(DbConnection con) {
 		synchronized (this) {
@@ -115,6 +146,7 @@ public class RelSingle <T> implements IRelationObject {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void prepareSave(DbConnection con) throws Exception {
 		prepare();

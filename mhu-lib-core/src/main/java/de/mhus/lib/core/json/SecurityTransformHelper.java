@@ -7,29 +7,44 @@ import java.util.regex.Pattern;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * <p>SecurityTransformHelper class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class SecurityTransformHelper extends TransformHelper {
 
 	private Log log;
 	private ClassLoader loader;
 	private LinkedList<Rule> rules = null;
 	
+	/**
+	 * <p>Constructor for SecurityTransformHelper.</p>
+	 *
+	 * @param loader a {@link java.lang.ClassLoader} object.
+	 * @param log a {@link de.mhus.lib.core.logging.Log} object.
+	 */
 	public SecurityTransformHelper(ClassLoader loader, Log log) {
 		this.log = log;
 		this.loader = loader;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void log(String string, Throwable t) {
 		if (log != null)
 			log.t(string,t);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void log(String msg) {
 		if (log != null)
 			log.t(msg);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public Object createObject(Class<?> type) throws InstantiationException, IllegalAccessException {
 		if (!checkSecurityForClass(type.getCanonicalName()))
@@ -37,6 +52,7 @@ public class SecurityTransformHelper extends TransformHelper {
 		return super.createObject(type);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<?> getType(String cName) throws IllegalAccessException {
 		if (!checkSecurityForClass(cName))
@@ -44,6 +60,12 @@ public class SecurityTransformHelper extends TransformHelper {
 		return super.getType(cName);
 	}
 	
+	/**
+	 * <p>checkSecurityForClass.</p>
+	 *
+	 * @param type a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public boolean checkSecurityForClass(String type) {
 		if (rules == null)
 			return true;
@@ -56,6 +78,7 @@ public class SecurityTransformHelper extends TransformHelper {
 		return false;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public ClassLoader getClassLoader() {
 		if (loader != null)
@@ -63,10 +86,20 @@ public class SecurityTransformHelper extends TransformHelper {
 		return super.getClassLoader();
 	}
 	
+	/**
+	 * <p>setClassLoader.</p>
+	 *
+	 * @param loader a {@link java.lang.ClassLoader} object.
+	 */
 	public void setClassLoader(ClassLoader loader) {
 		this.loader = loader;
 	}
 
+	/**
+	 * <p>addRule.</p>
+	 *
+	 * @param rule a {@link de.mhus.lib.core.json.SecurityTransformHelper.Rule} object.
+	 */
 	public void addRule(Rule rule) {
 		if (rules == null) rules = new LinkedList<>();
 		synchronized (rules) {
@@ -74,6 +107,11 @@ public class SecurityTransformHelper extends TransformHelper {
 		}
 	}
 	
+	/**
+	 * <p>Getter for the field <code>rules</code>.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
 	public List<Rule> getRules() {
 		if (rules == null) rules = new LinkedList<>();
 		return rules;

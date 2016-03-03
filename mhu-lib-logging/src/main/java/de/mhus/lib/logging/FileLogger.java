@@ -14,6 +14,12 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
+/**
+ * <p>FileLogger class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FileLogger extends Log {
 	
 	protected File file;
@@ -23,20 +29,43 @@ public class FileLogger extends Log {
 	private PrintStream out;
 	private long maxFileSize = 1024 * 1024 * 500; // 500 MB
 
+	/**
+	 * <p>Constructor for FileLogger.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param file a {@link java.io.File} object.
+	 */
 	public FileLogger(String name, File file) {
 		this(name,file,Log.LEVEL.INFO);
 	}
 	
+	/**
+	 * <p>Constructor for FileLogger.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param file a {@link java.io.File} object.
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public FileLogger(String name, File file, Log.LEVEL level) {
 		super(name);
 		this.level = level;
 		this.file = file;
 	}
 
+	/**
+	 * <p>Getter for the field <code>level</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public Log.LEVEL getLevel() {
 		return level;
 	}
 
+	/**
+	 * <p>Setter for the field <code>level</code>.</p>
+	 *
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public void setLevel(Log.LEVEL level) {
 		this.level = level;
 	}
@@ -160,6 +189,13 @@ public class FileLogger extends Log {
 		
 	}
 	
+	/**
+	 * <p>print.</p>
+	 *
+	 * @param level a {@link java.lang.String} object.
+	 * @param message a {@link java.lang.Object} object.
+	 * @param t a {@link java.lang.Throwable} object.
+	 */
 	protected synchronized void print(String level, Object message, Throwable t) {
 		if (!check()) return;
 		out.println(printTime() + "," + level + "," + getInfo() + "," + message);
@@ -170,10 +206,20 @@ public class FileLogger extends Log {
 		
 	}
 
+	/**
+	 * <p>getInfo.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getInfo() {
 		return getName();
 	}
 
+	/**
+	 * <p>check.</p>
+	 *
+	 * @return a boolean.
+	 */
 	protected synchronized boolean check() {
 		
 		doUpdateFile();
@@ -200,9 +246,17 @@ public class FileLogger extends Log {
 		return out != null;
 	}
 
+	/**
+	 * <p>doUpdateFile.</p>
+	 *
+	 * @since 3.2.9
+	 */
 	protected void doUpdateFile() {
 	}
 
+	/**
+	 * <p>rotate.</p>
+	 */
 	protected void rotate() {
 		File oldFile = file;
 		doUpdateFile();
@@ -217,6 +271,11 @@ public class FileLogger extends Log {
 			file.renameTo(new File(file.getParentFile(), MDate.toFileFormat(new Date()) + "." + file.getName() ));
 	}
 	
+	/**
+	 * <p>printTime.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String printTime() {
 		if (printTime) {
 			return MCast.toString(new Date()); // TODO maybe more efficient
@@ -224,43 +283,77 @@ public class FileLogger extends Log {
 		return "";
 	}
 
+	/**
+	 * <p>isPrintTime.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isPrintTime() {
 		return printTime;
 	}
 
+	/**
+	 * <p>Setter for the field <code>printTime</code>.</p>
+	 *
+	 * @param printTime a boolean.
+	 */
 	public void setPrintTime(boolean printTime) {
 		this.printTime = printTime;
 	}
 
+	/**
+	 * <p>isTraces.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTraces() {
 		return traces;
 	}
 
+	/**
+	 * <p>Setter for the field <code>traces</code>.</p>
+	 *
+	 * @param traces a boolean.
+	 */
 	public void setTraces(boolean traces) {
 		this.traces = traces;
 	}
 
+	/**
+	 * <p>Getter for the field <code>maxFileSize</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMaxFileSize() {
 		return maxFileSize;
 	}
 
+	/**
+	 * <p>Setter for the field <code>maxFileSize</code>.</p>
+	 *
+	 * @param maxFileSize a long.
+	 */
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void update() {
 		engine = new MyEngine(getName());
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void register() {
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void unregister() {
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		if (out != null) {
@@ -271,6 +364,7 @@ public class FileLogger extends Log {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void finalize() throws Throwable {
 		close();

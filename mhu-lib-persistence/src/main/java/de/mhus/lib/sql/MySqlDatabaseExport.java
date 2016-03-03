@@ -29,53 +29,58 @@ import de.mhus.lib.errors.MRuntimeException;
 /**
  * This class connects to a database and dumps all the tables and contents out to stdout in the form of
  * a set of SQL executable statements
- * 
-# Properties file for controlling db2sql.java
-
-# Driver information (make sure the appropriate classes/jars are on the classpath)
-# ==================
-#
-# These are mandatory, you must provide appropriate values
-driver.url=jdbc:mysql://localhost/testdb
-driver.class=com.mysql.jdbc.Driver
-
-# Information passed to DriverManger.getConnection
-# ================================================
-#
-# Put any information here that you want to pass to the DriverManager, for example:
-user=<username>
-password=<password>
-
-# Configuration information
-# =========================
-#
-# Optional information that you can set to control which tables are output etc.
-# See
-target="_BLANK">DatabaseMetaData.getTables(...) for information on how to use these.
-# Leave these blank to get all tables (note that only normal tables are returned, not
-# views, system tables, temporary tables, synonyms or aliases)
-# catalog=
-# schemaPattern=
-# tableName=
-#
-# You can also specify a quote character that is used to surround column names. This is
-# useful if your tables contain any SQL-unfriendly characters such as hyphens. This is
-# configurable so that you can set it up for your target database rather than the source
-# database. Note however that if you do specify a quote character then the case of the
-# table will probably become significant and this may not be what you want. Note also
-# that this is not the same as the quote character for data values. For that a single
-# quote is used always. Leave this blank for no quote character.
-# columnName.quoteChar="
-
-# dropTables = true
-
+ *
+ *# Properties file for controlling db2sql.java
+ *
+ *# Driver information (make sure the appropriate classes/jars are on the classpath)
+ *# ==================
+ *#
+ *# These are mandatory, you must provide appropriate values
+ *driver.url=jdbc:mysql://localhost/testdb
+ *driver.class=com.mysql.jdbc.Driver
+ *
+ *# Information passed to DriverManger.getConnection
+ *# ================================================
+ *#
+ *# Put any information here that you want to pass to the DriverManager, for example:
+ *#user= username
+ *#password= password
+ *
+ *# Configuration information
+ *# =========================
+ *#
+ *# Optional information that you can set to control which tables are output etc.
+ *# See
+ *# target="_BLANK" DatabaseMetaData.getTables(...) for information on how to use these.
+ *# Leave these blank to get all tables (note that only normal tables are returned, not
+ *# views, system tables, temporary tables, synonyms or aliases)
+ *# catalog=
+ *# schemaPattern=
+ *# tableName=
+ *#
+ *# You can also specify a quote character that is used to surround column names. This is
+ *# useful if your tables contain any SQL-unfriendly characters such as hyphens. This is
+ *# configurable so that you can set it up for your target database rather than the source
+ *# database. Note however that if you do specify a quote character then the case of the
+ *# table will probably become significant and this may not be what you want. Note also
+ *# that this is not the same as the quote character for data values. For that a single
+ *# quote is used always. Leave this blank for no quote character.
+ *# columnName.quoteChar="
+ *
+ *# dropTables = true
+ *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class MySqlDatabaseExport {
 
-	/** Dump the whole database to an SQL string 
-	 * @param props 
-	 * @param writer 
-	 * @return */
+			/**
+			 * Dump the whole database to an SQL string
+			 *
+			 * @param props a {@link de.mhus.lib.core.directory.ResourceNode} object.
+			 * @param writer a {@link java.io.PrintWriter} object.
+			 * @return a boolean.
+			 */
 	public static boolean dumpDB(ResourceNode props, PrintWriter writer) {
 		try {
 			Properties prop = new Properties();
@@ -87,10 +92,13 @@ public class MySqlDatabaseExport {
 		}
 	}
 
-	/** Dump the whole database to an SQL string 
-	 * @param props 
-	 * @param writer 
-	 * @return */
+			/**
+			 * Dump the whole database to an SQL string
+			 *
+			 * @param props a {@link java.util.Properties} object.
+			 * @param writer a {@link java.io.PrintWriter} object.
+			 * @return a boolean.
+			 */
 	public static boolean dumpDB(Properties props, PrintWriter writer) {
 		String driverClassName = props.getProperty("driver.class");
 		String driverURL = props.getProperty("driver.url");
@@ -119,6 +127,14 @@ public class MySqlDatabaseExport {
 			String catalog = props.getProperty("catalog");
 			String schema = props.getProperty("schemaPattern");
 			String tables = props.getProperty("tableName");
+			/**
+			 * <p>dumpDB.</p>
+			 *
+			 * @param dbConn a {@link java.sql.Connection} object.
+			 * @param props a {@link java.util.Properties} object.
+			 * @param writer a {@link java.io.PrintWriter} object.
+			 * @return a boolean.
+			 */
 			String columnNameQuote = props.getProperty("columnName.quoteChar", "");
 			boolean dropTables = props.getProperty("dropTables","true").equals("true");
 
@@ -320,9 +336,11 @@ public class MySqlDatabaseExport {
 		}
 	}
 
-	/** Main method takes arguments for connection to JDBC etc. 
-	 * @param args 
-	 */
+		/**
+		 * Main method takes arguments for connection to JDBC etc.
+		 *
+		 * @param args an array of {@link java.lang.String} objects.
+		 */
 	public static void main(String[] args) {
 
 		if (args.length != 1) {

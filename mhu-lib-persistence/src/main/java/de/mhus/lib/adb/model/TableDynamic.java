@@ -7,8 +7,15 @@ import de.mhus.lib.adb.DbDynamic;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>TableDynamic class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class TableDynamic extends Table {
 
+	/** {@inheritDoc} */
 	@Override
 	protected void parseFields() throws InstantiationException, IllegalAccessException, MException {
 		DbDynamic.Field[] fa = ((DbDynamic)clazz.newInstance()).getFieldDefinitions();

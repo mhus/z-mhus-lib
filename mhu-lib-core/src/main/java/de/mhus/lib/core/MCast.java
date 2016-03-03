@@ -54,13 +54,14 @@ import de.mhus.lib.core.util.VectorMap;
 
 
 /**
- * 
+ *
  * Smplifies casts between java classes. Some functions in this class only make
  * the code readable. e.g. from string to int.
  * <p>
  * All Funktions are static.
- * 
+ *
  * @author jesus
+ * @version $Id: $Id
  */
 public final class MCast {
 
@@ -109,9 +110,9 @@ public final class MCast {
 	 * Will round the value mathematically and
 	 * return every time a comma as separator and
 	 * two digits after comma.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a double.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toCurrencyString(double _in) {
 
@@ -138,6 +139,12 @@ public final class MCast {
 
 	}
 
+	/**
+	 * <p>addCaster.</p>
+	 *
+	 * @param caster a {@link de.mhus.lib.core.cast.Caster} object.
+	 * @param overwrite a boolean.
+	 */
 	public static void addCaster(Caster<?,?> caster, boolean overwrite) {
 		if (!overwrite && casters.containsKey(caster.getFromClass(), caster.getToClass())) return;
 		casters.put(caster.getFromClass(), caster.getToClass(), caster);
@@ -153,25 +160,47 @@ public final class MCast {
 	 * If the time is not in the string, it will be set to "00:00:00". It is
 	 * possible to leave year, in this case it will be replaced with the actuall
 	 * year. If you leave month, it will be replaced with the actuall month.
-	 * 
-	 * @param in
-	 * @param def
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a {@link java.util.Date} object.
 	 * @return In all cases an Date() object. Is getTime() is 0, it occurs an
 	 *         error: ACast.toDate( in ).getTime == 0.
 	 */
-
 	public static Date toDate(Object in,Date def) {
 		return OBJECT_TO_DATE.cast(in, def);
 	}
 
+	/**
+	 * <p>toDate.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a {@link java.util.Date} object.
+	 * @param locale a {@link java.util.Locale} object.
+	 * @return a {@link java.util.Date} object.
+	 * @since 3.2.9
+	 */
 	public static Date toDate(Object in,Date def, Locale locale) {
 		return OBJECT_TO_DATE.cast(in, def, locale);
 	}
 	
+	/**
+	 * <p>toCalendar.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public static Calendar toCalendar(Object in) {
 		return OBJECT_TO_CALENDAR.cast(in, null);
 	}
 	
+	/**
+	 * <p>toCalendar.</p>
+	 *
+	 * @param _in a {@link java.util.Date} object.
+	 * @param tz a {@link java.util.TimeZone} object.
+	 * @param l a {@link java.util.Locale} object.
+	 * @return a {@link java.util.Calendar} object.
+	 */
 	public static Calendar toCalendar(Date _in, TimeZone tz, Locale l) {
 		Calendar calendar = Calendar.getInstance(tz,l);
 		calendar.setTime(_in);
@@ -180,9 +209,9 @@ public final class MCast {
 	
 	/**
 	 * Parse a time date string.
-	 * 
-	 * @param in
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.util.Calendar} object.
 	 */
 	public static Calendar toCalendar(String in) {
 		return OBJECT_TO_CALENDAR.cast(in, null);
@@ -190,10 +219,10 @@ public final class MCast {
 
 	/**
 	 * Parse time and date and return calendar.
-	 * 
-	 * @param in
-	 * @param def
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param def a {@link java.util.Calendar} object.
+	 * @return a {@link java.util.Calendar} object.
 	 */
 	public static Calendar toCalendar(String in, Calendar def) {
 		return OBJECT_TO_CALENDAR.cast(in, def);
@@ -232,10 +261,9 @@ public final class MCast {
 	/**
 	 * Convert the byte array to a string representation. It stores for every
 	 * byte a two letter hex value in the string.
-	 * 
-	 * @param in
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 *
+	 * @param in an array of byte.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toBinaryString(byte[] in ) {
 		char[] hex = new char[2 * in.length];
@@ -251,10 +279,9 @@ public final class MCast {
 	
 	/**
 	 * Convert a string with hex values in a byte array.
-	 * 
-	 * @see toBinaryString
-	 * @param in
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return an array of byte.
 	 */
 	public static byte[] fromBinaryString(String in) {
 		byte[] out = new byte[ in.length() / 2 ];
@@ -265,10 +292,10 @@ public final class MCast {
 
 	/**
 	 * Convert a two letter hex value to a single byte value.
-	 * 
-	 * @param in
-	 * @param offset
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param offset a int.
+	 * @return a byte.
 	 */
 	public static byte byteFromHex( String in, int offset ) {
 		int i = Integer.parseInt(in.substring(offset, offset+2), 16);
@@ -278,10 +305,9 @@ public final class MCast {
 	
 	/**
 	 * Convert a byte to a two letter hex value.
-	 * 
-	 * @param in
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 *
+	 * @param in a byte.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toHex2String( byte in ) {
 		char[] hex = new char[2];
@@ -296,13 +322,14 @@ public final class MCast {
 	/**
 	 * Convert String to boolean. If the conversion was not possible it returns
 	 * "_default".
-	 * 
+	 *
 	 * Valide true values: yes, true, ja, 1, t
-	 * 
+	 *
 	 * valide false values: no, falsae, nein, 0, f
-	 * @param _in
-	 * @param _default
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.Object} object.
+	 * @param _default a boolean.
+	 * @return a boolean.
 	 */
 	public static boolean toboolean(Object _in, boolean _default) {
 		return OBJECT_TO_BOOLEAN.toBoolean(_in,_default,null);
@@ -311,10 +338,10 @@ public final class MCast {
 	/**
 	 * Convert a string to float. If the string is malformed it returns
 	 * "_def".
-	 * 
-	 * @param in
-	 * @param def
-	 * @return
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a float.
+	 * @return a float.
 	 */
 	public static float tofloat(Object in, float def) {
 		return OBJECT_TO_FLOAT.toFloat(in, def, null);
@@ -323,42 +350,57 @@ public final class MCast {
 	/**
 	 * Convert a string to double. If the string is malformed it returns
 	 * "def".
-	 * @param in 
-	 * @param def 
-	 * @return 
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a double.
+	 * @return a double.
 	 */
 	public static double todouble(Object in, double def) {
 		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
 	}
 
 	/**
-	 * Converts String to int. If the string is malformed then it returns "_def". 
+	 * Converts String to int. If the string is malformed then it returns "_def".
 	 * A valid format is also the hex 0x (e.g. 0xFFFF) variant.
-	 * 
-	 * @param in
-	 * @param def
-	 * @return
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a int.
+	 * @return a int.
 	 */
 	public static int toint(Object in, int def) {
 		return OBJECT_TO_INTEGER.toInt(in, def, null);
 	}
 
 	/**
-	 * Converts a string to long. If the string is malformed then it returns "_def". 
+	 * Converts a string to long. If the string is malformed then it returns "_def".
 	 * A valid format is also the hex 0x (e.g. 0xFFFF) variant.
-	 * 
-	 * @param in
-	 * @param def
-	 * @return
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a long.
+	 * @return a long.
 	 */
 	public static long tolong(Object in, long def) {
 		return OBJECT_TO_LONG.toLong(in, def, null);
 	}
 
+	/**
+	 * <p>tobyte.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a byte.
+	 * @return a byte.
+	 */
 	public static byte tobyte(Object in, byte def) {
 		return OBJECT_TO_BYTE.toByte(in, def, null);
 	}
 
+	/**
+	 * <p>toshort.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a short.
+	 * @return a short.
+	 */
 	public static short toshort(Object in, short def) {
 		return OBJECT_TO_SHORT.toShort(in, def, null);
 	}
@@ -366,9 +408,9 @@ public final class MCast {
 	/**
 	 * Convert a double to string. The separator is
 	 * a dot.
-	 * 
-	 * @param in
-	 * @return
+	 *
+	 * @param in a double.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(double in) {
 		return DOUBLE_TO_STRING.toString(in);
@@ -377,9 +419,9 @@ public final class MCast {
 	/**
 	 * Convert a double to string. The separator is
 	 * a dot.
-	 * 
-	 * @param in
-	 * @return
+	 *
+	 * @param in a float.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(float in) {
 		return FLOAT_TO_STRING.toString(in);
@@ -387,9 +429,9 @@ public final class MCast {
 	
 	/**
 	 * Convert a boolean to string. Values are "true", "false".
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a boolean.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(boolean _in) {
 		if (_in)
@@ -400,9 +442,9 @@ public final class MCast {
 
 	/**
 	 * Converts integer to String.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a int.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(int _in) {
 		return Integer.toString(_in);
@@ -410,11 +452,10 @@ public final class MCast {
 
 	/**
 	 * Converts integer to string with the minimum digits.
-	 * 
-	 * @param _in
-	 * @param _digits 
-	 * @param _numbers
-	 * @return
+	 *
+	 * @param _in a int.
+	 * @param _digits a int.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(int _in, int _digits) {
 		StringBuffer out = new StringBuffer().append(Integer.toString(_in));
@@ -425,9 +466,9 @@ public final class MCast {
 
 	/**
 	 * Convert long to string.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a long.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(long _in) {
 		return String.valueOf(_in);
@@ -436,9 +477,9 @@ public final class MCast {
 	
 	/**
 	 * Convert integer to two letter hex code. Ignores negative values.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a int.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toHex2String(int _in) {
 		String out = Integer.toHexString(_in).toUpperCase();
@@ -449,9 +490,9 @@ public final class MCast {
 
 	/**
 	 * Convert integer to four letter hex code. Ignores negative values.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a int.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toHex4String(int _in) {
 		return toHex2String(_in / 256) + toHex2String(_in % 256);
@@ -459,9 +500,9 @@ public final class MCast {
 
 	/**
 	 * Put all list elements in a string list. Use the toString method.
-	 * 
-	 * @param _v
-	 * @return
+	 *
+	 * @param _v a {@link java.util.List} object.
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public static String[] toStringArray(List<?> _v) {
 
@@ -477,6 +518,12 @@ public final class MCast {
 	}
 
 
+	/**
+	 * <p>tointFromHex.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a int.
+	 */
 	public static int tointFromHex(String _in) {
 
 		int out = 0;
@@ -497,6 +544,12 @@ public final class MCast {
 		return out;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param in an array of byte.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(byte[] in) {
 
 		StringBuffer sb = new StringBuffer();
@@ -509,6 +562,12 @@ public final class MCast {
 
 	}
 
+	/**
+	 * <p>toByteArray.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return an array of byte.
+	 */
 	public static byte[] toByteArray(String in) {
 
 		if (in.length() == 0)
@@ -536,6 +595,13 @@ public final class MCast {
 		return out;
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param firstLine a {@link java.lang.String} object.
+	 * @param trace an array of {@link java.lang.StackTraceElement} objects.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(String firstLine, StackTraceElement[] trace) {
 		StringBuffer sb = new StringBuffer();
 		if (firstLine != null)
@@ -553,9 +619,9 @@ public final class MCast {
 	
 	/**
 	 * Return an indexed map of the values. The first value has the index "0" and so on.
-	 * 
-	 * @param values
-	 * @return
+	 *
+	 * @param values a {@link java.lang.Object} object.
+	 * @return a {@link java.util.Map} object.
 	 */
 	public static Map<String,Object> toIndexedMap(Object ... values) {
 		HashMap<String,Object> out = new HashMap<String, Object>();
@@ -565,6 +631,12 @@ public final class MCast {
 		return out;
 	}
 
+	/**
+	 * <p>objectToString.</p>
+	 *
+	 * @param value a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String objectToString(Object value) {
 		
 		if (value == null) return null;
@@ -585,6 +657,12 @@ public final class MCast {
 		return value.toString();
 	}
 
+	/**
+	 * <p>objectToDate.</p>
+	 *
+	 * @param value a {@link java.lang.Object} object.
+	 * @return a {@link java.util.Date} object.
+	 */
 	public static Date objectToDate(Object value) {
 		if (value == null) return null;
 		if (value instanceof Date)
@@ -594,10 +672,22 @@ public final class MCast {
 		return toDate(String.valueOf(value), null);
 	}
 
+	/**
+	 * <p>toSqlDate.</p>
+	 *
+	 * @param date a {@link java.util.Date} object.
+	 * @return a {@link java.sql.Date} object.
+	 */
 	public static java.sql.Date toSqlDate(Date date) {
 		return new java.sql.Date(date.getTime());
 	}
 
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param t a {@link java.lang.Throwable} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(Throwable t) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -606,16 +696,37 @@ public final class MCast {
 		return sw.toString();
 	}
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(Object in) {
 		if (in == null) return "";
 		return OBJECT_TO_STRING.cast(in, "");
 	}
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(Object in, String def) {
 		if (in == null) return def;
 		return OBJECT_TO_STRING.cast(in, def);
 	}
 	
+	/**
+	 * <p>toType.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param type a {@link java.lang.Class} object.
+	 * @param def a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Object toType(Object in, Class<?> type, Object def) {
 		// if null -> return null
@@ -661,9 +772,9 @@ public final class MCast {
 
 	/**
 	 * Return 0 in 7 flavors or null
-	 * 
-	 * @param type
-	 * @return
+	 *
+	 * @param type a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.Object} object.
 	 */
 	public static Object getDefaultPrimitive(Class<?> type) {
 		if (type == int.class)
@@ -683,6 +794,13 @@ public final class MCast {
 		return null;
 	}
 
+	/**
+	 * <p>toBinary.</p>
+	 *
+	 * @param value a {@link java.lang.Object} object.
+	 * @return an array of byte.
+	 * @throws java.io.IOException if any.
+	 */
 	public static byte[] toBinary(Object value) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -692,6 +810,14 @@ public final class MCast {
 		return bos.toByteArray();
 	}
 
+	/**
+	 * <p>fromBinary.</p>
+	 *
+	 * @param bin an array of byte.
+	 * @return a {@link java.lang.Object} object.
+	 * @throws java.io.IOException if any.
+	 * @throws java.lang.ClassNotFoundException if any.
+	 */
 	public static Object fromBinary(byte[] bin) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream bis = new ByteArrayInputStream(bin);
 		MObjectInputStream ois = new MObjectInputStream(bis);
@@ -703,9 +829,10 @@ public final class MCast {
 
 	/**
 	 * Return a interval based of the the definition string. Allowed are lists separated by comma (1,2,3,4) and intervals
-	 * (6/2 => 0,2,4,6 or 3-7/2 => 3,5,7) or '*' for null
+	 * (6/2 =&gt; 0,2,4,6 or 3-7/2 =&gt; 3,5,7) or '*' for null
 	 * TODO also allow mixed lists and intervals like 4,6-10/2
-	 * @param def
+	 *
+	 * @param def a {@link java.lang.String} object.
 	 * @return the values for the interval or null if should be ignored (*)
 	 */
 	public static long[] toLongIntervalValues(String def) {
@@ -758,11 +885,12 @@ public final class MCast {
 
 	/**
 	 * Return a interval based of the the definition string. Allowed are lists separated by comma (1,2,3,4) and intervals
-	 * (6/2 => 0,2,4,6 or 3-7/2 => 3,5,7) or '*' for null
+	 * (6/2 =&gt; 0,2,4,6 or 3-7/2 =&gt; 3,5,7) or '*' for null
 	 * TODO also allow mixed lists and intervals like 4,6-10/2
+	 *
 	 * @param def
-	 * @param defStart 
-	 * @param defStop 
+	 * @param defStart a int.
+	 * @param defStop a int.
 	 * @return the values for the interval or null if should be ignored (*)
 	 */
 	public static int[] toIntIntervalValues(String def, int defStart, int defStop) {
@@ -814,6 +942,14 @@ public final class MCast {
 		
 	}
 
+	/**
+	 * <p>toEnum.</p>
+	 *
+	 * @param value a {@link java.lang.Object} object.
+	 * @param def a E object.
+	 * @param <E> a E object.
+	 * @return a E object.
+	 */
 	public static <E extends Enum<E>> E toEnum(Object value, E def) {
 		if (value == null) return def;
 		String str = String.valueOf(value).trim().toUpperCase();
