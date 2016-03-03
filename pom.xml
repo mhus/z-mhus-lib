@@ -21,7 +21,7 @@
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib</artifactId>
-    <version>3.2.10-SNAPSHOT</version>
+    <version>3.2.9-SNAPSHOT</version>
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with usefull tools to rapide develop a application</description>
@@ -83,6 +83,18 @@
 		    </descriptors>
 		  </configuration>
 		</plugin> 
+		
+		<plugin>
+	      <groupId>org.sonatype.plugins</groupId>
+	      <artifactId>nexus-staging-maven-plugin</artifactId>
+	      <version>1.6.3</version>
+	      <extensions>true</extensions>
+	      <configuration>
+	        <serverId>ossrh</serverId>
+	        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+	        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+	      </configuration>
+	    </plugin>		
     </plugins>
   </build>
 
@@ -111,12 +123,12 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
+			<id>ossrh</id>
 			<name>Sonatype Nexus snapshot repository</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>sonatype-nexus-staging</id>
+			<id>ossrh</id>
 			<name>Sonatype Nexus release repository</name>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
@@ -124,7 +136,7 @@
 
         <profiles>
           <profile>
-            <id>release-sign-artifacts</id>
+            <id>release</id>
             <activation>
               <property>
                 <name>performRelease</name>
@@ -133,23 +145,6 @@
             </activation>
             <build>
               <plugins>
-                <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-gpg-plugin</artifactId>
-                  <version>1.4</version>
-                  <configuration>
-                    <passphrase>${gpg.passphrase}</passphrase>
-                  </configuration>
-                  <executions>
-                    <execution>
-                      <id>sign-artifacts</id>
-                      <phase>verify</phase>
-                      <goals>
-                        <goal>sign</goal>
-                      </goals>
-                    </execution>
-                  </executions>
-                </plugin>
 				  <plugin>
 			        <groupId>org.apache.maven.plugins</groupId>
 			        <artifactId>maven-source-plugin</artifactId>
@@ -164,6 +159,37 @@
 			          </execution>
 			        </executions>
 			      </plugin>
+				<plugin>
+			      <groupId>org.apache.maven.plugins</groupId>
+			      <artifactId>maven-javadoc-plugin</artifactId>
+			      <version>2.9.1</version>
+			      <executions>
+			        <execution>
+			          <id>attach-javadocs</id>
+			          <goals>
+			            <goal>jar</goal>
+			          </goals>
+			        </execution>
+			      </executions>
+			    </plugin>			      
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-gpg-plugin</artifactId>
+                  <version>1.5</version>
+                  <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                  </configuration>
+                  <executions>
+                    <execution>
+                      <id>sign-artifacts</id>
+                      <phase>verify</phase>
+                      <goals>
+                        <goal>sign</goal>
+                      </goals>
+                    </execution>
+                  </executions>
+                </plugin>
+			      
               </plugins>
             </build>
           </profile>
