@@ -9,6 +9,7 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.EmptyResourceNode;
@@ -18,11 +19,11 @@ public class MJms {
 
 	private static ResourceNode config;
 
-	public static void setProperties(AbstractProperties prop, Message msg) throws JMSException {
+	public static void setProperties(IProperties prop, Message msg) throws JMSException {
 		setProperties("",prop, msg);
 	}
 	
-	public static void setProperties(String prefix, AbstractProperties prop, Message msg) throws JMSException {
+	public static void setProperties(String prefix, IProperties prop, Message msg) throws JMSException {
 		if (prop == null || msg == null) return;
 		for (Entry<String, Object> item : prop) {
 			setProperty(prefix + item.getKey(),item.getValue(),msg);
@@ -58,7 +59,7 @@ public class MJms {
 			msg.setObjectProperty(name, value);
 	}
 
-	public static AbstractProperties getProperties(Message msg) throws JMSException {
+	public static IProperties getProperties(Message msg) throws JMSException {
 		MProperties out = new MProperties();
 		if (msg == null) return out;
 		@SuppressWarnings("unchecked")
@@ -70,11 +71,11 @@ public class MJms {
 		return out;
 	}
 	
-	public static void setMapProperties(AbstractProperties prop, MapMessage msg) throws JMSException {
+	public static void setMapProperties(IProperties prop, MapMessage msg) throws JMSException {
 		setMapProperties("", prop, msg);
 	}
 	
-	public static void setMapProperties(String prefix, AbstractProperties prop, MapMessage msg) throws JMSException {
+	public static void setMapProperties(String prefix, IProperties prop, MapMessage msg) throws JMSException {
 		if (prop == null || msg == null) return;
 		for (Entry<String, Object> item : prop) {
 			setMapProperty(prefix + item.getKey(),item.getValue(),msg);
@@ -110,7 +111,7 @@ public class MJms {
 			msg.setObject(name, value);
 	}
 
-	public static AbstractProperties getMapProperties(MapMessage msg) throws JMSException {
+	public static IProperties getMapProperties(MapMessage msg) throws JMSException {
 		MProperties out = new MProperties();
 		if (msg == null) return out;
 		@SuppressWarnings("unchecked")

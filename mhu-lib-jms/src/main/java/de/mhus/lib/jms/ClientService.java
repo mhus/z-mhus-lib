@@ -20,6 +20,7 @@ import javax.jms.TextMessage;
 import org.codehaus.jackson.JsonNode;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -206,7 +207,7 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 		return (T)getClientProxy();
 	}
 		
-	public void sendJsonOneWay(AbstractProperties prop, JsonNode json) throws JMSException, IOException {
+	public void sendJsonOneWay(IProperties prop, JsonNode json) throws JMSException, IOException {
 		
 		ByteArrayOutputStream w = new ByteArrayOutputStream();
 		try {

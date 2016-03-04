@@ -8,6 +8,7 @@ import javax.jms.JMSException;
 import org.codehaus.jackson.JsonNode;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.SecurityTransformHelper;
 
@@ -19,12 +20,12 @@ public class ClientJsonObject extends ClientJson {
 		super(dest);
 	}
 	
-	public void sendObjectOneWay(AbstractProperties prop, Object ... obj) throws JMSException, IOException {
+	public void sendObjectOneWay(IProperties prop, Object ... obj) throws JMSException, IOException {
 		JsonNode json = MJson.pojoToJson(obj, helper);
 		sendJsonOneWay(prop, json);
 	}
 
-	public RequestResult<Object> sendObject(AbstractProperties prop, Object ... obj) throws JMSException, IOException, IllegalAccessException {
+	public RequestResult<Object> sendObject(IProperties prop, Object ... obj) throws JMSException, IOException, IllegalAccessException {
 		JsonNode json = MJson.pojoToJson(obj, helper);
 		RequestResult<JsonNode> res = sendJson(prop, json);
 		if (res == null) return null;
@@ -35,7 +36,7 @@ public class ClientJsonObject extends ClientJson {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RequestResult<Object>[] sendObjectBroadcast(AbstractProperties prop, Object ... obj) throws JMSException, IOException, IllegalAccessException {
+	public RequestResult<Object>[] sendObjectBroadcast(IProperties prop, Object ... obj) throws JMSException, IOException, IllegalAccessException {
 		//ObjectNode json = MJson.createObjectNode();
 		JsonNode json = MJson.pojoToJson(obj, helper);
 		RequestResult<JsonNode>[] answers = sendJsonBroadcast(prop, json);

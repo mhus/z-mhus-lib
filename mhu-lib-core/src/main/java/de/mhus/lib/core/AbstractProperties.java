@@ -28,11 +28,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 */
 	public abstract Object getProperty(String name);
 	
-	@Deprecated
-	public int getProperty(String name, int def) throws MException {
-		return getInt(name,def);
-	}
-
 //	@Deprecated
 //	public boolean getProperty(String name, boolean def) {
 //		return getBoolean(name, def);
@@ -45,6 +40,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 //		return String.valueOf(out);
 //	}
 
+	@Override
 	public String getString(String name, String def) {
 		Object out;
 		try {
@@ -56,12 +52,14 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return String.valueOf(out);
 	}
 	
+	@Override
 	public String getString(String name) throws MException {
 		Object out = getProperty(name);
 		if (out == null) return null;
 		return String.valueOf(out);
 	}
 	
+	@Override
 	public boolean getBoolean(String name, boolean def) {
 		Object out;
 		try {
@@ -72,12 +70,14 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.toboolean(out, def);
 	}
 
+	@Override
 	public boolean getBoolean(String name) throws MException {
 		Object out = getProperty(name);
 		if (out == null) throw new MException("value not found");
 		return MCast.toboolean(out, false);
 	}
 
+	@Override
 	public int getInt(String name, int def) {
 		Object out;
 		try {
@@ -88,6 +88,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.toint(out,def);
 	}
 	
+	@Override
 	public long getLong(String name, long def) {
 		Object out;
 		try {
@@ -98,6 +99,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.tolong(out, def);
 	}
 	
+	@Override
 	public float getFloat(String name, float def) {
 		Object out;
 		try {
@@ -108,6 +110,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.tofloat(out, def);
 	}
 	
+	@Override
 	public double getDouble(String name, double def) {
 		Object out;
 		try {
@@ -118,11 +121,13 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.todouble(out,def);
 	}
 	
+	@Override
 	public Calendar getCalendar(String name) throws MException {
 		Object out = getProperty(name);
 		return MCast.toCalendar(out);
 	}
 	
+	@Override
 	public Date getDate(String name) {
 		try {
 			Object out = getProperty(name);
@@ -131,38 +136,47 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return null;
 	}
 	
+	@Override
 	public void setString(String name, String value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setInt(String name, int value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setLong(String name, long value) {
 		setProperty(name, value);
 	}
 
+	@Override
 	public void setDouble(String name, double value) {
 		setProperty(name, value);
 	}
 
+	@Override
 	public void setFloat(String name, float value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setBoolean(String name, boolean value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setCalendar(String name, Calendar value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setDate(String name, Date value) {
 		setProperty(name, value);
 	}
 	
+	@Override
 	public void setNumber(String name, Number value) {
 		if (value == null) {
 			removeProperty(name);
@@ -184,6 +198,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 			
 	}
 
+	@Override
 	public Number getNumber(String name, Number def) {
 		Object out = getProperty(name);
 		if (out == null) return def;
@@ -201,6 +216,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * @param name
 	 * @return
 	 */
+	@Override
 	public abstract boolean isProperty(String name);
 
 	/**
@@ -208,6 +224,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * 
 	 * @param key
 	 */
+	@Override
 	public abstract void removeProperty(String key);
 	
 	/**
@@ -223,12 +240,14 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * 
 	 * @return
 	 */
+	@Override
 	public abstract boolean isEditable();
 	
 	/**
 	 * @return 
 	 * 
 	 */
+	@Override
 	public abstract Set<String> keys();
 	
 	@Override

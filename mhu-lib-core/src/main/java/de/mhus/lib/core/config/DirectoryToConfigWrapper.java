@@ -30,12 +30,6 @@ public class DirectoryToConfigWrapper extends IConfig {
 		return node.createConfig(key);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getProperty(String name, int def) throws MException {
-		return node.getProperty(name, def);
-	}
-
 	@Override
 	public int moveConfig(ResourceNode config, int newPos) throws MException {
 		return node.moveConfig(config, newPos);

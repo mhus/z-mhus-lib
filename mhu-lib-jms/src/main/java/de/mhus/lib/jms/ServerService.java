@@ -9,6 +9,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 
 public class ServerService<T> extends ServerJms implements JmsChannelService {
 
@@ -37,7 +38,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 			log().w("function not one way",functionName,getDestination());
 			return;
 		}
-		AbstractProperties properties = MJms.getProperties(msg);
+		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
 		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {
@@ -76,7 +77,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 			return null;
 		}
 		
-		AbstractProperties properties = MJms.getProperties(msg);
+		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
 		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {

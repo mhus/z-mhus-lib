@@ -165,7 +165,7 @@ public class MCollection {
 		return out;
 	}
 	
-	public static Map<String,String> toStringMap(AbstractProperties in, boolean ignoreNull) {
+	public static Map<String,String> toStringMap(IProperties in, boolean ignoreNull) {
 		HashMap<String, String> out = new HashMap<String,String>();
 		for (Map.Entry<String,Object> e : in) {
 			if (e.getValue() == null) {

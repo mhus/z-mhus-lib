@@ -6,6 +6,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.portlet.IllegalCharacterException;
 
 public class ActionRequestHandler implements Action {
@@ -59,7 +60,7 @@ public class ActionRequestHandler implements Action {
 	}
 
 	@Override
-	public synchronized AbstractProperties createProperties(ActionRequest request) {
+	public synchronized IProperties createProperties(ActionRequest request) {
 		return null;
 	}
 

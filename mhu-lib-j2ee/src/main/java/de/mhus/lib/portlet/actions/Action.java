@@ -5,11 +5,12 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 
 public interface Action {
 
 	public boolean processAction(String path, ActionRequest request, ActionResponse response)
 			throws Exception;
 
-	public AbstractProperties createProperties(ActionRequest request);
+	public IProperties createProperties(ActionRequest request);
 }

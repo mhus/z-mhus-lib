@@ -1,6 +1,7 @@
 package de.mhus.lib.jms;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 
 public class ServerJsonService<T> extends ServerJsonObject implements JmsChannelService {
 
@@ -12,7 +13,7 @@ public class ServerJsonService<T> extends ServerJsonObject implements JmsChannel
 	}
 
 	@Override
-	public void receivedOneWay(AbstractProperties properties, Object... obj) {
+	public void receivedOneWay(IProperties properties, Object... obj) {
 		String functionName = properties.getString("function", null);
 		if (functionName == null) {
 			log().w("function not set",getDestination());
@@ -32,7 +33,7 @@ public class ServerJsonService<T> extends ServerJsonObject implements JmsChannel
 	}
 
 	@Override
-	public RequestResult<Object> received(AbstractProperties properties, Object... obj) {
+	public RequestResult<Object> received(IProperties properties, Object... obj) {
 		String functionName = properties.getString("function", null);
 		if (functionName == null) {
 			log().w("function not set",getDestination());

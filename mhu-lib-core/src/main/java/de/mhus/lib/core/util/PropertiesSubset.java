@@ -4,19 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class PropertiesSubset extends AbstractProperties {
 
-	private AbstractProperties parent;
+	private IProperties parent;
 	private String prefix;
 	private boolean readonly;
 	
-	public PropertiesSubset(AbstractProperties parent, String prefix) {
+	public PropertiesSubset(IProperties parent, String prefix) {
 		this(parent,prefix,false);
 	}
 	
-	public PropertiesSubset(AbstractProperties parent, String prefix, boolean readonly) {
+	public PropertiesSubset(IProperties parent, String prefix, boolean readonly) {
 		this.parent = parent;
 		this.prefix = prefix;
 		this.readonly = readonly;
@@ -24,7 +25,7 @@ public class PropertiesSubset extends AbstractProperties {
 	
 	@Override
 	public Object getProperty(String name) {
-		return parent.getProperty(prefix + name);
+		return parent.get(prefix + name);
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class PropertiesSubset extends AbstractProperties {
 	public void setProperty(String key, Object value) {
 		if (readonly)
 			throw new NotSupportedException();
-		parent.setProperty(prefix + key, value);
+		parent.put(prefix + key, value);
 	}
 
 	@Override

@@ -3,19 +3,20 @@ package de.mhus.lib.core.util;
 import java.util.Set;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class PropertiesReadOnly extends AbstractProperties {
 
-	private AbstractProperties parent;
+	private IProperties parent;
 
-	public PropertiesReadOnly(AbstractProperties parent) {
+	public PropertiesReadOnly(IProperties parent) {
 		this.parent = parent;
 	}
 	
 	@Override
-	public Object getProperty(String name) {
-		return parent.getProperty(name);
+	public Object get(Object name) {
+		return parent.get(name);
 	}
 
 	@Override
@@ -46,6 +47,11 @@ public class PropertiesReadOnly extends AbstractProperties {
 	@Override
 	public int size() {
 		return parent.size();
+	}
+
+	@Override
+	public Object getProperty(String name) {
+		return get(name);
 	}
 
 }

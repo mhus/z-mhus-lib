@@ -14,6 +14,7 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
@@ -32,7 +33,7 @@ public class CallContext implements MNlsProvider {
 	private ArrayNode result;
 	private Log log;
 	private ResourceRequest request;
-	private AbstractProperties properties;
+	private IProperties properties;
 
 	public CallContext(AbstractAjaxCallback callback, ResourceRequest request, JsonGenerator response) {
 		this.request = request;
@@ -153,7 +154,7 @@ public class CallContext implements MNlsProvider {
 		return getRequest().getPortletSession();
 	}
 	
-	public AbstractProperties getProperties() {
+	public IProperties getProperties() {
 		return properties;
 	}
 
