@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MLog;
@@ -18,6 +19,7 @@ import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.TimerIfc;
 
+@DefaultFactory(DefaultSingletonFactory.class)
 public class CfgManager {
 
 	private HashMap<String, CfgProvider> configurations = new HashMap<>();

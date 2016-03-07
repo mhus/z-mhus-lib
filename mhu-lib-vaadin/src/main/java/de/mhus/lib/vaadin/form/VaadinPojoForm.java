@@ -4,20 +4,20 @@ import de.mhus.lib.form.PojoDataSource;
 import de.mhus.lib.form.PojoForm;
 import de.mhus.lib.form.PojoProvider;
 
-public class VaadinPojoForm extends VaadinForm implements PojoProvider {
+public class VaadinPojoForm<T> extends VaadinForm implements PojoProvider {
 
-	private Object pojo;
+	private T pojo;
 
-	public VaadinPojoForm(Object pojo) throws Exception {
+	public VaadinPojoForm(T pojo) throws Exception {
 		setPojo(pojo);
 		setForm(new PojoForm(this) );
 	}
 	
-	public Object getPojo() {
+	public T getPojo() {
 		return pojo;
 	}
 
-	public void setPojo(Object pojo) {
+	public void setPojo(T pojo) {
 		this.pojo = pojo;
 		if (getBuilder() != null)
 			getBuilder().doUpdateValues();
