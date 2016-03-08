@@ -30,7 +30,18 @@ import de.mhus.lib.karaf.MOsgi;
 @Service
 public class CmdTimer extends MLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="list,timeout,stacktrace,timeoutstacktrace, schedule <name> <time>, done <name> <done>, disable/enable/cancel/remove <name>", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description=
+			"Command to execute"
+			+ " list,\n"
+			+ " timeout,\n"
+			+ " stacktrace,\n"
+			+ " timeoutstacktrace,\n"
+//			+ " schedule <name> <time>,\n"
+			+ " done <name> <done>,\n"
+			+ " disable/enable/cancel/remove <name>,\n"
+			+ " run <name>,\n"
+			+ " configure <name> <configuration>\n"
+			+ "  name is allways a pattern use * to define placeholders", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -217,6 +228,13 @@ public class CmdTimer extends MLog implements Action {
 						if (ret)
 							((MutableSchedulerJob) job).doReschedule(scheduler, SchedulerJob.CALCULATE_NEXT);
 					}
+				}
+			}
+		}
+		if (cmd.equals("run")) {
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					scheduler.doExecuteJob(job);
 				}
 			}
 		}

@@ -76,7 +76,7 @@ public class Scheduler extends MLog implements Named {
 		}
 	}
 
-	protected void doExecuteJob(SchedulerJob job) {
+	public void doExecuteJob(SchedulerJob job) {
 		if (!job.setBusy(this)) return;
 		new MThread(new MyExecutor(job)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
