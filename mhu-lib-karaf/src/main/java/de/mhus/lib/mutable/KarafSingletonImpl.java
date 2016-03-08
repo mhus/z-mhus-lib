@@ -150,5 +150,19 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	public File getFile(String dir) {
 		return new File(baseDir, dir);
 	}
+
+	@Override
+	public String getSystemProperty(String name, String def) {
+		String value = System.getProperty(name);
+		if (value == null) {
+			switch (name) {
+			case MConstants.PROP_CONFIG_FILE: return "etc/" + def;
+			case MConstants.PROP_TIMER_CONFIG_FILE: return "etc/" + def;
+			default:
+				return def;
+			}
+		}
+		return value;
+	}
 	
 }

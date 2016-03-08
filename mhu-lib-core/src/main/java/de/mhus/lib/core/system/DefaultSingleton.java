@@ -81,5 +81,10 @@ public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingl
 	public File getFile(String dir) {
 		return new File(baseDir, dir);
 	}
+
+	@Override
+	public String getSystemProperty(String name, String def) {
+		return System.getProperty(name, def);
+	}
 	
 }

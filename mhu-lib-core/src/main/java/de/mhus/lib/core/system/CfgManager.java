@@ -158,11 +158,7 @@ public class CfgManager {
 	class CentralMhusCfgProvider implements CfgProvider {
 
 		public void doInitialize() {
-			
-			configFile = System.getProperty(MConstants.PROP_CONFIG_FILE);
-			if (configFile == null)
-				configFile = MConstants.DEFAULT_MHUS_CONFIG_FILE;
-			
+			configFile = MSingleton.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE);
 		}
 
 		public void reConfigure() {

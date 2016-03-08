@@ -30,4 +30,6 @@ public interface ISingleton {
 	 * @return
 	 */
 	File getFile(String dir);
+
+	String getSystemProperty(String name, String def);
 }
