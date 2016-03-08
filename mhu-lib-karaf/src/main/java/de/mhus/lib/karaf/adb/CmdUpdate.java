@@ -2,17 +2,20 @@ package de.mhus.lib.karaf.adb;
 
 import java.util.HashMap;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.core.MString;
 
 @Command(scope = "adb", name = "update", description = "Update a single object in database")
+@Service
 public class CmdUpdate implements Action {
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
@@ -36,8 +39,11 @@ public class CmdUpdate implements Action {
 	@Option(name="-w", description="RAW Save",required=false)
 	boolean raw = false;
 	
+    @Reference
+    private Session session;
+
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 		
 		Object output = null;
 		

@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
@@ -26,6 +27,7 @@ import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.karaf.MOsgi;
 
 @Command(scope = "mhus", name = "timer", description = "Default Timer Handling")
+@Service
 public class CmdTimer extends MLog implements Action {
 
 	@Argument(index=0, name="cmd", required=true, description="list,timeout,stacktrace,timeoutstacktrace, schedule <name> <time>, done <name> <done>, disable/enable/cancel/remove <name>", multiValued=false)
@@ -35,7 +37,7 @@ public class CmdTimer extends MLog implements Action {
     String[] parameters;
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 		TimerFactory factory = MOsgi.getService(TimerFactory.class);
 		SchedulerTimer scheduler = TimerFactoryImpl.getScheduler(factory);
 		

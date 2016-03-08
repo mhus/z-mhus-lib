@@ -1,12 +1,13 @@
 package de.mhus.lib.karaf.adb;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 @Command(scope = "adb", name = "connect", description = "Connect ADB DataSource")
+@Service
 public class CmdConnect implements Action {
 
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
@@ -19,7 +20,7 @@ public class CmdConnect implements Action {
 	boolean cleanup = false;
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		DbManagerService service = AdbUtil.getService(serviceName);
 		if (service != null) {

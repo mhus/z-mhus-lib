@@ -1,20 +1,22 @@
 package de.mhus.lib.karaf.jms;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.jms.JmsConnection;
 
 @Command(scope = "jms", name = "connection-reset", description = "Reset connection")
+@Service
 public class CmdConnectionReset implements Action {
 
 	@Argument(index=0, name="name", required=true, description="ID of the connection or * for all", multiValued=false)
     String name;
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		JmsManagerService service = JmsUtil.getService();
 		if (service == null) {

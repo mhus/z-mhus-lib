@@ -2,16 +2,17 @@ package de.mhus.lib.karaf.jms;
 
 import java.util.List;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.jms.ping.Ping;
 
 @Command(scope = "jms", name = "ping", description = "ping")
+@Service
 public class CmdPing implements Action {
 
 	@Argument(index=0, name="cmd", required=false, description="command", multiValued=false)
@@ -30,7 +31,7 @@ public class CmdPing implements Action {
     int sleep = 1000;
     
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		Ping ping = null;
 		if (channel == null) {

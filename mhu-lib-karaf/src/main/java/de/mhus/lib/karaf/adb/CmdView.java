@@ -6,11 +6,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
@@ -18,6 +20,7 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
 
 @Command(scope = "adb", name = "view", description = "Show a object")
+@Service
 public class CmdView implements Action {
 
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
@@ -41,8 +44,11 @@ public class CmdView implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 
+    @Reference
+    private Session session;
+
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 		
 		Object output = null;
 		

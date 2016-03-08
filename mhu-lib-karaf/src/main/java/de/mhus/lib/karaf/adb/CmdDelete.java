@@ -1,12 +1,15 @@
 package de.mhus.lib.karaf.adb;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Reference;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
+import org.apache.karaf.shell.api.console.Session;
 
 @Command(scope = "adb", name = "delete", description = "Delete a single object from database")
+@Service
 public class CmdDelete implements Action {
 
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
@@ -21,8 +24,11 @@ public class CmdDelete implements Action {
 	@Option(name="-x", description="Output parameter",required=false)
 	String outputParam = null;
 
+    @Reference
+    private Session session;
+
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 		
 		Object output = null;
 		

@@ -1,18 +1,21 @@
 package de.mhus.lib.karaf.jms;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 @Command(scope = "jms", name = "channel-list", description = "List Channels")
+@Service
 public class CmdChannelList implements Action {
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		JmsManagerService service = JmsUtil.getService();
 		if (service == null) {
