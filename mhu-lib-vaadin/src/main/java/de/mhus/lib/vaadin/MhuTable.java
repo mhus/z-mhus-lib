@@ -1,9 +1,11 @@
 package de.mhus.lib.vaadin;
 
+import java.lang.reflect.Method;
 import java.sql.Time;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.print.attribute.standard.DateTimeAtCreation;
 
@@ -24,7 +26,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MEventHandler;
 import de.mhus.lib.core.lang.DateTime;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.vaadin.converter.BooleanPrimitiveConverter;
@@ -48,6 +52,8 @@ public class MhuTable extends Table {
 	protected Object editableId;
 	private boolean tableEditable = false;
 	private HashMap<String, ColumnModel> columnModels = new HashMap<>();
+	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>();
+	
 /*	
 	private Action.Handler fieldActionHandler = new Action.Handler() {
 		
@@ -226,4 +232,31 @@ public class MhuTable extends Table {
 		}
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        
+       // Notification.show("You are scrolling!\n " + variables);
+       // System.out.println(variables);
+        if (variables.containsKey("lastToBeRendered")) {
+        	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
+        	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
+        	if (last >= 0) {
+        		try {
+	        		Method method = RenderListener.class.getMethod("onRender", MhuTable.class, int.class, int.class);
+	        		renderEventHandler.fire(method, this, first, last);
+        		} catch (Throwable t) {
+        			t.printStackTrace(); // should not happen
+        		}
+        	}
+        }
+    }
+	
+	public static interface RenderListener {
+
+		void onRender(MhuTable mhuTable, int first, int last);
+		
+	}
+
 }
