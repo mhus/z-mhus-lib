@@ -18,36 +18,62 @@
     -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mhu-lib-logging</artifactId>
+  <artifactId>mhu-lib-vaadin</artifactId>
   <packaging>bundle</packaging>
 
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhu-lib</artifactId>
-        <version>3.2.9</version>
+        <version>3.2.11-SNAPSHOT</version>
   </parent>
-
+  
   <dependencies>
   	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>servlet-api</artifactId>
+  		<version>3.0-alpha-1</version>
+  	</dependency>
+	<!-- 
+  	<dependency>
+	   <groupId>org.vaadin.addons</groupId>
+	   <artifactId>popupbutton</artifactId>
+	   <version>1.2.1</version>
+	</dependency>
+	<dependency>
+   <groupId>org.vaadin.addons</groupId>
+   <artifactId>number-field</artifactId>
+   <version>1.0.1</version>
+</dependency>
+	 -->
+	<dependency>
+		<groupId>de.mhus.lib</groupId>
+		<artifactId>mhu-lib-core</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>de.mhus.lib</groupId>
+		<artifactId>mhu-lib-forms</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+  	<dependency>
   		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-core</artifactId>
+  		<artifactId>mhu-lib-annotations</artifactId>
   		<version>${project.version}</version>
   	</dependency>
-    <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.14</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>slf4j-api</artifactId>
-    	<version>1.7.5</version>
-    </dependency>
+	
+	<dependency>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-shared</artifactId>
+		<version>${vaadin.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.vaadin</groupId>
+		<artifactId>vaadin-client</artifactId>
+		<version>${vaadin.version}</version>
+	</dependency>
   </dependencies>
   
-   <build>
+  <build>
     <plugins>
 		  <plugin>
 	        <groupId>org.apache.felix</groupId>
@@ -58,13 +84,12 @@
 	          <instructions>
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
-	            <Export-Package>de.mhus.lib.logging*;version=${project.version}</Export-Package>
+	            <Export-Package>de.mhus.lib.vaadin*;version=${project.version}</Export-Package>
 	            <Import-Package>*</Import-Package>
-	            <DynamicImport-Package>*</DynamicImport-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
-    </plugins>
+	  </plugins>
   </build>
-    
+  
 </project>
