@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.print.attribute.standard.DateTimeAtCreation;
 
@@ -24,7 +25,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MEventHandler;
 import de.mhus.lib.core.lang.DateTime;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.vaadin.converter.BooleanPrimitiveConverter;
@@ -48,6 +51,14 @@ public class MhuTable extends Table {
 	protected Object editableId;
 	private boolean tableEditable = false;
 	private HashMap<String, ColumnModel> columnModels = new HashMap<>();
+	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>() {
+
+		@Override
+		public void fireOn(RenderListener listener, Object... values) {
+			listener.onRender(MhuTable.this, (Integer)values[0], (Integer)values[1]);
+		}
+		
+	};
 /*	
 	private Action.Handler fieldActionHandler = new Action.Handler() {
 		
@@ -226,4 +237,30 @@ public class MhuTable extends Table {
 		}
 	}
 	
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+	public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        
+       // Notification.show("You are scrolling!\n " + variables);
+       // System.out.println(variables);
+        if (variables.containsKey("lastToBeRendered")) {
+        	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
+        	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
+        	if (last >= 0) {
+        		renderEventHandler.fire(first, last);
+        	}
+        }
+    }
+	
+    public MEventHandler<RenderListener> renderEventHandler() {
+		return renderEventHandler;
+	}
+	
+	public static interface RenderListener {
+
+		void onRender(MhuTable mhuTable, int first, int last);
+		
+	}
+
 }
