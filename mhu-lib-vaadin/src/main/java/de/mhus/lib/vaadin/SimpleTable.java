@@ -1,17 +1,24 @@
 package de.mhus.lib.vaadin;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 
+import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MEventHandler;
+import de.mhus.lib.vaadin.MhuTable.RenderListener;
+
 public class SimpleTable extends Table {
 
 	private static final long serialVersionUID = 1L;
 	private IndexedContainer dataSource;
 	private ColumnDefinition[] columns;
+	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>();
 
 	public SimpleTable() {
 		super();
@@ -90,4 +97,35 @@ public class SimpleTable extends Table {
 		 dataSource.removeItem(id);
 	}
 	
+    public MEventHandler<RenderListener> renderEventHandler() {
+		return renderEventHandler;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+    public void changeVariables(Object source, Map variables) {
+        super.changeVariables(source, variables);
+        
+       // Notification.show("You are scrolling!\n " + variables);
+       // System.out.println(variables);
+        if (variables.containsKey("lastToBeRendered")) {
+        	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
+        	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
+        	if (last >= 0) {
+        		try {
+	        		Method method = RenderListener.class.getMethod("onRender", MhuTable.class, int.class, int.class);
+	        		renderEventHandler.fire(method, this, first, last);
+        		} catch (Throwable t) {
+        			t.printStackTrace(); // should not happen
+        		}
+        	}
+        }
+    }
+	
+	public static interface RenderListener {
+
+		void onRender(MhuTable mhuTable, int first, int last);
+		
+	}
+
 }
