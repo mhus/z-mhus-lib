@@ -253,6 +253,10 @@ public class MhuTable extends Table {
         }
     }
 	
+    public MEventHandler<RenderListener> renderEventHandler() {
+		return renderEventHandler;
+	}
+
 	public static interface RenderListener {
 
 		void onRender(MhuTable mhuTable, int first, int last);
