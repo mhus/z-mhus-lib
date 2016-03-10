@@ -165,7 +165,7 @@ public abstract class MEventHandler<L> extends MLog {
 	public void fire(Object ... values) {
 		for (Object obj : getListenersArray()) {
 			try {
-				fireOn((L)obj, values);
+				onFire((L)obj, values);
 //				method.invoke(obj, values);
 			} catch (Throwable t) {
 				log().d(obj,values);
@@ -173,6 +173,6 @@ public abstract class MEventHandler<L> extends MLog {
 		}
 	}
 	
-	public abstract void fireOn(L listener, Object ... values);
+	public abstract void onFire(L listener, Object ... values);
 	
 }

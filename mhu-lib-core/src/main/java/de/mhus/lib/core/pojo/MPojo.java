@@ -299,15 +299,6 @@ public class MPojo {
 			}
 		}
 	}
-
-//	private static String fromAttribute(String value) {
-//		if (value == null) return null;
-//		if (value.equals(MAGIC + "null")) return null;
-//		if (value.startsWith(MAGIC)) {
-//			new String( Base64.decode( value.substring(MAGIC.length()) ) );
-//		}
-//		return value;
-//	}
 	
 	private static boolean hasValidChars(String value) {
 		for (int i = 0; i < value.length(); i++) {
@@ -319,19 +310,7 @@ public class MPojo {
 		}
 		return true;
 	}
-/*
-	private static String toAttribute(String value) {
-		if (value == null) return MAGIC + "null";
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			if (c == '\n' || c == '\r' || c == '\t' || c >= 32 && c <= 55295 ) {
-			} else {
-				return MAGIC + Base64.encode(value);
-			}
-		}
-		return value;
-	}
-*/
+
 	public static void xmlToPojo(Element from, Object to, MActivator act) throws IOException {
 		xmlToPojo(from, to, getDefaultModelFactory(), act);
 	}

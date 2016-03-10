@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 
 import de.mhus.lib.core.MProperties;
 
-public class SimpleTable extends Table {
+public class SimpleTable extends ExpandingTable {
 
 	private static final long serialVersionUID = 1L;
 	private IndexedContainer dataSource;
@@ -17,24 +17,22 @@ public class SimpleTable extends Table {
 	//protected MProperties status = new MProperties();
 
 	public SimpleTable() {
-		super();
-		initUI();
 	}
 
 	public SimpleTable(String caption, Container dataSource) {
 		super(caption, dataSource);
-		initUI();
 	}
 
 	public SimpleTable(String caption) {
 		super(caption);
-		initUI();
 	}
 
+	@Override
 	protected void initUI() {
         setColumnReorderingAllowed(true);
         setColumnCollapsingAllowed(true);
         setSizeFull();
+        super.initUI();
 	}
 
 	public void createDataSource(ColumnDefinition ... columns) {

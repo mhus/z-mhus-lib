@@ -35,10 +35,11 @@ import de.mhus.lib.form.ui.FmRichText;
 import de.mhus.lib.form.ui.FmDate.FORMATS;
 import de.mhus.lib.form.ui.FmText;
 import de.mhus.lib.form.ui.FmTextArea;
+import de.mhus.lib.vaadin.ExpandingTable;
 import de.mhus.lib.vaadin.MhuTable;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
-@Title("Forms03")
+@Title("Forms04")
 @Theme("valo")
 public class Forms04UI extends UI {
 
@@ -52,13 +53,23 @@ public class Forms04UI extends UI {
 			
 			MhuTable table = new MhuTable();
 			
-			table.renderEventHandler().register(new MhuTable.RenderListener() {
+			table.renderEventHandler().register(new ExpandingTable.RenderListener() {
 				
 				@Override
-				public void onRender(MhuTable mhuTable, int first, int last) {
+				public void onRender(ExpandingTable mhuTable, int first, int last) {
 		        	if (last >= 0 && last >= data.size()-1) {
 		        		extendData();
 		        	}
+				}
+			});
+			table.sortEventHandler().register(new ExpandingTable.SortListener() {
+				
+				@Override
+				public void onSortChanged(ExpandingTable mhuTable) {
+					data.removeAllItems();
+					System.out.println("sort changed: " + mhuTable.getSortedColumn() + " " + mhuTable.isSortedAscending());
+	        		extendData();
+	        		mhuTable.setCurrentPageFirstItemIndex(0); // scroll to top
 				}
 			});
 			
