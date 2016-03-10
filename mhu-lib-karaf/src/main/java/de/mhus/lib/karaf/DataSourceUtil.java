@@ -32,17 +32,19 @@ public class DataSourceUtil {
                 return ds;
             }
         }
+
         // throw new RuntimeException("No DataSource with name " + name + " found");
         return null;
     }
 
-	public ServiceReference<?>[] getDataSources() {
+	@SuppressWarnings("unchecked")
+	public ServiceReference<DataSource>[] getDataSources() {
         try {
             ServiceReference<?>[] dsRefs = getContext().getServiceReferences(DataSource.class.getName(), null);
             if (dsRefs == null) {
                 dsRefs = new ServiceReference[]{};
             }
-            return dsRefs;
+            return (ServiceReference<DataSource>[]) dsRefs;
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);
         }
