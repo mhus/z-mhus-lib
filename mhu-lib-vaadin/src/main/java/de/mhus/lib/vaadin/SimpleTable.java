@@ -113,7 +113,7 @@ public class SimpleTable extends Table {
         	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
         	if (last >= 0) {
         		try {
-	        		Method method = RenderListener.class.getMethod("onRender", MhuTable.class, int.class, int.class);
+	        		Method method = RenderListener.class.getMethod("onRender", SimpleTable.class, int.class, int.class);
 	        		renderEventHandler.fire(method, this, first, last);
         		} catch (Throwable t) {
         			t.printStackTrace(); // should not happen
@@ -124,7 +124,7 @@ public class SimpleTable extends Table {
 	
 	public static interface RenderListener {
 
-		void onRender(MhuTable mhuTable, int first, int last);
+		void onRender(SimpleTable mhuTable, int first, int last);
 		
 	}
 
