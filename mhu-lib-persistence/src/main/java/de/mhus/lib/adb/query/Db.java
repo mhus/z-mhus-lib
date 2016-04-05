@@ -48,6 +48,17 @@ public class Db {
 	}
 	
 	/**
+	 * <p>like</p>
+	 * 
+	 * @param attr
+	 * @param value
+	 * @return like
+	 */
+	public static APart like(String attr, Object value) {
+		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(value));
+	}
+	
+	/**
 	 * <p>ne.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
