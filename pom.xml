@@ -60,7 +60,7 @@
 	    
         <felix.plugin.version>3.0.1</felix.plugin.version>
         <maven.version>2.0.9</maven.version>
-	    
+	    <jackson.version>1.9.5</jackson.version>
       </properties>
 
    <build>

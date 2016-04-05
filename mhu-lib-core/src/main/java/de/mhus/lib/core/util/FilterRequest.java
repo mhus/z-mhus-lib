@@ -3,6 +3,7 @@ package de.mhus.lib.core.util;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import de.mhus.lib.core.MString;
 
@@ -47,4 +48,9 @@ public class FilterRequest {
 		return facets.get(name);
 	}
 	
+	public Set<String> getFacetKeys() {
+		if (facets == null) return new EmptySet<String>();
+		return facets.keySet();
+	}
+
 }

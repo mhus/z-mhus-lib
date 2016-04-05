@@ -19,6 +19,17 @@ public class Db {
 		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(value));
 	}
 	
+	/**
+	 * <p>like</p>
+	 * 
+	 * @param attr a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
+	 * @return like
+	 */
+	public static APart like(String attr, Object value) {
+		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(value));
+	}
+
 	public static APart ne(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.NE,left,right);
 	}
@@ -150,6 +161,10 @@ public class Db {
 
 	public static AOperation limit(int limit) {
 		return new ALimit(limit);
+	}
+	
+	public static AOperation limit(int offset, int limit) {
+		return new ALimit(offset, limit);
 	}
 	
 	private static class AContainsWrap extends AAttribute {
