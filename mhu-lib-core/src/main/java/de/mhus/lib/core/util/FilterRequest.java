@@ -1,5 +1,6 @@
 package de.mhus.lib.core.util;
 
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -83,6 +84,7 @@ public class FilterRequest {
 	}
 	
 	public Set<String> getFacetKeys() {
+		if (facets == null) return new EmptySet<String>();
 		return facets.keySet();
 	}
 	
