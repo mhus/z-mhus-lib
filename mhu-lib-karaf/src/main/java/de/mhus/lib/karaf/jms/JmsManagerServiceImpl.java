@@ -43,9 +43,10 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-		connectionTracker.close();
+		if (connectionTracker != null) connectionTracker.close();
 		for (String name : listConnections())
 			removeConnection(name);
+		timer.cancel();
 	}
 	
 	@Reference(service=TimerFactory.class)
