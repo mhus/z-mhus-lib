@@ -17,16 +17,32 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
+/**
+ * Note: because of a 'new behavior' or bug in Felix we need to delay the start of the
+ * service trackers. Immediately will cause an 'Circular reference detected' exception.
+ * 
+ * Discussion: https://github.com/eclipse/smarthome/issues/870
+ * 
+ * Switching to DS driven references was also not successful, got the same exception.
+ * 
+ * You can chnage the behavior in mhus-config by setting JmsManagerService/startupDelay to zero
+ * 
+ * @author mikehummel
+ *
+ */
 @Component(name="JmsManagerService",immediate=true)
 @Service
 public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
+	private static CfgInt startupDelay = new CfgInt(JmsManagerService.class, "startupDelay", 10000);
+	
 	private HashMap<String, JmsConnection> connections = new HashMap<>();
 	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
 	
@@ -39,19 +55,24 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 		context = ctx.getBundleContext();
+		if (startupDelay.value() <= 0)
+			initializeTracker();
 	}
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
+		if (channelTracker != null) channelTracker.close();
 		if (connectionTracker != null) connectionTracker.close();
 		for (String name : listConnections())
 			removeConnection(name);
-		timer.cancel();
+		if (timer != null) timer.cancel();
 	}
 	
 	@Reference(service=TimerFactory.class)
 	public void setTimerFactory(TimerFactory factory) {
-		if (timer != null) return;
+		
+		if (startupDelay.value() <= 0 || connectionTracker != null) return;
+		
 		timer = factory.getTimer();
 		timer.schedule(new TimerTask() {
 
@@ -60,7 +81,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 				initializeTracker();
 			}
 			
-		}, 10000);
+		}, startupDelay.value());
 	}
 	
 	protected void initializeTracker() {
