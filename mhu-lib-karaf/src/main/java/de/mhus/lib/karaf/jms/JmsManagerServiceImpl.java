@@ -1,6 +1,7 @@
 package de.mhus.lib.karaf.jms;
 
 import java.util.HashMap;
+import java.util.TimerTask;
 
 import javax.jms.JMSException;
 
@@ -16,6 +17,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.util.TimerFactory;
+import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
@@ -25,53 +28,72 @@ import de.mhus.lib.jms.JmsConnection;
 public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	private HashMap<String, JmsConnection> connections = new HashMap<>();
-//	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
+	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
 	
 	private HashMap<String, JmsDataChannel> channels = new HashMap<>();
-//	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
+	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
 	
 	private BundleContext context;
+	private TimerIfc timer;
 	
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 		context = ctx.getBundleContext();
-//		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
-//		connectionTracker.open();
-//		
-//		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
-//		channelTracker.open();
 	}
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-//		connectionTracker.close();
+		connectionTracker.close();
 		for (String name : listConnections())
 			removeConnection(name);
 	}
 	
-	@Reference(service=JmsDataSource.class,dynamic=true,multiple=true,unbind="removeJmsDataSource")
-	public void addJmsDataSource(JmsDataSource dataSource) {
-		
-		try {
-			addConnection(dataSource.getName(), dataSource.createConnection());
-		} catch (JMSException e) {
-			log().e(dataSource.getName(), e);
-		}
+	@Reference(service=TimerFactory.class)
+	public void setTimerFactory(TimerFactory factory) {
+		if (timer != null) return;
+		timer = factory.getTimer();
+		timer.schedule(new TimerTask() {
 
-	}
-
-	public void removeJmsDataSource(JmsDataSource dataSource) {
-		removeConnection(dataSource.getName());
+			@Override
+			public void run() {
+				initializeTracker();
+			}
+			
+		}, 10000);
 	}
 	
-	@Reference(service=JmsDataChannel.class,dynamic=true,multiple=true,unbind="removeJmsDataChannel")
-	public void addJmsDataChannel(JmsDataChannel dataChannel) {
-		addChannel(dataChannel);
+	protected void initializeTracker() {
+		log().i("initialize tracker");
+		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
+		connectionTracker.open();
+		
+		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
+		channelTracker.open();
 	}
 
-	public void removeJmsDataChannel(JmsDataChannel dataChannel) {
-		removeChannel(dataChannel.getName());
-	}
+//	@Reference(service=JmsDataSource.class,dynamic=true,multiple=true,unbind="removeJmsDataSource")
+//	public void addJmsDataSource(JmsDataSource dataSource) {
+//		
+//		try {
+//			addConnection(dataSource.getName(), dataSource.createConnection());
+//		} catch (JMSException e) {
+//			log().e(dataSource.getName(), e);
+//		}
+//
+//	}
+//
+//	public void removeJmsDataSource(JmsDataSource dataSource) {
+//		removeConnection(dataSource.getName());
+//	}
+//	
+//	@Reference(service=JmsDataChannel.class,dynamic=true,multiple=true,unbind="removeJmsDataChannel")
+//	public void addJmsDataChannel(JmsDataChannel dataChannel) {
+//		addChannel(dataChannel);
+//	}
+//
+//	public void removeJmsDataChannel(JmsDataChannel dataChannel) {
+//		removeChannel(dataChannel.getName());
+//	}
 	
 	
 	@Override
@@ -133,7 +155,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 				}
 		}
 	}
-/*	
+
 	private class MyConnectionTrackerCustomizer implements ServiceTrackerCustomizer<JmsDataSource, JmsDataSource> {
 
 		@Override
@@ -207,7 +229,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		}
 		
 	}
-*/
+
 	@Override
 	public String[] listChannels() {
 		synchronized (channels) {
