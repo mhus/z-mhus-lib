@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.jms.JMSException;
 
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
@@ -13,38 +14,65 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
+import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 @Component(name="JmsManagerService",immediate=true)
+@Service
 public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	private HashMap<String, JmsConnection> connections = new HashMap<>();
-	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
+//	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
 	
 	private HashMap<String, JmsDataChannel> channels = new HashMap<>();
-	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
+//	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
 	
 	private BundleContext context;
 	
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 		context = ctx.getBundleContext();
-		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
-		connectionTracker.open();
-		
-		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
-		channelTracker.open();
+//		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
+//		connectionTracker.open();
+//		
+//		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
+//		channelTracker.open();
 	}
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-		connectionTracker.close();
+//		connectionTracker.close();
 		for (String name : listConnections())
 			removeConnection(name);
 	}
+	
+	@Reference(service=JmsDataSource.class,dynamic=true,multiple=true,unbind="removeJmsDataSource")
+	public void addJmsDataSource(JmsDataSource dataSource) {
+		
+		try {
+			addConnection(dataSource.getName(), dataSource.createConnection());
+		} catch (JMSException e) {
+			log().e(dataSource.getName(), e);
+		}
+
+	}
+
+	public void removeJmsDataSource(JmsDataSource dataSource) {
+		removeConnection(dataSource.getName());
+	}
+	
+	@Reference(service=JmsDataChannel.class,dynamic=true,multiple=true,unbind="removeJmsDataChannel")
+	public void addJmsDataChannel(JmsDataChannel dataChannel) {
+		addChannel(dataChannel);
+	}
+
+	public void removeJmsDataChannel(JmsDataChannel dataChannel) {
+		removeChannel(dataChannel.getName());
+	}
+	
 	
 	@Override
 	public void addConnection(String name, JmsConnection con) {
@@ -105,6 +133,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 				}
 		}
 	}
+/*	
 	private class MyConnectionTrackerCustomizer implements ServiceTrackerCustomizer<JmsDataSource, JmsDataSource> {
 
 		@Override
@@ -152,10 +181,15 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		public JmsDataChannel addingService(
 				ServiceReference<JmsDataChannel> reference) {
 
-			JmsDataChannel service = context.getService(reference);
-			if (service != null)
-				addChannel(service);
-			return service;
+			try {
+				JmsDataChannel service = context.getService(reference);
+				if (service != null)
+					addChannel(service);
+				return service;
+			} catch (Throwable t) {
+				log().e(reference,t);
+				return null;
+			}
 		}
 
 		@Override
@@ -173,7 +207,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		}
 		
 	}
-
+*/
 	@Override
 	public String[] listChannels() {
 		synchronized (channels) {
