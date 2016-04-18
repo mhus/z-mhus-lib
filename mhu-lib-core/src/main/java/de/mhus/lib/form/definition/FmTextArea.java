@@ -1,8 +1,6 @@
-package de.mhus.lib.form.ui;
+package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.IDefAttribute;
-import de.mhus.lib.form.definition.FmElement;
-import de.mhus.lib.form.definition.FmNls;
 
 public class FmTextArea extends FmElement {
 

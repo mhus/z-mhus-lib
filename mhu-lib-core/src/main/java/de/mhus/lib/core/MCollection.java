@@ -184,5 +184,19 @@ public class MCollection {
 			out.add(item);
 		return out;
 	}
-	
+
+	public static <T> TreeSet<T> toTreeSet(T[] items) {
+		TreeSet<T> ret = new TreeSet<T>();
+		for (T item : items)
+			if (item != null) ret.add(item);
+		return ret;
+	}
+
+	public static <T> HashSet<T> toHashSet(T[] items) {
+		HashSet<T> ret = new HashSet<T>();
+		for (T item : items)
+			if (item != null) ret.add(item);
+		return ret;
+	}
+
 }

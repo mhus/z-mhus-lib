@@ -23,15 +23,16 @@ import de.mhus.lib.form.DummyDataSource;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.ModelDataSource;
 import de.mhus.lib.form.UiComponent;
+import de.mhus.lib.form.definition.FmCheckbox;
+import de.mhus.lib.form.definition.FmDate;
 import de.mhus.lib.form.definition.FmDisabled;
-import de.mhus.lib.form.ui.FmCheckbox;
-import de.mhus.lib.form.ui.FmDate;
-import de.mhus.lib.form.ui.FmNumber;
-import de.mhus.lib.form.ui.FmNumber.TYPES;
-import de.mhus.lib.form.ui.FmRichText;
-import de.mhus.lib.form.ui.FmDate.FORMATS;
-import de.mhus.lib.form.ui.FmText;
-import de.mhus.lib.form.ui.FmTextArea;
+import de.mhus.lib.form.definition.FmNumber;
+import de.mhus.lib.form.definition.FmRichText;
+import de.mhus.lib.form.definition.FmText;
+import de.mhus.lib.form.definition.FmTextArea;
+import de.mhus.lib.form.definition.FmDate.FORMATS;
+import de.mhus.lib.form.definition.FmNumber.TYPES;
+import de.mhus.lib.form.definition.FmOptions;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
 @Title("Forms02")
@@ -62,6 +63,7 @@ public class Forms02UI extends UI {
 					new FmNumber("n3", TYPES.INTEGER ,"N1", "Dein Nachname"),
 					new FmCheckbox("n5", "N1", "Dein Nachname"),
 					new FmRichText("n4", "N1", "Dein Nachname" ),
+					new FmOptions("n6","Options","Hobbies"),
 					null
 					);
 			

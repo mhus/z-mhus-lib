@@ -1,11 +1,13 @@
 package de.mhus.lib.vaadin.form;
 
+import java.io.Serializable;
+
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.UiComponent;
 
-public abstract class UiLayout extends UiComponent {
+public abstract class UiLayout extends UiComponent implements Serializable {
 
 	public abstract void createRow(final UiVaadin c);
 	public abstract Component getComponent();

@@ -1,5 +1,7 @@
 package de.mhus.lib.vaadin.form;
 
+import java.io.Serializable;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents;
@@ -20,6 +22,7 @@ import de.mhus.lib.form.UiWizard;
 
 public class UiLayout100 extends UiLayout {
 
+	private static final long serialVersionUID = 1L;
 	private GridLayout layout;
 	private int rows;
 	

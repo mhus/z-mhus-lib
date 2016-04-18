@@ -5,7 +5,7 @@ import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ModelUtil;
 import de.mhus.lib.form.definition.FmSplit;
-import de.mhus.lib.form.ui.FmText;
+import de.mhus.lib.form.definition.FmText;
 
 public class Test01 {
 

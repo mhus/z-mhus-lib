@@ -12,8 +12,8 @@ import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
-import de.mhus.lib.form.ui.FmDate;
-import de.mhus.lib.form.ui.FmDate.FORMATS;
+import de.mhus.lib.form.definition.FmDate;
+import de.mhus.lib.form.definition.FmDate.FORMATS;
 
 public class UiDate extends UiVaadin {
 

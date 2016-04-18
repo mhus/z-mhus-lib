@@ -10,7 +10,7 @@ import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
-import de.mhus.lib.form.ui.FmNumber;
+import de.mhus.lib.form.definition.FmNumber;
 import de.mhus.lib.vaadin.aqua.SpinnerNumberField;
 
 public class UiNumber extends UiVaadin {
