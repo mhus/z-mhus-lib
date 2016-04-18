@@ -25,6 +25,7 @@ public class HeartbeatSender extends ClientJms {
 	public void sendHeartbeat() {
 		if (getSession() == null) {
 			log().i("heartbeat has no session");
+			doHeartbeatAction();
 			reset();
 			return;
 		}
@@ -40,5 +41,9 @@ public class HeartbeatSender extends ClientJms {
 		} catch (JMSException e) {
 			log().w(e);
 		}
+	}
+	
+	private void doHeartbeatAction() {
+		//TODO reset channels and connection?
 	}
 }

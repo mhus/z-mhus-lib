@@ -407,7 +407,7 @@ public final class MCast {
 	public static String toString(int _in) {
 		return Integer.toString(_in);
 	}
-
+	
 	/**
 	 * Converts integer to string with the minimum digits.
 	 * 
@@ -423,6 +423,21 @@ public final class MCast {
 		return out.toString();
 	}
 
+	/**
+	 * Converts integer to string with the minimum digits.
+	 * 
+	 * @param _in
+	 * @param _digits 
+	 * @param _numbers
+	 * @return
+	 */
+	public static String toString(long _in, int _digits) {
+		StringBuffer out = new StringBuffer().append(Long.toString(_in));
+		while (out.length() < _digits)
+			out.insert(0, '0');
+		return out.toString();
+	}
+	
 	/**
 	 * Convert long to string.
 	 * 

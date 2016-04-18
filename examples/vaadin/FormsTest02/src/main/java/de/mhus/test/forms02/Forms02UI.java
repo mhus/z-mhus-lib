@@ -23,6 +23,7 @@ import de.mhus.lib.form.DummyDataSource;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.ModelDataSource;
 import de.mhus.lib.form.UiComponent;
+import de.mhus.lib.form.definition.FmDisabled;
 import de.mhus.lib.form.ui.FmCheckbox;
 import de.mhus.lib.form.ui.FmDate;
 import de.mhus.lib.form.ui.FmNumber;
@@ -54,13 +55,13 @@ public class Forms02UI extends UI {
 			setContent(mainLayout);
 			
 			DefRoot model = new DefRoot( new DefAttribute("showInformation", true),
-					new FmText("firstName", "Vorname", "Dein Vorname"),
-					new FmText("lastName", "Nachname", "Dein Nachname"),
+					new FmText("firstName", "Vorname", "Dein Vorname" ),
+					new FmText("lastName", "Nachname", "Dein Nachname", new FmDisabled()),
 					new FmTextArea("n1", "N1", "Dein Nachname"),
 					new FmDate("n2", FORMATS.DATETIME, "N1", "Dein Nachname"),
 					new FmNumber("n3", TYPES.INTEGER ,"N1", "Dein Nachname"),
 					new FmCheckbox("n5", "N1", "Dein Nachname"),
-					new FmRichText("n4", "N1", "Dein Nachname"),
+					new FmRichText("n4", "N1", "Dein Nachname" ),
 					null
 					);
 			

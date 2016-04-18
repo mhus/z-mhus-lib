@@ -152,7 +152,7 @@ public class MOsgi {
 	 * @return
 	 */
 	public static BundleContext getBundleContext() {
-		return FrameworkUtil.getBundle(org.apache.felix.service.command.CommandProcessor.class).getBundleContext();
+		return FrameworkUtil.getBundle(FrameworkUtil.class).getBundleContext();
 	}
 	
 }

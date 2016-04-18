@@ -5,11 +5,7 @@ import java.util.Observer;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
-import org.osgi.service.component.ComponentContext;
 
-import aQute.bnd.annotation.component.Activate;
-import aQute.bnd.annotation.component.Deactivate;
-import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.schedule.CronJob;

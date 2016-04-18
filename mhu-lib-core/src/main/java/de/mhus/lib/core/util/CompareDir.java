@@ -190,7 +190,7 @@ public class CompareDir extends MObject {
 		}
 		
 		tk.stop();
-		log().d( "Time",tk.getCurrentTimeAsString( true ) );
+		log().d( "Time",tk.getCurrentTimeAsString() );
 
 	}
 	

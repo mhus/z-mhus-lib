@@ -354,7 +354,7 @@ public class AdbTest extends TestCase {
 		}
 		
 		timer.stop();
-		System.out.println("Time: " + timer.getCurrentTimeAsString(true));
+		System.out.println("Time: " + timer.getCurrentTimeAsString());
 	}
 	
 	public void testDbQuery() throws Exception {

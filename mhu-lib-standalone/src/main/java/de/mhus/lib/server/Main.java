@@ -196,7 +196,7 @@ public class Main extends MJmx {
 				e.printStackTrace();
 			} finally {
 				watch.stop();
-				System.out.println("TOTAL TIME: " + watch.getCurrentTimeAsString(true));
+				System.out.println("TOTAL TIME: " + watch.getCurrentTimeAsString());
 			}
 		}
 	}

@@ -119,30 +119,7 @@ public class MStopWatch extends MJmx {
 
 	@JmxManaged(descrition="Currently elapsed time")
 	public String getCurrentTimeAsString() {
-		return getCurrentTimeAsString(true);
-	}
-	
-	public String getCurrentTimeAsString(boolean longFormat) {
-		long msec = getCurrentTime();
-		long sec = msec / 1000;
-		long min = sec / 60;
-		if (!longFormat && min < 60)
-			return MCast.toString((int) (min), 2) + ':'
-					+ MCast.toString((int) (sec % 60), 2) + '.'
-					+ MCast.toString((int) (msec % 1000), 3);
-		long hours = min / 60;
-		if (!longFormat && hours < 24)
-			return MCast.toString((int) (hours), 2) + ':'
-					+ MCast.toString((int) (min % 60), 2) + ':'
-					+ MCast.toString((int) (sec % 60), 2) + '.'
-					+ MCast.toString((int) (msec % 1000), 3);
-		long days = hours / 24;
-		return MCast.toString((int) (days), 2) + ' '
-				+ MCast.toString((int) (hours % 24), 2) + ':'
-				+ MCast.toString((int) (min % 60), 2) + ':'
-				+ MCast.toString((int) (sec % 60), 2) + '.'
-				+ MCast.toString((int) (msec % 1000), 3);
-
+		return MTimeInterval.getIntervalAsString(getCurrentTime());
 	}
 
 	@JmxManaged(descrition="Name of the watch")

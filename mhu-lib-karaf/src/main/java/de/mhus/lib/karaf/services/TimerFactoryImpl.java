@@ -17,19 +17,18 @@ import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
-import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
-import de.mhus.lib.karaf.MOsgi;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
 public class TimerFactoryImpl implements TimerFactory {
 	
-	private Log log = Log.getLog(TimerFactoryImpl.class);
+//	private Log log = Log.getLog(TimerFactoryImpl.class); // this will cause a cycle!
 	private SchedulerTimer myTimer;
 //	private TreeMap<Long, MTimerTask> queue = new TreeMap<>();
 	
@@ -38,14 +37,14 @@ public class TimerFactoryImpl implements TimerFactory {
 	
 	@Deactivate
 	void doDeactivate(ComponentContext ctx) {
-		log.i("cancel common timer");
+		MLogUtil.log().i("cancel common timer");
 		myTimer.cancel();
 		myTimer = null;
 	}
 
 	@Activate
 	void doActivate(ComponentContext ctx) {
-		log.i("start common timer");
+		MLogUtil.log().i("start common timer");
 		myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
 		myTimer.start();
 		
@@ -172,13 +171,13 @@ public class TimerFactoryImpl implements TimerFactory {
 //					return;
 //				}
 				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
-					log.d("stop timertask",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+					MLogUtil.log().d("stop timertask",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 					cancel();
 					return;
 				}
 				task.run();
 			} catch (Throwable t) {
-				log.i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
+				MLogUtil.log().i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
 				if (task instanceof TimerTaskSelfControl) {
 					if ( ((TimerTaskSelfControl)task).isCancelOnError() )
 							cancel();
