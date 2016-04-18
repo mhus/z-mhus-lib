@@ -31,11 +31,15 @@ public abstract class UiVaadin extends UiComponent {
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
 		doUpdateMetadata();
 		setValue(ds.getObject(this, DataSource.VALUE, null));
-		setCaption(ds.getString(this, DataSource.CAPTION, getName()));
+		setCaption(getCaption(ds));
 		if (componentError != null) componentError.setVisible(false);
 		editorEditable = ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
 		if (componentEditor != null && !editorEditable) componentEditor.setEnabled(false);
 		getForm().getControl().reverted(this);
+	}
+
+	public String getCaption(DataSource ds) {
+		return ds.getString(this, DataSource.CAPTION, getName());
 	}
 
 	@Override

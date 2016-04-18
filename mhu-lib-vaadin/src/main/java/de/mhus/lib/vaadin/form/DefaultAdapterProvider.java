@@ -21,6 +21,10 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 		a.addMap("combobox", UiCombobox.Adapter.class);
 		a.addMap("layout100", UiLayout100.Adapter.class);
 		a.addMap("layout50x50", UiLayout50x50.Adapter.class);
+		a.addMap("layouttabs", UiLayoutTabs.Adapter.class);
+		a.addMap("100", UiLayout100.Adapter.class);
+		a.addMap("50x50", UiLayout50x50.Adapter.class);
+		a.addMap("tabs", UiLayoutTabs.Adapter.class);
 		a.addMap("options", UiOptions.Adapter.class);
 		
 	}

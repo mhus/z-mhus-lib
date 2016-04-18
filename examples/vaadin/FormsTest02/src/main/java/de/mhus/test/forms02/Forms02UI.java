@@ -26,6 +26,8 @@ import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.definition.FmCheckbox;
 import de.mhus.lib.form.definition.FmDate;
 import de.mhus.lib.form.definition.FmDisabled;
+import de.mhus.lib.form.definition.FmLayout100;
+import de.mhus.lib.form.definition.FmLayoutTabs;
 import de.mhus.lib.form.definition.FmNumber;
 import de.mhus.lib.form.definition.FmRichText;
 import de.mhus.lib.form.definition.FmText;
@@ -64,6 +66,18 @@ public class Forms02UI extends UI {
 					new FmCheckbox("n5", "N1", "Dein Nachname"),
 					new FmRichText("n4", "N1", "Dein Nachname" ),
 					new FmOptions("n6","Options","Hobbies"),
+					
+					new FmLayoutTabs("tabs","Tabs Example","",
+							new FmLayout100("t1", "Address","",
+								new FmText("n10", "N10", "Dein Nachname"),
+								new FmText("n11", "N11", "Dein Nachname")
+								),
+							new FmLayout100("t2", "Location","",
+									new FmText("n20", "N20", "Dein Nachname"),
+									new FmText("n21", "N21", "Dein Nachname")
+									)
+							),
+					
 					null
 					);
 			
@@ -95,16 +109,6 @@ public class Forms02UI extends UI {
 			
 			vf.getBuilder().getComponent("firstName").setError("Error Message");
 			
-			
-			
-/*			
-			GridLayout grid = new GridLayout(3,1);
-			
-			grid.addComponent(new Label("Label"), 0, 0);
-			grid.addComponent(new TextField(), 1, 0, 2, 0);
-			
-			mainLayout.addComponent(grid);
-*/			
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

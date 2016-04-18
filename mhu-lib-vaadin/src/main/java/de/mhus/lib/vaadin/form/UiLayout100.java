@@ -15,6 +15,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.UiComponent;
@@ -231,5 +232,5 @@ public class UiLayout100 extends UiLayout {
 		}
 		
 	}
-	
+
 }

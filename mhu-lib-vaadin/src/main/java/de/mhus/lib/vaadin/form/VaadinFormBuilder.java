@@ -39,6 +39,7 @@ public class VaadinFormBuilder {
 		for (ResourceNode node : model.getNodes()) {
 			String name = node.getName();
 			if (name.equals("element")) name = node.getString("type");
+			
 			UiComponent comp = form.getAdapterProvider().createComponent(name, (IConfig) node);
 			comp.doInit(form, (IConfig) node);
 			
