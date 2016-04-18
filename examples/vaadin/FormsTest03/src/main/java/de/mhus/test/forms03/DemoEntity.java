@@ -7,6 +7,8 @@ import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.form.Item;
+import de.mhus.lib.form.definition.FmColumns;
+import de.mhus.lib.form.definition.FmLayout50x50;
 import de.mhus.lib.form.ui.FmCombobox;
 import de.mhus.lib.form.ui.FmText;
 
@@ -64,8 +66,8 @@ public class DemoEntity {
 	@ALayoutModel
 	public DefRoot model() {
 		return new DefRoot( 
-				new DefAttribute("layout","50x50"),
-				new FmText("firstName","firstname=First name","Bla bla...", new DefAttribute("columns", "2") ),
+				new FmLayout50x50(),
+				new FmText("firstName","firstname=First name","Bla bla...", new FmColumns(2) ),
 				new FmText("lastName","lastname=Last name","Bla bla..."),
 				new FmCombobox("gender", "gender=Geschlecht","Bla bla")
 				);

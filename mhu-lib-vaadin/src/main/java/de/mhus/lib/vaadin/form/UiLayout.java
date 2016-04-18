@@ -41,6 +41,11 @@ public abstract class UiLayout extends UiComponent {
 		
 	}
 	@Override
+	public void setEditable(boolean editable) throws MException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
 	public boolean isEnabled() throws MException {
 		// TODO Auto-generated method stub
 		return false;

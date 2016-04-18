@@ -1,5 +1,6 @@
 package de.mhus.lib.vaadin.form;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
@@ -11,6 +12,8 @@ import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
+import de.mhus.lib.form.ui.FmDate;
+import de.mhus.lib.form.ui.FmDate.FORMATS;
 
 public class UiDate extends UiVaadin {
 
@@ -21,7 +24,31 @@ public class UiDate extends UiVaadin {
 
 	@Override
 	public Component createEditor() {
-		return new DateField();
+		DateField ret = new DateField();
+		ret.setLocale(getForm().getLocale());
+		FORMATS format = FmDate.FORMATS.valueOf(getConfig().getString("format",FmDate.FORMATS.DATE.name()).toUpperCase());
+		switch (format) {
+		case DATE:
+			ret.setResolution(Resolution.DAY);
+			break;
+		case DATETIME:
+			ret.setResolution(Resolution.MINUTE);
+			break;
+		case DATETIMESECONDS:
+			ret.setResolution(Resolution.SECOND);
+			break;
+		case TIME:
+			ret.setDateFormat("HH:mm");
+			ret.setResolution(Resolution.MINUTE);
+			break;
+		case TIMESECONDS:
+			ret.setDateFormat("HH:mm:ss");
+			ret.setResolution(Resolution.SECOND);
+			break;
+		default:
+			break;
+		}
+		return ret;
 	}
 
 	@Override

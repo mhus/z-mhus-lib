@@ -38,6 +38,8 @@ public abstract class UiComponent {
 	
 	public abstract void setEnabled(boolean enabled) throws MException;
 	
+	public abstract void setEditable(boolean editable) throws MException;
+	
 	public abstract boolean isEnabled() throws MException;
 
 	public boolean isFullSize() {
@@ -63,5 +65,6 @@ public abstract class UiComponent {
 	public abstract void setError(String error);
 	
 	public abstract void clearError();
+
 
 }

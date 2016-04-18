@@ -27,6 +27,7 @@ public abstract class UiVaadin extends UiComponent {
 	public void doRevert() throws MException {
 		DataSource ds = getForm().getDataSource();
 		setEnabled( ds.getBoolean(this, DataSource.ENABLED, true) );
+		setEditable( ds.getBoolean(this, DataSource.EDITABLE, true) );
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
 		doUpdateMetadata();
 		setValue(ds.getObject(this, DataSource.VALUE, null));
@@ -75,6 +76,11 @@ public abstract class UiVaadin extends UiComponent {
 		return false;
 	}
 
+	@Override
+	public void setEditable(boolean editable) throws MException {
+		if (componentEditor != null && editorEditable) componentEditor.setReadOnly(!editable);
+		if (componentWizard != null) componentWizard.setReadOnly(!editable);
+	}
 
 	protected abstract void setValue(Object value) throws MException;
 	protected abstract Object getValue() throws MException;

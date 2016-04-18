@@ -6,6 +6,7 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 public interface DataSource {
 
 	public static final String ENABLED = "enabled";
+	public static final String EDITABLE = "enabled";
 	public static final String VISIBLE = "visible";
 	public static final String VALUE = "";
 	public static final String CAPTION = "caption";
