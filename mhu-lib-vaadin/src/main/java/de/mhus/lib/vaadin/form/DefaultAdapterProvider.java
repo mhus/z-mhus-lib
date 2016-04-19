@@ -26,6 +26,8 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 		a.addMap("50x50", UiLayout50x50.Adapter.class);
 		a.addMap("tabs", UiLayoutTabs.Adapter.class);
 		a.addMap("options", UiOptions.Adapter.class);
+		a.addMap("layoutpanel", UiPanel.Adapter.class);
+		a.addMap("panel", UiPanel.Adapter.class);
 		
 	}
 

@@ -37,6 +37,7 @@ import de.mhus.lib.form.definition.FmTextArea;
 import de.mhus.lib.form.definition.FmDate.FORMATS;
 import de.mhus.lib.form.definition.FmNumber.TYPES;
 import de.mhus.lib.form.definition.FmOptions;
+import de.mhus.lib.form.definition.FmPanel;
 import de.mhus.lib.form.definition.FmReadOnly;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
@@ -80,10 +81,12 @@ public class Forms02UI extends UI {
 								new FmText("n10", "N10", "Dein Nachname"),
 								new FmText("n11", "N11", "Dein Nachname")
 								),
-							new FmLayout100("t2", "Location","",
-									new FmText("n20", "N20", "Dein Nachname"),
-									new FmText("n21", "N21", "Dein Nachname")
-									)
+							new FmPanel("t2","Panel","", 
+								new FmLayout100("t2", "Location","",
+										new FmText("n20", "N20", "Dein Nachname"),
+										new FmText("n21", "N21", "Dein Nachname")
+										)
+								)
 							),
 					
 					null
