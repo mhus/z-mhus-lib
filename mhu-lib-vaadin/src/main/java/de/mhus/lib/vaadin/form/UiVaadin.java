@@ -83,7 +83,7 @@ public abstract class UiVaadin extends UiComponent {
 	@Override
 	public void setEditable(boolean editable) throws MException {
 		if (componentEditor != null && editorEditable) componentEditor.setReadOnly(!editable);
-		if (componentWizard != null) componentWizard.setReadOnly(!editable);
+//		if (componentWizard != null) componentWizard.setReadOnly(!editable);
 	}
 
 	protected abstract void setValue(Object value) throws MException;

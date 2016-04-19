@@ -31,7 +31,9 @@ public class VaadinFormBuilder {
 
 	public UiLayout createLayout(IConfig model) throws Exception {
 		String name = "layout" + model.getString("layout", "100");
-		return (UiLayout)form.getAdapterProvider().createComponent(name, model);
+		UiLayout ret = (UiLayout)form.getAdapterProvider().createComponent(name, model);
+		ret.doInit(form, model);
+		return ret;
 	}
 
 	private void build(UiLayout layout, IConfig model) throws Exception {
@@ -54,6 +56,12 @@ public class VaadinFormBuilder {
 	}
 	
 	public void doRevert() {
+		try {
+			layout.doRevert();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (Map.Entry<String, UiVaadin> entry : index.entrySet())
 			try {
 				entry.getValue().doRevert();

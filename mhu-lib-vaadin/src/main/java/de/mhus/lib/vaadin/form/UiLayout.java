@@ -14,9 +14,6 @@ public abstract class UiLayout extends UiVaadin implements Serializable {
 	public abstract Component getComponent();
 	
 	@Override
-	public void doRevert() throws MException {
-	}
-	@Override
 	public void doUpdateValue() throws MException {
 	}
 	@Override

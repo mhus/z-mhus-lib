@@ -37,6 +37,7 @@ import de.mhus.lib.form.definition.FmTextArea;
 import de.mhus.lib.form.definition.FmDate.FORMATS;
 import de.mhus.lib.form.definition.FmNumber.TYPES;
 import de.mhus.lib.form.definition.FmOptions;
+import de.mhus.lib.form.definition.FmReadOnly;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
 @Title("Forms02")
@@ -54,7 +55,9 @@ public class Forms02UI extends UI {
 	        VerticalSplitPanel split = new VerticalSplitPanel();
 	        split.setSizeFull();
 	        
-	        split.addComponent(new Label("Moin"));
+	        Label label = new Label("Moin");
+	        split.addComponent(label);
+	        split.setSplitPosition(30,Unit.PIXELS);
 
 	        mainLayout.addComponent(split);
 			setContent(mainLayout);
@@ -72,6 +75,8 @@ public class Forms02UI extends UI {
 					
 					new FmLayoutTabs("tabs","Tabs Example","",
 							new FmLayout100("t1", "Address","",
+							//	new DefAttribute("visible","false"),
+								new FmDisabled(),
 								new FmText("n10", "N10", "Dein Nachname"),
 								new FmText("n11", "N11", "Dein Nachname")
 								),
