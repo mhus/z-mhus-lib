@@ -26,9 +26,11 @@ import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.definition.FmCheckbox;
 import de.mhus.lib.form.definition.FmDate;
 import de.mhus.lib.form.definition.FmDisabled;
+import de.mhus.lib.form.definition.FmElement;
 import de.mhus.lib.form.definition.FmLayout100;
 import de.mhus.lib.form.definition.FmLayout50x50;
 import de.mhus.lib.form.definition.FmLayoutTabs;
+import de.mhus.lib.form.definition.FmNls;
 import de.mhus.lib.form.definition.FmNumber;
 import de.mhus.lib.form.definition.FmRichText;
 import de.mhus.lib.form.definition.FmRootLayout50x50;
@@ -73,7 +75,11 @@ public class Forms02UI extends UI {
 					new FmCheckbox("n5", "N1", "Dein Nachname"),
 					new FmRichText("n4", "N1", "Dein Nachname" ),
 					new FmOptions("n6","Options","Hobbies"),
-					
+					new FmElement("l1", new FmNls("","Link Beschreibung"), 
+							new DefAttribute("type", "link"), 
+							new DefAttribute("label", "Spring weg..."),
+							new DefAttribute("value", "http://duckduckgo.com")
+							),
 					new FmLayoutTabs("tabs","Tabs Example","",
 							new FmLayout100("t1", "Address","",
 							//	new DefAttribute("visible","false"),

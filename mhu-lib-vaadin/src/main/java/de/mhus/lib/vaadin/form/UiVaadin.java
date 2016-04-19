@@ -30,7 +30,7 @@ public abstract class UiVaadin extends UiComponent {
 		setEditable( ds.getBoolean(this, DataSource.EDITABLE, true) );
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
 		doUpdateMetadata();
-		setValue(ds.getObject(this, DataSource.VALUE, null));
+		setValue(ds.getObject(this, DataSource.VALUE, getConfig().get("value") ));
 		setCaption(getCaption(ds));
 		if (componentError != null) componentError.setVisible(false);
 		editorEditable = ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);

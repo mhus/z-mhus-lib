@@ -28,6 +28,7 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 		a.addMap("options", UiOptions.Adapter.class);
 		a.addMap("layoutpanel", UiPanel.Adapter.class);
 		a.addMap("panel", UiPanel.Adapter.class);
+		a.addMap("link", UiLink.Adapter.class);
 		
 	}
 

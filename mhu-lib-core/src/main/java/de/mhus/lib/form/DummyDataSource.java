@@ -17,7 +17,7 @@ public class DummyDataSource extends FormControlAdapter implements DataSource {
 	
 	public String getString(UiComponent component, String name, String def) {
 		System.out.println("getString " + component.getName() + "." + name);
-		return name;
+		return def;
 	}
 	
 	public Object getObject(UiComponent component, String name, Object def) {

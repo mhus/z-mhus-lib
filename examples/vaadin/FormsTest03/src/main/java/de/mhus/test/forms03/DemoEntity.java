@@ -11,6 +11,7 @@ import de.mhus.lib.form.Item;
 import de.mhus.lib.form.definition.FmColumns;
 import de.mhus.lib.form.definition.FmCombobox;
 import de.mhus.lib.form.definition.FmLayout50x50;
+import de.mhus.lib.form.definition.FmLink;
 import de.mhus.lib.form.definition.FmOptions;
 import de.mhus.lib.form.definition.FmRootLayout50x50;
 import de.mhus.lib.form.definition.FmText;
@@ -75,7 +76,8 @@ public class DemoEntity {
 				new FmText("firstName","firstname=First name","Bla bla...", new FmColumns(2) ),
 				new FmText("lastName","lastname=Last name","Bla bla..."),
 				new FmCombobox("gender", "gender=Geschlecht","Bla bla"),
-				new FmOptions("hobbies", "Hobbies", "Deine Hobbies")
+				new FmOptions("hobbies", "Hobbies", "Deine Hobbies"),
+				new FmLink("search", "Duck Duck Go", "Suchen", "Link zu einer Suchmaschine")
 				);
 	}
 	public String getId() {
@@ -105,7 +107,7 @@ public class DemoEntity {
 	}
 	
 	public void setHobbies(Set<String> in) {
-		this.hobbies = in;
+		this.hobbies = in; 
 	}
 	
 	public Item[] getHobbiesItems() {
@@ -115,5 +117,10 @@ public class DemoEntity {
 				new Item("r", "Radfahren")
 		};
 	}
+	
+	public String getSearch() {
+		return getFirstName();
+	}
+	
 	
 }
