@@ -27,9 +27,11 @@ import de.mhus.lib.form.definition.FmCheckbox;
 import de.mhus.lib.form.definition.FmDate;
 import de.mhus.lib.form.definition.FmDisabled;
 import de.mhus.lib.form.definition.FmLayout100;
+import de.mhus.lib.form.definition.FmLayout50x50;
 import de.mhus.lib.form.definition.FmLayoutTabs;
 import de.mhus.lib.form.definition.FmNumber;
 import de.mhus.lib.form.definition.FmRichText;
+import de.mhus.lib.form.definition.FmRootLayout50x50;
 import de.mhus.lib.form.definition.FmText;
 import de.mhus.lib.form.definition.FmTextArea;
 import de.mhus.lib.form.definition.FmDate.FORMATS;
@@ -57,7 +59,8 @@ public class Forms02UI extends UI {
 	        mainLayout.addComponent(split);
 			setContent(mainLayout);
 			
-			DefRoot model = new DefRoot( new DefAttribute("showInformation", true),
+			DefRoot model = new DefRoot( 
+					new DefAttribute("showInformation", true),
 					new FmText("firstName", "Vorname", "Dein Vorname" ),
 					new FmText("lastName", "Nachname", "Dein Nachname", new FmDisabled()),
 					new FmTextArea("n1", "N1", "Dein Nachname"),

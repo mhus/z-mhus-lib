@@ -12,6 +12,7 @@ import de.mhus.lib.form.definition.FmColumns;
 import de.mhus.lib.form.definition.FmCombobox;
 import de.mhus.lib.form.definition.FmLayout50x50;
 import de.mhus.lib.form.definition.FmOptions;
+import de.mhus.lib.form.definition.FmRootLayout50x50;
 import de.mhus.lib.form.definition.FmText;
 
 public class DemoEntity {
@@ -70,7 +71,7 @@ public class DemoEntity {
 	@ALayoutModel
 	public DefRoot model() {
 		return new DefRoot( 
-				new FmLayout50x50(),
+				new FmRootLayout50x50(),
 				new FmText("firstName","firstname=First name","Bla bla...", new FmColumns(2) ),
 				new FmText("lastName","lastname=Last name","Bla bla..."),
 				new FmCombobox("gender", "gender=Geschlecht","Bla bla"),
