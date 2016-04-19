@@ -82,10 +82,11 @@ public class Forms02UI extends UI {
 								new FmText("n11", "N11", "Dein Nachname")
 								),
 							new FmPanel("t2","Panel","", 
-								new FmLayout100("t2", "Location","",
-										new FmText("n20", "N20", "Dein Nachname"),
-										new FmText("n21", "N21", "Dein Nachname")
-										)
+									new FmTextArea("t2n1", "T2N1", "Text Area")
+//								new FmLayout100("t2", "Location","",
+//										new FmText("n20", "N20", "Dein Nachname"),
+//										new FmText("n21", "N21", "Dein Nachname")
+//										)
 								)
 							),
 					

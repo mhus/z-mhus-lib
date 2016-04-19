@@ -50,28 +50,29 @@ public class UiLayout100 extends UiLayout {
 		//e.setHeight("30px");
 		
 		
-		if (e instanceof AbstractField) {
-			((AbstractField)e).setImmediate(true);
-			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
-				
-				@Override
-				public void valueChange(ValueChangeEvent event) {
-					c.fieldValueChangedEvent();
-				}
-			});
-		}
-		if (e instanceof FocusNotifier) {
-			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
-				
-				@Override
-				public void focus(FocusEvent event) {
-					c.focusEvent();
-				}
-			});
-		}
+//		if (e instanceof AbstractField) {
+//			((AbstractField)e).setImmediate(true);
+//			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
+//				
+//				@Override
+//				public void valueChange(ValueChangeEvent event) {
+//					c.fieldValueChangedEvent();
+//				}
+//			});
+//		}
+//		if (e instanceof FocusNotifier) {
+//			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
+//				
+//				@Override
+//				public void focus(FocusEvent event) {
+//					c.focusEvent();
+//				}
+//			});
+//		}
 		
 		c.setComponentEditor(e);
-
+		c.setListeners();
+		
 		if (c.isFullSize()) {
 			UiRow row1 = createRow();
 			row1.setFull(true);

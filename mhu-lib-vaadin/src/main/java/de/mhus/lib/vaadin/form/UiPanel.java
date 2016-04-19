@@ -14,9 +14,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 import de.mhus.lib.core.config.IConfig;
@@ -48,8 +50,17 @@ public class UiPanel extends UiLayout {
 		DataSource ds = getForm().getDataSource();
 		String caption = c.getCaption(ds);
 		
+		
 		layout.setCaption(caption);
-		layout.setContent(editor);
+		if (editor instanceof Layout) {
+			layout.setContent(editor);
+		} else {
+			VerticalLayout container = new VerticalLayout(editor);
+			layout.setContent(container);
+			c.setComponentEditor(editor);
+			c.setListeners();
+		}
+		editor.setWidth("100%");
 		content = c;
 	}
 	
