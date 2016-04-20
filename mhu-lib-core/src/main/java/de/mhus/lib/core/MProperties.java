@@ -9,6 +9,7 @@ import java.io.ObjectOutput;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -146,7 +147,10 @@ public class MProperties extends AbstractProperties implements Externalizable {
 
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		return new MapEntrySetWrapper( properties.entrySet() );
+		HashMap<String, Object> wrapper = new HashMap<>();
+		for (java.util.Map.Entry<Object, Object> entry : properties.entrySet())
+			wrapper.put( String.valueOf( entry.getKey() ), entry.getValue() );
+		return wrapper.entrySet();
 	}
 
 	public static MProperties load(String fileName) {
@@ -169,11 +173,4 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return properties.size();
 	}
 	
-	@SuppressWarnings("serial")
-	private class MapEntrySetWrapper extends HashSet<java.util.Map.Entry<String, Object>> {
-		@SuppressWarnings("unchecked")
-		public MapEntrySetWrapper(Set<java.util.Map.Entry<Object, Object>> entrySet) {
-			super( (Collection<? extends java.util.Map.Entry<String, Object>>) entrySet );
-		}
-	}
 }
