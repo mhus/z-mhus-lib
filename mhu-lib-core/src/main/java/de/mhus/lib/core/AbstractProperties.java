@@ -13,7 +13,6 @@ import java.util.Set;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
-import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class AbstractProperties extends MObject implements IProperties {
 
@@ -348,11 +347,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	}
 
 	@Override
-	public boolean containsValue(Object value) {
-		throw new NotSupportedException();
-	}
-
-	@Override
 	public Object get(Object key) {
 		if (key == null) return null;
 		return getProperty(String.valueOf(key));
@@ -390,13 +384,4 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return keys();
 	}
 
-	@Override
-	public Collection<Object> values() {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		throw new NotSupportedException();
-	}
 }

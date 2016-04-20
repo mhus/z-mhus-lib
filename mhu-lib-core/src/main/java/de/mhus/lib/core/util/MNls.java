@@ -1,5 +1,6 @@
 package de.mhus.lib.core.util;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class MNls extends AbstractProperties {
 	
@@ -129,6 +131,21 @@ public class MNls extends AbstractProperties {
 	@Override
 	public int size() {
 		return properties.size();
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		throw new NotSupportedException();
 	}
 
 }

@@ -1,5 +1,6 @@
 package de.mhus.lib.core.util;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,6 +70,21 @@ public class PropertiesSubset extends AbstractProperties {
 			if (k.startsWith(prefix))
 				cnt++;
 		return cnt;
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		throw new NotSupportedException(); //TODO implement
+	}
+
+	@Override
+	public Collection<Object> values() {
+		throw new NotSupportedException(); //TODO implement
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		throw new NotSupportedException(); //TODO implement
 	}
 
 }

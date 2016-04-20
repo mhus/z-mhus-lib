@@ -34,7 +34,7 @@ public class UiLink extends UiVaadin {
 		if (value == null)
 			((Label)getComponentEditor()).setCaption(label );
 		else {
-			String link = Rfc1738.encode( String.valueOf( value )  );
+			String link = MXml.encode( String.valueOf( value )  );
 			((Label)getComponentEditor()).setCaption("<a href=\"" + link + "\" target=_blank>" + label + "</a>" );
 		}
 		this.value = value;

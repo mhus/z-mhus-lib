@@ -1,5 +1,6 @@
 package de.mhus.lib.core.util;
 
+import java.util.Collection;
 import java.util.Set;
 
 import de.mhus.lib.core.AbstractProperties;
@@ -52,6 +53,21 @@ public class PropertiesReadOnly extends AbstractProperties {
 	@Override
 	public Object getProperty(String name) {
 		return get(name);
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return parent.containsValue(value);
+	}
+
+	@Override
+	public Collection<Object> values() {
+		return parent.values();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		return parent.entrySet();
 	}
 
 }

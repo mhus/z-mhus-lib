@@ -6,14 +6,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.SetCast;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class MProperties extends AbstractProperties implements Externalizable {
 
@@ -131,6 +134,21 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return p;
 	}
 
+	@Override
+	public boolean containsValue(Object value) {
+		return properties.containsValue(value);
+	}
+
+	@Override
+	public Collection<Object> values() {
+		return properties.values();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		return new MapEntrySetWrapper( properties.entrySet() );
+	}
+
 	public static MProperties load(String fileName) {
 		Properties p = new Properties();
 		try {
@@ -149,5 +167,13 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	@Override
 	public int size() {
 		return properties.size();
+	}
+	
+	@SuppressWarnings("serial")
+	private class MapEntrySetWrapper extends HashSet<java.util.Map.Entry<String, Object>> {
+		@SuppressWarnings("unchecked")
+		public MapEntrySetWrapper(Set<java.util.Map.Entry<Object, Object>> entrySet) {
+			super( (Collection<? extends java.util.Map.Entry<String, Object>>) entrySet );
+		}
 	}
 }

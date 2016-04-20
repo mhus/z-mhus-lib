@@ -15,6 +15,7 @@ import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
 import de.mhus.lib.core.util.ArraySet;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 /**
  * This interface represent a generic Directory Node. Nodes are
@@ -342,4 +343,19 @@ public abstract class ResourceNode extends AbstractProperties {
 		return keys.length;
 	}
 	
+	@Override
+	public boolean containsValue(Object value) {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		throw new NotSupportedException(); //TODO could be done generic ... getNames() getValue ...
+	}
+
 }

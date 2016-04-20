@@ -1,5 +1,6 @@
 package de.mhus.lib.portlet.resource;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import javax.portlet.ResourceRequest;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class ResourceProperties extends AbstractProperties {
 
@@ -47,6 +49,21 @@ public class ResourceProperties extends AbstractProperties {
 	@Override
 	public int size() {
 		return request.getParameterMap().size();
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {
+		throw new NotSupportedException();
 	}
 
 }
