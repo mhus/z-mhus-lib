@@ -58,6 +58,9 @@ public class MPojo {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
+			
+			if (!attr.canRead()) continue;
+
 			Object value = attr.get(from);
 			String name = attr.getName();
 			setJsonValue(to, name, value, factory, false, level+1);
@@ -193,6 +196,9 @@ public class MPojo {
 	public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
+			
+			if (!attr.canWrite()) continue;
+
 			String name = attr.getName();
 			Class<?> type = attr.getType();
 			JsonNode json = from.get(name);
@@ -245,6 +251,9 @@ public class MPojo {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
+			
+			if (!attr.canRead()) continue;
+
 			Object value = attr.get(from);
 			String name = attr.getName();
 			
@@ -324,6 +333,9 @@ public class MPojo {
 			index.put(e.getAttribute("name"), e);
 		
 		for (PojoAttribute<Object> attr : model) {
+			
+			if (!attr.canWrite()) continue;
+
 			String name = attr.getName();
 //			Class<?> type = attr.getType();
 			Element a = index.get(name);
@@ -454,7 +466,11 @@ public class MPojo {
 		PojoModel model = factory.createPojoModel(from.getClass());
 
 		for (PojoAttribute<?> attr : model) {
+			
+			if (!attr.canRead()) continue;
+			
 			Object value = attr.get(from);
+			
 			String name = attr.getName();
 			Class<?> type = attr.getType();
 			if (type == int.class) out.setInt(name, (int)value);
@@ -499,6 +515,9 @@ public class MPojo {
 	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory, Caster<Object,Object> unknownHadler) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
+			
+			if (!attr.canWrite()) continue;
+			
 			String name = attr.getName();
 			Class<?> type = attr.getType();
 			try {
