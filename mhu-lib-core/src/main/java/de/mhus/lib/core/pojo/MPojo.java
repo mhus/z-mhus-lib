@@ -22,6 +22,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.logging.Log;
@@ -233,8 +234,7 @@ public class MPojo {
 				else
 					attr.set(to, json.getValueAsText());
 			} catch (Throwable t) {
-				System.out.println("ERROR " + name);
-				t.printStackTrace();
+				log.d(MSystem.getClassName(to), name, t);
 			}
 		}
 	}
@@ -252,60 +252,66 @@ public class MPojo {
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
 			
-			if (!attr.canRead()) continue;
-
-			Object value = attr.get(from);
-			String name = attr.getName();
-			
-			Element a = to.getOwnerDocument().createElement("attribute");
-			to.appendChild(a);
-			a.setAttribute("name", name);
-			
-			if (value == null) {
-				a.setAttribute("null", "true");
-				//to.setAttribute(name, (String)null);
-			} else
-			if (value instanceof Boolean)
-				a.setAttribute("boolean", MCast.toString((boolean)value));
-			else
-			if (value instanceof Integer)
-				a.setAttribute("int", MCast.toString((int)value));
-			else
-			if (value instanceof Long)
-				a.setAttribute("long", MCast.toString((long)value));
-			else
-			if (value instanceof Date)
-				a.setAttribute("date", MCast.toString( ((Date)value).getTime() ));
-			else
-			if (value instanceof String) {
-				if (hasValidChars((String)value))
-					a.setAttribute("string", (String)value);
-				else {
-					a.setAttribute("encoding", "base64");
-					a.setAttribute("string", Base64.encode( (String)value));
-				}
-			} else
-			if (value.getClass().isEnum()) {
-				a.setAttribute("enum", MCast.toString( ((Enum<?>)value).ordinal() ) );
-				a.setAttribute("value", ((Enum<?>)value).name());
-			}
-			else
-			if (value instanceof UUID) {
-				a.setAttribute("uuid", ((UUID)value).toString() );
-			}
-			else 
-			if (value instanceof Serializable) {
-				a.setAttribute("serializable","true");
+			try {
+				if (!attr.canRead()) continue;
+	
+				Object value = attr.get(from);
+				String name = attr.getName();
 				
-				CDATASection cdata = a.getOwnerDocument().createCDATASection("");
-				String data = MCast.toBinaryString( MCast.toBinary(value) );
-				cdata.setData(data);
-				a.appendChild(cdata);
-			} else
-			{
-				a.setAttribute("type", value.getClass().getCanonicalName());
-				pojoToXml(value, a, factory, level+1);
+				Element a = to.getOwnerDocument().createElement("attribute");
+				to.appendChild(a);
+				a.setAttribute("name", name);
+				
+				if (value == null) {
+					a.setAttribute("null", "true");
+					//to.setAttribute(name, (String)null);
+				} else
+				if (value instanceof Boolean)
+					a.setAttribute("boolean", MCast.toString((boolean)value));
+				else
+				if (value instanceof Integer)
+					a.setAttribute("int", MCast.toString((int)value));
+				else
+				if (value instanceof Long)
+					a.setAttribute("long", MCast.toString((long)value));
+				else
+				if (value instanceof Date)
+					a.setAttribute("date", MCast.toString( ((Date)value).getTime() ));
+				else
+				if (value instanceof String) {
+					if (hasValidChars((String)value))
+						a.setAttribute("string", (String)value);
+					else {
+						a.setAttribute("encoding", "base64");
+						a.setAttribute("string", Base64.encode( (String)value));
+					}
+				} else
+				if (value.getClass().isEnum()) {
+					a.setAttribute("enum", MCast.toString( ((Enum<?>)value).ordinal() ) );
+					a.setAttribute("value", ((Enum<?>)value).name());
+				}
+				else
+				if (value instanceof UUID) {
+					a.setAttribute("uuid", ((UUID)value).toString() );
+				}
+				else 
+				if (value instanceof Serializable) {
+					a.setAttribute("serializable","true");
+					
+					CDATASection cdata = a.getOwnerDocument().createCDATASection("");
+					String data = MCast.toBinaryString( MCast.toBinary(value) );
+					cdata.setData(data);
+					a.appendChild(cdata);
+				} else
+				{
+					a.setAttribute("type", value.getClass().getCanonicalName());
+					pojoToXml(value, a, factory, level+1);
+				}
+				
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(from), attr.getName(), t);
 			}
+
 		}
 	}
 	
@@ -334,93 +340,97 @@ public class MPojo {
 		
 		for (PojoAttribute<Object> attr : model) {
 			
-			if (!attr.canWrite()) continue;
-
-			String name = attr.getName();
-//			Class<?> type = attr.getType();
-			Element a = index.get(name);
-			if (a == null) {
-				log.d("attribute not found",name,to.getClass());
-				continue;
-			}
-			{
-				String value = a.getAttribute("null");
-				if (MString.isSet(value) && value.equals("true")) {
-					attr.set(to, null);
+			try {
+				if (!attr.canWrite()) continue;
+	
+				String name = attr.getName();
+	//			Class<?> type = attr.getType();
+				Element a = index.get(name);
+				if (a == null) {
+					log.d("attribute not found",name,to.getClass());
 					continue;
 				}
-			}
-			if (a.hasAttribute("string")) {
-				String data = a.getAttribute("encoding");
-				if ("base64".equals(data)) {
-					String value = new String( Base64.decode(a.getAttribute("string")) );
-					attr.set(to, value);
-				} else {
-					String value = a.getAttribute("string");
-					attr.set(to, value);
-				}
-				continue;
-			}
-			if (a.hasAttribute("boolean")) {
-				String value = a.getAttribute("boolean");
-				attr.set(to, MCast.toboolean(value, false));
-				continue;
-			}
-			if (a.hasAttribute("int")) {
-				String value = a.getAttribute("int");
-				attr.set(to, MCast.toint(value,0));
-				continue;
-			}
-			if (a.hasAttribute("long")) {
-				String value = a.getAttribute("long");
-				attr.set(to, MCast.tolong(value,0));
-				continue;
-			}
-			if (a.hasAttribute("date")) {
-				String value = a.getAttribute("date");
-				Date obj = new Date();
-				obj.setTime( MCast.tolong(value,0) );
-				attr.set(to, obj);
-				continue;
-			}
-			if (a.hasAttribute("uuid")) {
-				String value = a.getAttribute("uuid");
-				try {
-					attr.set(to, UUID.fromString(value));
-				} catch (Throwable t) {
-					log.d(name,t);
-				}
-				continue;
-			}
-			if (a.hasAttribute("enum")) {
-				String value = a.getAttribute("enum");
-				attr.set(to, MCast.toint(value, 0));
-				continue;
-			}
-			if ("true".equals(a.getAttribute("serializable"))) {
-				CDATASection cdata = MXml.findCDataSection(a);
-				if (cdata != null) {
-					String data = cdata.getData();
-					try {
-						Object obj = MCast.fromBinary( MCast.fromBinaryString(data) );
-						attr.set(to, obj);
-					} catch (ClassNotFoundException e1) {
-						throw new IOException(e1);
+				{
+					String value = a.getAttribute("null");
+					if (MString.isSet(value) && value.equals("true")) {
+						attr.set(to, null);
+						continue;
 					}
 				}
-			}
-			if (a.hasAttribute("type")) {
-				String value = a.getAttribute("type");
-				try {
-					Object obj = act.createObject(value);
-					xmlToPojo(a,obj,factory,act);
-					attr.set(to, obj);
-				} catch (Exception e1) {
-					log.d(name,to.getClass(),e1);
+				if (a.hasAttribute("string")) {
+					String data = a.getAttribute("encoding");
+					if ("base64".equals(data)) {
+						String value = new String( Base64.decode(a.getAttribute("string")) );
+						attr.set(to, value);
+					} else {
+						String value = a.getAttribute("string");
+						attr.set(to, value);
+					}
+					continue;
 				}
-				continue;
-			}
+				if (a.hasAttribute("boolean")) {
+					String value = a.getAttribute("boolean");
+					attr.set(to, MCast.toboolean(value, false));
+					continue;
+				}
+				if (a.hasAttribute("int")) {
+					String value = a.getAttribute("int");
+					attr.set(to, MCast.toint(value,0));
+					continue;
+				}
+				if (a.hasAttribute("long")) {
+					String value = a.getAttribute("long");
+					attr.set(to, MCast.tolong(value,0));
+					continue;
+				}
+				if (a.hasAttribute("date")) {
+					String value = a.getAttribute("date");
+					Date obj = new Date();
+					obj.setTime( MCast.tolong(value,0) );
+					attr.set(to, obj);
+					continue;
+				}
+				if (a.hasAttribute("uuid")) {
+					String value = a.getAttribute("uuid");
+					try {
+						attr.set(to, UUID.fromString(value));
+					} catch (Throwable t) {
+						log.d(name,t);
+					}
+					continue;
+				}
+				if (a.hasAttribute("enum")) {
+					String value = a.getAttribute("enum");
+					attr.set(to, MCast.toint(value, 0));
+					continue;
+				}
+				if ("true".equals(a.getAttribute("serializable"))) {
+					CDATASection cdata = MXml.findCDataSection(a);
+					if (cdata != null) {
+						String data = cdata.getData();
+						try {
+							Object obj = MCast.fromBinary( MCast.fromBinaryString(data) );
+							attr.set(to, obj);
+						} catch (ClassNotFoundException e1) {
+							throw new IOException(e1);
+						}
+					}
+				}
+				if (a.hasAttribute("type")) {
+					String value = a.getAttribute("type");
+					try {
+						Object obj = act.createObject(value);
+						xmlToPojo(a,obj,factory,act);
+						attr.set(to, obj);
+					} catch (Exception e1) {
+						log.d(name,to.getClass(),e1);
+					}
+					continue;
+				}
 
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(to), attr.getName(), t);
+			}
 
 		}
 	}
@@ -467,37 +477,42 @@ public class MPojo {
 
 		for (PojoAttribute<?> attr : model) {
 			
-			if (!attr.canRead()) continue;
-			
-			Object value = attr.get(from);
-			
-			String name = attr.getName();
-			Class<?> type = attr.getType();
-			if (type == int.class) out.setInt(name, (int)value);
-			else
-			if (type == Integer.class) out.setInt(name, (Integer)value);
-			else
-			if (type == long.class)  out.setLong(name, (long)value);
-			else
-			if (type == Long.class)  out.setLong(name, (Long)value);
-			else
-			if (type == float.class)  out.setFloat(name, (float)value);
-			else
-			if (type == Float.class)  out.setFloat(name, (Float)value);
-			else
-			if (type == double.class)  out.setDouble(name, (double)value);
-			else
-			if (type == Double.class)  out.setDouble(name, (Double)value);
-			else
-			if (type == boolean.class)  out.setBoolean(name, (boolean)value);
-			else
-			if (type == Boolean.class)  out.setBoolean(name, (Boolean)value);
-			else
-			if (type == String.class)  out.setString(name, (String)value);
-			else
-			if (type == Date.class)  out.setDate(name, (Date)value);
-			else
-				out.setString(name, String.valueOf(value));
+			try {
+				if (!attr.canRead()) continue;
+				
+				Object value = attr.get(from);
+				
+				String name = attr.getName();
+				Class<?> type = attr.getType();
+				if (type == int.class) out.setInt(name, (int)value);
+				else
+				if (type == Integer.class) out.setInt(name, (Integer)value);
+				else
+				if (type == long.class)  out.setLong(name, (long)value);
+				else
+				if (type == Long.class)  out.setLong(name, (Long)value);
+				else
+				if (type == float.class)  out.setFloat(name, (float)value);
+				else
+				if (type == Float.class)  out.setFloat(name, (Float)value);
+				else
+				if (type == double.class)  out.setDouble(name, (double)value);
+				else
+				if (type == Double.class)  out.setDouble(name, (Double)value);
+				else
+				if (type == boolean.class)  out.setBoolean(name, (boolean)value);
+				else
+				if (type == Boolean.class)  out.setBoolean(name, (Boolean)value);
+				else
+				if (type == String.class)  out.setString(name, (String)value);
+				else
+				if (type == Date.class)  out.setDate(name, (Date)value);
+				else
+					out.setString(name, String.valueOf(value));
+				
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(from), attr.getName(), t);
+			}
 		}
 		return out;
 	}
@@ -550,8 +565,7 @@ public class MPojo {
 				else
 					attr.set(to, unknownHadler == null ? from.getString(name) : unknownHadler.cast(from.get(name), null) );
 			} catch (Throwable t) {
-				System.out.println("ERROR " + name);
-				t.printStackTrace();
+				log.d(MSystem.getClassName(to), name, t);
 			}
 		}
 	}

@@ -59,14 +59,14 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 				String name = prefix + s;
 				Method getter = null;
 				Method setter = null;
-				if (mName.startsWith("get")) {
+				if (mName.startsWith("get") && m.getParameterCount() == 0) {
 					mName = mName.substring(3);
 					getter = m;
 					try {
 						setter = clazz.getMethod("set" + mName,getter.getReturnType());
 					} catch (NoSuchMethodException nsme) {}
 				} else
-				if (mName.startsWith("set")) {
+				if (mName.startsWith("set") && m.getParameterCount() == 1) {
 					mName = mName.substring(3);
 					setter = m;
 					try {
@@ -77,7 +77,7 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 						} catch (NoSuchMethodException nsme2) {}
 					}
 				} else
-				if (mName.startsWith("is")) {
+				if (mName.startsWith("is") && m.getParameterCount() == 0) {
 					mName = mName.substring(2);
 					getter = m;
 					try {
