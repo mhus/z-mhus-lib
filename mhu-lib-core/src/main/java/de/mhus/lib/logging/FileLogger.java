@@ -22,11 +22,17 @@ public class FileLogger extends Log {
 	private boolean traces = true;
 	private PrintStream out;
 	private long maxFileSize = 1024 * 1024 * 500; // 500 MB
+	private boolean autoFlush = false;
 
 	public FileLogger(String name, File file) {
 		this(name,file,Log.LEVEL.INFO);
 	}
-	
+
+	public FileLogger(String name, File file, boolean autoFlush) {
+		this(name,file,Log.LEVEL.INFO);
+		this.autoFlush = autoFlush;
+	}
+
 	public FileLogger(String name, File file, Log.LEVEL level) {
 		super(name);
 		this.level = level;
@@ -168,6 +174,7 @@ public class FileLogger extends Log {
 			((Throwable)message).printStackTrace(out);
 		if (t!=null && traces) t.printStackTrace(out);
 		
+		if (autoFlush) out.flush();
 	}
 
 	protected String getInfo() {
