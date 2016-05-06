@@ -199,4 +199,14 @@ public class MCollection {
 		return ret;
 	}
 
+	public static <T> void addAll(List<T> list, T[] items) {
+		for (T i : items)
+			if (i != null) list.add(i);
+	}
+	
+	public static <T> void addAll(Set<T> list, T[] items) {
+		for (T i : items)
+			if (i != null) list.add(i);
+	}
+	
 }

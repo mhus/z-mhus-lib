@@ -47,7 +47,8 @@
 	            *,
 	            org.apache.log4j*;version=1.2.14;resolution:=optional,
 	            org.slf4j*;version=1.7.5;resolution:=optional,
-	            de.mhus.lib.mutable;version=${project.version};resolution:=optional</Import-Package>
+	            de.mhus.lib.mutable;version=${project.version};resolution:=optional,
+	            net.sf.cglib.proxy.*;resolution:=optional</Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 	          </instructions>
 	        </configuration>
@@ -115,7 +116,13 @@
     	<version>1.7.5</version>
     	<scope>compile</scope>
     </dependency>
-  	
+	<dependency>
+		<groupId>cglib</groupId>
+		<artifactId>cglib</artifactId>
+		<version>3.2.2</version>
+	</dependency>
+
+        
   </dependencies>
   
   

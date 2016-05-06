@@ -407,6 +407,20 @@ public class AdbTest extends TestCase {
 		store3.setName("LA West");
 		store3.setPrincipal(p3.getId());
 		store3.save();
+
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
+			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("Max",res.get(0).getName());
+		}
+
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq(Person2::getName, "Max");
+			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("Max",res.get(0).getName());
+		}
 		
 		{
 			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
@@ -437,7 +451,7 @@ public class AdbTest extends TestCase {
 			List<Store> res = manager.getByQualification(q).toCacheAndClose();
 			assertEquals(1, res.size());
 		}
-		
+				
 	}
 
 	public void testReconnect() throws Exception {

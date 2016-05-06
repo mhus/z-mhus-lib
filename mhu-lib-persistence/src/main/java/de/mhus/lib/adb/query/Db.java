@@ -1,6 +1,7 @@
 package de.mhus.lib.adb.query;
 
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.AttributeMap;
@@ -18,7 +19,7 @@ public class Db {
 	public static APart eq(String attr, Object value) {
 		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(value));
 	}
-	
+		
 	/**
 	 * <p>like</p>
 	 * 
