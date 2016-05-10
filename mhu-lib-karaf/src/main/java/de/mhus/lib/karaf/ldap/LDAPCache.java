@@ -239,24 +239,24 @@ public class LDAPCache implements Closeable, NamespaceChangeListener, ObjectChan
         filter = filter.replaceAll(Pattern.quote("%fqdn"), Matcher.quoteReplacement(userDnNamespace));
         filter = filter.replace("\\", "\\\\");
 
-        LOGGER.info("Looking for the user roles in LDAP with ");
-        LOGGER.info("  base DN: " + options.getRoleBaseDn());
-        LOGGER.info("  filter: " + filter);
+        LOGGER.debug("Looking for the user roles in LDAP with ");
+        LOGGER.debug("  base DN: " + options.getRoleBaseDn());
+        LOGGER.debug("  filter: " + filter);
 
         NamingEnumeration namingEnumeration = context.search(options.getRoleBaseDn(), filter, controls);
         try {
             List<String> rolesList = new ArrayList<>();
             while (namingEnumeration.hasMore()) {
                 SearchResult result = (SearchResult) namingEnumeration.next();
-                LOGGER.info("*** Found " + result);
+                LOGGER.debug("*** Found " + result);
                 Attributes attributes = result.getAttributes();
                 Attribute roles1 = attributes.get(options.getRoleNameAttribute());
                 if (roles1 != null) {
-                    LOGGER.info("*** Roles1 " + roles1);
+                    LOGGER.debug("*** Roles1 " + roles1);
                     for (int i = 0; i < roles1.size(); i++) {
                         String role = (String) roles1.get(i);
                         if (role != null) {
-                            LOGGER.info("User {} is a member of role {}", user, role);
+                            LOGGER.debug("User {} is a member of role {}", user, role);
                             // handle role mapping
                             Set<String> roleMappings = tryMappingRole(role);
                             if (roleMappings.isEmpty()) {
