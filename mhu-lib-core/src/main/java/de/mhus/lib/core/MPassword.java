@@ -126,13 +126,15 @@ public class MPassword {
     private static final Random random = new Random();
     
 	public static String generate(int min, int max, boolean upper, boolean numbers, boolean specials) {
-		char[] symbols = new char[ 75 ];
+		char[] symbols = new char[ 75 - 3 ];
 		int i = 0;
 		for (char c = 'a'; c <= 'z'; c++)
-			symbols[i++] = c;
+			if ( c != 'l')
+				symbols[i++] = c;
 		if (upper)
 			for (char c = 'A'; c <= 'Z'; c++)
-				symbols[i++] = c;
+				if (c != 'I' && c != 'O')
+					symbols[i++] = c;
 		if (numbers)
 			for (char c = '0'; c <= '9'; c++)
 				symbols[i++] = c;
