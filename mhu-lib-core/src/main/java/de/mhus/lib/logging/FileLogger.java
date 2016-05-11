@@ -23,6 +23,7 @@ public class FileLogger extends Log {
 	private PrintStream out;
 	private long maxFileSize = 1024 * 1024 * 500; // 500 MB
 	private boolean autoFlush = false;
+	private boolean rotate = true;
 
 	public FileLogger(String name, File file) {
 		this(name,file,Log.LEVEL.INFO);
@@ -43,8 +44,9 @@ public class FileLogger extends Log {
 		return level;
 	}
 
-	public void setLevel(Log.LEVEL level) {
+	public FileLogger setLevel(Log.LEVEL level) {
 		this.level = level;
+		return this;
 	}
 	
 	private class MyEngine extends LogEngine {
@@ -187,7 +189,7 @@ public class FileLogger extends Log {
 		
 		if (file == null) return false;
 		
-		if (out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
+		if (isRotate() && out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
 			out.flush();
 			out.close();
 			out = null;
@@ -211,6 +213,7 @@ public class FileLogger extends Log {
 	}
 
 	protected void rotate() {
+		if (!isRotate()) return;
 		File oldFile = file;
 		doUpdateFile();
 		if (file == null) {
@@ -235,16 +238,18 @@ public class FileLogger extends Log {
 		return printTime;
 	}
 
-	public void setPrintTime(boolean printTime) {
+	public FileLogger setPrintTime(boolean printTime) {
 		this.printTime = printTime;
+		return this;
 	}
 
 	public boolean isTraces() {
 		return traces;
 	}
 
-	public void setTraces(boolean traces) {
+	public FileLogger setTraces(boolean traces) {
 		this.traces = traces;
+		return this;
 	}
 
 	public long getMaxFileSize() {
@@ -282,6 +287,24 @@ public class FileLogger extends Log {
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
+	}
+
+	public boolean isRotate() {
+		return rotate;
+	}
+
+	public FileLogger setRotate(boolean rotate) {
+		this.rotate = rotate;
+		return this;
+	}
+
+	public boolean isAutoFlush() {
+		return autoFlush;
+	}
+
+	public FileLogger setAutoFlush(boolean autoFlush) {
+		this.autoFlush = autoFlush;
+		return this;
 	}
 	
 	

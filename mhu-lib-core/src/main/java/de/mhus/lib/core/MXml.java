@@ -20,6 +20,8 @@ package de.mhus.lib.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -367,6 +369,14 @@ public class MXml {
 		StreamResult result = new StreamResult(out);
 		DOMSource source = new DOMSource(e);
 		transformer.transform(source, result);
+		
+	}
+	
+	public static void saveXml(Node e, File out) throws Exception {
+		
+		FileOutputStream fo = new FileOutputStream(out);
+		saveXml(e, fo);
+		fo.close();
 		
 	}
 	
