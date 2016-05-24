@@ -74,7 +74,7 @@ public class SimpleTable extends ExpandingTable {
 		}
 		Item item = dataSource.addItem(id);
 		if (item == null) {
-			MLogUtil.log().i(this.getClass(),"addRow: item is null");
+			MLogUtil.log().i(this.getClass(),"addRow: item is null", id);
 			return;
 		}
 		for (int i = 0; i < columns.length; i++) {
