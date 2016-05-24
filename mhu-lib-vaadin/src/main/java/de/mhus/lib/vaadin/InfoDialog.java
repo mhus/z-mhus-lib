@@ -4,7 +4,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public class AlertDialog extends ModalDialog {
+public class InfoDialog extends ModalDialog {
 
 	/**
 	 * 
@@ -16,7 +16,7 @@ public class AlertDialog extends ModalDialog {
 	private Listener listener;
 	protected Label label;
 
-	public AlertDialog(String title, String message, String txtCancel, Listener listener) throws Exception {
+	public InfoDialog(String title, String message, String txtCancel, Listener listener) throws Exception {
 
 		this.message = message;
 		this.listener = listener;
@@ -48,14 +48,14 @@ public class AlertDialog extends ModalDialog {
 
 	public static void show(UI ui, String title, String message, String txtCancel, Listener listener) {
 		try {
-			new AlertDialog(title,message,txtCancel,listener).show(ui);
+			new InfoDialog(title,message,txtCancel,listener).show(ui);
 		} catch (Exception e) {
 		}
 	}
 
 	public static interface Listener {
 
-		public void onClose(AlertDialog dialog);
+		public void onClose(InfoDialog dialog);
 		
 	}
 
