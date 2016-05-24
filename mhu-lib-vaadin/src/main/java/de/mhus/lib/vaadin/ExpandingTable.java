@@ -7,6 +7,7 @@ import com.vaadin.ui.Table;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MEventHandler;
+import de.mhus.lib.core.MSystem;
 
 /**
  * This type of table is able to expand the datasource. Therefore listen for the render events and expand the table if
@@ -67,6 +68,8 @@ public class ExpandingTable extends Table {
 			@Override
 			public void headerClick(HeaderClickEvent event) {
 				
+				if (ExpandingTable.super.isSortDisabled()) return;
+				
 				String name = String.valueOf( event.getPropertyId() );
 				if (name.equals(sortedColumn))
 					sortedAscending = ! sortedAscending;
@@ -74,7 +77,19 @@ public class ExpandingTable extends Table {
 					sortedAscending = true;
 				sortedColumn = name;
 				
-				sortEventHandler.fire();
+				boolean changed = false;
+				// update table now
+				if ( !MSystem.equals(ExpandingTable.super.getSortContainerPropertyId(),sortedColumn)) {
+					ExpandingTable.super.setSortContainerPropertyId(sortedColumn);
+					changed = true;
+				}
+				if (ExpandingTable.super.isSortAscending() != sortedAscending) {
+					ExpandingTable.super.setSortAscending(sortedAscending);
+					changed = true;
+				}
+				
+				if (changed)
+					sortEventHandler.fire();
 				
 			}
 		});
