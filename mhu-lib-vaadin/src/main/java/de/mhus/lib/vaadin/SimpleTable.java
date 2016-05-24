@@ -8,6 +8,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public class SimpleTable extends ExpandingTable {
 
@@ -67,8 +68,20 @@ public class SimpleTable extends ExpandingTable {
 
 	@SuppressWarnings("unchecked")
 	public void addRow(Object id, Object ... values) {
+		if (id == null) {
+			MLogUtil.log().i(this.getClass(),"addRow: id is null");
+			return;
+		}
 		Item item = dataSource.addItem(id);
-		for (int i = 0; i < columns.length; i++)
+		if (item == null) {
+			MLogUtil.log().i(this.getClass(),"addRow: item is null");
+			return;
+		}
+		for (int i = 0; i < columns.length; i++) {
+			if (columns[i] == null) {
+				MLogUtil.log().i(this.getClass(),"addRow: column is null",i);
+				return;
+			}
 			item.getItemProperty(
 						columns[i].getId()
 					).setValue(
@@ -76,6 +89,7 @@ public class SimpleTable extends ExpandingTable {
 									values[i] : 
 										columns[i].getDefaultValue() 
 								);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
