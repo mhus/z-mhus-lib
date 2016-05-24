@@ -105,6 +105,25 @@ public class ExpandingTable extends Table {
 		return sortEventHandler;
 	}
     
+	@Override
+	public void setSortContainerPropertyId(Object propertyId) {
+		sortedColumn = String.valueOf(propertyId);
+		super.setSortContainerPropertyId(propertyId);
+	}
+
+	@Override
+	public void setSortAscending(boolean ascending) {
+		sortedAscending = ascending;
+		super.setSortAscending(ascending);
+	}
+
+	@Override
+	public void setSortDisabled(boolean sortDisabled) {
+		sortedColumn = null;
+		sortedAscending = true;
+		super.setSortDisabled(sortDisabled);
+	}
+
 	public String getSortedColumn() {
 		return sortedColumn;
 	}
