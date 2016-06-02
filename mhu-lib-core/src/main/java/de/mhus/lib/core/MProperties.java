@@ -168,6 +168,20 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return out;
 	}
 
+	public static MProperties load(File f) {
+		Properties p = new Properties();
+		try {
+			if (f.exists() && f.isFile()) {
+				FileInputStream is = new FileInputStream(f);
+				p.load(is);
+			}
+		} catch (Throwable t) {
+			MLogUtil.log().d(f, t);
+		}
+		MProperties out = new MProperties(p);
+		return out;
+	}
+	
 	@Override
 	public int size() {
 		return properties.size();
