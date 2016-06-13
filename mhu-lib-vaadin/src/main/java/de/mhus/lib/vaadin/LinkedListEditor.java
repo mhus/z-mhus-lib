@@ -1,18 +1,20 @@
 package de.mhus.lib.vaadin;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 import de.mhus.lib.core.pojo.PojoAttribute;
-import de.mhus.lib.core.util.FilterRequest;
 
 public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 
 	private static final long serialVersionUID = 1L;
 	protected LinkedList<E> list = new LinkedList<>();
-	protected LinkedList<E> deleted = new LinkedList<>();
+	protected HashSet<E> deleted = new HashSet<>();
+	protected HashSet<E> changed = new HashSet<>();
+	protected HashSet<E> created = new HashSet<>();
 	private PojoAttribute<Object> idAttribute;
 	
 	@SuppressWarnings("unchecked")
@@ -60,7 +62,10 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	protected void doDelete(E entry) {
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPreDelete(this);
-		deleted.add(entry);
+		if (created.contains(entry))
+			created.remove(entry);
+		else
+			deleted.add(entry);
 		list.remove(entry);
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPostDelete(this);
@@ -82,6 +87,9 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 			} catch (Throwable t) {
 			}
 		}
+		
+		if (!created.contains(entry))
+			changed.add(entry);
 		
 		if (original instanceof ManagedListEntity)
 			((ManagedListEntity)original).doPostSave(this);
@@ -126,6 +134,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 				idAttribute.set(entry, id);
 			
 			list.add(entry);
+			created.add(entry);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
