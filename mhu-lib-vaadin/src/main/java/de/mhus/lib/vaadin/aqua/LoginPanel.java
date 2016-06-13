@@ -88,7 +88,7 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         username.focus();
         fields.addComponent(username);
 
-        final PasswordField password = new PasswordField(nls.find("login.password=Password"));
+        final PasswordField password = new PasswordField(MNls.find(this, "password=Password"));
         fields.addComponent(password);
 
         final Button signin = new Button(MNls.find(this, "signin=Sign In"));
