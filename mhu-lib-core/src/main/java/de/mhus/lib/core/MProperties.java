@@ -21,6 +21,8 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class MProperties extends AbstractProperties implements Externalizable {
 
+	private static final long serialVersionUID = 1L;
+	
 	protected Properties properties = null;
 	
 	public MProperties() {
