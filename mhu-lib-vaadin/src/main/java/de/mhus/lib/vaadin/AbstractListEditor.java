@@ -54,7 +54,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private Button bUpdate;
 	private Button bDelete;
 	protected Object editMode;
-	private VaadinPojoForm model;
+	protected VaadinPojoForm<E> model;
 	protected SearchField filter;
 	private boolean showSearchField = true;
 	private boolean needSortUpdate = false;
@@ -264,7 +264,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	protected void doSelectionChanged() {
 		if (editMode != null) return;
 		Object selectedId = table.getValue();
-		Object target = null;
+		E target = null;
 		if (selectedId == null)
 			target = createTarget();
 		else
@@ -385,9 +385,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		editMode = selectedId;
 		if (MY_NEW_MARKER.equals(editMode)) return;
 
-		Object target = getEditableTarget(editMode);
+		E target = getEditableTarget(editMode);
 		model.setPojo(target);
-		
 	}
 
 	protected abstract void doSave(E entry) throws Exception;
