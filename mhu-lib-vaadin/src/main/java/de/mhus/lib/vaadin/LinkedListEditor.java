@@ -88,8 +88,8 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 			}
 		}
 		
-		if (!created.contains(entry))
-			changed.add(entry);
+		if (!created.contains(original))
+			changed.add(original);
 		
 		if (original instanceof ManagedListEntity)
 			((ManagedListEntity)original).doPostSave(this);
