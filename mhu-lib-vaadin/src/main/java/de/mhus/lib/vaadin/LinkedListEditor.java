@@ -143,5 +143,11 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	protected Object createId() {
 		return UUID.randomUUID().toString();
 	}
+	
+	public void applyChanges() {
+		created.clear();
+		deleted.clear();
+		changed.clear();
+	}
 
 }
