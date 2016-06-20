@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -54,7 +55,14 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
 		log().d("sendJmsOneWay",dest,msg);
-		producer.send(msg);
+		try {
+			producer.send(msg);
+		} catch (IllegalStateException ise) {
+			log().i("reconnect",getName(),ise.getMessage());
+			producer = null;
+			open();
+			producer.send(msg);
+		}
 	}
 	
 	protected void prepareMessage(Message msg) throws JMSException {
@@ -79,7 +87,16 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			interceptorOut.prepare(msg);
 		try {
 			log().d("sendJms",dest,msg);
-			producer.send(msg);
+			try {
+				producer.send(msg);
+			} catch (IllegalStateException ise) {
+				log().i("reconnect",getName(),ise.getMessage());
+				producer = null;
+				open();
+				openAnswerQueue();
+				msg.setJMSReplyTo(answerQueue);
+				producer.send(msg);
+			}
 	
 			long start = System.currentTimeMillis();
 			while (true) {
@@ -137,8 +154,17 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		addAllowedId(id);
 		try {
 			log().d("sendJmsBroadcast",dest,msg);
-			producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
-	
+			try {
+				producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
+			} catch (IllegalStateException ise) {
+				log().i("reconnect",getName(),ise.getMessage());
+				producer = null;
+				open();
+				openAnswerQueue();
+				msg.setJMSReplyTo(answerQueue);
+				producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
+			}
+
 			long start = System.currentTimeMillis();
 			LinkedList<Message> res = new LinkedList<>();
 			while (true) {
@@ -178,6 +204,13 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			dest.open();
 			log().d("open",dest);
 			producer = dest.getConnection().getSession().createProducer(dest.getDestination());
+			// reset answer queue
+			try {
+				if (answerQueue != null) answerQueue.delete();
+			} catch (Throwable t) {
+				log().t(t);
+			}
+			answerQueue = null;
 		}
 	}
 	
