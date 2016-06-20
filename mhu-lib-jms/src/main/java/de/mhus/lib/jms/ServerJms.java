@@ -5,7 +5,11 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.jms.TextMessage;
+
+import org.apache.activemq.ActiveMQMessageConsumer;
+import org.apache.activemq.ActiveMQSession;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
@@ -282,6 +286,11 @@ do not block jms driven threads !!! This will cause a deadlock
 		if (isClosed()) return;
 		log().d("beat");
 		try {
+			Session session = getSession();
+			if ( session instanceof ActiveMQSession && ((ActiveMQSession)getSession()).isClosed() ) {
+				log().i("reconnect because session is closed",getName());
+				consumer = null;
+			}
 			open(); // try to reopen and re-listen
 		} catch (JMSException e) {
 			log().d(e);

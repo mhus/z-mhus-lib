@@ -23,12 +23,20 @@ public class HeartbeatSender extends ClientJms {
 	}
 	
 	public void sendHeartbeat() {
+
 		if (getSession() == null) {
 			log().i("heartbeat has no session");
-			doHeartbeatAction();
 			reset();
 			return;
 		}
+		
+		try {
+			getDestination().getConnection().doChannelBeat();
+		} catch (Throwable e) {
+			log().w("channel beat failed",e);
+			return;
+		}
+		
 		try {
 			TextMessage msg = getSession().createTextMessage(MSystem.getAppIdent());
 			Message[] ret = sendJmsBroadcast(msg);
@@ -43,7 +51,4 @@ public class HeartbeatSender extends ClientJms {
 		}
 	}
 	
-	private void doHeartbeatAction() {
-		//TODO reset channels and connection?
-	}
 }
