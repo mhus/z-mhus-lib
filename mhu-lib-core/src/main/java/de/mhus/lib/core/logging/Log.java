@@ -3,6 +3,7 @@ package de.mhus.lib.core.logging;
 import java.util.UUID;
 
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 /**
@@ -104,7 +105,7 @@ public class Log {
     	Throwable error = null;
 //    	int cnt=0;
     	for (Object o : msg) {
-			error = serialize(sb,o, error);
+			error = MSystem.serialize(sb,o, error);
 //   		cnt++;
     	}
     	
@@ -131,29 +132,6 @@ public class Log {
 			break;
     	}
 	}
-
-	private Throwable serialize(StringBuffer sb, Object o, Throwable error) {
-    	try {
-	    	if (o == null) {
-				sb.append("[null]");
-	    	} else
-			if (o instanceof Throwable) {
-				if (error == null) return (Throwable)o;
-				// another error
-				sb.append("[").append(o).append("]");
-			} else
-	    	if (o.getClass().isArray()) {
-	    		sb.append("{");
-	    		for (Object p : (Object[])o) {
-	    			error = serialize(sb, p, error);
-	    		}
-	    		sb.append("}");
-	    	} else
-	    		sb.append("[").append(o).append("]");
-    	} catch (Throwable t) {}
-		return error;
-	}
-
 
 //	/**
 //     * Log a message in trace, it will automatically append the objects if trace is enabled. Can Also add a trace.

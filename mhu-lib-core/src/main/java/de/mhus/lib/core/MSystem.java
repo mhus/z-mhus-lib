@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.TimerTask;
 
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.Stringifier;
 
 public class MSystem {	
 	
@@ -201,15 +202,34 @@ public class MSystem {
 		boolean first = true;
 		for (Object a : attributes) {
 			if (!first) sb.append(','); else first = false;
-			if (a == null)
-				sb.append("null");
-			else
-				sb.append(a.toString());
+			serialize(sb, a, null);
 		}
 		sb.append(']');
 		return sb.toString();
 	}
 	
+	public static Throwable serialize(StringBuffer sb, Object o, Throwable error) {
+    	try {
+	    	if (o == null) {
+				sb.append("[null]");
+	    	} else
+			if (o instanceof Throwable) {
+				if (error == null) return (Throwable)o;
+				// another error
+				sb.append("[").append(o).append("]");
+			} else
+	    	if (o.getClass().isArray()) {
+	    		sb.append("{");
+	    		for (Object p : (Object[])o) {
+	    			error = serialize(sb, p, error);
+	    		}
+	    		sb.append("}");
+	    	} else
+	    		sb.append("[").append(o).append("]");
+    	} catch (Throwable t) {}
+		return error;
+	}
+
 	public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotation) {
 		Class<?> current = clazz;
 		while (current != null) {
