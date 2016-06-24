@@ -4,8 +4,10 @@ import java.io.Externalizable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -179,6 +181,28 @@ public class MProperties extends AbstractProperties implements Externalizable {
 			}
 		} catch (Throwable t) {
 			MLogUtil.log().d(f, t);
+		}
+		MProperties out = new MProperties(p);
+		return out;
+	}
+	
+	public static MProperties load(InputStream is) {
+		Properties p = new Properties();
+		try {
+			p.load(is);
+		} catch (Throwable t) {
+			MLogUtil.log().d(t);
+		}
+		MProperties out = new MProperties(p);
+		return out;
+	}
+	
+	public static MProperties load(Reader is) {
+		Properties p = new Properties();
+		try {
+			p.load(is);
+		} catch (Throwable t) {
+			MLogUtil.log().d(t);
 		}
 		MProperties out = new MProperties(p);
 		return out;
