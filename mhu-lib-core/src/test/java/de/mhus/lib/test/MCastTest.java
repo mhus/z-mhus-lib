@@ -1,6 +1,7 @@
 package de.mhus.lib.test;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -167,4 +168,12 @@ public class MCastTest extends TestCase {
 		}
 		
 	}
+	
+	public void testDateTransform() {
+		String str = MDate.transform("dd.MM.yyyy", "2016-07-20", null );
+//		String str = new java.text.SimpleDateFormat("dd.MM.yyyy").format( de.mhus.lib.core.MDate.toDate("2016-07-20", null) );
+		System.out.println(str);
+		assertEquals("20.07.2016", str);
+	}
+	
 }

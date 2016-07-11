@@ -237,4 +237,14 @@ public class MDate extends Date {
 		return timeSecFormat.format(date);
 	}
 
+	public static String toString(String format, Date date) {
+		return new SimpleDateFormat(format).format( date );
+	}
+	
+	public static String transform(String format, String date, Date def) {
+		Date d = toDate(date, def);
+		if (d == null) return null;
+		return toString(format, d);
+	}
+
 }
