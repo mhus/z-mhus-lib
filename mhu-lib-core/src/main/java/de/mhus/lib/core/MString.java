@@ -137,6 +137,7 @@ public class MString {
 			oldOffset = offset;
 		}
 		String s = _in.substring(oldOffset);
+		if (trim) s = s.trim();
 		if (s.length() != 0)
 			out.add(s);
 		return out.toArray(new String[out.size()]);
