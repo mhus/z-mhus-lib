@@ -5,6 +5,8 @@ import java.util.Observer;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.shell.api.console.Session;
+import org.apache.karaf.shell.api.console.SessionFactory;
 
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
@@ -55,8 +57,8 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 		log().d(name,"execute",command);
 		
 		try {
-		  CommandProcessor commandProcessor=MOsgi.getService(CommandProcessor.class);
-		  CommandSession commandSession=commandProcessor.createSession(System.in,System.out,System.err);						
+		  SessionFactory commandProcessor=MOsgi.getService(SessionFactory.class);
+		  Session commandSession=commandProcessor.create(System.in,System.out,System.err);						
 		  
 		  commandSession.put("interactive.mode", false);
 		  commandSession.put("APPLICATION",System.getProperty("karaf.name","root"));

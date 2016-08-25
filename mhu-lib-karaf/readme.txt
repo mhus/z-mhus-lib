@@ -18,3 +18,26 @@ bundle:watch mhu-lib-logging
 bundle:watch mhu-lib-karaf
 bundle:watch mhu-lib-j2ee
 bundle:watch mhu-lib-jms
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+    <bean id="cmd" 
+          class="de.mhus.lib.karaf.services.ScheduleGogo" 
+          init-method="init" destroy-method="destroy">
+      <property name="name" value="cmd_hello"/>
+      <property name="interval" value="*/2 * * * *"/>
+      <property name="command" value="log:log 'hello world!'"/>
+      <property name="timerFactory" ref="TimerFactoryRef" />
+    </bean>
+    <reference
+       id="TimerFactoryRef" 
+       interface="de.mhus.lib.core.util.TimerFactory" />
+    <service 
+      interface="de.mhus.lib.karaf.services.SimpleServiceIfc" 
+      ref="cmd">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="cmd_hello"/>
+        </service-properties>
+    </service>
+</blueprint>

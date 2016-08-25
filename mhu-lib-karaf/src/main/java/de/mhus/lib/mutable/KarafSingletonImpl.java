@@ -10,6 +10,7 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
@@ -88,13 +89,21 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		} catch (Throwable t) {
 			System.out.println("Can't initialize housekeeper base: " + t);
 		}
-		try {
-			TimerFactory timerFactory = MOsgi.getService(TimerFactory.class);
-			TimerIfc timerIfc = timerFactory.getTimer();
-			getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
-		} catch (Throwable t) {
-			System.out.println("Can't initialize timer base: " + t);
-		}
+		
+		MThread.asynchronous( new Runnable() {
+
+			@Override
+			public void run() {
+				MThread.sleep(1000);
+				try {
+					TimerFactory timerFactory = MOsgi.getService(TimerFactory.class);
+					TimerIfc timerIfc = timerFactory.getTimer();
+					getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+				} catch (Throwable t) {
+					System.out.println("Can't initialize timer base: " + t);
+				}
+			}
+		});
 		getCfgManager().reConfigure();
 
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );
