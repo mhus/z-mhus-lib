@@ -218,8 +218,8 @@ public class MThread extends MObject implements Runnable {
 
 	}
 
-	public static void asynchronous(Runnable task) {
-		new MThread(task);
+	public static void asynchron(Runnable task) {
+		new MThread(task).start();
 	}
 
 }

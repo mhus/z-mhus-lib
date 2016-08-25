@@ -90,7 +90,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 			System.out.println("Can't initialize housekeeper base: " + t);
 		}
 		
-		MThread.asynchronous( new Runnable() {
+		MThread.asynchron( new Runnable() {
 
 			@Override
 			public void run() {
