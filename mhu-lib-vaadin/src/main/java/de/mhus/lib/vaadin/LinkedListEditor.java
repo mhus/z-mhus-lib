@@ -59,7 +59,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	}
 
 	@Override
-	protected void doDelete(E entry) {
+	public void doDelete(E entry) {
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPreDelete(this);
 		if (created.contains(entry))
@@ -73,13 +73,20 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doSave(E entry) {
+	public void doSave(E entry) {
 
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPreSave(this);
 
 		Object id = getId(entry);
-		E original = getTarget(id);
+		E original = id != null ? getTarget(id) : null;
+
+		// in case of a new one ... (for external callers)
+		if (original == null) {
+			doSaveNew(entry);
+			return;
+		}
+		
 		for (PojoAttribute<Object> attr : beanModel) {
 			try {
 				Object value = attr.get(entry);
@@ -149,5 +156,5 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 		deleted.clear();
 		changed.clear();
 	}
-
+	
 }
