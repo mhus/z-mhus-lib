@@ -355,6 +355,13 @@ public class MXml {
 			return builder.parse(new InputSource(file));
 	}
 
+	public static Document loadXml(File f)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = dbf.newDocumentBuilder();
+		return builder.parse(f);
+	}
+
 	/**
 	 * Write the element into the stream.
 	 * 
