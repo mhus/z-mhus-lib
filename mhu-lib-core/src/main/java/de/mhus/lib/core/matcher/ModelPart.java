@@ -22,7 +22,7 @@ public abstract class ModelPart {
 			return matches(str);
 	}
 
-	public boolean m(Map<String,Object> map) {
+	public boolean m(Map<String,?> map) {
 		if (not)
 			return !matches(map);
 		else
@@ -37,7 +37,7 @@ public abstract class ModelPart {
 		return param;
 	}
 
-	protected boolean matches(Map<String,Object> map) {
+	protected boolean matches(Map<String,?> map) {
 		Object val = map.get(param);
 		if (val != null)
 			return matches(String.valueOf(val));

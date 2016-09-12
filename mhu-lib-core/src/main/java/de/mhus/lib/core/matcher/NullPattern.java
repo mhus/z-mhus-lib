@@ -24,7 +24,7 @@ public class NullPattern extends ModelPattern {
 		return str == null;
 	}
 
-	protected boolean matches(Map<String,Object> map) {
+	protected boolean matches(Map<String,?> map) {
 		Object val = map.get(getParamName());
 		return val == null;
 	}

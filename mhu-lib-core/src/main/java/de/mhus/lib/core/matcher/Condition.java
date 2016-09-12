@@ -22,7 +22,7 @@ public class Condition {
 		parse(tokenizer);
 	}
 
-	public boolean matches(Map<String,Object> map) {
+	public boolean matches(Map<String,?> map) {
 		if (map == null) return false;
 		return root.m(map);
 	}

@@ -15,7 +15,7 @@ public abstract class ModelComposit extends ModelPart {
 		return components.size();
 	}
 
-	protected abstract boolean matches(Map<String,Object> map);
+	protected abstract boolean matches(Map<String,?> map);
 
 	@Override
 	public String toString() {

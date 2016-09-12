@@ -18,7 +18,7 @@ public class ModelOr extends ModelComposit {
 	}
 
 	@Override
-	protected boolean matches(Map<String, Object> map) {
+	protected boolean matches(Map<String, ?> map) {
 		for (ModelPart part : components) {
 			if (part.m(map)) return true;
 		}
