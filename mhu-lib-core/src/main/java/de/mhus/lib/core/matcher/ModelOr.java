@@ -1,5 +1,7 @@
 package de.mhus.lib.core.matcher;
 
+import java.util.Map;
+
 public class ModelOr extends ModelComposit {
 
 	@Override
@@ -13,6 +15,14 @@ public class ModelOr extends ModelComposit {
 	@Override
 	public String getOperatorName() {
 		return "or";
+	}
+
+	@Override
+	protected boolean matches(Map<String, Object> map) {
+		for (ModelPart part : components) {
+			if (part.m(map)) return true;
+		}
+		return false;
 	}
 
 }

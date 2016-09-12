@@ -1,5 +1,7 @@
 package de.mhus.lib.core.matcher;
 
+import java.util.Map;
+
 public abstract class ModelPattern extends ModelPart {
 
 	public abstract void setPattern(String pattern);
@@ -8,7 +10,7 @@ public abstract class ModelPattern extends ModelPart {
 
 	@Override
 	public String toString() {
-		return (isNot() ? "not " : "") + getPatternTypeName() + " '" + getPattern() + "'";
+		return (getParamName() != null ? "$" + getParamName() + "$ " : "" ) + (isNot() ? "not " : "") + getPatternTypeName() + " '" + getPattern() + "'";
 	}
 
 }

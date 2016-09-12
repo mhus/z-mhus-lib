@@ -1,6 +1,7 @@
 package de.mhus.lib.core.matcher;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 public abstract class ModelComposit extends ModelPart {
 
@@ -13,6 +14,8 @@ public abstract class ModelComposit extends ModelPart {
 	public int size() {
 		return components.size();
 	}
+
+	protected abstract boolean matches(Map<String,Object> map);
 
 	@Override
 	public String toString() {
