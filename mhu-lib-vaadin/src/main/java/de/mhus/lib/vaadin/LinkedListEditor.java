@@ -69,6 +69,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 		list.remove(entry);
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPostDelete(this);
+		setModified(true);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -84,6 +85,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 		// in case of a new one ... (for external callers)
 		if (original == null) {
 			doSaveNew(entry);
+			setModified(true);
 			return;
 		}
 		
@@ -100,7 +102,8 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 		
 		if (original instanceof ManagedListEntity)
 			((ManagedListEntity)original).doPostSave(this);
-		
+	
+		setModified(true);
 	}
 
 	@Override
@@ -142,6 +145,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 			
 			list.add(entry);
 			created.add(entry);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
