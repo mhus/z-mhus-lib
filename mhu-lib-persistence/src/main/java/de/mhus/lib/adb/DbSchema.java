@@ -465,4 +465,9 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 		table.injectObject(object);
 	}
 
+	public void authorizeReadAttributes(DbConnection con, DbManager dbManagerJdbc, Class<?> clazz,
+			String registryName, String attribute) {
+		throw new AccessDeniedException();
+	}
+
 }

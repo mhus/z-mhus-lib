@@ -3,6 +3,7 @@ package de.mhus.lib.adb;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.adb.model.Field;
@@ -218,7 +219,36 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		return executeCountQuery(con, "max", sql.toString(), attributes);
 
 	}
-	
+
+	public <T,R> List<R> getAttributeByQualification(Class<? extends T> clazz, String attribute, String qualification, Map<String,Object> attributes) throws MException {
+		return getAttributeByQualification(null, clazz, null, attribute, qualification, attributes);
+	}
+
+	public <T,R> List<R> getAttributedByQualification(String attribute, AQuery<? extends T> qualification) throws MException {
+		return getAttributeByQualification(null, (Class<? extends T>)qualification.getType(), null, attribute, qualification.toQualification(this), qualification.getAttributes(this));
+	}
+
+	public <T,R> List<R> getAttributeByQualification(DbConnection con, Class<? extends T> clazz, String registryName, String attribute, String qualification, Map<String,Object> attributes) throws MException {
+		
+		getSchema().authorizeReadAttributes(con, this, clazz, registryName, attribute);
+
+		reloadLock.waitWithException(MAX_LOCK);
+		
+		Class<? extends Persistable> clazz2 = schema.findClassForObject(clazz,this);
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT $db.").append(getMappingName(clazz2)).append(".").append(attribute).append("$ AS value FROM $db.").append(getMappingName(clazz2)).append("$ ");
+		if (MString.isSet(qualification)) {
+			String low = qualification.trim().toLowerCase();
+			if (low.startsWith("order ") || low.startsWith("limit "))
+				sql.append(qualification);
+			else
+				sql.append("WHERE ").append(qualification);
+		}
+
+		return executeAttributeQuery(con, "value", sql.toString(), attributes);
+
+	}
+		
 	public <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException {
 
 		return executeQuery(null, clazz, null, query, attributes);
@@ -311,6 +341,37 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			} catch (Throwable t) {
 				log().w(query,attributeName,t);
 			}
+		}
+	}
+
+	public <T> List<T> executeAttributeQuery(DbConnection con, String alias, String query, Map<String,Object> attributes) throws MException {
+		reloadLock.waitWithException(MAX_LOCK);
+		log().t("query",alias,query,attributes);
+		Map<String, Object> map = null;
+
+		DbConnection myCon = null;
+		if (con == null) {
+			try {
+				myCon = schema.getConnection(pool);
+			} catch (Throwable t) {
+				throw new MException(con,query,attributes,t);
+			}
+			con = myCon;
+		}
+		if (attributes == null)
+			map = nameMappingRO;
+		else
+			map = new FallbackMap<String, Object>(attributes, nameMappingRO, true);
+		try {
+			DbStatement sth = con.createStatement(query);
+			DbResult res = sth.executeQuery(map);
+			LinkedList<T> out = new LinkedList<>();
+			while (res.next()) {
+				out.add( (T)res.getObject(alias));
+			}
+			return out;
+		} catch (Throwable t) {
+			throw new MException(con,query,attributes,t);
 		}
 	}
 

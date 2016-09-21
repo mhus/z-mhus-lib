@@ -3,6 +3,7 @@ package de.mhus.lib.adb;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.adb.model.Field;
@@ -93,6 +94,12 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	public abstract <T> long getMaxByQualification(DbConnection con, T object, String registryName, String field, String qualification, Map<String,Object> attributes) throws MException;
 
 	public abstract <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException;
+
+	public abstract <T,R> List<R> getAttributeByQualification(Class<? extends T> clazz, String field, String qualification, Map<String,Object> attributes) throws MException;
+
+	public abstract <T,R> List<R> getAttributedByQualification(String field, AQuery<? extends T> qualification) throws MException;
+
+	public abstract <T,R> List<R> getAttributeByQualification(DbConnection con, Class<? extends T> clazz, String registryName, String field, String qualification, Map<String,Object> attributes) throws MException;
 
 	/**
 	 * Returns an collection.

@@ -106,4 +106,9 @@ public class MutableResult extends DbResult {
 		return getMDate(columnLabel).toSqlTimestamp();
 	}
 
+	@Override
+	public Object getObject(String columnLabel) throws Exception {
+		return current.get(columnLabel);
+	}
+
 }

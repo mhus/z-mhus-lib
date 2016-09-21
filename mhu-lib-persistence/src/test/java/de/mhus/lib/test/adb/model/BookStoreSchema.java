@@ -75,4 +75,9 @@ public class BookStoreSchema extends DbSchema {
 		list.add(Regal.class);
 	}
 
+	public void authorizeReadAttributes(DbConnection con, DbManager dbManagerJdbc, Class<?> clazz,
+			String registryName, String attribute) {
+	}
+	
+	
 }

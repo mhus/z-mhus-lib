@@ -39,4 +39,6 @@ public abstract class DbResult {
 
 	public abstract List<String> getColumnNames() throws Exception;
 
+	public abstract Object getObject(String columnLabel) throws Exception;
+
 }

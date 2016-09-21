@@ -169,7 +169,11 @@ public class AdbTest extends TestCase {
 		manager.saveObject(b);
 		assertNotNull(b.getLendToId());
 
-
+		// test getFields ...
+		List<String> names = manager.getAttributedByQualification("name", Db.query(Book.class));
+		System.out.println(names);
+		assertEquals(2, names.size());
+		
 		// remove book
 
 		manager.deleteObject(b);
