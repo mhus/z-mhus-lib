@@ -224,7 +224,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		}
 
 		@Override
-		public void doTick() {
+		public void doTick(boolean forced) {
 			
 			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
 				log.d("stop scheduled task",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
@@ -232,7 +232,7 @@ public class TimerFactoryImpl implements TimerFactory {
 				return;
 			}
 
-			super.doTick();
+			super.doTick(forced);
 		}
 		
 		@Override

@@ -47,7 +47,7 @@ public class Scheduler extends MLog implements Named {
 		if (pack != null) {
 			for (SchedulerJob job : pack) {
 				try {
-					doExecuteJob(job);
+					doExecuteJob(job, false);
 				} catch (Throwable t) {
 					job.doError(t);
 				}
@@ -76,9 +76,9 @@ public class Scheduler extends MLog implements Named {
 		}
 	}
 
-	public void doExecuteJob(SchedulerJob job) {
+	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) return;
-		new MThread(new MyExecutor(job)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
+		new MThread(new MyExecutor(job,forced)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
 
 	public void stop() {
@@ -94,9 +94,11 @@ public class Scheduler extends MLog implements Named {
 	private class MyExecutor implements Runnable {
 
 		private SchedulerJob job;
+		private boolean forced;
 
-		public MyExecutor(SchedulerJob job) {
+		public MyExecutor(SchedulerJob job, boolean forced) {
 			this.job = job;
+			this.forced = forced;
 		}
 
 		@Override
@@ -106,7 +108,7 @@ public class Scheduler extends MLog implements Named {
 			}
 			try {
 				if (job != null && !job.isCanceled())
-					job.doTick();
+					job.doTick(forced);
 			} catch (Throwable t) {
 				job.doError(t);
 			} finally {

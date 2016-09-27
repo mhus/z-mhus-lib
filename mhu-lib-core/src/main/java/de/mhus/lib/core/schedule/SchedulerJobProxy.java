@@ -17,8 +17,8 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 	}
 
 	@Override
-	public void doTick() {
-		instance.doTick();
+	public void doTick(boolean forced) {
+		instance.doTick(forced);
 	}
 
 	@Override

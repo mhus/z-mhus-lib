@@ -234,7 +234,7 @@ public class CmdTimer extends MLog implements Action {
 		if (cmd.equals("run")) {
 			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
 				if (job != null) {
-					scheduler.doExecuteJob(job);
+					scheduler.doExecuteJob(job, true);
 				}
 			}
 		}

@@ -51,19 +51,21 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	/**
 	 * Call this method to fire ticks to the scheduler. If the time is come the scheduler will execute the operation and set 'done' to true.
 	 */
-	public void doTick() {
+	public void doTick(boolean forced) {
 		
-		if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
-			cancel();
-		if (isCanceled()) return;
-		
-		if (getNextExecutionTime() == CALCULATE_NEXT) {
-			synchronized (this) {
-				doCaclulateNextExecution();
+		if (!forced) {
+			if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
+				cancel();
+			if (isCanceled()) return;
+			
+			if (getNextExecutionTime() == CALCULATE_NEXT) {
+				synchronized (this) {
+					doCaclulateNextExecution();
+				}
 			}
 		}
 		
-		if (isExecutionTimeReached()) {
+		if (forced || isExecutionTimeReached()) {
 			lastExecutionStart = System.currentTimeMillis();
 			thread = Thread.currentThread();
 			try {
@@ -186,7 +188,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	@Override
 	public void doit() throws Exception {
-		doTick();
+		doTick(false);
 	}
 
 	public long getNextExecutionTime() {
