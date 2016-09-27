@@ -340,6 +340,11 @@ public class MFile {
 		if (_src.isDirectory())
 			return false;
 
+		if (_dest.isDirectory())
+			_dest = new File(_dest, _src.getName());
+		
+		if (_dest.equals(_src)) return false;
+		
 		try {
 			InputStream fis = new FileInputStream(_src);
 			OutputStream fos = new FileOutputStream(_dest) ;
