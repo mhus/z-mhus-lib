@@ -19,6 +19,7 @@ import javax.jms.TextMessage;
 
 import org.codehaus.jackson.JsonNode;
 
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.errors.MRuntimeException;

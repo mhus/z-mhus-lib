@@ -14,22 +14,16 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * <p>MCollection class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MCollection {
 
 	/**
 	 * Returns true of array is not null and the value of item is included in
 	 * the array. It compares with the equals() method of the array item. Also
 	 * a item value of null will be compared.
-	 *
-	 * @param array an array of {@link java.lang.Object} objects.
-	 * @param item a {@link java.lang.Object} object.
-	 * @return a boolean.
+	 * 
+	 * @param array
+	 * @param item
+	 * @return
 	 */
 	public static boolean contains(Object[] array, Object item) {
 		if (array == null) return false;
@@ -41,10 +35,8 @@ public class MCollection {
 
 	/**
 	 * Fills a list at the end with the values of an array, ignoring null values.
-	 *
-	 * @param array an array of T objects.
-	 * @param list a {@link java.util.Collection} object.
-	 * @param <T> a T object.
+	 * @param array 
+	 * @param list 
 	 */
 	public static <T> void copyArray(T[] array, Collection<T> list) {
 		if (array == null || list == null) return;
@@ -55,9 +47,7 @@ public class MCollection {
 	//from http://stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist
 	/**
 	 * remove duplicated entries
-	 *
-	 * @param list a {@link java.util.List} object.
-	 * @param <T> a T object.
+	 * @param list
 	 */
 	public static <T> void removeDuplicates(List<T> list) {
 	    final Set<T> encountered = new HashSet<T>();
@@ -73,10 +63,8 @@ public class MCollection {
 	/**
 	 * remove duplicated entries, Attention exponential runtime behavior !!!
 	 * Running from beginning to the end, the first element will be left, following removed.
-	 *
-	 * @param list a {@link java.util.List} object.
-	 * @param comparator a {@link java.util.Comparator} object.
-	 * @param <T> a T object.
+	 * @param list
+	 * @param comparator 
 	 */
 	public static <T> void removeDuplicates(List<T> list, Comparator<T> comparator) {
 	    final Set<T> encountered = new HashSet<>();
@@ -97,14 +85,6 @@ public class MCollection {
 	    }
 	}
 
-	/**
-	 * <p>append.</p>
-	 *
-	 * @param array an array of T objects.
-	 * @param newElements a T object.
-	 * @param <T> a T object.
-	 * @return an array of T objects.
-	 */
 	@SafeVarargs
 	public static <T> T[] append(T[] array,T ... newElements) {
 		
@@ -119,13 +99,6 @@ public class MCollection {
 		return newArray;
 	}
 
-	/**
-	 * <p>order.</p>
-	 *
-	 * @param array an array of int.
-	 * @param unique a boolean.
-	 * @return an array of int.
-	 */
 	public static int[] order(int[] array, boolean unique) {
 		if (unique) {
 			HashSet<Integer> set = new HashSet<>();
@@ -149,13 +122,6 @@ public class MCollection {
 		return out;
 	}
 
-	/**
-	 * <p>order.</p>
-	 *
-	 * @param array an array of long.
-	 * @param unique a boolean.
-	 * @return an array of long.
-	 */
 	public static long[] order(long[] array, boolean unique) {
 		if (unique) {
 			HashSet<Long> set = new HashSet<>();
@@ -179,13 +145,6 @@ public class MCollection {
 		return out;
 	}
 
-	/**
-	 * <p>fillIntArray.</p>
-	 *
-	 * @param from a int.
-	 * @param to a int.
-	 * @return an array of int.
-	 */
 	public static int[] fillIntArray(int from, int to) {
 		int[] out = new int[to-from];
 		for (int l = 0; l < out.length; l++)
@@ -193,14 +152,6 @@ public class MCollection {
 		return out;
 	}
 	
-	/**
-	 * <p>toStringMap.</p>
-	 *
-	 * @param in a {@link java.util.Map} object.
-	 * @param ignoreNull a boolean.
-	 * @return a {@link java.util.Map} object.
-	 * @since 3.2.9
-	 */
 	public static Map<String,String> toStringMap(Map<Object,Object> in, boolean ignoreNull) {
 		HashMap<String, String> out = new HashMap<String,String>();
 		for (Entry<Object, Object> e : in.entrySet()) {
@@ -214,14 +165,6 @@ public class MCollection {
 		return out;
 	}
 	
-	/**
-	 * <p>toStringMap.</p>
-	 *
-	 * @param in a {@link de.mhus.lib.core.IProperties} object.
-	 * @param ignoreNull a boolean.
-	 * @return a {@link java.util.Map} object.
-	 * @since 3.2.9
-	 */
 	public static Map<String,String> toStringMap(IProperties in, boolean ignoreNull) {
 		HashMap<String, String> out = new HashMap<String,String>();
 		for (Map.Entry<String,Object> e : in) {
@@ -235,18 +178,35 @@ public class MCollection {
 		return out;
 	}
 	
-	/**
-	 * <p>toList.</p>
-	 *
-	 * @param array an array of T objects.
-	 * @param <T> a T object.
-	 * @return a {@link java.util.List} object.
-	 */
 	public static <T> List<T> toList(T[] array) {
 		LinkedList<T> out = new LinkedList<>();
 		for (T item : array)
 			out.add(item);
 		return out;
+	}
+
+	public static <T> TreeSet<T> toTreeSet(T[] items) {
+		TreeSet<T> ret = new TreeSet<T>();
+		for (T item : items)
+			if (item != null) ret.add(item);
+		return ret;
+	}
+
+	public static <T> HashSet<T> toHashSet(T[] items) {
+		HashSet<T> ret = new HashSet<T>();
+		for (T item : items)
+			if (item != null) ret.add(item);
+		return ret;
+	}
+
+	public static <T> void addAll(List<T> list, T[] items) {
+		for (T i : items)
+			if (i != null) list.add(i);
+	}
+	
+	public static <T> void addAll(Set<T> list, T[] items) {
+		for (T i : items)
+			if (i != null) list.add(i);
 	}
 	
 }

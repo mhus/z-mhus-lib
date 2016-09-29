@@ -11,13 +11,6 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 
-/**
- * <p>Scheduler class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
 public class Scheduler extends MLog implements Named {
 
 	private Timer timer;
@@ -26,29 +19,17 @@ public class Scheduler extends MLog implements Named {
 	private LinkedList<SchedulerJob> running = new LinkedList<>();
 	private long nextTimeoutCheck;
 	
-	/**
-	 * <p>Constructor for Scheduler.</p>
-	 */
 	public Scheduler() {}
 	
-	/**
-	 * <p>Constructor for Scheduler.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 */
 	public Scheduler(String name) {
 		this.name = name;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * <p>start.</p>
-	 */
 	public void start() {
 		if (timer != null) return;
 		timer = new Timer(name,true);
@@ -61,15 +42,12 @@ public class Scheduler extends MLog implements Named {
 		}, 1000, 1000);
 	}
 	
-	/**
-	 * <p>doTick.</p>
-	 */
 	protected void doTick() {
 		List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
 		if (pack != null) {
 			for (SchedulerJob job : pack) {
 				try {
-					doExecuteJob(job);
+					doExecuteJob(job, false);
 				} catch (Throwable t) {
 					job.doError(t);
 				}
@@ -98,30 +76,17 @@ public class Scheduler extends MLog implements Named {
 		}
 	}
 
-	/**
-	 * <p>doExecuteJob.</p>
-	 *
-	 * @param job a {@link de.mhus.lib.core.schedule.SchedulerJob} object.
-	 */
-	protected void doExecuteJob(SchedulerJob job) {
+	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) return;
-		new MThread(new MyExecutor(job)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
+		new MThread(new MyExecutor(job,forced)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
 
-	/**
-	 * <p>stop.</p>
-	 */
 	public void stop() {
 		if (timer == null) return;
 		timer.cancel();
 		timer = null;
 	}
 	
-	/**
-	 * <p>schedule.</p>
-	 *
-	 * @param scheduler a {@link de.mhus.lib.core.schedule.SchedulerJob} object.
-	 */
 	public void schedule(SchedulerJob scheduler) {
 		scheduler.doSchedule(this);
 	}
@@ -129,9 +94,11 @@ public class Scheduler extends MLog implements Named {
 	private class MyExecutor implements Runnable {
 
 		private SchedulerJob job;
+		private boolean forced;
 
-		public MyExecutor(SchedulerJob job) {
+		public MyExecutor(SchedulerJob job, boolean forced) {
 			this.job = job;
+			this.forced = forced;
 		}
 
 		@Override
@@ -141,7 +108,7 @@ public class Scheduler extends MLog implements Named {
 			}
 			try {
 				if (job != null && !job.isCanceled())
-					job.doTick();
+					job.doTick(forced);
 			} catch (Throwable t) {
 				job.doError(t);
 			} finally {
@@ -160,31 +127,16 @@ public class Scheduler extends MLog implements Named {
 	}
 
 	
-	/**
-	 * <p>getRunningJobs.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
 	public List<SchedulerJob> getRunningJobs() {
 		synchronized (running) {
 			return new LinkedList<>(running);
 		}
 	}
 	
-	/**
-	 * <p>getScheduledJobs.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
 	public List<SchedulerJob> getScheduledJobs() {
 		return queue.getJobs();
 	}
 	
-	/**
-	 * <p>Getter for the field <code>queue</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.schedule.SchedulerQueue} object.
-	 */
 	public SchedulerQueue getQueue() {
 		return queue;
 	}

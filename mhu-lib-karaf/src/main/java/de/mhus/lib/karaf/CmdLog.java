@@ -1,9 +1,10 @@
 package de.mhus.lib.karaf;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
@@ -19,6 +20,7 @@ import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
+@Service
 public class CmdLog extends MLog implements Action {
 
 	@Argument(index=0, name="cmd", required=true, description="Command:\n clear - reset all loggers,\n add <path> - add a trace log,\n full - enable full trace logging,\n dirty - enable dirty logging,\n level - set log level (console logger),\n reloadconfig,\n settrail [<config>] - enable trail logging for this thread,\n istrail - output the traillog config,\n releasetrail - unset the current trail log config\n general - enable general logging\n off - log mapping off\n trace,debug,info,warn,error,fatal <msg>", multiValued=false)
@@ -28,7 +30,7 @@ public class CmdLog extends MLog implements Action {
     String[] parameters;
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		ISingleton s = MSingleton.get();
 		if (! (s instanceof KarafSingletonImpl)) {
@@ -77,7 +79,7 @@ public class CmdLog extends MLog implements Action {
 				System.out.println(name);
 		} break;
 		case "reloadconfig": { //TODO need single command class
-			singleton.reConfigure();
+			singleton.getCfgManager().reConfigure();
 			MSingleton.updateLoggers();
 			System.out.println("OK");
 		} break;

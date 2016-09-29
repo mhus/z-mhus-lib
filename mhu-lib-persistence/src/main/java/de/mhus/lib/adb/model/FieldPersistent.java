@@ -22,29 +22,10 @@ import de.mhus.lib.core.util.Rfc1738;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbResult;
 
-/**
- * <p>FieldPersistent class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class FieldPersistent extends Field {
 
 	private String autoPrefix;
 
-	/**
-	 * <p>Constructor for FieldPersistent.</p>
-	 *
-	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
-	 * @param table a {@link de.mhus.lib.adb.model.Table} object.
-	 * @param isPrimary a boolean.
-	 * @param readOnly a boolean.
-	 * @param attribute a {@link de.mhus.lib.core.pojo.PojoAttribute} object.
-	 * @param attr2 a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @param dynamicField a {@link de.mhus.lib.adb.DbDynamic.Field} object.
-	 * @param features an array of {@link java.lang.String} objects.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	@SuppressWarnings("unchecked")
 	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, boolean readOnly, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
 		this.manager = manager;
@@ -76,7 +57,6 @@ public class FieldPersistent extends Field {
 	//		init();
 	//	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void init(String[] features) throws MException {
 		this.retDbType = attr.getExtracted("type", table.getDbRetType(attribute.getType()) ).toUpperCase();
@@ -94,7 +74,6 @@ public class FieldPersistent extends Field {
 		super.init(features);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void fillNameMapping(HashMap<String, Object> nameMapping) {
 		nameMapping.put("db." + manager.getMappingName(table.clazz) + "." + methodName, new Raw(name));
@@ -107,7 +86,6 @@ public class FieldPersistent extends Field {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void prepareCreate(Object obj) throws Exception {
 		if (autoId) {
@@ -141,7 +119,6 @@ public class FieldPersistent extends Field {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getFromTarget(Object obj) throws Exception {
 		Object out = get(obj);
@@ -155,7 +132,6 @@ public class FieldPersistent extends Field {
 		return out;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setToTarget(DbResult res, Object obj) throws Exception {
 
@@ -220,7 +196,6 @@ public class FieldPersistent extends Field {
 											log().d("can't set to target ",name,retDbType );
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean changed(DbResult res, Object obj) throws Exception {
 
@@ -275,7 +250,6 @@ public class FieldPersistent extends Field {
 		return false;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isPersistent() {
 		return true;

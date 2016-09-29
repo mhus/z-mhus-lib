@@ -29,11 +29,15 @@
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhu-lib</artifactId>
-        <version>3.2.9-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
   </parent>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-services-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -53,6 +57,8 @@
                         	de.mhus.lib.cao*;resolution:=optional,
                         	de.mhus.lib.sql*;resolution:=optional,
                         	de.mhus.lib.jms*;resolution:=optional,
+                        	de.mhus.lib.vaadin*;resolution:=optional,
+                        	com.vaadin*;resolution:=optional,
                         	org.apache.activemq.*;resolution:=optional,
                         	javax.jms.*;resolution:=optional,
                             *
@@ -63,6 +69,26 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+    	<pluginManagement>
+			<plugins>
+                <plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-services-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <executions>
+                        <execution>
+                            <id>service-metadata-generate</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>service-metadata-generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+			</plugins>    	
+    	</pluginManagement>
+        
     </build>
     
     <dependencies>
@@ -103,11 +129,6 @@
         </dependency>
         <dependency>
         	<groupId>de.mhus.lib</groupId>
-        	<artifactId>mhu-lib-logging</artifactId>
-        	<version>${project.version}</version>
-        </dependency>
-        <dependency>
-        	<groupId>de.mhus.lib</groupId>
         	<artifactId>mhu-lib-persistence</artifactId>
         	<version>${project.version}</version>
         </dependency>
@@ -121,6 +142,11 @@
         			<groupId>org.apache.activemq</groupId>
         		</exclusion>
         	</exclusions>
+        </dependency>
+        <dependency>
+        	<groupId>de.mhus.lib</groupId>
+        	<artifactId>mhu-lib-vaadin</artifactId>
+        	<version>${project.version}</version>
         </dependency>
 
        <dependency>
@@ -136,5 +162,20 @@
         </dependency>
 
     </dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${felix.plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

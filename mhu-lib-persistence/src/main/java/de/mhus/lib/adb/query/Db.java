@@ -1,236 +1,103 @@
 package de.mhus.lib.adb.query;
 
 import java.util.Map.Entry;
+import java.util.function.Function;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.AttributeMap;
 
-/**
- * <p>Db class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class Db {
 
-	/**
-	 * <p>query.</p>
-	 *
-	 * @param type a {@link java.lang.Class} object.
-	 * @param <T> a T object.
-	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
-	 */
 	public static <T> AQuery<T> query(Class<T> type) {
 		return new AQuery<T>(type);
 	}
 
-	/**
-	 * <p>eq.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart eq(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.EQ,left,right);
 	}
 
-	/**
-	 * <p>eq.</p>
-	 *
-	 * @param attr a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 * @since 3.2.9
-	 */
 	public static APart eq(String attr, Object value) {
 		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(value));
 	}
-	
+		
 	/**
 	 * <p>like</p>
 	 * 
-	 * @param attr
-	 * @param value
+	 * @param attr a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
 	 * @return like
 	 */
 	public static APart like(String attr, Object value) {
 		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(value));
 	}
-	
-	/**
-	 * <p>ne.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
+
 	public static APart ne(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.NE,left,right);
 	}
 
-	/**
-	 * <p>lt.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart lt(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.LT,left,right);
 	}
 
-	/**
-	 * <p>le.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 * @since 3.2.9
-	 */
 	public static APart le(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.LE,left,right);
 	}
 	
-	/**
-	 * <p>gt.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart gt(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.GT,left,right);
 	}
 
-	/**
-	 * <p>ge.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 * @since 3.2.9
-	 */
 	public static APart ge(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.GE,left,right);
 	}
 	
-	/**
-	 * <p>el.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart el(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.EL,left,right);
 	}
 
-	/**
-	 * <p>eg.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart eg(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.EG,left,right);
 	}
 
-	/**
-	 * <p>like.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart like(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.LIKE,left,right);
 	}
 
-	/**
-	 * <p>contains.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 * @since 3.2.9
-	 */
 	public static APart contains(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.LIKE,left, new AContainsWrap( right ) );
 	}
 	
-	/**
-	 * <p>in.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart in(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.IN,left,right);
 	}
 
-	/**
-	 * <p>in.</p>
-	 *
-	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param projection a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
-	 * @return a {@link de.mhus.lib.adb.query.AOperation} object.
-	 * @since 3.2.9
-	 */
 	public static AOperation in(AAttribute left, AAttribute projection,
 			AQuery<?> subQuery) {
 		return new ASubQuery(left, projection, subQuery);
 	}
 
-	/**
-	 * <p>and.</p>
-	 *
-	 * @param operations a {@link de.mhus.lib.adb.query.APart} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart and(APart ... operations) {
 		return new AAnd(operations);
 	}
 
-	/**
-	 * <p>or.</p>
-	 *
-	 * @param operations a {@link de.mhus.lib.adb.query.APart} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart or(APart ... operations) {
 		return new AOr(operations);
 	}
 
-	/**
-	 * <p>not.</p>
-	 *
-	 * @param operation a {@link de.mhus.lib.adb.query.APart} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart not(APart operation) {
 		return new ANot(operation);
 	}
 
-	/**
-	 * <p>concat.</p>
-	 *
-	 * @param parts a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 */
 	public static AAttribute concat(AAttribute ... parts) {
 		return new AConcat(parts);
 	}
 
 	/**
 	 * A dynamic value.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+	 * 
+	 * @param name
+	 * @param value
+	 * @return
 	 */
 	public static AAttribute value(String name, Object value) {
 		return new ADynValue(name,value);
@@ -238,9 +105,9 @@ public class Db {
 
 	/**
 	 * A dynamic value
-	 *
-	 * @param value a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+	 * 
+	 * @param value
+	 * @return
 	 */
 	public static AAttribute value(Object value) {
 		return new ADynValue(value);
@@ -248,9 +115,9 @@ public class Db {
 
 	/**
 	 * A database field.
-	 *
-	 * @param attribute a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+	 * 
+	 * @param attribute
+	 * @return
 	 */
 	public static AAttribute attr(String attribute) {
 		return new ADbAttribute(null, attribute);
@@ -258,10 +125,10 @@ public class Db {
 
 	/**
 	 * A database field.
-	 *
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @param attribute a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+	 * 
+	 * @param clazz
+	 * @param attribute
+	 * @return
 	 */
 	public static AAttribute attr(Class<?> clazz, String attribute) {
 		return new ADbAttribute(clazz, attribute);
@@ -269,62 +136,36 @@ public class Db {
 
 	/**
 	 * A fixed value
-	 *
-	 * @param value a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+	 * 
+	 * @param value
+	 * @return
 	 */
 	public static AAttribute fix(String value) {
 		return new AFix(value);
 	}
 
-	/**
-	 * <p>fix.</p>
-	 *
-	 * @param value a {@link java.lang.Enum} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 */
 	public static AAttribute fix(Enum<?> value) {
 		return new AEnumFix(value);
 	}
 
-	/**
-	 * <p>literal.</p>
-	 *
-	 * @param literal a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart literal(String literal) {
 		return new ALiteral(literal);
 	}
 
-	/**
-	 * <p>literal.</p>
-	 *
-	 * @param list a {@link de.mhus.lib.adb.query.APart} object.
-	 * @return a {@link de.mhus.lib.adb.query.APart} object.
-	 */
 	public static APart literal(APart ... list) {
 		return new ALiteralList(list);
 	}
 
-	/**
-	 * <p>list.</p>
-	 *
-	 * @param list a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 */
 	public static AAttribute list(AAttribute ... list) {
 		return new AList(list);
 	}
 
-	/**
-	 * <p>limit.</p>
-	 *
-	 * @param limit a int.
-	 * @return a {@link de.mhus.lib.adb.query.AOperation} object.
-	 */
 	public static AOperation limit(int limit) {
 		return new ALimit(limit);
+	}
+	
+	public static AOperation limit(int offset, int limit) {
+		return new ALimit(offset, limit);
 	}
 	
 	private static class AContainsWrap extends AAttribute {
@@ -352,24 +193,10 @@ public class Db {
 		
 	}
 
-	/**
-	 * <p>isNull.</p>
-	 *
-	 * @param attr a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.AOperation} object.
-	 * @since 3.2.9
-	 */
 	public static AOperation isNull(AAttribute attr) {
 		return new ANull(attr, true);
 	}
 
-	/**
-	 * <p>isNotNull.</p>
-	 *
-	 * @param attr a {@link de.mhus.lib.adb.query.AAttribute} object.
-	 * @return a {@link de.mhus.lib.adb.query.AOperation} object.
-	 * @since 3.2.9
-	 */
 	public static AOperation isNotNull(AAttribute attr) {
 		return new ANull(attr, false);
 	}
@@ -380,21 +207,19 @@ public class Db {
 	/**
 	 * Extend the query by operators from the search string. THe method analyze the search string and
 	 * add all search parameters to the query concatenating with 'and'.
-	 * The syntax of the search are key:value,key:value... It's also possible to set only a value.
+	 * The syntax of the search are <key>:<value>,<key>:<value>... It's also possible to set only a value.
 	 * In this case the helper is asked for the correct key.
-	 *
+	 * 
 	 * The helper plays a central role in analyzing the query. The helper can also deny the usage of keys or
 	 * change the name.
-	 *
+	 * 
 	 * The value can have place holders at the beginning and end to generate a like statement. The placeholder
 	 * is a asterisk.
-	 *
+	 * 
 	 * @param query The query to extend
 	 * @param search The search string
 	 * @param helper The helper or null for the default helper
 	 * @return The query
-	 * @param <T> a T object.
-	 * @since 3.2.9
 	 */
 	public static <T> AQuery<T> extendObjectQueryFromSearch(AQuery<T> query, String search, SearchHelper helper) {
 		if (MString.isEmpty(search)) return query;
@@ -407,14 +232,6 @@ public class Db {
 		return query;
 	}
 
-	/**
-	 * <p>extendObjectQueryFromParameter.</p>
-	 *
-	 * @param query a {@link de.mhus.lib.adb.query.AQuery} object.
-	 * @param part a {@link java.lang.String} object.
-	 * @param helper a {@link de.mhus.lib.adb.query.SearchHelper} object.
-	 * @since 3.2.9
-	 */
 	public static void extendObjectQueryFromParameter(AQuery<?> query, String part, SearchHelper helper) {
 		int p = part.indexOf(':');
 		String key = null;
@@ -445,13 +262,6 @@ public class Db {
 		
 	}
 
-	/**
-	 * <p>transformToLikeLike.</p>
-	 *
-	 * @param value a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 * @since 3.2.9
-	 */
 	public static String transformToLikeLike(String value) {
 		if (value.indexOf('\\') > -1) value = value.replace("\\", "\\\\");
 		if (value.indexOf('%') > -1) value = value.replace("%", "\\%");

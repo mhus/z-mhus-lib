@@ -38,7 +38,11 @@ public class EventHandlerTest
      */
     public void testListeners()
     {
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>();
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+			}
+    	};
     	MyListener l1 = new MyListener();
     	MyListener l2 = new MyListener();
     	
@@ -60,7 +64,11 @@ public class EventHandlerTest
      */
     public void testUnregister()
     {
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>();
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+			}
+    	};
     	MyListener l1 = new MyListener();
     	MyListener l2 = new MyListener();
     	
@@ -81,7 +89,11 @@ public class EventHandlerTest
      */
     public void testWeakMode()
     {
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true);
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+			}
+    	};
     	MyListener l1 = new MyListener();
     	MyListener l2 = new MyListener();
     	
@@ -99,7 +111,11 @@ public class EventHandlerTest
     }
     
     public void testIterator() {
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true);
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+			}
+    	};
     	MyListener l1 = new MyListener();
     	MyListener l2 = new MyListener();
     	
@@ -117,7 +133,11 @@ public class EventHandlerTest
 
     public void testConcurrentModification() {
     	
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true);
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+			}
+    	};
     	MyListener l1 = new MyListenerModify(eh);
     	MyListener l2 = new MyListenerModify(eh);
     	
@@ -140,13 +160,18 @@ public class EventHandlerTest
     
     public void testFireMethod() throws SecurityException, NoSuchMethodException {
     	
-    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true);
+    	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
+
+			@Override
+			public void onFire(MyListener listener, Object... values) {
+				listener.doIt();
+			}
+    		
+    	};
     	MyListener l1 = new MyListener();
     	eh.register(l1);
     	
-    	Method doItMethod = MyListener.class.getMethod("doIt");
-    	
-    	eh.fire(doItMethod);
+    	eh.fire();
     	
     	assertTrue(l1.done);
     }

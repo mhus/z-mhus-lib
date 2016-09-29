@@ -16,7 +16,9 @@ public class MValidatorTest extends TestCase {
 		assertEquals(false, MValidator.isEmailAddress("mike@alababa"));
 		assertEquals(true, MValidator.isEmailAddress("mike@alababa.blabla.de"));
 		assertEquals(true, MValidator.isEmailAddress("mike@alababa.aha.soso.local"));
-
+	}
+	
+	public void testZip() {
 		Locale l = new Locale("de","DE");
 		assertEquals(true, MValidator.isZipCode(l, "04212"));
 		assertEquals(true, MValidator.isZipCode(l, "95030"));
@@ -29,11 +31,21 @@ public class MValidatorTest extends TestCase {
 			assertEquals(true, false);
 		} catch (Throwable t) {
 		}
-		
+	}
+	
+	public void testNames() {
 		assertEquals(true, MValidator.isFirstName("Güven"));
 		assertEquals(true, MValidator.isFirstName("André"));
-		
 		assertEquals(true, MValidator.isLastName("Müller"));
-		
 	}
+
+	public void testPhone() {
+		assertEquals(true, MValidator.isPhoneNumber("+49 40 43214") );
+		assertEquals(true, MValidator.isPhoneNumber("040-43214") );
+		assertEquals(false, MValidator.isPhoneNumber("+49 40 abc") );
+		assertEquals(false, MValidator.isPhoneNumber("+49") );
+		assertEquals(false, MValidator.isPhoneNumber("+49 40 12345 12345 12345 12345") );
+		assertEquals(false, MValidator.isPhoneNumber("+49-40/1234") );
+	}
+	
 }

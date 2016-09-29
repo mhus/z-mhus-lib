@@ -17,7 +17,7 @@ import java.util.HashMap;
  * optionally trim leading and trailing spaces on fields, even inside quotes.
  * File must normally end with a single CrLf, other wise you will get a null
  * when trying to read a field on older JVMs.
- *
+ * 
  * @author copyright (c) 2002-2006 Roedy Green Canadian Mind Products version
  *         1.0 2002 March 27 <br>
  *         1.1 2002 March 28 - close - configurable separator char - no longer
@@ -45,13 +45,12 @@ import java.util.HashMap;
  *         should be ignored. e.g. ; ! #. These chars have to be in quotes in
  *         data then. <br>
  *         2. allow \ to be used for quoting characters.
- * @version $Id: $Id
  */
+
 public class CSVReader {
 
 	// ------------------------------ FIELDS ------------------------------
 
-	/** Constant <code>NO_QUOTS=0</code> */
 	public static final char NO_QUOTS = 0;
 	
 	/**
@@ -184,7 +183,7 @@ public class CSVReader {
 	/**
 	 * convenience Constructor, default to comma separator, " for quote, no
 	 * multiline fields, with trimming.
-	 *
+	 * 
 	 * @param r
 	 *            input Reader source of CSV Fields to read.
 	 */
@@ -194,7 +193,7 @@ public class CSVReader {
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param r
 	 *            input Reader source of CSV Fields to read.
 	 * @param separator
@@ -273,8 +272,8 @@ public class CSVReader {
 
 	/**
 	 * Close the Reader.
-	 *
-	 * @throws java.io.IOException if any.
+	 * 
+	 * @throws IOException
 	 */
 	public void close() throws IOException {
 		if (r != null) {
@@ -285,13 +284,14 @@ public class CSVReader {
 
 	/**
 	 * Read one field from the CSV file
-	 *
+	 * 
 	 * @return String value, even if the field is numeric. Surrounded and
 	 *         embedded double quotes are stripped. possibly "". null means end
 	 *         of line.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
 	 */
 	public String get() throws EOFException, IOException {
@@ -484,11 +484,12 @@ public class CSVReader {
 
 	/**
 	 * Get all fields in the line
-	 *
+	 * 
 	 * @return Array of strings, one for each field. Possibly empty, but never
 	 *         null.
-	 * @throws java.io.EOFException if any.
-	 * @throws java.io.IOException if any.
+	 * 
+	 * @throws EOFException
+	 * @throws IOException
 	 */
 	public String[] getAllFieldsInLine() throws EOFException, IOException {
 		ArrayList<String> al = new ArrayList<String>(30);
@@ -504,13 +505,15 @@ public class CSVReader {
 
 	/**
 	 * Read one double field from the CSV file.
-	 *
+	 * 
 	 * @return houble value, empty field returns 0, as does end of line.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
-	 * @throws java.lang.NumberFormatException if any.
+	 * @throws NumberFormatException
+	 *             , if field does not contain a well-formed int.
 	 */
 	public double getDouble() throws EOFException, IOException,
 			NumberFormatException {
@@ -529,13 +532,15 @@ public class CSVReader {
 
 	/**
 	 * Read one float field from the CSV file.
-	 *
+	 * 
 	 * @return float value, empty field returns 0, as does end of line.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
-	 * @throws java.lang.NumberFormatException if any.
+	 * @throws NumberFormatException
+	 *             , if field does not contain a well-formed int.
 	 */
 	public float getFloat() throws EOFException, IOException,
 			NumberFormatException {
@@ -554,13 +559,15 @@ public class CSVReader {
 
 	/**
 	 * Read one integer field from the CSV file
-	 *
+	 * 
 	 * @return int value, empty field returns 0, as does end of line.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
-	 * @throws java.lang.NumberFormatException if any.
+	 * @throws NumberFormatException
+	 *             , if field does not contain a well-formed int.
 	 */
 	public int getInt() throws EOFException, IOException, NumberFormatException {
 		String s = get();
@@ -606,13 +613,15 @@ public class CSVReader {
 
 	/**
 	 * Read one long field from the CSV file
-	 *
+	 * 
 	 * @return long value, empty field returns 0, as does end of line.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
-	 * @throws java.lang.NumberFormatException if any.
+	 * @throws NumberFormatException
+	 *             , if field does not contain a well-formed int.
 	 */
 	public long getLong() throws EOFException, IOException,
 			NumberFormatException {
@@ -648,13 +657,14 @@ public class CSVReader {
 
 	/**
 	 * Skip over fields you don't want to process.
-	 *
+	 * 
 	 * @param fields
 	 *            How many field you want to bypass reading. The newline counts
 	 *            as one field.
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
 	 */
 	public void skip(int fields) throws EOFException, IOException {
@@ -669,10 +679,10 @@ public class CSVReader {
 
 	/**
 	 * Skip over remaining fields on this line you don't want to process.
-	 *
-	 * @throws java.io.EOFException
+	 * 
+	 * @throws EOFException
 	 *             at end of file after all the fields have been read.
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 *             Some problem reading the file, possibly malformed data.
 	 */
 	public void skipToNextLine() throws EOFException, IOException {
@@ -682,13 +692,6 @@ public class CSVReader {
 		line = null;
 	}
 
-	/**
-	 * <p>readHeader.</p>
-	 *
-	 * @param lower a boolean.
-	 * @throws java.io.EOFException if any.
-	 * @throws java.io.IOException if any.
-	 */
 	public void readHeader(boolean lower) throws EOFException, IOException {
 		currentLine = getAllFieldsInLine();
 		headerIndex = new HashMap<>();
@@ -696,21 +699,10 @@ public class CSVReader {
 			headerIndex.put(lower ? currentLine[i].toLowerCase() : currentLine[i], i);
 	}
 	
-	/**
-	 * <p>getRowNames.</p>
-	 *
-	 * @return an array of {@link java.lang.String} objects.
-	 */
 	public String[] getRowNames() {
 		return headerIndex.keySet().toArray(new String[headerIndex.size()]);
 	}
 	
-	/**
-	 * <p>next.</p>
-	 *
-	 * @return a boolean.
-	 * @throws java.io.IOException if any.
-	 */
 	public boolean next() throws IOException {
 		try {
 			currentLine = getAllFieldsInLine();
@@ -720,34 +712,16 @@ public class CSVReader {
 		return true;
 	}
 	
-	/**
-	 * <p>get.</p>
-	 *
-	 * @param row a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 * @throws java.io.IOException if any.
-	 */
 	public String get(String row) throws IOException {
 		Integer idx = headerIndex.get(row);
 		if (idx == null) throw new IOException("row not found " + row);
 		return currentLine[ idx ];
 	}
 	
-	/**
-	 * <p>get.</p>
-	 *
-	 * @param row a int.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String get(int row) {
 		return currentLine[row];
 	}
 	
-	/**
-	 * <p>Getter for the field <code>lineCount</code>.</p>
-	 *
-	 * @return a int.
-	 */
 	public int getLineCount() {
 		return lineCount;
 	}
@@ -756,7 +730,7 @@ public class CSVReader {
 
 	/**
 	 * Test driver
-	 *
+	 * 
 	 * @param args
 	 *            not used
 	 */

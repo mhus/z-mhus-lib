@@ -9,23 +9,23 @@ import java.sql.Statement;
 import java.util.Map;
 
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.configupdater.ConfigBoolean;
-import de.mhus.lib.core.configupdater.ConfigLong;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.errors.MException;
 
 /**
  * This represents a qyery statement. Use it to execute queries.
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class JdbcStatement extends DbStatement {
 
 
-	private static ConfigBoolean traceRuntime = new ConfigBoolean(DbConnection.class, "traceRuntime", false);
-	private static ConfigLong traceMaxRuntime = new ConfigLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+	private static CfgBoolean traceRuntime = new CfgBoolean(DbConnection.class, "traceRuntime", false);
+	private static CfgLong traceMaxRuntime = new CfgLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
 	
 	private JdbcConnection dbCon;
 	private Statement sth;
@@ -55,15 +55,6 @@ public class JdbcStatement extends DbStatement {
 		}
 	}
 
-	/**
-	 * <p>prepareStatement.</p>
-	 *
-	 * @param attributes a {@link java.util.Map} object.
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param query a {@link java.lang.String} object.
-	 * @return a {@link java.sql.PreparedStatement} object.
-	 * @throws java.sql.SQLException if any.
-	 */
 	protected PreparedStatement prepareStatement(Map<String, Object> attributes, Statement sth, String query ) throws SQLException {
 
 		// recycle prepared query - should not differ !
@@ -86,9 +77,6 @@ public class JdbcStatement extends DbStatement {
 		return null;
 	}
 
-	/**
-	 * <p>closePreparedSth.</p>
-	 */
 	protected void closePreparedSth() {
 		if (preparedSth != null) {
 			xquery = null;
@@ -102,10 +90,13 @@ public class JdbcStatement extends DbStatement {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Executes the given SQL statement, which may return multiple results. In this statement
 	 * InputStream as attribute values are allowed.
+	 * 
+	 * @See Statement.execute
+	 * @param attributes
+	 * @return
+	 * @throws Exception
 	 */
 	@Override
 	public boolean execute(Map<String, Object> attributes) throws Exception {
@@ -124,22 +115,22 @@ public class JdbcStatement extends DbStatement {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public DbResult getResultSet() throws SQLException {
 		return new JdbcResult(this, sth.getResultSet());
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getUpdateCount() throws SQLException {
 		return sth.getUpdateCount();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Return the result of an select query.
+	 * 
+	 * @param attributes
+	 * @return
+	 * @throws Exception
 	 */
 	@Override
 	public DbResult executeQuery(Map<String, Object> attributes) throws Exception {
@@ -154,9 +145,11 @@ public class JdbcStatement extends DbStatement {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Return the result of an update query. In the attributes InputStreams are allowed (blobs).
+	 * 
+	 * @param attributes
+	 * @return
+	 * @throws Exception
 	 */
 	@Override
 	public int executeUpdate(Map<String, Object> attributes) throws Exception {
@@ -170,13 +163,6 @@ public class JdbcStatement extends DbStatement {
 		return result;
 	}
 
-	/**
-	 * <p>trace.</p>
-	 *
-	 * @param query a {@link java.lang.String} object.
-	 * @param start a long.
-	 * @since 3.2.9
-	 */
 	protected void trace(String query, long start) {
 		if (!traceRuntime.value()) return;
 		long stop = System.currentTimeMillis();
@@ -187,16 +173,15 @@ public class JdbcStatement extends DbStatement {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Return the used connection.
+	 * 
+	 * @return
 	 */
 	@Override
 	public DbConnection getConnection() {
 		return dbCon;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		closePreparedSth();

@@ -27,6 +27,7 @@ public abstract class CaoMonitor {
 	 *
 	 * @return <code>true</code> if cancellation has been requested,
 	 *    and <code>false</code> otherwise
+	 * @see #setCanceled(boolean)
 	 */
 	public abstract boolean isCanceled();
 
@@ -50,7 +51,7 @@ public abstract class CaoMonitor {
 
 	/**
 	 * Returns the actual number of already worked items set by worked().
-	 * @return int 
+	 * @return 
 	 */
 	public abstract int alreadyWorked();
 
@@ -67,7 +68,7 @@ public abstract class CaoMonitor {
 	 * logger to be sure the results of the operation will be stored
 	 * in the correct and separate location.
 	 * 
-	 * @return Log
+	 * @return
 	 */
 	public abstract Log log();
 }

@@ -1,11 +1,13 @@
 package de.mhus.lib.karaf.adb;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 @Command(scope = "adb", name = "datasource", description = "Update ADB DataSource")
+@Service
 public class CmdDatasource implements Action {
 	
 	@Argument(index=0, name="service", required=true, description="Service Class", multiValued=false)
@@ -15,7 +17,7 @@ public class CmdDatasource implements Action {
     String sourceName;
 	
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		int cnt = 0;
 		

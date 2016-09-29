@@ -13,231 +13,182 @@ import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
-/**
- * <p>JpaQuery class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class JpaQuery<T> implements TypedQuery<T> {
 
 	private JpaEntityManager entityManager;
 	private Query query;
 
-	/**
-	 * <p>Constructor for JpaQuery.</p>
-	 *
-	 * @param entityManager a {@link de.mhus.lib.jpa.JpaEntityManager} object.
-	 * @param query a {@link javax.persistence.Query} object.
-	 */
 	public JpaQuery(JpaEntityManager entityManager, Query query) {
 		this.entityManager = entityManager;
 		this.query = query;
 	}
 
-	/**
-	 * <p>Getter for the field <code>entityManager</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.jpa.JpaEntityManager} object.
-	 */
 	public JpaEntityManager getEntityManager() {
 		return entityManager;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> getResultList() {
 		return new JpaList<T>(entityManager, query.getResultList() );
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getSingleResult() {
 		return (T) query.getSingleResult();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int executeUpdate() {
 		return query.executeUpdate();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setMaxResults(int maxResult) {
 		return new JpaQuery<T>( entityManager, query.setMaxResults(maxResult) );
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getMaxResults() {
 		return query.getMaxResults();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setFirstResult(int startPosition) {
 		return new JpaQuery<T>(entityManager,query.setFirstResult(startPosition));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getFirstResult() {
 		return query.getFirstResult();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setHint(String hintName, Object value) {
 		return new JpaQuery<T>(entityManager,query.setHint(hintName, value));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Map<String, Object> getHints() {
 		return query.getHints();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setParameter(Parameter<Calendar> param, Calendar value,
 			TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(param, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setParameter(Parameter<Date> param, Date value,
 			TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(param, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setParameter(String name, Object value) {
 		return new JpaQuery<T>(entityManager,query.setParameter(name, value));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setParameter(String name, Calendar value,
 			TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(name, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public TypedQuery<T> setParameter(String name, Date value, TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(name, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public TypedQuery<T> setParameter(int position, Object value) {
 		return new JpaQuery<T>(entityManager,query.setParameter(position, value));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public TypedQuery<T> setParameter(int position, Calendar value,
 			TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(position, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public TypedQuery<T> setParameter(int position, Date value,
 			TemporalType temporalType) {
 		return new JpaQuery<T>(entityManager,query.setParameter(position, value, temporalType));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<Parameter<?>> getParameters() {
 		return query.getParameters();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Parameter<?> getParameter(String name) {
 		return query.getParameter(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public <E> Parameter<E> getParameter(String name, Class<E> type) {
 		return query.getParameter(name, type);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Parameter<?> getParameter(int position) {
 		return query.getParameter(position);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public <E> Parameter<E> getParameter(int position, Class<E> type) {
 		return query.getParameter(position, type);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isBound(Parameter<?> param) {
 		return query.isBound(param);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public <E> E getParameterValue(Parameter<E> param) {
 		return query.getParameterValue(param);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getParameterValue(String name) {
 		return query.getParameterValue(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getParameterValue(int position) {
 		return query.getParameterValue(position);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setFlushMode(FlushModeType flushMode) {
 		return new JpaQuery<T>(entityManager,query.setFlushMode(flushMode));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public FlushModeType getFlushMode() {
 		return query.getFlushMode();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<T> setLockMode(LockModeType lockMode) {
 		return new JpaQuery<T>(entityManager,query.setLockMode(lockMode));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public LockModeType getLockMode() {
 		return query.getLockMode();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public <E> E unwrap(Class<E> cls) {
 		return query.unwrap(cls);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public <E> TypedQuery<T> setParameter(Parameter<E> param,E value) {
 		return new JpaQuery<T>(entityManager,query.setParameter(param, value));

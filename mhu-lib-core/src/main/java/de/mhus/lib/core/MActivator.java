@@ -12,14 +12,8 @@ import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.Injector;
 import de.mhus.lib.core.lang.InjectorList;
 
-/**
- * <p>Abstract MActivator class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 @DefaultImplementation(DefaultActivator.class)
-public abstract class MActivator extends ClassLoader implements IBase {
+public abstract class MActivator extends ClassLoader  {
 
 //	protected static StaticBase base = new StaticBase();
 	
@@ -27,80 +21,30 @@ public abstract class MActivator extends ClassLoader implements IBase {
 
 	private boolean destroyed = false;
 
-	/**
-	 * <p>Constructor for MActivator.</p>
-	 */
 	public MActivator() {
 //		this(Thread.currentThread().getContextClassLoader());
 		this(MActivator.class.getClassLoader());
 	}
 	
-	/**
-	 * <p>Constructor for MActivator.</p>
-	 *
-	 * @param loader a {@link java.lang.ClassLoader} object.
-	 */
 	public MActivator(ClassLoader loader) {
 		super(loader);
 	}
 			
-	/**
-	 * <p>createObject.</p>
-	 *
-	 * @param ifc a {@link java.lang.Class} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param <T> a T object.
-	 * @return a T object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public <T> T createObject(Class<T> ifc, String name) throws Exception {
 		return (T)createObject(ifc,name,null,null);
 	}
 	
-	/**
-	 * <p>createObject.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Object} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public Object createObject(String name) throws Exception {
 		return createObject(name, null, null);
 	}
 	
-	/**
-	 * <p>mapName.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Object} object.
-	 */
 	protected abstract Object mapName(String name);
 	
-	/**
-	 * <p>createObject.</p>
-	 *
-	 * @param ifc a {@link java.lang.Class} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param classes an array of {@link java.lang.Class} objects.
-	 * @param objects an array of {@link java.lang.Object} objects.
-	 * @param <T> a T object.
-	 * @return a T object.
-	 * @throws java.lang.Exception if any.
-	 */
 	@SuppressWarnings("unchecked")
 	public <T> T createObject(Class<T> ifc, String name, Class<?>[] classes, Object[] objects ) throws Exception {
 		return (T)createObject(ifc.getCanonicalName() + ":" + name,classes,objects);
 	}
 
-	/**
-	 * <p>createObject.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param classes an array of {@link java.lang.Class} objects.
-	 * @param objects an array of {@link java.lang.Object} objects.
-	 * @return a {@link java.lang.Object} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public Object createObject(String name, Class<?>[] classes, Object[] objects ) throws Exception {
 		
 		Object obj = mapName(name);
@@ -139,13 +83,6 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		return out;
 	}
 	
-	/**
-	 * <p>getResourceStream.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.io.InputStream} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public InputStream getResourceStream(String name) throws Exception {
 		Object obj = mapName(name);
 				
@@ -158,40 +95,16 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		return null;
 	}
 
-	/**
-	 * <p>getObject.</p>
-	 *
-	 * @param ifc a {@link java.lang.Class} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param <T> a T object.
-	 * @return a T object.
-	 * @throws java.lang.Exception if any.
-	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(Class<T> ifc, String name) throws Exception {
 		return (T)getObject(ifc.getCanonicalName() + ":" + name);
 	}
 	
-	/**
-	 * <p>getObject.</p>
-	 *
-	 * @param ifc a {@link java.lang.Class} object.
-	 * @param <T> a T object.
-	 * @return a T object.
-	 * @throws java.lang.Exception if any.
-	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(Class<T> ifc) throws Exception {
 		return (T)getObject(ifc.getCanonicalName());
 	}
 	
-	/**
-	 * <p>getObject.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Object} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public Object getObject(String name) throws Exception {
 				
 		if (isInstance(name))
@@ -219,29 +132,10 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		return obj;
 	}
 
-	/**
-	 * <p>getInstance.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Object} object.
-	 */
 	protected abstract Object getInstance(String name);
 
-	/**
-	 * <p>setInstance.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param obj a {@link java.lang.Object} object.
-	 */
 	protected abstract void setInstance(String name, Object obj);
 	
-	/**
-	 * <p>getClazz.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Class} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public Class<?> getClazz(String name) throws Exception {
 		Object obj = mapName(name);
 		if (obj instanceof String)
@@ -252,80 +146,38 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		
 	}
 
-	/**
-	 * <p>getURL.</p>
-	 *
-	 * @param path a {@link java.lang.String} object.
-	 * @return a {@link java.net.URL} object.
-	 */
 	public URL getURL(String path) {
 		return getResource(path);
 	}
 	
-	/**
-	 * <p>Getter for the field <code>injector</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.lang.InjectorList} object.
-	 */
 	public InjectorList getInjector() {
 		return injector;
 	}
 
-	/**
-	 * <p>Setter for the field <code>injector</code>.</p>
-	 *
-	 * @param injector a {@link de.mhus.lib.core.lang.InjectorList} object.
-	 */
 	public void setInjector(InjectorList injector) {
 		this.injector = injector;
 	}
 
-	/**
-	 * <p>addInjector.</p>
-	 *
-	 * @param injector a {@link de.mhus.lib.core.lang.Injector} object.
-	 */
 	public void addInjector(Injector injector) {
 		if (this.injector == null)
 			this.injector = new InjectorList();
 		this.injector.add(injector);
 	}
 	
-	/**
-	 * <p>destroy.</p>
-	 */
 	public void destroy() {
 		destroyed  = true;
 	}
 
-	/**
-	 * <p>isDestroyed.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isDestroyed() {
 		return destroyed;
 	}
 	
-	/**
-	 * <p>isInstance.</p>
-	 *
-	 * @param ifc a {@link java.lang.Class} object.
-	 * @return a boolean.
-	 */
 	public boolean isInstance(Class<?> ifc) {
 		return isInstance(ifc.getCanonicalName());
 	}
 	
-	/**
-	 * <p>isInstance.</p>
-	 *
-	 * @param ifc a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	public abstract boolean isInstance(String ifc);
 	
-	/** {@inheritDoc} */
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		
@@ -342,7 +194,6 @@ public abstract class MActivator extends ClassLoader implements IBase {
 		return getParent().loadClass(name);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	protected URL findResource(String name) {
 		Object obj = mapName(name);

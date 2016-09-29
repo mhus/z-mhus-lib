@@ -10,12 +10,6 @@ import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.io.PipedStream;
 import de.mhus.lib.core.io.TextReader;
 
-/**
- * <p>VirtualConsole class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class VirtualConsole extends Console {
 
 	protected int height = DEFAULT_HEIGHT;
@@ -42,11 +36,6 @@ public class VirtualConsole extends Console {
 	
 	private boolean quiet;
 	
-	/**
-	 * <p>Constructor for VirtualConsole.</p>
-	 *
-	 * @throws java.io.IOException if any.
-	 */
 	public VirtualConsole() throws IOException {
 		super( new PrintStream(new ByteArrayOutputStream()),true,"ASCII");
 		out = new VirtualOutStream();
@@ -62,9 +51,6 @@ public class VirtualConsole extends Console {
 //		//System.setErr(this);
 //	}
 	
-	/**
-	 * <p>reset.</p>
-	 */
 	public void reset() {
 		blink = false;
 		bold = false;
@@ -78,13 +64,11 @@ public class VirtualConsole extends Console {
 				buffer[y][x] = new Props();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String readLine(LinkedList<String> history) {
 		return reader.readLine();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public char[] readPassword() {
 		quiet = true;
@@ -96,30 +80,21 @@ public class VirtualConsole extends Console {
 		}
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public boolean isSupportSize() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getWidth() {
 		return width;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getHeight() {
 		return height;
 	}
 	
-	/**
-	 * <p>resize.</p>
-	 *
-	 * @param width a int.
-	 * @param height a int.
-	 */
 	public void resize(int width, int height) {
 		Props[][] newBuffer = new Props[height][width];
 		for (int y=0; y < height; y++)
@@ -139,106 +114,82 @@ public class VirtualConsole extends Console {
 		
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isSupportCursor() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setCursor(int x, int y) {
 		this.x = x % width;
 		this.y = Math.min(y, height-1);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getCursorX() {
 		return x;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getCursorY() {
 		return y;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isSupportColor() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setColor(COLOR foreground, COLOR background) {
 		this.foreground = foreground;
 		this.background = background;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public COLOR getForegroundColor() {
 		return foreground;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public COLOR getBackgroundColor() {
 		return background;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isSupportBlink() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setBlink(boolean blink) {
 		this.blink = blink;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isBlink() {
 		return blink;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isSupportBold() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setBold(boolean bold) {
 		this.bold = bold;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isBold() {
 		return bold;
 	}
 	
-	/**
-	 * <p>getInputWriter.</p>
-	 *
-	 * @return a {@link java.io.PrintStream} object.
-	 */
 	public PrintStream getInputWriter() {
 		return writer;
 	}
 
-	/**
-	 * <p>getMonoDisplayAsString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getMonoDisplayAsString() {
 		
 		StringBuffer out = new StringBuffer();
@@ -280,23 +231,12 @@ public class VirtualConsole extends Console {
 		}
 	}
 	
-	/**
-	 * <p>fillInputBuffer.</p>
-	 *
-	 * @param c a char.
-	 * @throws java.io.IOException if any.
-	 */
 	protected void fillInputBuffer(char c) throws IOException {
 		if (!quiet) writeChar(c);
 //		outPipe.write(c);
 		piped.getOut().write(c);
 	}
 	
-	/**
-	 * <p>writeChar.</p>
-	 *
-	 * @param c a char.
-	 */
 	protected void writeChar(char c) {
 		
 		if (echo)
@@ -382,7 +322,6 @@ public class VirtualConsole extends Console {
 		
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void cleanup() {
 		bold = false;

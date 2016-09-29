@@ -1,53 +1,49 @@
 package de.mhus.lib.core.matcher;
 
-/**
- * <p>Abstract ModelPart class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
+import java.util.Map;
+
 public abstract class ModelPart {
 	
 	private boolean not;
+	private String param;
 	
-	/**
-	 * <p>isNot.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isNot() {
 		return not;
 	}
 
-	/**
-	 * <p>Setter for the field <code>not</code>.</p>
-	 *
-	 * @param not a boolean.
-	 */
 	public void setNot(boolean not) {
 		this.not = not;
 	}
 	
-	/**
-	 * <p>m.</p>
-	 *
-	 * @param str a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	public boolean m(String str) {
 		if (not)
 			return !matches(str);
 		else
 			return matches(str);
 	}
+
+	public boolean m(Map<String,?> map) {
+		if (not)
+			return !matches(map);
+		else
+			return matches(map);
+	}
+
+	public void setParamName(String param) {
+		this.param = param;
+	}
 	
-	/**
-	 * <p>matches.</p>
-	 *
-	 * @param str a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
+	public String getParamName() {
+		return param;
+	}
+
+	protected boolean matches(Map<String,?> map) {
+		Object val = map.get(param);
+		if (val != null)
+			return matches(String.valueOf(val));
+		return false;
+	}
+	
 	protected abstract boolean matches(String str);
 	
 }

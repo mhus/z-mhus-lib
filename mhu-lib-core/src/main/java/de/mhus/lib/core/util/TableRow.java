@@ -14,24 +14,12 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundException;
 
-/**
- * <p>TableRow class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
 public class TableRow implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	LinkedList<Object> data = new LinkedList<>();
 	private Table table;
 	
-	/**
-	 * <p>Getter for the field <code>data</code>.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
 	public List<Object> getData() {
 		return data;
 	}
@@ -84,54 +72,27 @@ public class TableRow implements Serializable {
 		
 	}
 
-	/**
-	 * <p>appendData.</p>
-	 *
-	 * @param d a {@link java.lang.Object} object.
-	 */
 	public void appendData(Object ... d) {
 		for (Object o : d)
 			data.add(o);
 	}
 	
-	/**
-	 * <p>Setter for the field <code>data</code>.</p>
-	 *
-	 * @param d a {@link java.lang.Object} object.
-	 */
 	public void setData(Object ... d) {
 		data.clear();
 		for (Object o : d)
 			data.add(o);
 	}
 
-	/**
-	 * <p>Setter for the field <code>table</code>.</p>
-	 *
-	 * @param table a {@link de.mhus.lib.core.util.Table} object.
-	 */
 	public void setTable(Table table) {
 		this.table = table;
 	}
 	
-	/**
-	 * <p>get.</p>
-	 *
-	 * @param index a int.
-	 * @return a {@link java.lang.Object} object.
-	 */
 	public Object get(int index) {
 		if (index < 0 || index >= data.size())
 			throw new NotFoundException("column index not found",index);
 		return data.get(index);
 	}
 	
-	/**
-	 * <p>get.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Object} object.
-	 */
 	public Object get(String name) {
 		int index = table.getColumnIndex(name);
 		if (index == -1)
@@ -139,14 +100,6 @@ public class TableRow implements Serializable {
 		return get(index);
 	}
 
-	/**
-	 * <p>get.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param def a T object.
-	 * @param <T> a T object.
-	 * @return a T object.
-	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String name, T def) {
 		int index = table.getColumnIndex(name);

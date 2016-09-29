@@ -25,23 +25,24 @@ import java.util.Map;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.configupdater.ConfigBoolean;
-import de.mhus.lib.core.configupdater.ConfigLong;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.service.ConfigProvider;
 import de.mhus.lib.core.service.UniqueId;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
 /**
  * The pool handles a bundle of connections. The connections should have the same
  * credentials (url, user access). Unused or closed connections will be freed after a
  * pending period.
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 @JmxManaged(descrition="Database pool")
 public abstract class DbPool extends MJmx {
@@ -49,14 +50,14 @@ public abstract class DbPool extends MJmx {
 	// Trace parameters
 	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
 	private long lastStackTracePrint = 0;
-	private ConfigBoolean traceCaller = new ConfigBoolean(DbConnection.class, "traceCallers", false) {
+	private CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false) {
 		@Override
-		protected void onUpdate(Boolean newValue) {
+		protected void onPreUpdate(Boolean newValue) {
 			if (stackTraces != null)
 				stackTraces.clear();
 		}
 	};
-	private ConfigLong traceWait = new ConfigLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private CfgLong traceWait = new CfgLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
 	
 	private DbProvider provider;
 	private String name;
@@ -66,8 +67,8 @@ public abstract class DbPool extends MJmx {
 	/**
 	 * Create a new pool from central configuration.
 	 * It's used the MSingleton configuration with the key of this class.
-	 *
-	 * @throws java.lang.Exception if any.
+	 * 
+	 * @throws Exception
 	 */
 	public DbPool() throws Exception {
 		this(null,null);
@@ -75,17 +76,17 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Create a new pool from a configuration.
-	 *
+	 * 
 	 * @param config Config element or null. null will use the central MSingleton configuration.
 	 * @param activator Activator or null. null will use the central MSingleton Activator.
-	 * @throws java.lang.Exception if any.
+	 * @throws Exception
 	 */
 	public DbPool(ResourceNode config,MActivator activator) throws Exception {
 
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
-		if (activator == null) activator = base(MActivator.class);
+		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
 
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
@@ -95,38 +96,25 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Create a pool with the DbProvider.
-	 *
-	 * @param provider a {@link de.mhus.lib.sql.DbProvider} object.
+	 * 
+	 * @param provider
 	 */
 	public DbPool(DbProvider provider) {
 		doCreateConfig();
 		setProvider(provider);
 	}
 
-	/**
-	 * <p>Getter for the field <code>config</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	protected ResourceNode getConfig() {
 		return config;
 	}
 
-	/**
-	 * <p>Getter for the field <code>name</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	protected String getName() {
 		return name;
 	}
 
-	/**
-	 * <p>doCreateConfig.</p>
-	 */
 	protected void doCreateConfig() {
 		try {
-			config = base(ConfigProvider.class).getConfig(this,null);
+			config = MSingleton.get().getCfgManager().getCfg(this,null);
 		} catch (Throwable t) {
 		}
 		if (config == null) config = new HashConfig();
@@ -134,20 +122,20 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Set a DbProvider for this pool.
-	 *
-	 * @param provider a {@link de.mhus.lib.sql.DbProvider} object.
+	 * 
+	 * @param provider
 	 */
 	protected void setProvider(DbProvider provider) {
 		this.provider = provider;
 		name = provider.getName();
 		if (name == null) name = "pool";
-		name = name + base(UniqueId.class).nextUniqueId();
+		name = name + MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
 	}
 
 	/**
 	 * Returns the DbProvider, it implements the database behavior and creates new connections.
-	 *
-	 * @return a {@link de.mhus.lib.sql.DbProvider} object.
+	 * 
+	 * @return
 	 */
 	public DbProvider getProvider() {
 		return provider;
@@ -155,8 +143,7 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Returns the database dialect object. (Delegated to DbProvider).
-	 *
-	 * @return a {@link de.mhus.lib.sql.Dialect} object.
+	 * @return
 	 */
 	public Dialect getDialect() {
 		return provider.getDialect();
@@ -164,56 +151,44 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Look into the pool for an unused DbProvider. If no one find, create one.
-	 *
-	 * @throws java.lang.Exception if any.
-	 * @return a {@link de.mhus.lib.sql.DbConnection} object.
+	 * 
+	 * @param jmxName
+	 * @return
+	 * @throws Exception
 	 */
 	public abstract DbConnection getConnection() throws Exception;
 
 	/**
 	 * Current pool size.
-	 *
+	 * 
 	 * @return Current pool size, also pending closed connections.
 	 */
 	@JmxManaged(descrition="Current size of the pool")
 	public abstract int getSize();
 
-	/**
-	 * <p>getUsedSize.</p>
-	 *
-	 * @return a int.
-	 */
 	@JmxManaged(descrition="Current used connections in the pool")
 	public abstract int getUsedSize();
 
 	/**
 	 * Cleanup the connection pool. Unused or closed connections will be removed.
 	 * TODO new strategy to remove unused connections - not prompt, need a timeout time or minimum pool size.
-	 *
-	 * @param unusedAlso a boolean.
+	 * @param unusedAlso 
 	 */
 	@JmxManaged(descrition="Cleanup unused connections")
 	public abstract void cleanup(boolean unusedAlso);
 
 	/**
 	 * Close the pool and all connections.
+	 * 
 	 */
 	public abstract void close();
 
-	/** {@inheritDoc} */
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
 	}
 
-	/**
-	 * <p>getStatement.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.sql.DbPrepared} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public DbPrepared getStatement(String name) throws MException {
 		String[] query = provider.getQuery(name);
 		return new DbPrepared(this, query[1], query[0]);
@@ -221,10 +196,10 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Create a prepared statement using the default language.
-	 *
-	 * @param sql a {@link java.lang.String} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 * @return a {@link de.mhus.lib.sql.DbPrepared} object.
+	 * 
+	 * @param sql
+	 * @return
+	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql) throws MException {
 		return createStatement(sql, null);
@@ -232,57 +207,30 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Create a new prepared statement for further use.
-	 *
-	 * @param sql a {@link java.lang.String} object.
-	 * @param language a {@link java.lang.String} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 * @return a {@link de.mhus.lib.sql.DbPrepared} object.
+	 * 
+	 * @param sql
+	 * @param language
+	 * @return
+	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql, String language) throws MException {
 		return new DbPrepared(this, sql, language);
 	}
 
-	/**
-	 * <p>getPoolId.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	@JmxManaged(descrition="Unique name of the pool")
 	public String getPoolId() {
 		return name;
 	}
 
-	/**
-	 * <p>dumpUsage.</p>
-	 *
-	 * @param used a boolean.
-	 * @return a {@link java.lang.String} object.
-	 */
 	@JmxManaged(descrition="Return the usage of the connections")
 	public abstract String dumpUsage(boolean used);
 
-	/**
-	 * <p>isClosed.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public abstract boolean isClosed();
 
-	/**
-	 * <p>Getter for the field <code>stackTraces</code>.</p>
-	 *
-	 * @return a {@link java.util.Map} object.
-	 * @since 3.2.9
-	 */
 	public Map<String,ConnectionTrace> getStackTraces() {
 		return stackTraces ;
 	}
 	
-	/**
-	 * <p>printStackTrace.</p>
-	 *
-	 * @since 3.2.9
-	 */
 	public void printStackTrace() {
 		if (traceCaller.value() && lastStackTracePrint + traceWait.value() < System.currentTimeMillis()) {
 			lastStackTracePrint = System.currentTimeMillis();

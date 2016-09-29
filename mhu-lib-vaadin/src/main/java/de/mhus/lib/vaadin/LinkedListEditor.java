@@ -1,6 +1,7 @@
 package de.mhus.lib.vaadin;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +12,9 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 
 	private static final long serialVersionUID = 1L;
 	protected LinkedList<E> list = new LinkedList<>();
-	protected LinkedList<E> deleted = new LinkedList<>();
+	protected HashSet<E> deleted = new HashSet<>();
+	protected HashSet<E> changed = new HashSet<>();
+	protected HashSet<E> created = new HashSet<>();
 	private PojoAttribute<Object> idAttribute;
 	
 	@SuppressWarnings("unchecked")
@@ -56,24 +59,36 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	}
 
 	@Override
-	protected void doDelete(E entry) {
+	public void doDelete(E entry) {
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPreDelete(this);
-		deleted.add(entry);
+		if (created.contains(entry))
+			created.remove(entry);
+		else
+			deleted.add(entry);
 		list.remove(entry);
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPostDelete(this);
+		setModified(true);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doSave(E entry) {
+	public void doSave(E entry) {
 
 		if (entry instanceof ManagedListEntity)
 			((ManagedListEntity)entry).doPreSave(this);
 
 		Object id = getId(entry);
-		E original = getTarget(id);
+		E original = id != null ? getTarget(id) : null;
+
+		// in case of a new one ... (for external callers)
+		if (original == null) {
+			doSaveNew(entry);
+			setModified(true);
+			return;
+		}
+		
 		for (PojoAttribute<Object> attr : beanModel) {
 			try {
 				Object value = attr.get(entry);
@@ -82,9 +97,13 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 			}
 		}
 		
+		if (!created.contains(original))
+			changed.add(original);
+		
 		if (original instanceof ManagedListEntity)
 			((ManagedListEntity)original).doPostSave(this);
-		
+	
+		setModified(true);
 	}
 
 	@Override
@@ -109,7 +128,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	}
 
 	@Override
-	protected List<E> createFullDataList() {
+	protected List<E> createBeanDataList() {
 		return list;
 	}
 	
@@ -125,6 +144,8 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 				idAttribute.set(entry, id);
 			
 			list.add(entry);
+			created.add(entry);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -133,5 +154,11 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	protected Object createId() {
 		return UUID.randomUUID().toString();
 	}
-
+	
+	public void applyChanges() {
+		created.clear();
+		deleted.clear();
+		changed.clear();
+	}
+	
 }

@@ -38,8 +38,9 @@ import java.awt.TextArea;
 
 /**
  * Check that Java version is sufficiently recent
- *
+ * 
  * @author Roedy Green, Canadian Mind Products
+ * @version 1.7, 2006-03-04
  */
 public class VersionCheck {
 
@@ -54,14 +55,15 @@ public class VersionCheck {
 
 	/**
 	 * Ensures Java runtime version e.g. 1.1.7 is sufficiently recent. Based on
-	 * code by Dr. Tony Dahlman adahlman@jps.net
-	 *
+	 * code by Dr. Tony Dahlman <adahlman@jps.net>
+	 * 
 	 * @param wantedMajor
 	 *            java major version e.g. 1
 	 * @param wantedMinor
 	 *            Java minor version e.g. 1
 	 * @param wantedBugFix
 	 *            Java bugfix version e.g. 7
+	 * 
 	 * @return true if JVM version running is equal to or more recent than
 	 *         (higher than) the level specified.
 	 */
@@ -175,7 +177,7 @@ public class VersionCheck {
 	/**
 	 * use in a paint routine if Java version is not ok, usually tested
 	 * statically.
-	 *
+	 * 
 	 * @param wantedMajor
 	 *            java major version e.g. 1
 	 * @param wantedMinor
@@ -184,6 +186,7 @@ public class VersionCheck {
 	 *            Java bugfix version e.g. 7
 	 * @param container
 	 *            container to add an error message component.
+	 * 
 	 * @return true if version is ok
 	 */
 	public static boolean isJavaVersionOK(int wantedMajor, int wantedMinor,

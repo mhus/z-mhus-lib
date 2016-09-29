@@ -1,6 +1,10 @@
 package de.mhus.lib.test;
 
 import junit.framework.TestCase;
+
+import java.util.HashMap;
+
+import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.core.matcher.Matcher;
 import de.mhus.lib.errors.MException;
 
@@ -121,6 +125,40 @@ public class MatcherTest extends TestCase {
 			assertEquals(false, filter.matches("xyz"));
 		}
 
+	}
+	
+	public void testCondition() throws MException {
+		HashMap<String, Object> val = new HashMap<String,Object>();
+		val.put("param1", "aloa");
+		val.put("param2", "nix");
+		
+		{
+			Condition cond = new Condition("$param1 aloa");
+			System.out.println(cond);
+			assertEquals(true, cond.matches(val));
+		}
+		{
+			Condition cond = new Condition("$param1 aloax");
+			System.out.println(cond);
+			assertEquals(false, cond.matches(val));
+		}
+		{
+			Condition cond = new Condition("($param1 bla or $param1 aloa)");
+			System.out.println(cond);
+			assertEquals(true, cond.matches(val));
+		}
+		{
+			Condition cond = new Condition("($param1 bla or $param1 blub)");
+			System.out.println(cond);
+			assertEquals(false, cond.matches(val));
+		}
+		{
+			Condition cond = new Condition("($param1 aloa and $param2 nix)");
+			System.out.println(cond);
+			assertEquals(true, cond.matches(val));
+		}
+		
+		
 	}
 	
 }

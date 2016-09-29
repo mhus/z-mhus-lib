@@ -1,9 +1,10 @@
 package de.mhus.lib.karaf.jms.heartbeat;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -11,13 +12,14 @@ import org.osgi.framework.ServiceReference;
 import de.mhus.lib.karaf.jms.JmsUtil;
 
 @Command(scope = "jms", name = "heartbeat", description = "Send heardbeat")
+@Service
 public class CmdHeartbeat implements Action {
 
 	@Argument(index=0, name="enable", required=false, description="enable / disable", multiValued=false)
     Boolean enable;
 	
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		HeartbeatAdmin service = getService();
 		if (service == null) {

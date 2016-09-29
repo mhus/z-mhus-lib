@@ -25,16 +25,6 @@ final class MBeanProxy extends MObject implements DynamicMBean {
 //	private Object real;
 	private JmxDescription desc;
 
-    /**
-     * <p>Constructor for MBeanProxy.</p>
-     *
-     * @param realObject a {@link java.lang.Object} object.
-     * @param desc a {@link de.mhus.lib.core.jmx.JmxDescription} object.
-     * @param server a {@link de.mhus.lib.core.jmx.MRemoteManager} object.
-     * @param name a {@link javax.management.ObjectName} object.
-     * @param weak a boolean.
-     * @throws java.lang.Exception if any.
-     */
     public MBeanProxy(Object realObject,JmxDescription desc,MRemoteManager server,ObjectName name,boolean weak) throws Exception {
     	// have tow references, the real only to hold the project for a while, depends on the strategy
         this.weak = new ReferenceImpl(realObject);
@@ -54,7 +44,6 @@ final class MBeanProxy extends MObject implements DynamicMBean {
         }
     }
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(String attribute)
 			throws AttributeNotFoundException, MBeanException,
@@ -78,7 +67,6 @@ final class MBeanProxy extends MObject implements DynamicMBean {
 		server = null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(Attribute attribute)
 			throws AttributeNotFoundException, InvalidAttributeValueException,
@@ -88,43 +76,31 @@ final class MBeanProxy extends MObject implements DynamicMBean {
 		
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public AttributeList getAttributes(String[] attributes) {
         return desc.getAttributes(getObject(), attributes);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public AttributeList setAttributes(AttributeList attributes) {
 		return desc.setAttributes(getObject(),attributes);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object invoke(String actionName, Object[] params, String[] signature)
 			throws MBeanException, ReflectionException {
 		return desc.invoke(getObject(), actionName, params, signature);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public MBeanInfo getMBeanInfo() {
 		return desc.getMBeanInfo();
 	}
 
-	/**
-	 * <p>Setter for the field <code>name</code>.</p>
-	 *
-	 * @param objectName a {@link javax.management.ObjectName} object.
-	 */
 	public void setName(ObjectName objectName) {
 		name = objectName;
 	}
 
-	/**
-	 * <p>check.</p>
-	 */
 	public void check() {
 		try {
 			getObject();

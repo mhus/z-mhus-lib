@@ -4,15 +4,16 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.karaf.TemplateUtils;
 
 @Command(scope = "jms", name = "channel-add", description = "add channel")
+@Service
 public class CmdChannelAdd implements Action {
 
 	@Argument(index=0, name="name", required=true, description="ID of the channel", multiValued=false)
@@ -37,7 +38,7 @@ public class CmdChannelAdd implements Action {
     boolean service;
     
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		if (online) {
 			

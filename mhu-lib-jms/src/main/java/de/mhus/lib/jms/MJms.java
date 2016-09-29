@@ -8,6 +8,7 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
@@ -131,7 +132,7 @@ public class MJms {
 
 	public synchronized static ResourceNode getConfig() {
 		if (config == null)
-			config = MSingleton.get().getConfigProvider().getConfig("jms", new EmptyResourceNode());
+			config = MSingleton.get().getCfgManager().getCfg("jms", new EmptyResourceNode());
 		 return config;
 	}
 	

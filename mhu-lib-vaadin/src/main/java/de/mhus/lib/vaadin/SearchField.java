@@ -2,6 +2,7 @@ package de.mhus.lib.vaadin;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -9,6 +10,8 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 
 import de.mhus.lib.core.util.FilterRequest;
+import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsProvider;
 
 public class SearchField extends HorizontalLayout {
 
@@ -16,10 +19,12 @@ public class SearchField extends HorizontalLayout {
 	private ComboBox filter;
 	private Listener listener;
 	private Button bSearch;
+	private MNlsProvider nlsProvider;
 //	private LinkedList<String> knownFacetNames = new LinkedList<>();
 
 	@SuppressWarnings("serial")
-	public SearchField() {
+	public SearchField(MNlsProvider nlsProvider) {
+		this.nlsProvider = nlsProvider;
         filter = new ComboBox();
         filter.setNewItemsAllowed(true);
         filter.setNewItemHandler(new AbstractSelect.NewItemHandler() {
@@ -32,7 +37,7 @@ public class SearchField extends HorizontalLayout {
 				filter.setValue(newItemCaption);
 			}
 		});
-        filter.setInputPrompt("Filter");
+        filter.setInputPrompt(MNls.find(nlsProvider, "filter.prompt=Filter"));
         filter.setImmediate(true);
 //        filter.addShortcutListener(new ShortcutListener("Filter",ShortcutAction.KeyCode.ENTER, null) {
 //			
@@ -67,7 +72,7 @@ public class SearchField extends HorizontalLayout {
         filter.setWidth("100%");
         
         bSearch = new Button();
-        bSearch.setStyleName("icon-search");
+        bSearch.setIcon(FontAwesome.SEARCH);
         bSearch.addClickListener(new Button.ClickListener() {
 			
 			@Override

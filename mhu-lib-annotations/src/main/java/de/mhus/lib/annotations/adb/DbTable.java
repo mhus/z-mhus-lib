@@ -4,11 +4,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * With this annotation you can overwrite the default behavior and define a
+ * With this annotation you can overwrite the default behavior and define a 
  * class table name 'by hand'. Use this annotation for classes.
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbTable {

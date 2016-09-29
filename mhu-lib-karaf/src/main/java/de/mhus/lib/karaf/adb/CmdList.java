@@ -1,17 +1,20 @@
 package de.mhus.lib.karaf.adb;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.console.ConsoleTable;
 
 @Command(scope = "adb", name = "list", description = "List all ADB Services")
+@Service
 public class CmdList implements Action {
 
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 		
 		DbManagerAdmin admin = AdbUtil.getAdmin();
 		if (admin == null) {

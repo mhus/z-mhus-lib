@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.core.MSingleton;
@@ -88,7 +89,7 @@ public class AdbTest extends TestCase {
 		timer.start();
 
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
-		DbManager manager = new DbManager(pool, schema);
+		DbManager manager = new DbManagerJdbc(pool, schema);
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
 		// create persons
@@ -168,7 +169,11 @@ public class AdbTest extends TestCase {
 		manager.saveObject(b);
 		assertNotNull(b.getLendToId());
 
-
+		// test getFields ...
+		List<String> names = manager.getAttributedByQualification("name", Db.query(Book.class));
+		System.out.println(names);
+		assertEquals(2, names.size());
+		
 		// remove book
 
 		manager.deleteObject(b);
@@ -353,7 +358,7 @@ public class AdbTest extends TestCase {
 		}
 		
 		timer.stop();
-		System.out.println("Time: " + timer.getCurrentTimeAsString(true));
+		System.out.println("Time: " + timer.getCurrentTimeAsString());
 	}
 	
 	public void testDbQuery() throws Exception {
@@ -365,7 +370,7 @@ public class AdbTest extends TestCase {
 		MStopWatch timer = new MStopWatch();
 		timer.start();
 
-		DbManager manager = new DbManager(pool, schema);
+		DbManager manager = new DbManagerJdbc(pool, schema);
 		
 		Store store1 = manager.inject(new Store());
 		store1.save();
@@ -406,6 +411,20 @@ public class AdbTest extends TestCase {
 		store3.setName("LA West");
 		store3.setPrincipal(p3.getId());
 		store3.save();
+
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
+			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("Max",res.get(0).getName());
+		}
+
+		{
+			AQuery<Person2> q1 = Db.query(Person2.class).eq(Person2::getName, "Max");
+			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
+			assertEquals(1, res.size());
+			assertEquals("Max",res.get(0).getName());
+		}
 		
 		{
 			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");
@@ -436,7 +455,7 @@ public class AdbTest extends TestCase {
 			List<Store> res = manager.getByQualification(q).toCacheAndClose();
 			assertEquals(1, res.size());
 		}
-		
+				
 	}
 
 	public void testReconnect() throws Exception {
@@ -444,10 +463,10 @@ public class AdbTest extends TestCase {
 
 //		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
-		DbManager manager1 = new DbManager(pool, schema1);
+		DbManager manager1 = new DbManagerJdbc(pool, schema1);
 
 		BookStoreSchema schema2 = new BookStoreSchema();
-		DbManager manager2 = new DbManager(pool, schema2);
+		DbManager manager2 = new DbManagerJdbc(pool, schema2);
 
 		manager1.reconnect();
 		manager2.reconnect();

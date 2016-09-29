@@ -1,5 +1,6 @@
 package de.mhus.lib.jms;
 
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 
 public class RequestResult<T> {

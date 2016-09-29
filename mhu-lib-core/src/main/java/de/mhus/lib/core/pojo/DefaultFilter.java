@@ -4,12 +4,6 @@ import de.mhus.lib.annotations.pojo.Action;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.annotations.pojo.Hidden;
 
-/**
- * <p>DefaultFilter class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class DefaultFilter implements PojoFilter {
 
 	private boolean removeHidden;
@@ -18,22 +12,10 @@ public class DefaultFilter implements PojoFilter {
 	private boolean removeEmbedded;
 	private boolean removeNoActions;
 
-	/**
-	 * <p>Constructor for DefaultFilter.</p>
-	 */
 	public DefaultFilter() {
 		this(true, false, true, false, true);
 	}
 	
-	/**
-	 * <p>Constructor for DefaultFilter.</p>
-	 *
-	 * @param removeHidden a boolean.
-	 * @param removeEmbedded a boolean.
-	 * @param removeWriteOnly a boolean.
-	 * @param removeReadOnly a boolean.
-	 * @param removeNoActions a boolean.
-	 */
 	public DefaultFilter(boolean removeHidden, boolean removeEmbedded, boolean removeWriteOnly, boolean removeReadOnly, boolean removeNoActions ) {
 		this.removeHidden = removeHidden;
 		this.removeEmbedded = removeEmbedded;
@@ -42,7 +24,6 @@ public class DefaultFilter implements PojoFilter {
 		this.removeNoActions = removeNoActions;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void filter(PojoModelImpl model) {
 		for (String name : model.getAttributeNames()) {

@@ -17,19 +17,16 @@ import de.mhus.lib.core.directory.ResourceNode;
 /**
  * This class can compare a configuration with a database table structure
  * and can modify the database structure without deleting existing tables.
- *
+ * 
  * TODO: on request: remove other columns
  * TODO: views, foreign keys
  * TODO: data !!!
- *
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class DialectDefault extends Dialect {
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Create or Update the defined tables. The config object need a bundle of 'table' configurations
 	 * which define the needed table structure.
 	 * Example:
@@ -38,6 +35,11 @@ public class DialectDefault extends Dialect {
 	 *     [field name='field name' prefix='prefix_' type='field type' default='def value' notnull=yes/no /]
 	 *   [/table]
 	 * [/config]
+	 * @param data
+	 * @param db
+	 * @param caoBundle
+	 * @param cleanup Cleanup unknown fields from the table
+	 * @throws Exception
 	 */
 	@Override
 	public void createTables(ResourceNode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception {
@@ -217,13 +219,6 @@ public class DialectDefault extends Dialect {
 		sth.close();
 	}
 
-	/**
-	 * <p>createTable.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param ctable a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	protected void createTable(Statement sth, String tn, ResourceNode ctable) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("create table " + tn + " ( ");
@@ -243,24 +238,10 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>createTableLastCheck.</p>
-	 *
-	 * @param ctable a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param sql a {@link java.lang.StringBuffer} object.
-	 */
 	protected void createTableLastCheck(ResourceNode ctable, String tn, StringBuffer sql) {
 
 	}
 
-	/**
-	 * <p>alterTableAddPrimaryKey.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param keys a {@link java.lang.String} object.
-	 */
 	protected void alterTableAddPrimaryKey(Statement sth, String tn, String keys) {
 		String sql = "ALTER TABLE "+tn+" ADD PRIMARY KEY("+keys+")";
 		log().t("new primary key",sql);
@@ -271,13 +252,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterTableChangePrimaryKey.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param keys a {@link java.lang.String} object.
-	 */
 	protected void alterTableChangePrimaryKey(Statement sth, String tn,
 			String keys) {
 		String sql = "ALTER TABLE "+tn+" DROP PRIMARY KEY, ADD PRIMARY KEY("+keys+")";
@@ -289,12 +263,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterTableDropPrimaryKey.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 */
 	protected void alterTableDropPrimaryKey(Statement sth, String tn) {
 		String sql = "ALTER TABLE "+tn+" DROP PRIMARY KEY";
 		log().t("drop primary key",sql);
@@ -305,13 +273,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterColumnAdd.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param cfield a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	protected void alterColumnAdd(Statement sth, String tn, ResourceNode cfield) {
 		//		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
 		String sql = "ALTER TABLE " + tn + " ADD COLUMN " + getFieldConfig(cfield);
@@ -323,14 +284,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterColumnSetDefault.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param fName a {@link java.lang.String} object.
-	 * @param cfield a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	protected void alterColumnSetDefault(Statement sth, String tn, String fName,
 			ResourceNode cfield) {
 		String sql = null;
@@ -343,13 +296,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterColumnDropDefault.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param fName a {@link java.lang.String} object.
-	 */
 	protected void alterColumnDropDefault(Statement sth, String tn, String fName) {
 		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + fName + " DROP DEFAULT";
 		log().t("alter table",sql);
@@ -360,13 +306,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>alterColumn.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param cfield a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	protected void alterColumn(Statement sth,String tn, ResourceNode cfield) {
 		String sql = "ALTER TABLE " + tn + " MODIFY COLUMN " + getFieldConfig(cfield);
 		log().t("alter table",sql);
@@ -378,13 +317,6 @@ public class DialectDefault extends Dialect {
 
 	}
 
-	/**
-	 * <p>alterColumnDrop.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param tn a {@link java.lang.String} object.
-	 * @param fName a {@link java.lang.String} object.
-	 */
 	protected void alterColumnDrop(Statement sth,String tn, String fName) {
 		String sql = "ALTER TABLE " + tn + " DROP COLUMN " + fName;
 		log().t("alter table",sql);
@@ -397,13 +329,15 @@ public class DialectDefault extends Dialect {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Create or update indexes. The configuration need a bundle of 'index' elements to define the indexes.
 	 * Example:
 	 * [config]
 	 *   [index name='name' table='table name' btree=yes/no unique=yes/no fields='field1,field2,...'/]
 	 * [/config]
+	 * @param data
+	 * @param db
+	 * @param caoMeta
+	 * @throws Exception
 	 */
 	@Override
 	public void createIndexes(ResourceNode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception {
@@ -485,28 +419,10 @@ public class DialectDefault extends Dialect {
 		sth.close();
 	}
 
-	/**
-	 * <p>equalsIndexName.</p>
-	 *
-	 * @param table a {@link java.lang.String} object.
-	 * @param iName a {@link java.lang.String} object.
-	 * @param iName2 a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	protected boolean equalsIndexName(String table, String iName, String iName2) {
 		return iName2.equals(iName);
 	}
 
-	/**
-	 * <p>recreateIndex.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param unique a boolean.
-	 * @param btree a boolean.
-	 * @param iName a {@link java.lang.String} object.
-	 * @param table a {@link java.lang.String} object.
-	 * @param columns a {@link java.lang.String} object.
-	 */
 	protected void recreateIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
 		String sql = "DROP INDEX " + iName + " ON " + table;
@@ -525,16 +441,6 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	/**
-	 * <p>createIndex.</p>
-	 *
-	 * @param sth a {@link java.sql.Statement} object.
-	 * @param unique a boolean.
-	 * @param btree a boolean.
-	 * @param iName a {@link java.lang.String} object.
-	 * @param table a {@link java.lang.String} object.
-	 * @param columns a {@link java.lang.String} object.
-	 */
 	protected void createIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
 		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
@@ -548,12 +454,14 @@ public class DialectDefault extends Dialect {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Execute 'data' configs:
 	 * select = a select query to define a condition and/or data set
 	 * set and column = set a value in the config to the value from column
 	 * condition = found,not found,error,no error
+	 * 
+	 * @param data
+	 * @param db
+	 * @throws Exception
 	 */
 	@Override
 	public void createData(ResourceNode data, DbConnection db) throws Exception {
@@ -611,25 +519,21 @@ public class DialectDefault extends Dialect {
 		sth.close();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeTableName(String tableName) throws Exception {
 		return tableName + "_";
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeIndexName(String tableName) throws Exception {
 		return tableName;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeColumnName(String columnName) {
 		return columnName;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String escape(String text) {
 		return MSql.escape(text);

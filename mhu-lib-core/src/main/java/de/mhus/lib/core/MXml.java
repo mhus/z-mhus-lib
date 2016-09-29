@@ -20,6 +20,8 @@ package de.mhus.lib.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,19 +62,13 @@ import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-/**
- * <p>MXml class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MXml {
 
 	//private static Log log = Log.getLog(MXml.class);
 	
 	/**
 	 * Returns the text value of a node.
-	 *
+	 * 
 	 * @param root The element where you need the text value from
 	 * @param inner If true all inner elements are parsed and the text appended
 	 * @return null if root is null or the text of the element
@@ -99,9 +95,9 @@ public class MXml {
 
 	/**
 	 * Returns the text value of a node. The listener manipulates the output for different inner notes.
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @param listener a {@link de.mhus.lib.core.MXml.ValueListener} object.
+	 * 
+	 * @param root
+	 * @param listener
 	 * @return null if the root is null or the text
 	 */
 	public static String getValue(Element root, ValueListener listener) {
@@ -130,9 +126,9 @@ public class MXml {
 	
 	/**
 	 * Returns a list of elements with this name in the given root element on the first level only.
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @param name a {@link java.lang.String} object.
+	 * 
+	 * @param root
+	 * @param name
 	 * @return null if the root or name is null else the list of nodes
 	 */
 	public static NodeList getLocalElements(Element root, String name) {
@@ -153,8 +149,8 @@ public class MXml {
 
 	/**
 	 * Returns a list of all elements in the given root element on the first level only.
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
+	 * 
+	 * @param root
 	 * @return null if the root is null otherwise the list of nodes
 	 */
 	public static NodeList getLocalElements(Element root) {
@@ -173,9 +169,9 @@ public class MXml {
 
 	/**
 	 * Returns an iterator of elements with this name in the given root element on the first level only.
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @param name a {@link java.lang.String} object.
+	 * 
+	 * @param root
+	 * @param name
 	 * @return every time an iterator - never null
 	 */
 	public static ElementIterator getLocalElementIterator(Element root, String name) {
@@ -184,20 +180,20 @@ public class MXml {
 	
 	/**
 	 * Returns an iterator of all elements in the given root element on the first level only.
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @return a {@link de.mhus.lib.core.MXml.ElementIterator} object.
+	 * 
+	 * @param root
+	 * @return
 	 */
 	public static ElementIterator getLocalElementIterator(Element root) {
 		return new ElementIterator(getLocalElements(root));
 	}
 
 	/**
-	 * Returns the first found element by path. Available search definitions are slash and
+	 * Returns the first found element by path. Available search definitions are slash and 
 	 * bracked, e.g. "/root/somenode/number[3]/name"
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @param path a {@link java.lang.String} object.
+  	 *
+	 * @param root
+	 * @param path
 	 * @return null if root or path is null or the element is not found
 	 */
 	public static Element getElementByPath(Element root, String path) {
@@ -282,8 +278,8 @@ public class MXml {
 
 	/**
 	 * Returns the path to the node as string representation, separated with slashes.
-	 *
-	 * @param in a {@link org.w3c.dom.Node} object.
+	 * 
+	 * @param in
 	 * @return an empty string if the node is null
 	 */
 	public static String getPathAsString(Node in) {
@@ -305,14 +301,14 @@ public class MXml {
 
 	/**
 	 * Create a XML Document from a string. Using the defined charset.
-	 *
-	 * @param xml a {@link java.lang.String} object.
-	 * @param charset a {@link java.lang.String} object.
-	 * @throws javax.xml.parsers.ParserConfigurationException if any.
-	 * @throws java.io.UnsupportedEncodingException if any.
-	 * @throws org.xml.sax.SAXException if any.
-	 * @throws java.io.IOException if any.
-	 * @return a {@link org.w3c.dom.Document} object.
+	 * 
+	 * @param xml
+	 * @param charset
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws UnsupportedEncodingException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public static Document loadXml(String xml, String charset) throws ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException {
 		if (xml == null) return null;
@@ -324,12 +320,12 @@ public class MXml {
 	
 	/**
 	 * Create a XML Document from a string.
-	 *
-	 * @param xml a {@link java.lang.String} object.
-	 * @throws javax.xml.parsers.ParserConfigurationException if any.
-	 * @throws org.xml.sax.SAXException if any.
-	 * @throws java.io.IOException if any.
-	 * @return a {@link org.w3c.dom.Document} object.
+	 * 
+	 * @param xml
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public static Document loadXml(String xml)
 			throws ParserConfigurationException, SAXException, IOException {
@@ -338,12 +334,12 @@ public class MXml {
 
 	/**
 	 * Create a XML Document from a stream resource.
-	 *
-	 * @param is a {@link java.io.InputStream} object.
-	 * @throws javax.xml.parsers.ParserConfigurationException if any.
-	 * @throws org.xml.sax.SAXException if any.
-	 * @throws java.io.IOException if any.
-	 * @return a {@link org.w3c.dom.Document} object.
+	 * 
+	 * @param is
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public static Document loadXml(InputStream is)
 			throws ParserConfigurationException, SAXException, IOException {
@@ -352,15 +348,6 @@ public class MXml {
 		return builder.parse(is);
 	}
 
-	/**
-	 * <p>loadXml.</p>
-	 *
-	 * @param file a {@link java.io.Reader} object.
-	 * @return a {@link org.w3c.dom.Document} object.
-	 * @throws javax.xml.parsers.ParserConfigurationException if any.
-	 * @throws org.xml.sax.SAXException if any.
-	 * @throws java.io.IOException if any.
-	 */
 	public static Document loadXml(Reader file)
 		throws ParserConfigurationException, SAXException, IOException {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -368,12 +355,19 @@ public class MXml {
 			return builder.parse(new InputSource(file));
 	}
 
+	public static Document loadXml(File f)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = dbf.newDocumentBuilder();
+		return builder.parse(f);
+	}
+
 	/**
 	 * Write the element into the stream.
-	 *
-	 * @param e a {@link org.w3c.dom.Node} object.
-	 * @param out a {@link java.io.OutputStream} object.
-	 * @throws java.lang.Exception if any.
+	 * 
+	 * @param e
+	 * @param out
+	 * @throws Exception
 	 */
 	public static void saveXml(Node e, OutputStream out) throws Exception {
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -385,14 +379,14 @@ public class MXml {
 		
 	}
 	
-	/**
-	 * <p>saveXml.</p>
-	 *
-	 * @param e a {@link org.w3c.dom.Node} object.
-	 * @param out a {@link java.io.Writer} object.
-	 * @param intend a boolean.
-	 * @throws java.lang.Exception if any.
-	 */
+	public static void saveXml(Node e, File out) throws Exception {
+		
+		FileOutputStream fo = new FileOutputStream(out);
+		saveXml(e, fo);
+		fo.close();
+		
+	}
+	
 	public static void saveXml(Node e, Writer out,boolean intend) throws Exception {
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, intend ? "yes" : "no");
@@ -403,14 +397,6 @@ public class MXml {
 		
 	}
 	
-	/**
-	 * <p>toString.</p>
-	 *
-	 * @param e a {@link org.w3c.dom.Node} object.
-	 * @param intend a boolean.
-	 * @return a {@link java.lang.String} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public static String toString(Node e, boolean intend) throws Exception {
 		StringWriter sw = new StringWriter();
 		saveXml(e,sw,intend);
@@ -419,9 +405,9 @@ public class MXml {
 	
 	/**
 	 * Create and return a empty xml document.
-	 *
-	 * @throws java.lang.Exception if any.
-	 * @return a {@link org.w3c.dom.Document} object.
+	 * 
+	 * @return
+	 * @throws Exception
 	 */
 	public static Document createDocument() throws Exception {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -431,9 +417,9 @@ public class MXml {
 
 	/**
 	 * Encode the default problematic characters in a string to store it in a xml value.
-	 *
-	 * @param _in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param _in
+	 * @return
 	 */
 	public static String encode(String _in) {
 
@@ -461,9 +447,9 @@ public class MXml {
 
 	/**
 	 * Encodes the amp and all characters greater then 255 to unicode representation with amp and hash signs.
-	 *
-	 * @param _in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param _in
+	 * @return
 	 */
 	public static String unicodeEncode(String _in) {
 
@@ -483,9 +469,9 @@ public class MXml {
 
 	/**
 	 * Decodes a string with encoded characters to a java string.
-	 *
-	 * @param _in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * @param _in 
+	 * @return 
+	 * 
 	 */
 	public static String decode(String _in) {
 
@@ -559,9 +545,9 @@ public class MXml {
 	/**
 	 *  Prints information - most technical - of the xml element and its childs and returns it as string.
 	 *  Use this function for debugging (debugger).
-	 *
-	 * @param element a {@link org.w3c.dom.Node} object.
-	 * @return a {@link java.lang.String} object.
+	 *  
+	 * @param element
+	 * @return
 	 */
 	public static String dump(Node element) {
 		if (element == null) return "null";
@@ -573,21 +559,14 @@ public class MXml {
 
 	/**
 	 * Prints information - most technical - of the xml element and its childs to the stream.
-	 *
-	 * @param o a {@link java.io.PrintStream} object.
-	 * @param element a {@link org.w3c.dom.Node} object.
+	 * 
+	 * @param o
+	 * @param element
 	 */
 	public static void dump(PrintStream o, Node element) {
 		dump(o, element, "");
 	}
 
-	/**
-	 * <p>dump.</p>
-	 *
-	 * @param o a {@link java.io.PrintStream} object.
-	 * @param node a {@link org.w3c.dom.Node} object.
-	 * @param level a {@link java.lang.String} object.
-	 */
 	public static void dump(PrintStream o, Node node, String level) {
 		if (node instanceof Document) {
 			dump(o, ((Document)node).getDocumentElement(), level);
@@ -627,12 +606,6 @@ public class MXml {
 
 	}
 
-	/**
-	 * <p>dump.</p>
-	 *
-	 * @param out a {@link java.io.PrintStream} object.
-	 * @param nodes a {@link org.w3c.dom.NodeList} object.
-	 */
 	public static void dump(PrintStream out, NodeList nodes) {
 
 		for (int i = 0; i < nodes.getLength(); i++)
@@ -706,9 +679,9 @@ public class MXml {
 	
 	/**
 	 * Returns the inner XML Structure as string with all tag definitions.
-	 *
-	 * @param node a org$w3c$dom$Node object.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param node
+	 * @return
 	 */
 	public static String innerXml(org.w3c.dom.Node node) {
 		return innerXml(node, true);
@@ -716,8 +689,8 @@ public class MXml {
 	
 	/**
 	 * Returns the inner XML Structure as string with all tag definitions.
-	 *
-	 * @param node a org$w3c$dom$Node object.
+	 * 
+	 * @param node
 	 * @param instructions set to false to ignore processing instructions (on the first level)
 	 * @return null if the node is null otherwise the innerXml as text
 	 */
@@ -755,11 +728,11 @@ public class MXml {
 	
 	/**
 	 * Execute an XPATH query for a list of nodes.
-	 *
-	 * @param root a {@link org.w3c.dom.Node} object.
-	 * @param query a {@link java.lang.String} object.
+	 * 
+	 * @param root
+	 * @param query
 	 * @return never null
-	 * @throws javax.xml.xpath.XPathExpressionException if any.
+	 * @throws XPathExpressionException
 	 */
 	public static NodeIterator queryXPath(Node root, String query) throws XPathExpressionException {
 		if (root == null || query == null) return new NodeIterator(null);
@@ -771,11 +744,11 @@ public class MXml {
 
 	/**
 	 * Execute an XPATH query for a list of elements.
-	 *
-	 * @param root a {@link org.w3c.dom.Node} object.
-	 * @param query a {@link java.lang.String} object.
+	 * 
+	 * @param root
+	 * @param query
 	 * @return never null
-	 * @throws javax.xml.xpath.XPathExpressionException if any.
+	 * @throws XPathExpressionException 
 	 */
 	public static ElementIterator queryXPathElements(Node root, String query) throws XPathExpressionException {
 		if (root == null || query == null) return new ElementIterator(null);
@@ -787,8 +760,8 @@ public class MXml {
 	
 	/**
 	 * Remove white spaces in the text nodes.
-	 *
-	 * @param element a {@link org.w3c.dom.Element} object.
+	 * 
+	 * @param element
 	 */
 	public static void trim(Element element) {
 		if (element == null) return;
@@ -815,8 +788,7 @@ public class MXml {
 	/**
 	 * Remove the element from his parent but append the children
 	 * instead if it into the parent node - on the same position.
-	 *
-	 * @param element a {@link org.w3c.dom.Element} object.
+	 * @param element
 	 */
 	public static void carveOut(Element element) {
 		
@@ -838,8 +810,8 @@ public class MXml {
 	/**
 	 * Normalize the name of attributes or node names. Allowed characters are (a-z, A-Z, 0-9, - _ .) all other
 	 * characters are replaced with _
-	 *
-	 * @param key a {@link java.lang.String} object.
+	 * 
+	 * @param key
 	 * @return normalized key or null if the key is null.
 	 */
 	public static String normalizeName(String key) {
@@ -867,23 +839,11 @@ public class MXml {
 		return encode(key);
 	}
 	
-	/**
-	 * <p>removeTags.</p>
-	 *
-	 * @param txt a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String removeTags(String txt) {
 		txt = txt.replaceAll("<([\\s\\S]*?)>", "");
 		return txt;
 	}
 	
-	/**
-	 * <p>removeHtmlTags.</p>
-	 *
-	 * @param txt a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String removeHtmlTags(String txt) {
 		txt = txt.replaceAll("<script([\\s\\S]*?)</script>", "");
 		txt = txt.replaceAll("<SCRIPT([\\s\\S]*?)</SCRIPT>", "");
@@ -899,27 +859,12 @@ public class MXml {
 		
 	}
 	
-	/**
-	 * <p>getValue.</p>
-	 *
-	 * @param root a {@link org.w3c.dom.Element} object.
-	 * @param path a {@link java.lang.String} object.
-	 * @param def a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String getValue(Element root, String path, String def) {
 		Element ele = getElementByPath(root, path);
 		if (ele == null) return def;
 		return getValue(ele, false);
 	}
 
-	/**
-	 * <p>findCDataSection.</p>
-	 *
-	 * @param a a {@link org.w3c.dom.Element} object.
-	 * @return a {@link org.w3c.dom.CDATASection} object.
-	 * @since 3.2.9
-	 */
 	public static CDATASection findCDataSection(Element a) {
 		NodeList list = a.getChildNodes();
 		for (int i = 0; i < list.getLength(); i++) {

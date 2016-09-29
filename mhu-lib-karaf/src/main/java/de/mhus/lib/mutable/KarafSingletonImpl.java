@@ -10,15 +10,15 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
-import de.mhus.lib.core.configupdater.DefaultConfigLoader;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
@@ -39,16 +39,15 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	
 	private LogFactory logFactory;
 	private BaseControl baseControl;
-	private ConfigProvider configProvider;
+	private CfgManager configProvider;
 	private boolean fullTrace = false;
 	private HashSet<String> logTrace = new HashSet<>();
 
 	private KarafHousekeeper housekeeper;
 	
-	private DefaultConfigLoader cl = new DefaultConfigLoader();
-
-	public IConfig getConfig() {
-		return cl.getConfig();
+	private File baseDir = new File("data/mhus");
+	{
+		baseDir.mkdirs();
 	}
 	
 	@Override
@@ -70,9 +69,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	}
 
 	@Override
-	public synchronized ConfigProvider getConfigProvider() {
+	public synchronized CfgManager getCfgManager() {
 		if (configProvider == null) {
-			configProvider = new ConfigProvider(getConfig());
+			configProvider = new CfgManager(this);
 		}
 		return configProvider;
 	}
@@ -81,7 +80,8 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
 		logFactory = new JavaLoggerFactory();
-		cl.doInitialize(this);
+		
+		getCfgManager(); // init
 		
 		try {
 			housekeeper = new KarafHousekeeper();
@@ -89,14 +89,22 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		} catch (Throwable t) {
 			System.out.println("Can't initialize housekeeper base: " + t);
 		}
-		try {
-			TimerFactory timerFactory = MOsgi.getService(TimerFactory.class);
-			TimerIfc timerIfc = timerFactory.getTimer();
-			getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
-		} catch (Throwable t) {
-			System.out.println("Can't initialize timer base: " + t);
-		}
-		reConfigure();
+		
+		MThread.asynchron( new Runnable() {
+
+			@Override
+			public void run() {
+				MThread.sleep(1000);
+				try {
+					TimerFactory timerFactory = MOsgi.getService(TimerFactory.class);
+					TimerIfc timerIfc = timerFactory.getTimer();
+					getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+				} catch (Throwable t) {
+					System.out.println("Can't initialize timer base: " + t);
+				}
+			}
+		});
+		getCfgManager().reConfigure();
 
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );
 	}
@@ -126,30 +134,9 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		return fullTrace;
 	}
 
-//	public void updateOsgiConfig(Dictionary<String, ?> config) {
-//		synchronized (this) {
-//			MProperties p = new MProperties(config);
-//			setFullTrace(p.getBoolean(CONFIG_FULL_TRACE, isFullTrace()));
-//			MSingleton.setDirtyTrace(p.getBoolean(CONFIG_DIRTY_TRACE, isFullTrace()));
-//			clearTrace();
-//			for (String name : p.keys()) {
-//				if (name.startsWith(CONFIG_TRACE) && p.getBoolean(name, false)) {
-//					setTrace(name.substring(CONFIG_TRACE.length()+1));
-//				}
-//			}
-//			configFileName = p.getString(CONFIG_FILE_NAME,configFileName);
-//			reloadConfig();
-//		}
-//	}
-
 	@Override
 	public Base base() {
 		return getBaseControl().getCurrentBase();
-	}
-
-	@Override
-	public void reConfigure() {
-		cl.reConfigure();
 	}
 
 	@Override
@@ -160,6 +147,31 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 	@Override
 	public Set<String> getLogTrace() {
 		return logTrace;
+	}
+
+	@Override
+	public void setBaseDir(File file) {
+		baseDir = file;
+		baseDir.mkdirs();
+	}
+
+	@Override
+	public File getFile(String dir) {
+		return new File(baseDir, dir);
+	}
+
+	@Override
+	public String getSystemProperty(String name, String def) {
+		String value = System.getProperty(name);
+		if (value == null) {
+			switch (name) {
+			case MConstants.PROP_CONFIG_FILE: return "etc/" + def;
+			case MConstants.PROP_TIMER_CONFIG_FILE: return "etc/" + def;
+			default:
+				return def;
+			}
+		}
+		return value;
 	}
 	
 }

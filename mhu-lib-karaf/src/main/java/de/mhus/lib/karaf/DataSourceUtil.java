@@ -9,6 +9,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.jdbc.DataSourceFactory;
 
 public class DataSourceUtil {
 	
@@ -32,17 +33,19 @@ public class DataSourceUtil {
                 return ds;
             }
         }
+
         // throw new RuntimeException("No DataSource with name " + name + " found");
         return null;
     }
 
-	public ServiceReference<?>[] getDataSources() {
+	@SuppressWarnings("unchecked")
+	public ServiceReference<DataSource>[] getDataSources() {
         try {
             ServiceReference<?>[] dsRefs = getContext().getServiceReferences(DataSource.class.getName(), null);
             if (dsRefs == null) {
                 dsRefs = new ServiceReference[]{};
             }
-            return dsRefs;
+            return (ServiceReference<DataSource>[]) dsRefs;
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -60,6 +63,8 @@ public class DataSourceUtil {
 	public void registerDataSource(DataSource dataSource, String name) {
         Dictionary<String, Object> properties = new Hashtable<String, Object>();
         properties.put(SERVICE_JNDI_NAME_KEY, name);
+        properties.put(DataSourceFactory.JDBC_DATASOURCE_NAME, name);
+        
         context.registerService(DataSource.class, dataSource,properties);
 	}
 }

@@ -5,13 +5,17 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
+import javax.jms.Session;
 import javax.jms.TextMessage;
+
+import org.apache.activemq.ActiveMQMessageConsumer;
+import org.apache.activemq.ActiveMQSession;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.configupdater.ConfigLong;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
@@ -20,8 +24,8 @@ import de.mhus.lib.core.logging.TrailLevelMapper;
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
 	private static long usedThreads = 0;
-	private static ConfigLong maxThreadCount = new ConfigLong(ServerJms.class, "maxThreadCount", -1);
-	private static ConfigLong maxThreadCountTimeout = new ConfigLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
+	private static CfgLong maxThreadCount = new CfgLong(ServerJms.class, "maxThreadCount", -1);
+	private static CfgLong maxThreadCountTimeout = new CfgLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
 	
     public ServerJms(JmsDestination dest) {
 		super(dest);
@@ -105,8 +109,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 		
 		if (fork) {
 			
-			long timeout = maxThreadCountTimeout.value();
-			while (maxThreadCount.value() > 0 && usedThreads > maxThreadCount.value()) {
+			long timeout = getMaxThreadCountTimeout();
+			long mtc = getMaxThreadCount();
+			while (mtc > 0 && getUsedThreads() > mtc) {
 				
 				/*
 "AT100[232] de.mhus.lib.jms.ServerJms$1" Id=232 in BLOCKED on lock=de....aaa.AccessApiImpl@48781daa
@@ -123,22 +128,22 @@ do not block jms driven threads !!! This will cause a deadlock
 				 */
 				for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
 					if (element.getClassName().equals(ServerJms.class.getCanonicalName())) {
-						log().i("Too many JMS Threads ... ignore, it's a JMS call",usedThreads);
+						log().i("Too many JMS Threads ... ignore, it's a 'JMS to JMS' call",getUsedThreads());
 						break;
 					}
 				}
 				
-				log().i("Too many JMS Threads ... wait!",usedThreads);
+				log().i("Too many JMS Threads ... wait!",getUsedThreads());
 				MThread.sleep(100);
 				timeout-=100;
 				if (timeout < 0) {
-					log().i("Too many JMS Threads ... timeout",usedThreads);
+					log().i("Too many JMS Threads ... timeout",getUsedThreads());
 					break;
 				}
 			}
 			
-			usedThreads++;
-			log().t(">>> usedThreads",usedThreads);
+			incrementUsedThreads();
+			log().t(">>> usedThreads",getUsedThreads());
 			
 			new MThread(
 					new Runnable() {
@@ -148,8 +153,8 @@ do not block jms driven threads !!! This will cause a deadlock
 							try {
 								processMessage(message);
 							} finally {
-								usedThreads--;
-								log().t("<<< usedThreads",usedThreads);
+								decrementUsedThreads();
+								log().t("<<< usedThreads",getUsedThreads());
 							}
 						}
 					}
@@ -159,6 +164,45 @@ do not block jms driven threads !!! This will cause a deadlock
 			
 	}
 	
+	/**
+	 * Overwrite this method to change default behavior.
+	 */
+	protected void decrementUsedThreads() {
+		usedThreads--;
+	}
+	
+	/**
+	 * Overwrite this method to change default behavior.
+	 */
+	protected void incrementUsedThreads() {
+		usedThreads++;
+	}
+
+	/**
+	 * Overwrite this method to change default behavior.
+	 * @return current used threads
+	 */
+	protected long getUsedThreads() {
+		return usedThreads;
+	}
+
+	/**
+	 * Overwrite this method to change default behavior.
+	 * 
+	 * @return
+	 */
+	protected long getMaxThreadCount() {
+		return maxThreadCount.value();
+	}
+
+	/**
+	 * Overwrite this method to change standard behavior.
+	 * @return  maxThreadCountTimeout.value()
+	 */
+	protected long getMaxThreadCountTimeout() {
+		return maxThreadCountTimeout.value();
+	}
+
 	public void processMessage(final Message message) {
 
 		log().d("received",dest,message);
@@ -242,6 +286,11 @@ do not block jms driven threads !!! This will cause a deadlock
 		if (isClosed()) return;
 		log().d("beat");
 		try {
+			Session session = getSession();
+			if ( session instanceof ActiveMQSession && ((ActiveMQSession)getSession()).isClosed() ) {
+				log().i("reconnect because session is closed",getName());
+				consumer = null;
+			}
 			open(); // try to reopen and re-listen
 		} catch (JMSException e) {
 			log().d(e);
@@ -287,6 +336,13 @@ do not block jms driven threads !!! This will cause a deadlock
 		return fork;
 	}
 
+	/**
+	 * Set to true if a incoming message should be handled by a worker thread (asynchrony) or set to false
+	 * if the incoming message should be processed by the JMS thread (synchrony). The default is 'true' because
+	 * a synchrony mode will block all message handlers and causes dead locks.
+	 * 
+	 * @param fork
+	 */
 	public void setFork(boolean fork) {
 		this.fork = fork;
 	}

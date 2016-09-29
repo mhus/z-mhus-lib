@@ -2,6 +2,7 @@ package de.mhus.lib.test.adb;
 
 import junit.framework.TestCase;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.DbTransaction;
 import de.mhus.lib.adb.transaction.TransactionNestedException;
@@ -30,7 +31,7 @@ public class TransactionTest extends TestCase {
 	public DbManager createManager() throws Exception {
 		DbPool pool = createPool("transactionModel").getPool("test");
 		DbSchema schema = new TransactionSchema();
-		DbManager manager = new DbManager(pool, schema);
+		DbManager manager = new DbManagerJdbc(pool, schema);
 		return manager;
 	}
 

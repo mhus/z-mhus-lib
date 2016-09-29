@@ -23,13 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-/**
- * <p>MEventHandler class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
-public class MEventHandler<L> extends MLog {
+public abstract class MEventHandler<L> extends MLog {
 
 	private HashMap<L,String> listeners = new HashMap<L,String>();
 	private WeakHashMap<L, String> weak = new WeakHashMap<L, String>();
@@ -44,7 +38,7 @@ public class MEventHandler<L> extends MLog {
 	
 	/**
 	 * Create the handler and specify if all listeners have to be weak.
-	 *
+	 * 
 	 * @param weakHandler If true handler is in weak mode. All registered handlers are weak.
 	 */
 	public MEventHandler(boolean weakHandler) {
@@ -54,7 +48,7 @@ public class MEventHandler<L> extends MLog {
 	 * Register a listener for this kind of events. If the handler is weak the
 	 * listener will registered weak. A listener can only register one time. A second
 	 * registration will be ignored.
-	 *
+	 * 
 	 * @param listener Listener for the events.
 	 */
 	public void register(L listener) {
@@ -70,7 +64,7 @@ public class MEventHandler<L> extends MLog {
 
 	/**
 	 * Unregister normal or weak listener from the handler.
-	 *
+	 * 
 	 * @param listener Listener for the events.
 	 */
 	public void unregister(L listener) {
@@ -81,8 +75,8 @@ public class MEventHandler<L> extends MLog {
 	}
 
 	/**
-	 * Register the listener as a weak reference.
-	 *
+	 * Register the listener as a weak reference. 
+	 * 
 	 * @param listener Listener for the events.
 	 */
 	public void registerWeak(L listener) {
@@ -94,7 +88,7 @@ public class MEventHandler<L> extends MLog {
 	/**
 	 * Returns true if the listener instance is already registered for this
 	 * event handler.
-	 *
+	 * 
 	 * @param listener Listener for the events.
 	 * @return true if the listener is registered as normal or weak.
 	 */
@@ -109,7 +103,7 @@ public class MEventHandler<L> extends MLog {
 	 * cashed - this will prevent weak listeners to be removed from the memory. The list
 	 * should be used to fire events to the listeners if the listeners are able to change the
 	 * event handler (register / unregister).
-	 *
+	 * 
 	 * @return All registered listeners
 	 */
 	public Object[] getListenersArray() {
@@ -135,9 +129,9 @@ public class MEventHandler<L> extends MLog {
 	/**
 	 * Use this to iterate into the listeners and if you be sure the listeners
 	 * do not try to change the event handler (register/unregister). This
-	 * method will save resources if only normal or only weak listeners are
+	 * method will save resources if only normal or only weak listeners are 
 	 * registered.
-	 *
+	 * 
 	 * @return Iterable object for all listeners.
 	 */
 	public Iterable<L> getListeners() {
@@ -152,8 +146,8 @@ public class MEventHandler<L> extends MLog {
 	
 	/**
 	 * Amount of registered listeners.
-	 *
-	 * @return a int.
+	 * 
+	 * @return
 	 */
 	public int size() {
 		return listeners.size() + weak.size();
@@ -161,27 +155,24 @@ public class MEventHandler<L> extends MLog {
 	
 	/**
 	 * Return true if the handler only store weak references (also by register()).
-	 *
+	 * 
 	 * @return flag
 	 */
 	public boolean isWeakHandler() {
 		return weakHandler;
 	}
 
-	/**
-	 * <p>fire.</p>
-	 *
-	 * @param method a {@link java.lang.reflect.Method} object.
-	 * @param values a {@link java.lang.Object} object.
-	 */
-	public void fire(Method method, Object ... values) {
+	public void fire(Object ... values) {
 		for (Object obj : getListenersArray()) {
 			try {
-				method.invoke(obj, values);
+				onFire((L)obj, values);
+//				method.invoke(obj, values);
 			} catch (Throwable t) {
-				log().d(obj,method.getName(),values);
+				log().d(obj,values);
 			}
 		}
 	}
+	
+	public abstract void onFire(L listener, Object ... values);
 	
 }

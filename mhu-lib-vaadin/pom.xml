@@ -24,7 +24,7 @@
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhu-lib</artifactId>
-        <version>3.2.9-SNAPSHOT</version>
+        <version>3.3.0-SNAPSHOT</version>
   </parent>
   
   <dependencies>
@@ -48,11 +48,6 @@
 	<dependency>
 		<groupId>de.mhus.lib</groupId>
 		<artifactId>mhu-lib-core</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>de.mhus.lib</groupId>
-		<artifactId>mhu-lib-forms</artifactId>
 		<version>${project.version}</version>
 	</dependency>
   	<dependency>

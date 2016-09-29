@@ -15,23 +15,12 @@ import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
 
-/**
- * <p>Abstract SchedulerJob class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
 public abstract class SchedulerJob extends MTimerTask implements Operation {
 
-	/** Constant <code>CALCULATE_NEXT=0</code> */
 	public static final long CALCULATE_NEXT = 0;
-	/** Constant <code>DISABLED_TIME=-1</code> */
 	public static final long DISABLED_TIME = -1;
-	/** Constant <code>REMOVE_TIME=-2</code> */
 	public static final long REMOVE_TIME = -2;
 	
-	/** Constant <code>log</code> */
 	protected static Log log = Log.getLog(SchedulerJob.class);
 	private Object owner;
 	private long nextExecutionTime = CALCULATE_NEXT;
@@ -44,11 +33,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long timeoutInMinutes;
 	private Thread thread;
 	
-	/**
-	 * <p>Constructor for SchedulerJob.</p>
-	 *
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public SchedulerJob(Observer task) {
 		setTask(task);
 		if (task == null)
@@ -59,12 +43,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			setName(MSystem.getClassName(task));
 	}
 	
-	/**
-	 * <p>Constructor for SchedulerJob.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public SchedulerJob(String name,  Observer task) {
 		setTask(task);
 		setName(name);
@@ -73,19 +51,21 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	/**
 	 * Call this method to fire ticks to the scheduler. If the time is come the scheduler will execute the operation and set 'done' to true.
 	 */
-	public void doTick() {
+	public void doTick(boolean forced) {
 		
-		if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
-			cancel();
-		if (isCanceled()) return;
-		
-		if (getNextExecutionTime() == CALCULATE_NEXT) {
-			synchronized (this) {
-				doCaclulateNextExecution();
+		if (!forced) {
+			if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
+				cancel();
+			if (isCanceled()) return;
+			
+			if (getNextExecutionTime() == CALCULATE_NEXT) {
+				synchronized (this) {
+					doCaclulateNextExecution();
+				}
 			}
 		}
 		
-		if (isExecutionTimeReached()) {
+		if (forced || isExecutionTimeReached()) {
 			lastExecutionStart = System.currentTimeMillis();
 			thread = Thread.currentThread();
 			try {
@@ -108,7 +88,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	 */
 	protected abstract void doCaclulateNextExecution();
 
-	/** {@inheritDoc} */
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
 		log.d("execute",context.getParameters());
@@ -125,19 +104,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return ret;
 	}
 	
-	/**
-	 * <p>doExecute2.</p>
-	 *
-	 * @param context a {@link de.mhus.lib.core.strategy.TaskContext} object.
-	 * @return a {@link de.mhus.lib.core.strategy.OperationResult} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		if (task != null) task.update(null, context);
 		return null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isBusy() {
 		synchronized (this) {
@@ -145,7 +116,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean setBusy(Object owner) {
 		synchronized (this) {
@@ -155,7 +125,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean releaseBusy(Object owner) {
 		synchronized (this) {
@@ -166,11 +135,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return true;
 	}
 
-	/**
-	 * <p>Getter for the field <code>owner</code>.</p>
-	 *
-	 * @return a {@link java.lang.Object} object.
-	 */
 	public Object getOwner() {
 		return owner;
 	}
@@ -178,27 +142,16 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	/**
 	 * By default the function will compare the nextExecutionTime with the current time. If the time is come it will return
 	 * true. If nextExecutionTime is 0 or less it will return false in every case.
-	 *
-	 * @return a boolean.
+	 * @return
 	 */
 	protected boolean isExecutionTimeReached() {
 		return getNextExecutionTime() > 0 && System.currentTimeMillis() >= getNextExecutionTime();
 	}
 	
-	/**
-	 * <p>isDone.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isDone() {
 		return done;
 	}
 
-	/**
-	 * <p>Setter for the field <code>done</code>.</p>
-	 *
-	 * @param done a boolean.
-	 */
 	protected void setDone(boolean done) {
 		this.done = done;
 	}
@@ -210,81 +163,46 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		}
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public boolean hasAccess() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean canExecute(TaskContext context) {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public OperationDescription getDescription() {
 		return null;
 	}
 
-	/**
-	 * <p>Getter for the field <code>task</code>.</p>
-	 *
-	 * @return a {@link java.util.Observer} object.
-	 */
 	public Observer getTask() {
 		return task;
 	}
 
-	/**
-	 * <p>Setter for the field <code>task</code>.</p>
-	 *
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	protected void setTask(Observer task) {
 		this.task = task;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void doit() throws Exception {
-		doTick();
+		doTick(false);
 	}
 
-	/**
-	 * <p>Getter for the field <code>nextExecutionTime</code>.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getNextExecutionTime() {
 		return nextExecutionTime;
 	}
 
-	/**
-	 * <p>doError.</p>
-	 *
-	 * @param t a {@link java.lang.Throwable} object.
-	 */
 	protected void doError(Throwable t) {
 		log.e(getName(),t);
 	}
 
-	/**
-	 * <p>doSchedule.</p>
-	 *
-	 * @param scheduler a {@link de.mhus.lib.core.schedule.Scheduler} object.
-	 */
 	protected void doSchedule(Scheduler scheduler) {
 		doReschedule(scheduler, getNextExecutionTime());
 	}
 
-	/**
-	 * <p>doReschedule.</p>
-	 *
-	 * @param scheduler a {@link de.mhus.lib.core.schedule.Scheduler} object.
-	 * @param time a long.
-	 */
 	protected void doReschedule(Scheduler scheduler, long time) {
 		setNextExecutionTime(time);
 		if (isCanceled()) return;
@@ -304,43 +222,22 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		scheduler.getQueue().doSchedule(this);
 	}
 
-	/**
-	 * <p>Getter for the field <code>lastExecutionStart</code>.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getLastExecutionStart() {
 		return lastExecutionStart;
 	}
 
-	/**
-	 * <p>Getter for the field <code>lastExecutionStop</code>.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getLastExecutionStop() {
 		return lastExecutionStop;
 	}
 
-	/**
-	 * <p>Getter for the field <code>scheduledTime</code>.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getScheduledTime() {
 		return scheduledTime;
 	}
 
-	/**
-	 * <p>Setter for the field <code>scheduledTime</code>.</p>
-	 *
-	 * @param scheduledTime a long.
-	 */
 	protected void setScheduledTime(long scheduledTime) {
 		this.scheduledTime = scheduledTime;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 //		return task.getClass().getName() + "," + 
@@ -355,20 +252,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			getClass().getName();
 	}
 
-	/**
-	 * <p>Getter for the field <code>timeoutInMinutes</code>.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getTimeoutInMinutes() {
 		return timeoutInMinutes;
 	}
 
-	/**
-	 * <p>Setter for the field <code>timeoutInMinutes</code>.</p>
-	 *
-	 * @param timeoutInMinutes a long.
-	 */
 	public void setTimeoutInMinutes(long timeoutInMinutes) {
 		this.timeoutInMinutes = timeoutInMinutes;
 	}
@@ -381,20 +268,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		
 	}
 
-	/**
-	 * <p>Getter for the field <code>thread</code>.</p>
-	 *
-	 * @return a {@link java.lang.Thread} object.
-	 */
 	public Thread getThread() {
 		return thread;
 	}
 
-	/**
-	 * <p>Setter for the field <code>nextExecutionTime</code>.</p>
-	 *
-	 * @param nextExecutionTime a long.
-	 */
 	public void setNextExecutionTime(long nextExecutionTime) {
 		this.nextExecutionTime = nextExecutionTime;
 	}

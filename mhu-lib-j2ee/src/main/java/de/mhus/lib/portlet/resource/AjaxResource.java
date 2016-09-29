@@ -10,15 +10,8 @@ import javax.portlet.ResourceResponse;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 
-/**
- * <p>Abstract AjaxResource class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public abstract class AjaxResource extends AbstractResource {
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean serveResource(String path, ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,
@@ -52,23 +45,10 @@ public abstract class AjaxResource extends AbstractResource {
 		return true;
 	}
 
-	/**
-	 * <p>isDirectWriteEnabled.</p>
-	 *
-	 * @return a boolean.
-	 */
 	protected boolean isDirectWriteEnabled() {
 		return false;
 	}
 
-	/**
-	 * <p>doRequest.</p>
-	 *
-	 * @param request a {@link javax.portlet.ResourceRequest} object.
-	 * @param out a {@link org.codehaus.jackson.JsonGenerator} object.
-	 * @throws java.io.IOException if any.
-	 * @throws javax.portlet.PortletException if any.
-	 */
 	protected abstract void doRequest(ResourceRequest request, JsonGenerator out) throws IOException,
 	PortletException;
 	

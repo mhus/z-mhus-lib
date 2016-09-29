@@ -187,14 +187,14 @@ public class MhuBeanItemContainer<BEANTYPE> extends
     /**
      * Constructs a {@code BeanItemContainer} and adds the given beans to it.
      * The collection must not be empty.
-     * MhuBeanItemContainer can be used for
+     * {@link MhuBeanItemContainer#BeanItemContainer(Class)} can be used for
      * creating an initially empty {@code BeanItemContainer}.
      * 
      * Note that when using this constructor, the actual class of the first item
      * in the collection is used to determine the bean properties supported by
      * the container instance, and only beans of that class or its subclasses
      * can be added to the collection. If this is problematic or empty
-     * collections need to be supported, use BeanItemContainer
+     * collections need to be supported, use {@link #BeanItemContainer(Class)}
      * and {@link #addAll(Collection)} instead.
      * 
      * @param collection
@@ -202,7 +202,7 @@ public class MhuBeanItemContainer<BEANTYPE> extends
      * @throws IllegalArgumentException
      *             If the collection is null or empty.
      * 
-     * @deprecated As of 6.5, use BeanItemContainer
+     * @deprecated As of 6.5, use {@link #BeanItemContainer(Class, Collection)}
      *             instead
      */
     @SuppressWarnings("unchecked")

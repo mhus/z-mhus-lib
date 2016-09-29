@@ -10,17 +10,15 @@ import de.mhus.lib.core.directory.ResourceNode;
 /**
  * This class can compare a configuration with a database table structure
  * and can modify the database structure without deleting existing tables.
- *
+ * 
  * TODO: on request: remove other columns
  * TODO: views, foreign keys
  * TODO: data !!!
- *
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class DialectMysql extends DialectDefault {
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeColumnName(String columnName) {
 		//		if ("key".equals(columnName))
@@ -29,7 +27,6 @@ public class DialectMysql extends DialectDefault {
 		return columnName + "_"; // TODO not working at all
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getDbType(String type, String size) {
 		String t = type.toUpperCase();
@@ -48,7 +45,6 @@ public class DialectMysql extends DialectDefault {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	/** {@inheritDoc} */
 	@Override
 	public String toSqlDateValue(Date date) {
 		synchronized (dateFormat) {
@@ -56,13 +52,11 @@ public class DialectMysql extends DialectDefault {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void createTableLastCheck(ResourceNode ctable, String tn, StringBuffer sql) {
 		sql.append(" ENGINE=InnoDb");
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String escape(String text) {
 		String ret = MSql.escape(text);

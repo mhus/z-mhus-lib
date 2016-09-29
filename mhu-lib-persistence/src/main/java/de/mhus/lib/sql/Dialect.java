@@ -240,7 +240,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	/**
 	 * Return a database specific type for the normalized type from configuration.
 	 * @param f
-	 * @return String
+	 * @return
 	 */
 	public String getDbType(ResourceNode f) {
 		return getDbType(f.getString("type","string"),f.getString("size", "100"));
@@ -250,7 +250,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a database specific type for the normalized type from the type and size.
 	 * @param type The general type name - see const
 	 * @param size the size, if needed
-	 * @return String
+	 * @return
 	 */
 	public String getDbType(String type, String size) {
 		String t = type.toUpperCase();
@@ -306,7 +306,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid index name.
 	 * 
 	 * @param tableName
-	 * @return String
+	 * @return
 	 * @throws Exception
 	 */
 	public abstract String normalizeIndexName(String tableName) throws Exception;
@@ -315,7 +315,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid table name.
 	 * 
 	 * @param tableName
-	 * @return String
+	 * @return
 	 * @throws Exception
 	 */
 	public abstract String normalizeTableName(String tableName) throws Exception;
@@ -324,7 +324,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid column name.
 	 * 
 	 * @param columnName
-	 * @return String
+	 * @return
 	 */
 	public abstract String normalizeColumnName(String columnName);
 
@@ -333,7 +333,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * specialized to the database type.
 	 * @param language 
 	 * 
-	 * @return String
+	 * @return
 	 * @throws MException
 	 */
 	public Parser getQueryParser(String language) throws MException {
@@ -382,7 +382,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * It will detect the common language.
 	 * 
 	 * @param sql
-	 * @return String
+	 * @return
 	 */
 	public String detectLanguage(String sql) {
 		if (sql == null) return null;

@@ -8,16 +8,6 @@ import de.mhus.lib.core.base.AnnotationInjectStrategy;
 import de.mhus.lib.core.base.BaseByThreadStrategy;
 
 public class MBaseTest extends TestCase {
-
-	public void testFork() {
-		MSingleton.get().getBaseControl().setFindStrategy(new BaseByThreadStrategy());
-		new MBaseTestClass().fork();
-	}
-	
-	public void testOverwrite() {
-		MSingleton.get().getBaseControl().setFindStrategy(new BaseByThreadStrategy());
-		new MBaseTestClass().override();
-	}
 	
 	public void testInject() {
 		MSingleton.get().getBaseControl().setFindStrategy(new BaseByThreadStrategy());

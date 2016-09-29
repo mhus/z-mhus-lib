@@ -5,17 +5,18 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * The class holds a bundle of different database pools.
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class DbPoolBundle extends MObject {
 
@@ -27,6 +28,7 @@ public class DbPoolBundle extends MObject {
 	/**
 	 * Create a new bundle from default configuration. Load it from MSingleton with the
 	 * key of this class.
+	 * 
 	 */
 	public DbPoolBundle() {
 		this(null,null);
@@ -34,26 +36,19 @@ public class DbPoolBundle extends MObject {
 
 	/**
 	 * Create a new Bundle from configuration.
-	 *
+	 * 
 	 * @param config Config element or null. null will use the central MSingleton configuration.
 	 * @param activator Activator or null. null will use the central MSingleton activator.
 	 */
 	public DbPoolBundle(ResourceNode config, MActivator activator) {
 
-		if (config == null) config = base(ConfigProvider.class).getConfig(DbPoolBundle.class, null);
-		if (activator == null) activator = base(MActivator.class);
+		if (config == null) config = MSingleton.get().getCfgManager().getCfg(DbPoolBundle.class, null);
+		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
 
 		this.config = config;
 		this.activator = activator;
 	}
 
-	/**
-	 * <p>getPool.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.sql.DbPool} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public DbPool getPool(String name) throws Exception {
 
 		if (bundle == null) throw new MException("Bundle already closed");
@@ -73,11 +68,6 @@ public class DbPoolBundle extends MObject {
 		}
 	}
 
-	/**
-	 * <p>getNames.</p>
-	 *
-	 * @return an array of {@link java.lang.String} objects.
-	 */
 	public String[] getNames() {
 		LinkedList<String> out = new LinkedList<String>();
 		for (ResourceNode c : config.getNodes()) {
@@ -90,35 +80,18 @@ public class DbPoolBundle extends MObject {
 		return out.toArray(new String[out.size()]);
 	}
 
-	/**
-	 * <p>Getter for the field <code>config</code>.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public ResourceNode getConfig(String name) {
 		return config.getNode(name);
 	}
 
-	/**
-	 * <p>Getter for the field <code>config</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public ResourceNode getConfig() {
 		return config;
 	}
 
-	/**
-	 * <p>reset.</p>
-	 */
 	public void reset() {
 		bundle = new HashMap<String, DbPool>();
 	}
 
-	/**
-	 * <p>close.</p>
-	 */
 	public void close() {
 
 		if (bundle == null) return;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.mhus.lib.adb.DbAccessManager;
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Table;
@@ -26,7 +27,7 @@ public class BookStoreSchema extends DbSchema {
 			Person p = new Person();
 			p.setName("Hausmeister Krause");
 			dbManager.createObject(p);
-			dbManager.getSchemaProperties().set(DbManager.DATABASE_VERSION, "1");
+			dbManager.getSchemaProperties().set(DbManagerJdbc.DATABASE_VERSION, "1");
 		}
 	}
 
@@ -74,4 +75,9 @@ public class BookStoreSchema extends DbSchema {
 		list.add(Regal.class);
 	}
 
+	public void authorizeReadAttributes(DbConnection con, DbManager dbManagerJdbc, Class<?> clazz,
+			String registryName, String attribute) {
+	}
+	
+	
 }

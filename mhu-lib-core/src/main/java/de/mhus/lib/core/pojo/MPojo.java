@@ -15,35 +15,25 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
+import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
 
-/**
- * <p>MPojo class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MPojo {
 
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
 	private static PojoModelFactory defaultModelFactory;
 
-	/**
-	 * <p>Getter for the field <code>defaultModelFactory</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @since 3.2.9
-	 */
 	public static synchronized PojoModelFactory getDefaultModelFactory() {
 		if (defaultModelFactory == null)
 			defaultModelFactory = new PojoModelFactory() {
@@ -57,61 +47,27 @@ public class MPojo {
 		return defaultModelFactory;
 	}
 	
-	/**
-	 * <p>pojoToJson.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.codehaus.jackson.node.ObjectNode} object.
-	 * @throws java.io.IOException if any.
-	 */
 	public static void pojoToJson(Object from, ObjectNode to) throws IOException {
 		pojoToJson(from, to, getDefaultModelFactory());
 	}
 	
-	/**
-	 * <p>pojoToJson.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.codehaus.jackson.node.ObjectNode} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory) throws IOException {
 		pojoToJson(from, to, factory, 0);
 	}
 	
-	/**
-	 * <p>pojoToJson.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.codehaus.jackson.node.ObjectNode} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param level a int.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
+			
+			if (!attr.canRead()) continue;
+
 			Object value = attr.get(from);
 			String name = attr.getName();
 			setJsonValue(to, name, value, factory, false, level+1);
 		}
 	}
 
-	/**
-	 * <p>addJsonValue.</p>
-	 *
-	 * @param to a {@link org.codehaus.jackson.node.ArrayNode} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param deep a boolean.
-	 * @param level a int.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	@SuppressWarnings("unchecked")
 	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
@@ -171,18 +127,6 @@ public class MPojo {
 		}		
 	}
 	
-	/**
-	 * <p>setJsonValue.</p>
-	 *
-	 * @param to a {@link org.codehaus.jackson.node.ObjectNode} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param deep a boolean.
-	 * @param level a int.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	@SuppressWarnings("unchecked")
 	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
@@ -245,30 +189,17 @@ public class MPojo {
 		}
 	}
 
-	/**
-	 * <p>jsonToPojo.</p>
-	 *
-	 * @param from a {@link org.codehaus.jackson.JsonNode} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @throws java.io.IOException if any.
-	 */
 	public static void jsonToPojo(JsonNode from, Object to) throws IOException {
 		jsonToPojo(from, to, getDefaultModelFactory());
 	}
 	
-	/**
-	 * <p>jsonToPojo.</p>
-	 *
-	 * @param from a {@link org.codehaus.jackson.JsonNode} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	@SuppressWarnings("unchecked")
 	public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
+			
+			if (!attr.canWrite()) continue;
+
 			String name = attr.getName();
 			Class<?> type = attr.getType();
 			JsonNode json = from.get(name);
@@ -303,114 +234,86 @@ public class MPojo {
 				else
 					attr.set(to, json.getValueAsText());
 			} catch (Throwable t) {
-				System.out.println("ERROR " + name);
-				t.printStackTrace();
+				log.d(MSystem.getClassName(to), name, t);
 			}
 		}
 	}
 
-	/**
-	 * <p>pojoToXml.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.w3c.dom.Element} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void pojoToXml(Object from, Element to) throws IOException {
 		pojoToXml(from, to, getDefaultModelFactory());
 	}
 
-	/**
-	 * <p>pojoToXml.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.w3c.dom.Element} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void pojoToXml(Object from, Element to, PojoModelFactory factory) throws IOException {
 		pojoToXml(from, to, factory, 0);
 	}
 	
-	/**
-	 * <p>pojoToXml.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param to a {@link org.w3c.dom.Element} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param level a int.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void pojoToXml(Object from, Element to, PojoModelFactory factory, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
-			Object value = attr.get(from);
-			String name = attr.getName();
 			
-			Element a = to.getOwnerDocument().createElement("attribute");
-			to.appendChild(a);
-			a.setAttribute("name", name);
-			
-			if (value == null) {
-				a.setAttribute("null", "true");
-				//to.setAttribute(name, (String)null);
-			} else
-			if (value instanceof Boolean)
-				a.setAttribute("boolean", MCast.toString((boolean)value));
-			else
-			if (value instanceof Integer)
-				a.setAttribute("int", MCast.toString((int)value));
-			else
-			if (value instanceof Long)
-				a.setAttribute("long", MCast.toString((long)value));
-			else
-			if (value instanceof Date)
-				a.setAttribute("date", MCast.toString( ((Date)value).getTime() ));
-			else
-			if (value instanceof String) {
-				if (hasValidChars((String)value))
-					a.setAttribute("string", (String)value);
-				else {
-					a.setAttribute("encoding", "base64");
-					a.setAttribute("string", Base64.encode( (String)value));
-				}
-			} else
-			if (value.getClass().isEnum()) {
-				a.setAttribute("enum", MCast.toString( ((Enum<?>)value).ordinal() ) );
-				a.setAttribute("value", ((Enum<?>)value).name());
-			}
-			else
-			if (value instanceof UUID) {
-				a.setAttribute("uuid", ((UUID)value).toString() );
-			}
-			else 
-			if (value instanceof Serializable) {
-				a.setAttribute("serializable","true");
+			try {
+				if (!attr.canRead()) continue;
+	
+				Object value = attr.get(from);
+				String name = attr.getName();
 				
-				CDATASection cdata = a.getOwnerDocument().createCDATASection("");
-				String data = MCast.toBinaryString( MCast.toBinary(value) );
-				cdata.setData(data);
-				a.appendChild(cdata);
-			} else
-			{
-				a.setAttribute("type", value.getClass().getCanonicalName());
-				pojoToXml(value, a, factory, level+1);
+				Element a = to.getOwnerDocument().createElement("attribute");
+				to.appendChild(a);
+				a.setAttribute("name", name);
+				
+				if (value == null) {
+					a.setAttribute("null", "true");
+					//to.setAttribute(name, (String)null);
+				} else
+				if (value instanceof Boolean)
+					a.setAttribute("boolean", MCast.toString((boolean)value));
+				else
+				if (value instanceof Integer)
+					a.setAttribute("int", MCast.toString((int)value));
+				else
+				if (value instanceof Long)
+					a.setAttribute("long", MCast.toString((long)value));
+				else
+				if (value instanceof Date)
+					a.setAttribute("date", MCast.toString( ((Date)value).getTime() ));
+				else
+				if (value instanceof String) {
+					if (hasValidChars((String)value))
+						a.setAttribute("string", (String)value);
+					else {
+						a.setAttribute("encoding", "base64");
+						a.setAttribute("string", Base64.encode( (String)value));
+					}
+				} else
+				if (value.getClass().isEnum()) {
+					a.setAttribute("enum", MCast.toString( ((Enum<?>)value).ordinal() ) );
+					a.setAttribute("value", ((Enum<?>)value).name());
+				}
+				else
+				if (value instanceof UUID) {
+					a.setAttribute("uuid", ((UUID)value).toString() );
+				}
+				else 
+				if (value instanceof Serializable) {
+					a.setAttribute("serializable","true");
+					
+					CDATASection cdata = a.getOwnerDocument().createCDATASection("");
+					String data = MCast.toBinaryString( MCast.toBinary(value) );
+					cdata.setData(data);
+					a.appendChild(cdata);
+				} else
+				{
+					a.setAttribute("type", value.getClass().getCanonicalName());
+					pojoToXml(value, a, factory, level+1);
+				}
+				
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(from), attr.getName(), t);
 			}
+
 		}
 	}
-
-//	private static String fromAttribute(String value) {
-//		if (value == null) return null;
-//		if (value.equals(MAGIC + "null")) return null;
-//		if (value.startsWith(MAGIC)) {
-//			new String( Base64.decode( value.substring(MAGIC.length()) ) );
-//		}
-//		return value;
-//	}
 	
 	private static boolean hasValidChars(String value) {
 		for (int i = 0; i < value.length(); i++) {
@@ -422,42 +325,11 @@ public class MPojo {
 		}
 		return true;
 	}
-/*
-	private static String toAttribute(String value) {
-		if (value == null) return MAGIC + "null";
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			if (c == '\n' || c == '\r' || c == '\t' || c >= 32 && c <= 55295 ) {
-			} else {
-				return MAGIC + Base64.encode(value);
-			}
-		}
-		return value;
-	}
-*/
-	/**
-	 * <p>xmlToPojo.</p>
-	 *
-	 * @param from a {@link org.w3c.dom.Element} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @param act a {@link de.mhus.lib.core.MActivator} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
+
 	public static void xmlToPojo(Element from, Object to, MActivator act) throws IOException {
 		xmlToPojo(from, to, getDefaultModelFactory(), act);
 	}
 	
-	/**
-	 * <p>xmlToPojo.</p>
-	 *
-	 * @param from a {@link org.w3c.dom.Element} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param act a {@link de.mhus.lib.core.MActivator} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	@SuppressWarnings("unchecked")
 	public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
@@ -467,91 +339,98 @@ public class MPojo {
 			index.put(e.getAttribute("name"), e);
 		
 		for (PojoAttribute<Object> attr : model) {
-			String name = attr.getName();
-//			Class<?> type = attr.getType();
-			Element a = index.get(name);
-			if (a == null) {
-				log.d("attribute not found",name,to.getClass());
-				continue;
-			}
-			{
-				String value = a.getAttribute("null");
-				if (MString.isSet(value) && value.equals("true")) {
-					attr.set(to, null);
+			
+			try {
+				if (!attr.canWrite()) continue;
+	
+				String name = attr.getName();
+	//			Class<?> type = attr.getType();
+				Element a = index.get(name);
+				if (a == null) {
+					log.d("attribute not found",name,to.getClass());
 					continue;
 				}
-			}
-			if (a.hasAttribute("string")) {
-				String data = a.getAttribute("encoding");
-				if ("base64".equals(data)) {
-					String value = new String( Base64.decode(a.getAttribute("string")) );
-					attr.set(to, value);
-				} else {
-					String value = a.getAttribute("string");
-					attr.set(to, value);
-				}
-				continue;
-			}
-			if (a.hasAttribute("boolean")) {
-				String value = a.getAttribute("boolean");
-				attr.set(to, MCast.toboolean(value, false));
-				continue;
-			}
-			if (a.hasAttribute("int")) {
-				String value = a.getAttribute("int");
-				attr.set(to, MCast.toint(value,0));
-				continue;
-			}
-			if (a.hasAttribute("long")) {
-				String value = a.getAttribute("long");
-				attr.set(to, MCast.tolong(value,0));
-				continue;
-			}
-			if (a.hasAttribute("date")) {
-				String value = a.getAttribute("date");
-				Date obj = new Date();
-				obj.setTime( MCast.tolong(value,0) );
-				attr.set(to, obj);
-				continue;
-			}
-			if (a.hasAttribute("uuid")) {
-				String value = a.getAttribute("uuid");
-				try {
-					attr.set(to, UUID.fromString(value));
-				} catch (Throwable t) {
-					log.d(name,t);
-				}
-				continue;
-			}
-			if (a.hasAttribute("enum")) {
-				String value = a.getAttribute("enum");
-				attr.set(to, MCast.toint(value, 0));
-				continue;
-			}
-			if ("true".equals(a.getAttribute("serializable"))) {
-				CDATASection cdata = MXml.findCDataSection(a);
-				if (cdata != null) {
-					String data = cdata.getData();
-					try {
-						Object obj = MCast.fromBinary( MCast.fromBinaryString(data) );
-						attr.set(to, obj);
-					} catch (ClassNotFoundException e1) {
-						throw new IOException(e1);
+				{
+					String value = a.getAttribute("null");
+					if (MString.isSet(value) && value.equals("true")) {
+						attr.set(to, null);
+						continue;
 					}
 				}
-			}
-			if (a.hasAttribute("type")) {
-				String value = a.getAttribute("type");
-				try {
-					Object obj = act.createObject(value);
-					xmlToPojo(a,obj,factory,act);
-					attr.set(to, obj);
-				} catch (Exception e1) {
-					log.d(name,to.getClass(),e1);
+				if (a.hasAttribute("string")) {
+					String data = a.getAttribute("encoding");
+					if ("base64".equals(data)) {
+						String value = new String( Base64.decode(a.getAttribute("string")) );
+						attr.set(to, value);
+					} else {
+						String value = a.getAttribute("string");
+						attr.set(to, value);
+					}
+					continue;
 				}
-				continue;
-			}
+				if (a.hasAttribute("boolean")) {
+					String value = a.getAttribute("boolean");
+					attr.set(to, MCast.toboolean(value, false));
+					continue;
+				}
+				if (a.hasAttribute("int")) {
+					String value = a.getAttribute("int");
+					attr.set(to, MCast.toint(value,0));
+					continue;
+				}
+				if (a.hasAttribute("long")) {
+					String value = a.getAttribute("long");
+					attr.set(to, MCast.tolong(value,0));
+					continue;
+				}
+				if (a.hasAttribute("date")) {
+					String value = a.getAttribute("date");
+					Date obj = new Date();
+					obj.setTime( MCast.tolong(value,0) );
+					attr.set(to, obj);
+					continue;
+				}
+				if (a.hasAttribute("uuid")) {
+					String value = a.getAttribute("uuid");
+					try {
+						attr.set(to, UUID.fromString(value));
+					} catch (Throwable t) {
+						log.d(name,t);
+					}
+					continue;
+				}
+				if (a.hasAttribute("enum")) {
+					String value = a.getAttribute("enum");
+					attr.set(to, MCast.toint(value, 0));
+					continue;
+				}
+				if ("true".equals(a.getAttribute("serializable"))) {
+					CDATASection cdata = MXml.findCDataSection(a);
+					if (cdata != null) {
+						String data = cdata.getData();
+						try {
+							Object obj = MCast.fromBinary( MCast.fromBinaryString(data) );
+							attr.set(to, obj);
+						} catch (ClassNotFoundException e1) {
+							throw new IOException(e1);
+						}
+					}
+				}
+				if (a.hasAttribute("type")) {
+					String value = a.getAttribute("type");
+					try {
+						Object obj = act.createObject(value);
+						xmlToPojo(a,obj,factory,act);
+						attr.set(to, obj);
+					} catch (Exception e1) {
+						log.d(name,to.getClass(),e1);
+					}
+					continue;
+				}
 
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(to), attr.getName(), t);
+			}
 
 		}
 	}
@@ -559,12 +438,11 @@ public class MPojo {
 	/**
 	 * Functionize a String. Remove bad names and set first characters to upper. Return def if the name
 	 * can't be created, e.g. only numbers.
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @param firstUpper a boolean.
-	 * @param def a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 * @since 3.2.9
+	 * 
+	 * @param in
+	 * @param firstUpper 
+	 * @param def
+	 * @return
 	 */
 	public static String toFunctionName(String in, boolean firstUpper,String def) {
 		if (MString.isEmpty(in)) return def;
@@ -589,104 +467,72 @@ public class MPojo {
 		return out.toString();
 	}
 	
-	/**
-	 * <p>pojoToProperties.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.core.IProperties} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static IProperties pojoToProperties(Object from) throws IOException {
 		return pojoToProperties(from, getDefaultModelFactory());
 	}
 	
-	/**
-	 * <p>pojoToProperties.</p>
-	 *
-	 * @param from a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @return a {@link de.mhus.lib.core.IProperties} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static IProperties pojoToProperties(Object from, PojoModelFactory factory) throws IOException {
 		MProperties out = new MProperties();
 		PojoModel model = factory.createPojoModel(from.getClass());
 
 		for (PojoAttribute<?> attr : model) {
-			Object value = attr.get(from);
-			String name = attr.getName();
-			Class<?> type = attr.getType();
-			if (type == int.class) out.setInt(name, (int)value);
-			else
-			if (type == Integer.class) out.setInt(name, (Integer)value);
-			else
-			if (type == long.class)  out.setLong(name, (long)value);
-			else
-			if (type == Long.class)  out.setLong(name, (Long)value);
-			else
-			if (type == float.class)  out.setFloat(name, (float)value);
-			else
-			if (type == Float.class)  out.setFloat(name, (Float)value);
-			else
-			if (type == double.class)  out.setDouble(name, (double)value);
-			else
-			if (type == Double.class)  out.setDouble(name, (Double)value);
-			else
-			if (type == boolean.class)  out.setBoolean(name, (boolean)value);
-			else
-			if (type == Boolean.class)  out.setBoolean(name, (Boolean)value);
-			else
-			if (type == String.class)  out.setString(name, (String)value);
-			else
-			if (type == Date.class)  out.setDate(name, (Date)value);
-			else
-				out.setString(name, String.valueOf(value));
+			
+			try {
+				if (!attr.canRead()) continue;
+				
+				Object value = attr.get(from);
+				
+				String name = attr.getName();
+				Class<?> type = attr.getType();
+				if (type == int.class) out.setInt(name, (int)value);
+				else
+				if (type == Integer.class) out.setInt(name, (Integer)value);
+				else
+				if (type == long.class)  out.setLong(name, (long)value);
+				else
+				if (type == Long.class)  out.setLong(name, (Long)value);
+				else
+				if (type == float.class)  out.setFloat(name, (float)value);
+				else
+				if (type == Float.class)  out.setFloat(name, (Float)value);
+				else
+				if (type == double.class)  out.setDouble(name, (double)value);
+				else
+				if (type == Double.class)  out.setDouble(name, (Double)value);
+				else
+				if (type == boolean.class)  out.setBoolean(name, (boolean)value);
+				else
+				if (type == Boolean.class)  out.setBoolean(name, (Boolean)value);
+				else
+				if (type == String.class)  out.setString(name, (String)value);
+				else
+				if (type == Date.class)  out.setDate(name, (Date)value);
+				else
+					out.setString(name, String.valueOf(value));
+				
+			} catch (Throwable t) {
+				log.d(MSystem.getClassName(from), attr.getName(), t);
+			}
 		}
 		return out;
 	}
 
 	
-	/**
-	 * <p>propertiesToPojo.</p>
-	 *
-	 * @param from a {@link de.mhus.lib.core.IProperties} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void propertiesToPojo(IProperties from, Object to) throws IOException {
 		propertiesToPojo(from, to, getDefaultModelFactory(), null);
 	}
 	
-	/**
-	 * <p>propertiesToPojo.</p>
-	 *
-	 * @param from a {@link de.mhus.lib.core.IProperties} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory) throws IOException {
 		propertiesToPojo(from, to, factory, null);
 	}
 	
-	/**
-	 * <p>propertiesToPojo.</p>
-	 *
-	 * @param from a {@link de.mhus.lib.core.IProperties} object.
-	 * @param to a {@link java.lang.Object} object.
-	 * @param factory a {@link de.mhus.lib.core.pojo.PojoModelFactory} object.
-	 * @param unknownHadler a {@link de.mhus.lib.core.cast.Caster} object.
-	 * @throws java.io.IOException if any.
-	 * @since 3.2.9
-	 */
 	@SuppressWarnings("unchecked")
 	public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory, Caster<Object,Object> unknownHadler) throws IOException {
 		PojoModel model = factory.createPojoModel(to.getClass());
 		for (PojoAttribute<Object> attr : model) {
+			
+			if (!attr.canWrite()) continue;
+			
 			String name = attr.getName();
 			Class<?> type = attr.getType();
 			try {
@@ -717,10 +563,9 @@ public class MPojo {
 					attr.set(to, c );
 				}
 				else
-					attr.set(to, unknownHadler == null ? from.getString(name) : unknownHadler.cast(from.getProperty(name), null) );
+					attr.set(to, unknownHadler == null ? from.getString(name) : unknownHadler.cast(from.get(name), null) );
 			} catch (Throwable t) {
-				System.out.println("ERROR " + name);
-				t.printStackTrace();
+				log.d(MSystem.getClassName(to), name, t);
 			}
 		}
 	}

@@ -2,15 +2,16 @@ package de.mhus.lib.karaf.jms;
 
 import java.io.File;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.jms.JmsConnection;
 
 @Command(scope = "jms", name = "connection-remove", description = "Remove connection")
+@Service
 public class CmdConnectionRemove implements Action {
 
 	@Argument(index=0, name="name", required=true, description="ID of the connection", multiValued=false)
@@ -20,7 +21,7 @@ public class CmdConnectionRemove implements Action {
     boolean online;
 	
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 	
 		if (online) {
 			JmsManagerService service = JmsUtil.getService();

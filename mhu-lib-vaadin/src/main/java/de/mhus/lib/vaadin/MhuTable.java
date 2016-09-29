@@ -1,6 +1,5 @@
 package de.mhus.lib.vaadin;
 
-import java.lang.reflect.Method;
 import java.sql.Time;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +24,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TableFieldFactory;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Table.HeaderClickEvent;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
@@ -42,7 +42,7 @@ import de.mhus.lib.vaadin.converter.SqlDateConverter;
 import de.mhus.lib.vaadin.converter.SqlTimeConverter;
 
 @SuppressWarnings("serial")
-public class MhuTable extends Table {
+public class MhuTable extends ExpandingTable {
 	
 	private static final long serialVersionUID = 1L;
 //	protected static final Action ACTION_ENTER = new ShortcutAction("Enter", ShortcutAction.KeyCode.ENTER,null);
@@ -52,37 +52,23 @@ public class MhuTable extends Table {
 	protected Object editableId;
 	private boolean tableEditable = false;
 	private HashMap<String, ColumnModel> columnModels = new HashMap<>();
-	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>();
 	
-/*	
-	private Action.Handler fieldActionHandler = new Action.Handler() {
-		
+	public MhuTable() {
+		super();
+	}
 
-		@Override
-		public void handleAction(Action action, Object sender, Object target) {
-			
-			if (editableId == null) return;
-			
-			if (action == ACTION_ESCAPE) {
-		         doActionEditable(null);
-		         return;
-			}
-			if (action == ACTION_ENTER) {
-				 if (doActionSave())
-					 doActionEditable(null);
-		         return;
-			}
-			
-		}
-		
-		@Override
-		public Action[] getActions(Object target, Object sender) {
-			return new Action[] {ACTION_ENTER,ACTION_ESCAPE};
-		}
-	};
-*/
+	public MhuTable(String caption, Container dataSource) {
+		super(caption, dataSource);
+	}
 
-	{
+	public MhuTable(String caption) {
+		super(caption);
+	}
+
+
+	@Override
+	protected void initUI() {
+
 		setTableFieldFactory(new TableFieldFactory() {
 			
 			@Override
@@ -104,15 +90,9 @@ public class MhuTable extends Table {
          	}
          });
 			
-//		addActionHandler(fieldActionHandler);
-		
+		super.initUI();
 	}
-
-//	@Override
-//    protected Object getPropertyValue(Object rowId, Object colId, Property property) {
-//        return super.getPropertyValue(rowId, colId, property);
-//    }
-
+	
 	@SuppressWarnings("unchecked")
 	protected Field<?> createField(Container container,
 			Object itemId, Object propertyId, Component uiContext) {
@@ -232,35 +212,4 @@ public class MhuTable extends Table {
 		}
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-    public void changeVariables(Object source, Map variables) {
-        super.changeVariables(source, variables);
-        
-       // Notification.show("You are scrolling!\n " + variables);
-       // System.out.println(variables);
-        if (variables.containsKey("lastToBeRendered")) {
-        	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
-        	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
-        	if (last >= 0) {
-        		try {
-	        		Method method = RenderListener.class.getMethod("onRender", MhuTable.class, int.class, int.class);
-	        		renderEventHandler.fire(method, this, first, last);
-        		} catch (Throwable t) {
-        			t.printStackTrace(); // should not happen
-        		}
-        	}
-        }
-    }
-	
-    public MEventHandler<RenderListener> renderEventHandler() {
-		return renderEventHandler;
-	}
-
-	public static interface RenderListener {
-
-		void onRender(MhuTable mhuTable, int first, int last);
-		
-	}
-
 }

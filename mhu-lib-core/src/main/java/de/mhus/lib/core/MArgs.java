@@ -27,20 +27,20 @@ import java.util.Vector;
  * The class is a parser for program argument lists, like you get in the main(args)
  * method. You can also put a usage definition to the constructor to define the
  * possible methods.
- *
- * The parser will parse all arguments. If a minus is the first character the next
+ * 
+ * The parser will parse all arguments. If a minus is the first character the next 
  * argument will be stored under this key. A argument key can be there multiple times.
  * If there no value after the key the key is marked as existing. A value without a key
  * on front of it is stored under the DEFAUTL key.
- *
+ * 
  * The "usage" feature is not finished yet!
- *
+ * 
  * @author mhu
- * @version $Id: $Id
+ *
  */
+
 public class MArgs {
 
-	/** Constant <code>DEFAULT=""</code> */
 	public static final String DEFAULT = "";
 
 	private Hashtable<String,Vector<String>> values = new Hashtable<String,Vector<String>>();
@@ -48,19 +48,13 @@ public class MArgs {
 
 	/**
 	 * Use the argument array to parse arguments.
-	 *
-	 * @param args an array of {@link java.lang.String} objects.
+	 * 
+	 * @param args
 	 */
 	public MArgs(String[] args) {
 		this(args, null);
 	}
 
-	/**
-	 * <p>Constructor for MArgs.</p>
-	 *
-	 * @param args an array of {@link java.lang.String} objects.
-	 * @param pUsage an array of {@link java.lang.String} objects.
-	 */
 	public MArgs(String[] args, String[] pUsage) {
 
 		String name = DEFAULT;
@@ -139,20 +133,20 @@ public class MArgs {
 
 	/**
 	 * Returns true if the argument list contains the key.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a boolean.
+	 * 
+	 * @param name
+	 * @return
 	 */
 	public boolean contains(String name) {
 		return values.get(name) != null;
 	}
 
 	/**
-	 * Returns a List of the arguments for the given key. If the key was not set it
+	 * Returns a List of the arguments for the given key. If the key was not set it 
 	 * returns null. Do not change the list.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.util.List} object.
+	 * 
+	 * @param name
+	 * @return
 	 */
 	protected List<String> getArgValues(String name) {
 		return values.get(name);
@@ -160,9 +154,9 @@ public class MArgs {
 
 	/**
 	 * Returns the amount of attributes for this key.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a int.
+	 * 
+	 * @param name
+	 * @return
 	 */
 	public int getSize(String name) {
 		if (!contains(name))
@@ -173,11 +167,11 @@ public class MArgs {
 	/**
 	 * Returns the "index" parameter for this key. If the parameter is not
 	 * set in this index it returns "def".
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param def a {@link java.lang.String} object.
-	 * @param index a int.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param name
+	 * @param def
+	 * @param index
+	 * @return
 	 */
 	public String getValue(String name, String def, int index) {
 		String ret = getValue(name, index);
@@ -187,10 +181,10 @@ public class MArgs {
 	/**
 	 * Returns the "index" parameter for this key. If the parameter is not
 	 * set in this index it returns null.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param index a int.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param name
+	 * @param index
+	 * @return
 	 */
 	public String getValue(String name, int index) {
 		String[] ret = getValues(name);
@@ -204,9 +198,9 @@ public class MArgs {
 	/**
 	 * Return all values for this parameter as a array. If not set it will return an empty
 	 * array.
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return an array of {@link java.lang.String} objects.
+	 * 
+	 * @param name
+	 * @return
 	 */
 	public String[] getValues(String name) {
 		if (!contains(name))
@@ -216,14 +210,13 @@ public class MArgs {
 
 	/**
 	 * Return a iterable set of existing keys.
-	 *
-	 * @return a {@link java.util.Set} object.
+	 * 
+	 * @return
 	 */
 	public Set<String> getKeys() {
 		return values.keySet();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return values.toString();

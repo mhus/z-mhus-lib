@@ -8,13 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * <p>SoftHashMap class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
 public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 
 	/**
@@ -25,9 +18,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 	private long lastCleanup;
 
 	
-	/**
-	 * <p>Constructor for SoftHashMap.</p>
-	 */
 	public SoftHashMap() {
 		
 	}
@@ -41,9 +31,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		cleanup();
 	}
 	
-	/**
-	 * <p>cleanup.</p>
-	 */
 	public void cleanup() {
 		synchronized (map) {
 			Iterator<Entry<K, SoftReference<V>>> iter = map.entrySet().iterator();
@@ -56,7 +43,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		synchronized (map) {
@@ -64,7 +50,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int size() {
 		periodicCleanup();
@@ -73,7 +58,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		periodicCleanup();
@@ -82,7 +66,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public V get(Object key) {
 		periodicCleanup();
@@ -98,7 +81,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		synchronized (map) {
@@ -106,7 +88,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean containsKey(Object key) {
 		periodicCleanup();
@@ -115,7 +96,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		synchronized (map) {
@@ -123,7 +103,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public V put(K key, V value) {
 		periodicCleanup();
@@ -134,14 +113,12 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void putAll(Map<? extends K, ? extends V> m) {
 		for (java.util.Map.Entry<? extends K, ? extends V> entry : m.entrySet())
 			put(entry.getKey(), entry.getValue());
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public V remove(Object key) {
 		periodicCleanup();
@@ -152,7 +129,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		synchronized (map) {
@@ -160,7 +136,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean containsValue(Object value) {
 		periodicCleanup();
@@ -169,7 +144,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object clone() {
@@ -179,7 +153,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<K> keySet() {
 		periodicCleanup();
@@ -188,7 +161,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Collection<V> values() {
 		periodicCleanup();
@@ -197,7 +169,6 @@ public class SoftHashMap<K,V> implements Map<K,V>, Cloneable, Serializable {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<java.util.Map.Entry<K,V>> entrySet() {
 		periodicCleanup();

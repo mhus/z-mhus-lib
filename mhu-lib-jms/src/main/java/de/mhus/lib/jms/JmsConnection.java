@@ -9,15 +9,15 @@ import javax.jms.Session;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import de.mhus.lib.core.configupdater.ConfigString;
+import de.mhus.lib.core.cfg.CfgString;
 
 public class JmsConnection extends JmsObject implements ExceptionListener {
 
     private static final Boolean NON_TRANSACTED = false;
     @SuppressWarnings("unused") // used by config manager
-	private static final ConfigString allowedSerializablePackages = new ConfigString(JmsConnection.class, "org.apache.activemq.SERIALIZABLE_PACKAGES", "de,java,org,com") {
+	private static final CfgString allowedSerializablePackages = new CfgString(JmsConnection.class, "org.apache.activemq.SERIALIZABLE_PACKAGES", "de,java,org,com") {
     	@Override
-		public void onUpdate(String newValue) {
+		public void onPreUpdate(String newValue) {
     		System.setProperty("org.apache.activemq.SERIALIZABLE_PACKAGES", newValue);
     	}
     };

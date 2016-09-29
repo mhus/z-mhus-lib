@@ -21,47 +21,32 @@ package de.mhus.lib.core.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * <p>YOutputStream class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class YOutputStream extends OutputStream {
 
 	private OutputStream[] streams;
 
-	/**
-	 * <p>Constructor for YOutputStream.</p>
-	 *
-	 * @param pStreams an array of {@link java.io.OutputStream} objects.
-	 */
 	public YOutputStream(OutputStream[] pStreams) {
 		streams = pStreams;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void write(int b) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void write(byte b[]) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void write(byte b[], int off, int len) throws IOException {
 		for (int i = 0; i < streams.length; i++)
 			streams[i].write(b, off, len);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void close() throws IOException {
 		for (int i = 0; i < streams.length; i++)

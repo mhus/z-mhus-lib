@@ -21,40 +21,26 @@ package de.mhus.lib.core.io;
 import java.io.IOException;
 import java.io.Writer;
 
-/**
- * <p>YWriter class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class YWriter extends Writer {
 
 	private Writer[] writers;
 
-	/**
-	 * <p>Constructor for YWriter.</p>
-	 *
-	 * @param pWriters an array of {@link java.io.Writer} objects.
-	 */
 	public YWriter(Writer[] pWriters) {
 		writers = pWriters;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void close() throws IOException {
 		for (int i = 0; i < writers.length; i++)
 			writers[i].close();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void flush() throws IOException {
 		for (int i = 0; i < writers.length; i++)
 			writers[i].flush();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException {
 		for (int i = 0; i < writers.length; i++)

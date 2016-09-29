@@ -24,10 +24,10 @@ import java.util.Iterator;
 
 /**
  * An Iterator wrapper for an Enumeration.
- *
+ * 
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @version $Id: EnumerationIterator.java 463298 2006-10-12 16:10:32Z henning $
- * @param <T>
+ * @param <T> 
  */
 public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	/**
@@ -38,7 +38,7 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 
 	/**
 	 * Creates a new iteratorwrapper instance for the specified Enumeration.
-	 *
+	 * 
 	 * @param enumeration
 	 *            The Enumeration to wrap.
 	 */
@@ -48,9 +48,9 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Move to next element in the array.
+	 * 
+	 * @return The next object in the array.
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -59,9 +59,9 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Check to see if there is another element in the array.
+	 * 
+	 * @return Whether there is another element.
 	 */
 	@Override
 	public boolean hasNext() {
@@ -69,8 +69,6 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Unimplemented. No analogy in Enumeration
 	 */
 	@Override
@@ -78,7 +76,6 @@ public class EnumerationIterator<T> implements Iterator<T>, Iterable<T> {
 		// not implemented
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Iterator<T> iterator() {
 		return this;

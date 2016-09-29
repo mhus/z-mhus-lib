@@ -12,19 +12,14 @@ import javax.management.ObjectName;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.service.ConfigProvider;
+import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
-/**
- * <p>MRemoteManager class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MRemoteManager extends MObject implements IBase {
 	
 	private MBeanServer mbs;
@@ -32,34 +27,16 @@ public class MRemoteManager extends MObject implements IBase {
 
 	private Housekeeper housekeeper;
 
-	/**
-	 * <p>Constructor for MRemoteManager.</p>
-	 *
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public MRemoteManager() throws MException {
 		housekeeper = new Housekeeper(this);
-		ResourceNode config = base(ConfigProvider.class).getConfig(this,new HashConfig());
-		base(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
+		ResourceNode config = MSingleton.baseLookup(this,CfgManager.class).getCfg(this,new HashConfig());
+		MSingleton.baseLookup(this,MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
 	}
 	
-	/**
-	 * <p>register.</p>
-	 *
-	 * @param object a {@link de.mhus.lib.core.jmx.JmxObject} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public void register(JmxObject object) throws Exception {
 		register(object,false);
 	}
 	
-	/**
-	 * <p>register.</p>
-	 *
-	 * @param object a {@link de.mhus.lib.core.jmx.JmxObject} object.
-	 * @param weak a boolean.
-	 * @throws java.lang.Exception if any.
-	 */
 	public void register(JmxObject object,boolean weak) throws Exception {
 		if (object instanceof JmxPackage) {
 		  ((JmxPackage)object).open(this);
@@ -74,12 +51,6 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 	}
 
-	/**
-	 * <p>unregister.</p>
-	 *
-	 * @param object a {@link de.mhus.lib.core.jmx.JmxObject} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public void unregister(JmxObject object) throws Exception {
 		if (object instanceof JmxPackage) {
 		  ((JmxPackage)object).close();
@@ -90,15 +61,6 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 	}
 	
-	/**
-	 * <p>register.</p>
-	 *
-	 * @param name a {@link javax.management.ObjectName} object.
-	 * @param object a {@link java.lang.Object} object.
-	 * @param capsulate a boolean.
-	 * @param weak a boolean.
-	 * @throws java.lang.Exception if any.
-	 */
 	public void register(ObjectName name, Object object,boolean capsulate, boolean weak) throws Exception {
 		
 		Object proxy = object;
@@ -143,11 +105,6 @@ public class MRemoteManager extends MObject implements IBase {
 		
 	}
 
-	/**
-	 * <p>unregister.</p>
-	 *
-	 * @param name a {@link javax.management.ObjectName} object.
-	 */
 	public void unregister(ObjectName name) {
 		synchronized (this) {
 			registry.remove(name);
@@ -162,9 +119,6 @@ public class MRemoteManager extends MObject implements IBase {
 		
 	}
 	
-	/**
-	 * <p>open.</p>
-	 */
 	public void open() {
 		synchronized (this) {
 			if (mbs != null) return;
@@ -180,9 +134,6 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 	}
 	
-	/**
-	 * <p>close.</p>
-	 */
 	public void close() {
 		synchronized (this) {
 			if (mbs == null) return;
@@ -198,18 +149,10 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 	}
 
-	/**
-	 * <p>isOpen.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isOpen() {
 		return mbs != null;
 	}
 
-	/**
-	 * <p>check.</p>
-	 */
 	public void check() {
 		synchronized (this) {
 			for (Map.Entry<ObjectName, Object> item : new HashMap<ObjectName,Object>(registry).entrySet()) {
@@ -220,11 +163,6 @@ public class MRemoteManager extends MObject implements IBase {
 		}
 	}
 	
-	/**
-	 * <p>getMBeanServer.</p>
-	 *
-	 * @return a {@link javax.management.MBeanServer} object.
-	 */
 	public MBeanServer getMBeanServer() {
 		return mbs;
 	}

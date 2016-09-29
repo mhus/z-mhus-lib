@@ -2,13 +2,14 @@ package de.mhus.lib.karaf.jms;
 
 import java.io.File;
 
-import org.apache.felix.service.command.CommandSession;
-import org.apache.karaf.shell.commands.Action;
-import org.apache.karaf.shell.commands.Argument;
-import org.apache.karaf.shell.commands.Command;
-import org.apache.karaf.shell.commands.Option;
+import org.apache.karaf.shell.api.action.Action;
+import org.apache.karaf.shell.api.action.Argument;
+import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
+import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 @Command(scope = "jms", name = "channel-remove", description = "Remove channel")
+@Service
 public class CmdChannelRemove implements Action {
 
 	@Argument(index=0, name="name", required=true, description="ID of the channel", multiValued=false)
@@ -18,7 +19,7 @@ public class CmdChannelRemove implements Action {
     boolean online;
 	
 	@Override
-	public Object execute(CommandSession session) throws Exception {
+	public Object execute() throws Exception {
 
 		if (online) {
 			JmsManagerService service = JmsUtil.getService();

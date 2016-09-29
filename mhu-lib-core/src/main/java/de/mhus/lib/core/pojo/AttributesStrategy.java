@@ -12,12 +12,6 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.lang.MObject;
 
 @IgnoreBind
-/**
- * <p>AttributesStrategy class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class AttributesStrategy extends MObject implements PojoStrategy {
 
 	private boolean embedded;
@@ -25,21 +19,10 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 	private boolean toLower;
 	private Class<? extends Annotation> annotationMarker[];
 
-	/**
-	 * <p>Constructor for AttributesStrategy.</p>
-	 */
 	public AttributesStrategy() {
 		this(true,true, ".", null);
 	}
 	
-	/**
-	 * <p>Constructor for AttributesStrategy.</p>
-	 *
-	 * @param embedded a boolean.
-	 * @param toLower a boolean.
-	 * @param embedGlue a {@link java.lang.String} object.
-	 * @param annotationMarker an array of {@link java.lang.Class} objects.
-	 */
 	public AttributesStrategy(boolean embedded, boolean toLower, String embedGlue, Class<? extends Annotation>[] annotationMarker) {
 		this.embedded = embedded;
 		this.toLower = toLower;
@@ -47,7 +30,6 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 		this.annotationMarker = annotationMarker;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void parseObject(PojoParser parser, Object pojo, PojoModelImpl model) {
 		if (pojo instanceof Class)
@@ -56,21 +38,11 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 			parseObject(parser, pojo.getClass(), model);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void parse(PojoParser parser, Class<?> clazz, PojoModelImpl model) {
 		parse("",null,parser,clazz,model);
 	}
 
-	/**
-	 * <p>parse.</p>
-	 *
-	 * @param prefix a {@link java.lang.String} object.
-	 * @param parent a {@link de.mhus.lib.core.pojo.AttributesStrategy.Attribute} object.
-	 * @param parser a {@link de.mhus.lib.core.pojo.PojoParser} object.
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @param model a {@link de.mhus.lib.core.pojo.PojoModelImpl} object.
-	 */
 	protected void parse (String prefix, Attribute<Object> parent, PojoParser parser, Class<?> clazz, PojoModelImpl model) {
 		
 		for (Field field : getAttributes(clazz)) {
@@ -110,23 +82,11 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 	}
 	
 	
-	/**
-	 * <p>isEmbedded.</p>
-	 *
-	 * @param field a {@link java.lang.reflect.Field} object.
-	 * @return a boolean.
-	 */
 	protected boolean isEmbedded(Field field) {
 		if (!embedded) return false;
 		return field.isAnnotationPresent(Embedded.class);
 	}
 	
-	/**
-	 * <p>isMarker.</p>
-	 *
-	 * @param field a {@link java.lang.reflect.Field} object.
-	 * @return a boolean.
-	 */
 	protected boolean isMarker(Field field) {
 		if (annotationMarker == null) return true;
 		for (Class<? extends Annotation> a :annotationMarker)
@@ -134,12 +94,6 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 		return false;
 	}
 
-	/**
-	 * <p>getAttributes.</p>
-	 *
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @return a {@link java.util.LinkedList} object.
-	 */
 	protected LinkedList<Field> getAttributes(Class<?> clazz) {
 		LinkedList<Field> out = new LinkedList<Field>();
 		do {

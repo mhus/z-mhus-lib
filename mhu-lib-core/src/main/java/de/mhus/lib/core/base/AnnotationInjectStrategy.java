@@ -10,15 +10,8 @@ import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 
-/**
- * <p>AnnotationInjectStrategy class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class AnnotationInjectStrategy extends InjectStrategy {
 
-	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void inject(Object object, Base base) {

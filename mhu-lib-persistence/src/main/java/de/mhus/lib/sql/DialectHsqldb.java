@@ -13,19 +13,17 @@ import de.mhus.lib.errors.MRuntimeException;
 /**
  * This class can compare a configuration with a database table structure
  * and can modify the database structure without deleting existing tables.
- *
+ * 
  * TODO: on request: remove other columns
  * TODO: views, foreign keys
  * TODO: data !!!
- *
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class DialectHsqldb extends DialectDefault {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	/** {@inheritDoc} */
 	@Override
 	protected String getFieldConfig(ResourceNode f) {
 		try {
@@ -48,12 +46,6 @@ public class DialectHsqldb extends DialectDefault {
 		}
 	}
 
-	/**
-	 * <p>getFieldConfigWithoutExtras.</p>
-	 *
-	 * @param f a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	protected String getFieldConfigWithoutExtras(ResourceNode f) {
 		try {
 			String type = getDbType(f);
@@ -76,7 +68,6 @@ public class DialectHsqldb extends DialectDefault {
 	}
 
 
-	/** {@inheritDoc} */
 	@Override
 	public String toSqlDateValue(Date date) {
 		synchronized (dateFormat) {
@@ -84,13 +75,11 @@ public class DialectHsqldb extends DialectDefault {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeColumnName(String columnName) {
 		return columnName.toUpperCase();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void alterColumn(Statement sth,String tn, ResourceNode cfield) {
 		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + getFieldConfigWithoutExtras(cfield);
@@ -103,7 +92,6 @@ public class DialectHsqldb extends DialectDefault {
 
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void alterTableChangePrimaryKey(Statement sth, String tn,
 			String keys) {
@@ -111,7 +99,6 @@ public class DialectHsqldb extends DialectDefault {
 		alterTableAddPrimaryKey(sth, tn, keys);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void recreateIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
@@ -133,7 +120,6 @@ public class DialectHsqldb extends DialectDefault {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void createIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
@@ -150,25 +136,21 @@ public class DialectHsqldb extends DialectDefault {
 
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected boolean equalsIndexName(String table, String iName, String iName2) {
 		return iName2.equals(table + iName);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeTableName(String tableName) throws Exception {
 		return tableName.toUpperCase() + "_";
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String normalizeIndexName(String tableName) throws Exception {
 		return tableName.toUpperCase();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void prepareConnection(Connection con) throws SQLException {
 		super.prepareConnection(con);

@@ -12,23 +12,8 @@ import java.util.zip.ZipFile;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.lang.MObject;
 
-/**
- * <p>Unzip class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class Unzip extends MObject {
 		
-  /**
-   * <p>unzip.</p>
-   *
-   * @param src a {@link java.io.File} object.
-   * @param dst a {@link java.io.File} object.
-   * @param filter a {@link java.io.FileFilter} object.
-   * @throws java.util.zip.ZipException if any.
-   * @throws java.io.IOException if any.
-   */
   public void unzip(File src,File dst,FileFilter filter) throws ZipException, IOException {
     Enumeration<?> entries;
     ZipFile zipFile;

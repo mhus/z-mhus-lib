@@ -4,12 +4,6 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * <p>MethodAnalyser class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MethodAnalyser {
 
 	   private static void traverseInterfacesForMethod(Class<?> cls, Set<Class<?>> result, String methodName) {
@@ -24,13 +18,6 @@ public class MethodAnalyser {
 	      }
 	   }
 
-	   /**
-	    * <p>getInterfacesForMethod.</p>
-	    *
-	    * @param cls a {@link java.lang.Class} object.
-	    * @param methodName a {@link java.lang.String} object.
-	    * @return a {@link java.util.Set} object.
-	    */
 	   public static Set<Class<?>> getInterfacesForMethod(Class<?> cls, String methodName) {
 		  Set<Class<?>> result = new HashSet<>();
 	      traverseInterfacesForMethod(cls,result,methodName);
@@ -49,13 +36,6 @@ public class MethodAnalyser {
 		      }
 		   }
 
-		   /**
-		    * <p>getMethodsForMethod.</p>
-		    *
-		    * @param cls a {@link java.lang.Class} object.
-		    * @param methodName a {@link java.lang.String} object.
-		    * @return a {@link java.util.Set} object.
-		    */
 		   public static Set<Method> getMethodsForMethod(Class<?> cls, String methodName) {
 			  Set<Method> result = new HashSet<>();
 		      traverseMethodsForMethod(cls,result,methodName);

@@ -3,13 +3,6 @@ package de.mhus.lib.annotations.generic;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * <p>Public class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.2.9
- */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Public {
 	String[] hints() default {};

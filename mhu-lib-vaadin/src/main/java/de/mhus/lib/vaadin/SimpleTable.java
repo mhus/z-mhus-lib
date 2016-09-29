@@ -1,44 +1,39 @@
 package de.mhus.lib.vaadin;
 
-import java.lang.reflect.Method;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 
-import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MEventHandler;
-import de.mhus.lib.vaadin.MhuTable.RenderListener;
+import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.logging.MLogUtil;
 
-public class SimpleTable extends Table {
+public class SimpleTable extends ExpandingTable {
 
 	private static final long serialVersionUID = 1L;
 	private IndexedContainer dataSource;
 	private ColumnDefinition[] columns;
-	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>();
+	//protected MProperties status = new MProperties();
 
 	public SimpleTable() {
-		super();
-		initUI();
 	}
 
 	public SimpleTable(String caption, Container dataSource) {
 		super(caption, dataSource);
-		initUI();
 	}
 
 	public SimpleTable(String caption) {
 		super(caption);
-		initUI();
 	}
 
+	@Override
 	protected void initUI() {
         setColumnReorderingAllowed(true);
         setColumnCollapsingAllowed(true);
         setSizeFull();
+        super.initUI();
 	}
 
 	public void createDataSource(ColumnDefinition ... columns) {
@@ -60,6 +55,7 @@ public class SimpleTable extends Table {
         
         for (Object col : colapsedByDefault)
         	setColumnCollapsed(col, true);
+                
 	}
 
 	public IndexedContainer getDataSource() {
@@ -72,8 +68,20 @@ public class SimpleTable extends Table {
 
 	@SuppressWarnings("unchecked")
 	public void addRow(Object id, Object ... values) {
+		if (id == null) {
+			MLogUtil.log().i(this.getClass(),"addRow: id is null");
+			return;
+		}
 		Item item = dataSource.addItem(id);
-		for (int i = 0; i < columns.length; i++)
+		if (item == null) {
+			MLogUtil.log().i(this.getClass(),"addRow: item is null", id);
+			return;
+		}
+		for (int i = 0; i < columns.length; i++) {
+			if (columns[i] == null) {
+				MLogUtil.log().i(this.getClass(),"addRow: column is null",i);
+				return;
+			}
 			item.getItemProperty(
 						columns[i].getId()
 					).setValue(
@@ -81,6 +89,7 @@ public class SimpleTable extends Table {
 									values[i] : 
 										columns[i].getDefaultValue() 
 								);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -97,35 +106,4 @@ public class SimpleTable extends Table {
 		 dataSource.removeItem(id);
 	}
 	
-    public MEventHandler<RenderListener> renderEventHandler() {
-		return renderEventHandler;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-    public void changeVariables(Object source, Map variables) {
-        super.changeVariables(source, variables);
-        
-       // Notification.show("You are scrolling!\n " + variables);
-       // System.out.println(variables);
-        if (variables.containsKey("lastToBeRendered")) {
-        	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
-        	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
-        	if (last >= 0) {
-        		try {
-	        		Method method = RenderListener.class.getMethod("onRender", SimpleTable.class, int.class, int.class);
-	        		renderEventHandler.fire(method, this, first, last);
-        		} catch (Throwable t) {
-        			t.printStackTrace(); // should not happen
-        		}
-        	}
-        }
-    }
-	
-	public static interface RenderListener {
-
-		void onRender(SimpleTable mhuTable, int first, int last);
-		
-	}
-
 }

@@ -21,49 +21,30 @@ package de.mhus.lib.core.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- * <p>SizeCountOutputStream class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class SizeCountOutputStream extends OutputStream {
 
 	private long count;
 	private OutputStream stream;
 
-	/**
-	 * <p>Constructor for SizeCountOutputStream.</p>
-	 *
-	 * @param stream a {@link java.io.OutputStream} object.
-	 */
 	public SizeCountOutputStream(OutputStream stream) {
 		this.stream = stream;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void write(int b) throws IOException {
 		count++;
 		stream.write(b);
 	}
 
-	/**
-	 * <p>getSize.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getSize() {
 		return count;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void close() throws IOException {
 		stream.close();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void flush() throws IOException {
 		stream.flush();
