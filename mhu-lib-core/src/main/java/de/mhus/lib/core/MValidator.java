@@ -113,8 +113,11 @@ public class MValidator {
 	
 	public static boolean isPhoneNumber(String phone) {
 		if (MString.isEmpty(phone)) return false;
-		//validate phone numbers of format "1234567890"
-        if (phone.matches("[+0-9]+\\d")) return true;
+		//validate phone numbers of format "+123-456 7890"
+		// 49 1234 123456 1234 => 19 Digits (max to 20)
+		if (phone.startsWith("+")) phone = phone.substring(1);
+		if (phone.length() < 4 || phone.length() > 20) return false;
+        if (phone.matches("[0-9 -]+\\d")) return true;
         
         return false;
     }
