@@ -7,19 +7,37 @@ import javax.sql.DataSource;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.directory.ResourceNode;
 
+/**
+ * <p>DataSourceProvider class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class DataSourceProvider extends DbProvider {
 
 	private DataSource dataSource;
 	private Dialect dialect;
 
+	/**
+	 * <p>Constructor for DataSourceProvider.</p>
+	 */
 	public DataSourceProvider() {}
 
+	/**
+	 * <p>Constructor for DataSourceProvider.</p>
+	 *
+	 * @param dataSource a {@link javax.sql.DataSource} object.
+	 * @param dialect a {@link de.mhus.lib.sql.Dialect} object.
+	 * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 * @param activator a {@link de.mhus.lib.core.MActivator} object.
+	 */
 	public DataSourceProvider(DataSource dataSource, Dialect dialect, ResourceNode config, MActivator activator) {
 		doInitialize(config, activator);
 		setDataSource(dataSource);
 		setDialect(dialect);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InternalDbConnection createConnection() throws Exception {
 		if (dataSource == null) return null;
@@ -39,6 +57,7 @@ public class DataSourceProvider extends DbProvider {
 		return new JdbcConnection(this, con);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Dialect getDialect() {
 		if (dialect == null)
@@ -47,14 +66,29 @@ public class DataSourceProvider extends DbProvider {
 		return dialect;
 	}
 
+	/**
+	 * <p>Getter for the field <code>dataSource</code>.</p>
+	 *
+	 * @return a {@link javax.sql.DataSource} object.
+	 */
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
+	/**
+	 * <p>Setter for the field <code>dataSource</code>.</p>
+	 *
+	 * @param dataSource a {@link javax.sql.DataSource} object.
+	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * <p>Setter for the field <code>dialect</code>.</p>
+	 *
+	 * @param dialect a {@link de.mhus.lib.sql.Dialect} object.
+	 */
 	public void setDialect(Dialect dialect) {
 		this.dialect = dialect;
 	}

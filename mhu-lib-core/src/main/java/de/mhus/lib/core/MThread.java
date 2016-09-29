@@ -24,70 +24,127 @@ import de.mhus.lib.core.logging.Log;
 
 
 /**
+ * <p>MThread class.</p>
+ *
  * @author hummel
- * 
+ *
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @version $Id: $Id
  */
 public class MThread extends MObject implements Runnable {
 
+	/** Constant <code>log</code> */
 	protected static Log log = Log.getLog(MThread.class);
 	
 	protected Runnable task = this;
 	protected String name = "";
 	protected ThreadContainer tc = null;
 
+	/**
+	 * <p>Constructor for MThread.</p>
+	 */
 	public MThread() {
 	}
 
+	/**
+	 * <p>Constructor for MThread.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 */
 	public MThread(String _name) {
 		name = _name;
 	}
 
+	/**
+	 * <p>Constructor for MThread.</p>
+	 *
+	 * @param _task a {@link java.lang.Runnable} object.
+	 */
 	public MThread(Runnable _task) {
 		task = _task;
 	}
 
+	/**
+	 * <p>Constructor for MThread.</p>
+	 *
+	 * @param _task a {@link java.lang.Runnable} object.
+	 * @param _name a {@link java.lang.String} object.
+	 */
 	public MThread(Runnable _task, String _name) {
 		task = _task;
 		name = _name;
 	}
 
+	/**
+	 * <p>Getter for the field <code>task</code>.</p>
+	 *
+	 * @return a {@link java.lang.Runnable} object.
+	 */
 	protected Runnable getTask() {
 		return task;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void run() {
 	}
 
+	/**
+	 * <p>start.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.MThread} object.
+	 */
 	public MThread start() {
 		tc = MSingleton.baseLookup(this,MThreadManager.class).start(this, name);
 		return this;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 */
 	public void setName(String _name) {
 		if (tc != null)
 			tc.setName(_name);
 	}
 
+	/**
+	 * <p>Getter for the field <code>name</code>.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getName() {
 		if (tc != null)
 			return tc.getName();
 		return "";
 	}
 
+	/**
+	 * <p>setPriority.</p>
+	 *
+	 * @param _p a int.
+	 */
 	public void setPriority(int _p) {
 		if (tc != null)
 			tc.setPriority(_p);
 	}
 
+	/**
+	 * <p>getPriority.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getPriority() {
 		if (tc != null)
 			return tc.getPriority();
 		return 0;
 	}
 
+	/**
+	 * <p>stop.</p>
+	 */
 	@SuppressWarnings("deprecation")
 	public void stop() {
 		if (tc == null)
@@ -95,6 +152,11 @@ public class MThread extends MObject implements Runnable {
 		tc.stop();
 	}
 
+	/**
+	 * <p>throwException.</p>
+	 *
+	 * @param throwable a {@link java.lang.Throwable} object.
+	 */
 	@SuppressWarnings("deprecation")
 	public void throwException(Throwable throwable) {
 		if (tc == null)
@@ -105,7 +167,8 @@ public class MThread extends MObject implements Runnable {
 	/**
 	 * Sleeps _millisec milliseconds. On Error (e.g. a break), it prints a
 	 * stacktrace dump.
-	 * @param _millisec 
+	 *
+	 * @param _millisec a long.
 	 */
 	public static void sleep(long _millisec) {
 		try {
@@ -119,6 +182,11 @@ public class MThread extends MObject implements Runnable {
 		tc = null;
 	}
 
+	/**
+	 * <p>taskError.</p>
+	 *
+	 * @param t a {@link java.lang.Throwable} object.
+	 */
 	public void taskError(Throwable t) {
 
 	}
@@ -218,6 +286,12 @@ public class MThread extends MObject implements Runnable {
 
 	}
 
+	/**
+	 * <p>asynchron.</p>
+	 *
+	 * @param task a {@link java.lang.Runnable} object.
+	 * @since 3.3.0
+	 */
 	public static void asynchron(Runnable task) {
 		new MThread(task).start();
 	}

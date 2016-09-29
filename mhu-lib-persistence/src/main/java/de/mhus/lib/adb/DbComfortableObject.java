@@ -7,9 +7,9 @@ import de.mhus.lib.sql.DbConnection;
 /**
  * A comfortable abstract object base to make the life of the developer fresh and
  * handy. Use this, if possible as base of a database object. You will love it.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class DbComfortableObject extends MObject implements DbObject {
 
@@ -18,13 +18,18 @@ public class DbComfortableObject extends MObject implements DbObject {
 	private String registryName;
 	private DbConnection con;
 
+	/**
+	 * <p>isAdbManaged.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAdbManaged() {
 		return manager != null;
 	}
 	/**
 	 * Save changes.
-	 * 
-	 * @throws MException
+	 *
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public void save() throws MException {
 		if (isAdbManaged() && !persistent)
@@ -35,9 +40,9 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/**
 	 * Save object if it is not managed jet then it will create the object
-	 * 
-	 * @param manager
-	 * @throws MException
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbObjectHandler} object.
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public void save(DbObjectHandler manager) throws MException {
 		if (isAdbManaged() && persistent)
@@ -48,9 +53,9 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/**
 	 * Save the object if the object differs from database.
-	 * 
+	 *
 	 * @return true if the object was saved.
-	 * @throws MException
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public boolean saveChanged() throws MException {
 		if (isAdbManaged() && !persistent) {
@@ -66,8 +71,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/**
 	 * Reload from database.
-	 * 
-	 * @throws MException
+	 *
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public void reload() throws MException {
 		manager.reloadObject(con, registryName, this);
@@ -75,8 +80,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/**
 	 * Delete from database.
-	 * 
-	 * @throws MException
+	 *
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public void delete() throws MException {
 		if (isAdbManaged()) {
@@ -87,9 +92,9 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/**
 	 * Create this new object in the database.
-	 * 
-	 * @param manager
-	 * @throws MException
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbObjectHandler} object.
+	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	public void create(DbObjectHandler manager) throws MException {
 		manager.createObject(con, this);
@@ -97,6 +102,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.
 	 */
 	@Override
@@ -104,6 +111,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook, the default behavior is to call doPostLoad().
 	 */
 	@Override
@@ -112,6 +121,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.
 	 */
 	@Override
@@ -119,6 +130,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.But remember, it could be called more times. It's only
 	 * to store the data.
 	 */
@@ -129,18 +142,22 @@ public class DbComfortableObject extends MObject implements DbObject {
 		persistent = isPersistent;
 	}
 
+	/** {@inheritDoc} */
 	public boolean setDbHandler(DbObjectHandler manager) {
 		if (this.manager != null) return false;
 		this.manager = manager;
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isAdbPersistent() {
 		return persistent;
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.
 	 */
 	@Override
@@ -148,6 +165,8 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.
 	 */
 	@Override
@@ -155,17 +174,26 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
 	 * Overwrite to get the hook.
 	 */
 	@Override
 	public void doPostDelete(DbConnection con) {
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbObjectHandler getDbHandler() {
 		return manager;
 	}
 
+	/**
+	 * <p>isAdbChanged.</p>
+	 *
+	 * @return a boolean.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public boolean isAdbChanged() throws MException {
 		return isAdbManaged() && ( !persistent || manager.objectChanged(this) );
 	}

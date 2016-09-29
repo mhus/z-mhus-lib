@@ -26,7 +26,7 @@ public abstract class DbStatement extends MObject {
 	 * 
 	 * @See Statement.execute
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract boolean execute(Map<String, Object> attributes) throws Exception;
@@ -39,7 +39,7 @@ public abstract class DbStatement extends MObject {
 	 * Return the result of an select query.
 	 * 
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract DbResult executeQuery(Map<String, Object> attributes) throws Exception;
@@ -48,7 +48,7 @@ public abstract class DbStatement extends MObject {
 	 * Return the result of an update query. In the attributes InputStreams are allowed (blobs).
 	 * 
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract int executeUpdate(Map<String, Object> attributes) throws Exception;
@@ -56,7 +56,7 @@ public abstract class DbStatement extends MObject {
 	/**
 	 * Return the used connection.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public abstract DbConnection getConnection();
 

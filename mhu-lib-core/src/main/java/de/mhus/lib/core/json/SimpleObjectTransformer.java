@@ -19,8 +19,15 @@ import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.errors.NotSupportedException;
 
+/**
+ * <p>SimpleObjectTransformer class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class SimpleObjectTransformer extends TransformStrategy {
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object jsonToPojo(JsonNode from, Class<?> type,
@@ -154,6 +161,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 		
 	}
 
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public JsonNode pojoToJson(Object from, TransformHelper helper)
@@ -273,6 +281,13 @@ public class SimpleObjectTransformer extends TransformStrategy {
 		return to;
 	}
 
+	/**
+	 * <p>getValue.</p>
+	 *
+	 * @param node a {@link org.codehaus.jackson.JsonNode} object.
+	 * @param helper a {@link de.mhus.lib.core.json.TransformHelper} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public static Object getValue(JsonNode node, TransformHelper helper) {
 		Object out = null;
 		if (node == null) return null;

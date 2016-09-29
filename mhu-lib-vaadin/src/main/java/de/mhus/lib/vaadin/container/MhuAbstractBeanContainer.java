@@ -93,7 +93,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
          * Return the item identifier for a bean.
          * 
          * @param bean
-         * @return
+         * @return x
          */
         public IDTYPE getIdForBean(BEANTYPE bean);
     }
@@ -216,7 +216,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * This comes from the bean type constructor parameter, and bean metadata
      * (including container properties) is based on this.
      * 
-     * @return
+     * @return x
      */
     public Class<? super BEANTYPE> getBeanType() {
         return type;

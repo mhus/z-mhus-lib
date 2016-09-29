@@ -1,13 +1,20 @@
 package de.mhus.lib.core;
 
+/**
+ * <p>MMath class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MMath {
 
 	/**
 	 * Pack the number in a base 36 numerical system. This means the characters 0-9 A-Z are used. This is the maximum
 	 * packed system if you want to use case insensitive strings.
+	 *
 	 * @param value The value to convert
 	 * @param digits number of minimum digits (expect the minus character if the value is negative)
-	 * @return
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toBasis36(long value, int digits) {
 		StringBuffer sb = new StringBuffer();
@@ -34,11 +41,11 @@ public class MMath {
 	/**
 	 * Pack the number in a base 36 numerical system. This means the characters 0-9 A-Z are used. This is the maximum
 	 * packed system if you want to use case insensitive strings. This function creates ids specially for logger traces.
-	 * 
+	 *
 	 * @param value The value to convert
 	 * @param ident additional ident at the right side, has 4 digits
 	 * @param digits number of minimum digits (expect the minus character if the value is negative)
-	 * @return
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toBasis36WithIdent(long value, long ident, int digits) {
 		StringBuffer sb = new StringBuffer();

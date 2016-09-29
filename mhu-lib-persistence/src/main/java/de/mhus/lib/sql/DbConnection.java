@@ -24,7 +24,7 @@ public interface DbConnection {
 	/**
 	 * Returns if the user can change the database.
 	 * 
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public boolean isReadOnly() throws Exception;
@@ -40,7 +40,7 @@ public interface DbConnection {
 	 * Returns a predefined statement.
 	 * 
 	 * @param name Name of the predefined statement.
-	 * @return The statement or null if the statement is not found.
+	 * @return x The statement or null if the statement is not found.
 	 * @throws MException
 	 */
 	public DbStatement getStatement(String name) throws MException;
@@ -50,7 +50,7 @@ public interface DbConnection {
 	 * the default language.
 	 * 
 	 * @param sql
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public DbStatement createStatement(String sql) throws MException;
@@ -60,7 +60,7 @@ public interface DbConnection {
 	 * 
 	 * @param sql sql query
 	 * @param language the specific language or null if the default language should be used.
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public DbStatement createStatement(String sql, String language) throws MException;
@@ -69,21 +69,21 @@ public interface DbConnection {
 	 * Create a statement from a prepared one.
 	 * 
 	 * @param dbPrepared
-	 * @return
+	 * @return x
 	 */
 	DbStatement createStatement(DbPrepared dbPrepared);
 
 	/**
 	 * Returns true of the connection is no more valid.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public boolean isClosed();
 
 	/**
 	 * Returns true if the connection is in use. This is needed for the db connection pool.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public boolean isUsed();
 
@@ -102,14 +102,14 @@ public interface DbConnection {
 	/**
 	 * Return the unique id of this connection. Need to log information.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public long getInstanceId();
 
 	/**
 	 * Create a query compiler for this connection. Used by the DbStatement class.
 	 * @param language 
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public Parser createQueryCompiler(String language) throws MException;
@@ -117,7 +117,7 @@ public interface DbConnection {
 	/**
 	 * Return the original instance thrue proxies - if possible.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public DbConnection instance();
 
@@ -128,7 +128,7 @@ public interface DbConnection {
 	/**
 	 * Return the default used language for this kind of connection.
 	 * 
-	 * @return The default supported language, could also be null as default value.
+	 * @return x The default supported language, could also be null as default value.
 	 */
 	public abstract String getDefaultLanguage();
 
@@ -136,7 +136,7 @@ public interface DbConnection {
 	 * Return a list of supported languages. Every connection should at least
 	 * support the LANGUAGE_COMMON.
 	 * 
-	 * @return The list of languages or an empty array but never null.
+	 * @return x The list of languages or an empty array but never null.
 	 */
 	public abstract String[] getLanguages();
 

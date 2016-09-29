@@ -30,24 +30,34 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 
 /**
- * 
+ * <p>HtmlParser class.</p>
+ *
  * @author hummel
+ * @version $Id: $Id
  */
 public class HtmlParser {
 
+	/** Constant <code>TEXT=1</code> */
 	public static final int TEXT = 1;
+	/** Constant <code>TAG=2</code> */
 	public static final int TAG = 2;
 
 	private Reader is = null;
 	private Listener listener = null;
 	private boolean trim = false;
 
+	/**
+	 * <p>Constructor for HtmlParser.</p>
+	 */
 	public HtmlParser() {
 	}
 
-	/** Creates a new instance of Parser 
-	 * @param _is 
-	 * @param _listener */
+		/**
+		 * Creates a new instance of Parser
+		 *
+		 * @param _is a {@link java.io.InputStream} object.
+		 * @param _listener a {@link de.mhus.lib.core.parser.HtmlParser.Listener} object.
+		 */
 	public HtmlParser(InputStream _is, Listener _listener) {
 		is = new InputStreamReader(_is);
 		listener = _listener;
@@ -55,17 +65,35 @@ public class HtmlParser {
 
 	public HtmlParser(Reader _is, Listener _listener) {
 		is = _is;
+		/**
+		 * <p>Constructor for HtmlParser.</p>
+		 *
+		 * @param _is a {@link java.io.Reader} object.
+		 * @param _listener a {@link de.mhus.lib.core.parser.HtmlParser.Listener} object.
+		 */
 		listener = _listener;
 	}
 
 	public boolean parse(Reader _is, Listener _listener) {
 		is = _is;
+		/**
+		 * <p>parse.</p>
+		 *
+		 * @param _is a {@link java.io.Reader} object.
+		 * @param _listener a {@link de.mhus.lib.core.parser.HtmlParser.Listener} object.
+		 * @return a boolean.
+		 */
 		listener = _listener;
 		return parse();
 	}
 
 	public boolean parse() {
 
+		/**
+		 * <p>parse.</p>
+		 *
+		 * @return a boolean.
+		 */
 		int type = TEXT;
 		StringBuffer text = new StringBuffer();
 		char[] one = new char[1];
@@ -154,6 +182,11 @@ public class HtmlParser {
 
 	protected void trim(StringBuffer text) {
 		if (!trim) return;
+		/**
+		 * <p>trim.</p>
+		 *
+		 * @param text a {@link java.lang.StringBuffer} object.
+		 */
 		while (text.length() > 0 && MString.isWhitespace(text.charAt(0)) )
 			text.deleteCharAt(0);
 		while (text.length() > 0 && MString.isWhitespace(text.charAt(text.length()-1)) )
@@ -165,7 +198,6 @@ public class HtmlParser {
 	 * @return
 	 */
 	private String getTagName(String tag) {
-
 		if (MString.isIndex(tag, MString.WHITESPACE)) {
 			return MString.beforeIndex(tag, MString.WHITESPACE);
 		}
@@ -177,7 +209,6 @@ public class HtmlParser {
 	 * @param tag
 	 */
 	private Hashtable<String,String> getTagParams(String tag) {
-
 		Hashtable<String,String> out = new Hashtable<String,String>();
 
 		if (!MString.isIndex(tag, MString.WHITESPACE)) {
@@ -224,10 +255,20 @@ public class HtmlParser {
 
 	public boolean isTrim() {
 		return trim;
+	/**
+	 * <p>isTrim.</p>
+	 *
+	 * @return a boolean.
+	 */
 	}
 
 	public void setTrim(boolean trim) {
 		this.trim = trim;
+	/**
+	 * <p>Setter for the field <code>trim</code>.</p>
+	 *
+	 * @param trim a boolean.
+	 */
 	}
 
 	public interface Listener {

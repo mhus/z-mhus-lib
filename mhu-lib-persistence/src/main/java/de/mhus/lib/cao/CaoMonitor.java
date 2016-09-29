@@ -2,6 +2,12 @@ package de.mhus.lib.cao;
 
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * <p>Abstract CaoMonitor class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public abstract class CaoMonitor {
 
 	/** Constant indicating an unknown amount of work.
@@ -11,7 +17,7 @@ public abstract class CaoMonitor {
 	/**
 	 * Notifies that the main task is beginning.  This must only be called once
 	 * on a given progress monitor instance.
-	 * 
+	 *
 	 * @param name the name (or description) of the main task
 	 * @param totalWork the total number of work units into which
 	 *  the main task is been subdivided. If the value is <code>UNKNOWN</code>
@@ -27,7 +33,6 @@ public abstract class CaoMonitor {
 	 *
 	 * @return <code>true</code> if cancellation has been requested,
 	 *    and <code>false</code> otherwise
-	 * @see #setCanceled(boolean)
 	 */
 	public abstract boolean isCanceled();
 
@@ -51,7 +56,8 @@ public abstract class CaoMonitor {
 
 	/**
 	 * Returns the actual number of already worked items set by worked().
-	 * @return 
+	 *
+	 * @return a int.
 	 */
 	public abstract int alreadyWorked();
 
@@ -67,8 +73,8 @@ public abstract class CaoMonitor {
 	 * Return a logger to use by the client. The client should use this
 	 * logger to be sure the results of the operation will be stored
 	 * in the correct and separate location.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.core.logging.Log} object.
 	 */
 	public abstract Log log();
 }

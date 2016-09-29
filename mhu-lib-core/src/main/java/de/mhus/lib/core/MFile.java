@@ -46,8 +46,10 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
 /**
- * 
+ * <p>MFile class.</p>
+ *
  * @author hummel
+ * @version $Id: $Id
  */
 public class MFile {
 	
@@ -59,8 +61,9 @@ public class MFile {
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot.
-	 * @param _file 
-	 * @return 
+	 *
+	 * @param _file a {@link java.io.File} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getFileSuffix(File _file) {
 		if (_file == null) return null;
@@ -69,8 +72,9 @@ public class MFile {
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot or an empty string.
-	 * @param name 
-	 * @return 
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getFileSuffix(String name) {
 		if (name == null) return null;
@@ -85,8 +89,9 @@ public class MFile {
 	/**
 	 * Returns the name of the file in a path name. Using the OS specific
 	 * separator.
-	 * @param path 
-	 * @return 
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getFileName(String path) {
 		if (path == null) return null;
@@ -100,7 +105,8 @@ public class MFile {
 
 	/**
 	 * return the internal working directory.
-	 * @return 
+	 *
+	 * @return a {@link java.io.File} object.
 	 */
 	public static File getWorkingDirectory() {
 
@@ -110,8 +116,9 @@ public class MFile {
 
 	/**
 	 * Open and read a file. It returns the content of the file as string.
-	 * @param _f 
-	 * @return 
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readFile(File _f) {
 		return readFile(_f, MString.CHARSET_UTF_8);
@@ -119,9 +126,10 @@ public class MFile {
 	
 	/**
 	 * Open and read a file. It returns the content of the file as string.
-	 * @param _f 
-	 * @param encoding 
-	 * @return 
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @param encoding a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readFile(File _f, String encoding) {
 		if (_f == null) return null;
@@ -141,8 +149,9 @@ public class MFile {
 
 	/**
 	 * Open and read a file. It returns the content of the file as string.
-	 * @param _is 
-	 * @return 
+	 *
+	 * @param _is a {@link java.io.Reader} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readFile(Reader _is) {
 		if (_is == null) return null;
@@ -171,13 +180,21 @@ public class MFile {
 	/**
 	 * Open and read a stream. It returns the content of the file as string.
 	 * Be aware of special characters.
-	 * @param _is 
-	 * @return 
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String readFile(InputStream _is) {
 		return readFile(_is, MString.CHARSET_UTF_8);
 	}
 	
+	/**
+	 * <p>readFile.</p>
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @param encoding a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String readFile(InputStream _is, String encoding) {
 		if (_is == null) return null;
 		if (encoding == null) encoding = MString.CHARSET_UTF_8;
@@ -194,9 +211,10 @@ public class MFile {
 
 	/**
 	 * Open and read a file. It returns the content of the file as byte array.
-	 * @param in 
-	 * @return 
-	 * @throws IOException 
+	 *
+	 * @param in a {@link java.io.File} object.
+	 * @throws java.io.IOException if any.
+	 * @return an array of byte.
 	 */
 	public static byte[] readBinaryFile(File in) throws IOException {
 		if (in == null) return null;
@@ -207,9 +225,10 @@ public class MFile {
 
 	/**
 	 * Open and read a stream. It returns the content of the file as byte array.
-	 * @param is 
-	 * @return 
-	 * @throws IOException 
+	 *
+	 * @param is a {@link java.io.InputStream} object.
+	 * @throws java.io.IOException if any.
+	 * @return an array of byte.
 	 */
 	public static byte[] readBinary(InputStream is) throws IOException {
 		return readBinary(is, false);
@@ -217,10 +236,11 @@ public class MFile {
 
 	/**
 	 * Open and read a stream. It returns the content of the file as byte array.
-	 * @param is 
-	 * @param close 
-	 * @return 
-	 * @throws IOException 
+	 *
+	 * @param is a {@link java.io.InputStream} object.
+	 * @param close a boolean.
+	 * @throws java.io.IOException if any.
+	 * @return an array of byte.
 	 */
 	public static byte[] readBinary(InputStream is, boolean close)
 			throws IOException {
@@ -244,11 +264,12 @@ public class MFile {
 
 	/**
 	 * Open and read a stream. It put the content of the file into the byte array.
-	 * @param is 
-	 * @param buffer 
-	 * @param offset 
-	 * @param length 
-	 * @throws IOException 
+	 *
+	 * @param is a {@link java.io.InputStream} object.
+	 * @param buffer an array of byte.
+	 * @param offset a int.
+	 * @param length a int.
+	 * @throws java.io.IOException if any.
 	 */
 	public static void readBinary(InputStream is, byte[] buffer, int offset,
 			int length) throws IOException {
@@ -267,9 +288,10 @@ public class MFile {
 
 	/**
 	 * Open and write a file. Be aware of special characters.
-	 * @param _f 
-	 * @param _content 
-	 * @return 
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @param _content a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean writeFile(File _f, String _content) {
 		if (_f == null) return false;
@@ -291,10 +313,10 @@ public class MFile {
 
 	/**
 	 * Open and write the content of the byte array a file.
-	 * 
-	 * @param _f
-	 * @param _content
-	 * @return
+	 *
+	 * @param _f a {@link java.io.File} object.
+	 * @param _content an array of byte.
+	 * @return a boolean.
 	 */
 	public static boolean writeFile(File _f, byte[] _content) {
 		if (_f == null) return false;
@@ -314,12 +336,12 @@ public class MFile {
 
 	/**
 	 * Write the byte array to the stream.
-	 * 
-	 * @param fos
-	 * @param _content
-	 * @param offset
-	 * @param length
-	 * @throws IOException
+	 *
+	 * @param fos a {@link java.io.OutputStream} object.
+	 * @param _content an array of byte.
+	 * @param offset a int.
+	 * @param length a int.
+	 * @throws java.io.IOException if any.
 	 */
 	public static void writeFile(OutputStream fos, byte[] _content, int offset,
 			int length) throws IOException {
@@ -329,10 +351,10 @@ public class MFile {
 
 	/**
 	 * Copy a file.
-	 * 
-	 * @param _src
-	 * @param _dest
-	 * @return
+	 *
+	 * @param _src a {@link java.io.File} object.
+	 * @param _dest a {@link java.io.File} object.
+	 * @return a boolean.
 	 */
 	public static boolean copyFile(File _src, File _dest) {
 		if (_src == null || _dest == null) return false;
@@ -361,8 +383,9 @@ public class MFile {
 
 	/**
 	 * Copy a stream.
-	 * @param _is 
-	 * @param _os 
+	 *
+	 * @param _is a {@link java.io.InputStream} object.
+	 * @param _os a {@link java.io.OutputStream} object.
 	 */
 	public static void copyFile(InputStream _is, OutputStream _os) {
 		if (_is == null || _os == null) return;
@@ -386,8 +409,9 @@ public class MFile {
 
 	/**
 	 * Copy a stream.
-	 * @param _is 
-	 * @param _os 
+	 *
+	 * @param _is a {@link java.io.Reader} object.
+	 * @param _os a {@link java.io.Writer} object.
 	 */
 	public static void copyFile(Reader _is, Writer _os) {
 		if (_is == null || _os == null) return;
@@ -411,9 +435,9 @@ public class MFile {
 	
 	/**
 	 * Normalize the filename, removes all special characters.
-	 * 
-	 * @param _name
-	 * @return
+	 *
+	 * @param _name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toFileName(String _name) {
 		if (_name == null) return null;
@@ -439,8 +463,8 @@ public class MFile {
 
 	/**
 	 * Remove a directory and all included content.
-	 * 
-	 * @param _dir
+	 *
+	 * @param _dir a {@link java.io.File} object.
 	 */
 	public static void deleteDir(File _dir) {
 		if (_dir == null) return;
@@ -461,9 +485,9 @@ public class MFile {
 
 	/**
 	 * Copy a hole directory to another location.
-	 * 
-	 * @param _src
-	 * @param _dest
+	 *
+	 * @param _src a {@link java.io.File} object.
+	 * @param _dest a {@link java.io.File} object.
 	 */
 	public static void copyDir(File _src, File _dest) {
 		copyDir(_src, _dest, (String) null);
@@ -471,10 +495,10 @@ public class MFile {
 
 	/**
 	 * Copy a directory with content. Use the filter to filter the content.
-	 * 
-	 * @param _src
-	 * @param _dest
-	 * @param _filter
+	 *
+	 * @param _src a {@link java.io.File} object.
+	 * @param _dest a {@link java.io.File} object.
+	 * @param _filter a {@link java.lang.String} object.
 	 */
 	public static void copyDir(File _src, File _dest, String _filter) {
 		if (_src == null || _dest == null) return;
@@ -487,6 +511,13 @@ public class MFile {
 
 
 	
+	/**
+	 * <p>copyDir.</p>
+	 *
+	 * @param _src a {@link java.io.File} object.
+	 * @param _dest a {@link java.io.File} object.
+	 * @param _filter an array of {@link java.lang.String} objects.
+	 */
 	public static void copyDir(File _src, File _dest, final String[] _filter) {
 		if (_src == null || _dest == null) return;
 
@@ -506,6 +537,13 @@ public class MFile {
 				
 			});
 	}
+	/**
+	 * <p>copyDir.</p>
+	 *
+	 * @param _src a {@link java.io.File} object.
+	 * @param _dest a {@link java.io.File} object.
+	 * @param _filter a {@link java.io.FileFilter} object.
+	 */
 	public static void copyDir(File _src, File _dest, FileFilter _filter) {
 		if (_src == null || _dest == null) return;
 
@@ -533,9 +571,9 @@ public class MFile {
 
 	/**
 	 * Return a name free from problematic characters like slash, they will be changed to underscore
-	 * 
-	 * @param name
-	 * @return
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String normalize(String name) {
 		if (name == null) return null;
@@ -552,9 +590,9 @@ public class MFile {
 
 	/**
 	 * Returns the name without path and extension.
-	 * 
-	 * @param key
-	 * @return
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getFileNameOnly(String key) {
 		if (key == null) return null;
@@ -566,11 +604,10 @@ public class MFile {
 
 	/**
 	 * Replace the Extension of the file
-	 * @param name 
-	 * @param newExtension 
-	 * @param canonicalName
-	 * @param string
-	 * @return 
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param newExtension a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String replaceExtension(String name, String newExtension) {
 		if (name == null || newExtension == null) return name;
@@ -579,8 +616,9 @@ public class MFile {
 	
 	/**
 	 * Searching for the mime type in config and as last option have a static list of extensions.
-	 * @param extension
-	 * @return 
+	 *
+	 * @param extension a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getMimeType(String extension) {
 		if (extension == null) return null;
@@ -646,11 +684,11 @@ public class MFile {
 	/**
 	 * Write a line list to a file. Be aware of the ENTER \\n character in the lines !
 	 * Every line will be truncated by a ENTER \\n sign. This means the last line is empty.
-	 * 
-	 * @param file
-	 * @param lines
-	 * @param append
-	 * @throws IOException
+	 *
+	 * @param file a {@link java.io.File} object.
+	 * @param lines a {@link java.util.List} object.
+	 * @param append a boolean.
+	 * @throws java.io.IOException if any.
 	 */
 	public static void writeLines(File file, List<String> lines, boolean append) throws IOException {
 		if (file == null || lines == null) return;
@@ -668,11 +706,11 @@ public class MFile {
 
 	/**
 	 * Read a file into a list line by line
-	 * 
-	 * @param file
+	 *
+	 * @param file a {@link java.io.File} object.
 	 * @param removeLastEmpty If you have written line by line the last ENTER will produce an empty line, set true to remove this line.
-	 * @return
-	 * @throws IOException
+	 * @throws java.io.IOException if any.
+	 * @return a {@link java.util.List} object.
 	 */
 	public static List<String> readLines(File file, boolean removeLastEmpty) throws IOException {
 		if (file == null) return null;
@@ -692,6 +730,13 @@ public class MFile {
 		return out;
 	}
 	
+	/**
+	 * <p>readLines.</p>
+	 *
+	 * @param file a {@link java.io.File} object.
+	 * @param lineObserver a {@link java.util.Observer} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static void readLines(File file, Observer lineObserver) throws IOException {
 		if (file == null || lineObserver == null) return;
 		FileReader r = new FileReader(file);
@@ -699,6 +744,13 @@ public class MFile {
 		r.close();
 	}
 
+	/**
+	 * <p>readLines.</p>
+	 *
+	 * @param r a {@link java.io.Reader} object.
+	 * @param lineObserver a {@link java.util.Observer} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public static void readLines(Reader r, Observer lineObserver) throws IOException {
 		if (r == null || lineObserver == null) return;
 		BufferedReader br = new BufferedReader(r);

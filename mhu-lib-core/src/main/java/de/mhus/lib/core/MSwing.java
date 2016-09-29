@@ -14,14 +14,20 @@ import javax.swing.JDialog;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
+/**
+ * <p>MSwing class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MSwing {
 
 	/**
 	 * Convert string information to color.
-	 * 
-	 * @param string
-	 * @param def
-	 * @return
+	 *
+	 * @param string a {@link java.lang.String} object.
+	 * @param def a {@link java.awt.Color} object.
+	 * @return a {@link java.awt.Color} object.
 	 */
 	public static Color toColor(String string, Color def) {
 		Color out = null;
@@ -47,15 +53,15 @@ public class MSwing {
 	}
 	
 	/**
-	
-	 * 
+	 *
+	 *
 	 * Cast a Image to a Buffered Image. The new image is a
 	 * BufferedImage.TYPE_3BYTE_BGR type. Perhaps some informations of the
 	 * origin image will be lost.
-	 * @param _in 
-	 * @return 
+	 *
+	 * @param _in a {@link java.awt.Image} object.
+	 * @return a {@link java.awt.image.BufferedImage} object.
 	 */
-
 	public static BufferedImage toBufferedImage(Image _in) {
 
 		BufferedImage out = new BufferedImage(_in.getWidth(null), _in
@@ -68,6 +74,14 @@ public class MSwing {
 	}
 
 	//
+	/**
+	 * <p>toBufferedImage.</p>
+	 *
+	 * @param _in a {@link java.awt.Image} object.
+	 * @param _width a int.
+	 * @param _height a int.
+	 * @return a {@link java.awt.image.BufferedImage} object.
+	 */
 	public static BufferedImage toBufferedImage(Image _in, int _width,
 			int _height) {
 
@@ -82,9 +96,9 @@ public class MSwing {
 
 	/**
 	 * Convert Color information to string. Do not store alpha value.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.awt.Color} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(Color _in) {
 		return "#" + MCast.toHex2String(_in.getRed()) + MCast.toHex2String(_in.getGreen())
@@ -93,9 +107,9 @@ public class MSwing {
 
 	/**
 	 * Convert Font information to string.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.awt.Font} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toString(Font _in) {
 		return _in.getFamily() + "-"
@@ -104,6 +118,12 @@ public class MSwing {
 				+ _in.getSize();
 	}
 
+	/**
+	 * <p>getSelectedPart.</p>
+	 *
+	 * @param text a {@link javax.swing.JTextArea} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	static public String getSelectedPart(JTextArea text) {
 		String s = text.getSelectedText();
 		if (s == null) {
@@ -123,6 +143,11 @@ public class MSwing {
 		return s;
 	}
 
+	/**
+	 * <p>halfFrame.</p>
+	 *
+	 * @param _frame a {@link java.awt.Window} object.
+	 */
 	static public void halfFrame(Window _frame) {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -133,6 +158,11 @@ public class MSwing {
 
 	}
 
+	/**
+	 * <p>tribleFrame.</p>
+	 *
+	 * @param _frame a {@link java.awt.Window} object.
+	 */
 	static public void tribleFrame(Window _frame) {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -143,6 +173,11 @@ public class MSwing {
 
 	}
 
+	/**
+	 * <p>centerFrame.</p>
+	 *
+	 * @param _frame a {@link java.awt.Window} object.
+	 */
 	static public void centerFrame(Window _frame) {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -164,6 +199,12 @@ public class MSwing {
 
 	}
 
+	/**
+	 * <p>centerDialog.</p>
+	 *
+	 * @param _frame a {@link java.awt.Window} object.
+	 * @param _dialog a {@link javax.swing.JDialog} object.
+	 */
 	static public void centerDialog(Window _frame, JDialog _dialog) {
 
 		int x, y;
@@ -199,6 +240,11 @@ public class MSwing {
 
 	}
 
+	/**
+	 * <p>getLookAndFeels.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
 	static public String[] getLookAndFeels() {
 
 		String[] o = new String[7];
@@ -213,6 +259,11 @@ public class MSwing {
 		return o;
 	}
 
+	/**
+	 * <p>setLookAndFeel.</p>
+	 *
+	 * @param _nr a int.
+	 */
 	static public void setLookAndFeel(int _nr) {
 
 		String luf = null;

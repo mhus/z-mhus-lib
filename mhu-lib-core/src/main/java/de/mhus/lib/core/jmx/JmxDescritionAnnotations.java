@@ -13,13 +13,27 @@ import javax.management.MBeanOperationInfo;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 
+/**
+ * <p>JmxDescritionAnnotations class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class JmxDescritionAnnotations extends JmxDescriptionMBean {
 
+	/**
+	 * <p>Constructor for JmxDescritionAnnotations.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @throws java.lang.ClassNotFoundException if any.
+	 * @throws javax.management.IntrospectionException if any.
+	 */
 	public JmxDescritionAnnotations(Object in) throws ClassNotFoundException,
 			IntrospectionException {
 		super(in);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void analyse(Object in) throws ClassNotFoundException, IntrospectionException {
 		

@@ -5,34 +5,54 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.lang.Base;
 
+/**
+ * <p>DefaultBase class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class DefaultBase extends Base {
 	
 	MActivator activator;
 
+	/**
+	 * <p>Constructor for DefaultBase.</p>
+	 *
+	 * @param parent a {@link de.mhus.lib.core.lang.Base} object.
+	 */
 	public DefaultBase(Base parent) {
 		super(parent);
 		this.activator = MSingleton.get().createActivator();
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void destroy() {
 		if (activator != null) activator.destroy();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isDestroyed() {
 		return activator == null || activator.isDestroyed();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isBase(Class<?> ifc) {
 		return activator != null && activator.isInstance(ifc) || parent != null && parent.isBase(ifc);
 	}
 
+	/**
+	 * <p>Getter for the field <code>activator</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.MActivator} object.
+	 */
 	public MActivator getActivator() {
 		return activator;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T lookup(Class<T> ifc) {
 		try {
@@ -52,6 +72,7 @@ public class DefaultBase extends Base {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void addObject(Class<?> ifc, Object obj) {
 		MActivator act = getActivator();
@@ -59,6 +80,7 @@ public class DefaultBase extends Base {
 			((MutableActivator)act).addObject(ifc, null, obj);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeObject(Class<?> ifc) {
 		MActivator act = getActivator();

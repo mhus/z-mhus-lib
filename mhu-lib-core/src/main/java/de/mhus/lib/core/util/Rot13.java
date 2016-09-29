@@ -18,12 +18,30 @@
 
 package de.mhus.lib.core.util;
 
+/**
+ * <p>Rot13 class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class Rot13 {
 
+	/**
+	 * <p>encode.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encode(String in) {
 		return decode(in);
 	}
 
+	/**
+	 * <p>decode.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String decode(String in) {
 
 		StringBuffer out = new StringBuffer();

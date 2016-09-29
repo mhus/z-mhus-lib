@@ -17,14 +17,20 @@ import java.util.TimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Stringifier;
 
+/**
+ * <p>MSystem class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MSystem {	
 	
 	private static Log log = Log.getLog(MSystem.class);
 	
 	/**
 	 * Returns the name of the current system. COMPUTERNAME or HOSTNAME.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getHostname() 
 	{
@@ -42,8 +48,8 @@ public class MSystem {
 	
 	/**
 	 * Returns the process id of the current application.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getPid() 
 	{
@@ -55,10 +61,10 @@ public class MSystem {
 	/**
 	 * Load and return a properties file. If the file not exists it will only
 	 * log the impact and return a empty properties object.
-	 * 
+	 *
 	 * If the properties object is not null this instance will be used to load
 	 * the file entries.
-	 * 
+	 *
 	 * 1. Find by system property {propertyname}.file=
 	 * 2. Find in {current dir}
 	 * 3. Find in {current dir}/config
@@ -66,7 +72,7 @@ public class MSystem {
 	 * 5. Find in classpath without package name
 	 * 6. Find in classpath with package of the owner (if set)
 	 * 7. throw an error
-	 * 
+	 *
 	 * @param owner null or reference object for the class path
 	 * @param properties A pre-instanciated properties object
 	 * @param propertyFile Name of the properties file, e.g. something.properties
@@ -94,7 +100,7 @@ public class MSystem {
 	}
        
 	/**
-	 * 
+	 *
 	 * 1. Find by system property {propertyname}.file=
 	 * 2. Find in {current dir}
 	 * 3. Find in {current dir}/config
@@ -102,10 +108,11 @@ public class MSystem {
 	 * 5. Find in classpath without package name
 	 * 6. Find in classpath with package of the owner (if set)
 	 * 7. throw an error
-	 * @param owner
-	 * @param propertyFile
-	 * @return
-	 * @throws IOException
+	 *
+	 * @param owner a {@link java.lang.Object} object.
+	 * @param propertyFile a {@link java.lang.String} object.
+	 * @throws java.io.IOException if any.
+	 * @return a {@link java.net.URL} object.
 	 */
 	@SuppressWarnings("deprecation")
 	public static URL locateResource(Object owner,String propertyFile) throws IOException {
@@ -164,6 +171,12 @@ public class MSystem {
 		System.out.flush();
 	} // end beep
 
+	/**
+	 * <p>findSource.</p>
+	 *
+	 * @param returns a int.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String findSource(int returns) {
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 		if (stack.length > returns)
@@ -173,7 +186,8 @@ public class MSystem {
 
 	/**
 	 * Return the name of the main class or null if not found.
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getMainClassName()
 	{
@@ -187,13 +201,20 @@ public class MSystem {
 
 	/**
 	 * Return the system temp directory.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getTmpDirectory() {
 		return System.getProperty("java.io.tmpdir");
 	}
 	
+	/**
+	 * <p>toString.</p>
+	 *
+	 * @param sender a {@link java.lang.Object} object.
+	 * @param attributes a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String toString(Object sender, Object ... attributes) {
 		StringBuffer sb = new StringBuffer();
 		sb.append('[');
@@ -208,6 +229,15 @@ public class MSystem {
 		return sb.toString();
 	}
 	
+	/**
+	 * <p>serialize.</p>
+	 *
+	 * @param sb a {@link java.lang.StringBuffer} object.
+	 * @param o a {@link java.lang.Object} object.
+	 * @param error a {@link java.lang.Throwable} object.
+	 * @return a {@link java.lang.Throwable} object.
+	 * @since 3.3.0
+	 */
 	public static Throwable serialize(StringBuffer sb, Object o, Throwable error) {
     	try {
 	    	if (o == null) {
@@ -230,6 +260,14 @@ public class MSystem {
 		return error;
 	}
 
+	/**
+	 * <p>findAnnotation.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 * @param annotation a {@link java.lang.Class} object.
+	 * @param <A> a A object.
+	 * @return a A object.
+	 */
 	public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotation) {
 		Class<?> current = clazz;
 		while (current != null) {
@@ -240,12 +278,27 @@ public class MSystem {
 		return null;
 	}
 
+	/**
+	 * <p>equals.</p>
+	 *
+	 * @param a a {@link java.lang.Object} object.
+	 * @param b a {@link java.lang.Object} object.
+	 * @return a boolean.
+	 */
 	public static boolean equals(Object a, Object b) {
 		if (a == null && b == null) return true;
 		if (a == null) return false;
 		return a.equals(b);
 	}
 	
+	/**
+	 * <p>startScript.</p>
+	 *
+	 * @param dir a {@link java.io.File} object.
+	 * @param script a {@link java.lang.String} object.
+	 * @param timeout a long.
+	 * @return a {@link de.mhus.lib.core.MSystem.ScriptResult} object.
+	 */
 	public static ScriptResult startScript(File dir, String script, long timeout) {
 		log.i("script",dir,script);
 		ProcessBuilder pb = new ProcessBuilder(new File(dir, script).getAbsolutePath() );
@@ -279,15 +332,32 @@ public class MSystem {
 		
 	}
 
+	/**
+	 * <p>getAppIdent.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getAppIdent() {
 		return getHostname() + ":" + getPid();
 	}
 	
+	/**
+	 * <p>getObjectId.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getObjectId(Object o) {
 		if (o == null) return "null";
 		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
 	}
 
+	/**
+	 * <p>getClassName.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String getClassName(Object obj) {
 		if (obj == null) return "null";

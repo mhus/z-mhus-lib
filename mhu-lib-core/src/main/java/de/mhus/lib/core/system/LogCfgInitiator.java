@@ -16,6 +16,13 @@ import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.logging.ParameterMapper;
 import de.mhus.lib.core.logging.Log.LEVEL;
 
+/**
+ * <p>LogCfgInitiator class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.3.0
+ */
 public class LogCfgInitiator implements CfgInitiator {
 
 	private static PrintStream err;
@@ -25,6 +32,7 @@ public class LogCfgInitiator implements CfgInitiator {
 		out = System.out;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
 

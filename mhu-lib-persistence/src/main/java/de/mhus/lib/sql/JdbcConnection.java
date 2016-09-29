@@ -12,12 +12,13 @@ import de.mhus.lib.sql.parser.SimpleQueryCompiler;
 /**
  * This class is a proxy for DbProvider and it is the public interface for it. It will automatic free
  * the provider in the pool if the connection is no more needed.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
+ * @version $Id: $Id
  */
 public class JdbcConnection extends InternalDbConnection {
 
+	/** Constant <code>LANGUAGE_SQL="sql"</code> */
 	public static final String LANGUAGE_SQL = "sql";
 
 	private boolean used = false;
@@ -30,6 +31,7 @@ public class JdbcConnection extends InternalDbConnection {
 	private StackTraceElement[] createStackTrace;
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void commit() throws Exception {
 		log().t(poolId,id,"commit");
@@ -38,12 +40,14 @@ public class JdbcConnection extends InternalDbConnection {
 			connection.commit();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isReadOnly() throws Exception {
 		if (closed) throw new MException(poolId,id,"Connection not valid");
 		return connection.isReadOnly();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void rollback() throws Exception {
 		log().t(poolId,id,"rollback");
@@ -51,12 +55,19 @@ public class JdbcConnection extends InternalDbConnection {
 		connection.rollback();
 	}
 
+	/**
+	 * <p>Constructor for JdbcConnection.</p>
+	 *
+	 * @param provider a {@link de.mhus.lib.sql.DbProvider} object.
+	 * @param con a {@link java.sql.Connection} object.
+	 */
 	public JdbcConnection(DbProvider provider,Connection con) {
 		this.provider=provider;
 		this.connection = con;
 		id = MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbStatement getStatement(String name) throws MException {
 		synchronized (this) {
@@ -68,6 +79,7 @@ public class JdbcConnection extends InternalDbConnection {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbStatement createStatement(String sql, String language) throws MException {
 		synchronized (this) {
@@ -77,6 +89,7 @@ public class JdbcConnection extends InternalDbConnection {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isClosed() {
 		synchronized (this) {
@@ -84,12 +97,14 @@ public class JdbcConnection extends InternalDbConnection {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isUsed() {
 		synchronized (this) {
@@ -97,6 +112,7 @@ public class JdbcConnection extends InternalDbConnection {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setUsed(boolean used) {
 		log().t(poolId,id,"used",used);
@@ -115,7 +131,7 @@ public class JdbcConnection extends InternalDbConnection {
 
 	/**
 	 * Returns the JDBC Connection - if possible.
-	 * 
+	 *
 	 * @return JDBC Connection or null
 	 */
 	public Connection getConnection() {
@@ -123,6 +139,7 @@ public class JdbcConnection extends InternalDbConnection {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		log().t(poolId,id,"close");
@@ -140,45 +157,62 @@ public class JdbcConnection extends InternalDbConnection {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public long getInstanceId() {
 		return id;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Parser createQueryCompiler(String language) throws MException {
 		if (pool != null) return pool.getDialect().getQueryParser(language);
 		return new SimpleQueryCompiler();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbConnection instance() {
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbStatement createStatement(DbPrepared dbPrepared) {
 		return new JdbcStatement(this, dbPrepared);
 	}
 
+	/**
+	 * <p>setTimeoutUnused.</p>
+	 *
+	 * @param timeoutUnused a long.
+	 */
 	public void setTimeoutUnused(long timeoutUnused) {
 		this.timeoutUnused = timeoutUnused;
 	}
 
+	/**
+	 * <p>setTimeoutLifetime.</p>
+	 *
+	 * @param timeoutLifetime a long.
+	 */
 	public void setTimeoutLifetime(long timeoutLifetime) {
 		this.timeoutLifetime = timeoutLifetime;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getDefaultLanguage() {
 		return LANGUAGE_SQL;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getLanguages() {
 		return new String[] {LANGUAGE_SQL};
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public DbStatement createStatement(String sql) throws MException {
 		return createStatement(sql, provider.getDialect().detectLanguage(sql));

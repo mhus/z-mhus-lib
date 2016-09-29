@@ -135,7 +135,7 @@ public abstract class DbPool extends MJmx {
 	/**
 	 * Returns the DbProvider, it implements the database behavior and creates new connections.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public DbProvider getProvider() {
 		return provider;
@@ -143,7 +143,7 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Returns the database dialect object. (Delegated to DbProvider).
-	 * @return
+	 * @return x
 	 */
 	public Dialect getDialect() {
 		return provider.getDialect();
@@ -152,8 +152,7 @@ public abstract class DbPool extends MJmx {
 	/**
 	 * Look into the pool for an unused DbProvider. If no one find, create one.
 	 * 
-	 * @param jmxName
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract DbConnection getConnection() throws Exception;
@@ -161,7 +160,7 @@ public abstract class DbPool extends MJmx {
 	/**
 	 * Current pool size.
 	 * 
-	 * @return Current pool size, also pending closed connections.
+	 * @return x Current pool size, also pending closed connections.
 	 */
 	@JmxManaged(descrition="Current size of the pool")
 	public abstract int getSize();
@@ -198,7 +197,7 @@ public abstract class DbPool extends MJmx {
 	 * Create a prepared statement using the default language.
 	 * 
 	 * @param sql
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql) throws MException {
@@ -210,7 +209,7 @@ public abstract class DbPool extends MJmx {
 	 * 
 	 * @param sql
 	 * @param language
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public DbPrepared createStatement(String sql, String language) throws MException {

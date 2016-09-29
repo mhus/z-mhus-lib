@@ -14,7 +14,7 @@ public class SearchHelper {
 	 * 
 	 * @param query
 	 * @param key
-	 * @return
+	 * @return x
 	 */
 	public String transformKey(AQuery<?> query, String key) {
 		return key;

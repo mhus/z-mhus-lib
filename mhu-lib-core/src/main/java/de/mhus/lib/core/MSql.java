@@ -27,14 +27,20 @@ import java.sql.Types;
 
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>MSql class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MSql {
 
 	/**
 	 * Prepare a string to use it in a sql query. It will also append the quots. A null string will be represented as one space of NULL
-	 * 
-	 * @param string
+	 *
+	 * @param string a {@link java.lang.String} object.
 	 * @param notNull Set to true will return a single space instead of the string NULL
-	 * @return
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String encode(String string, boolean notNull) {
 		if (string == null)
@@ -46,8 +52,9 @@ public class MSql {
 
 	/**
 	 * Escape all single quots to double single quots.
-	 * @param in
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String escape(String in) {
 		if (in == null)
@@ -59,8 +66,9 @@ public class MSql {
 
 	/**
 	 * Remove all double single quots.
-	 * @param in 
-	 * @return 
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String unescape(String in) {
 		if (in == null)
@@ -72,9 +80,10 @@ public class MSql {
 
 	/**
 	 * Escape single quots and truncates the string is needed.
-	 * @param in
-	 * @param truncateSize
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param truncateSize a int.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String escape(String in, int truncateSize) {
 		if (in == null)
@@ -88,10 +97,10 @@ public class MSql {
 
 	/**
 	 * Executes a bundle of queries, separated by semicolon.
-	 * 
-	 * @param sth
-	 * @param sql
-	 * @throws SQLException
+	 *
+	 * @param sth a {@link java.sql.Statement} object.
+	 * @param sql a {@link java.lang.String} object.
+	 * @throws java.sql.SQLException if any.
 	 */
 	public static void executeUpdateQueries(Statement sth, String sql)
 			throws SQLException {
@@ -107,10 +116,9 @@ public class MSql {
 	 * wrapping in ' at each end. Further quoting is required to use the results
 	 * in Java String literals. If you use PreparedStatement, then this method
 	 * is not needed. The ' quoting is automatically handled for you.
-	 * 
+	 *
 	 * @param sql
 	 *            Raw SQL string literal
-	 * 
 	 * @return sql String literal enclosed in '
 	 */
 	public static String quoteSQL(String sql) {
@@ -130,10 +138,10 @@ public class MSql {
 
 	/**
 	 * Removes all non standard characters. Currently do not validate keywords.
-	 * 
+	 *
 	 * @param in The string to validate
 	 * @param con Optional the sql connection to validate keywords. null is possible.
-	 * @return
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String toSqlLabel(String in, Connection con) {
 		boolean error = false;
@@ -166,10 +174,27 @@ public class MSql {
 	}
 
 
+	/**
+	 * <p>fillProperties.</p>
+	 *
+	 * @param res a {@link java.sql.ResultSet} object.
+	 * @param prop a {@link de.mhus.lib.core.MProperties} object.
+	 * @throws java.sql.SQLException if any.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public static void fillProperties(ResultSet res, MProperties prop) throws SQLException, MException {
 		fillProperties(res, prop, null);
 	}
 	
+	/**
+	 * <p>fillProperties.</p>
+	 *
+	 * @param res a {@link java.sql.ResultSet} object.
+	 * @param prop a {@link de.mhus.lib.core.MProperties} object.
+	 * @param translator a {@link de.mhus.lib.core.MSql.SqlTranslator} object.
+	 * @throws java.sql.SQLException if any.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public static void fillProperties(ResultSet res, MProperties prop, SqlTranslator translator) throws SQLException, MException {
 		ResultSetMetaData meta = res.getMetaData();
 		if (translator == null) translator = new SqlTranslator();

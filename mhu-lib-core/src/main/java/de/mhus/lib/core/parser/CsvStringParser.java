@@ -1,7 +1,18 @@
 package de.mhus.lib.core.parser;
 
+/**
+ * <p>CsvStringParser class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class CsvStringParser extends StringTokenizerParser {
 
+	/**
+	 * <p>Constructor for CsvStringParser.</p>
+	 *
+	 * @param condition a {@link java.lang.String} object.
+	 */
 	public CsvStringParser(String condition) {
 		super(condition);
 		breakableCharacters = ",";

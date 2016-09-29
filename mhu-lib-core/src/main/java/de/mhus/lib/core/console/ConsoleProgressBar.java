@@ -22,10 +22,13 @@ package de.mhus.lib.core.console;
 
 
 /**
+ * <p>ConsoleProgressBar class.</p>
+ *
  * @author hummel
- * 
+ *
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @version $Id: $Id
  */
 public class ConsoleProgressBar {
 
@@ -39,14 +42,32 @@ public class ConsoleProgressBar {
 	Console stream;
 	
 	
+	/**
+	 * <p>Constructor for ConsoleProgressBar.</p>
+	 *
+	 * @param console a {@link de.mhus.lib.core.console.Console} object.
+	 */
 	public ConsoleProgressBar(Console console) {
 		this(console, 0, 100);
 	}
 	
+	/**
+	 * <p>Constructor for ConsoleProgressBar.</p>
+	 *
+	 * @param console a {@link de.mhus.lib.core.console.Console} object.
+	 * @param _max a long.
+	 */
 	public ConsoleProgressBar(Console console, long _max) {
 		this(console, 0, _max);
 	}
 
+	/**
+	 * <p>Constructor for ConsoleProgressBar.</p>
+	 *
+	 * @param console a {@link de.mhus.lib.core.console.Console} object.
+	 * @param _len a int.
+	 * @param _max a long.
+	 */
 	public ConsoleProgressBar(Console console, int _len, long _max) {
 		this.stream = console;
 		if (_len < 1)
@@ -55,10 +76,20 @@ public class ConsoleProgressBar {
 		max = _max;
 	}
 
+	/**
+	 * <p>add.</p>
+	 *
+	 * @param _add a long.
+	 */
 	public void add(long _add) {
 		set(current + _add);
 	}
 
+	/**
+	 * <p>set.</p>
+	 *
+	 * @param _current a long.
+	 */
 	public void set(long _current) {
 
 		if (stop != -1)
@@ -77,6 +108,9 @@ public class ConsoleProgressBar {
 		paint(_current);
 	}
 
+	/**
+	 * <p>clean.</p>
+	 */
 	public void clean() {
 
 		if (stop != -1)
@@ -111,11 +145,19 @@ public class ConsoleProgressBar {
 		current = _current;
 	}
 
+	/**
+	 * <p>finish.</p>
+	 */
 	public void finish() {
 		stream.println();
 		stop = System.currentTimeMillis();
 	}
 
+	/**
+	 * <p>getTime.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getTime() {
 		if (stop == -1)
 			return (System.currentTimeMillis() - start) / 1000;
@@ -124,7 +166,8 @@ public class ConsoleProgressBar {
 	}
 
 	/**
-	 * 
+	 * <p>getRate.</p>
+	 *
 	 * @return Rate per milliseconds
 	 */
 	public float getRate() {

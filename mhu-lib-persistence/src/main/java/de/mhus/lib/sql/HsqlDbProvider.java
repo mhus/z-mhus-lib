@@ -6,12 +6,26 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.NodeConfig;
 
+/**
+ * <p>HsqlDbProvider class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class HsqlDbProvider extends JdbcProvider {
 
+	/**
+	 * <p>Constructor for HsqlDbProvider.</p>
+	 */
 	public HsqlDbProvider() {
 		this(UUID.randomUUID().toString());
 	}
 	
+	/**
+	 * <p>Constructor for HsqlDbProvider.</p>
+	 *
+	 * @param memoryDbName a {@link java.lang.String} object.
+	 */
 	public HsqlDbProvider(String memoryDbName) {
 		config = new NodeConfig();
 		config.setProperty("driver", "org.hsqldb.jdbcDriver");
@@ -22,6 +36,13 @@ public class HsqlDbProvider extends JdbcProvider {
 		activator = MSingleton.baseLookup(this,MActivator.class);
 	}
 	
+	/**
+	 * <p>Constructor for HsqlDbProvider.</p>
+	 *
+	 * @param file a {@link java.lang.String} object.
+	 * @param user a {@link java.lang.String} object.
+	 * @param pass a {@link java.lang.String} object.
+	 */
 	public HsqlDbProvider(String file, String user, String pass) {
 		config = new NodeConfig();
 		config.setProperty("driver", "org.hsqldb.jdbcDriver");

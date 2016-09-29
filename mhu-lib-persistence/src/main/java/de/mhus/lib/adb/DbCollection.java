@@ -116,7 +116,7 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	 * If recycle is on the original container object will be used for every iteration. If it's off then every time a new object will be created.
 	 * Default is off.
 	 * @param on
-	 * @return
+	 * @return x
 	 */
 	public DbCollection<O> setRecycle(boolean on) {
 		recycle = on;
@@ -177,7 +177,7 @@ public class DbCollection<O> extends MObject implements Iterable<O>, Iterator<O>
 	 * Transfer Objects to a table view.
 	 * 
 	 * @param maxSize More the zero, zero or less will disable the parameter
-	 * @return
+	 * @return x
 	 */
 	public Table toTableAndClose(int maxSize) {
 		Table out = new Table();

@@ -7,6 +7,13 @@ import java.util.List;
 import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.util.SoftHashMap;
 
+/**
+ * <p>MutableParameterMapper class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.3.0
+ */
 public class MutableParameterMapper extends AbstractParameterMapper implements de.mhus.lib.core.logging.MutableParameterMapper {
 
 	private HashMap<String, ParameterEntryMapper> mapping = new HashMap<>();
@@ -19,6 +26,7 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 		}
 	};
 	
+	/** {@inheritDoc} */
 	@Override
 	protected Object map(Object o) {
 		if (o == null || mapping.size() == 0) return null;
@@ -76,6 +84,7 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		synchronized (this) {
@@ -84,6 +93,7 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void put(String clazz, ParameterEntryMapper mapper) {
 		synchronized (this) {

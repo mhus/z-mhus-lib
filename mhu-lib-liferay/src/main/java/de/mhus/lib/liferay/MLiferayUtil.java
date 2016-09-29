@@ -35,7 +35,7 @@ public class MLiferayUtil {
 	 * 
 	 * @param user user or null. If null it will return false
 	 * @param role Role name or null. If null it will return false'
-	 * @return
+	 * @return x
 	 * @throws SystemException
 	 */
 	public static boolean hasRole(User user, String role) throws SystemException {
@@ -52,7 +52,7 @@ public class MLiferayUtil {
 	 * 
 	 * @param user
 	 * @param roles
-	 * @return
+	 * @return x
 	 * @throws SystemException
 	 */
 	public static boolean hasRole(User user, List<String> roles) throws SystemException {

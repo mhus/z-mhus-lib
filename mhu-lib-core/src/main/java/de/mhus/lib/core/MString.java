@@ -25,25 +25,34 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * <p>MString class.</p>
+ *
  * @author hummel
- * 
+ *
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * @version $Id: $Id
  */
 public class MString {
 
+	/** Constant <code>CHARSET_UTF_8="UTF-8"</code> */
 	public static final String CHARSET_UTF_8 = "UTF-8";
+	/** Constant <code>CHARSET_UTF_16="UTF-16"</code> */
 	public static final String CHARSET_UTF_16 = "UTF-16";
+	/** Constant <code>CHARSET_ISO_8859_1="ISO-8859-1"</code> */
 	public static final String CHARSET_ISO_8859_1 = "ISO-8859-1";
 
+	/** Constant <code>WHITESPACE=new char[] { ' ', '\n', '\r', '\t' }</code> */
 	public static final char[] WHITESPACE = new char[] { ' ', '\n', '\r', '\t' };
+	/** Constant <code>DEFAULT_SEPARATOR=","</code> */
 	public static final String DEFAULT_SEPARATOR = ",";
 	private static final String[] DEFAULT_SELECTION_SEPARATOR = new String[] {"\n\n"};
+	/** Constant <code>CHARSET_DEFAULT="CHARSET_UTF_8"</code> */
 	public static final String CHARSET_DEFAULT = CHARSET_UTF_8;
 
 	/**
 	 * Return true if the the string is not empty also trimmed.
-	 * 
+	 *
 	 * @param _in The string to test
 	 * @return true if the string is not null and not an empty string and not only contains whitespaces
 	 */
@@ -53,7 +62,7 @@ public class MString {
 	
 	/**
 	 * Return true if the the string is not empty.
-	 * 
+	 *
 	 * @param _in The string to test
 	 * @return true if the string is not null and not an empty string
 	 */
@@ -63,9 +72,9 @@ public class MString {
 	
 	/**
 	 * Returns true if the string is null or an empty string.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean isEmpty(String _in) {
 		return (_in == null || _in.length() == 0);
@@ -74,10 +83,10 @@ public class MString {
 	/**
 	 * Split the string in parts. Separator is a pattern. In difference of the
 	 * build in split it will not remove empty parts and the pattern is not a regex.
-	 * 
-	 * @param _in
-	 * @param _pattern
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @param _pattern a {@link java.lang.String} object.
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public static String[] split(String _in, String _pattern) {
 
@@ -111,15 +120,23 @@ public class MString {
 	/**
 	 * Split the string in parts. Separator is a pattern. In difference of the
 	 * build in the pattern is not a regex.
-	 * 
-	 * @param _in
-	 * @param _pattern
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @param _pattern a {@link java.lang.String} object.
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public static String[] splitIgnoreEmpty(String _in, String _pattern) {
 		return splitIgnoreEmpty(_in, _pattern, false);
 	}
 	
+	/**
+	 * <p>splitIgnoreEmpty.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @param _pattern a {@link java.lang.String} object.
+	 * @param trim a boolean.
+	 * @return an array of {@link java.lang.String} objects.
+	 */
 	public static String[] splitIgnoreEmpty(String _in, String _pattern,boolean trim) {
 
 		if (_in == null)
@@ -146,11 +163,11 @@ public class MString {
 
 	/**
 	 * Replace all pattern thru replacement strings. Pattern is not a regex.
-	 * 
-	 * @param _src
-	 * @param _pattern
-	 * @param _replacement
-	 * @return
+	 *
+	 * @param _src a {@link java.lang.String} object.
+	 * @param _pattern a {@link java.lang.String} object.
+	 * @param _replacement a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String replaceAll(String _src, String _pattern,
 			String _replacement) {
@@ -161,10 +178,10 @@ public class MString {
 
 	/**
 	 * Replace all pattern thru replacement strings. Pattern is not a regex.
-	 * 
-	 * @param _src
-	 * @param _pattern
-	 * @param _replacement
+	 *
+	 * @param _src a {@link java.lang.StringBuffer} object.
+	 * @param _pattern a {@link java.lang.String} object.
+	 * @param _replacement a {@link java.lang.String} object.
 	 */
 	public static void replaceAll(StringBuffer _src, String _pattern,
 			String _replacement) {
@@ -182,11 +199,11 @@ public class MString {
 
 	/**
 	 * Return, if the char is located in the string (indexOf).
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
-
 	public static boolean isIndex(String _s, String _c) {
 		int p = _s.indexOf(_c);
 		if (p < 0)
@@ -198,9 +215,10 @@ public class MString {
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String beforeIndex(String _s, String _c) {
 		int p = _s.indexOf(_c);
@@ -213,9 +231,10 @@ public class MString {
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String afterIndex(String _s, String _c) {
 		int p = _s.indexOf(_c);
@@ -227,11 +246,11 @@ public class MString {
 
 	/**
 	 * Return, if the char is located in the string (indexOf).
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a char.
+	 * @return a boolean.
 	 */
-
 	public static boolean isIndex(String _s, char _c) {
 		int p = _s.indexOf(_c);
 		if (p < 0)
@@ -243,9 +262,10 @@ public class MString {
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String beforeIndex(String _s, char _c) {
 		int p = _s.indexOf(_c);
@@ -258,9 +278,10 @@ public class MString {
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c a char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String afterIndex(String _s, char _c) {
 		int p = _s.indexOf(_c);
@@ -272,10 +293,10 @@ public class MString {
 	
 	/**
 	 * Returns true if one of the chars is found in the string.
-	 * 
-	 * @param _s
-	 * @param _c
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c an array of char.
+	 * @return a boolean.
 	 */
 	public static boolean isIndex(String _s, char[] _c) {
 
@@ -289,9 +310,10 @@ public class MString {
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c an array of char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String beforeIndex(String _s, char[] _c) {
 
@@ -306,9 +328,10 @@ public class MString {
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
 	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return 
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c an array of char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String afterIndex(String _s, char[] _c) {
 
@@ -322,11 +345,11 @@ public class MString {
 
 	/**
 	 * Returns the position where the first of one of the chars is found in the string.
-	 * 
-	 * @param _s
-	 * @param _c
-	 * @param offset
-	 * @return
+	 *
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c an array of char.
+	 * @param offset a int.
+	 * @return a int.
 	 */
 	public static int indexOf(String _s, char[] _c, int offset) {
 
@@ -342,9 +365,9 @@ public class MString {
 	/**
 	 * Returns the position where the first of one of the chars is found in the string.
 	 *
-	 * @param _s
-	 * @param _c
-	 * @return
+	 * @param _s a {@link java.lang.String} object.
+	 * @param _c an array of char.
+	 * @return a int.
 	 */
 	public static int indexOf(String _s, char[] _c) {
 		return indexOf(_s, _c, 0);
@@ -352,9 +375,9 @@ public class MString {
 
 	/**
 	 * Encodes for the web. Same like MXml.encode
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String encodeWebUnicode(String _in) {
 
@@ -373,6 +396,13 @@ public class MString {
 	}
 
 	
+	/**
+	 * <p>isUnicode.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @param _joker a char.
+	 * @return a boolean.
+	 */
 	public static boolean isUnicode(String _in, char _joker) {
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
@@ -382,6 +412,12 @@ public class MString {
 		return false;
 	}
 
+	/**
+	 * <p>encodeUnicode.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encodeUnicode(String _in) {
 
 		if (_in == null)
@@ -405,6 +441,12 @@ public class MString {
 		return out.toString();
 	}
 
+	/**
+	 * <p>encodeURIComponent.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encodeURIComponent(String _in) {
 
 		if (_in == null)
@@ -425,6 +467,12 @@ public class MString {
 		return out.toString();
 	}
 
+	/**
+	 * <p>decodeUnicode.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String decodeUnicode(String _in) {
 
 		int mode = 0;
@@ -481,6 +529,12 @@ public class MString {
 		return out.toString();
 	}
 
+	/**
+	 * <p>decodeURIComponent.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String decodeURIComponent(String _in) {
 
 		int mode = 0;
@@ -513,6 +567,12 @@ public class MString {
 		return out.toString();
 	}
 
+	/**
+	 * <p>encodeCSVLine.</p>
+	 *
+	 * @param _fields an array of {@link java.lang.String} objects.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encodeCSVLine(String[] _fields) {
 
 		if (_fields == null || _fields.length == 0)
@@ -529,6 +589,12 @@ public class MString {
 
 	}
 
+	/**
+	 * <p>encodeCSV.</p>
+	 *
+	 * @param _field a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encodeCSV(String _field) {
 
 		if (_field == null)
@@ -547,6 +613,12 @@ public class MString {
 	 * }
 	 */
 
+	/**
+	 * <p>decodeCSV.</p>
+	 *
+	 * @param _field a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String decodeCSV(String _field) {
 
 		if (_field == null || _field.length() == 0)
@@ -564,6 +636,13 @@ public class MString {
 
 	}
 
+	/**
+	 * <p>compareRegexPattern.</p>
+	 *
+	 * @param str a {@link java.lang.String} object.
+	 * @param pattern a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean compareRegexPattern(String str, String pattern) {
 		if (str == null || pattern == null) return false;
 		return str.matches(pattern);
@@ -572,10 +651,10 @@ public class MString {
 	/**
 	 * Use % at the beginning and/or the end
 	 * example: %aloa% or !%aloa%
-	 * 
-	 * @param str
-	 * @param pattern
-	 * @return
+	 *
+	 * @param str a {@link java.lang.String} object.
+	 * @param pattern a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean compareSQLLikePattern(String str, String pattern) {
 		if (str == null || pattern == null) return false;
@@ -602,10 +681,10 @@ public class MString {
 	/**
 	 * Use * at the beginning or/and the end and a ! at the beginning for 'not'.
 	 * e.g. *aloa* !*aloa*
-	 * 
-	 * @param str
-	 * @param pattern
-	 * @return
+	 *
+	 * @param str a {@link java.lang.String} object.
+	 * @param pattern a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean compareFsLikePattern(String str, String pattern) {
 		if (str == null || pattern == null) return false;
@@ -633,6 +712,14 @@ public class MString {
 		return !ret;
 	}
 
+	/**
+	 * <p>replaceSQLLikePattern.</p>
+	 *
+	 * @param str a {@link java.lang.String} object.
+	 * @param pattern a {@link java.lang.String} object.
+	 * @param replace a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String replaceSQLLikePattern(String str, String pattern,
 			String replace) {
 		if (pattern.endsWith("%") && pattern.startsWith("%")) {
@@ -656,6 +743,13 @@ public class MString {
 		return str;
 	}
 
+	/**
+	 * <p>join.</p>
+	 *
+	 * @param src an array of {@link java.lang.String} objects.
+	 * @param glue a char.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String join(String[] src, char glue) {
 		if (src == null)
 			return null;
@@ -672,10 +766,24 @@ public class MString {
 		return sb.toString();
 	}
 
+	/**
+	 * <p>join.</p>
+	 *
+	 * @param src a {@link java.util.List} object.
+	 * @param glue a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String join(List<?> src, String glue) {
 		return join(src.iterator(), glue);
 	}
 	
+	/**
+	 * <p>join.</p>
+	 *
+	 * @param src a {@link java.util.Iterator} object.
+	 * @param glue a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String join(Iterator<?> src, String glue) {
 		if (src == null)
 			return null;
@@ -693,10 +801,9 @@ public class MString {
 	/**
 	 * Convert String to canonical standard form. null -> "". Trims lead trail
 	 * blanks.
-	 * 
+	 *
 	 * @param s
 	 *            String to be converted.
-	 * 
 	 * @return String in canonical form.
 	 */
 	public static String canonical(String s) {
@@ -710,10 +817,9 @@ public class MString {
 	/**
 	 * Collapse multiple spaces in string down to a single space. Remove lead
 	 * and trailing spaces.
-	 * 
+	 *
 	 * @param s
 	 *            String to strip of blanks.
-	 * 
 	 * @return String with all blanks, lead/trail/embedded removed.
 	 */
 	public static String condense(String s) {
@@ -750,13 +856,12 @@ public class MString {
 	/**
 	 * count of how many leading characters there are on a string matching a
 	 * given character. It does not remove them.
-	 * 
+	 *
 	 * @param text
 	 *            text with possible leading characters, possibly empty, but not
 	 *            null.
 	 * @param c
 	 *            the leading character of interest, usually ' ' or '\n'
-	 * 
 	 * @return count of leading matching characters, possibly 0.
 	 */
 	public static int countLeading(String text, char c) {
@@ -770,13 +875,12 @@ public class MString {
 	/**
 	 * count of how many trailing characters there are on a string matching a
 	 * given character. It does not remove them.
-	 * 
+	 *
 	 * @param text
 	 *            text with possible trailing characters, possibly empty, but
 	 *            not null.
 	 * @param c
 	 *            the trailing character of interest, usually ' ' or '\n'
-	 * 
 	 * @return count of trailing matching characters, possibly 0.
 	 */
 	public static int countTrailing(String text, char c) {
@@ -790,10 +894,9 @@ public class MString {
 
 	/**
 	 * Is this string empty?
-	 * 
+	 *
 	 * @param s
 	 *            String to be tested for emptiness.
-	 * 
 	 * @return true if the string is null or equal to the "" null string. or
 	 *         just blanks
 	 */
@@ -803,12 +906,11 @@ public class MString {
 
 	/**
 	 * Ensure the string contains only legal characters
-	 * 
+	 *
 	 * @param candidate
 	 *            string to test.
 	 * @param legalChars
 	 *            characters than are legal for candidate.
-	 * 
 	 * @return true if candidate is formed only of chars from the legal set.
 	 */
 	public static boolean isLegal(String candidate, String legalChars) {
@@ -822,12 +924,10 @@ public class MString {
 
 	/**
 	 * Check if char is plain ASCII lower case.
-	 * 
+	 *
 	 * @param c
 	 *            char to check
-	 * 
 	 * @return true if char is in range a..z
-	 * 
 	 * @see Character#isLowerCase(char)
 	 */
 	public static boolean isUnaccentedLowerCase(char c) {
@@ -836,12 +936,10 @@ public class MString {
 
 	/**
 	 * Check if char is plain ASCII upper case.
-	 * 
+	 *
 	 * @param c
 	 *            char to check.
-	 * 
 	 * @return true if char is in range A..Z.
-	 * 
 	 * @see Character#isUpperCase(char)
 	 */
 	public static boolean isUnaccentedUpperCase(char c) {
@@ -850,7 +948,7 @@ public class MString {
 
 	/**
 	 * Pads the string out to the given length by applying blanks on the left.
-	 * 
+	 *
 	 * @param s
 	 *            String to be padded/chopped.
 	 * @param newLen
@@ -858,7 +956,6 @@ public class MString {
 	 * @param chop
 	 *            true if Strings longer than newLen should be truncated to
 	 *            newLen chars.
-	 * 
 	 * @return String padded on left/chopped to the desired length.
 	 */
 	public static String leftPad(String s, int newLen, boolean chop) {
@@ -880,13 +977,11 @@ public class MString {
 	 * convert a String to a long. The routine is very forgiving. It ignores
 	 * invalid chars, lead trail, embedded spaces, decimal points etc. Dash is
 	 * treated as a minus sign.
-	 * 
+	 *
 	 * @param numStr
 	 *            String to be parsed.
-	 * 
 	 * @return long value of String with junk characters stripped.
-	 * 
-	 * @throws NumberFormatException
+	 * @throws java.lang.NumberFormatException
 	 *             if the number is too big to fit in a long.
 	 */
 	public static long parseDirtyLong(String numStr) {
@@ -917,13 +1012,11 @@ public class MString {
 	 * convert a String into long pennies. It ignores invalid chars, lead trail,
 	 * embedded spaces. Dash is treated as a minus sign. 0 or 2 decimal places
 	 * are permitted.
-	 * 
+	 *
 	 * @param numStr
 	 *            String to be parsed.
-	 * 
 	 * @return long pennies.
-	 * 
-	 * @throws NumberFormatException
+	 * @throws java.lang.NumberFormatException
 	 *             if the number is too big to fit in a long.
 	 */
 	public static long parseLongPennies(String numStr) {
@@ -995,10 +1088,9 @@ public class MString {
 	/**
 	 * Print dollar currency, stored internally as scaled int. convert pennies
 	 * to a string with a decorative decimal point.
-	 * 
+	 *
 	 * @param pennies
 	 *            long amount in pennies.
-	 * 
 	 * @return amount with decorative decimal point, but no lead $.
 	 */
 	public static String penniesToString(long pennies) {
@@ -1030,13 +1122,12 @@ public class MString {
 
 	/**
 	 * Produce a String of a given repeating character.
-	 * 
+	 *
 	 * @param c
 	 *            the character to repeat
 	 * @param count
 	 *            the number of times to repeat
-	 * 
-	 * @return String, e.g. rep('*',4) returns "****"
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String rep(char c, int count) {
 		if (count <= 0) return "";
@@ -1049,7 +1140,7 @@ public class MString {
 
 	/**
 	 * Pads the string out to the given length by applying blanks on the right.
-	 * 
+	 *
 	 * @param s
 	 *            String to be padded/chopped.
 	 * @param newLen
@@ -1057,7 +1148,6 @@ public class MString {
 	 * @param chop
 	 *            true if Strings longer than newLen should be truncated to
 	 *            newLen chars.
-	 * 
 	 * @return String padded on left/chopped to the desired length.
 	 */
 	public static String rightPad(String s, int newLen, boolean chop) {
@@ -1077,10 +1167,9 @@ public class MString {
 
 	/**
 	 * Remove all spaces from a String.
-	 * 
+	 *
 	 * @param s
 	 *            String to strip of blanks.
-	 * 
 	 * @return String with all blanks, lead/trail/embedded removed.
 	 */
 	public static String squish(String s) {
@@ -1110,10 +1199,9 @@ public class MString {
 	 * U.S.A." e.g. "THE HISTORY OF THE USA" -> "The History of the Usa" (sorry
 	 * about that.) Don't confuse this with Character.isTitleCase which concerns
 	 * ligatures.
-	 * 
+	 *
 	 * @param s
 	 *            String to convert. May be any mixture of case.
-	 * 
 	 * @return String with each word capitalised, except embedded words "the"
 	 *         "of" "to"
 	 */
@@ -1158,12 +1246,10 @@ public class MString {
 
 	/**
 	 * Convert int to hex with lead zeroes
-	 * 
+	 *
 	 * @param h
 	 *            number you want to convert to hex
-	 * 
 	 * @return 0x followed by unsigned hex 8-digit representation
-	 * 
 	 * @see #toString(Color)
 	 */
 	public static String toHexString(int h) {
@@ -1176,13 +1262,12 @@ public class MString {
 
 	/**
 	 * Convert an integer to a String, with left zeroes.
-	 * 
+	 *
 	 * @param i
 	 *            the integer to be converted
 	 * @param len
 	 *            the length of the resulting string. Warning. It will chop the
 	 *            result on the left if it is too long.
-	 * 
 	 * @return String representation of the int e.g. 007
 	 */
 	public static String toLZ(int i, int len) {
@@ -1203,12 +1288,10 @@ public class MString {
 
 	/**
 	 * Get #ffffff html hex number for a colour
-	 * 
+	 *
 	 * @param c
 	 *            Color object whose html colour number you want as a string
-	 * 
 	 * @return # followed by 6 hex digits
-	 * 
 	 * @see #toHexString(int)
 	 */
 	public static String toString(Color c) {
@@ -1223,10 +1306,9 @@ public class MString {
 	 * Removes white space from beginning this string. <p/> All characters that
 	 * have codes less than or equal to <code>'&#92;u0020'</code> (the space character) are
 	 * considered to be white space.
-	 * 
+	 *
 	 * @param s
 	 *            String to process. As always the original in unchanged.
-	 * 
 	 * @return this string, with leading white space removed
 	 */
 	public static String trimLeading(String s) {
@@ -1245,10 +1327,9 @@ public class MString {
 	 * Removes white space from end this string. <p/> All characters that have
 	 * codes less than or equal to <code>'&#92;u0020'</code> (the space character) are considered
 	 * to be white space.
-	 * 
+	 *
 	 * @param s
 	 *            String to process. As always the original in unchanged.
-	 * 
 	 * @return this string, with trailing white space removed
 	 */
 	public static String trimTrailing(String s) {
@@ -1263,6 +1344,13 @@ public class MString {
 		return (len != origLen) ? s.substring(0, len) : s;
 	} // end trimTrailing
 
+	/**
+	 * <p>equals.</p>
+	 *
+	 * @param in1 a {@link java.lang.String} object.
+	 * @param in2 a {@link java.lang.String} object.
+	 * @return a boolean.
+	 */
 	public static boolean equals(String in1, String in2) {
 
 		return (in1 == null && in2 == null) || (in1 != null && in1.equals(in2));
@@ -1271,27 +1359,49 @@ public class MString {
 	/**
 	 * Split the string in n parts and return the part number nr. If the part is not found
 	 * the default value will be returned.
-	 * @param value 
-	 * @param nr 
-	 * @param name
-	 * @param def
-	 * @param index
-	 * @param subset
-	 * @return
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @param nr a int.
+	 * @param def a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getPart(String value, int nr, String def) {
 		return getPart(value, DEFAULT_SEPARATOR, nr, def);
 	}
 
+	/**
+	 * <p>getPart.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @param nr a int.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getPart(String value, int nr) {
 		return getPart(value, DEFAULT_SEPARATOR, nr);
 	}
 
+	/**
+	 * <p>getPart.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param nr a int.
+	 * @param def a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getPart(String value, String separator, int nr, String def ) {
 		String ret = getPart(value, separator, nr);
 		return ret == null ? def : ret;
 	}
 
+	/**
+	 * <p>getPart.</p>
+	 *
+	 * @param value a {@link java.lang.String} object.
+	 * @param separator a {@link java.lang.String} object.
+	 * @param nr a int.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String getPart(String value, String separator, int nr ) {
 		if (value == null)
 			return null;
@@ -1304,10 +1414,10 @@ public class MString {
 	/**
 	 * Return part before last occurrence of the char. If the char
 	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return
+	 *
+	 * @param string a {@link java.lang.String} object.
+	 * @param c a char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String beforeLastIndex(String string, char c) {
 		if (string == null) return null;
@@ -1319,10 +1429,10 @@ public class MString {
 	/**
 	 * Return the part after the last occurrence of the char. If the char
 	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return
+	 *
+	 * @param string a {@link java.lang.String} object.
+	 * @param c a char.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String afterLastIndex(String string, char c) {
 		if (string == null) return null;
@@ -1334,10 +1444,10 @@ public class MString {
 	/**
 	 * Return part before last occurrence of the char. If the char
 	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return
+	 *
+	 * @param string a {@link java.lang.String} object.
+	 * @param c a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String beforeLastIndex(String string, String c) {
 		if (string == null) return null;
@@ -1349,10 +1459,10 @@ public class MString {
 	/**
 	 * Return the part after the last occurrence of the char. If the char
 	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return
+	 *
+	 * @param string a {@link java.lang.String} object.
+	 * @param c a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String afterLastIndex(String string, String c) {
 		if (string == null) return null;
@@ -1364,7 +1474,7 @@ public class MString {
 	/**
 	 * This will truncate the string at the end. If the string is shorter as length it returns
 	 * the string itself.
-	 * 
+	 *
 	 * @param in String to truncate
 	 * @param length Max length of the string
 	 * @return truncated string
@@ -1378,9 +1488,9 @@ public class MString {
 	 * This will truncate the string, but it also adds three dots (...) at the removed position.
 	 * The truncation is not at the end at all. The resulted string is a nice representation of
 	 * the original input. Use this function to display a truncated string.
-	 * 
+	 *
 	 * abc...xyz
-	 * 
+	 *
 	 * @param in String to truncate
 	 * @param length Max length of the string
 	 * @return truncated string
@@ -1396,7 +1506,7 @@ public class MString {
 	/**
 	 * Search in a string the selected paragraph indicated be empty lines. If the caret position outside
 	 * the string it will return null.
-	 * 
+	 *
 	 * @param text The string, must not be null
 	 * @param caretPosition Position of the caret.
 	 * @return the position or null if the input string is null. Return is int[] {start, end}
@@ -1405,6 +1515,14 @@ public class MString {
 		return getSelectedPart(text, caretPosition, DEFAULT_SELECTION_SEPARATOR);
 	}
 	
+	/**
+	 * <p>getSelectedPart.</p>
+	 *
+	 * @param text a {@link java.lang.String} object.
+	 * @param caretPosition a int.
+	 * @param separators an array of {@link java.lang.String} objects.
+	 * @return an array of int.
+	 */
 	public static int[] getSelectedPart(String text,int caretPosition, String[] separators) {
 		String s = text;
 		if (s == null || caretPosition > text.length()) return null;
@@ -1436,13 +1554,13 @@ public class MString {
 	}
 
 	/**
-	 * Returns the string part of the selected part. If the part position is 
+	 * Returns the string part of the selected part. If the part position is
 	 * outside the bounds of the string it will be trimmed. If the part
 	 * position is not correct or the returned string is empty then the default
 	 * string is returned. Good values for the default are null or an empty string.
-	 * 
+	 *
 	 * Use this method with the result of getSelectedPart()
-	 * 
+	 *
 	 * @param text The text to crop
 	 * @param part The position in the text, first element is the begin second element the end of the selection.
 	 * @param def Return this if a selection is not possible.
@@ -1460,11 +1578,11 @@ public class MString {
 	
 	/**
 	 * Replace a text in another text.
-	 * 
-	 * @param text
-	 * @param part
-	 * @param replacement
-	 * @return
+	 *
+	 * @param text a {@link java.lang.String} object.
+	 * @param part an array of int.
+	 * @param replacement a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String replaceSelection(String text, int[] part, String replacement) {
 		if (text == null || part == null || part.length < 2 || replacement == null) return null;
@@ -1480,7 +1598,7 @@ public class MString {
 	
 	/**
 	 * Append the number of times a character to a string buffer.
-	 * 
+	 *
 	 * @param amount number of repeatings
 	 * @param fill char to fill
 	 * @param buffer target
@@ -1491,10 +1609,10 @@ public class MString {
 	
 	/**
 	 * Repeate the character a given times.
-	 * 
+	 *
 	 * @param amount number of repeatings
 	 * @param fill char to fill
-	 * @return
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String getRepeatig(int amount, char fill) {
 		StringBuffer buffer = new StringBuffer();
@@ -1504,9 +1622,9 @@ public class MString {
 	
 	/**
 	 * Return true if the character is in the list of whitespaces.
-	 * 
-	 * @param c
-	 * @return
+	 *
+	 * @param c a char.
+	 * @return a boolean.
 	 */
 	public static boolean isWhitespace(char c) {
 		for (char w : WHITESPACE)
@@ -1516,9 +1634,9 @@ public class MString {
 	
 	/**
 	 * Return the count of the character in the string.
-	 * 
-	 * @param in
-	 * @param c
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param c a char.
 	 * @return count of chars or 0 if 'in' is null
 	 */
 	public static int countCharacters(String in, char c) {
@@ -1533,9 +1651,9 @@ public class MString {
 	
 	/**
 	 * Return the count of the characters in the string.
-	 * 
-	 * @param in
-	 * @param c
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param c an array of char.
 	 * @return count of chars or 0 if 'in' is null
 	 */
 	public static int countCharacters(String in, char[] c) {
@@ -1551,6 +1669,7 @@ public class MString {
 	/**
 	 * Try to find initials out of the given title. Use the first letters after whitspaces for the initials. The
 	 * returned string is not in upper letters. If you need Upper Letters append toUpper().
+	 *
 	 * @param title The input String
 	 * @param upperOnly Set true if only collect upper characters in title
 	 * @param digits Set true if digits (after whitespaces) should also be used.
@@ -1581,9 +1700,10 @@ public class MString {
 	/**
 	 * Check a string against all characters in another string. If the first string is not build from
 	 * characters of the other one the method returns false.
-	 * @param in
-	 * @param composed
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @param composed a {@link java.lang.String} object.
+	 * @return a boolean.
 	 */
 	public static boolean isComposedOf(String in, String composed) {
 		if (in == null || composed == null) return false;
@@ -1594,6 +1714,12 @@ public class MString {
 		return true;
 	}
 
+	/**
+	 * <p>integerPart.</p>
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String integerPart(String in) {
 		if (in == null) return in;
 		in = in.trim();

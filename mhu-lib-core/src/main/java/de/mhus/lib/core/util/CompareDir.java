@@ -7,6 +7,12 @@ import java.util.TreeMap;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.lang.MObject;
 
+/**
+ * <p>CompareDir class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class CompareDir extends MObject {
 		
 	private boolean fullRefresh;
@@ -23,6 +29,13 @@ public class CompareDir extends MObject {
 	private boolean commitAfterFinish;
 	private boolean needAllFolders;
 
+	/**
+	 * <p>compare.</p>
+	 *
+	 * @param current a {@link java.util.TreeMap} object.
+	 * @param last a {@link java.util.TreeMap} object.
+	 * @param listener a {@link de.mhus.lib.core.util.CompareDir.Listener} object.
+	 */
 	public void compare( TreeMap<String,CompareDirEntry> current, TreeMap<String,CompareDirEntry> last, Listener listener ) {
 		
 		MStopWatch tk = new MStopWatch();	
@@ -212,49 +225,103 @@ public class CompareDir extends MObject {
 		return false;
 	}
 	
+	/**
+	 * <p>getProgress.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getProgress() {
 		if ( totalSize == 0 ) return 100;
 		return totalCnt * 100 / totalSize;
 	}
 
+	/**
+	 * <p>getProgressCount.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getProgressCount() {
 		return currentCnt;
 	}
 
+	/**
+	 * <p>kill.</p>
+	 */
 	public void kill() {
 		killed = true;
 	}
 
+	/**
+	 * <p>getDeletedCnt.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getDeletedCnt() {
 		return deleteCnt;
 	}
 
+	/**
+	 * <p>Getter for the field <code>insertCnt</code>.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getInsertCnt() {
 		return insertCnt;
 	}
 
+	/**
+	 * <p>getUpdatedCnt.</p>
+	 *
+	 * @return a int.
+	 */
 	public int getUpdatedCnt() {
 		return updateCnt;
 	}
 
+	/**
+	 * <p>doCommit.</p>
+	 */
 	public void doCommit() {
 	}
 
+	/**
+	 * <p>doRollback.</p>
+	 */
 	public void doRollback() {
 	}
 	
+	/**
+	 * <p>isFullRefresh.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isFullRefresh() {
 		return fullRefresh;
 	}
 
+	/**
+	 * <p>Setter for the field <code>fullRefresh</code>.</p>
+	 *
+	 * @param fullRefresh a boolean.
+	 */
 	public void setFullRefresh(boolean fullRefresh) {
 		this.fullRefresh = fullRefresh;
 	}
 
+	/**
+	 * <p>Getter for the field <code>pathes</code>.</p>
+	 *
+	 * @return an array of {@link java.lang.String} objects.
+	 */
 	public String[] getPathes() {
 		return pathes;
 	}
 
+	/**
+	 * <p>Setter for the field <code>pathes</code>.</p>
+	 *
+	 * @param pathes an array of {@link java.lang.String} objects.
+	 */
 	public void setPathes(String[] pathes) {
 		this.pathes = pathes;
 		pathesSlash = new String[ pathes.length ];
@@ -262,26 +329,56 @@ public class CompareDir extends MObject {
 			pathesSlash[i] = pathes[i] + '/';
 	}
 
+	/**
+	 * <p>isCommitAfterEveryEvent.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isCommitAfterEveryEvent() {
 		return commitAfterEveryEvent;
 	}
 
+	/**
+	 * <p>Setter for the field <code>commitAfterEveryEvent</code>.</p>
+	 *
+	 * @param commitAfterEveryEvent a boolean.
+	 */
 	public void setCommitAfterEveryEvent(boolean commitAfterEveryEvent) {
 		this.commitAfterEveryEvent = commitAfterEveryEvent;
 	}
 
+	/**
+	 * <p>isCommitAfterFinish.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isCommitAfterFinish() {
 		return commitAfterFinish;
 	}
 
+	/**
+	 * <p>Setter for the field <code>commitAfterFinish</code>.</p>
+	 *
+	 * @param commitAfterFinish a boolean.
+	 */
 	public void setCommitAfterFinish(boolean commitAfterFinish) {
 		this.commitAfterFinish = commitAfterFinish;
 	}
 
+	/**
+	 * <p>isNeedAllFolders.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isNeedAllFolders() {
 		return needAllFolders;
 	}
 
+	/**
+	 * <p>Setter for the field <code>needAllFolders</code>.</p>
+	 *
+	 * @param needAllFolders a boolean.
+	 */
 	public void setNeedAllFolders(boolean needAllFolders) {
 		this.needAllFolders = needAllFolders;
 	}

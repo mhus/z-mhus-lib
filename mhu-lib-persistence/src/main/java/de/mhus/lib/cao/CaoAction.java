@@ -37,7 +37,7 @@ public abstract class CaoAction extends MObject {
 	 * 
 	 * @param list
 	 * @param initConfig specific initial attributes
-	 * @return
+	 * @return x
 	 * @throws CaoException 
 	 */
 	public abstract MForm createConfiguration(CaoList list,Object...initConfig) throws CaoException;
@@ -50,7 +50,7 @@ public abstract class CaoAction extends MObject {
 	 * 
 	 * @param list
 	 * @param configuration
-	 * @return
+	 * @return x
 	 * @throws CaoException
 	 */
 	public abstract CaoOperation execute(CaoList list, Object configuration) throws CaoException;

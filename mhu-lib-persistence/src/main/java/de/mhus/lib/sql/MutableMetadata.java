@@ -26,7 +26,7 @@ public class MutableMetadata extends CaoMetadata {
 	 * This method cleanup the internal index. Manipulate the map before you call a getter,
 	 * this will recreate the internal index. Changes after it will not affect.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public List<CaoMetaDefinition> getMap() {
 		synchronized (this) {

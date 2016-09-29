@@ -16,17 +16,37 @@ import org.apache.openjpa.persistence.OpenJPAEntityManager;
 
 import de.mhus.lib.core.lang.MObject;
 
+/**
+ * <p>JpaEntityManager class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class JpaEntityManager extends MObject implements EntityManager {
 
 	private JpaManager manager;
 	private EntityManager entityManager;
 
+	/**
+	 * <p>Constructor for JpaEntityManager.</p>
+	 *
+	 * @param manager a {@link de.mhus.lib.jpa.JpaManager} object.
+	 * @param factory a {@link javax.persistence.EntityManagerFactory} object.
+	 * @param map a {@link java.util.Map} object.
+	 */
 	@SuppressWarnings("rawtypes")
 	public JpaEntityManager(JpaManager manager, EntityManagerFactory factory, Map map) {
 		this.manager = manager;
 		entityManager = factory.createEntityManager(map);
 	}
 
+	/**
+	 * <p>injectObject.</p>
+	 *
+	 * @param object a T object.
+	 * @param <T> a T object.
+	 * @return a T object.
+	 */
 	public <T> T injectObject(T object) {
 		if (object != null && object instanceof JpaInjection) {
 			((JpaInjection)object).doInjectJpa(this);
@@ -34,10 +54,16 @@ public class JpaEntityManager extends MObject implements EntityManager {
 		return object;
 	}
 
+	/**
+	 * <p>Getter for the field <code>manager</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.jpa.JpaManager} object.
+	 */
 	public JpaManager getManager() {
 		return manager;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		if (entityManager == null) return;
@@ -47,6 +73,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void persist(Object entity) {
 		log().t("persist");
@@ -55,6 +82,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T merge(T entity) {
 		log().t("merge",entity);
@@ -63,6 +91,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void remove(Object entity) {
 		log().t("remove",entity);
@@ -71,6 +100,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T find(Class<T> entityClass, Object primaryKey) {
 		log().t("find",entityClass,primaryKey);
@@ -78,6 +108,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T find(Class<T> entityClass, Object primaryKey,
 			Map<String, Object> properties) {
@@ -86,6 +117,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T find(Class<T> entityClass, Object primaryKey,
 			LockModeType lockMode) {
@@ -94,6 +126,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T find(Class<T> entityClass, Object primaryKey,
 			LockModeType lockMode, Map<String, Object> properties) {
@@ -103,6 +136,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T getReference(Class<T> entityClass, Object primaryKey) {
 		log().t("getReference",entityClass,primaryKey);
@@ -110,6 +144,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void flush() {
 		log().t("flush");
@@ -117,6 +152,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void setFlushMode(FlushModeType flushMode) {
 		log().t("flush mode",flushMode);
@@ -124,12 +160,14 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public FlushModeType getFlushMode() {
 		return entityManager.getFlushMode();
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void lock(Object entity, LockModeType lockMode) {
 		log().t("lock",entity,lockMode);
@@ -138,6 +176,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void lock(Object entity, LockModeType lockMode,
 			Map<String, Object> properties) {
@@ -147,6 +186,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void refresh(Object entity) {
 		log().t("refresh",entity);
@@ -155,6 +195,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void refresh(Object entity, Map<String, Object> properties) {
 		log().t("refresh",entity,properties);
@@ -163,6 +204,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void refresh(Object entity, LockModeType lockMode) {
 		log().t("refresh",entity,lockMode);
@@ -171,6 +213,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void refresh(Object entity, LockModeType lockMode,
 			Map<String, Object> properties) {
@@ -180,6 +223,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		log().t("clear");
@@ -187,6 +231,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void detach(Object entity) {
 		log().t("detach",entity);
@@ -195,6 +240,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean contains(Object entity) {
 		log().t("contains",entity);
@@ -203,6 +249,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public LockModeType getLockMode(Object entity) {
 		injectObject(entity);
@@ -210,6 +257,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void setProperty(String propertyName, Object value) {
 		log().t("property",propertyName,value);
@@ -217,12 +265,14 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Map<String, Object> getProperties() {
 		return entityManager.getProperties();
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public JpaQuery<?> createQuery(String qlString) {
 		log().t("create query",qlString);
@@ -230,6 +280,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> JpaQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
 		log().t("create query",criteriaQuery);
@@ -237,6 +288,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> JpaQuery<T> createQuery(String qlString, Class<T> resultClass) {
 		log().t("create query",qlString,resultClass);
@@ -244,6 +296,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Query createNamedQuery(String name) {
 		log().t("create named query",name);
@@ -251,6 +304,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> JpaQuery<T> createNamedQuery(String name, Class<T> resultClass) {
 		log().t("create named query",name,resultClass);
@@ -258,6 +312,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Query createNativeQuery(String sqlString) {
 		log().t("create native query",sqlString);
@@ -265,6 +320,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	@SuppressWarnings("rawtypes")
 	public Query createNativeQuery(String sqlString, Class resultClass) {
@@ -273,6 +329,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Query createNativeQuery(String sqlString, String resultSetMapping) {
 		log().t("create native query",sqlString,resultSetMapping);
@@ -280,6 +337,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public void joinTransaction() {
 		log().t("join transaction");
@@ -287,6 +345,7 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public <T> T unwrap(Class<T> cls) {
 		log().t("unwrap", cls);
@@ -294,54 +353,76 @@ public class JpaEntityManager extends MObject implements EntityManager {
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Object getDelegate() {
 		return entityManager.getDelegate();
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isOpen() {
 		return entityManager != null && entityManager.isOpen();
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public EntityTransaction getTransaction() {
 		return entityManager.getTransaction();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public CriteriaBuilder getCriteriaBuilder() {
 		return entityManager.getCriteriaBuilder();
 	}
 
 
+	/** {@inheritDoc} */
 	@Override
 	public Metamodel getMetamodel() {
 		return entityManager.getMetamodel();
 	}
 
+	/**
+	 * <p>begin.</p>
+	 */
 	public void begin() {
 		log().t("begin");
 		getTransaction().begin();
 	}
 
+	/**
+	 * <p>commit.</p>
+	 */
 	public void commit() {
 		log().t("commit");
 		getTransaction().commit();
 	}
 
+	/**
+	 * <p>rollback.</p>
+	 */
 	public void rollback() {
 		log().t("rollback");
 		getTransaction().rollback();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public EntityManagerFactory getEntityManagerFactory() {
 		return manager;
 	}
 
+	/**
+	 * <p>copy.</p>
+	 *
+	 * @param object a T object.
+	 * @param <T> a T object.
+	 * @return a T object.
+	 */
 	public <T> T copy(T object) {
 		log().t("copy",object);
 		return injectObject(((OpenJPAEntityManager)entityManager).detachCopy(object));

@@ -75,7 +75,7 @@ public class MySqlDatabaseExport {
 	/** Dump the whole database to an SQL string 
 	 * @param props 
 	 * @param writer 
-	 * @return */
+	 * @return x */
 	public static boolean dumpDB(ResourceNode props, PrintWriter writer) {
 		try {
 			Properties prop = new Properties();
@@ -90,7 +90,7 @@ public class MySqlDatabaseExport {
 	/** Dump the whole database to an SQL string 
 	 * @param props 
 	 * @param writer 
-	 * @return */
+	 * @return x */
 	public static boolean dumpDB(Properties props, PrintWriter writer) {
 		String driverClassName = props.getProperty("driver.class");
 		String driverURL = props.getProperty("driver.url");

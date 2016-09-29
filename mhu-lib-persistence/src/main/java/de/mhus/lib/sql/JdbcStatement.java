@@ -95,7 +95,7 @@ public class JdbcStatement extends DbStatement {
 	 * 
 	 * @See Statement.execute
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	@Override
@@ -129,7 +129,7 @@ public class JdbcStatement extends DbStatement {
 	 * Return the result of an select query.
 	 * 
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class JdbcStatement extends DbStatement {
 	 * Return the result of an update query. In the attributes InputStreams are allowed (blobs).
 	 * 
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	@Override
@@ -175,7 +175,7 @@ public class JdbcStatement extends DbStatement {
 	/**
 	 * Return the used connection.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	@Override
 	public DbConnection getConnection() {

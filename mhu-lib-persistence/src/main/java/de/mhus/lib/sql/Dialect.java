@@ -80,7 +80,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * function to be sure you have all hacks included.
 	 * 
 	 * @param type The type enum
-	 * @return null if type is null/unknown or the name
+	 * @return x null if type is null/unknown or the name
 	 */
 	public static String typeEnumToString(DbType.TYPE type) {
 		if (type == null) return null;
@@ -172,7 +172,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Returns a formated default value.
 	 * 
 	 * @param def
-	 * @return
+	 * @return x
 	 */
 	protected String getDbDef(String def) {
 		try {
@@ -187,7 +187,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	/**
 	 * Return a normalized cao type from the config.
 	 * @param f
-	 * @return
+	 * @return x
 	 */
 	protected CaoMetaDefinition.TYPE getCaoType(ResourceNode f) {
 		String type = f.getString("type",DbType.TYPE.STRING.name()).toUpperCase();
@@ -240,7 +240,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	/**
 	 * Return a database specific type for the normalized type from configuration.
 	 * @param f
-	 * @return
+	 * @return x
 	 */
 	public String getDbType(ResourceNode f) {
 		return getDbType(f.getString("type","string"),f.getString("size", "100"));
@@ -250,7 +250,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a database specific type for the normalized type from the type and size.
 	 * @param type The general type name - see const
 	 * @param size the size, if needed
-	 * @return
+	 * @return x
 	 */
 	public String getDbType(String type, String size) {
 		String t = type.toUpperCase();
@@ -306,7 +306,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid index name.
 	 * 
 	 * @param tableName
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract String normalizeIndexName(String tableName) throws Exception;
@@ -315,7 +315,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid table name.
 	 * 
 	 * @param tableName
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract String normalizeTableName(String tableName) throws Exception;
@@ -324,7 +324,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * Return a valid column name.
 	 * 
 	 * @param columnName
-	 * @return
+	 * @return x
 	 */
 	public abstract String normalizeColumnName(String columnName);
 
@@ -333,7 +333,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * specialized to the database type.
 	 * @param language 
 	 * 
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public Parser getQueryParser(String language) throws MException {
@@ -382,7 +382,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * It will detect the common language.
 	 * 
 	 * @param sql
-	 * @return
+	 * @return x
 	 */
 	public String detectLanguage(String sql) {
 		if (sql == null) return null;

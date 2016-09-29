@@ -89,7 +89,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * Masquerade the table names if needed. By default a tablePrefix is set for the table.
 	 * 
 	 * @param name
-	 * @return
+	 * @return x
 	 */
 	public String getTableName(String name) {
 		return tablePrefix + name;
@@ -104,7 +104,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @param ret could be null, return the default object
 	 * @param manager
 	 * @param isPersistent
-	 * @return
+	 * @return x x
 	 * @throws Exception
 	 */
 	public Object createObject(Class<?> clazz, String registryName, DbResult ret, DbManager manager, boolean isPersistent) throws Exception {
@@ -122,7 +122,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * 
 	 * @param object
 	 * @param manager
-	 * @return
+	 * @return x
 	 */
 	public Class<? extends Persistable> findClassForObject(Object object, DbManager manager) {
 		initObjectTypes();
@@ -151,8 +151,6 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @param obj
 	 * @param name
 	 * @param manager
-	 * @return
-	 * @throws Exception 
 	 */
 	public void doCreateUniqueIdFor(Table table,Field field,Object obj, String name, DbManager manager) {
 		
@@ -209,7 +207,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * Return true if you want to store persistent information about the schema in the database.
 	 * Use Manager.getSchemaProperties() to access the properties.
 	 * Default value is true.
-	 * @return
+	 * @return x
 	 */
 	public boolean hasPersistentInfo() {
 		return true;
@@ -219,7 +217,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * Return the name of the schema used for example for the schema property table. Default
 	 * is the simple name of the class.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public String getSchemaName() {
 		return getClass().getSimpleName();
@@ -311,7 +309,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * given table. This will most time be called one at initialization time.
 	 * 
 	 * @param c
-	 * @return The manager or null
+	 * @return x The manager or null
 	 */
 	public DbAccessManager getAccessManager(Table c) {
 		return null;
@@ -421,7 +419,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * connection from the pool are used. You may overwrite the commit() or rollback() methods.
 	 * 
 	 * @param pool
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public DbConnection getConnection(DbPool pool) throws Exception {

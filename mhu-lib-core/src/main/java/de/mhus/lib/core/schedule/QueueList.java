@@ -6,10 +6,17 @@ import java.util.List;
 
 import de.mhus.lib.core.MTimeInterval;
 
+/**
+ * <p>QueueList class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class QueueList implements SchedulerQueue {
 
 	private LinkedList<SchedulerJob> list = new LinkedList<>();
 	
+	/** {@inheritDoc} */
 	@Override
 	public List<SchedulerJob> removeJobs(long toTime) {
 		LinkedList<SchedulerJob> out = null;
@@ -29,6 +36,7 @@ public class QueueList implements SchedulerQueue {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void doSchedule(SchedulerJob schedulerJob) {
 		long time = schedulerJob.getScheduledTime();
@@ -48,6 +56,7 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeJob(SchedulerJob job) {
 		synchronized (this) {
@@ -59,6 +68,7 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int size() {
 		synchronized (this) {
@@ -66,6 +76,7 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<SchedulerJob> getJobs() {
 		synchronized (this) {

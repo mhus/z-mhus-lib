@@ -20,9 +20,9 @@ import de.mhus.lib.errors.MException;
 
 /**
  * Implements a configuration loaded from xml structures.
- * 
- * @author mhu
  *
+ * @author mhu
+ * @version $Id: $Id
  */
 public class XmlConfig extends IConfig {
 
@@ -32,6 +32,9 @@ public class XmlConfig extends IConfig {
 	protected XmlConfig parent;
 	protected String name;
 	
+	/**
+	 * <p>Constructor for XmlConfig.</p>
+	 */
 	public XmlConfig() {
 		try {
 			Document doc = MXml.createDocument();
@@ -41,20 +44,42 @@ public class XmlConfig extends IConfig {
 		} catch (Exception e) {}
 	}
 	
+	/**
+	 * <p>getDocument.</p>
+	 *
+	 * @return a {@link org.w3c.dom.Document} object.
+	 */
 	public Document getDocument() {
 		return element.getOwnerDocument();
 	}
 	
+	/**
+	 * <p>Constructor for XmlConfig.</p>
+	 *
+	 * @param elementByPath a {@link org.w3c.dom.Element} object.
+	 */
 	public XmlConfig(Element elementByPath) {
 		this(null,elementByPath);
 	}
 	
+	/**
+	 * <p>Constructor for XmlConfig.</p>
+	 *
+	 * @param parent a {@link de.mhus.lib.core.config.XmlConfig} object.
+	 * @param elementByPath a {@link org.w3c.dom.Element} object.
+	 */
 	public XmlConfig(XmlConfig parent,Element elementByPath) {
 		this.parent = parent;
 		element = elementByPath;
 		if (element!=null) name = element.getNodeName();
 	}
 
+	/**
+	 * <p>readConfig.</p>
+	 *
+	 * @param file a {@link java.io.Reader} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void readConfig(Reader file) throws Exception {
 		Document config = MXml.loadXml(file);
 		file.close();
@@ -62,6 +87,7 @@ public class XmlConfig extends IConfig {
 		name = element.getNodeName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WritableResourceNode getNode(String key) {
 		Element e = MXml.getElementByPath(element, key);
@@ -69,6 +95,7 @@ public class XmlConfig extends IConfig {
 		return new XmlConfig(this, e);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WritableResourceNode[] getNodes() {
 		NodeList list = MXml.getLocalElements(element);
@@ -78,6 +105,7 @@ public class XmlConfig extends IConfig {
 		return out;		
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public WritableResourceNode[] getNodes(String key) {
 		NodeList list = MXml.getLocalElements(element, key);
@@ -87,6 +115,7 @@ public class XmlConfig extends IConfig {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getNodeKeys() {
 		NodeList list = MXml.getLocalElements(element);
@@ -97,6 +126,7 @@ public class XmlConfig extends IConfig {
 		return set.toArray(new String[set.size()]);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getPropertyKeys() {
 		NamedNodeMap list = element.getAttributes();
@@ -106,24 +136,40 @@ public class XmlConfig extends IConfig {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeProperty(String name) {
 		element.removeAttribute(name);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void setProperty(String key, Object val) {
 		element.setAttribute(MXml.normalizeName(key), MCast.objectToString(val) );
 	}
 
+	/**
+	 * <p>writeConfig.</p>
+	 *
+	 * @param configStream a {@link java.io.Writer} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void writeConfig(Writer configStream) throws Exception {
 		writeConfig(configStream,false);
 	}
+	/**
+	 * <p>writeConfig.</p>
+	 *
+	 * @param configStream a {@link java.io.Writer} object.
+	 * @param intend a boolean.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void writeConfig(Writer configStream,boolean intend) throws Exception {
 		MXml.trim(element);
 		MXml.saveXml(element, configStream, intend);
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public XmlConfig createConfig(String name) {
 		Element ele = element.getOwnerDocument().createElement(name);
@@ -131,6 +177,7 @@ public class XmlConfig extends IConfig {
 		return new XmlConfig(this,ele);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getProperty(String key) {
 		if (element==null || key==null) return null;
@@ -139,20 +186,28 @@ public class XmlConfig extends IConfig {
 		return out;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isProperty(String name) {
 		return getProperty(name) != null;
 	}
 
+	/**
+	 * <p>isConfigChanged.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isConfigChanged() {
 		return parent == null ? changed : (changed || parent.isConfigChanged());
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int moveConfig(ResourceNode config, int newPos) throws MException {
 		if (!(config instanceof XmlConfig)) 
@@ -219,6 +274,7 @@ public class XmlConfig extends IConfig {
 		return newPos;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void removeConfig(ResourceNode config) throws MException {
 		if (!(config instanceof XmlConfig)) 
@@ -230,20 +286,28 @@ public class XmlConfig extends IConfig {
 		element.removeChild(((XmlConfig)config).element);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEditable() {
 		return true;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WritableResourceNode getParent() {
 		return parent;
 	}
 	
+	/**
+	 * <p>getXmlElement.</p>
+	 *
+	 * @return a {@link org.w3c.dom.Element} object.
+	 */
 	public Element getXmlElement() {
 		return element;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof XmlConfig) {
@@ -252,11 +316,13 @@ public class XmlConfig extends IConfig {
 		return super.equals(obj);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public InputStream getInputStream(String key) {
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public URL getUrl() {
 		return null;

@@ -3,20 +3,29 @@ package de.mhus.lib.core.cast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
+/**
+ * <p>ObjectToLong class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class ObjectToLong implements Caster<Object,Long> {
 
 	private final static Log log = Log.getLog(ObjectToLong.class);
 	
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Long> getToClass() {
 		return Long.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Long cast(Object in, Long def) {
 		ObjectContainer<Long> ret = new ObjectContainer<>(def);
@@ -24,6 +33,14 @@ public class ObjectToLong implements Caster<Object,Long> {
 		return ret.getObject();
 	}
 
+	/**
+	 * <p>toLong.</p>
+	 *
+	 * @param in a {@link java.lang.Object} object.
+	 * @param def a long.
+	 * @param ret a {@link de.mhus.lib.core.util.ObjectContainer} object.
+	 * @return a long.
+	 */
 	public long toLong(Object in, long def, ObjectContainer<Long> ret) {
 		if (in == null) return def;
 		if (in instanceof Number) {

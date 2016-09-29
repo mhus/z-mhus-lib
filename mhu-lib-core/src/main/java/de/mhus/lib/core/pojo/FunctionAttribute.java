@@ -6,6 +6,12 @@ import java.lang.reflect.Method;
 
 import de.mhus.lib.core.MCast;
 
+/**
+ * <p>FunctionAttribute class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FunctionAttribute<T> implements PojoAttribute<T> {
 
 	private Class<T> clazz;
@@ -14,6 +20,15 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 	private String name;
 	private FunctionAttribute<Object> parent;
 
+	/**
+	 * <p>Constructor for FunctionAttribute.</p>
+	 *
+	 * @param clazz a {@link java.lang.Class} object.
+	 * @param getter a {@link java.lang.reflect.Method} object.
+	 * @param setter a {@link java.lang.reflect.Method} object.
+	 * @param name a {@link java.lang.String} object.
+	 * @param parent a {@link de.mhus.lib.core.pojo.FunctionAttribute} object.
+	 */
 	public FunctionAttribute(Class<T> clazz, Method getter, Method setter, String name, FunctionAttribute<Object> parent) {
 		this.clazz = clazz;
 		this.getter = getter;
@@ -22,21 +37,25 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 		this.parent = parent;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Class<T> getManagedClass() {
 		return clazz;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canRead() {
 		return getter != null;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean canWrite() {
 		return setter != null;
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Class<T> getType() {
@@ -46,6 +65,7 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 			return (Class<T>) setter.getParameterTypes()[0];
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void set(Object pojo, T value) throws IOException {
@@ -68,6 +88,7 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public T get(Object pojo) throws IOException {
@@ -83,11 +104,13 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public <A extends Annotation> A getAnnotation(Class<? extends A> annotationClass) {
 		A out = getter == null ? null : getter.getAnnotation(annotationClass);
@@ -96,6 +119,7 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 		return out;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return "[" + name + "@FunctionAttribute]";

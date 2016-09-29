@@ -24,15 +24,25 @@ import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
 
+/**
+ * <p>Abstract MTimerTask class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public abstract class MTimerTask extends TimerTask implements Observer, Named {
 
 	private boolean canceled = false;
 	private String name;
 	
+	/**
+	 * <p>Constructor for MTimerTask.</p>
+	 */
 	public MTimerTask() {
 		setName(MSystem.getClassName(this));
 	}
 		
+	/** {@inheritDoc} */
 	@Override
 	final public void run() {
 		boolean error = false;
@@ -51,39 +61,72 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 		}
 	}
 
+	/**
+	 * <p>onError.</p>
+	 *
+	 * @param t a {@link java.lang.Throwable} object.
+	 */
 	protected void onError(Throwable t) {
 		t.printStackTrace();
 	}
 
+	/**
+	 * <p>onFinal.</p>
+	 *
+	 * @param isError a boolean.
+	 */
 	protected void onFinal(boolean isError) {
 	}
 
+	/**
+	 * <p>doit.</p>
+	 *
+	 * @throws java.lang.Exception if any.
+	 */
 	public abstract void doit() throws Exception;
 	
+    /** {@inheritDoc} */
     @Override
 	public void update(Observable o, Object arg) {
     	run();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean cancel() {
     	setCanceled(true);
     	return super.cancel();
     }
     
+	/**
+	 * <p>isCanceled.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isCanceled() {
 		return canceled;
 	}
 
+	/**
+	 * <p>Setter for the field <code>canceled</code>.</p>
+	 *
+	 * @param canceled a boolean.
+	 */
 	public void setCanceled(boolean canceled) {
 		this.canceled = canceled;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Setter for the field <code>name</code>.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}

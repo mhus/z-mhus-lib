@@ -78,7 +78,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param registryName
 	 * @param qualification
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public abstract <T> long getCountByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException;
@@ -122,7 +122,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param attributeName
 	 * @param query
 	 * @param attributes
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public abstract <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException;
@@ -147,7 +147,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param con A connection to use or null
 	 * @param registryName The registry name
 	 * @param keys The primary key values
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public abstract Object getObject(DbConnection con, String registryName, Object ... keys) throws MException;
@@ -169,7 +169,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param con A connection to use or null
 	 * @param registryName The registry name
 	 * @param keys The primary key values
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public abstract boolean existsObject(DbConnection con, String registryName, Object ... keys) throws MException;
@@ -196,7 +196,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param con
 	 * @param registryName
 	 * @param object
-	 * @return
+	 * @return x
 	 * @throws MException
 	 */
 	public abstract boolean objectChanged(DbConnection con, String registryName, Object object) throws MException;

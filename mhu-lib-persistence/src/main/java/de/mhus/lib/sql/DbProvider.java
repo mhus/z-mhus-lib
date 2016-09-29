@@ -44,7 +44,7 @@ public abstract class DbProvider extends MObject {
 	/**
 	 * Returns a new DbConnection for this kind of database.
 	 * 
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public abstract InternalDbConnection createConnection() throws Exception;
@@ -67,7 +67,7 @@ public abstract class DbProvider extends MObject {
 	 * TODO need to manipulate the set of statements from outside.
 	 * 
 	 * @param name
-	 * @return The query string or null.
+	 * @return x The query string or null.
 	 */
 	public String[] getQuery(String name) {
 		try {
@@ -98,14 +98,14 @@ public abstract class DbProvider extends MObject {
 	 * Returns the Dialect object for this database. It contains all deep specific
 	 * abstraction functions to handle the database.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public abstract Dialect getDialect();
 
 	/**
 	 * Nice name of the connection - from configuration to identify it.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public String getName() {
 		try {
@@ -118,7 +118,7 @@ public abstract class DbProvider extends MObject {
 	/**
 	 * Returns the used activator.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public MActivator getActivator() {
 		return activator;

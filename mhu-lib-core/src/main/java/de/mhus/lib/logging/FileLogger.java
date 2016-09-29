@@ -14,6 +14,13 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
+/**
+ * <p>FileLogger class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ * @since 3.3.0
+ */
 public class FileLogger extends Log {
 	
 	protected File file;
@@ -25,25 +32,56 @@ public class FileLogger extends Log {
 	private boolean autoFlush = false;
 	private boolean rotate = true;
 
+	/**
+	 * <p>Constructor for FileLogger.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param file a {@link java.io.File} object.
+	 */
 	public FileLogger(String name, File file) {
 		this(name,file,Log.LEVEL.INFO);
 	}
 
+	/**
+	 * <p>Constructor for FileLogger.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param file a {@link java.io.File} object.
+	 * @param autoFlush a boolean.
+	 */
 	public FileLogger(String name, File file, boolean autoFlush) {
 		this(name,file,Log.LEVEL.INFO);
 		this.autoFlush = autoFlush;
 	}
 
+	/**
+	 * <p>Constructor for FileLogger.</p>
+	 *
+	 * @param name a {@link java.lang.String} object.
+	 * @param file a {@link java.io.File} object.
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public FileLogger(String name, File file, Log.LEVEL level) {
 		super(name);
 		this.level = level;
 		this.file = file;
 	}
 
+	/**
+	 * <p>Getter for the field <code>level</code>.</p>
+	 *
+	 * @return a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 */
 	public Log.LEVEL getLevel() {
 		return level;
 	}
 
+	/**
+	 * <p>Setter for the field <code>level</code>.</p>
+	 *
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 * @return a {@link de.mhus.lib.logging.FileLogger} object.
+	 */
 	public FileLogger setLevel(Log.LEVEL level) {
 		this.level = level;
 		return this;
@@ -168,6 +206,13 @@ public class FileLogger extends Log {
 		
 	}
 	
+	/**
+	 * <p>print.</p>
+	 *
+	 * @param level a {@link java.lang.String} object.
+	 * @param message a {@link java.lang.Object} object.
+	 * @param t a {@link java.lang.Throwable} object.
+	 */
 	protected synchronized void print(String level, Object message, Throwable t) {
 		if (!check()) return;
 		out.println(printTime() + "," + level + "," + getInfo() + "," + message);
@@ -179,10 +224,20 @@ public class FileLogger extends Log {
 		if (autoFlush) out.flush();
 	}
 
+	/**
+	 * <p>getInfo.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	protected String getInfo() {
 		return getName();
 	}
 
+	/**
+	 * <p>check.</p>
+	 *
+	 * @return a boolean.
+	 */
 	protected synchronized boolean check() {
 		
 		doUpdateFile();
@@ -209,9 +264,15 @@ public class FileLogger extends Log {
 		return out != null;
 	}
 
+	/**
+	 * <p>doUpdateFile.</p>
+	 */
 	protected void doUpdateFile() {
 	}
 
+	/**
+	 * <p>rotate.</p>
+	 */
 	protected void rotate() {
 		if (!isRotate()) return;
 		File oldFile = file;
@@ -227,6 +288,11 @@ public class FileLogger extends Log {
 			file.renameTo(new File(file.getParentFile(), MDate.toFileFormat(new Date()) + "." + file.getName() ));
 	}
 	
+	/**
+	 * <p>printTime.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String printTime() {
 		if (printTime) {
 			return MCast.toString(new Date()); // TODO maybe more efficient
@@ -234,45 +300,81 @@ public class FileLogger extends Log {
 		return "";
 	}
 
+	/**
+	 * <p>isPrintTime.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isPrintTime() {
 		return printTime;
 	}
 
+	/**
+	 * <p>Setter for the field <code>printTime</code>.</p>
+	 *
+	 * @param printTime a boolean.
+	 * @return a {@link de.mhus.lib.logging.FileLogger} object.
+	 */
 	public FileLogger setPrintTime(boolean printTime) {
 		this.printTime = printTime;
 		return this;
 	}
 
+	/**
+	 * <p>isTraces.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isTraces() {
 		return traces;
 	}
 
+	/**
+	 * <p>Setter for the field <code>traces</code>.</p>
+	 *
+	 * @param traces a boolean.
+	 * @return a {@link de.mhus.lib.logging.FileLogger} object.
+	 */
 	public FileLogger setTraces(boolean traces) {
 		this.traces = traces;
 		return this;
 	}
 
+	/**
+	 * <p>Getter for the field <code>maxFileSize</code>.</p>
+	 *
+	 * @return a long.
+	 */
 	public long getMaxFileSize() {
 		return maxFileSize;
 	}
 
+	/**
+	 * <p>Setter for the field <code>maxFileSize</code>.</p>
+	 *
+	 * @param maxFileSize a long.
+	 */
 	public void setMaxFileSize(long maxFileSize) {
 		this.maxFileSize = maxFileSize;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void update() {
 		engine = new MyEngine(getName());
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void register() {
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void unregister() {
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		if (out != null) {
@@ -283,25 +385,48 @@ public class FileLogger extends Log {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();
 	}
 
+	/**
+	 * <p>isRotate.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isRotate() {
 		return rotate;
 	}
 
+	/**
+	 * <p>Setter for the field <code>rotate</code>.</p>
+	 *
+	 * @param rotate a boolean.
+	 * @return a {@link de.mhus.lib.logging.FileLogger} object.
+	 */
 	public FileLogger setRotate(boolean rotate) {
 		this.rotate = rotate;
 		return this;
 	}
 
+	/**
+	 * <p>isAutoFlush.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean isAutoFlush() {
 		return autoFlush;
 	}
 
+	/**
+	 * <p>Setter for the field <code>autoFlush</code>.</p>
+	 *
+	 * @param autoFlush a boolean.
+	 * @return a {@link de.mhus.lib.logging.FileLogger} object.
+	 */
 	public FileLogger setAutoFlush(boolean autoFlush) {
 		this.autoFlush = autoFlush;
 		return this;

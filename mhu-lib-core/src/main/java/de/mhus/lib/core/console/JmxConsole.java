@@ -7,11 +7,23 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
+/**
+ * <p>JmxConsole class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class JmxConsole extends VirtualConsole {
 
 	@SuppressWarnings("unused")
 	private JmxConsoleProxy jmxProxy;
 
+	/**
+	 * <p>Constructor for JmxConsole.</p>
+	 *
+	 * @throws java.io.IOException if any.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public JmxConsole() throws IOException, MException {
 		super();
 		width = 80;

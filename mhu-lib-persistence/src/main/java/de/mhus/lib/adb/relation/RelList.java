@@ -11,6 +11,12 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.sql.DbConnection;
 
+/**
+ * <p>RelList class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class RelList<T> implements List<T> {
 
 	List<T> current;
@@ -20,6 +26,12 @@ public class RelList<T> implements List<T> {
 	List<T> changed;
 	private DbRelation config;
 
+	/**
+	 * <p>Constructor for RelList.</p>
+	 *
+	 * @param list a {@link java.util.List} object.
+	 * @param config a {@link de.mhus.lib.annotations.adb.DbRelation} object.
+	 */
 	@SuppressWarnings("unchecked")
 	public RelList(List<?> list, DbRelation config) {
 		org = (List<T>) list;
@@ -27,30 +39,37 @@ public class RelList<T> implements List<T> {
 		this.config = config;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int size() {
 		return current.size();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		return current.isEmpty();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean contains(Object o) {
 		return current.contains(o);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public Iterator<T> iterator() {
 		return new LinkedList<T>(current).iterator(); // iterate over a copy
 	}
+	/** {@inheritDoc} */
 	@Override
 	public Object[] toArray() {
 		return current.toArray();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public <E> E[] toArray(E[] a) {
 		return current.toArray(a);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean add(T e) {
 		init();
@@ -59,6 +78,7 @@ public class RelList<T> implements List<T> {
 		if (!current.contains(e)) current.add(e);
 		return true;
 	}
+	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(Object o) {
@@ -76,85 +96,116 @@ public class RelList<T> implements List<T> {
 		changed = new LinkedList<T>();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		return current.containsAll(c);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		for (T t : c) add(t);
 		return true;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
 		for (T t : c) add(t);
 		return true;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		for (Object t : c) remove(t);
 		return true;
 
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean retainAll(Collection<?> c) {
 		return current.retainAll(c);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		for (T t : current) remove(t);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object o) {
 		return current.equals(o);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return current.hashCode();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public T get(int index) {
 		return current.get(index);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public T set(int index, T element) {
 		// return current.set(index, element);
 		return null;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public void add(int index, T element) {
 		add(element);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public T remove(int index) {
 		remove(get(index));
 		return null;
 	}
+	/** {@inheritDoc} */
 	@Override
 	public int indexOf(Object o) {
 		return current.indexOf(o);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public int lastIndexOf(Object o) {
 		return current.lastIndexOf(o);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public ListIterator<T> listIterator() {
 		return current.listIterator();
 	}
+	/** {@inheritDoc} */
 	@Override
 	public ListIterator<T> listIterator(int index) {
 		return current.listIterator(index);
 	}
+	/** {@inheritDoc} */
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
 		return current.subList(fromIndex, toIndex);
 	}
 
+	/**
+	 * <p>changed.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public boolean changed() {
 		return add != null && (add.size() > 0 || remove.size() > 0 || changed.size() > 0);
 	}
 
+	/**
+	 * <p>save.</p>
+	 *
+	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
+	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
+	 * @param fName a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
+	 * @throws java.lang.Exception if any.
+	 */
 	public void save(DbManager manager, DbConnection con, String fName, Object value) throws Exception {
 		if (remove != null) {
 			for (T t : remove) {
@@ -206,11 +257,21 @@ public class RelList<T> implements List<T> {
 		changed = null;
 	}
 
+	/**
+	 * <p>Setter for the field <code>changed</code>.</p>
+	 *
+	 * @param obj a T object.
+	 */
 	public void setChanged(T obj) {
 		init();
 		changed.add(obj);
 	}
 
+	/**
+	 * <p>unsetChanged.</p>
+	 *
+	 * @param obj a T object.
+	 */
 	public void unsetChanged(T obj) {
 		if (changed == null) return;
 		changed.remove(obj);

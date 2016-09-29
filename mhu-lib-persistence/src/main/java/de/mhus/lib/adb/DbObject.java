@@ -33,7 +33,7 @@ public interface DbObject extends Persistable {
 	 * the handler was already present.
 	 * 
 	 * @param manager
-	 * @return
+	 * @return x
 	 */
 	boolean setDbHandler(DbObjectHandler manager);
 	

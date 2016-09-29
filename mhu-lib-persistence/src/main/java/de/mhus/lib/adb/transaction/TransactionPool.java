@@ -13,7 +13,7 @@ public class TransactionPool {
 	
 	/**
 	 * Return current transaction, if cascaded transactions, return the last/current
-	 * @return
+	 * @return x
 	 */
 	public Transaction get() {
 //		synchronized (pool) {
@@ -26,7 +26,7 @@ public class TransactionPool {
 	
 	/**
 	 * Return current transaction, if cascaded transactions, return the base
-	 * @return
+	 * @return x
 	 */
 	public Transaction getBase() {
 //		synchronized (pool) {

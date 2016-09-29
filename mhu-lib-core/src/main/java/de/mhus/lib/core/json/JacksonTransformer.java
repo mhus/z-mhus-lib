@@ -5,8 +5,15 @@ import org.codehaus.jackson.JsonNode;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.errors.NotSupportedException;
 
+/**
+ * <p>JacksonTransformer class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class JacksonTransformer extends TransformStrategy {
 
+	/** {@inheritDoc} */
 	@Override
 	public Object jsonToPojo(JsonNode node, Class<?> type,
 			TransformHelper helper) throws NotSupportedException {
@@ -19,6 +26,7 @@ public class JacksonTransformer extends TransformStrategy {
 
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public JsonNode pojoToJson(Object obj, TransformHelper helper)
 			throws NotSupportedException {

@@ -33,8 +33,9 @@ import de.mhus.lib.core.MString;
 
 /**
  * The class encodes/decodes strings in rfc1738 format.
- * 
+ *
  * @author jesus
+ * @version $Id: $Id
  */
 public class Rfc1738 extends TreeMap<String,String> {
 
@@ -44,10 +45,23 @@ public class Rfc1738 extends TreeMap<String,String> {
 	 */
 	private static final long serialVersionUID = -3321101084525120985L;
 
+	/**
+	 * <p>put.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _value a int.
+	 */
 	public void put(String _key, int _value) {
 		put(_key, MCast.toString(_value));
 	}
 
+	/**
+	 * <p>getInt.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @param _def a int.
+	 * @return a int.
+	 */
 	public int getInt(String _key, int _def) {
 		String v = get(_key);
 		if (v == null)
@@ -55,10 +69,17 @@ public class Rfc1738 extends TreeMap<String,String> {
 		return MCast.toint(v,0);
 	}
 
+	/**
+	 * <p>getInt.</p>
+	 *
+	 * @param _key a {@link java.lang.String} object.
+	 * @return a int.
+	 */
 	public int getInt(String _key) {
 		return getInt(_key, -1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return implode(this);
@@ -66,7 +87,7 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	/**
 	 * Decode a string with rfc1738 spec.
-	 * 
+	 *
 	 * @param _in encoded string
 	 * @return decoded string
 	 */
@@ -131,6 +152,7 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	/**
 	 * encode a string in rfc1738 spec
+	 *
 	 * @param _in decoded string
 	 * @return encoded string
 	 */
@@ -145,6 +167,12 @@ public class Rfc1738 extends TreeMap<String,String> {
 		return encodeNoUTF8(_in);
 	}
 	
+	/**
+	 * <p>encodeNoUTF8.</p>
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encodeNoUTF8(String _in) {
 	
 		StringBuffer sb = new StringBuffer();
@@ -168,12 +196,24 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	}
 
+	/**
+	 * <p>encode.</p>
+	 *
+	 * @param c a char.
+	 * @return a {@link java.lang.String} object.
+	 */
 	public static String encode(char c) {
 		StringBuffer sb = new StringBuffer();
 		encodeNoUTF8(sb, c);
 		return sb.toString();
 	}
 	
+	/**
+	 * <p>encodeNoUTF8.</p>
+	 *
+	 * @param sb a {@link java.lang.StringBuffer} object.
+	 * @param c a char.
+	 */
 	public static void encodeNoUTF8(StringBuffer sb, char c) {
 		
 		if (c == ' ' ) {
@@ -202,8 +242,9 @@ public class Rfc1738 extends TreeMap<String,String> {
 	
 	/**
 	 * Transfor the elements of an array to a string using the rfc1738 sprec.
-	 * @param in
-	 * @return
+	 *
+	 * @param in an array of {@link java.lang.String} objects.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String implodeArray(String[] in) {
 		
@@ -223,9 +264,9 @@ public class Rfc1738 extends TreeMap<String,String> {
 	
 	/**
 	 * Transforms a encoded array of strings back.
-	 * 
-	 * @param in
-	 * @return
+	 *
+	 * @param in a {@link java.lang.String} object.
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public static String[] explodeArray(String in) {
 		
@@ -240,9 +281,9 @@ public class Rfc1738 extends TreeMap<String,String> {
 	
 	/**
 	 * Transforms a list encoded map of attributes back.
-	 * 
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.lang.String} object.
+	 * @return a {@link java.util.Map} object.
 	 */
 	public static Map<String,String> explode(String _in) {
 
@@ -271,8 +312,9 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	/**
 	 * Encode a list of attributes in a single string
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link java.util.Map} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String implode(Map<String,String> _in) {
 
@@ -304,8 +346,9 @@ public class Rfc1738 extends TreeMap<String,String> {
 
 	/**
 	 * Encode a list of attributes in a single string
-	 * @param _in
-	 * @return
+	 *
+	 * @param _in a {@link de.mhus.lib.core.IProperties} object.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public static String implode(IProperties _in) {
 

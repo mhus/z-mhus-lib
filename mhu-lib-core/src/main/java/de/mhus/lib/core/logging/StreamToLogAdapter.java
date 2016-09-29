@@ -6,14 +6,27 @@ import java.io.PrintStream;
 
 import de.mhus.lib.core.logging.Log.LEVEL;
 
+/**
+ * <p>StreamToLogAdapter class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class StreamToLogAdapter extends PrintStream {
 
+	/** Constant <code>log</code> */
 	protected static Log log = Log.getLog("Console");
 
 	protected LEVEL level;
 	protected StringBuffer line = new StringBuffer();
 	protected PrintStream forward;
 
+	/**
+	 * <p>Constructor for StreamToLogAdapter.</p>
+	 *
+	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
+	 * @param forward a {@link java.io.PrintStream} object.
+	 */
 	public StreamToLogAdapter(LEVEL level, PrintStream forward) {
 		super(new MyOutputStream());
 		this.level = level;
@@ -40,6 +53,11 @@ public class StreamToLogAdapter extends PrintStream {
 		
 	}
 
+	/**
+	 * <p>writeByte.</p>
+	 *
+	 * @param b a int.
+	 */
 	protected void writeByte(int b) {
 		if (forward != null) 
 			forward.write(b);
@@ -56,6 +74,9 @@ public class StreamToLogAdapter extends PrintStream {
 		}
 	}
 
+	/**
+	 * <p>writeLine.</p>
+	 */
 	protected void writeLine() {
 		log.log(level, line);
 		line.setLength(0);

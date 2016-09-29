@@ -20,9 +20,10 @@ import de.mhus.lib.errors.NotSupportedException;
 /**
  * This interface represent a generic Directory Node. Nodes are
  * sets of definitions. The definitions can be bound together to a inner Nodes.
- * 
+ *
+ * @author mikehummel
+ * @version $Id: $Id
  */
-
 public abstract class ResourceNode extends AbstractProperties {
 
 	protected ConfigStringCompiler compiler;
@@ -30,8 +31,8 @@ public abstract class ResourceNode extends AbstractProperties {
 
 	/**
 	 * Return all existing keys. A property key is unique.
-	 *  
-	 * @return
+	 *
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public abstract String[] getPropertyKeys();
 
@@ -39,48 +40,49 @@ public abstract class ResourceNode extends AbstractProperties {
 	 * Returns a inner configuration by the name. Inner configurations
 	 * are not unique. If more then one configurations exists it will
 	 * return the first one. if no configuration exists it returns null.
-	 * 
-	 * @param key
-	 * @return
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
 	public abstract ResourceNode getNode(String key);
 
 	/**
 	 * Return all inner configurations ignoring the name. The order
 	 * is like in the configuration file. This never returns null.
-	 * 
-	 * @param key
-	 * @return
+	 *
+	 * @return an array of {@link de.mhus.lib.core.directory.ResourceNode} objects.
 	 */
 	public abstract ResourceNode[] getNodes();
 
 	/**
 	 * Return all inner configurations by the given name. The order
 	 * is like in the configuration file. This never returns null.
-	 * 
-	 * @param key
-	 * @return
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @return an array of {@link de.mhus.lib.core.directory.ResourceNode} objects.
 	 */
 	public abstract ResourceNode[] getNodes(String key);
 
 	/**
 	 * Return all possible, existing inner configuration names.
-	 * @return
+	 *
+	 * @return an array of {@link java.lang.String} objects.
 	 */
 	public abstract String[] getNodeKeys();
 
 	/**
 	 * Return a name of this config element could also be null.
 	 * The name most time is the name of a sub config.
-	 * @return
-	 * @throws MException 
+	 *
+	 * @throws de.mhus.lib.errors.MException if any.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public abstract String getName() throws MException;
 
 	/**
 	 * Return the default content input stream.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link java.io.InputStream} object.
 	 */
 	public InputStream getInputStream() {
 		return getInputStream(null);
@@ -88,42 +90,61 @@ public abstract class ResourceNode extends AbstractProperties {
 	
 	/**
 	 * Return the input stream of a content resource.
+	 *
 	 * @param key Name of a rendition or null for the default content
-	 * @return
+	 * @return a {@link java.io.InputStream} object.
 	 */
 	public abstract InputStream getInputStream(String key);
 	
 	/**
 	 * Returns a compiled and executed string. The string is compiled with StringCompiler and is cached. Example
 	 * is "this is the value of another $anothername,default$" or with the prefix "root.": "This is a root attribute $root.name$
-	 * 
+	 *
 	 * User the "../" prefix to go one back ...
-	 * 
+	 *
 	 * @see StringCompiler
-	 * @param key
-	 * @return
-	 * @throws MException 
+	 * @param key a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 * @return a {@link java.lang.String} object.
 	 */
 	public String getExtracted(String key) throws MException {
 		return getExtracted(key, null);
 	}
 	
+	/**
+	 * <p>getExtracted.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @param def a {@link java.lang.String} object.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	public String getExtracted(String key, String def) throws MException {
 		return getExtracted(key,def,0);
 	}
 	
 	/**
 	 * return the parent config if possible.
-	 * 
-	 * @return
+	 *
+	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
 	public abstract ResourceNode getParent();
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<String> keys() {
 		return new ArraySet<String>(getPropertyKeys());
 	}
 
+	/**
+	 * <p>getExtracted.</p>
+	 *
+	 * @param key a {@link java.lang.String} object.
+	 * @param def a {@link java.lang.String} object.
+	 * @param level a int.
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 */
 	protected String getExtracted(String key, String def,int level) throws MException {
 		
 		if (level > 10) return def;
@@ -301,12 +322,33 @@ public abstract class ResourceNode extends AbstractProperties {
 		
 	}
 
+	/**
+	 * <p>getUrl.</p>
+	 *
+	 * @return a {@link java.net.URL} object.
+	 */
 	public abstract URL getUrl();
 
+	/**
+	 * <p>isValide.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public abstract boolean isValide();
 	
+	/**
+	 * <p>hasContent.</p>
+	 *
+	 * @return a boolean.
+	 */
 	public abstract boolean hasContent();
 
+	/**
+	 * <p>getNodeByPath.</p>
+	 *
+	 * @param path a {@link java.lang.String} object.
+	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 */
 	public ResourceNode getNodeByPath(String path) {
 		if (path == null) return null;
 		while (path.startsWith("/")) path = path.substring(1);
@@ -318,6 +360,13 @@ public abstract class ResourceNode extends AbstractProperties {
 		return next.getNodeByPath(path.substring(p+1));
 	}
 	
+	/**
+	 * <p>dump.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 * @throws de.mhus.lib.errors.MException if any.
+	 * @since 3.3.0
+	 */
 	public String dump() throws MException {
 		StringBuffer sb = new StringBuffer();
 		dump(sb,0);
@@ -337,22 +386,31 @@ public abstract class ResourceNode extends AbstractProperties {
 		
 	}
 	
+	/**
+	 * <p>size.</p>
+	 *
+	 * @return a int.
+	 * @since 3.3.0
+	 */
 	public int size() {
 		String[] keys = getPropertyKeys();
 		if (keys == null) return 0;
 		return keys.length;
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public boolean containsValue(Object value) {
 		throw new NotSupportedException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Collection<Object> values() {
 		throw new NotSupportedException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		throw new NotSupportedException(); //TODO could be done generic ... getNames() getValue ...

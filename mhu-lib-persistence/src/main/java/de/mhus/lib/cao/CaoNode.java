@@ -66,7 +66,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * return true if this node can have children. If the node is only a
 	 * leaf, it will return false.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public abstract boolean isNode();
 
@@ -93,7 +93,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * element has been deleted. This method returns not false if the element data is changed. Only
 	 * CaoWritable can be changed and the have a isDirty() method.
 	 * 
-	 * @return
+	 * @return x
 	 */
 	public abstract boolean isValid();
 
@@ -119,7 +119,7 @@ public abstract class CaoNode extends ResourceNode {
 	/**
 	 * Return the current access policy for this element.
 	 * 
-	 * @return
+	 * @return x
 	 * @throws CaoException
 	 */
 	public CaoPolicy getAccessPolicy() throws CaoException {

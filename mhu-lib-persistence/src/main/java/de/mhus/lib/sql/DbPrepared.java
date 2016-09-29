@@ -26,7 +26,7 @@ public class DbPrepared {
 	/**
 	 * Return a statement with a new connection from the pool.
 	 * 
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public DbStatement getStatement() throws Exception {
@@ -38,7 +38,7 @@ public class DbPrepared {
 	 * Return a statement for the given connection - hopefully from the same pool.
 	 * 
 	 * @param con
-	 * @return
+	 * @return x
 	 * @throws Exception
 	 */
 	public DbStatement getStatement(DbConnection con) throws Exception {

@@ -10,37 +10,80 @@ import java.lang.reflect.Proxy;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSingleton;
 
+/**
+ * <p>MObjectInputStream class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class MObjectInputStream extends ObjectInputStream {
 
 	private ClassLoader cl = null;
 	private MActivator act = null;
 
+	/**
+	 * <p>Constructor for MObjectInputStream.</p>
+	 *
+	 * @throws java.io.IOException if any.
+	 * @throws java.lang.SecurityException if any.
+	 */
 	public MObjectInputStream() throws IOException, SecurityException {
 		super();
 	}
 
+	/**
+	 * <p>Constructor for MObjectInputStream.</p>
+	 *
+	 * @param in a {@link java.io.InputStream} object.
+	 * @param act a {@link de.mhus.lib.core.MActivator} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public MObjectInputStream(InputStream in, MActivator act) throws IOException {
 		super(in);
 		setActivator(act);
 	}
 	
+	/**
+	 * <p>Constructor for MObjectInputStream.</p>
+	 *
+	 * @param in a {@link java.io.InputStream} object.
+	 * @param cl a {@link java.lang.ClassLoader} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public MObjectInputStream(InputStream in, ClassLoader cl) throws IOException {
 		super(in);
 		setClassLoader(cl);
 	}
 	
+	/**
+	 * <p>Constructor for MObjectInputStream.</p>
+	 *
+	 * @param in a {@link java.io.InputStream} object.
+	 * @throws java.io.IOException if any.
+	 */
 	public MObjectInputStream(InputStream in) throws IOException {
 		super(in);
 	}
 	
+	/**
+	 * <p>setActivator.</p>
+	 *
+	 * @param activator a {@link de.mhus.lib.core.MActivator} object.
+	 */
 	public void setActivator(MActivator activator) {
 		act = activator;
 	}
 	
+	/**
+	 * <p>setClassLoader.</p>
+	 *
+	 * @param cl a {@link java.lang.ClassLoader} object.
+	 */
 	public void setClassLoader(ClassLoader cl) {
 		this.cl = cl;
 	}
 
+    /** {@inheritDoc} */
     @Override
 	protected Class<?> resolveClass(ObjectStreamClass desc)
             throws IOException, ClassNotFoundException
@@ -64,6 +107,7 @@ public class MObjectInputStream extends ObjectInputStream {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
 	protected Class<?> resolveProxyClass(String[] interfaces)
             throws IOException, ClassNotFoundException

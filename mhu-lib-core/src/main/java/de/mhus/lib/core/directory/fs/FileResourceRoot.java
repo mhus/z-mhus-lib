@@ -5,12 +5,29 @@ import java.io.File;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ResourceNode;
 
+/**
+ * <p>FileResourceRoot class.</p>
+ *
+ * @author mikehummel
+ * @version $Id: $Id
+ */
 public class FileResourceRoot extends FileResource {
 
+	/**
+	 * <p>Constructor for FileResourceRoot.</p>
+	 *
+	 * @param documentRoot a {@link java.io.File} object.
+	 */
 	public FileResourceRoot(File documentRoot) {
 		super(null, null, documentRoot);
 	}
 
+	/**
+	 * <p>getResource.</p>
+	 *
+	 * @param target a {@link java.lang.String} object.
+	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
+	 */
 	public ResourceNode getResource(String target) {
 		
 		return getResource(this,target);
