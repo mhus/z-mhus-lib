@@ -46,9 +46,9 @@ public class Heartbeat extends HeartbeatReceiver {
 		if (sender != null) sender.reopen();
 	}
 
-	public void sendHeartbeat() {
+	public void sendHeartbeat(String cmd) {
 		if (sender != null)
-			sender.sendHeartbeat();
+			sender.sendHeartbeat(cmd);
 	}
 
 }

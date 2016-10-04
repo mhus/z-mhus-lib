@@ -35,7 +35,7 @@ public class HeartbeatTimer extends Heartbeat {
 
 	protected void doTimerTask() {
 		if (isClosed() || sender == null || sender.isClosed()) return;
-		sender.sendHeartbeat();
+		sender.sendHeartbeat(null);
 	}
 
 	@Override

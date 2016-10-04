@@ -13,6 +13,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
+import de.mhus.lib.karaf.jms.JmsDataChannel;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 
@@ -54,6 +55,11 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 
 	@Override
 	public void sendHeartbeat() {
+		sendHeartbeat(null);
+	}
+	
+	@Override
+	public void sendHeartbeat(String cmd) {
 		synchronized (services) {
 			JmsManagerService jmsService = JmsUtil.getService();
 			if (jmsService == null) return;
@@ -73,7 +79,7 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 						service.doActivate();
 					} else {
 						if (!service.getChannel().isClosed())
-							service.doTimerTask();
+							service.doTimerTask(cmd);
 					}
 				} catch (Throwable t) {
 					log().d(conName,t);
@@ -86,6 +92,26 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 				jmsService.removeChannel(service.getName());
 				service.doDeactivate();
 			}
+			
+			// send beat ...
+			
+			JmsManagerService service = JmsUtil.getService();
+			if (service == null) return;
+
+			for (String cName : service.listChannels()) {
+				try {
+					JmsDataChannel c = service.getChannel(cName);
+					if (c.getChannel() != null) {
+						log().d("heart-beat",cName,cmd);
+						c.getChannel().doBeat();
+//						c.getChannel().reset();
+//						c.getChannel().open();
+					}
+				} catch (Throwable t) {
+					log().w(cName,cmd,t);
+				}
+			}
+						
 		}
 	}
 

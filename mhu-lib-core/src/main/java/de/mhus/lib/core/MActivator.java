@@ -5,6 +5,7 @@ import java.net.URL;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.annotations.activator.DefaultImplementationNull;
 import de.mhus.lib.annotations.activator.ObjectFactory;
 import de.mhus.lib.annotations.lang.Prototype;
 import de.mhus.lib.core.activator.DefaultActivator;
@@ -113,9 +114,15 @@ public abstract class MActivator extends ClassLoader  {
 		Class<?> clazz = findClass(name);
 		Class<?> orgClazz = clazz;
 		
+		DefaultImplementationNull defaultImplementationNull = clazz.getAnnotation(DefaultImplementationNull.class);
+		if (defaultImplementationNull != null) {
+			return null;
+		}
+		
 		DefaultImplementation defaultImplementation = clazz.getAnnotation(DefaultImplementation.class);
 		if (defaultImplementation != null) {
 			clazz = defaultImplementation.value();
+			if (clazz == null) return null;
 		}
 		DefaultFactory defaultFactory = clazz.getAnnotation(DefaultFactory.class);
 		if (defaultFactory != null) {

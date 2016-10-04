@@ -359,4 +359,7 @@ do not block jms driven threads !!! This will cause a deadlock
 		this.fork = fork;
 	}
 
+	public long getLastActivity() {
+		return lastActivity;
+	}
 }

@@ -4,6 +4,8 @@ public interface HeartbeatAdmin {
 
 	void sendHeartbeat();
 	
+	void sendHeartbeat(String cmd);
+	
 	void setEnabled(boolean enable);
 	
 	boolean isEnabled();
