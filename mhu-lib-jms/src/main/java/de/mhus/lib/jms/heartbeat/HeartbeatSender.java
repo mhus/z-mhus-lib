@@ -30,12 +30,12 @@ public class HeartbeatSender extends ClientJms {
 			return;
 		}
 		
-		try {
-			getDestination().getConnection().doChannelBeat();
-		} catch (Throwable e) {
-			log().w("channel beat failed",e);
-			return;
-		}
+//		try {
+//			getDestination().getConnection().doChannelBeat();
+//		} catch (Throwable e) {
+//			log().w("channel beat failed",e);
+//			return;
+//		}
 		
 		try {
 			TextMessage msg = getSession().createTextMessage(MSystem.getAppIdent());

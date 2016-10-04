@@ -10,6 +10,7 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQMessageConsumer;
 import org.apache.activemq.ActiveMQSession;
+import org.apache.activemq.management.JMSConsumerStatsImpl;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
@@ -26,6 +27,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	private static long usedThreads = 0;
 	private static CfgLong maxThreadCount = new CfgLong(ServerJms.class, "maxThreadCount", -1);
 	private static CfgLong maxThreadCountTimeout = new CfgLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
+	private static CfgLong inactivityTimeout = new CfgLong(ServerJms.class, "inactivityTimeout", MTimeInterval.HOUR_IN_MILLISECOUNDS );
 	
     public ServerJms(JmsDestination dest) {
 		super(dest);
@@ -39,11 +41,13 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	private JmsInterceptor interceptorOut;
 
 	private boolean fork = true;
+	private long lastActivity = System.currentTimeMillis();
 	
 	@Override
 	public synchronized void open() throws JMSException {
 		if (isClosed()) throw new JMSException("server closed");
 		if (consumer == null || getSession() == null) {
+			lastActivity = System.currentTimeMillis();
 			dest.open();
 			if (dest.getConnection() == null || dest.getConnection().getSession() == null) throw new JMSException("connection offline");
 			dest.getConnection().registerChannel(this);
@@ -78,18 +82,22 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	
 	@Override
 	public void reset() {
+		if (isClosed()) return;
+		lastActivity = System.currentTimeMillis();
 		log().i("reset",dest);
 		try {
-			consumer.close();
+			if (consumer != null)
+				consumer.close();
 		} catch (Throwable t) {log().d(t);}
 		try {
-			replyProducer.close();
+			if (replyProducer != null)
+				replyProducer.close();
 		} catch (Throwable t) {log().d(t);}
 		consumer = null;
 		replyProducer = null;
 		onReset();
 	}
-
+	
 	public abstract void receivedOneWay(Message msg) throws JMSException;
 	
 	public abstract Message received(Message msg) throws JMSException;
@@ -204,7 +212,7 @@ do not block jms driven threads !!! This will cause a deadlock
 	}
 
 	public void processMessage(final Message message) {
-
+		lastActivity = System.currentTimeMillis();
 		log().d("received",dest,message);
 
 		boolean releaseLog = false;
@@ -292,6 +300,10 @@ do not block jms driven threads !!! This will cause a deadlock
 				consumer = null;
 			}
 			open(); // try to reopen and re-listen
+			
+			if (inactivityTimeout.value() > 0 && MTimeInterval.isTimeOut(lastActivity, inactivityTimeout.value() ))
+				reset();
+			
 		} catch (JMSException e) {
 			log().d(e);
 		}
