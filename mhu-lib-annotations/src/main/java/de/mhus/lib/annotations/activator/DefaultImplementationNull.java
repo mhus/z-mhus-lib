@@ -1,9 +1,8 @@
-package de.mhus.lib.annotations.pojo;
+package de.mhus.lib.annotations.activator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Action {
-
+public @interface DefaultImplementationNull {
 }

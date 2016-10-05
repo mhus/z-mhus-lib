@@ -20,12 +20,6 @@ package de.mhus.lib.errors;
 
 import java.util.UUID;
 
-/**
- * <p>MException class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MException extends Exception {
 
 	/**
@@ -35,27 +29,15 @@ public class MException extends Exception {
 	
 	private UUID errorId = UUID.randomUUID();
 	
-	/**
-	 * <p>Constructor for MException.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 */
 	public MException(Object ... in) {
 		super(argToString(in),argToCause(in));
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return errorId.toString() + " " + super.toString();
 	}
 	
-	/**
-	 * <p>argToString.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String argToString(Object ... in) {
 		StringBuffer sb = new StringBuffer();
 		for (Object o : in) {
@@ -69,12 +51,6 @@ public class MException extends Exception {
 		return sb.toString();
 	}
 	
-	/**
-	 * <p>argToCause.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 * @return a {@link java.lang.Throwable} object.
-	 */
 	public static Throwable argToCause(Object ... in) {
 		Throwable cause = null;
 		for (Object o : in) {
@@ -89,11 +65,6 @@ public class MException extends Exception {
 		return cause;
 	}
 	
-	/**
-	 * <p>getId.</p>
-	 *
-	 * @return a {@link java.util.UUID} object.
-	 */
 	public UUID getId() {
 		return errorId;
 	}
