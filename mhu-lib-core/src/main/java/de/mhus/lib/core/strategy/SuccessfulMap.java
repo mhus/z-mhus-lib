@@ -37,5 +37,10 @@ public class SuccessfulMap extends Successful {
 	public Set<String> keySet() {
 		return ((HashMap<String,String>)getResult()).keySet();
 	}
+
+	@SuppressWarnings("unchecked")
+	public int size() {
+		return ((HashMap<String,String>)getResult()).size();
+	}
 	
 }

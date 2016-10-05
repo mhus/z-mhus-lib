@@ -201,11 +201,11 @@ public class Rfc1738 extends TreeMap<String,String> {
 	}
 	
 	/**
-	 * Transfor the elements of an array to a string using the rfc1738 sprec.
+	 * Transform the elements of an array to a string using the rfc1738 sprec.
 	 * @param in
 	 * @return
 	 */
-	public static String implodeArray(String[] in) {
+	public static String implodeArray(String ... in) {
 		
 		if (in==null) return "";
 		
@@ -221,6 +221,36 @@ public class Rfc1738 extends TreeMap<String,String> {
 		
 	}
 	
+	/**
+	 * Transform the array into a key value list, the even elements are 'keys', followed by the odd 'value'.
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public static String implodeKeyValues(String ... in) {
+		
+		if (in==null) return "";
+		
+		StringBuffer sb = new StringBuffer();
+		boolean first = true;
+		boolean key = true;
+		for ( String i : in ) {
+			if (!first)
+				sb.append('&');
+			sb.append(encode(i));
+			first = false;
+			
+			if (key) {
+				sb.append('=');
+				key = false;
+			} else {
+				key = true;
+			}
+		}
+		return sb.toString();
+		
+	}
+
 	/**
 	 * Transforms a encoded array of strings back.
 	 * 
