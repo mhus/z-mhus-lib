@@ -30,13 +30,14 @@ import de.mhus.lib.core.util.Rot13;
  * Decode / Encode passwords. Attention: This do not give security in any way.
  * It's only a way to deny reading the password from the screen. No algorithm will
  * give you security in this case. Only one way algorithm is more secure.
- *
+ * 
  * The password is not allowed to start with a ":". Only the encoded password will
  * start with a ":" followed by the algorithm version and the encoded password.
- *
+ * 
  * @author mhu
- * @version $Id: $Id
+ *
  */
+
 public class MPassword {
 
 	private static Log log = Log.getLog(MPassword.class);
@@ -46,21 +47,14 @@ public class MPassword {
 	/**
 	 * Encode a password string be aware of special characters like umlaute. This
 	 * can cause problems.
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param in
+	 * @return
 	 */
 	public static String encode(String in) {
 		return encode(1,in);
 	}
 	
-	/**
-	 * <p>encode.</p>
-	 *
-	 * @param method a int.
-	 * @param in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String encode(int method, String in) {
 		if (in == null) return null;
 		if (isEncoded(in)) return in;
@@ -73,12 +67,6 @@ public class MPassword {
 		return null;
 	}
 
-	/**
-	 * <p>isEncoded.</p>
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	public static boolean isEncoded(String in) {
 		if (in == null) return false;
 		return in.startsWith(":");
@@ -86,9 +74,9 @@ public class MPassword {
 
 	/**
 	 * Decode a encoded password.
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
+	 * 
+	 * @param in
+	 * @return
 	 */
 	public static String decode(String in) {
 		if (in == null) return null;
@@ -101,12 +89,6 @@ public class MPassword {
 		return in;
 	}
 	
-	/**
-	 * <p>encodePasswordMD5.</p>
-	 *
-	 * @param real a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String encodePasswordMD5(String real) {
 		MessageDigest md;
 		try {
@@ -119,13 +101,6 @@ public class MPassword {
 		return null;
 	}
 
-	/**
-	 * <p>sha1.</p>
-	 *
-	 * @param input a {@link java.lang.String} object.
-	 * @return a {@link java.lang.String} object.
-	 * @throws java.security.NoSuchAlgorithmException if any.
-	 */
 	public static String sha1(String ... input) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA1");
         for (String in : input)
@@ -139,11 +114,6 @@ public class MPassword {
         return sb.toString();
     }	
 	
-	/**
-	 * <p>main.</p>
-	 *
-	 * @param args an array of {@link java.lang.String} objects.
-	 */
 	public static void main(String[] args) {
 		if (args.length == 0) {
 			System.out.print("decoded: ");
@@ -155,16 +125,6 @@ public class MPassword {
 	
     private static final Random random = new Random();
     
-	/**
-	 * <p>generate.</p>
-	 *
-	 * @param min a int.
-	 * @param max a int.
-	 * @param upper a boolean.
-	 * @param numbers a boolean.
-	 * @param specials a boolean.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String generate(int min, int max, boolean upper, boolean numbers, boolean specials) {
 		char[] symbols = new char[ 75 - 3 ];
 		int i = 0;
@@ -192,14 +152,6 @@ public class MPassword {
 		return generate(max == min ? min : (random.nextInt(max-min)+max), symbols, i);
 	}
 	
-	/**
-	 * <p>generate.</p>
-	 *
-	 * @param length a int.
-	 * @param symbols an array of char.
-	 * @param symbolLength a int.
-	 * @return a {@link java.lang.String} object.
-	 */
 	public static String generate(int length, char[] symbols, int symbolLength) {
 		char[] buf = new char[length];
 		for (int idx = 0; idx < buf.length; ++idx) 

@@ -5,40 +5,20 @@ import java.util.Map;
 
 import de.mhus.lib.core.MString;
 
-/**
- * <p>StringCompiler class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class StringCompiler implements Parser {
 
 	private static StringCompiler defaultCompiler = new StringCompiler();
 
 	protected String separator = "$";
 
-	/**
-	 * <p>compile.</p>
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.parser.CompiledString} object.
-	 */
 	public static CompiledString compile(String in) {
 		return compile(in, defaultCompiler);
 	}
 	
-	/**
-	 * <p>compile.</p>
-	 *
-	 * @param in a {@link java.lang.String} object.
-	 * @param compiler a {@link de.mhus.lib.core.parser.StringCompiler} object.
-	 * @return a {@link de.mhus.lib.core.parser.CompiledString} object.
-	 */
 	public static CompiledString compile(String in, StringCompiler compiler) {
 		return compiler.compileString(in);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public CompiledString compileString(String in) {
 		LinkedList<StringPart> compiled = new LinkedList<StringPart>();
@@ -60,12 +40,6 @@ public class StringCompiler implements Parser {
 		return new CompiledString(compiled);
 	}
 
-	/**
-	 * <p>createAttributePart.</p>
-	 *
-	 * @param part a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.parser.StringPart} object.
-	 */
 	protected StringPart createAttributePart(String part) {
 		if (part.startsWith("#env."))
 			return new EnvironmentPart(part);
@@ -74,22 +48,10 @@ public class StringCompiler implements Parser {
 		return createDefaultAttributePart(part);
 	}
 
-	/**
-	 * <p>createDefaultAttributePart.</p>
-	 *
-	 * @param part a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.parser.StringPart} object.
-	 */
 	protected StringPart createDefaultAttributePart(String part) {
 		return new AttributePart(part);
 	}
 	
-	/**
-	 * <p>createContentPart.</p>
-	 *
-	 * @param part a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.parser.StringPart} object.
-	 */
 	protected StringPart createContentPart(String part) {
 		return new ContentPart(part);
 	}

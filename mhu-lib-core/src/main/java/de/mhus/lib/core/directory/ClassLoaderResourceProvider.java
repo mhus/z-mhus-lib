@@ -6,53 +6,28 @@ import java.net.URL;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
 
-/**
- * <p>ClassLoaderResourceProvider class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode> {
 
 	private ClassLoader loader;
 	
-	/**
-	 * <p>Constructor for ClassLoaderResourceProvider.</p>
-	 */
 	public ClassLoaderResourceProvider() {
 		//this(Thread.currentThread().getContextClassLoader());
 		this(ClassLoaderResourceProvider.class.getClassLoader());
 	}
 	
-	/**
-	 * <p>Constructor for ClassLoaderResourceProvider.</p>
-	 *
-	 * @param loader a {@link java.lang.ClassLoader} object.
-	 */
 	public ClassLoaderResourceProvider(ClassLoader loader) {
 		this.loader = loader;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceNode getResource(String name) {
 		return new CLResourceNode(loader,name);
 	}
 
-	/**
-	 * <p>getClassLoader.</p>
-	 *
-	 * @return a {@link java.lang.ClassLoader} object.
-	 */
 	public ClassLoader getClassLoader() {
 		return loader;
 	}
 
-	/**
-	 * <p>setClassLoader.</p>
-	 *
-	 * @param loader a {@link java.lang.ClassLoader} object.
-	 */
 	public void setClassLoader(ClassLoader loader) {
 		this.loader = loader;
 	}

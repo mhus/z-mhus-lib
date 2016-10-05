@@ -22,15 +22,8 @@ import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.errors.NotSupportedException;
 
-/**
- * <p>SerializerTransformer class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class SerializerTransformer extends TransformStrategy {
 
-	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object jsonToPojo(JsonNode from, Class<?> typex,
@@ -153,7 +146,6 @@ public class SerializerTransformer extends TransformStrategy {
 				
 	}
 
-	/** {@inheritDoc} */
 	@SuppressWarnings("unchecked")
 	@Override
 	public JsonNode pojoToJson(Object from, TransformHelper helper)
@@ -231,14 +223,6 @@ public class SerializerTransformer extends TransformStrategy {
 		}		
 	}
 
-	/**
-	 * <p>putPojoValue.</p>
-	 *
-	 * @param out a {@link org.codehaus.jackson.node.ObjectNode} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @param helper a {@link de.mhus.lib.core.json.TransformHelper} object.
-	 */
 	protected void putPojoValue(ObjectNode out, String name, Object value, TransformHelper helper) {
 		if (value == null) 
 			out.putNull(name);
@@ -273,13 +257,6 @@ public class SerializerTransformer extends TransformStrategy {
 			out.put(name, pojoToJson(value, helper.incLevel()) );
 	}
 
-	/**
-	 * <p>getValue.</p>
-	 *
-	 * @param node a {@link org.codehaus.jackson.JsonNode} object.
-	 * @param helper a {@link de.mhus.lib.core.json.TransformHelper} object.
-	 * @return a {@link java.lang.Object} object.
-	 */
 	public static Object getValue(JsonNode node, TransformHelper helper) {
 		Object out = null;
 		if (node == null) return null;

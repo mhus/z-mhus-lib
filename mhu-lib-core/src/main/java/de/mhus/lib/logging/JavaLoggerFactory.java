@@ -7,22 +7,13 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
-/**
- * <p>JavaLoggerFactory class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class JavaLoggerFactory extends LogFactory {
 
-	/** {@inheritDoc} */
 	@Override
 	public void init(ResourceNode config) throws Exception {
 		
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public LogEngine createInstance(String name) {
 		return new JLLog(Logger.getLogger(name), name);
@@ -155,7 +146,7 @@ public class JavaLoggerFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return x
+	     * @return 
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

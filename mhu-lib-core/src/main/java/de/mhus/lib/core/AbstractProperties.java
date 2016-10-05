@@ -14,22 +14,16 @@ import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
-/**
- * <p>Abstract AbstractProperties class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public abstract class AbstractProperties extends MObject implements IProperties {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Overwrite this function to provide values in string format.
-	 *
-	 * @param name a {@link java.lang.String} object.
+	 * 
+	 * @param name
 	 * @return null if the property not exists or the property value.
+	 * @throws MException 
 	 */
 	public abstract Object getProperty(String name);
 	
@@ -45,7 +39,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 //		return String.valueOf(out);
 //	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getString(String name, String def) {
 		Object out;
@@ -58,7 +51,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return String.valueOf(out);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String getString(String name) throws MException {
 		Object out = getProperty(name);
@@ -66,7 +58,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return String.valueOf(out);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public boolean getBoolean(String name, boolean def) {
 		Object out;
@@ -78,7 +69,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.toboolean(out, def);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean getBoolean(String name) throws MException {
 		Object out = getProperty(name);
@@ -86,7 +76,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.toboolean(out, false);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int getInt(String name, int def) {
 		Object out;
@@ -98,7 +87,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.toint(out,def);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public long getLong(String name, long def) {
 		Object out;
@@ -110,7 +98,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.tolong(out, def);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public float getFloat(String name, float def) {
 		Object out;
@@ -122,7 +109,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.tofloat(out, def);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public double getDouble(String name, double def) {
 		Object out;
@@ -134,14 +120,12 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return MCast.todouble(out,def);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public Calendar getCalendar(String name) throws MException {
 		Object out = getProperty(name);
 		return MCast.toCalendar(out);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public Date getDate(String name) {
 		try {
@@ -151,55 +135,46 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return null;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setString(String name, String value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setInt(String name, int value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setLong(String name, long value) {
 		setProperty(name, value);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setDouble(String name, double value) {
 		setProperty(name, value);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setFloat(String name, float value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setBoolean(String name, boolean value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setCalendar(String name, Calendar value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setDate(String name, Date value) {
 		setProperty(name, value);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void setNumber(String name, Number value) {
 		if (value == null) {
@@ -222,7 +197,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 			
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Number getNumber(String name, Number def) {
 		Object out = getProperty(name);
@@ -236,52 +210,50 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Return true if the property exists.
+	 * 
+	 * @param name
+	 * @return
 	 */
 	@Override
 	public abstract boolean isProperty(String name);
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Remove the property field in the list of properties.
+	 * 
+	 * @param key
 	 */
 	@Override
 	public abstract void removeProperty(String key);
 	
 	/**
 	 * Overwrite this function to allow changes in properties.
-	 *
-	 * @param key a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
+	 * 
+	 * @param key
+	 * @param value
 	 */
 	public abstract void setProperty(String key, Object value);
 	
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Overwrite this function and return true if the property set can be edited.
+	 * 
+	 * @return
 	 */
 	@Override
 	public abstract boolean isEditable();
 	
-	/** {@inheritDoc} */
+	/**
+	 * @return 
+	 * 
+	 */
 	@Override
 	public abstract Set<String> keys();
 	
-	/** {@inheritDoc} */
 	@Override
 	public Iterator<Map.Entry<String, Object>> iterator() {
 		return new IPIterator();
 	}
 
-	/**
-	 * <p>toMap.</p>
-	 *
-	 * @return a {@link java.util.Map} object.
-	 */
 	public Map<String, Object> toMap() {
 		Map<String, Object> out = new HashMap<>();
 		for (Map.Entry<String, Object> entry : this) {
@@ -360,31 +332,26 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public abstract int size();
 	
-	/** {@inheritDoc} */
 	@Override
 	public boolean isEmpty() {
 		return size() == 0;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean containsKey(Object key) {
 		if (key == null) return false;
 		return isProperty(String.valueOf(key));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object get(Object key) {
 		if (key == null) return null;
 		return getProperty(String.valueOf(key));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object put(String key, Object value) {
 		Object current = get(key);
@@ -392,7 +359,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return current;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object remove(Object key) {
 		if (key == null) return null;
@@ -401,21 +367,18 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return current;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> m) {
 		for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
 			put(e.getKey(),e.getValue());
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		for (String name : keys())
 			removeProperty(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<String> keySet() {
 		return keys();

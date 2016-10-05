@@ -15,8 +15,8 @@ import de.mhus.lib.karaf.jms.JmsUtil;
 @Service
 public class CmdHeartbeat implements Action {
 
-	@Argument(index=0, name="enable", required=false, description="enable / disable", multiValued=false)
-    Boolean enable;
+	@Argument(index=0, name="cmd", required=false, description="enable / disable, reset", multiValued=false)
+    String cmd;
 	
 	@Override
 	public Object execute() throws Exception {
@@ -27,14 +27,15 @@ public class CmdHeartbeat implements Action {
 			return null;
 		}
 
-		if (enable == null) {
-			System.out.println("Send Heartbeat ...");
-			service.sendHeartbeat();
+		if ("enable".equals(cmd) || "disbale".equals(cmd)) {
+			service.setEnabled("enable".equals(cmd));
+			System.out.println("OK " + cmd);
 		} else {
-			service.setEnabled(enable);
+			System.out.println("Send Heartbeat ...");
+			service.sendHeartbeat(cmd);
+			System.out.println("OK " + cmd);
 		}
 		
-		System.out.println("OK " + (service.isEnabled() ? "enabled" : "disabled"));
 		return null;
 	}
 

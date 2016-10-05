@@ -9,7 +9,7 @@ import java.io.Writer;
  * they contain commas or quotes. Embedded quotes are doubled. Embedded spaces
  * do not normally require surrounding quotes. The last field on the line is not
  * followed by a comma. Null fields are represented by two commas in a row.
- *
+ * 
  * @author copyright (c) 2002-2006 Roedy Green Canadian Mind Products version
  *         1.0 2002 March 27 <br>
  *         1.1 2002 March 28 - allow variable separator - add close method<br>
@@ -23,7 +23,6 @@ import java.io.Writer;
  *         2.1 2005-07-17 reorganization, new bat files.<br>
  *         2.2 2005-08-28 - add CSVAlign and CSVPack to the suite.
  *         2.3 2015-06-12 fix enclosing of fields
- * @version $Id: $Id
  */
 public class CSVWriter {
 
@@ -76,7 +75,7 @@ public class CSVWriter {
 
 	/**
 	 * convenience Constructor, defaults to quotelevel 1, comma separator , trim
-	 *
+	 * 
 	 * @param pw
 	 *            Writer where fields will be written.
 	 */
@@ -86,7 +85,7 @@ public class CSVWriter {
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param pw
 	 *            Writer where fields will be written.
 	 * @param quoteLevel
@@ -137,18 +136,13 @@ public class CSVWriter {
 	/**
 	 * Set default value if put() gets a value of null. If the defaultNullValue
 	 * is also null put() will write a new line. Default is a empty string.
-	 *
-	 * @param in a {@link java.lang.String} object.
+	 * 
+	 * @param in
 	 */
 	public void setDefaultNullValue(String in) {
 		defaultNullValue = in;
 	}
 	
-	/**
-	 * <p>Getter for the field <code>defaultNullValue</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getDefaultNullValue() {
 		return defaultNullValue;
 	}
@@ -166,11 +160,6 @@ public class CSVWriter {
 		column = 0;
 	}
 
-	/**
-	 * <p>print.</p>
-	 *
-	 * @param values a {@link java.lang.Object} object.
-	 */
 	public void print(Object ... values) {
 		String[] v = new String[values.length];
 		for (int i = 0; i < values.length; i++)
@@ -178,11 +167,6 @@ public class CSVWriter {
 		put(v);
 	}
 	
-	/**
-	 * <p>println.</p>
-	 *
-	 * @param values a {@link java.lang.Object} object.
-	 */
 	public void println(Object ... values) {
 		String[] v = new String[values.length];
 		for (int i = 0; i < values.length; i++)
@@ -194,8 +178,11 @@ public class CSVWriter {
 	/**
 	 * Write one csv field to the file, followed by a separator unless it is the
 	 * last field on the line. Lead and trailing blanks will be removed.
-	 *
-	 * @param values a {@link java.lang.String} object.
+	 * @param values 
+	 * 
+	 * @param s
+	 *            The string to write. Any additional quotes or embedded quotes
+	 *            will be provided by put. Null means start a new line.
 	 */
 	public void put(String ... values) {
 		if (pw == null) {
@@ -217,83 +204,38 @@ public class CSVWriter {
 		}
 	}
 
-	/**
-	 * <p>Getter for the field <code>lineSeparator</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getLineSeparator() {
 		return lineSeparator;
 	}
 
-	/**
-	 * <p>Setter for the field <code>lineSeparator</code>.</p>
-	 *
-	 * @param lineSeparator a {@link java.lang.String} object.
-	 */
 	public void setLineSeparator(String lineSeparator) {
 		this.lineSeparator = lineSeparator;
 	}
 	
-	/**
-	 * <p>isTrim.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isTrim() {
 		return trim;
 	}
 	
-	/**
-	 * <p>Getter for the field <code>quote</code>.</p>
-	 *
-	 * @return a char.
-	 */
 	public char getQuote() {
 		return quote;
 	}
 
-	/**
-	 * <p>getPrintWriter.</p>
-	 *
-	 * @return a {@link java.io.PrintWriter} object.
-	 */
 	public PrintWriter getPrintWriter() {
 		return pw;
 	}
 	
-	/**
-	 * <p>Getter for the field <code>quoteLevel</code>.</p>
-	 *
-	 * @return a int.
-	 */
 	public int getQuoteLevel() {
 		return quoteLevel;
 	}
 	
-	/**
-	 * <p>getColumnOfLine.</p>
-	 *
-	 * @return a int.
-	 */
 	public int getColumnOfLine() {
 		return column;
 	}
 	
-	/**
-	 * <p>getValueWriter.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.io.CSVWriter.ValueWriter} object.
-	 */
 	public ValueWriter getValueWriter() {
 		return writer;
 	}
 
-	/**
-	 * <p>setValueWriter.</p>
-	 *
-	 * @param writer a {@link de.mhus.lib.core.io.CSVWriter.ValueWriter} object.
-	 */
 	public void setValueWriter(ValueWriter writer) {
 		this.writer = writer;
 	}

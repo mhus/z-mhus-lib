@@ -5,12 +5,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Set;
 
-/**
- * <p>FunctionAction class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class FunctionAction implements PojoAction {
 
 	private Class<?> clazz;
@@ -18,14 +12,6 @@ public class FunctionAction implements PojoAction {
 	private String name;
 	private FunctionAttribute<Object> parent;
 
-	/**
-	 * <p>Constructor for FunctionAction.</p>
-	 *
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @param action a {@link java.lang.reflect.Method} object.
-	 * @param name a {@link java.lang.String} object.
-	 * @param parent a {@link de.mhus.lib.core.pojo.FunctionAttribute} object.
-	 */
 	public FunctionAction(Class<?> clazz, Method action, String name,
 			FunctionAttribute<Object> parent) {
 		this.clazz = clazz;
@@ -34,13 +20,11 @@ public class FunctionAction implements PojoAction {
 		this.parent = parent;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object doExecute(Object pojo, Object... args) throws IOException {
 		
@@ -53,7 +37,6 @@ public class FunctionAction implements PojoAction {
 		}
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public Annotation getAnnotation(Class<? extends Annotation> annotationClass) {
 		
@@ -70,19 +53,16 @@ public class FunctionAction implements PojoAction {
 		return null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<?> getManagedClass() {
 		return clazz;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public Class<?> getReturnType() {
 		return action.getReturnType();
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public Class<?>[] getParameterType() {
 		return action.getParameterTypes();

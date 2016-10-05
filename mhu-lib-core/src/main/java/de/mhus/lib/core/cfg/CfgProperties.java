@@ -8,26 +8,12 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.util.PropertiesSubset;
 
-/**
- * <p>CfgProperties class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class CfgProperties extends CfgValue<IProperties> {
 
-	/**
-	 * <p>Constructor for CfgProperties.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @param path a {@link java.lang.String} object.
-	 */
 	public CfgProperties(Object owner, String path) {
 		super(owner, path, new MProperties() );
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected IProperties loadValue() {
 

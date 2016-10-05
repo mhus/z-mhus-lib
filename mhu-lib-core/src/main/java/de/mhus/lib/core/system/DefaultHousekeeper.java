@@ -9,31 +9,20 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.MTimerTask;
 
-/**
- * <p>DefaultHousekeeper class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class DefaultHousekeeper extends MLog implements MHousekeeper {
 
 	private MTimer timer;
 
-	/**
-	 * <p>Constructor for DefaultHousekeeper.</p>
-	 */
 	public DefaultHousekeeper() {
 		log().t("new default housekeeper");
 		timer = new MTimer(true);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void register(MHousekeeperTask task, long sleep, boolean weak) {
 		timer.schedule(new MyTimerTask(task,weak), sleep, sleep);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void finalize() {
 		log().t("finalize");

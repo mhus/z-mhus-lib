@@ -22,50 +22,28 @@ package de.mhus.lib.core;
 import java.util.Vector;
 
 /**
- * <p>MThreadDaemon class.</p>
- *
  * @author hummel
- *
+ * 
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- * @version $Id: $Id
  */
 public class MThreadDaemon extends MThread implements Runnable {
 
-	/**
-	 * <p>Constructor for MThreadDaemon.</p>
-	 */
 	public MThreadDaemon() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * <p>Constructor for MThreadDaemon.</p>
-	 *
-	 * @param _task a {@link java.lang.Runnable} object.
-	 * @param _name a {@link java.lang.String} object.
-	 */
 	public MThreadDaemon(Runnable _task, String _name) {
 		super(_task, _name);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * <p>Constructor for MThreadDaemon.</p>
-	 *
-	 * @param _task a {@link java.lang.Runnable} object.
-	 */
 	public MThreadDaemon(Runnable _task) {
 		super(_task);
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * <p>Constructor for MThreadDaemon.</p>
-	 *
-	 * @param _name a {@link java.lang.String} object.
-	 */
 	public MThreadDaemon(String _name) {
 		super(_name);
 		// TODO Auto-generated constructor stub
@@ -74,7 +52,6 @@ public class MThreadDaemon extends MThread implements Runnable {
 	private static Vector<ThreadContainer> pool = new Vector<ThreadContainer>();
 	private static ThreadGroup group = new ThreadGroup("AThreadDeamon");
 
-	/** {@inheritDoc} */
 	@Override
 	public MThreadDaemon start() {
 		tc = start(this, name);
@@ -107,11 +84,6 @@ public class MThreadDaemon extends MThread implements Runnable {
 		return tc;
 	}
 
-	/**
-	 * <p>poolClean.</p>
-	 *
-	 * @param pendingTime a long.
-	 */
 	public static void poolClean(long pendingTime) {
 		synchronized (pool) {
 			ThreadContainer[] list = pool
@@ -126,9 +98,6 @@ public class MThreadDaemon extends MThread implements Runnable {
 		}
 	}
 
-	/**
-	 * <p>poolClean.</p>
-	 */
 	public static void poolClean() {
 
 		synchronized (pool) {
@@ -143,11 +112,6 @@ public class MThreadDaemon extends MThread implements Runnable {
 		}
 	}
 
-	/**
-	 * <p>poolSize.</p>
-	 *
-	 * @return a int.
-	 */
 	public static int poolSize() {
 		synchronized (pool) {
 			return pool.size();
@@ -155,11 +119,6 @@ public class MThreadDaemon extends MThread implements Runnable {
 
 	}
 
-	/**
-	 * <p>poolWorkingSize.</p>
-	 *
-	 * @return a int.
-	 */
 	public static int poolWorkingSize() {
 		int size = 0;
 		synchronized (pool) {

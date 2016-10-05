@@ -3,29 +3,20 @@ package de.mhus.lib.core.cast;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.ObjectContainer;
 
-/**
- * <p>ObjectToByte class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class ObjectToByte implements Caster<Object,Byte> {
 
 	private final static Log log = Log.getLog(ObjectToByte.class);
 	
-	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Byte> getToClass() {
 		return Byte.class;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Class<? extends Object> getFromClass() {
 		return Object.class;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Byte cast(Object in, Byte def) {
 		ObjectContainer<Byte> ret = new ObjectContainer<>(def);
@@ -33,14 +24,6 @@ public class ObjectToByte implements Caster<Object,Byte> {
 		return ret.getObject();
 	}
 
-	/**
-	 * <p>toByte.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 * @param def a byte.
-	 * @param ret a {@link de.mhus.lib.core.util.ObjectContainer} object.
-	 * @return a byte.
-	 */
 	public byte toByte(Object in, byte def, ObjectContainer<Byte> ret) {
 		if (in == null) return def;
 		if (in instanceof Byte) {

@@ -20,32 +20,19 @@ package de.mhus.lib.core.util;
 
 import java.util.Iterator;
 
-/**
- * <p>SingleIterator class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class SingleIterator<E> implements Iterator<E> {
 
 	private E element = null;
 
-	/**
-	 * <p>Constructor for SingleIterator.</p>
-	 *
-	 * @param element a E object.
-	 */
 	public SingleIterator(E element) {
 		this.element = element;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean hasNext() {
 		return (element != null);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public E next() {
 		E next = element;
@@ -53,7 +40,6 @@ public class SingleIterator<E> implements Iterator<E> {
 		return next;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void remove() {
 	}

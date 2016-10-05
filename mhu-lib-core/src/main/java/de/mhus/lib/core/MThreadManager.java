@@ -6,17 +6,9 @@ import de.mhus.lib.core.MThread.ThreadContainer;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.MObject;
 
-/**
- * <p>MThreadManager class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MThreadManager extends MObject implements IBase {
 
-	/** Constant <code>SLEEP_TIME=1000 * 60 * 10</code> */
 	public static long SLEEP_TIME = 1000 * 60 * 10;
-	/** Constant <code>PENDING_TIME=1000 * 60</code> */
 	public static long PENDING_TIME = 1000 * 60;
 	private Vector<ThreadContainer> pool = new Vector<ThreadContainer>();
 	private ThreadGroup group = new ThreadGroup("AThread");
@@ -63,11 +55,6 @@ public class MThreadManager extends MObject implements IBase {
 		return tc;
 	}
 
-	/**
-	 * <p>poolClean.</p>
-	 *
-	 * @param pendingTime a long.
-	 */
 	public void poolClean(long pendingTime) {
 		synchronized (pool) {
 			ThreadContainer[] list = pool
@@ -82,9 +69,6 @@ public class MThreadManager extends MObject implements IBase {
 		}
 	}
 
-	/**
-	 * <p>poolClean.</p>
-	 */
 	public void poolClean() {
 
 		synchronized (pool) {
@@ -99,11 +83,6 @@ public class MThreadManager extends MObject implements IBase {
 		}
 	}
 
-	/**
-	 * <p>poolSize.</p>
-	 *
-	 * @return a int.
-	 */
 	public int poolSize() {
 		synchronized (pool) {
 			return pool.size();
@@ -111,11 +90,6 @@ public class MThreadManager extends MObject implements IBase {
 
 	}
 
-	/**
-	 * <p>poolWorkingSize.</p>
-	 *
-	 * @return a int.
-	 */
 	public int poolWorkingSize() {
 		int size = 0;
 		synchronized (pool) {
@@ -129,7 +103,6 @@ public class MThreadManager extends MObject implements IBase {
 		return size;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected void finalize() {
 		log().t("finalize");

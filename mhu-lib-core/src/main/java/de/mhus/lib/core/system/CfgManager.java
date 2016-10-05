@@ -19,13 +19,6 @@ import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.TimerIfc;
 
-/**
- * <p>CfgManager class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 @DefaultFactory(DefaultSingletonFactory.class)
 public class CfgManager {
 
@@ -44,23 +37,12 @@ public class CfgManager {
 	}
 
 	
-	/**
-	 * <p>Constructor for CfgManager.</p>
-	 *
-	 * @param internal a {@link de.mhus.lib.core.system.ISingletonInternal} object.
-	 */
 	public CfgManager(ISingletonInternal internal) {
 		this.internal = internal;
 		provider = new CentralMhusCfgProvider();
 		provider.doInitialize();
 	}
 	
-	/**
-	 * <p>registerCfgInitiator.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param initiator a {@link de.mhus.lib.core.cfg.CfgInitiator} object.
-	 */
 	public void registerCfgInitiator(String name, CfgInitiator initiator) {
 		if (initiator == null)
 			initiators.remove(name);
@@ -68,12 +50,6 @@ public class CfgManager {
 			initiators.put(name, initiator);
 	}
 	
-	/**
-	 * <p>registerCfgProvider.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param provider a {@link de.mhus.lib.core.cfg.CfgProvider} object.
-	 */
 	public void registerCfgProvider(String name, CfgProvider provider) {
 		if (name == null) return;
 		if (provider == null) {
@@ -85,13 +61,6 @@ public class CfgManager {
 		}
 	}
 	
-	/**
-	 * <p>getCfg.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @param def a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public ResourceNode getCfg(Object owner, ResourceNode def) {
 		initCfg();
 		
@@ -127,12 +96,6 @@ public class CfgManager {
 		
 	}
 
-	/**
-	 * <p>getCfg.</p>
-	 *
-	 * @param owner a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public ResourceNode getCfg(String owner) {
 		initCfg();
 		
@@ -147,13 +110,6 @@ public class CfgManager {
 		return cOwner;
 	}
 	
-	/**
-	 * <p>getCfg.</p>
-	 *
-	 * @param owner a {@link java.lang.String} object.
-	 * @param def a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public ResourceNode getCfg(String owner, ResourceNode def) {
 		initCfg();
 
@@ -166,13 +122,6 @@ public class CfgManager {
 		return def;
 	}
 
-	/**
-	 * <p>isOwner.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @param n a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	public boolean isOwner(Object owner, String n) {
 
 		Class<?> c = null;
@@ -202,9 +151,6 @@ public class CfgManager {
 		return false;
 	}
 
-	/**
-	 * <p>reConfigure.</p>
-	 */
 	public void reConfigure() {
 		provider.reConfigure();
 	}

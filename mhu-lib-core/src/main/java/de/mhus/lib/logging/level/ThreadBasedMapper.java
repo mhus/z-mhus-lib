@@ -9,31 +9,14 @@ import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ISingleton;
 
-/**
- * <p>ThreadBasedMapper class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class ThreadBasedMapper implements TrailLevelMapper {
 	
 	private ThreadLocal<ThreadMapperConfig> map = new ThreadLocal<>();
 	
-	/**
-	 * <p>set.</p>
-	 *
-	 * @param config a {@link de.mhus.lib.logging.level.ThreadMapperConfig} object.
-	 */
 	public void set(ThreadMapperConfig config) {
 		map.set(config);
 	}
 
-	/**
-	 * <p>set.</p>
-	 *
-	 * @param config a {@link java.lang.String} object.
-	 */
 	public void set(String config) {
 		if (config == null || !config.startsWith(ThreadMapperConfig.MAP_LABEL)) return;
 		ThreadMapperConfig c = new ThreadMapperConfig();
@@ -41,18 +24,10 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		set(c);
 	}
 	
-	/**
-	 * <p>release.</p>
-	 */
 	public void release() {
 		map.remove();
 	}
 	
-	/**
-	 * <p>get.</p>
-	 *
-	 * @return a {@link de.mhus.lib.logging.level.ThreadMapperConfig} object.
-	 */
 	public ThreadMapperConfig get() {
 		ThreadMapperConfig config = map.get();
 		if (config == null) return null;
@@ -63,7 +38,6 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		return config;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public LEVEL map(Log log, LEVEL level, Object... msg) {
 		ThreadMapperConfig config = get();
@@ -71,14 +45,12 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		return config.map(log, level, msg);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String doSerializeTrail() {
 		ThreadMapperConfig c = get();
 		return c == null ? null : c.doSerialize();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void doConfigureTrail(String config) {
 		//if (backup == null) return;
@@ -86,20 +58,17 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		set(config);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void doResetTrail() {
 		release();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isLocalTrail() {
 		ThreadMapperConfig c = get();
 		return c == null ? false : c.isLocal();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void prepareMessage(Log log, StringBuffer msg) {
 		ThreadMapperConfig config = map.get();
@@ -110,7 +79,6 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getTrailId() {
 		ThreadMapperConfig config = map.get();
@@ -121,7 +89,6 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return MSystem.toString(this, map.get());

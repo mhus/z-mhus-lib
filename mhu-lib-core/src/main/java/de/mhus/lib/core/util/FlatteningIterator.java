@@ -8,24 +8,23 @@ import java.util.Stack;
 
 /**
  * An iterator that 'flattens out' collections, iterators, arrays, etc.
- *
+ * 
  * That is it will iterate out their contents in order, descending into any
  * iterators, iterables or arrays provided to it.
- *
+ * 
  * An example (not valid Java for brevity - some type declarations are
  * ommitted):
- *
+ * 
  * new FlattingIterator({1, 2, 3}, {{1, 2}, {3}}, new ArrayList({1, 2, 3}))
- *
+ * 
  * Will iterate through the sequence 1, 2, 3, 1, 2, 3, 1, 2, 3.
- *
+ * 
  * Note that this implements a non-generic version of the Iterator interface so
  * may be cast appropriately - it's very hard to give this class an appropriate
  * generic type.
- *
+ * 
  * @author david
- * @param <E>
- * @version $Id: $Id
+ * @param <E> 
  */
 public class FlatteningIterator<E> implements Iterator<E> {
 	// Marker object. This is never exposed outside this class, so can be
@@ -45,16 +44,10 @@ public class FlatteningIterator<E> implements Iterator<E> {
 	// is currently unknown.
 	private Object next = blank;
 
-	/**
-	 * <p>Constructor for FlatteningIterator.</p>
-	 *
-	 * @param objects a {@link java.lang.Object} object.
-	 */
 	public FlatteningIterator(Object... objects) {
 		this.iterators.push(Arrays.asList(objects).iterator());
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void remove() {
 		/* Not implemented */}
@@ -82,8 +75,6 @@ public class FlatteningIterator<E> implements Iterator<E> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Returns the next element in our iteration, throwing a
 	 * NoSuchElementException if none is found.
 	 */
@@ -102,8 +93,6 @@ public class FlatteningIterator<E> implements Iterator<E> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Returns if there are any objects left to iterate over. This method can
 	 * change the internal state of the object when it is called, but repeated
 	 * calls to it will not have any additional side effects.

@@ -3,29 +3,12 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
 
-/**
- * <p>FmDate class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class FmDate extends FmElement {
 
 	public enum FORMATS {DATE,DATETIME,DATETIMESECONDS,TIME,TIMESECONDS};
 	
-	/** Constant <code>FORMAT="format"</code> */
 	public static final String FORMAT = "format";
 
-	/**
-	 * <p>Constructor for FmDate.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param format a {@link de.mhus.lib.form.definition.FmDate.FORMATS} object.
-	 * @param title a {@link java.lang.String} object.
-	 * @param description a {@link java.lang.String} object.
-	 * @param definitions a {@link de.mhus.lib.core.definition.IDefAttribute} object.
-	 */
 	public FmDate(String name, FORMATS format, String title, String description, IDefAttribute ... definitions) {
 		this(name, new DefAttribute(FORMAT, format.name()), new FmNls(title, description));
 		addDefinition(definitions);
@@ -34,12 +17,6 @@ public class FmDate extends FmElement {
 //		this(name, new FmNls(title, description), new FmDefaultSources());
 //	}
 
-	/**
-	 * <p>Constructor for FmDate.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param definitions a {@link de.mhus.lib.core.definition.IDefAttribute} object.
-	 */
 	public FmDate(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		//setString(FmElement.TYPE, FORMATS.DATE.name());

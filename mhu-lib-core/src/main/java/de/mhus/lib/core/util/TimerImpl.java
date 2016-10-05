@@ -11,87 +11,66 @@ import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.schedule.SchedulerJob;
 
-/**
- * <p>TimerImpl class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class TimerImpl extends MLog implements TimerIfc {
 	
 	private Timer timer;
 	private LinkedList<TimerTaskWrap> tasks = new LinkedList<>();
 	
-	/**
-	 * <p>Constructor for TimerImpl.</p>
-	 *
-	 * @param timer a {@link java.util.Timer} object.
-	 */
 	public TimerImpl(Timer timer) {
 		this.timer = timer;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		return timer.hashCode();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
 		return timer.equals(obj);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, long delay) {
 		log().d("schedule",task,delay);
 		timer.schedule(new TimerTaskWrap(this, task), delay);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, Date time) {
 		log().d("schedule",task,time);
 		timer.schedule(new TimerTaskWrap(this, task), time);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, long delay, long period) {
 		log().d("schedule",task,delay,period);
 		timer.schedule(new TimerTaskWrap(this, task), delay, period);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return timer.toString();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, Date firstTime, long period) {
 		log().d("schedule",task,firstTime,period);
 		timer.schedule(new TimerTaskWrap(this, task), firstTime, period);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
 		log().d("scheduleAtFixedRate",task,delay,period);
 		timer.scheduleAtFixedRate(new TimerTaskWrap(this, task), delay, period);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
 		log().d("scheduleAtFixedRate",task,firstTime,period);
 		timer.scheduleAtFixedRate(new TimerTaskWrap(this, task), firstTime, period);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
 		synchronized (this) {
@@ -100,11 +79,6 @@ public class TimerImpl extends MLog implements TimerIfc {
 		}
 	}
 
-	/**
-	 * <p>purge.</p>
-	 *
-	 * @return a int.
-	 */
 	public int purge() {
 		return timer.purge();
 	}
@@ -170,7 +144,6 @@ public class TimerImpl extends MLog implements TimerIfc {
 		
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(SchedulerJob scheduler) {
 		schedule(scheduler, 1000, 1000);

@@ -8,12 +8,6 @@ import java.util.LinkedList;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.lang.MObject;
 
-/**
- * <p>FunctionsStrategy class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class FunctionsStrategy extends MObject implements PojoStrategy {
 
 	private boolean embedded;
@@ -22,33 +16,16 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 	private boolean actionsOnly;
 	private Class<? extends Annotation>[] annotationMarker;
 	
-	/**
-	 * <p>Constructor for FunctionsStrategy.</p>
-	 */
 	@SuppressWarnings("unchecked")
 	public FunctionsStrategy() {
 		this(true,true, ".", false);
 	}
 	
-	/**
-	 * <p>Constructor for FunctionsStrategy.</p>
-	 *
-	 * @param actionsOnly a boolean.
-	 */
 	@SuppressWarnings("unchecked")
 	public FunctionsStrategy(boolean actionsOnly) {
 		this(true,true, ".", actionsOnly);
 	}
 	
-	/**
-	 * <p>Constructor for FunctionsStrategy.</p>
-	 *
-	 * @param embedded a boolean.
-	 * @param toLower a boolean.
-	 * @param embedGlue a {@link java.lang.String} object.
-	 * @param actionsOnly a boolean.
-	 * @param annotationMarker a {@link java.lang.Class} object.
-	 */
 	public FunctionsStrategy(boolean embedded, boolean toLower, String embedGlue, boolean actionsOnly, @SuppressWarnings("unchecked") Class<? extends Annotation> ... annotationMarker) {
 		this.embedded = embedded;
 		this.toLower = toLower;
@@ -57,22 +34,11 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 		this.annotationMarker = annotationMarker;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void parse(PojoParser parser, Class<?> clazz, PojoModelImpl model) {
 		parse("", null, parser, clazz, model, 0);
 	}
 	
-	/**
-	 * <p>parse.</p>
-	 *
-	 * @param prefix a {@link java.lang.String} object.
-	 * @param parent a {@link de.mhus.lib.core.pojo.FunctionAttribute} object.
-	 * @param parser a {@link de.mhus.lib.core.pojo.PojoParser} object.
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @param model a {@link de.mhus.lib.core.pojo.PojoModelImpl} object.
-	 * @param level a int.
-	 */
 	@SuppressWarnings("unchecked")
 	protected void parse(String prefix, FunctionAttribute<Object> parent, PojoParser parser, Class<?> clazz, PojoModelImpl model, int level) {
 
@@ -182,12 +148,6 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 		return false;
 	}
 
-	/**
-	 * <p>getMethods.</p>
-	 *
-	 * @param clazz a {@link java.lang.Class} object.
-	 * @return a {@link java.util.LinkedList} object.
-	 */
 	protected LinkedList<Method> getMethods(Class<?> clazz) {
 		LinkedList<Method> out = new LinkedList<Method>();
 //		HashSet<String> names = new HashSet<String>();
@@ -204,7 +164,6 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 		return out;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void parseObject(PojoParser parser, Object pojo, PojoModelImpl model) {
 		Class<?> clazz = pojo.getClass();

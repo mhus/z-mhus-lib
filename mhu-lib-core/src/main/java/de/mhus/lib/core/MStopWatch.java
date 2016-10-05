@@ -22,12 +22,6 @@ import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.UniqueId;
 
-/**
- * <p>MStopWatch class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 @JmxManaged(descrition="Simple Stop Watch")
 public class MStopWatch extends MJmx {
 
@@ -40,38 +34,20 @@ public class MStopWatch extends MJmx {
 
 	private String name;
 	
-	/**
-	 * <p>Constructor for MStopWatch.</p>
-	 */
 	public MStopWatch() {
 		name = "StopWatch " + MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
 	}
 	
-	/**
-	 * <p>Constructor for MStopWatch.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 */
 	public MStopWatch(String name) {
 		this.name = name;
 	}
 	
-	/**
-	 * <p>start.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.MStopWatch} object.
-	 */
 	public MStopWatch start() {
 		if (start == 0)
 			start = System.currentTimeMillis();
 		return this;
 	}
 
-	/**
-	 * <p>stop.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.MStopWatch} object.
-	 */
 	public MStopWatch stop() {
 		if (start != 0 && stop == 0) {
 			stop = System.currentTimeMillis();
@@ -91,11 +67,6 @@ public class MStopWatch extends MJmx {
 		return this;
 	}
 
-	/**
-	 * <p>getCurrentTime.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getCurrentTime() {
 		if (start == 0)
 			return 0;
@@ -104,22 +75,12 @@ public class MStopWatch extends MJmx {
 		return stop - start;
 	}
 
-	/**
-	 * <p>reset.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.MStopWatch} object.
-	 */
 	public MStopWatch reset() {
 		start = 0;
 		stop = 0;
 		return this;
 	}
 
-	/**
-	 * <p>getStatus.</p>
-	 *
-	 * @return a int.
-	 */
 	public int getStatus() {
 		if (start == 0 && stop == 0)
 			return STATUS_INITIAL;
@@ -128,20 +89,10 @@ public class MStopWatch extends MJmx {
 		return STATUS_STOPPED;
 	}
 	
-	/**
-	 * <p>isRunning.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isRunning() {
 		return getStatus() == STATUS_RUNNING;
 	}
 
-	/**
-	 * <p>getStatusAsString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	@JmxManaged(descrition="Current status of the watch")
 	public String getStatusAsString() {
 		switch (getStatus()) {
@@ -152,56 +103,30 @@ public class MStopWatch extends MJmx {
 		}
 	}
 	
-	/**
-	 * <p>getCurrentSeconds.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getCurrentSeconds() {
 		return getCurrentTime() / 1000;
 	}
 
-	/**
-	 * <p>getCurrentMinutes.</p>
-	 *
-	 * @return a long.
-	 */
 	public long getCurrentMinutes() {
 		return getCurrentSeconds() / 60;
 	}
 
-	/**
-	 * <p>getCurrentMinutesAsString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getCurrentMinutesAsString() {
 		long sec = getCurrentSeconds();
 		return String.valueOf(sec / 60) + ':'
 				+ MCast.toString((int) (sec % 60), 2);
 	}
 
-	/**
-	 * <p>getCurrentTimeAsString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	@JmxManaged(descrition="Currently elapsed time")
 	public String getCurrentTimeAsString() {
 		return MTimeInterval.getIntervalAsString(getCurrentTime());
 	}
 
-	/**
-	 * <p>Getter for the field <code>name</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	@JmxManaged(descrition="Name of the watch")
 	public String getName() {
 		return name;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return name + "=" + getCurrentTimeAsString();

@@ -16,9 +16,9 @@ import de.mhus.lib.core.MTimeInterval;
  *          day of month  1-31
  *          month         1-12 (or names, see below)
  *          day of week   1-7 (1 is Sunday)
- *
+ *          
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 
@@ -26,14 +26,6 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 	private boolean restrictive = true; // if not executed in the minute of scheduled time, a new time is scheduled
 
 
-	/**
-	 * <p>Constructor for CronJob.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param definition a {@link de.mhus.lib.core.schedule.CronJob.Definition} object.
-	 * @param restrictive a boolean.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public CronJob(String name, Definition definition, boolean restrictive, Observer task) {
 		super(name, task);
 		setRestrictive(restrictive);
@@ -41,16 +33,6 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		this.definition = definition;
 	}
 	
-	/**
-	 * <p>Constructor for CronJob.</p>
-	 *
-	 * @param minute a {@link java.lang.String} object.
-	 * @param hour a {@link java.lang.String} object.
-	 * @param dayOfMonth a {@link java.lang.String} object.
-	 * @param month a {@link java.lang.String} object.
-	 * @param dayOfWeek a {@link java.lang.String} object.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public CronJob(String minute, String hour, String dayOfMonth, String month, String dayOfWeek, Observer task) {
 		super(task);
 		if (minute == null) minute = "*";
@@ -61,39 +43,18 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		this.definition = new Definition(minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek);
 	}
 	
-	/**
-	 * <p>Constructor for CronJob.</p>
-	 *
-	 * @param definition a {@link java.lang.String} object.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public CronJob(String definition, Observer task) {
 		super(task);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = new Definition(definition);
 	}
 
-	/**
-	 * <p>Constructor for CronJob.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param definition a {@link java.lang.String} object.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public CronJob(String name, String definition, Observer task) {
 		super(name, task);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = new Definition(definition);
 	}
 	
-	/**
-	 * <p>Constructor for CronJob.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param definition a {@link java.lang.String} object.
-	 * @param restrictive a boolean.
-	 * @param task a {@link java.util.Observer} object.
-	 */
 	public CronJob(String name, String definition, boolean restrictive, Observer task) {
 		super(name, task);
 		setRestrictive(restrictive);
@@ -101,13 +62,11 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		this.definition = new Definition(definition);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void doCaclulateNextExecution() {
 		setNextExecutionTime(definition.calculateNext( System.currentTimeMillis() ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected boolean isExecutionTimeReached() {
 		if (restrictive) {
@@ -121,20 +80,10 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		
 	}
 
-	/**
-	 * <p>isRestrictive.</p>
-	 *
-	 * @return a boolean.
-	 */
 	public boolean isRestrictive() {
 		return restrictive;
 	}
 
-	/**
-	 * <p>Setter for the field <code>restrictive</code>.</p>
-	 *
-	 * @param restrictive a boolean.
-	 */
 	public void setRestrictive(boolean restrictive) {
 		this.restrictive = restrictive;
 	}
@@ -257,32 +206,27 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return CronJob.class.getSimpleName()  + "," + definition;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void doReschedule(Scheduler queue, long time) {
 		super.doReschedule(queue, time);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setDone(boolean done) {
 		super.setDone(done);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean doReconfigure(String config) {
 		this.definition = new Definition(config);
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setScheduledTime(long scheduledTime) {
 		super.setScheduledTime(scheduledTime);

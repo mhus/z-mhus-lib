@@ -10,13 +10,6 @@ import de.mhus.lib.core.config.PropertiesConfigFile;
 import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.util.TimerIfc;
 
-/**
- * <p>PropertiesCfgFileWatch class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
 
@@ -25,22 +18,13 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 	private IConfig config;
 	private String name;
 	
-	/**
-	 * <p>Constructor for PropertiesCfgFileWatch.</p>
-	 */
 	public PropertiesCfgFileWatch() {
 	}
 	
-	/**
-	 * <p>Constructor for PropertiesCfgFileWatch.</p>
-	 *
-	 * @param file a {@link java.io.File} object.
-	 */
 	public PropertiesCfgFileWatch(File file) {
 		setFile(file);
 	}
 	
-	/** {@inheritDoc} */
 	public void doStart(final String name) {
 		this.name = name;
 		load();
@@ -73,9 +57,6 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		}
 	}
 
-	/**
-	 * <p>doStop.</p>
-	 */
 	public void doStop() {
 		if (fileWatch != null) {
 			fileWatch.doStop();
@@ -84,26 +65,15 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 	}
 	
 	
-	/** {@inheritDoc} */
 	@Override
 	public IConfig getConfig() {
 		return config;
 	}
 
-	/**
-	 * <p>Getter for the field <code>file</code>.</p>
-	 *
-	 * @return a {@link java.io.File} object.
-	 */
 	public File getFile() {
 		return file;
 	}
 
-	/**
-	 * <p>Setter for the field <code>file</code>.</p>
-	 *
-	 * @param file a {@link java.io.File} object.
-	 */
 	public void setFile(File file) {
 		this.file = file;
 	}

@@ -10,78 +10,52 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.TimerIfc;
 
-/**
- * <p>SchedulerTimer class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class SchedulerTimer extends Scheduler implements TimerIfc {
 
-	/**
-	 * <p>Constructor for SchedulerTimer.</p>
-	 */
 	public SchedulerTimer() {
 		super();
 	}
 
-	/**
-	 * <p>Constructor for SchedulerTimer.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 */
 	public SchedulerTimer(String name) {
 		super(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, long delay) {
 		schedule(new OnceJob(System.currentTimeMillis() + delay, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, Date time) {
 		schedule(new OnceJob(time, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, long delay, long period) {
 		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(TimerTask task, Date firstTime, long period) {
 		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
 		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
 		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void schedule(SchedulerJob job) {
 		super.schedule(job);
 		configureDefault(job);
 	}
 	
-	/**
-	 * <p>configureDefault.</p>
-	 *
-	 * @param job a {@link de.mhus.lib.core.schedule.SchedulerJob} object.
-	 */
 	public void configureDefault(SchedulerJob job) {
 		MProperties properties = loadConfiguration();
 		String n = job.getName();
@@ -106,7 +80,6 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 		return properties;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void cancel() {
 		stop();

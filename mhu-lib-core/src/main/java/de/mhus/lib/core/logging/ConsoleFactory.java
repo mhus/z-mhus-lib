@@ -12,12 +12,6 @@ import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
-/**
- * <p>ConsoleFactory class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class ConsoleFactory extends LogFactory {
 
 	//public static boolean tracing = true;
@@ -27,35 +21,20 @@ public class ConsoleFactory extends LogFactory {
 	@SuppressWarnings("unused")
 	private ResourceNode config;
 
-	/**
-	 * <p>Constructor for ConsoleFactory.</p>
-	 */
 	public ConsoleFactory() {
 		out = System.out;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public LogEngine createInstance(String name) {
 		return new ConsoleLog(name);
 	}
 
-	/**
-	 * <p>Constructor for ConsoleFactory.</p>
-	 *
-	 * @param config a {@link de.mhus.lib.core.config.IConfig} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public ConsoleFactory(IConfig config) throws Exception {
 //		name = config.getExtracted("name","");
 		init(config);
 	}
 	
-	/**
-	 * <p>printTime.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String printTime() {
 		if (printTime) {
 			return MCast.toString(new Date()) + " "; // TODO maybe more efficient
@@ -63,7 +42,6 @@ public class ConsoleFactory extends LogFactory {
 		return "";
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public void init(ResourceNode config) throws Exception {
 		if (config == null) return;
@@ -98,11 +76,6 @@ public class ConsoleFactory extends LogFactory {
 		
 	}
 	
-	/**
-	 * <p>Constructor for ConsoleFactory.</p>
-	 *
-	 * @param stream a {@link java.io.PrintStream} object.
-	 */
 	public ConsoleFactory(PrintStream stream) {
 		this.out = stream;
 	}
@@ -113,20 +86,10 @@ public class ConsoleFactory extends LogFactory {
 //        super.update(o, arg);
 //	}
 
-	/**
-	 * <p>getLevel.</p>
-	 *
-	 * @return a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
-	 */
 	public Log.LEVEL getLevel() {
 		return level;
 	}
 
-	/**
-	 * <p>setLevel.</p>
-	 *
-	 * @param level a {@link de.mhus.lib.core.logging.Log.LEVEL} object.
-	 */
 	public void setLevel(Log.LEVEL level) {
 		this.level = level;
 	}

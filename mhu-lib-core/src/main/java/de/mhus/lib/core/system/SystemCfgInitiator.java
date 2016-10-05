@@ -8,16 +8,8 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.directory.ResourceNode;
 
-/**
- * <p>SystemCfgInitiator class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class SystemCfgInitiator implements CfgInitiator {
 
-	/** {@inheritDoc} */
 	@Override
 	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
 		ResourceNode system = manager.getCfg("system");

@@ -9,38 +9,18 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 
-/**
- * <p>LoginCallbackHandler class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class LoginCallbackHandler implements CallbackHandler {
 
-	  /**
-	   * <p>Constructor for LoginCallbackHandler.</p>
-	   */
 	  public LoginCallbackHandler() {
 	    super();
 	  }
 	 
-	  /**
-	   * <p>Constructor for LoginCallbackHandler.</p>
-	   *
-	   * @param name a {@link java.lang.String} object.
-	   * @param password a {@link java.lang.String} object.
-	   */
 	  public LoginCallbackHandler( String name, String password) {
 	    super();
 	    this.username = name;
 	    this.password = password;
 	  }
 	 
-	  /**
-	   * <p>Constructor for LoginCallbackHandler.</p>
-	   *
-	   * @param password a {@link java.lang.String} object.
-	   */
 	  public LoginCallbackHandler( String password) {
 	    super();
 	    this.password = password;
@@ -50,9 +30,9 @@ public class LoginCallbackHandler implements CallbackHandler {
 	  private String username;
 	 
 	  /**
-	   * {@inheritDoc}
-	   *
 	   * Handles the callbacks, and sets the user/password detail.
+	   * @param callbacks the callbacks to handle
+	   * @throws IOException if an input or output error occurs.
 	   */
 	  @Override
 	public void handle( Callback[] callbacks)

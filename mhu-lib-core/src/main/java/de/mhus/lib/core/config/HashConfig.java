@@ -12,12 +12,6 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
-/**
- * <p>HashConfig class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class HashConfig extends IConfig {
 
 	private HashMap<String, String> 	properties 	= null;
@@ -26,19 +20,10 @@ public class HashConfig extends IConfig {
 	private String name;
 	private WritableResourceNode parent;
 	
-	/**
-	 * <p>Constructor for HashConfig.</p>
-	 */
 	public HashConfig() {
 		this(null,null);
 	}
 	
-	/**
-	 * <p>Constructor for HashConfig.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param parent a {@link de.mhus.lib.core.directory.WritableResourceNode} object.
-	 */
 	public HashConfig(String name,WritableResourceNode parent) {
 		this.name = name;
 		this.parent = parent;
@@ -47,23 +32,16 @@ public class HashConfig extends IConfig {
 		childrenAll = new LinkedList<HashConfig>();
 	}
 
-	/**
-	 * <p>Constructor for HashConfig.</p>
-	 *
-	 * @param fill a {@link java.util.Map} object.
-	 */
 	public HashConfig(Map<String, String> fill) {
 		this(null,null);
 		if (fill !=null) properties.putAll(fill);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String[] getPropertyKeys() {
 		return properties.keySet().toArray(new String[properties.size()]);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceNode getNode(String key) {
 		LinkedList<HashConfig> list = children.get(key);
@@ -71,7 +49,6 @@ public class HashConfig extends IConfig {
 		return list.getFirst();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceNode[] getNodes(String key) {
 		LinkedList<HashConfig> list = children.get(key);
@@ -79,25 +56,21 @@ public class HashConfig extends IConfig {
 		return list.toArray(new HashConfig[list.size()]);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceNode[] getNodes() {
 		return childrenAll.toArray(new HashConfig[childrenAll.size()]);
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	public String[] getNodeKeys() {
 		return children.keySet().toArray(new String[children.size()]);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public WritableResourceNode createConfig(String key) throws MException {
 		HashConfig child = new HashConfig(key,this);
@@ -111,25 +84,12 @@ public class HashConfig extends IConfig {
 		return child;
 	}
 
-	/**
-	 * <p>unlink.</p>
-	 *
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public void unlink() throws MException {
 		if (parent == null) return;
 		parent.removeConfig(this);
 		parent = null;
 	}
 	
-	/**
-	 * <p>setConfig.</p>
-	 *
-	 * @param key a {@link java.lang.String} object.
-	 * @param child a {@link de.mhus.lib.core.config.HashConfig} object.
-	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public ResourceNode setConfig(String key, HashConfig child) throws MException {
 		if (child.parent != null) throw new MException("Config already linked");
 		LinkedList<HashConfig> list = children.get(key);
@@ -145,7 +105,6 @@ public class HashConfig extends IConfig {
 	}
 	
 	// TODO move in childAll list
-	/** {@inheritDoc} */
 	@Override
 	public int moveConfig(ResourceNode config, int newPos) throws MException {
 
@@ -201,7 +160,6 @@ public class HashConfig extends IConfig {
 		return newPos;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void removeConfig(ResourceNode config) throws MException {
 
@@ -217,55 +175,46 @@ public class HashConfig extends IConfig {
 
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String getProperty(String name) {
 		return properties.get(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isProperty(String name) {
 		return properties.containsKey(name);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void removeProperty(String key) {
 		properties.remove(key);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setProperty(String key, Object value) {
 		properties.put(key, MCast.objectToString(value));
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean isEditable() {
 		return true;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceNode getParent() {
 		return parent;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Set<String> keys() {
 		return properties.keySet();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public InputStream getInputStream(String key) {
 		return null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public URL getUrl() {
 		return null;

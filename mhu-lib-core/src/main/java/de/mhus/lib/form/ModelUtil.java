@@ -15,21 +15,8 @@ import de.mhus.lib.core.definition.IDefDefinition;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
-/**
- * <p>ModelUtil class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class ModelUtil {
 
-	/**
-	 * <p>toModel.</p>
-	 *
-	 * @param xml a {@link org.w3c.dom.Element} object.
-	 * @return a {@link de.mhus.lib.core.definition.DefRoot} object.
-	 */
 	public static DefRoot toModel(Element xml) {
 		DefRoot root = new DefRoot();
 
@@ -58,12 +45,6 @@ public class ModelUtil {
 		}
 	}
 
-	/**
-	 * <p>toXml.</p>
-	 *
-	 * @param model a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @return a {@link org.w3c.dom.Document} object.
-	 */
 	public static Document toXml(ResourceNode model) {
 		
 		try {

@@ -1,11 +1,5 @@
 package de.mhus.lib.core.util;
 
-/**
- * <p>ASCII class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class ASCII {
 
 	/*

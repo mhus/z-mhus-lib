@@ -7,20 +7,10 @@ import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.cfg.CfgString;
 
-/**
- * <p>ServerIdent class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class ServerIdent {
 
 	private CfgString ident;
 	
-	/**
-	 * <p>Constructor for ServerIdent.</p>
-	 */
 	public ServerIdent() {
 		String persistence = MSingleton.getCfg(ServerIdent.class).getString("persistence", MSingleton.getFile(".ident.txt").getAbsolutePath() );
 		File file = new File(persistence);
@@ -34,11 +24,6 @@ public class ServerIdent {
 			ident = new CfgString(ServerIdent.class, "ident", def );
 	}
 	
-	/**
-	 * <p>toString.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String toString() {
 		return ident.value();
 	}

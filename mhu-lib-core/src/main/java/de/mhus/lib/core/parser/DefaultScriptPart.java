@@ -10,28 +10,16 @@ import javax.script.ScriptException;
 
 import de.mhus.lib.core.lang.MObject;
 
-/**
- * <p>DefaultScriptPart class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class DefaultScriptPart extends MObject implements StringPart {
 
 	private String part;
 	ScriptEngineManager manager = new ScriptEngineManager();
 
-	/**
-	 * <p>Constructor for DefaultScriptPart.</p>
-	 *
-	 * @param part a {@link java.lang.String} object.
-	 */
 	public DefaultScriptPart(String part) {
 		if (part.startsWith(">>>")) part = part.substring(3);
 		this.part = part;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void execute(StringBuffer out, Map<String, Object> attributes) {
         ScriptEngine engine = manager.getEngineByName ("js");
@@ -50,7 +38,6 @@ public class DefaultScriptPart extends MObject implements StringPart {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void dump(int level, StringBuffer out) {
 		

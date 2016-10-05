@@ -4,30 +4,22 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.WeakHashMap;
 
-/**
- * <p>WeakObservable class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class WeakObservable extends Observable {
     private boolean changed = false;
     private WeakHashMap<Observer, String> obs;
    
-    /**
-     * <p>Constructor for WeakObservable.</p>
-     */
     public WeakObservable() {
     	obs = new WeakHashMap<Observer, String>();
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * Adds an observer to the set of observers for this object, provided
-     * that it is not the same as some observer already in the set.
-     * The order in which notifications will be delivered to multiple
+     * Adds an observer to the set of observers for this object, provided 
+     * that it is not the same as some observer already in the set. 
+     * The order in which notifications will be delivered to multiple 
      * observers is not specified. See the class comment.
+     *
+     * @param   o   an observer to be added.
+     * @throws NullPointerException   if the parameter o is null.
      */
     @Override
 	public synchronized void addObserver(Observer o) {
@@ -39,10 +31,9 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * Deletes an observer from the set of observers of this object.
+     * Deletes an observer from the set of observers of this object. 
      * Passing <CODE>null</CODE> to this method will have no effect.
+     * @param   o   the observer to be deleted.
      */
     @Override
 	public synchronized void deleteObserver(Observer o) {
@@ -50,20 +41,17 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * If this object has changed, as indicated by the
-     * <code>hasChanged</code> method, then notify all of its observers
-     * and then call the <code>clearChanged</code> method to
-     * indicate that this object has no longer changed.
+     * If this object has changed, as indicated by the 
+     * <code>hasChanged</code> method, then notify all of its observers 
+     * and then call the <code>clearChanged</code> method to 
+     * indicate that this object has no longer changed. 
      * <p>
      * Each observer has its <code>update</code> method called with two
-     * arguments: this observable object and <code>null</code>. In other
+     * arguments: this observable object and <code>null</code>. In other 
      * words, this method is equivalent to:
      * <blockquote><tt>
      * notifyObservers(null)</tt></blockquote>
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#hasChanged()
+     *
      * @see     java.util.Observable#clearChanged()
      * @see     java.util.Observable#hasChanged()
      * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -74,17 +62,15 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * If this object has changed, as indicated by the
-     * <code>hasChanged</code> method, then notify all of its observers
-     * and then call the <code>clearChanged</code> method to indicate
-     * that this object has no longer changed.
+     * If this object has changed, as indicated by the 
+     * <code>hasChanged</code> method, then notify all of its observers 
+     * and then call the <code>clearChanged</code> method to indicate 
+     * that this object has no longer changed. 
      * <p>
      * Each observer has its <code>update</code> method called with two
      * arguments: this observable object and the <code>arg</code> argument.
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#hasChanged()
+     *
+     * @param   arg   any object.
      * @see     java.util.Observable#clearChanged()
      * @see     java.util.Observable#hasChanged()
      * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -121,8 +107,6 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * Clears the observer list so that this object no longer has any observers.
      */
     @Override
@@ -131,9 +115,7 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * Marks this <tt>Observable</tt> object as having been changed; the
+     * Marks this <tt>Observable</tt> object as having been changed; the 
      * <tt>hasChanged</tt> method will now return <tt>true</tt>.
      */
     @Override
@@ -142,15 +124,12 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
+     * Indicates that this object has no longer changed, or that it has 
+     * already notified all of its observers of its most recent change, 
+     * so that the <tt>hasChanged</tt> method will now return <tt>false</tt>. 
+     * This method is called automatically by the 
+     * <code>notifyObservers</code> methods. 
      *
-     * Indicates that this object has no longer changed, or that it has
-     * already notified all of its observers of its most recent change,
-     * so that the <tt>hasChanged</tt> method will now return <tt>false</tt>.
-     * This method is called automatically by the
-     * <code>notifyObservers</code> methods.
-     * @see     java.util.Observable#notifyObservers()
-     * @see     java.util.Observable#notifyObservers(java.lang.Object)
      * @see     java.util.Observable#notifyObservers()
      * @see     java.util.Observable#notifyObservers(java.lang.Object)
      */
@@ -160,11 +139,12 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
+     * Tests if this object has changed. 
      *
-     * Tests if this object has changed.
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#setChanged()
+     * @return  <code>true</code> if and only if the <code>setChanged</code> 
+     *          method has been called more recently than the 
+     *          <code>clearChanged</code> method on this object; 
+     *          <code>false</code> otherwise.
      * @see     java.util.Observable#clearChanged()
      * @see     java.util.Observable#setChanged()
      */
@@ -174,9 +154,9 @@ public class WeakObservable extends Observable {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * Returns the number of observers of this <tt>Observable</tt> object.
+     *
+     * @return  the number of observers of this object.
      */
     @Override
 	public synchronized int countObservers() {

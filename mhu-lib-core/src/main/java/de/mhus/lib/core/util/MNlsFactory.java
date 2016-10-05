@@ -14,61 +14,28 @@ import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.Base;
 
-/**
- * <p>MNlsFactory class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MNlsFactory extends MNlsBundle {
 
 	@SuppressWarnings("unused")
 	private ResourceNode config;
 	
-	/**
-	 * <p>Constructor for MNlsFactory.</p>
-	 */
 	public MNlsFactory() {
 		this(null);
 //		forkBase();
 	}
 	
-	/**
-	 * <p>Constructor for MNlsFactory.</p>
-	 *
-	 * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 */
 	public MNlsFactory(ResourceNode config) {
 		this.config = config;
 	}
 	
-	/**
-	 * <p>create.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 */
 	public MNls create(Object owner) {
 		return load(null, null, toResourceName(owner), null);
 	}
 	
-	/**
-	 * <p>load.</p>
-	 *
-	 * @param owner a {@link java.lang.Class} object.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 */
 	public MNls load(Class<?> owner) {
 		return load(null, owner, null, null);
 	}
 	
-	/**
-	 * <p>toResourceName.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @return a {@link java.lang.String} object.
-	 * @since 3.3.0
-	 */
 	public static String toResourceName(Object owner) {
 		if (owner == null) return null;
 		if (owner instanceof String)
@@ -78,46 +45,14 @@ public class MNlsFactory extends MNlsBundle {
 		return owner.getClass().getCanonicalName().replace('.', '/');
 	}
 	
-	/**
-	 * <p>load.</p>
-	 *
-	 * @param res a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 * @param owner a {@link java.lang.Class} object.
-	 * @param resourceName a {@link java.lang.String} object.
-	 * @param locale a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 */
 	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale) {
 		return load(res,owner,resourceName,locale, true);
 	}
 	
-	/**
-	 * <p>load.</p>
-	 *
-	 * @param res a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 * @param owner a {@link java.lang.Class} object.
-	 * @param resourceName a {@link java.lang.String} object.
-	 * @param locale a {@link java.lang.String} object.
-	 * @param searchAlternatives a boolean.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 * @since 3.3.0
-	 */
 	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale, boolean searchAlternatives) {
 		return load(res,owner,resourceName,locale,searchAlternatives,0);
 	}
 	
-	/**
-	 * <p>load.</p>
-	 *
-	 * @param res a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 * @param owner a {@link java.lang.Class} object.
-	 * @param resourceName a {@link java.lang.String} object.
-	 * @param locale a {@link java.lang.String} object.
-	 * @param searchAlternatives a boolean.
-	 * @param level a int.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 * @since 3.3.0
-	 */
 	protected MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale, boolean searchAlternatives, int level) {
 		if (level > 50) return null;
 		try {
@@ -180,21 +115,10 @@ public class MNlsFactory extends MNlsBundle {
 		return new MNls();
 	}
 	
-	/**
-	 * <p>getDefaultLocale.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getDefaultLocale() {
 		return Locale.getDefault().toString();
 	}
 
-	/**
-	 * <p>load.</p>
-	 *
-	 * @param is a {@link java.io.InputStream} object.
-	 * @return a {@link de.mhus.lib.core.util.MNls} object.
-	 */
 	public MNls load(InputStream is) {
 		Properties properties = new Properties();
 		try {
@@ -205,17 +129,10 @@ public class MNlsFactory extends MNlsBundle {
 		return new MNls(properties,"");
 	}
 	
-	/**
-	 * <p>lookup.</p>
-	 *
-	 * @param owner a {@link java.lang.Object} object.
-	 * @return a {@link de.mhus.lib.core.util.MNlsFactory} object.
-	 */
 	public static MNlsFactory lookup(Object owner) {
 		return MSingleton.baseLookup(owner,MNlsFactory.class);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public MNls createNls(String locale) {
 		return load(null, null, getPath(), locale, false);

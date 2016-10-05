@@ -1,42 +1,25 @@
 package de.mhus.lib.core.logging;
 
-/**
- * <p>Abstract LogEngine class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public abstract class LogEngine {
 
     private String name;
 
-	/**
-	 * <p>Constructor for LogEngine.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 */
 	public LogEngine(String name) {
     	this.name = name;
 	}
 
-	/**
-	 * <p>Getter for the field <code>name</code>.</p>
-	 *
-	 * @return a {@link java.lang.String} object.
-	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * <p> Is debug logging currently enabled? </p>
-	 *
-	 * <p> Call this method to prevent having to perform expensive operations
-	 * (for example, <code>String</code> concatenation)
-	 * when the log level is more than debug. </p>
-	 *
-	 * @return a boolean.
-	 */
+     * <p> Is debug logging currently enabled? </p>
+     *
+     * <p> Call this method to prevent having to perform expensive operations
+     * (for example, <code>String</code> concatenation)
+     * when the log level is more than debug. </p>
+     * @return 
+     */
 	public abstract boolean isDebugEnabled();
 
 
@@ -46,8 +29,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than error. </p>
-     *
-     * @return a boolean.
+     * @return 
      */
     public abstract boolean isErrorEnabled();
 
@@ -58,8 +40,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than fatal. </p>
-     *
-     * @return a boolean.
+     * @return 
      */
     public abstract boolean isFatalEnabled();
 
@@ -70,8 +51,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than info. </p>
-     *
-     * @return a boolean.
+     * @return 
      */
     public abstract boolean isInfoEnabled();
 
@@ -82,8 +62,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than trace. </p>
-     *
-     * @return a boolean.
+     * @return 
      */
     public abstract boolean isTraceEnabled();
 
@@ -94,12 +73,11 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than warn. </p>
-     *
-     * @return a boolean.
+     * @return 
      */
     public abstract boolean isWarnEnabled();
 
-    /**
+	/**
      * <p> Log a message with trace log level. </p>
      *
      * @param message log this message
@@ -200,16 +178,8 @@ public abstract class LogEngine {
      */
     public abstract void fatal(Object message, Throwable t);
 
-	/**
-	 * <p>doInitialize.</p>
-	 *
-	 * @param logFactory a {@link de.mhus.lib.core.logging.LogFactory} object.
-	 */
 	public abstract void doInitialize(LogFactory logFactory);
 
-	/**
-	 * <p>close.</p>
-	 */
 	public abstract void close();
 
 }

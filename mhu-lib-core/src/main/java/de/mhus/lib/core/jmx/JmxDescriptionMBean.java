@@ -17,12 +17,6 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ReflectionException;
 
-/**
- * <p>JmxDescriptionMBean class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class JmxDescriptionMBean extends JmxDescription {
 
 	protected HashMap<String, Method> getter  = new HashMap<String, Method>();
@@ -31,26 +25,12 @@ public class JmxDescriptionMBean extends JmxDescription {
 	protected MBeanInfo info;
 	private String name;
 
-	/**
-	 * <p>Constructor for JmxDescriptionMBean.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 * @throws java.lang.ClassNotFoundException if any.
-	 * @throws javax.management.IntrospectionException if any.
-	 */
 	public JmxDescriptionMBean(Object in) throws ClassNotFoundException,
 			IntrospectionException {
 		name = in.getClass().getName();
 		analyse(in);
 	}
 
-	/**
-	 * <p>analyse.</p>
-	 *
-	 * @param in a {@link java.lang.Object} object.
-	 * @throws java.lang.ClassNotFoundException if any.
-	 * @throws javax.management.IntrospectionException if any.
-	 */
 	protected void analyse(Object in) throws ClassNotFoundException, IntrospectionException {
 		
 		String description = "";
@@ -103,43 +83,23 @@ public class JmxDescriptionMBean extends JmxDescription {
 	
 	}
 
-	/**
-	 * <p>Getter for the field <code>getter</code>.</p>
-	 *
-	 * @param attribute a {@link java.lang.String} object.
-	 * @return a {@link java.lang.reflect.Method} object.
-	 */
 	public Method getGetter(String attribute) {
 		return getter.get(attribute);
 	}
 
-	/**
-	 * <p>Getter for the field <code>setter</code>.</p>
-	 *
-	 * @param attribute a {@link java.lang.String} object.
-	 * @return a {@link java.lang.reflect.Method} object.
-	 */
 	public Method getSetter(String attribute) {
 		return setter.get(attribute);
 	}
 
-	/**
-	 * <p>getMethod.</p>
-	 *
-	 * @param actionName a {@link java.lang.String} object.
-	 * @return a {@link java.lang.reflect.Method} object.
-	 */
 	public Method getMethod(String actionName) {
 		return methods.get(actionName);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public MBeanInfo getMBeanInfo() {
 		return info;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object getAttribute(Object o, String attribute)
 			throws AttributeNotFoundException, MBeanException,
@@ -153,7 +113,6 @@ public class JmxDescriptionMBean extends JmxDescription {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void setAttribute(Object o,Attribute attribute)
 			throws AttributeNotFoundException, InvalidAttributeValueException,
@@ -169,7 +128,6 @@ public class JmxDescriptionMBean extends JmxDescription {
 
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public Object invoke(Object o, String actionName, Object[] params, String[] signature)
 			throws MBeanException, ReflectionException {

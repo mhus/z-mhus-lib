@@ -22,7 +22,7 @@ public class HeartbeatSender extends ClientJms {
 		this(null);
 	}
 	
-	public void sendHeartbeat() {
+	public void sendHeartbeat(String cmd) {
 
 		if (getSession() == null) {
 			log().i("heartbeat has no session");
@@ -30,15 +30,15 @@ public class HeartbeatSender extends ClientJms {
 			return;
 		}
 		
-		try {
-			getDestination().getConnection().doChannelBeat();
-		} catch (Throwable e) {
-			log().w("channel beat failed",e);
-			return;
-		}
+//		try {
+//			getDestination().getConnection().doChannelBeat();
+//		} catch (Throwable e) {
+//			log().w("channel beat failed",e);
+//			return;
+//		}
 		
 		try {
-			TextMessage msg = getSession().createTextMessage(MSystem.getAppIdent());
+			TextMessage msg = getSession().createTextMessage((cmd == null ? "ping" : cmd) + "," + MSystem.getAppIdent());
 			Message[] ret = sendJmsBroadcast(msg);
 			LinkedList<String> hosts = new LinkedList<>();
 			for (Message m : ret) {

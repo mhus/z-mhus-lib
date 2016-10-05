@@ -8,45 +8,25 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.SyntaxError;
 
 /**
- * <p>Condition class.</p>
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
+ *
  */
 public class Condition {
 
 	ModelComposit root = null;
 	
-	/**
-	 * <p>Constructor for Condition.</p>
-	 *
-	 * @param condition a {@link java.lang.String} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public Condition(String condition) throws MException {
 		TechnicalStringParser tokenizer = new TechnicalStringParser(condition);
 		tokenizer.setBreakableCharacters("()!");
 		parse(tokenizer);
 	}
 
-	/**
-	 * <p>matches.</p>
-	 *
-	 * @param map a {@link java.util.Map} object.
-	 * @return a boolean.
-	 */
 	public boolean matches(Map<String,?> map) {
 		if (map == null) return false;
 		return root.m(map);
 	}
 	
-	/**
-	 * <p>parse.</p>
-	 *
-	 * @param condition a {@link de.mhus.lib.core.parser.StringTokenizerParser} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	protected void parse(StringTokenizerParser condition) throws MException {
 	
 		root = null;
@@ -172,7 +152,6 @@ public class Condition {
 	}
 	
 	
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return root == null ? "[null]" : root.toString();

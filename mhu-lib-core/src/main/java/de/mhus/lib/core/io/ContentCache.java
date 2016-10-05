@@ -15,21 +15,15 @@ import de.mhus.lib.errors.MException;
 
 /**
  * TODO implement save write / read mechanism
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class ContentCache extends MObject {
 
 	private File root;
 	private boolean saveWrite = false; // enable thread / process save write
 
-	/**
-	 * <p>Constructor for ContentCache.</p>
-	 *
-	 * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
-	 * @throws de.mhus.lib.errors.MException if any.
-	 */
 	public ContentCache(ResourceNode config) throws MException {
 		if (config != null) {
 			String rootString = config.getExtracted("root");
@@ -47,12 +41,6 @@ public class ContentCache extends MObject {
 		}
 	}
 	
-	/**
-	 * <p>isCached.</p>
-	 *
-	 * @param id a {@link java.lang.String} object.
-	 * @return a boolean.
-	 */
 	public boolean isCached(String id) {
 		if (root == null || id == null) return false;
 		File dir = getDir(id);
@@ -61,27 +49,12 @@ public class ContentCache extends MObject {
 		return file.exists();
 	}
 
-	/**
-	 * <p>cacheAndReturn.</p>
-	 *
-	 * @param id a {@link java.lang.String} object.
-	 * @param is a {@link java.io.InputStream} object.
-	 * @return a {@link java.io.InputStream} object.
-	 * @throws java.io.IOException if any.
-	 */
 	public InputStream cacheAndReturn(String id, InputStream is) throws IOException {
 		if (root == null || id == null) return is;
 		doCache(id,is);
 		return getCached(id);
 	}
 	
-	/**
-	 * <p>doCache.</p>
-	 *
-	 * @param id a {@link java.lang.String} object.
-	 * @param is a {@link java.io.InputStream} object.
-	 * @throws java.io.IOException if any.
-	 */
 	public void doCache(String id, InputStream is) throws IOException {
 		if (root == null || id == null) return;
 		openLock();
@@ -104,13 +77,6 @@ public class ContentCache extends MObject {
 		if (!saveWrite) return;
 	}
 
-	/**
-	 * <p>getCached.</p>
-	 *
-	 * @param id a {@link java.lang.String} object.
-	 * @return a {@link java.io.InputStream} object.
-	 * @throws java.io.FileNotFoundException if any.
-	 */
 	public InputStream getCached(String id) throws FileNotFoundException {
 		if (root == null || id == null) return null;
 		log().d("load cached",id);

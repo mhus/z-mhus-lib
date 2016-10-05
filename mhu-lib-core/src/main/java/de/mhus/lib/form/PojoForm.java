@@ -11,33 +11,13 @@ import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.core.util.MNlsFactory;
 
-/**
- * <p>PojoForm class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- * @since 3.3.0
- */
 public class PojoForm extends Form {
 
-	/**
-	 * <p>Constructor for PojoForm.</p>
-	 *
-	 * @param pojo a {@link de.mhus.lib.form.PojoProvider} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public PojoForm(PojoProvider pojo) throws Exception {
 		this(pojo, "");
 		//setNlsBundle(new MNlsFactory().setOwner(pojo.getPojo()));
 	}
 	
-	/**
-	 * <p>Constructor for PojoForm.</p>
-	 *
-	 * @param pojo a {@link de.mhus.lib.form.PojoProvider} object.
-	 * @param modelName a {@link java.lang.String} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public PojoForm(PojoProvider  pojo, String modelName) throws Exception {
 		model = createModel(pojo.getPojo(), modelName);
 
@@ -51,14 +31,6 @@ public class PojoForm extends Form {
 			
 	}
 
-	/**
-	 * <p>createModel.</p>
-	 *
-	 * @param pojo a {@link java.lang.Object} object.
-	 * @param modelName a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.config.IConfig} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	protected IConfig createModel(Object pojo, String modelName) throws Exception {
 		
 		PojoModel pojoModel = new PojoParser().parse(pojo).filter(new DefaultFilter(true, false, true, false, false)).getModel();

@@ -10,21 +10,8 @@ import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.util.Rfc1738;
 
-/**
- * <p>MConfigFactory class.</p>
- *
- * @author mikehummel
- * @version $Id: $Id
- */
 public class MConfigFactory implements IBase {
 
-	/**
-	 * <p>createConfigFor.</p>
-	 *
-	 * @param file a {@link java.io.File} object.
-	 * @return a {@link de.mhus.lib.core.directory.WritableResourceNode} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public WritableResourceNode createConfigFor(File file) throws Exception {
 		
 		if (file.isDirectory())
@@ -52,13 +39,6 @@ public class MConfigFactory implements IBase {
 		}
 		return null;
 	}
-	/**
-	 * <p>createConfigFor.</p>
-	 *
-	 * @param uri a {@link java.net.URI} object.
-	 * @return a {@link de.mhus.lib.core.directory.WritableResourceNode} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public WritableResourceNode createConfigFor(URI uri) throws Exception {
 		if (uri == null) return null;
 		
@@ -95,13 +75,6 @@ public class MConfigFactory implements IBase {
 		return null;
 	}
 	
-	/**
-	 * <p>createConfigForFile.</p>
-	 *
-	 * @param key a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.core.directory.WritableResourceNode} object.
-	 * @throws java.lang.Exception if any.
-	 */
 	public WritableResourceNode createConfigForFile(String key) throws Exception {
 		if (key == null) return null;
 
@@ -118,10 +91,10 @@ public class MConfigFactory implements IBase {
 	
 	/**
 	 * Return a config or null if the string is not understud.
-	 *
-	 * @param configString a {@link java.lang.String} object.
+	 * 
+	 * @param configString
 	 * @return A config object if the config is found or null. If no config is recognized it returns null
-	 * @throws java.lang.Exception if any.
+	 * @throws Exception
 	 */
 	public WritableResourceNode toConfig(String configString) throws Exception {
 		if (MString.isEmptyTrim(configString)) return new HashConfig();

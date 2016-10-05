@@ -34,7 +34,7 @@ import java.io.InputStream;
  * reading (returning false only if the user enters an end-of-file from the
  * console). Includes a one-character peek ahead facility.
  * <p>
- *
+ * 
  * TextReader's behavior is similar to that of Pascal's standard input. It has
  * three utilities for processing the input one token at a time (one for words
  * and two for numbers). As in Pascal, these token-processing methods skip
@@ -44,25 +44,25 @@ import java.io.InputStream;
  * end of a line that might imply that more input is present when it really
  * isn't.
  * <p>
- *
+ * 
  * TextReader also provides utilities for reading the input one character at a
  * time or one line at a time, in which case whitespace is preserved. As noted
  * above, it also has a utility for peeking one character ahead in the stream.
  * There is also a method for skipping whitespace. A programmer can combine
  * these utilities to define specialized behavior.
  * <p>
- *
+ * 
  * To simplify differences between operating systems, TextReader skips a "\r"
  * character if it sees it so that the two-character sequence "\r\n" becomes a
  * single "\n" character. It also inserts a virtual "\n" before end-of-file if
  * one is not present.
  * <p>
- *
+ * 
  * Below is an example of how to construct and manipulate a reader for
  * interactive console input.
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * TextReader console = new TextReader(System.in);
  * System.out.print(&quot;What is your name? &quot;);
@@ -75,13 +75,13 @@ import java.io.InputStream;
  * int n = console.readInt();
  * System.out.println(&quot;2 to the &quot; + n + &quot; = &quot; + (int) Math.pow(2, n));
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * The code above would execute something like this (user input underlined):
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * What is your name? &lt;u&gt;John Boy&lt;/u&gt;
  * Give me two positive numbers, John Boy --&gt; &lt;u&gt;3.4 2.9&lt;/u&gt;
@@ -89,9 +89,9 @@ import java.io.InputStream;
  * Give me a positive integer, John Boy --&gt; &lt;u&gt;14&lt;/u&gt;
  * 2 to the 14 = 16384
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * By default the token-processing methods like readInt consume the newline
  * character at the end of each line, which assumes that newline characters are
  * not significant. There is a utility that allows a programmer to specify that
@@ -99,9 +99,9 @@ import java.io.InputStream;
  * stream. For example, the code below reads exactly one line of input, adding
  * up the integers on the line.
  * <p>
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * input.eolIsSignificant(true);
  * input.skipWhite(false); // in case the line contains just whitespace
@@ -110,17 +110,17 @@ import java.io.InputStream;
  * 	sum += input.readInt();
  * input.readChar(); // to skip past the newline
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * To construct a reader using a file, the potential I/O error must be caught
  * because, for example, the specified file might not exist. Below is an example
  * of how to construct and manipulate a file reader using a specific file name
  * (in this case, project.dat). If an error occurs, the program exits with a
  * runtime exception.
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * TextReader input;
  * try {
@@ -133,14 +133,14 @@ import java.io.InputStream;
  * while (input.ready())
  * 	sum += input.readInt();
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * Below is a variation where the user is prompted for a file name and the
  * program loops until a legal file name is given.
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * TextReader console = new TextReader(System.in);
  * TextReader input;
@@ -159,31 +159,33 @@ import java.io.InputStream;
  * while (input.ready())
  * 	sum += input.readInt();
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * The previous two code examples use FileInputStream and IOException, which
  * would require you to include the line below at the beginning of your class
  * file.
- *
+ * 
  * <blockquote>
- *
+ * 
  * <pre>
  * import java.io.*;
  * </pre>
- *
+ * 
  * </blockquote>
- *
+ * 
  * Questions about this class can be sent to <a
  * href="http://www.cs.arizona.edu/people/reges">Stuart Reges</a> (<a
  * href="mailto:reges@cs.arizona.edu">reges@cs.arizona.edu</a>).
- *
+ * 
+ * @version 1.1, 1/7/01
  * @author Stuart Reges
  */
+
 public class TextReader {
 	/**
 	 * Create a text-reading stream.
-	 *
+	 * 
 	 * @param input
 	 *            the input stream to read from
 	 */
@@ -217,9 +219,9 @@ public class TextReader {
 
 	/**
 	 * Read a single character (including whitespace).
-	 *
+	 * 
 	 * @return next character in the stream
-	 * @throws java.lang.RuntimeException
+	 * @throws RuntimeException
 	 *             if end-of-file
 	 */
 	public char readChar() {
@@ -241,9 +243,9 @@ public class TextReader {
 
 	/**
 	 * Peek ahead one character.
-	 *
+	 * 
 	 * @return the character that a subsequent call on readChar() would return
-	 * @throws java.lang.RuntimeException
+	 * @throws RuntimeException
 	 *             if end-of-file
 	 */
 	public char peek() {
@@ -255,7 +257,7 @@ public class TextReader {
 
 	/**
 	 * Tell whether this stream is ready to be read.
-	 *
+	 * 
 	 * @return true if ready, false if not
 	 */
 	public boolean ready() {
@@ -265,9 +267,9 @@ public class TextReader {
 
 	/**
 	 * Reads a line of text.
-	 *
+	 * 
 	 * @return the line of text without the '\n'
-	 * @throws java.lang.RuntimeException
+	 * @throws RuntimeException
 	 *             if end-of-file
 	 */
 	public String readLine() {
@@ -285,7 +287,7 @@ public class TextReader {
 	/**
 	 * Determine whether or not ends of line are treated as tokens. This method
 	 * affects only the token-reading methods (readWord, readInt, readDouble).
-	 *
+	 * 
 	 * @param flag
 	 *            whether end-of-line characters should be left in stream
 	 */
@@ -297,7 +299,7 @@ public class TextReader {
 
 	/**
 	 * Skip whitespace.
-	 *
+	 * 
 	 * @param skipEoln
 	 *            whether or not to skip end-of-line characters
 	 */
@@ -310,7 +312,7 @@ public class TextReader {
 
 	/**
 	 * Read the next token delineated by whitespace.
-	 *
+	 * 
 	 * @return the word read (empty string if end-of-file reached)
 	 */
 	public String readWord() {
@@ -326,9 +328,9 @@ public class TextReader {
 
 	/**
 	 * Read the next token as an integer.
-	 *
+	 * 
 	 * @return next integer in input stream
-	 * @throws java.lang.RuntimeException
+	 * @throws RuntimeException
 	 *             if no token or next token not an integer
 	 */
 	public int readInt() {
@@ -337,9 +339,9 @@ public class TextReader {
 
 	/**
 	 * Read the next token as a double.
-	 *
+	 * 
 	 * @return next double in input stream
-	 * @throws java.lang.RuntimeException
+	 * @throws RuntimeException
 	 *             if no token or next token not a double
 	 */
 	public double readDouble() {

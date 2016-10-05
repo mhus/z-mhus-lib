@@ -13,16 +13,15 @@ import de.mhus.lib.core.logging.Log;
 
 /**
  * This class loader is a distributor. You can dynamically change the list of child loaders.
- *
+ * 
  * The class loader is thread safe.
- *
+ * 
  * @author mikehummel
- * @version $Id: $Id
+ *
  */
 public class DynamicClassLoader extends ClassLoader {
 		
 	public enum RESULT {NEXT,OWN,FORWARD};
-	/** Constant <code>log</code> */
 	public static Log log = Log.getLog(DynamicClassLoader.class);
 	
 	protected String name = null;
@@ -33,48 +32,26 @@ public class DynamicClassLoader extends ClassLoader {
 	
 	//protected ClassLoader last;
 	
-	/**
-	 * <p>Constructor for DynamicClassLoader.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 */
 	public DynamicClassLoader(String name) {
 		//super(new EmptyClassLoader());
 		//last = getSystemClassLoader();
 		this.name = name;
 	}
 	
-	/**
-	 * <p>Constructor for DynamicClassLoader.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @param parent a {@link java.lang.ClassLoader} object.
-	 */
 	public DynamicClassLoader(String name, ClassLoader parent) {
 		super(parent);
 		this.name = name;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return name;
 	}
 	
-	/**
-	 * <p>Setter for the field <code>rules</code>.</p>
-	 *
-	 * @param list a {@link java.util.List} object.
-	 */
 	public void setRules(List<Rule> list ) {
 		rules = list.toArray(new Rule[list.size()]);
 	}
 	
-	/**
-	 * <p>addRule.</p>
-	 *
-	 * @param rule a {@link de.mhus.lib.core.lang.DynamicClassLoader.Rule} object.
-	 */
 	public void addRule(Rule rule) {
 		LinkedList<Rule> list = new LinkedList<Rule>();
 		if (rules != null) {
@@ -85,16 +62,10 @@ public class DynamicClassLoader extends ClassLoader {
 		setRules(list);
 	}
 	
-	/**
-	 * <p>Setter for the field <code>defaultRule</code>.</p>
-	 *
-	 * @param rule a {@link de.mhus.lib.core.lang.DynamicClassLoader.RESULT} object.
-	 */
 	public void setDefaultRule(RESULT rule) {
 		defaultRule = rule;
 	}
 	
-	/** {@inheritDoc} */
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		log.t("ask for",this,name);
@@ -134,13 +105,6 @@ public class DynamicClassLoader extends ClassLoader {
 		return super.findClass(name);
 	}
 	
-	/**
-	 * <p>findAndOwnClass.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.lang.Class} object.
-	 * @throws java.lang.ClassNotFoundException if any.
-	 */
 	public Class<?> findAndOwnClass(String name) throws ClassNotFoundException {
 		
 		if (name.startsWith("java.") || name.startsWith("javax.") ) {
@@ -185,7 +149,6 @@ public class DynamicClassLoader extends ClassLoader {
 		}
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected URL findResource(String name) {
 		log.t("resource",this,name);
@@ -204,39 +167,18 @@ public class DynamicClassLoader extends ClassLoader {
 
 	// --- Methods to handle list
 	
-	/**
-	 * <p>add.</p>
-	 *
-	 * @param e a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 * @return a boolean.
-	 */
 	public boolean add(@SuppressWarnings("rawtypes") MResourceProvider e) {
 		return classLoaders.add(e);
 	}
 
-	/**
-	 * <p>remove.</p>
-	 *
-	 * @param o a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 * @return a boolean.
-	 */
 	public boolean remove(@SuppressWarnings("rawtypes") MResourceProvider o) {
 		return classLoaders.remove(o);
 	}
 
-	/**
-	 * <p>clear.</p>
-	 */
 	public void clear() {
 		classLoaders.clear();
 	}
 
-	/**
-	 * <p>add.</p>
-	 *
-	 * @param index a int.
-	 * @param element a {@link de.mhus.lib.core.directory.MResourceProvider} object.
-	 */
 	public void add(int index, @SuppressWarnings("rawtypes") MResourceProvider element) {
 		classLoaders.add(index, element);
 	}

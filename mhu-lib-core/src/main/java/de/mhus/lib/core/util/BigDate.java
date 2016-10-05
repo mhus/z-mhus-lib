@@ -191,8 +191,11 @@ import de.mhus.lib.core.MString;
  * avoid confusion, this calendar always uses January 1. <p/> TODO Future
  * enhancements: - handle time, and timezones, interconversion with
  * GregorianCalendar dates.
- *
+ * 
  * @author Roedy Green, Canadian Mind Products
+ * @version 4.9, 2006-03-04
+ * @see com.mindprod.holidays.Holiday to compute various holidays
+ * @see com.mindprod.holidays.IsHoliday to tell if a given day is a holiday.
  *      <p/>
  */
 public class BigDate implements Cloneable, Serializable, Comparable<Object> {
@@ -552,10 +555,9 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * sure you are getting the expected results. Note the date in the created
 	 * object does not keep updating every time you reference it with methods
 	 * like getOrdinal or getDD. You always get the date the object was created.
-	 *
+	 * 
 	 * @return BigDate object initialised to today, in Greenwich.
-	 * @see #localToday
-	 * @see #today
+	 * 
 	 * @see #localToday
 	 * @see #today
 	 */
@@ -568,20 +570,16 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * calculate the age in years, months and days.
-	 *
+	 * 
 	 * @param birthDate
 	 *            usually the birth of a person.
 	 * @param asof
 	 *            usually today, the day you want the age as of. asof must come
 	 *            after birthDate to get a meaningful result.
+	 * 
 	 * @return array of three ints (not Integers). [0]=age in years, [1]=age in
 	 *         months, [2]=age in days.
-	 * @see #localToday
-	 * @see #today
-	 * @see #UTCToday
-	 * @see #localToday
-	 * @see #today
-	 * @see #UTCToday
+	 * 
 	 * @see #localToday
 	 * @see #today
 	 * @see #UTCToday
@@ -633,18 +631,14 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get day of week for given ordinal. It is one-based starting with Sunday.
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since Jan 1, 1970 to test.
+	 * 
 	 * @return day of week 1=Sunday 2=Monday 3=Tuesday 4=Wednesday 5=Thursday
 	 *         6=Friday 7=Saturday Compatible with Sun's 1=Calendar.SUNDAY Not
 	 *         compatiblse with BigDate.getDayOfWeek.
-	 * @see #isoDayOfWeek
-	 * @see #dayOfWeek
-	 * @see #getCalendarDayOfWeek
-	 * @see #isoDayOfWeek
-	 * @see #dayOfWeek
-	 * @see #getCalendarDayOfWeek
+	 * 
 	 * @see #isoDayOfWeek
 	 * @see #dayOfWeek
 	 * @see #getCalendarDayOfWeek
@@ -655,18 +649,14 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get day of week for given ordinal. Is it zero-based starting with Sunday.
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since Jan 1, 1970 to test.
+	 * 
 	 * @return day of week 0=Sunday 1=Monday 2=Tuesday 3=Wednesday 4=Thursday
 	 *         5=Friday 6=Saturday WARNING: not compatible with
 	 *         1=Calendar.SUNDAY
-	 * @see #calendarDayOfWeek
-	 * @see #isoDayOfWeek
-	 * @see #getDayOfWeek
-	 * @see #calendarDayOfWeek
-	 * @see #isoDayOfWeek
-	 * @see #getDayOfWeek
+	 * 
 	 * @see #calendarDayOfWeek
 	 * @see #isoDayOfWeek
 	 * @see #getDayOfWeek
@@ -684,11 +674,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * How many days are there in a given month?
-	 *
+	 * 
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
 	 * @param leap
 	 *            true if you are interested in a leap year
+	 * 
 	 * @return how many days are in that month
 	 */
 	public static int daysInMonth(int mm, boolean leap) {
@@ -701,11 +692,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * How many days are there in a given month?
-	 *
+	 * 
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
 	 * @param yyyy
 	 *            year of interest.
+	 * 
 	 * @return how many days are in that month
 	 */
 	public static int daysInMonth(int mm, int yyyy) {
@@ -721,11 +713,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * How many days were there in the year prior to the first day of the given
 	 * month?
-	 *
+	 * 
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date).
 	 * @param leap
 	 *            true if you are interested in a leap year.
+	 * 
 	 * @return how many days in year prior to the start of that month.
 	 */
 	protected static int daysInYearPriorToMonth(int mm, boolean leap) {
@@ -735,11 +728,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Convert day number ddd in year to month.
-	 *
+	 * 
 	 * @param ddd
 	 *            day number in year Jan 01 = 1, 1 to 366.
 	 * @param leap
 	 *            true if year of interest is boolean.
+	 * 
 	 * @return month that day number would fall in.
 	 */
 	protected static int dddToMM(int ddd, boolean leap) {
@@ -749,13 +743,14 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Multiply then divide using floored rather than the usual truncated
 	 * arithmetic, using a long intermediate.
-	 *
+	 * 
 	 * @param multiplicand
 	 *            one of two numbers to multiply together
 	 * @param multiplier
 	 *            one of two numbers to multiply together
 	 * @param divisor
 	 *            number to divide by
+	 * 
 	 * @return ( multiplicand * multiplier ) / divisor
 	 */
 	public static int flooredMulDiv(int multiplicand, int multiplier,
@@ -770,7 +765,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Embeds copyright notice
-	 *
+	 * 
 	 * @return copyright notice
 	 */
 	public static String getCopyright() {
@@ -794,9 +789,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * year to 365.2425. It gets ahead 1 day every 3289 years. For BC dates, the
 	 * years the years 1, 5, 9 are leap years, not 4, 8, 12 as you might expect,
 	 * from the general rule.
-	 *
+	 * 
 	 * @param yyyy
 	 *            year to test.
+	 * 
 	 * @return true if the year is a leap year.
 	 */
 	public static boolean isLeap(int yyyy) {
@@ -828,9 +824,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Test to see if the given yyyy-mm-dd is a date as a String is legitimate.
 	 * must have 4-digit years, and use dashes between the number and no sign
 	 * Does extensive checks considering leap years, missing days etc.
-	 *
+	 * 
 	 * @param yyyy_mm_dd
 	 *            string of form "yyyy-mm-dd".
+	 * 
 	 * @return true if that represents a valid date.
 	 */
 	public static boolean isValid(String yyyy_mm_dd) {
@@ -850,13 +847,14 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Test to see if the given yyyy, mm, dd date is legitimate. Does extensive
 	 * checks considering leap years, missing days etc.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
 	 * @param dd
 	 *            day 1 to 31
+	 * 
 	 * @return true if yyyy mm dd is a valid date.
 	 */
 	public static boolean isValid(int yyyy, int mm, int dd) {
@@ -883,11 +881,13 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Get day of week 1 to 7 for this ordinal according to the ISO standard
 	 * IS-8601. It is one-based starting with Monday.
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since Jan 1, 1970 to test.
+	 * 
 	 * @return day of week 1=Monday to 7=Sunday, 0 for null date. WARNING: not
 	 *         compatible with 1=Calendar.SUNDAY.
+	 * 
 	 * @see BigDate#dayOfWeek(int)
 	 */
 	public static int isoDayOfWeek(int ordinal) {
@@ -903,9 +903,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Ordinal date of Jan 01 of the given year.
-	 *
+	 * 
 	 * @param yyyy
 	 *            year of interest
+	 * 
 	 * @return ordinal of Jan 01 of that year.
 	 */
 	protected static int jan01OfYear(int yyyy) {
@@ -945,8 +946,9 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * reference it with methods like getOrdinal or getDD. You always get the
 	 * date the object was created. It is quite a production to get the local
 	 * date. Best to ask once and save the today object.
-	 *
+	 * 
 	 * @return BigDate object initialised to today, local time.
+	 * 
 	 * @see #today #see #UTCToday
 	 */
 	public static BigDate localToday() {
@@ -956,7 +958,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Find the first monday in a given month, the 3rd monday or the last
 	 * Thursday...
-	 *
+	 * 
 	 * @param which
 	 *            1=first 2=second 3=third 4=fourth 5=last (might be 4th or 5th)
 	 * @param dayOfWeek
@@ -966,6 +968,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 *            year of interest.
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
+	 * 
 	 * @return day of month 1..31
 	 */
 	public static int nthXXXDay(int which, int dayOfWeek, int yyyy, int mm) {
@@ -982,7 +985,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Find the first monday in a given month, the 3rd monday or the last
 	 * Thursday...
-	 *
+	 * 
 	 * @param which
 	 *            1=first 2=second 3=third 4=fourth 5=last (might be 4th or 5th)
 	 * @param dayOfWeek
@@ -992,6 +995,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 *            year of interest.
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
+	 * 
 	 * @return day of month 1..31
 	 */
 	public static int ordinalOfnthXXXDay(int which, int dayOfWeek, int yyyy,
@@ -1004,14 +1008,15 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Convert date in form YYYY MM DD into days since the 1970 Jan 01. This
 	 * method lets you convert directly from Gregorian to ordinal without
 	 * creating a BigDate object. yyyy mm dd must be a valid date.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
 	 * @param dd
 	 *            day 1 to 31
-	 * @return a int.
+	 * 
+	 * @return ordinal, days since 1970 Jan 01.
 	 */
 	static public int toOrdinal(int yyyy, int mm, int dd) {
 		// treat null date as a special case
@@ -1037,12 +1042,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * like getOrdinal or getDD. You always get the date the object was created.
 	 * It is quite a production to get the this date. Best to ask once and save
 	 * the today object.
-	 *
+	 * 
 	 * @param timeZone
 	 *            in which we want to know the today's date.
+	 * 
 	 * @return BigDate object initialised to today at given timezone.
-	 * @see #localToday
-	 * @see #UTCToday
+	 * 
 	 * @see #localToday
 	 * @see #UTCToday
 	 */
@@ -1062,13 +1067,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Constructor for the null date. Gets set to null date, NOT current date
 	 * like Java Date!!. BigDate.localToday() will create an object initialised
 	 * to today's date.
-	 *
-	 * @see #localToday
-	 * @see #UTCToday
-	 * @see #today
-	 * @see #localToday
-	 * @see #UTCToday
-	 * @see #today
+	 * 
 	 * @see #localToday
 	 * @see #UTCToday
 	 * @see #today
@@ -1081,7 +1080,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Construct a BigDate object given the Propleptic Julian day number. The
 	 * Propleptic Julian calendar that astronomers use starts with 0 at noon on
 	 * 4713 BCE January 1. In contrast, BigDate's Ordinal base is 1970 Jan 1.
-	 *
+	 * 
 	 * @param prolepticJulianDay
 	 *            days since 4713 BC Jan 1 noon. Such numbers usually arise in
 	 *            astronomical calculation. You don't need to concern yourself
@@ -1114,7 +1113,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Ordinal constructor. The ordinal must be NULL_ORDINAL or in the range
 	 * -365968798 to 364522971 i.e. 999,999 BC to 999,999 AD
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since 1970 Jan 01.
 	 */
@@ -1127,7 +1126,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Create a BigDate object from a sting of the form: yyyy-mm-dd must have
 	 * 4-digit years, and use dashes between the number and no sign Does
 	 * extensive checks considering leap years, missing days etc.
-	 *
+	 * 
 	 * @param yyyy_mm_dd
 	 *            string of form "yyyy-mm-dd".
 	 */
@@ -1150,7 +1149,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Copy constructor
-	 *
+	 * 
 	 * @param b
 	 *            an existing BigDate object to use as a model for cloning
 	 *            another.
@@ -1164,7 +1163,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Constructor from Date, loses time information.
-	 *
+	 * 
 	 * @param utc
 	 *            Date ( UTC date/time stamp )
 	 * @param timeZone
@@ -1179,14 +1178,15 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Construct a BigDate object given a Gregorian date yyyy, mm, dd; always
 	 * rejects invalid dates. A null date is yyyy,mm,dd=0. BEWARE! In Java a
 	 * lead 0 on an integer implies OCTAL.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
 	 *            month 1 to 12 (not 0 to 11 as in Sun's Date)
 	 * @param dd
 	 *            day 1 to 31
-	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 * @throws IllegalArgumentException
 	 *             for invalid yyyy mm dd
 	 */
 	public BigDate(int yyyy, int mm, int dd) {
@@ -1197,7 +1197,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Construct a BigDate object given a Gregorian date yyyy, mm, dd; allows
 	 * control of how invalid dates are handled. A null date is yyyy,mm,dd=0.
 	 * BEWARE! In Java a lead 0 on an integer implies OCTAL.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
@@ -1216,15 +1216,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * get days since 1970 Jan 01 for this BigDate. 1970/01/01 = day 0.
-	 *
+	 * 
 	 * @return days since 1970 Jan 01. This is NOT what you want for the
 	 *         java.util.Date constructor.
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
+	 * 
 	 * @see #getLocalTimeStamp
 	 * @see #getUTCTimeStamp
 	 * @see #getTimeStamp
@@ -1236,9 +1231,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	// ------------------------ CANONICAL METHODS ------------------------
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Compares with another BigDate to see if they refer to the same date.
+	 * 
+	 * @param d
+	 *            other BigDate to compare with this one.
+	 * 
+	 * @return true if BigDate d refers to the same date
 	 */
 	@Override
 	public final boolean equals(Object d) {
@@ -1252,9 +1250,9 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * hashCode for use in Hashtable lookup
+	 * 
+	 * @return the ordinal which is perfectly unique for the date.
 	 */
 	@Override
 	public final int hashCode() {
@@ -1262,9 +1260,11 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Convert date to a human-readable String.
+	 * 
+	 * @return this BigDate as a String in form YYYY-MM-DD ISO 8601:1988
+	 *         international standard format. NOT final so you can override to
+	 *         suit yourself.
 	 */
 	@Override
 	public String toString() {
@@ -1286,11 +1286,16 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	// --------------------- Interface Comparable ---------------------
 
 	/**
-	 * {@inheritDoc}
-	 *
 	 * Defines Natural Order for the BigDate class. Determines if this date
 	 * comes after some other date. Conceptually returns (this -
 	 * anotherBigDate). compareTo() == 0 is faster than equals().
+	 * 
+	 * @param anotherBigDate
+	 *            date to compare against
+	 * 
+	 * @return a positive number if this date > (after) anotherBigDate.<br/>
+	 *         zero if this date = anotherBigDate.<br/> a negative number if
+	 *         this date < (before) anotherBigDate.
 	 */
 	@Override
 	public final int compareTo(Object anotherBigDate) {
@@ -1301,7 +1306,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * increment this date by a number of days.
-	 *
+	 * 
 	 * @param days
 	 *            postive or negative, -1 gets day before this one.
 	 */
@@ -1315,16 +1320,11 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get day of week for this BigDate. Is it one-based starting with Sunday.
-	 *
+	 * 
 	 * @return day of week 1=Sunday 2=Monday 3=Tuesday 4=Wednesday 5=Thursday
 	 *         6=Friday 7=Saturday Compatible with Sun's 1=Calendar.SUNDAY Not
 	 *         compatible with BigDate.getDayOfWee
-	 * @see #getISODayOfWeek
-	 * @see #getDayOfWeek
-	 * @see #calendarDayOfWeek
-	 * @see #getISODayOfWeek
-	 * @see #getDayOfWeek
-	 * @see #calendarDayOfWeek
+	 * 
 	 * @see #getISODayOfWeek
 	 * @see #getDayOfWeek
 	 * @see #calendarDayOfWeek
@@ -1335,7 +1335,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * get day of month for this BigDate.
-	 *
+	 * 
 	 * @return day 1 to 31, 0 for null date.
 	 */
 	public final int getDD() {
@@ -1344,7 +1344,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get day number in the year for this BigDate.
-	 *
+	 * 
 	 * @return day number Jan 01 = 1, 1 to 366
 	 */
 	public final int getDDD() {
@@ -1354,32 +1354,14 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get java.util.Date object corresponding to this BigDate,
-	 *
+	 * 
 	 * @param timeZone
 	 *            We consider this BigDate to have an implied time of 0:00 in
 	 *            this timeZone.
+	 * 
 	 * @return Date or null Result is undefined if BigDate is outside the range
 	 *         handled by Date.
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
-	 * @see #getUTCDate
-	 * @see #getLocalDate
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
-	 * @see #getUTCDate
-	 * @see #getLocalDate
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
-	 * @see #getUTCDate
-	 * @see #getLocalDate
-	 * @see #getLocalTimeStamp
-	 * @see #getUTCTimeStamp
-	 * @see #getTimeStamp
-	 * @see #getUTCDate
-	 * @see #getLocalDate
+	 * 
 	 * @see #getLocalTimeStamp
 	 * @see #getUTCTimeStamp
 	 * @see #getTimeStamp
@@ -1393,16 +1375,11 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get day of week for this BigDate. It is zero-based starting with Sunday.
-	 *
+	 * 
 	 * @return day of week 0=Sunday 1=Monday 2=Tuesday 3=Wednesday 4=Thursday
 	 *         5=Friday 6=Saturday WARNING: not compatible with
 	 *         1=Calendar.SUNDAY
-	 * @see #getCalendarDayOfWeek
-	 * @see #getISODayOfWeek
-	 * @see #dayOfWeek
-	 * @see #getCalendarDayOfWeek
-	 * @see #getISODayOfWeek
-	 * @see #dayOfWeek
+	 * 
 	 * @see #getCalendarDayOfWeek
 	 * @see #getISODayOfWeek
 	 * @see #dayOfWeek
@@ -1414,15 +1391,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Get day of week 1 to 7 for this BigDate according to the ISO standard
 	 * IS-8601. It is one-based starting with Monday.
-	 *
+	 * 
 	 * @return day of week 1=Monday to 7=Sunday, 0 for null date. WARNING: not
 	 *         compatible with 1=Calendar.SUNDAY
-	 * @see #getCalendarDayOfWeek
-	 * @see #getDayOfWeek
-	 * @see #isoDayOfWeek
-	 * @see #getCalendarDayOfWeek
-	 * @see #getDayOfWeek
-	 * @see #isoDayOfWeek
+	 * 
 	 * @see #getCalendarDayOfWeek
 	 * @see #getDayOfWeek
 	 * @see #isoDayOfWeek
@@ -1443,8 +1415,12 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * defined for dates on or after 1600 Jan 01. You can find out how many ISO
 	 * weeks there are per year with new BigDate( year, 12,
 	 * 31).getISOWeekNumber();
-	 *
+	 * 
 	 * @return week number 1..53, 0 for null or invalid date.
+	 * 
+	 * @see <a
+	 *      href="http://www.pip.dknet.dk/~pip10160/calendar.faq3.txt">Calendar
+	 *      * FAQ< /a>
 	 */
 	public final int getISOWeekNumber() {
 		if (ordinal < Jan_01_Leap100RuleYear) {
@@ -1482,9 +1458,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Get java.util.Date object corresponding to this BigDate. We consider this
 	 * BigDate to have an implied time of 0:00 local time.
-	 *
+	 * 
 	 * @return Date or null Result is undefined if BigDate is outside the range
 	 *         handled by Date.
+	 * 
 	 * @see #getLocalTimeStamp
 	 */
 	public final java.util.Date getLocalDate() {
@@ -1498,12 +1475,13 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * advance. N.B. returns long, not int as in many Unix implementations. This
 	 * the long that a Sun Date constructor wants. We consider this BigDate to
 	 * have an implied time of 0:00 local time.
-	 *
+	 * 
 	 * @return milliseconds since 1979 Jan 01 00:00 GMT, or NULL_TIMESTAMP. This
 	 *         is NOT a JDBC Timestamp! You can use this timestamp with
 	 *         java.util.Date.setTime, java.sql.TimeStamp.setTime or
 	 *         java.sql.Date.setTime or in the constructors. To interconvert,
 	 *         just cast.
+	 * 
 	 * @see #getLocalDate
 	 */
 	public final long getLocalTimeStamp() {
@@ -1512,7 +1490,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get month of year for this BigDate.
-	 *
+	 * 
 	 * @return month 1 to 12, 0 for null date.
 	 */
 	public final int getMM() {
@@ -1520,8 +1498,6 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	}
 
 	/**
-	 * <p>getProplepticJulianDay.</p>
-	 *
 	 * @return Julian day number of noon of the date BigDate represents. See
 	 *         notes on the Julian Propleptic calendar under the constructor.
 	 */
@@ -1536,7 +1512,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get season of year for this BigDate.
-	 *
+	 * 
 	 * @return 0=spring (Mar, Apr, May) 1=summer (Jun, Jul, Aug) 2=fall (Sep,
 	 *         Oct, Dec) 3=winter Dec, Jan, Feb
 	 */
@@ -1551,21 +1527,17 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * start of day 0:00. Does not account for leap seconds primarily because we
 	 * do not know them in advance. N.B. returns long, not int as in many Unix
 	 * implementations. This the long that a Sun Date constructor wants.
-	 *
+	 * 
 	 * @param timeZone
 	 *            We consider this BigDate to have an implied time of 0:00 in
 	 *            this timeZone.
+	 * 
 	 * @return milliseconds since 1979 Jan 01 00:00 GMT, or NULL_TIMESTAMP. This
 	 *         is NOT a JDBC Timestamp! You can use this timestamp with
 	 *         java.util.Date.setTime, java.sql.TimeStamp.setTime or
 	 *         java.sql.Date.setTime or in the constructors. To interconvert,
 	 *         just cast.
-	 * @see #getDate
-	 * @see #getUTCTimeStamp
-	 * @see #getLocalTimeStamp
-	 * @see #getDate
-	 * @see #getUTCTimeStamp
-	 * @see #getLocalTimeStamp
+	 * 
 	 * @see #getDate
 	 * @see #getUTCTimeStamp
 	 * @see #getLocalTimeStamp
@@ -1595,9 +1567,10 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Get java.util.Date object corresponding to this BigDate. We consider this
 	 * BigDate to have an implied time of 0:00 UTC (Greenwich GMT).
-	 *
+	 * 
 	 * @return Date or null Result is undefined if BigDate is outside the range
 	 *         handled by Date.
+	 * 
 	 * @see #getUTCTimeStamp
 	 */
 	public final java.util.Date getUTCDate() {
@@ -1611,12 +1584,13 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * advance. N.B. returns long, not int as in many Unix implementations. This
 	 * the long that a Sun Date constructor wants. We consider this BigDate to
 	 * have an implied time of 0:00 UTC (Greenwich GMT).
-	 *
+	 * 
 	 * @return milliseconds since 1970 Jan 01 00:00 GMT, or NULL_TIMESTAMP. This
 	 *         is NOT a JDBC Timestamp! You can use this timestamp with
 	 *         java.util.Date.setTime, java.sql.TimeStamp.setTime or
 	 *         java.sql.Date.setTime or in the constructors. To interconvert,
 	 *         just cast.
+	 * 
 	 * @see #getUTCDate
 	 */
 	public final long getUTCTimeStamp() {
@@ -1630,8 +1604,9 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * week with any days in the current year. Weeks start on Sunday. Jan 1 and
 	 * Dec 31 are always considered part of the current year. Only defined for
 	 * dates on or after 1600 Jan 01.
-	 *
+	 * 
 	 * @return week number 1..53, 0 for null or invalid date.
+	 * 
 	 * @see #getISOWeekNumber
 	 */
 	public final int getWeekNumber() {
@@ -1649,7 +1624,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Get year for this BigDate.
-	 *
+	 * 
 	 * @return year -999,999 to 999,999. 0 for null date. negative is BC,
 	 *         positive AD.
 	 */
@@ -1718,7 +1693,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Set the ordinal field, and compute the equivalent internal Gregorian yyyy
 	 * mm dd fields. alias setOrdinal.
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since 1970 Jan 1.
 	 */
@@ -1733,7 +1708,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Set the yyyy mm dd Gregorian fields, and compute the internal ordinal
 	 * equivalent. yyyy mm dd are checked for validity.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
@@ -1749,7 +1724,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * Set the Gregorian fields, and compute the ordinal equivalent with the
 	 * same modifiers CHECK, NORMALIZE, BYPASSCHECK as the constructor. BEWARE!
 	 * In Java a lead 0 on an integer implies OCTAL.
-	 *
+	 * 
 	 * @param yyyy
 	 *            -999,999 (BC) to +999,999 (AD)
 	 * @param mm
@@ -1788,7 +1763,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Sets the date that corresponding to a given utc timestamp at a given
 	 * TimeZone.
-	 *
+	 * 
 	 * @param utcTimestamp
 	 *            milliseconds since 1970 in UTC time. E.g. Date.getTime
 	 * @param timeZone
@@ -1822,7 +1797,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	/**
 	 * Set the ordinal field, and compute the equivalent internal Gregorian yyyy
 	 * mm dd fields. alias set.
-	 *
+	 * 
 	 * @param ordinal
 	 *            days since 1970 Jan 1.
 	 */
@@ -1836,7 +1811,7 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 
 	/**
 	 * Convert date to a human-readable String wed mm/dd/yy
-	 *
+	 * 
 	 * @return this BigDate as a String in form fri 12/31/03
 	 */
 	public String toDowMMDDYY() {
