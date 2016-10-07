@@ -235,7 +235,7 @@ public class Rfc1738 extends TreeMap<String,String> {
 		boolean first = true;
 		boolean key = true;
 		for ( String i : in ) {
-			if (!first)
+			if (!first && key)
 				sb.append('&');
 			sb.append(encode(i));
 			first = false;
