@@ -120,7 +120,7 @@ public class Condition {
 			}
 			
 			if (isPattern && lp.startsWith("$")) {
-				param = lp.substring(1);
+				param = part.substring(1);
 				if (param.endsWith("$")) param = param.substring(0, param.length()-1);
 				isPattern = false;
 			}

@@ -95,11 +95,17 @@ public class MThread extends MObject implements Runnable {
 		tc.stop();
 	}
 
-	@SuppressWarnings("deprecation")
-	public void throwException(Throwable throwable) {
+//	@SuppressWarnings("deprecation")
+//	public void throwException(Throwable throwable) {
+//		if (tc == null)
+//			return;
+//		tc.stop(throwable);
+//	}
+	
+	public void interupt() {
 		if (tc == null)
 			return;
-		tc.stop(throwable);
+		tc.interrupt();
 	}
 	
 	/**
