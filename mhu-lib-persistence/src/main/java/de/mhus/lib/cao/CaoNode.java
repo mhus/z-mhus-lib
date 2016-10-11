@@ -5,8 +5,10 @@ import de.mhus.lib.errors.MException;
 
 public abstract class CaoNode extends ResourceNode {
 
+	private static final long serialVersionUID = 1L;
 	private CaoConnection con;
 	private CaoNode parent;
+	protected CaoPolicyProvider policyProvider;
 
 	public CaoNode(CaoNode parent) {
 		this(parent.getConnection(),parent);
@@ -123,7 +125,8 @@ public abstract class CaoNode extends ResourceNode {
 	 * @throws CaoException
 	 */
 	public CaoPolicy getAccessPolicy() throws CaoException {
-		return new CaoPolicy(this ,true, isEditable());
+		if (policyProvider == null) return null;
+		return policyProvider.getAccessPolicy(this);
 	}
 
 }

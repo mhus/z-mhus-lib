@@ -8,6 +8,9 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.SyntaxError;
 
 /**
+ * e.g.
+ * $param1 regex .*test.*
+ * $param1 mr or $param1 mrs
  * 
  * @author mikehummel
  *
@@ -120,7 +123,7 @@ public class Condition {
 			}
 			
 			if (isPattern && lp.startsWith("$")) {
-				param = lp.substring(1);
+				param = part.substring(1);
 				if (param.endsWith("$")) param = param.substring(0, param.length()-1);
 				isPattern = false;
 			}

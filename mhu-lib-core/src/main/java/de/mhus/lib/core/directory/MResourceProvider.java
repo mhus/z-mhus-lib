@@ -6,6 +6,12 @@ import de.mhus.lib.core.lang.MObject;
 @DefaultImplementation(ClassLoaderResourceProvider.class)
 public abstract class MResourceProvider<T extends ResourceNode> extends MObject {
 
-	public abstract T getResource(String name);
+	/**
+	 * Return a requested resource.
+	 * 
+	 * @param path The name or path to the resource.
+	 * @return The resource or null if not found.
+	 */
+	public abstract T getResource(String path);
 	
 }

@@ -27,5 +27,10 @@ public class NoneConnection extends CaoConnection {
 		return null;
 	}
 
+	@Override
+	public CaoNode getRoot() {
+		return null;
+	}
+
 
 }

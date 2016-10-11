@@ -25,6 +25,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class ResourceNode extends AbstractProperties {
 
+	private static final long serialVersionUID = 1L;
 	protected ConfigStringCompiler compiler;
 	protected HashMap<String, CompiledString> compiledCache;
 
@@ -88,10 +89,10 @@ public abstract class ResourceNode extends AbstractProperties {
 	
 	/**
 	 * Return the input stream of a content resource.
-	 * @param key Name of a rendition or null for the default content
+	 * @param rendition Name of a rendition or null for the default content
 	 * @return
 	 */
-	public abstract InputStream getInputStream(String key);
+	public abstract InputStream getInputStream(String rendition);
 	
 	/**
 	 * Returns a compiled and executed string. The string is compiled with StringCompiler and is cached. Example
@@ -303,7 +304,7 @@ public abstract class ResourceNode extends AbstractProperties {
 
 	public abstract URL getUrl();
 
-	public abstract boolean isValide();
+	public abstract boolean isValid();
 	
 	public abstract boolean hasContent();
 

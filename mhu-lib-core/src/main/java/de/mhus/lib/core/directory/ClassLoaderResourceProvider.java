@@ -113,7 +113,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 		}
 
 		@Override
-		public boolean isValide() {
+		public boolean isValid() {
 			return true;
 		}
 

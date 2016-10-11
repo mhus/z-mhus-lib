@@ -15,7 +15,7 @@ import de.mhus.lib.errors.MException;
 public class FileResource extends ResourceNode {
 
 	public enum KEYS {NAME, LENGTH, MODIFIED, TYPE, HIDDEN};
-	public enum TYPE {FILE,DIRCTORY,UNKNOWN}
+	public enum TYPE {FILE,DIRECTORY,UNKNOWN}
 	
 	public static final long UNKNOWN_LENGTH = -1;
 	
@@ -51,7 +51,7 @@ public class FileResource extends ResourceNode {
 		
 		FileResource cached = cache.get(key);
 		if (cached != null) {
-			if (cached.isValide()) return cached;
+			if (cached.isValid()) return cached;
 			cache.remove(key);
 		}
 		File f = new File(file, key);
@@ -149,7 +149,7 @@ public class FileResource extends ResourceNode {
 				if (file.isFile())
 					return TYPE.FILE;
 				if (file.isDirectory())
-					return TYPE.DIRCTORY;
+					return TYPE.DIRECTORY;
 				return TYPE.UNKNOWN;
 			case HIDDEN:
 				return file.isHidden();
@@ -182,7 +182,7 @@ public class FileResource extends ResourceNode {
 	}
 
 	@Override
-	public boolean isValide() {
+	public boolean isValid() {
 		return file != null && file.exists();
 	}
 

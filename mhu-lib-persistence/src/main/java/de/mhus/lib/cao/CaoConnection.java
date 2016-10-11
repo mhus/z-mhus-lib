@@ -14,4 +14,11 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 		return driver;
 	}
 
+	/**
+	 * Request the first resource.
+	 * 
+	 * @return The root or null
+	 */
+	public abstract CaoNode getRoot();
+
 }

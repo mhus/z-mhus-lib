@@ -7,7 +7,7 @@ import de.mhus.lib.core.directory.WritableResourceNode;
 public abstract class IConfig extends WritableResourceNode {
 
 	@Override
-	public boolean isValide() {
+	public boolean isValid() {
 		return true;
 	}
 	

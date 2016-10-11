@@ -23,7 +23,6 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * 
 	 * @param name
 	 * @return null if the property not exists or the property value.
-	 * @throws MException 
 	 */
 	public abstract Object getProperty(String name);
 	

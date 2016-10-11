@@ -62,7 +62,7 @@ public class EmptyResourceNode extends ResourceNode {
 	}
 
 	@Override
-	public boolean isValide() {
+	public boolean isValid() {
 		return true;
 	}
 

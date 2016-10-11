@@ -11,6 +11,7 @@ import de.mhus.lib.errors.MException;
 
 public class CaoPolicy extends CaoNode {
 
+	private static final long serialVersionUID = 1L;
 	public static final String READ = "read";
 	public static final String WRITE = "write";
 	public static final String POLICIES = "policies";
@@ -215,11 +216,6 @@ public class CaoPolicy extends CaoNode {
 	@Override
 	public URL getUrl() {
 		return null;
-	}
-
-	@Override
-	public boolean isValide() {
-		return true;
 	}
 
 	@Override
