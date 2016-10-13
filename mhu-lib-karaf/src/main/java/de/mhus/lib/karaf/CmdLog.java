@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
@@ -42,6 +43,9 @@ public class CmdLog extends MLog implements Action {
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
+
+	@Option(name="-m", aliases="--max", description="Maximum log-block size gap before skip",required=false)
+	protected int maxDelta = 1024 * 512; // Max output per block!
 
 	// private Appender appender;
 
@@ -196,6 +200,13 @@ public class CmdLog extends MLog implements Action {
 							if (!runningField.isAccessible()) runningField.setAccessible(true);
 							try {
 								while (true) {
+									if (tail.available() > maxDelta  ) {
+										MThread.sleep(200);
+										os.cleanup();
+										os.println("--- Skip Log ---");
+										os.flush();
+										tail.clean();
+									}
 									int i = tail.read();
 									if(Thread.currentThread().isInterrupted()) break;
 									boolean running = (boolean)runningField.get(finalSession);
