@@ -17,7 +17,7 @@ public class TailInputStream extends InputStream {
 
 	public TailInputStream(File file) throws IOException {
 		this.file = file;
-		toEnd();
+		clean();
 	}
 	
 	@Override
@@ -48,13 +48,26 @@ public class TailInputStream extends InputStream {
 		return ret;
 	}
 	
+	public long delta() {
+		long size = file.length();
+		if (size > pos) return size-pos;
+		return size;
+	}
+	
+	public int available() {
+		long size = delta();
+		if (size > Integer.MAX_VALUE) return Integer.MAX_VALUE;
+		return (int)size;
+	}
+	
 	@Override
 	public void close() throws IOException {
 		closed = true;
+		if (is != null) is.close();
 		super.close();
 	}
 	
-	public void toEnd() throws IOException {
+	public void clean() throws IOException {
 		this.pos = file.length();
 		try {
 			if (is != null) is.close();
