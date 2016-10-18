@@ -338,6 +338,7 @@ public abstract class ResourceNode extends AbstractProperties {
 		
 	}
 	
+	@Override
 	public int size() {
 		String[] keys = getPropertyKeys();
 		if (keys == null) return 0;
@@ -351,12 +352,18 @@ public abstract class ResourceNode extends AbstractProperties {
 
 	@Override
 	public Collection<Object> values() {
-		throw new NotSupportedException();
+		HashMap<String, Object> out = new HashMap<>();
+		for (String key : getPropertyKeys())
+			out.put(key, getProperty(key) );
+		return out.values();
 	}
 
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		throw new NotSupportedException(); //TODO could be done generic ... getNames() getValue ...
+		HashMap<String, Object> out = new HashMap<>();
+		for (String key : getPropertyKeys())
+			out.put(key, getProperty(key) );
+		return out.entrySet();
 	}
 
 }
