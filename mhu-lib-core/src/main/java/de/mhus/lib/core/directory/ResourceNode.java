@@ -355,7 +355,10 @@ public abstract class ResourceNode extends AbstractProperties {
 
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		throw new NotSupportedException(); //TODO could be done generic ... getNames() getValue ...
+		HashMap<String, Object> out = new HashMap<>();
+		for (String key : getPropertyKeys())
+			out.put(key, getProperty(key) );
+		return out.entrySet();
 	}
 
 }

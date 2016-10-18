@@ -546,6 +546,22 @@ public class MFile {
 		if (name.indexOf('?') >= 0) name = name.replaceAll("\\?", "_");
 		if (name.indexOf(':') >= 0) name = name.replaceAll(":", "_");
 		if (name.indexOf(' ') >= 0) name = name.replaceAll(" ", "_");
+		if (name.indexOf("..") >= 0) name = name.replaceAll("..", "_");
+		if (name.indexOf('~') >= 0) name = name.replace('~', '_');
+
+		return name;
+	}
+
+	public static String normalizePath(String name) {
+		if (name == null) return null;
+		
+		if (name.indexOf('\\') >= 0) name = name.replaceAll("\\\\", "/");
+		if (name.indexOf('*') >= 0) name = name.replaceAll("\\*", "_");
+		if (name.indexOf('?') >= 0) name = name.replaceAll("\\?", "_");
+		if (name.indexOf(':') >= 0) name = name.replaceAll(":", "_");
+		if (name.indexOf(' ') >= 0) name = name.replaceAll(" ", "_");
+		if (name.indexOf("..") >= 0) name = name.replaceAll("..", "_");
+		if (name.indexOf('~') >= 0) name = name.replace('~', '_');
 
 		return name;
 	}
@@ -709,5 +725,18 @@ public class MFile {
 				lineObserver.update(null, line);
 		} while(line != null);
 	}
-	
+
+	public static File getFile(File parent, String path) {
+		if (MString.isEmpty(path)) return null; 
+		path = path.trim();
+		if (path.startsWith("/")) return new File(path);
+		if (path.startsWith("~")) return new File(getUserHome(), path);
+		if (parent.isFile()) parent = parent.getParentFile();
+		return new File(parent, path);
+	}
+
+	public static File getUserHome() {
+		return new File(System.getProperty("user.home"));
+	}
+
 }

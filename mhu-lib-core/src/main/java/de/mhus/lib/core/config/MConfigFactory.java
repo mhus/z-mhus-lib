@@ -2,6 +2,7 @@ package de.mhus.lib.core.config;
 
 import java.io.File;
 import java.net.URI;
+import java.util.HashSet;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
@@ -13,6 +14,41 @@ import de.mhus.lib.core.util.Rfc1738;
 public class MConfigFactory implements IBase {
 
 	public WritableResourceNode createConfigFor(File file) throws Exception {
+		return createConfigFor(file, false);
+	}
+	
+	public WritableResourceNode createConfigFor(File file, boolean include) throws Exception {
+		if (include) {
+			HashSet<String> included = new HashSet<>();
+			return create(file, included);
+		} else {
+			return create(file);
+		}
+	}
+	
+	protected WritableResourceNode create(File file, HashSet<String> included) throws Exception {
+		WritableResourceNode out = create(file);
+		included.add(file.getAbsolutePath());
+		for (String path : out.getString("__include", "").split(",")) {
+			if (MString.isSetTrim(path)) {
+				File absolut = MFile.getFile(file, path);
+				if (absolut == null) continue;
+				String abs = absolut.getAbsolutePath();
+				if (!included.contains(abs)) {
+					
+					WritableResourceNode nextOne = create(absolut, included);
+					for (String key : nextOne.getPropertyKeys())
+						if (!out.containsKey(key))
+							out.setProperty(key, nextOne.get(key));
+					
+					included.add(abs);
+				}
+			}
+		}
+		return out;
+	}
+	
+	protected WritableResourceNode create(File file) throws Exception {
 		
 		if (file.isDirectory())
 			return new DirConfig(file);
