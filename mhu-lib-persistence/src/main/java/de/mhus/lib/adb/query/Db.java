@@ -26,6 +26,16 @@ public class Db {
 	}
 
 	/**
+	 * 
+	 * @param mask Masquerading Base Type
+	 * @param type Real Type to query for
+	 * @return The Query
+	 */
+	public static <T> AQuery<T> query(Class<T> mask, Class<? extends T> type) {
+		return new AQuery<T>(mask, type);
+	}
+	
+	/**
 	 * <p>eq.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.

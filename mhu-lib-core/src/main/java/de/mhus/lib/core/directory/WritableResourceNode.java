@@ -4,6 +4,7 @@ import de.mhus.lib.errors.MException;
 
 public abstract class WritableResourceNode extends ResourceNode {
 
+	private static final long serialVersionUID = 1L;
 	public static final int MOVE_UP = -100;	
 	public static final int MOVE_DOWN = -101;
 	public static final int MOVE_FIRST = -102;

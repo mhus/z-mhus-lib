@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.LinkedList;
 
 import de.mhus.lib.cao.util.PropertiesNode;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.directory.ResourceNode;
 
 public class FsNode extends PropertiesNode {
@@ -102,6 +103,11 @@ public class FsNode extends PropertiesNode {
 	@Override
 	public boolean hasContent() {
 		return file.isFile();
+	}
+
+	@Override
+	protected void doUpdate(MProperties modified) {
+		
 	}
 
 }

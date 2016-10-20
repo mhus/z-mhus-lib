@@ -20,7 +20,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 	}
 
 	@Override
-	public ResourceNode getResource(String name) {
+	public ResourceNode getResourceByPath(String name) {
 		return new CLResourceNode(loader,name);
 	}
 
@@ -122,5 +122,10 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 			return true;
 		}
 		
+	}
+
+	@Override
+	public ResourceNode getResourceById(String id) {
+		return getResourceByPath(id);
 	}
 }

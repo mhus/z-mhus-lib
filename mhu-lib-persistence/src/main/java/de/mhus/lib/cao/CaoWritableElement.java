@@ -1,17 +1,19 @@
 package de.mhus.lib.cao;
 
-import de.mhus.lib.core.directory.WritableResourceNode;
+public abstract class CaoWritableElement extends CaoNode {
 
-public abstract class CaoWritableElement extends WritableResourceNode {
-
+	private static final long serialVersionUID = 1L;
 	private CaoNode parent;
 
 	public CaoWritableElement(CaoNode parent) {
+		super(parent.getParent());
 		this.parent = parent;
 	}
 
-	public CaoNode getElement() {
+	public CaoNode getOriginalElement() {
 		return parent;
 	}
+	
+	public abstract CaoOperation getUpdateOperation() throws CaoException;
 
 }

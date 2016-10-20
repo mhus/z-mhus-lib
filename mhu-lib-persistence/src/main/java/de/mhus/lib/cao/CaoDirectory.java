@@ -43,7 +43,7 @@ public class CaoDirectory extends MObject implements IBase {
 		CaoConnection scheme = getScheme(schemeName);
 		if (scheme == null) return null;
 
-		return scheme.getResource(uri.getPath()).getInputStream();
+		return scheme.getResourceByPath(uri.getPath()).getInputStream();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class CaoDirectory extends MObject implements IBase {
 		log().t(schemeName);
 		CaoConnection scheme = getScheme(schemeName);
 		if (scheme == null) return null;
-		return scheme.getResource(uri.getPath()).getUrl();
+		return scheme.getResourceByPath(uri.getPath()).getUrl();
 	}
 
 	/**

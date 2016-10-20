@@ -107,6 +107,14 @@ public class MatcherTest extends TestCase {
 			assertEquals(true, filter.matches("xyz"));
 			assertEquals(true, filter.matches("blablaaabbbla"));
 		}
+		
+		{
+			Matcher filter = new Matcher("ext_.* or exec_.* or ro_vp_msg");
+			System.out.println(filter);
+			assertEquals(true , filter.matches("ro_vp_msg"));
+			assertEquals(false, filter.matches("int_msg"));
+		}
+		
 	}
 	
 	public void testPatterns() throws MException {

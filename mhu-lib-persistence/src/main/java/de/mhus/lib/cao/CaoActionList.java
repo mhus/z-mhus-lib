@@ -17,26 +17,8 @@ import java.util.LinkedList;
  */
 public class CaoActionList implements Iterable<CaoAction>{
 
-	private LinkedList<CaoAction> actions = new LinkedList<CaoAction>();
-	private HashMap<String, CaoAction> index = new HashMap<String, CaoAction>();
-
-	/**
-	 * <p>add.</p>
-	 *
-	 * @param action a {@link de.mhus.lib.cao.CaoAction} object.
-	 */
-	public void add(CaoAction action) {
-		String name = action.getName();
-
-		if (index.containsKey(name)) {
-			//TODO find the best one, maybe replace
-			return;
-		}
-
-		actions.add(action);
-		index.put(name, action);
-
-	}
+	protected LinkedList<CaoAction> actions = new LinkedList<CaoAction>();
+	protected HashMap<String, CaoAction> index = new HashMap<String, CaoAction>();
 
 	/** {@inheritDoc} */
 	@Override

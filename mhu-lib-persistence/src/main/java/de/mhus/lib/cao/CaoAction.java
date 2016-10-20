@@ -17,6 +17,12 @@ import de.mhus.lib.form.MForm;
  */
 public abstract class CaoAction extends MObject {
 
+	public static final String UPDATE = "updateNode";
+	public static final String DELETE = "deleteNode";
+	public static final String MOVE   = "moveNode";
+	public static final String RENAME = "renameNode";
+	public static final String CREATE = "createNode";
+
 	private MNls resourceBundle;
 
 	public CaoAction() {
@@ -53,7 +59,7 @@ public abstract class CaoAction extends MObject {
 	 * @return x
 	 * @throws CaoException
 	 */
-	public abstract CaoOperation execute(CaoList list, Object configuration) throws CaoException;
+	public abstract CaoOperation createOperation(CaoList list, Object configuration) throws CaoException;
 
 	@Override
 	public String toString() {

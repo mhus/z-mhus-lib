@@ -74,13 +74,13 @@ public class MNlsFactory extends MNlsBundle {
 			InputStream is = null;
 			Properties properties = new Properties();
 			
-			is = res.getResource(locale.toString() + "/" + resourceName + ".properties" ).getInputStream();
+			is = res.getResourceByPath(locale.toString() + "/" + resourceName + ".properties" ).getInputStream();
 			if (searchAlternatives) {
 
 				if (is==null)
-					is = res.getResource(getDefaultLocale()  + "/" + resourceName + ".properties" ).getInputStream();
+					is = res.getResourceByPath(getDefaultLocale()  + "/" + resourceName + ".properties" ).getInputStream();
 				if (is==null)
-					is = res.getResource(resourceName + ".properties" ).getInputStream();
+					is = res.getResourceByPath(resourceName + ".properties" ).getInputStream();
 			
 			}
 			

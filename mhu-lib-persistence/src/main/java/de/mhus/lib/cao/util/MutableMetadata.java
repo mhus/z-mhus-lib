@@ -13,7 +13,8 @@ public class MutableMetadata extends CaoMetadata {
 
 	
 	public MutableMetadata addDefinition(CaoMetaDefinition def) {
-		index.put(def.getName(), def);
+		CaoMetaDefinition last = index.put(def.getName(), def);
+		if (last != null) definition.remove(last);
 		definition.add(def);
 		return this;
 	}

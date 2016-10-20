@@ -23,12 +23,17 @@ public class NoneConnection extends CaoConnection {
 
 	/** {@inheritDoc} */
 	@Override
-	public CaoNode getResource(String name) {
+	public CaoNode getResourceByPath(String name) {
 		return null;
 	}
 
 	@Override
 	public CaoNode getRoot() {
+		return null;
+	}
+
+	@Override
+	public CaoNode getResourceById(String id) {
 		return null;
 	}
 

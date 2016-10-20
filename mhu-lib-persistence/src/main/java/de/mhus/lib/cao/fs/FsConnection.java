@@ -42,24 +42,26 @@ public class FsConnection extends CaoConnection {
 	}
 
 	@Override
-	public CaoNode getResource(String path) {
-		FsNode node = cache.get(path);
-		if (node != null) {
-			if (node.isValid()) return node;
-			cache.remove(path);
-		}
-		
-		node = root;
-		for (String part : path.split("/")) {
-			if (MString.isSet(part)) {
-				node = (FsNode) node.getNode(part);
-				if (node == null) return null;
+	public CaoNode getResourceByPath(String path) {
+		synchronized (this) {
+			FsNode node = cache.get(path);
+			if (node != null) {
+				if (node.isValid()) return node;
+				cache.remove(path);
 			}
+			
+			node = root;
+			for (String part : path.split("/")) {
+				if (MString.isSet(part)) {
+					node = (FsNode) node.getNode(part);
+					if (node == null) return null;
+				}
+			}
+			
+			cache.put(path, node);
+			
+			return node;
 		}
-		
-		cache.put(path, node);
-		
-		return node;
 	}
 
 	public void fillProperties(File file, MProperties p) {
@@ -76,6 +78,11 @@ public class FsConnection extends CaoConnection {
 
 	public void setPolicyProvider(CaoPolicyProvider policyProvider) {
 		this.policyProvider = policyProvider;
+	}
+
+	@Override
+	public CaoNode getResourceById(String id) {
+		return getResourceByPath(id);
 	}
 
 }

@@ -36,6 +36,11 @@ public abstract class CaoNode extends ResourceNode {
 		return parent;
 	}
 
+	/**
+	 * 
+	 * @return A writable element
+	 * @throws MException
+	 */
 	public abstract CaoWritableElement getWritableNode() throws MException;
 
 	/**
@@ -97,6 +102,7 @@ public abstract class CaoNode extends ResourceNode {
 	 * 
 	 * @return x
 	 */
+	@Override
 	public abstract boolean isValid();
 
 	@Override

@@ -19,7 +19,7 @@ public class AQuery<T> extends APrint {
 
 	private LinkedList<AOperation> operations;
 	private DbManager manager;
-	private Class<T> type;
+	private Class<? extends T> type;
 	private Recorder<T> recorder;
 	
 	/**
@@ -35,6 +35,20 @@ public class AQuery<T> extends APrint {
 			this.operations.add(o);
 	}
 
+	/**
+	 * 
+	 * @param mask Masquerading Base Type
+	 * @param type Real Type querying for
+	 * @param operations Initial operations
+	 */
+	public AQuery(Class<T> mask, Class<? extends T> type, AOperation ... operations) {
+		// mask is never used, it's only for the template type definition
+		this.type = type;
+		this.operations = new LinkedList<>();
+		for (AOperation o : operations)
+			this.operations.add(o);
+	}
+	
 	/**
 	 * <p>Getter for the field <code>type</code>.</p>
 	 *
@@ -697,9 +711,10 @@ public class AQuery<T> extends APrint {
         return fieldName;
 	}
 
+	@SuppressWarnings("unchecked")
 	private synchronized void initRecorder() {
 		if (recorder == null)
-			recorder = RecordingObject.create(type);
+			recorder = (Recorder<T>) RecordingObject.create(type);
 	}
 
 }

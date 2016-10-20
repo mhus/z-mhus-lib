@@ -92,7 +92,7 @@ public class DynamicClassLoader extends ClassLoader {
 		String resName = name.replaceAll("\\.", "/") + ".class";
 		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
-				InputStream res = cl.getResource(resName).getInputStream();
+				InputStream res = cl.getResourceByPath(resName).getInputStream();
 				if (res != null) {
 					log.t("loaded class",this,cl,name);
 					return toClass(name,res);
@@ -114,7 +114,7 @@ public class DynamicClassLoader extends ClassLoader {
 		String resName = name.replaceAll("\\.", "/") + ".class";
 		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
-				InputStream res = cl.getResource(resName).getInputStream();
+				InputStream res = cl.getResourceByPath(resName).getInputStream();
 				if (res != null) {
 					log.t("loaded class",this,cl,name);
 					return toClass(name,res);
@@ -154,7 +154,7 @@ public class DynamicClassLoader extends ClassLoader {
 		log.t("resource",this,name);
 		for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
 			try {
-				URL res = cl.getResource(name).getUrl();
+				URL res = cl.getResourceByPath(name).getUrl();
 				if (res != null) {
 					res.openStream().close();
 					log.t("loaded resource",this,cl,name);

@@ -34,4 +34,10 @@ public class CaoList extends LinkedList<CaoNode> {
 		return parent;
 	}
 
+	public CaoList append(CaoNode ... nodes) {
+		for (CaoNode node : nodes)
+			add(node);
+		return this;
+	}
+	
 }

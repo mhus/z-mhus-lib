@@ -4,6 +4,7 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.CaoUtil;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MException;
@@ -29,7 +30,7 @@ public abstract class PropertiesNode extends CaoNode {
 
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
-//		if (isEditable()) return new 
+		if (isEditable()) return new WritablePropertiesNode(this);
 		return null;
 	}
 
@@ -73,4 +74,12 @@ public abstract class PropertiesNode extends CaoNode {
 		throw new NotSupportedException();
 	}
 
+	protected void createMetadataByProperties() {
+		for (java.util.Map.Entry<String, Object> entry : properties.entrySet()) {
+			((MutableMetadata)metadata).addDefinition(entry.getKey(), CaoUtil.objectToMetaType(entry.getValue()), 700);
+		}
+	}
+
+	protected abstract void doUpdate(MProperties modified) throws CaoException;
+	
 }
