@@ -3,6 +3,7 @@ package de.mhus.lib.cao.fs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.errors.AccessDeniedException;
 
 public class FsNode extends PropertiesNode {
 
@@ -80,20 +82,24 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public InputStream getInputStream(String rendition) {
-		if (rendition != null)
-			return null;
+		
+		File contentFile = ((FsConnection)getConnection()).getContentFileFor(file, rendition);
+		if (contentFile == null || !contentFile.exists()) return null;
 		try {
-			return new FileInputStream(file);
+			return new FileInputStream(contentFile);
 		} catch (FileNotFoundException e) {
-			log().d(file,e);
+			log().d(contentFile,e);
 		}
 		return null;
+		
 	}
 
 	@Override
 	public URL getUrl() {
+		File contentFile = ((FsConnection)getConnection()).getContentFileFor(file, null);
+		if (contentFile == null || !contentFile.exists()) return null;
 		try {
-			return file.toURL();
+			return contentFile.toURL();
 		} catch (MalformedURLException e) {
 			log().d(file,e);
 		}
@@ -102,12 +108,23 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public boolean hasContent() {
-		return file.isFile();
+		return file.isFile() || ((FsConnection)getConnection()).isUseMetaFile();
 	}
 
 	@Override
 	protected void doUpdate(MProperties modified) {
-		
+		if (!isEditable()) throw new AccessDeniedException(file);
+		File metaFile = ((FsConnection)getConnection()).getMetaFileFor(file);
+		try {
+			properties.save(metaFile);
+		} catch (IOException e) {
+			log().w(metaFile,e);
+		}
+	}
+
+	@Override
+	public boolean isEditable() {
+		return ((FsConnection)getConnection()).isUseMetaFile() && file.canWrite() && file.getParentFile().canWrite();
 	}
 
 }

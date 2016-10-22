@@ -9,6 +9,7 @@ import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicyProvider;
 import de.mhus.lib.cao.util.MutableMetadata;
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 
@@ -19,9 +20,17 @@ public class FsConnection extends CaoConnection {
 	private WeakHashMap<String, FsNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
 	private CaoPolicyProvider policyProvider;
+	private boolean useMetaFile;
 	
-	public FsConnection(File root) {
+	public FsConnection(String root, boolean useMetaFile, boolean useCache) {
+		this(new File(root), useMetaFile, useCache);
+	}
+	
+	public FsConnection(File root, boolean useMetaFile, boolean useCache) {
 		this(new FsDriver(), root);
+		this.useMetaFile = useMetaFile;
+		if (!useCache)
+			cache = null;
 	}
 	
 	public FsConnection(FsDriver driver, File root) {
@@ -44,7 +53,7 @@ public class FsConnection extends CaoConnection {
 	@Override
 	public CaoNode getResourceByPath(String path) {
 		synchronized (this) {
-			FsNode node = cache.get(path);
+			FsNode node = cache == null ? null : cache.get(path);
 			if (node != null) {
 				if (node.isValid()) return node;
 				cache.remove(path);
@@ -58,14 +67,33 @@ public class FsConnection extends CaoConnection {
 				}
 			}
 			
-			cache.put(path, node);
+			if (cache != null) cache.put(path, node);
 			
 			return node;
 		}
 	}
 
 	public void fillProperties(File file, MProperties p) {
+		
+		if (useMetaFile) {
+			File metaFile = getMetaFileFor(file);
+			
+			if (metaFile.exists() && metaFile.isFile()) {
+				MProperties meta = MProperties.load(metaFile);
+				p.putAll(meta);
+			}
+		}
+		
 		p.setLong(MODIFIED, file.lastModified());
+	}
+	
+	public File getMetaFileFor(File file) {
+		File metaFile = null;
+		if (file.isDirectory()) 
+			metaFile = new File(file, "..cao.meta");
+		else
+			metaFile = new File(file.getParentFile(), ".cao." + file.getName() + ".meta");
+		return metaFile;
 	}
 
 	public CaoMetadata getMetadata() {
@@ -83,6 +111,24 @@ public class FsConnection extends CaoConnection {
 	@Override
 	public CaoNode getResourceById(String id) {
 		return getResourceByPath(id);
+	}
+
+	public boolean isUseMetaFile() {
+		return useMetaFile;
+	}
+
+	public File getContentFileFor(File file, String rendition) {
+		if (file.isFile()) {
+			if (rendition != null) return null;
+			return file;
+		}
+		if (useMetaFile) {
+			if (rendition == null) rendition = "content";
+			rendition = MFile.normalize(rendition);
+			return new File(file, "..cao." + rendition);
+		}
+		
+		return null;
 	}
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public class CaoMetadata implements Iterable<CaoMetaDefinition>{
 
 	protected LinkedList<CaoMetaDefinition> definition = new LinkedList<CaoMetaDefinition>();
-	protected HashMap<String, CaoMetaDefinition> index = null;
+	protected HashMap<String, CaoMetaDefinition> index = new HashMap<String, CaoMetaDefinition>();
 
 	private CaoDriver driver;
 
@@ -35,8 +35,7 @@ public class CaoMetadata implements Iterable<CaoMetaDefinition>{
 
 	public CaoMetaDefinition getDefinition(String name) {
 		synchronized (this) {
-			if (index == null) {
-				index = new HashMap<String, CaoMetaDefinition>();
+			if (index.size() == 0) {
 				for (CaoMetaDefinition d : this) {
 					index.put(d.getName(), d);
 				}

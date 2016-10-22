@@ -3,6 +3,7 @@ package de.mhus.lib.core;
 import java.io.Externalizable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -211,6 +212,20 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	@Override
 	public int size() {
 		return properties.size();
+	}
+	
+	public boolean save(File file) throws IOException {
+		FileOutputStream fos = new FileOutputStream(file);
+		boolean ret = save(fos);
+		fos.close();
+		return ret;
+	}
+
+	public boolean save(FileOutputStream fos) throws IOException {
+		Properties p = new Properties();
+		p.putAll(this);
+		p.store(fos, "");
+		return false;
 	}
 	
 }
