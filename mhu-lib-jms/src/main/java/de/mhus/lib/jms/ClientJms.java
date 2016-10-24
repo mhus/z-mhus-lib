@@ -204,6 +204,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			dest.open();
 			log().d("open",dest);
 			producer = dest.getConnection().getSession().createProducer(dest.getDestination());
+			if (timeout > 0)
+				producer.setTimeToLive(timeout);
 			// reset answer queue
 			try {
 				if (answerQueue != null) answerQueue.delete();
@@ -305,6 +307,11 @@ public class ClientJms extends JmsChannel implements MessageListener {
 
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
+		if (timeout > 0 && producer != null)
+			try {
+				producer.setTimeToLive(timeout);
+			} catch (Exception e) {
+			}
 	}
 
 	public long getWarnTimeout() {
