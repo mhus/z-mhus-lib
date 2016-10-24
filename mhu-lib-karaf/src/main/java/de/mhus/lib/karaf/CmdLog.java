@@ -45,7 +45,7 @@ public class CmdLog extends MLog implements Action {
     String[] parameters;
 
 	@Option(name="-m", aliases="--max", description="Maximum log-block size gap before skip",required=false)
-	protected int maxDelta = 1024 * 1024; // Max output per block!
+	protected int maxDelta = -1;
 
 	// private Appender appender;
 
@@ -200,7 +200,7 @@ public class CmdLog extends MLog implements Action {
 							if (!runningField.isAccessible()) runningField.setAccessible(true);
 							try {
 								while (true) {
-									if (tail.available() > maxDelta  ) {
+									if (maxDelta > 0 && tail.available() > maxDelta  ) {
 										MThread.sleep(200);
 										os.cleanup();
 										os.println("--- Skip Log ---");
