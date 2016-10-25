@@ -1,5 +1,7 @@
 package de.mhus.lib.cao;
 
+import de.mhus.lib.errors.MException;
+
 public abstract class CaoWritableElement extends CaoNode {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +16,6 @@ public abstract class CaoWritableElement extends CaoNode {
 		return parent;
 	}
 	
-	public abstract CaoOperation getUpdateOperation() throws CaoException;
+	public abstract CaoOperation getUpdateOperation() throws MException;
 
 }

@@ -2,6 +2,7 @@ package de.mhus.lib.cao.adb;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Set;
 
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoException;
@@ -11,6 +12,7 @@ import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class AdbNode extends PropertiesNode {
 
@@ -152,6 +154,21 @@ public class AdbNode extends PropertiesNode {
 			p = ((AdbConnection)getConnection()).getResourceById(data.getParent().toString());
 		}
 		return p;
+	}
+
+	@Override
+	public String getVersionLabel() throws MException {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<String> getVersions() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public CaoNode getVersion(String version) {
+		throw new NotSupportedException();
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class CaoPolicy extends CaoNode {
 
@@ -26,7 +27,7 @@ public class CaoPolicy extends CaoNode {
 	protected CaoPolicy proxy = null;
 	protected CaoMetadata meta;
 
-	public CaoPolicy(CaoNode element, boolean readable, boolean writable) throws CaoException {
+	public CaoPolicy(CaoNode element, boolean readable, boolean writable) throws MException {
 		super(element);
 		this.element = element;
 		this.readable = readable;
@@ -64,7 +65,7 @@ public class CaoPolicy extends CaoNode {
 	}
 
 	@Override
-	public String getId() throws CaoException {
+	public String getId() throws MException {
 		if (proxy != null) return proxy.getId();
 		return null;
 	}
@@ -123,7 +124,7 @@ public class CaoPolicy extends CaoNode {
 	 * @return
 	 * @throws CaoException
 	 */
-	protected CaoList getPoliciesList(String[] attributes) throws CaoException {
+	protected CaoList getPoliciesList(String[] attributes) throws MException {
 		// Returns a list with the current user
 		CaoList list = new CaoList(this);
 		list.add(this);
@@ -149,7 +150,7 @@ public class CaoPolicy extends CaoNode {
 	}
 
 	@Override
-	public void reload() throws CaoException {
+	public void reload() throws MException {
 		proxy = element.getAccessPolicy();
 	}
 
@@ -221,6 +222,21 @@ public class CaoPolicy extends CaoNode {
 	@Override
 	public boolean hasContent() {
 		return false;
+	}
+
+	@Override
+	public String getVersionLabel() throws MException {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<String> getVersions() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public CaoNode getVersion(String version) {
+		throw new NotSupportedException();
 	}
 
 }

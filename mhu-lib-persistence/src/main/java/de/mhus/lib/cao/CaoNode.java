@@ -1,5 +1,7 @@
 package de.mhus.lib.cao;
 
+import java.util.Set;
+
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
@@ -57,8 +59,9 @@ public abstract class CaoNode extends ResourceNode {
 	 * 
 	 * @return Unique ID or null
 	 * @throws CaoException
+	 * @throws MException 
 	 */
-	public abstract String getId() throws CaoException;
+	public abstract String getId() throws MException;
 
 	/**
 	 * Return a display name of this object.
@@ -83,8 +86,9 @@ public abstract class CaoNode extends ResourceNode {
 	 * system is something was changed from another process. After reload the
 	 * object is no more dirty.
 	 * @throws CaoException 
+	 * @throws MException 
 	 */
-	public abstract void reload() throws CaoException;
+	public abstract void reload() throws MException;
 
 	@Override
 	public String toString() {
@@ -128,11 +132,24 @@ public abstract class CaoNode extends ResourceNode {
 	 * Return the current access policy for this element.
 	 * 
 	 * @return x
-	 * @throws CaoException
+	 * @throws MException 
 	 */
-	public CaoPolicy getAccessPolicy() throws CaoException {
+	public CaoPolicy getAccessPolicy() throws MException {
 		if (policyProvider == null) return null;
 		return policyProvider.getAccessPolicy(this);
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
+		CaoAspectFactory factory = getConnection().getAspectFactory(ifc);
+		if (factory == null) return null;
+		return (T) factory.getAspectFor(this);
+	}
+	
+	public abstract String getVersionLabel() throws MException;
+	
+	public abstract Set<String> getVersions() throws MException;
+	
+	public abstract CaoNode getVersion(String version) throws MException;
+	
 }

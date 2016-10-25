@@ -131,8 +131,15 @@ public class AdbConnection extends CaoConnection {
 		return collection;
 	}
 
+	@Override
+	public boolean supportVersions() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 //	public DbManager getManager() {
 //		return manager;
 //	}
 
+	
 }

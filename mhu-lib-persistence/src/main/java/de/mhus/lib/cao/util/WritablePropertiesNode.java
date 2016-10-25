@@ -2,16 +2,19 @@ package de.mhus.lib.cao.util;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Set;
 
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoMetadata;
+import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class WritablePropertiesNode extends CaoWritableElement {
 
@@ -133,7 +136,7 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getId() throws CaoException {
+	public String getId() throws MException {
 		return getOriginalElement().getId();
 	}
 
@@ -149,4 +152,19 @@ public class WritablePropertiesNode extends CaoWritableElement {
 			properties.put(entry.getKey(), entry.getValue());
 	}
 	
+	@Override
+	public String getVersionLabel() throws MException {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public Set<String> getVersions() {
+		throw new NotSupportedException();
+	}
+
+	@Override
+	public CaoNode getVersion(String version) {
+		throw new NotSupportedException();
+	}
+
 }

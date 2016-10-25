@@ -131,4 +131,10 @@ public class FsConnection extends CaoConnection {
 		return null;
 	}
 
+	@Override
+	public boolean supportVersions() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

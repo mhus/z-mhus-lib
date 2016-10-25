@@ -3,6 +3,7 @@ package de.mhus.lib.cao;
 import java.util.LinkedList;
 
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.errors.MException;
 
 public class CaoPrincipal extends CaoPolicy {
 
@@ -14,7 +15,7 @@ public class CaoPrincipal extends CaoPolicy {
 	protected int principalType;
 
 	public CaoPrincipal(CaoNode element, String name, PRINCIPAL_TYPES type, boolean readable, boolean writable)
-			throws CaoException {
+			throws MException {
 		super(element, readable, writable);
 		this.name = name;
 		principalType = type.ordinal();
@@ -27,7 +28,7 @@ public class CaoPrincipal extends CaoPolicy {
 	}
 
 	@Override
-	public String getName() throws CaoException {
+	public String getName() throws MException {
 		return name;
 	}
 
