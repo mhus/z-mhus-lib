@@ -26,9 +26,10 @@ public class Unzip extends MObject {
 
         if(entry.isDirectory()) {
           // Assume directories are stored parents first then children.
-          System.err.println("Extracting directory: " + entry.getName());
+          // System.err.println("Extracting directory: " + entry.getName());
+	      log().t("Unzip directory: " + entry.getName());
           // This is not robust, just for demonstration purposes.
-          (new File(entry.getName())).mkdir();
+          (new File(dst,entry.getName())).mkdir();
           continue;
         }
 

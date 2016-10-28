@@ -60,7 +60,7 @@ public class FsNode extends PropertiesNode {
 	public ResourceNode[] getNodes() {
 		LinkedList<ResourceNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
-			if (f.isHidden() || f.getName().startsWith(".")) continue;
+			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
 			out.add( new FsNode((FsConnection) getConnection(), f));
 		}
 		return out.toArray(new ResourceNode[ out.size() ]);

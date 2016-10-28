@@ -31,6 +31,7 @@ public class FsConnection extends CaoConnection {
 		this.useMetaFile = useMetaFile;
 		if (!useCache)
 			cache = null;
+		if (this.root != null) this.root.reload();
 	}
 	
 	public FsConnection(FsDriver driver, File root) {
@@ -90,9 +91,9 @@ public class FsConnection extends CaoConnection {
 	public File getMetaFileFor(File file) {
 		File metaFile = null;
 		if (file.isDirectory()) 
-			metaFile = new File(file, "..cao.meta");
+			metaFile = new File(file, "__cao.meta");
 		else
-			metaFile = new File(file.getParentFile(), ".cao." + file.getName() + ".meta");
+			metaFile = new File(file.getParentFile(), "__cao." + file.getName() + ".meta");
 		return metaFile;
 	}
 
@@ -125,7 +126,7 @@ public class FsConnection extends CaoConnection {
 		if (useMetaFile) {
 			if (rendition == null) rendition = "content";
 			rendition = MFile.normalize(rendition);
-			return new File(file, "..cao." + rendition);
+			return new File(file, "__cao." + rendition);
 		}
 		
 		return null;
