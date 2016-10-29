@@ -10,6 +10,12 @@ public class DelegateClassLoader extends ClassLoader {
 
 	private LinkedList<Package> list = new LinkedList<Package>();
 	
+	public DelegateClassLoader() {
+		
+	}
+	public DelegateClassLoader(ClassLoader parent) {
+		super(parent);
+	}
 	
 	public void register(ClassLoader loader) {
 		synchronized(list) {
