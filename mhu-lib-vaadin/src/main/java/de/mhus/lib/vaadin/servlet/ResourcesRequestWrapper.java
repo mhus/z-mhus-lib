@@ -4,15 +4,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
+import javax.servlet.http.Part;
 
 public class ResourcesRequestWrapper implements HttpServletRequest {
 	private HttpServletRequest parent;
@@ -306,6 +316,84 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 	@Override
 	public boolean isRequestedSessionIdFromUrl() {
 		return parent.isRequestedSessionIdFromUrl();
+	}
+
+	// servlet api 3.1.0
+	
+	@Override
+	public long getContentLengthLong() {
+		return parent.getContentLengthLong();
+	}
+
+	@Override
+	public ServletContext getServletContext() {
+		return parent.getServletContext();
+	}
+
+	@Override
+	public AsyncContext startAsync() throws IllegalStateException {
+		return parent.startAsync();
+	}
+
+	@Override
+	public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse)
+			throws IllegalStateException {
+		return parent.startAsync(servletRequest, servletResponse);
+	}
+
+	@Override
+	public boolean isAsyncStarted() {
+		return parent.isAsyncStarted();
+	}
+
+	@Override
+	public boolean isAsyncSupported() {
+		return parent.isAsyncSupported();
+	}
+
+	@Override
+	public AsyncContext getAsyncContext() {
+		return parent.getAsyncContext();
+	}
+
+	@Override
+	public DispatcherType getDispatcherType() {
+		return parent.getDispatcherType();
+	}
+
+	@Override
+	public String changeSessionId() {
+		return parent.changeSessionId();
+	}
+
+	@Override
+	public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+		return parent.authenticate(response);
+	}
+
+	@Override
+	public void login(String username, String password) throws ServletException {
+		parent.login(username, password);
+	}
+
+	@Override
+	public void logout() throws ServletException {
+		parent.logout();
+	}
+
+	@Override
+	public Collection<Part> getParts() throws IOException, ServletException {
+		return parent.getParts();
+	}
+
+	@Override
+	public Part getPart(String name) throws IOException, ServletException {
+		return parent.getPart(name);
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+		return parent.upgrade(handlerClass);
 	}
 
 }
