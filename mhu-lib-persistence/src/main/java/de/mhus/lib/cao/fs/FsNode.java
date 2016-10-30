@@ -23,8 +23,8 @@ public class FsNode extends PropertiesNode {
 	private static final long serialVersionUID = 1L;
 	private File file;
 
-	public FsNode(FsConnection connection, File file) {
-		super(connection, null);
+	public FsNode(FsConnection connection, File file, FsNode parent) {
+		super(connection, parent);
 		this.file = file;
 		reload();
 		this.metadata = ((FsConnection)getConnection()).getMetadata();
@@ -60,7 +60,7 @@ public class FsNode extends PropertiesNode {
 	public ResourceNode getNode(String key) {
 		File f = new File(file, key);
 		if (f.exists())
-			return new FsNode((FsConnection) getConnection(), f);
+			return new FsNode((FsConnection) getConnection(), f, this);
 		return null;
 	}
 
@@ -69,7 +69,7 @@ public class FsNode extends PropertiesNode {
 		LinkedList<ResourceNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
-			out.add( new FsNode((FsConnection) getConnection(), f));
+			out.add( new FsNode((FsConnection) getConnection(), f, this));
 		}
 		return out.toArray(new ResourceNode[ out.size() ]);
 	}

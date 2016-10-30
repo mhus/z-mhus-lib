@@ -42,7 +42,7 @@ public class FsConnection extends CaoConnection {
 		
 		policyProvider = new FsPolicyProvider();
 		
-		this.root = new FsNode(this,root);
+		this.root = new FsNode(this,root, null);
 		
 	}
 	
