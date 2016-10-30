@@ -6,4 +6,6 @@ public interface IResourceProvider<T> {
 	
 	public T getResourceById(String id);
 
+	String getName();
+
 }

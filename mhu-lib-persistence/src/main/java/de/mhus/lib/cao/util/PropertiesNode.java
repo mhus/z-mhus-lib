@@ -30,7 +30,7 @@ public abstract class PropertiesNode extends CaoNode {
 
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
-		if (isEditable()) return new WritablePropertiesNode(this);
+		if (isEditable()) return new WritablePropertiesNode(getConnection(), this);
 		return null;
 	}
 

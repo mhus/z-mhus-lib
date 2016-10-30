@@ -23,8 +23,8 @@ public class AdbConnection extends CaoConnection {
 	private DbManager manager;
 
 	@SuppressWarnings("unchecked")
-	public AdbConnection(CaoDriver driver, DbManager manager, Class<? extends AdbNodeData> type, String collection ) throws IOException {
-		super(driver);
+	public AdbConnection(String name, CaoDriver driver, DbManager manager, Class<? extends AdbNodeData> type, String collection ) throws IOException {
+		super(name, driver);
 		this.collection = collection;
 		this.manager = manager;
 		this.schema = manager.getSchema();

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoAction;
+import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoMetadata;
@@ -21,8 +22,8 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	private static final long serialVersionUID = 1L;
 	protected MProperties properties = new MProperties();
 
-	public WritablePropertiesNode(PropertiesNode parent) throws CaoException {
-		super(parent);
+	public WritablePropertiesNode(CaoConnection con, PropertiesNode parent) throws CaoException {
+		super(con, parent);
 		reload();
 	}
 
@@ -104,7 +105,9 @@ public class WritablePropertiesNode extends CaoWritableElement {
 
 	@Override
 	public CaoOperation getUpdateOperation() throws CaoException {
-		getOriginalElement().getConnection().getActions().getAction(CaoAction.UPDATE).createOperation(new CaoList(getOriginalElement()).append(this), null);
+		try {
+			return getOriginalElement().getConnection().getActions().getAction(CaoAction.UPDATE).createOperation(new CaoList(getOriginalElement()).append(this), null);
+		} catch (Throwable t) {}
 		return new SaveThis();
 	}
 

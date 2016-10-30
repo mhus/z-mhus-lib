@@ -17,8 +17,8 @@ public class NoneConnection extends CaoConnection {
 	 *
 	 * @param driver a {@link de.mhus.lib.cao.CaoDriver} object.
 	 */
-	public NoneConnection(CaoDriver driver) {
-		super(driver);
+	public NoneConnection(String name, CaoDriver driver) {
+		super(name, driver);
 	}
 
 	/** {@inheritDoc} */

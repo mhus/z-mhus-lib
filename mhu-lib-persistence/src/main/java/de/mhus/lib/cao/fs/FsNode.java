@@ -39,8 +39,16 @@ public class FsNode extends PropertiesNode {
 	@Override
 	public void reload() {
 		((FsConnection)getConnection()).fillProperties(file, properties);
-		this.id = file.getPath();
+		FsNode root = ((FsNode)((FsConnection)getConnection()).getRoot());
+		if (root == null)
+			this.id = "";
+		else
+			this.id = file.getPath().substring( root.getFile().getPath().length() );
 		this.name = file.getName();
+	}
+
+	private File getFile() {
+		return file;
 	}
 
 	@Override
@@ -119,11 +127,13 @@ public class FsNode extends PropertiesNode {
 	protected void doUpdate(MProperties modified) {
 		if (!isEditable()) throw new AccessDeniedException(file);
 		File metaFile = ((FsConnection)getConnection()).getMetaFileFor(file);
+		modified.remove("id");
 		try {
-			properties.save(metaFile);
+			modified.save(metaFile);
 		} catch (IOException e) {
 			log().w(metaFile,e);
 		}
+		reload();
 	}
 
 	@Override

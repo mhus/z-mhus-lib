@@ -10,9 +10,11 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	protected CaoDriver driver;
 	protected MutableActionList actionList = new MutableActionList();
 	protected HashMap<Class<? extends CaoAspect>,CaoAspectFactory> aspectFactory = new HashMap<>();
+	protected String name;
 
-	public CaoConnection(CaoDriver driver) {
+	public CaoConnection(String name, CaoDriver driver) {
 		this.driver = driver;
+		this.name = name;
 	}
 
 	public CaoDriver getDriver() {
@@ -39,6 +41,10 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	@SuppressWarnings("unchecked")
 	public <T extends CaoAspectFactory> T getAspectFactory(Class<? extends CaoAspect> ifc) {
 		return (T) aspectFactory.get(ifc);
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 }

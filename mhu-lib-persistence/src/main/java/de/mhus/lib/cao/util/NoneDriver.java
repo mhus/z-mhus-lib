@@ -12,7 +12,7 @@ public class NoneDriver extends CaoDriver {
 
 	@Override
 	public CaoConnection connect(URI uri, String authentication) {
-		return new NoneConnection(this);
+		return new NoneConnection("none",this);
 	}
 
 	public static synchronized CaoDriver getInstance() {

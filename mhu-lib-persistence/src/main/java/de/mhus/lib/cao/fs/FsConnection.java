@@ -22,20 +22,20 @@ public class FsConnection extends CaoConnection {
 	private CaoPolicyProvider policyProvider;
 	private boolean useMetaFile;
 	
-	public FsConnection(String root, boolean useMetaFile, boolean useCache) {
-		this(new File(root), useMetaFile, useCache);
+	public FsConnection(String name, String root, boolean useMetaFile, boolean useCache) {
+		this(name, new File(root), useMetaFile, useCache);
 	}
 	
-	public FsConnection(File root, boolean useMetaFile, boolean useCache) {
-		this(new FsDriver(), root);
+	public FsConnection(String name, File root, boolean useMetaFile, boolean useCache) {
+		this(name, new FsDriver(), root);
 		this.useMetaFile = useMetaFile;
 		if (!useCache)
 			cache = null;
 		if (this.root != null) this.root.reload();
 	}
 	
-	public FsConnection(FsDriver driver, File root) {
-		super(driver);
+	public FsConnection(String name, FsDriver driver, File root) {
+		super(name, driver);
 		
 		metadata = new MutableMetadata(driver)
 				.addDefinition(MODIFIED, TYPE.LONG, 0);

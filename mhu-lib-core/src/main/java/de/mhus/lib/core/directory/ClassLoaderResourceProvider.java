@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
 
 public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode> {
@@ -127,5 +128,10 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 	@Override
 	public ResourceNode getResourceById(String id) {
 		return getResourceByPath(id);
+	}
+
+	@Override
+	public String getName() {
+		return MSystem.getObjectId(this);
 	}
 }
