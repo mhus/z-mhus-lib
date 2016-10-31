@@ -2,8 +2,6 @@ package de.mhus.lib.core.lang;
 
 import java.util.HashSet;
 
-import de.mhus.lib.core.MSingleton;
-
 public abstract class Base {
 
 	protected Base parent;

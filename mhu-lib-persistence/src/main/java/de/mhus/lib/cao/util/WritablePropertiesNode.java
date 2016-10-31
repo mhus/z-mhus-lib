@@ -2,6 +2,7 @@ package de.mhus.lib.cao.util;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoAction;
@@ -12,8 +13,8 @@ import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -28,22 +29,22 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public CaoNode getNode(String key) {
 		return getOriginalElement().getNode(key);
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
+	public Collection<CaoNode> getNodes() {
 		return getOriginalElement().getNodes();
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
+	public Collection<CaoNode> getNodes(String key) {
 		return getOriginalElement().getNodes(key);
 	}
 
 	@Override
-	public String[] getNodeKeys() {
+	public Collection<String> getNodeKeys() {
 		return getOriginalElement().getNodeKeys();
 	}
 
@@ -89,8 +90,8 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
-		return properties.keySet().toArray(new String[0]);
+	public Collection<String> getPropertyKeys() {
+		return MCollection.toList(properties.keySet());
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MArgs;
+import junit.framework.TestCase;
 
 public class MArgsTest extends TestCase {
 

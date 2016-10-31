@@ -2,8 +2,8 @@ package de.mhus.lib.test;
 
 import java.util.Arrays;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.util.Rfc1738;
+import junit.framework.TestCase;
 
 public class Rfc1738Test extends TestCase {
 

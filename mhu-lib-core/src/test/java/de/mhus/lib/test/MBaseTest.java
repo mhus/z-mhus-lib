@@ -2,10 +2,10 @@ package de.mhus.lib.test;
 
 import java.util.LinkedList;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.base.AnnotationInjectStrategy;
 import de.mhus.lib.core.base.BaseByThreadStrategy;
+import junit.framework.TestCase;
 
 public class MBaseTest extends TestCase {
 	

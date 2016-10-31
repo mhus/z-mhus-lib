@@ -1,6 +1,5 @@
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.pojo.AttributesStrategy;
 import de.mhus.lib.core.pojo.DefaultFilter;
@@ -10,6 +9,7 @@ import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
+import junit.framework.TestCase;
 
 public class PojoTest extends TestCase {
 

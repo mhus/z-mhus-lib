@@ -1,11 +1,14 @@
 package de.mhus.lib.cao.util;
 
+import java.util.Collection;
+
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoUtil;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -50,8 +53,8 @@ public abstract class PropertiesNode extends CaoNode {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
-		return properties.keySet().toArray(new String[0]);
+	public Collection<String> getPropertyKeys() {
+		return MCollection.toList(properties.keySet());
 	}
 
 	@Override

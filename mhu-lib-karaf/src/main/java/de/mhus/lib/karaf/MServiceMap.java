@@ -2,10 +2,8 @@ package de.mhus.lib.karaf;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 
 public class MServiceMap<T> extends MServiceTracker<T> {

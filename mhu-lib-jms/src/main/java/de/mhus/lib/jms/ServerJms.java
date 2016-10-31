@@ -8,9 +8,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-import org.apache.activemq.ActiveMQMessageConsumer;
 import org.apache.activemq.ActiveMQSession;
-import org.apache.activemq.management.JMSConsumerStatsImpl;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;

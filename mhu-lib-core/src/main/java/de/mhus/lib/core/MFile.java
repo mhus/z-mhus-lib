@@ -20,7 +20,6 @@
 package de.mhus.lib.core;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -35,7 +34,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;

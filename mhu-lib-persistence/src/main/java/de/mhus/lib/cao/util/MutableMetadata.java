@@ -2,8 +2,8 @@ package de.mhus.lib.cao.util;
 
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoMetaDefinition;
-import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.cao.CaoMetadata;
 
 public class MutableMetadata extends CaoMetadata {
 

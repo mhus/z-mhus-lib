@@ -1,6 +1,5 @@
 package de.mhus.lib.vaadin;
 
-import java.util.Map;
 import java.util.Properties;
 
 public class ColumnDefinition {

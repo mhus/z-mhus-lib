@@ -6,7 +6,6 @@ import org.osgi.framework.ServiceReference;
 
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsConnection;
-import de.mhus.lib.jms.JmsDestination;
 
 public class JmsUtil {
 

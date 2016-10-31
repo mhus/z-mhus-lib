@@ -5,9 +5,7 @@ import java.util.LinkedList;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Table;
 
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.logging.MLogUtil;
 
 public class SimpleTable extends ExpandingTable {

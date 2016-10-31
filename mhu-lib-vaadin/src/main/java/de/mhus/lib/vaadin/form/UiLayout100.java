@@ -1,21 +1,12 @@
 package de.mhus.lib.vaadin.form;
 
-import java.io.Serializable;
-
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.UiComponent;

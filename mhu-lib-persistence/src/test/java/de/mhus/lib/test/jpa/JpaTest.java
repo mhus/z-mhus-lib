@@ -2,7 +2,6 @@ package de.mhus.lib.test.jpa;
 
 import java.util.List;
 
-import junit.framework.TestCase;
 import de.mhus.lib.jpa.JpaDefaultProperties;
 import de.mhus.lib.jpa.JpaEntityManager;
 import de.mhus.lib.jpa.JpaManager;
@@ -10,6 +9,7 @@ import de.mhus.lib.jpa.JpaQuery;
 import de.mhus.lib.test.jpa.model.Book;
 import de.mhus.lib.test.jpa.model.BookStoreSchema;
 import de.mhus.lib.test.jpa.model.Person;
+import junit.framework.TestCase;
 
 public class JpaTest extends TestCase {
 

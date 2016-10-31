@@ -6,13 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
 
-public class FileResource extends ResourceNode {
+public class FileResource extends ResourceNode<FileResource> {
+
+	private static final long serialVersionUID = 1L;
 
 	public enum KEYS {NAME, LENGTH, MODIFIED, TYPE, HIDDEN};
 	public enum TYPE {FILE,DIRECTORY,UNKNOWN}
@@ -32,18 +37,18 @@ public class FileResource extends ResourceNode {
 	}
 	
 	@Override
-	public String[] getPropertyKeys() {
+	public Collection<String> getPropertyKeys() {
 		
 		KEYS[] v = KEYS.values();
-		String[] out = new String[v.length];
+		LinkedList<String> out = new LinkedList<>();
 		for (int i = 0; i < v.length; i++)
-			out[i] = v[i].name().toLowerCase();
+			out.add( v[i].name().toLowerCase() );
 		
 		return out;
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public FileResource getNode(String key) {
 		if (key == null) return null;
 		if (key.equals("..") || key.equals(".")) return null;
 		if (key.indexOf('/') > -1 || key.indexOf('\\') > -1) return null; // only direct children
@@ -63,32 +68,34 @@ public class FileResource extends ResourceNode {
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		LinkedList<ResourceNode> out = new LinkedList<>();
+	public Collection<FileResource> getNodes() {
+		LinkedList<FileResource> out = new LinkedList<>();
 		for (String sub : file.list()) {
-			ResourceNode n = getNode(sub);
+			FileResource n = getNode(sub);
 			if (n != null)
 				out.add(n);
 		}
-		return out.toArray(new ResourceNode[out.size()]);
+		return out;
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		ResourceNode n = getNode(key);
-		if (n == null) return new ResourceNode[0];
-		return new ResourceNode[] {n};
+	public Collection<FileResource> getNodes(String key) {
+		FileResource n = getNode(key);
+		if (n == null) return new EmptyList<>();
+		LinkedList<FileResource> out = new LinkedList<>();
+		out.add(n);
+		return out;
 	}
 
 	@Override
-	public String[] getNodeKeys() {
+	public Collection<String> getNodeKeys() {
 		LinkedList<String> out = new LinkedList<>();
 		for (String sub : file.list()) {
-			ResourceNode n = getNode(sub);
+			FileResource n = getNode(sub);
 			if (n != null)
 				out.add(sub);
 		}
-		return out.toArray(new String[out.size()]);
+		return out;
 	}
 
 	@Override
@@ -109,7 +116,7 @@ public class FileResource extends ResourceNode {
 	}
 
 	@Override
-	public ResourceNode getParent() {
+	public FileResource getParent() {
 		return parent;
 	}
 

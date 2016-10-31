@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.SecurityTransformHelper;

@@ -2,10 +2,10 @@ package de.mhus.lib.core.jms.test;
 
 import javax.jms.JMSException;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.jms.JmsConnection;
+import junit.framework.TestCase;
 
 public class ConnectionTest extends TestCase {
 

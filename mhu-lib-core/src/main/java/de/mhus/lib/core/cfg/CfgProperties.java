@@ -1,6 +1,5 @@
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;

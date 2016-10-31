@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.portlet.IllegalCharacterException;
 

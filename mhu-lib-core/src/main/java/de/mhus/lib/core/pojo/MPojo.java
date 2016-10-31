@@ -15,7 +15,6 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;

@@ -8,11 +8,8 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.ValidationException;
 import de.mhus.lib.form.DataSource;
-import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
 
 public abstract class UiVaadin extends UiComponent {

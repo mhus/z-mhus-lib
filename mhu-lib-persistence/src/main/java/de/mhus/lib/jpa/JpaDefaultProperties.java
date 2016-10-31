@@ -2,7 +2,7 @@ package de.mhus.lib.jpa;
 
 import java.util.Properties;
 
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 public class JpaDefaultProperties extends JpaProperties {
 
@@ -12,7 +12,7 @@ public class JpaDefaultProperties extends JpaProperties {
 		super();
 	}
 
-	public JpaDefaultProperties(ResourceNode config) {
+	public JpaDefaultProperties(IConfig config) {
 		super(config);
 	}
 

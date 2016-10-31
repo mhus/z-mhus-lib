@@ -1,16 +1,15 @@
 package de.mhus.lib.test;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
+import junit.framework.TestCase;
 
 public class MCastTest extends TestCase {
 

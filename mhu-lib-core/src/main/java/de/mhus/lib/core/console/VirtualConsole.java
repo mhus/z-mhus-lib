@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
-import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.io.PipedStream;
 import de.mhus.lib.core.io.TextReader;
 

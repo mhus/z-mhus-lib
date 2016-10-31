@@ -1,6 +1,5 @@
 package de.mhus.lib.adb.query;
 
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.AttributeMap;
 
 public class ASubQuery extends APart {

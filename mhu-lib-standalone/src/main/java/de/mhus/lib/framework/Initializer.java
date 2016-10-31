@@ -8,7 +8,6 @@ import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
 
 @JmxManaged(descrition="Initializer management interface")
@@ -29,8 +28,8 @@ public class Initializer extends MJmx {
 			((MutableActivator)base).addObject(Initializer.class,null,this);
 		}
 		
-		ResourceNode cInit = config.getNode("initialize");
-		for (ResourceNode cStart : cInit.getNodes("start")) {
+		IConfig cInit = config.getNode("initialize");
+		for (IConfig cStart : cInit.getNodes("start")) {
 			try {
 				String clazz = cStart.getExtracted("class");
 				String interf = cStart.getExtracted("interface");

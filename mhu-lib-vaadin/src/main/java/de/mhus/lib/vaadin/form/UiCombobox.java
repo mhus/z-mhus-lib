@@ -2,7 +2,6 @@ package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TextField;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;

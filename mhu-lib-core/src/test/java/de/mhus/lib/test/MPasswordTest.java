@@ -1,7 +1,7 @@
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MPassword;
+import junit.framework.TestCase;
 
 public class MPasswordTest extends TestCase {
 

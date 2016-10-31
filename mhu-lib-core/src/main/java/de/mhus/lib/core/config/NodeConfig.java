@@ -1,32 +1,35 @@
 package de.mhus.lib.core.config;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
 public class NodeConfig extends PropertiesConfig {
 	
-	private HashMap<String, ResourceNode> configurations = new HashMap<String, ResourceNode>();
+	private static final long serialVersionUID = 1L;
+	private HashMap<String, IConfig> configurations = new HashMap<>();
 	
 	public NodeConfig() {
 		super(new Properties());
 	}
 	
-	public void setConfig(String name, ResourceNode config) {
+	public void setConfig(String name, IConfig config) {
 		configurations.put(name, config);
 	}
 	
 	@Override
-	public ResourceNode getNode(String key) {
+	public IConfig getNode(String key) {
 		return configurations.get(key);
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		return new ResourceNode[] { getNode(key)};
+	public List<IConfig> getNodes(String key) {
+		LinkedList<IConfig> out = new LinkedList<>();
+		out.add(getNode(key));
+		return out;
 //		return configurations.values().toArray(new IConfig[configurations.size()]);
 	}
 
@@ -35,7 +38,7 @@ public class NodeConfig extends PropertiesConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
+	public IConfig createConfig(String key) throws MException {
 		NodeConfig newConfig = new NodeConfig();
 		setConfig(key, newConfig);
 		return newConfig;

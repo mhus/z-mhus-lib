@@ -2,8 +2,8 @@ package de.mhus.lib.test;
 
 import java.util.Locale;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MValidator;
+import junit.framework.TestCase;
 
 public class MValidatorTest extends TestCase {
 

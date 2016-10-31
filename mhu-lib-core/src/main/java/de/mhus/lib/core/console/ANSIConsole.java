@@ -5,9 +5,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
-import org.omg.CORBA.UNKNOWN;
-
-import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.io.TextReader;
 
 // http://ascii-table.com/ansi-escape-sequences.php

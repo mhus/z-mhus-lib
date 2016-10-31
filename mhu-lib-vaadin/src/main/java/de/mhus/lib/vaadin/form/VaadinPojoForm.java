@@ -1,6 +1,5 @@
 package de.mhus.lib.vaadin.form;
 
-import de.mhus.lib.form.PojoDataSource;
 import de.mhus.lib.form.PojoForm;
 import de.mhus.lib.form.PojoProvider;
 

@@ -6,8 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import de.mhus.lib.core.MThread;
-
 public class TailInputStream extends InputStream {
 
 	private File file;

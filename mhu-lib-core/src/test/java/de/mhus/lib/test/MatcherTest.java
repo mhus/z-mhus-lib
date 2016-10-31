@@ -1,12 +1,11 @@
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
-
 import java.util.HashMap;
 
 import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.core.matcher.Matcher;
 import de.mhus.lib.errors.MException;
+import junit.framework.TestCase;
 
 public class MatcherTest extends TestCase {
 

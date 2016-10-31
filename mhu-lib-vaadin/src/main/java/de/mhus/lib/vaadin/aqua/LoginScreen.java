@@ -24,7 +24,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.security.AccessControl;
-import de.mhus.lib.core.security.MSecurity;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.VaadinAccessControl;

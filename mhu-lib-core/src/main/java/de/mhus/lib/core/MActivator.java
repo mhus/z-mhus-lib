@@ -9,7 +9,6 @@ import de.mhus.lib.annotations.activator.DefaultImplementationNull;
 import de.mhus.lib.annotations.activator.ObjectFactory;
 import de.mhus.lib.annotations.lang.Prototype;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.Injector;
 import de.mhus.lib.core.lang.InjectorList;
 

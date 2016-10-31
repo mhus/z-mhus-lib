@@ -5,7 +5,7 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 /**
  * <p>DataSourceProvider class.</p>
@@ -31,7 +31,7 @@ public class DataSourceProvider extends DbProvider {
 	 * @param config a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 * @param activator a {@link de.mhus.lib.core.MActivator} object.
 	 */
-	public DataSourceProvider(DataSource dataSource, Dialect dialect, ResourceNode config, MActivator activator) {
+	public DataSourceProvider(DataSource dataSource, Dialect dialect, IConfig config, MActivator activator) {
 		doInitialize(config, activator);
 		setDataSource(dataSource);
 		setDialect(dialect);

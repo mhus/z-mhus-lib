@@ -2,12 +2,14 @@ package de.mhus.lib.core.directory;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
 
-public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode> {
+public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode<?>> {
 
 	private ClassLoader loader;
 	
@@ -21,7 +23,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 	}
 
 	@Override
-	public ResourceNode getResourceByPath(String name) {
+	public ResourceNode<?> getResourceByPath(String name) {
 		return new CLResourceNode(loader,name);
 	}
 
@@ -33,8 +35,9 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 		this.loader = loader;
 	}
 
-	private static class CLResourceNode extends ResourceNode {
+	private static class CLResourceNode extends ResourceNode<ResourceNode<?>> {
 
+		private static final long serialVersionUID = 1L;
 		private String name;
 		private ClassLoader loader;
 
@@ -44,28 +47,28 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 		}
 
 		@Override
-		public String[] getPropertyKeys() {
-			return new String[0];
+		public List<String> getPropertyKeys() {
+			return MCollection.getEmptyList();
 		}
 
 		@Override
-		public ResourceNode getNode(String key) {
+		public ResourceNode<?> getNode(String key) {
 			return null;
 		}
 
 		@Override
-		public ResourceNode[] getNodes() {
-			return new ResourceNode[0];
+		public List<ResourceNode<?>> getNodes() {
+			return MCollection.getEmptyList();
 		}
 
 		@Override
-		public ResourceNode[] getNodes(String key) {
-			return null;
+		public List<ResourceNode<?>> getNodes(String key) {
+			return MCollection.getEmptyList();
 		}
 
 		@Override
-		public String[] getNodeKeys() {
-			return new String[0];
+		public List<String> getNodeKeys() {
+			return MCollection.getEmptyList();
 		}
 
 		@Override
@@ -81,7 +84,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 		}
 
 		@Override
-		public ResourceNode getParent() {
+		public ResourceNode<?> getParent() {
 			return null;
 		}
 
@@ -126,7 +129,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode>
 	}
 
 	@Override
-	public ResourceNode getResourceById(String id) {
+	public ResourceNode<?> getResourceById(String id) {
 		return getResourceByPath(id);
 	}
 

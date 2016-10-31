@@ -10,7 +10,7 @@ import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSql;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.parser.ParsingPart;
@@ -97,7 +97,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param cleanup 
 	 * @throws Exception
 	 */
-	public void createStructure(ResourceNode data, DbConnection db,MetadataBundle caoMeta, boolean cleanup) throws Exception {
+	public void createStructure(IConfig data, DbConnection db,MetadataBundle caoMeta, boolean cleanup) throws Exception {
 		createTables(data,db,caoMeta, cleanup);
 		createIndexes(data,db,caoMeta, cleanup);
 		createData(data,db);
@@ -118,7 +118,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param cleanup 
 	 * @throws Exception
 	 */
-	public abstract void createTables(ResourceNode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception;
+	public abstract void createTables(IConfig data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception;
 
 	/**
 	 * Create or update indexes. The configuration need a bundle of 'index' elements to define the indexes.
@@ -132,7 +132,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param cleanup 
 	 * @throws Exception
 	 */
-	public abstract void createIndexes(ResourceNode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception;
+	public abstract void createIndexes(IConfig data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception;
 
 	/**
 	 * Execute 'data' configs:
@@ -144,9 +144,9 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param db
 	 * @throws Exception
 	 */
-	public abstract  void createData(ResourceNode data, DbConnection db) throws Exception;
+	public abstract  void createData(IConfig data, DbConnection db) throws Exception;
 
-	protected String getFieldConfig(ResourceNode f) {
+	protected String getFieldConfig(IConfig f) {
 		try {
 			String type = getDbType(f);
 
@@ -189,7 +189,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param f
 	 * @return x
 	 */
-	protected CaoMetaDefinition.TYPE getCaoType(ResourceNode f) {
+	protected CaoMetaDefinition.TYPE getCaoType(IConfig f) {
 		String type = f.getString("type",DbType.TYPE.STRING.name()).toUpperCase();
 		CaoMetaDefinition.TYPE t = CaoMetaDefinition.TYPE.STRING;
 		if (f.getString(K_CATEGORIES, "").indexOf(C_ENUMERATION) > -1) {
@@ -242,7 +242,7 @@ public abstract class Dialect extends MObject implements ICompiler {
 	 * @param f
 	 * @return x
 	 */
-	public String getDbType(ResourceNode f) {
+	public String getDbType(IConfig f) {
 		return getDbType(f.getString("type","string"),f.getString("size", "100"));
 	}
 

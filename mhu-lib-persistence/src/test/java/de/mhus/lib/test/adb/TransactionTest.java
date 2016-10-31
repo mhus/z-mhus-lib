@@ -1,6 +1,5 @@
 package de.mhus.lib.test.adb;
 
-import junit.framework.TestCase;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
@@ -13,6 +12,7 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
 import de.mhus.lib.test.adb.model.TransactionDummy;
 import de.mhus.lib.test.adb.model.TransactionSchema;
+import junit.framework.TestCase;
 
 public class TransactionTest extends TestCase {
 

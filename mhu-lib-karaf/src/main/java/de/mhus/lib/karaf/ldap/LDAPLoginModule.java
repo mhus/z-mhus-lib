@@ -14,6 +14,13 @@
  */
 package de.mhus.lib.karaf.ldap;
 
+import java.io.IOException;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Map;
+
 import javax.naming.Context;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
@@ -24,12 +31,6 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
 
 import org.apache.karaf.jaas.boot.principal.RolePrincipal;
 import org.apache.karaf.jaas.boot.principal.UserPrincipal;

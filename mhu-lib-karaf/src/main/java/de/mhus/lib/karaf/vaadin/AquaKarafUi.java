@@ -9,8 +9,6 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractComponent;
 
-import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.security.AuthorizationSource;
 import de.mhus.lib.vaadin.aqua.AquaLifecycle;
 import de.mhus.lib.vaadin.aqua.AquaSpace;
 import de.mhus.lib.vaadin.aqua.AquaUi;

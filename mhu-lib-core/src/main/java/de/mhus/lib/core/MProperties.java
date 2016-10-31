@@ -17,14 +17,12 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.SetCast;
-import de.mhus.lib.errors.NotSupportedException;
 
 public class MProperties extends AbstractProperties implements Externalizable {
 

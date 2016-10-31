@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.annotations.adb.DbIndex;

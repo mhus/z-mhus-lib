@@ -6,7 +6,6 @@ import com.vaadin.ui.Table;
 import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.vaadin.converter.ObjectConverter;
-import de.mhus.lib.vaadin.converter.StringConverter;
 
 public class ColumnModel {
 

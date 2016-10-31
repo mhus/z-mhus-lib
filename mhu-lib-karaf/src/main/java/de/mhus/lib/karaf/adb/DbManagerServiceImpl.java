@@ -12,7 +12,7 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.karaf.DataSourceUtil;
 import de.mhus.lib.sql.DataSourceProvider;
@@ -71,7 +71,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		return null;
 	}
 
-	protected ResourceNode doCreateConfig() {
+	protected IConfig doCreateConfig() {
 		return null;
 	}
 

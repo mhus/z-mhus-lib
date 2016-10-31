@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
@@ -76,7 +76,7 @@ public class MySqlDatabaseExport {
 	 * @param props 
 	 * @param writer 
 	 * @return x */
-	public static boolean dumpDB(ResourceNode props, PrintWriter writer) {
+	public static boolean dumpDB(IConfig props, PrintWriter writer) {
 		try {
 			Properties prop = new Properties();
 			for (String key : props.getNodeKeys())

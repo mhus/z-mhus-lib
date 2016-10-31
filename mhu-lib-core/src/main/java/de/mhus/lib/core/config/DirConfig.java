@@ -3,10 +3,10 @@ package de.mhus.lib.core.config;
 import java.io.File;
 import java.io.FileReader;
 import java.util.LinkedList;
+import java.util.List;
 
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
 
 public class DirConfig extends PropertiesConfig {
@@ -28,12 +28,12 @@ public class DirConfig extends PropertiesConfig {
 	}
 	
 	@Override
-	public String[] getPropertyKeys() {
-		return new String[0];
+	public List<String> getPropertyKeys() {
+		return new EmptyList<>();
 	}
 
 	@Override
-	public WritableResourceNode getNode(String key) {
+	public IConfig getNode(String key) {
 		try {
 			String keyDot = key + ".";
 			for ( File f : dir.listFiles())
@@ -47,8 +47,8 @@ public class DirConfig extends PropertiesConfig {
 	}
 
 	@Override
-	public WritableResourceNode[] getNodes(String key) {
-		LinkedList<ResourceNode> out = new LinkedList<ResourceNode>();
+	public List<IConfig> getNodes(String key) {
+		LinkedList<IConfig> out = new LinkedList<>();
 			String keyDot = key + ".";
 			for ( File f : dir.listFiles())
 				try {
@@ -59,19 +59,19 @@ public class DirConfig extends PropertiesConfig {
 					
 				}
 		
-		return out.toArray(new WritableResourceNode[out.size()]);
+		return out;
 	}
 
 	@Override
-	public WritableResourceNode[] getNodes() {
-		LinkedList<WritableResourceNode> out = new LinkedList<WritableResourceNode>();
+	public List<IConfig> getNodes() {
+		LinkedList<IConfig> out = new LinkedList<>();
 			for ( File f : dir.listFiles())
 				try {
 					if (f.isDirectory() && !f.getName().startsWith(".") && !f.isHidden())
 						out.add(MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f));
 					else
 					if (!f.isDirectory() && !f.isHidden()) {
-						WritableResourceNode conf = MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f);
+						IConfig conf = MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f);
 						if (conf != null)
 							out.add(conf);
 					}
@@ -79,11 +79,11 @@ public class DirConfig extends PropertiesConfig {
 					
 				}
 		
-		return out.toArray(new WritableResourceNode[out.size()]);
+		return out;
 	}
 	
 	@Override
-	public String[] getNodeKeys() {
+	public List<String> getNodeKeys() {
 		LinkedList<String> out = new LinkedList<String>();
 		
 		for ( File f : dir.listFiles()) {
@@ -100,7 +100,7 @@ public class DirConfig extends PropertiesConfig {
 			}
 		}
 		
-		return out.toArray(new String[out.size()]);
+		return out;
 	}
 
 	@Override
@@ -109,21 +109,21 @@ public class DirConfig extends PropertiesConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
+	public IConfig createConfig(String key) throws MException {
 		return null;
 	}
 
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 		return 0;
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 	}
 
 	@Override
-	public WritableResourceNode getParent() {
+	public IConfig getParent() {
 		File parent = dir.getParentFile();
 		if (parent == null) return null;
 		return new DirConfig(parent);

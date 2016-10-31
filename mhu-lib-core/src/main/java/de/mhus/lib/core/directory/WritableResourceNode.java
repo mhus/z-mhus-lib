@@ -2,7 +2,7 @@ package de.mhus.lib.core.directory;
 
 import de.mhus.lib.errors.MException;
 
-public abstract class WritableResourceNode extends ResourceNode {
+public abstract class WritableResourceNode<W extends WritableResourceNode<W>> extends ResourceNode<W> {
 
 	private static final long serialVersionUID = 1L;
 	public static final int MOVE_UP = -100;	
@@ -18,7 +18,7 @@ public abstract class WritableResourceNode extends ResourceNode {
 	 * @return
 	 * @throws MException if editing is not possible
 	 */
-	public abstract WritableResourceNode createConfig(String key) throws MException;
+	public abstract WritableResourceNode<W> createConfig(String key) throws MException;
 	
 	/**
 	 * Move the position of the configuration in the hole set of configurations. If the config
@@ -29,7 +29,7 @@ public abstract class WritableResourceNode extends ResourceNode {
 	 * @return The new pos of the config
 	 * @throws MException if editing is not possible or the position is out of range
 	 */
-	public abstract int moveConfig(ResourceNode config, int newPos) throws MException;
+	public abstract int moveConfig(W config, int newPos) throws MException;
 	
 	/**
 	 * Remove a config element from the set. If the config element is not part of the set it will
@@ -38,7 +38,7 @@ public abstract class WritableResourceNode extends ResourceNode {
 	 * @param config The config object which should be removed.
 	 * @throws MException if editing is not possible
 	 */
-	public abstract void removeConfig(ResourceNode config) throws MException;
+	public abstract void removeConfig(W config) throws MException;
 
 	@Override
 	public void setString(String name, String value) {

@@ -1,7 +1,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 public class PseudoDbPool extends DbPool {
 
@@ -18,7 +18,7 @@ public class PseudoDbPool extends DbPool {
 	 * @param activator Activator or null. null will use the central MSingleton Activator.
 	 * @throws Exception
 	 */
-	public PseudoDbPool(ResourceNode config,MActivator activator) throws Exception {
+	public PseudoDbPool(IConfig config,MActivator activator) throws Exception {
 		super(config,activator);
 	}
 

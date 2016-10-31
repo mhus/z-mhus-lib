@@ -7,11 +7,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.definition.IDefDefinition;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
@@ -61,11 +58,11 @@ public class ModelUtil {
 		return null;
 	}
 
-	private static void toXml(ResourceNode node, Element xml) throws DOMException, MException {
+	private static void toXml(ResourceNode<?> node, Element xml) throws DOMException, MException {
 		for (String key : node.getPropertyKeys())
 			xml.setAttribute(key, node.getString(key, "") );
 		
-		for (ResourceNode next : node.getNodes()) {
+		for (ResourceNode<?> next : node.getNodes()) {
 			Element nextXml = xml.getOwnerDocument().createElement(next.getName());
 			xml.appendChild(nextXml);
 			toXml(next, nextXml);

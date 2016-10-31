@@ -7,9 +7,6 @@ import java.util.UUID;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoLoginForm;
-import de.mhus.lib.cao.CaoMetadata;
-import de.mhus.lib.cao.CaoPolicyProvider;
-import de.mhus.lib.core.MProperties;
 
 public class FsDriver extends CaoDriver {
 

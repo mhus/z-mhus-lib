@@ -7,17 +7,16 @@ import java.util.HashSet;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.util.Rfc1738;
 
 public class MConfigFactory implements IBase {
 
-	public WritableResourceNode createConfigFor(File file) throws Exception {
+	public IConfig createConfigFor(File file) throws Exception {
 		return createConfigFor(file, false);
 	}
 	
-	public WritableResourceNode createConfigFor(File file, boolean include) throws Exception {
+	public IConfig createConfigFor(File file, boolean include) throws Exception {
 		if (include) {
 			HashSet<String> included = new HashSet<>();
 			return create(file, included);
@@ -26,8 +25,8 @@ public class MConfigFactory implements IBase {
 		}
 	}
 	
-	protected WritableResourceNode create(File file, HashSet<String> included) throws Exception {
-		WritableResourceNode out = create(file);
+	protected IConfig create(File file, HashSet<String> included) throws Exception {
+		IConfig out = create(file);
 		included.add(file.getAbsolutePath());
 		for (String path : out.getString("__include", "").split(",")) {
 			if (MString.isSetTrim(path)) {
@@ -36,7 +35,7 @@ public class MConfigFactory implements IBase {
 				String abs = absolut.getAbsolutePath();
 				if (!included.contains(abs)) {
 					
-					WritableResourceNode nextOne = create(absolut, included);
+					IConfig nextOne = create(absolut, included);
 					for (String key : nextOne.getPropertyKeys())
 						if (!out.containsKey(key))
 							out.setProperty(key, nextOne.get(key));
@@ -48,7 +47,7 @@ public class MConfigFactory implements IBase {
 		return out;
 	}
 	
-	protected WritableResourceNode create(File file) throws Exception {
+	protected IConfig create(File file) throws Exception {
 		
 		if (file.isDirectory())
 			return new DirConfig(file);
@@ -75,7 +74,7 @@ public class MConfigFactory implements IBase {
 		}
 		return null;
 	}
-	public WritableResourceNode createConfigFor(URI uri) throws Exception {
+	public IConfig createConfigFor(URI uri) throws Exception {
 		if (uri == null) return null;
 		
 		String key = uri.getPath();
@@ -111,7 +110,7 @@ public class MConfigFactory implements IBase {
 		return null;
 	}
 	
-	public WritableResourceNode createConfigForFile(String key) throws Exception {
+	public IConfig createConfigForFile(String key) throws Exception {
 		if (key == null) return null;
 
 		//TODO dynamic please - and what about the MActivator .... !!
@@ -132,7 +131,7 @@ public class MConfigFactory implements IBase {
 	 * @return A config object if the config is found or null. If no config is recognized it returns null
 	 * @throws Exception
 	 */
-	public WritableResourceNode toConfig(String configString) throws Exception {
+	public IConfig toConfig(String configString) throws Exception {
 		if (MString.isEmptyTrim(configString)) return new HashConfig();
 		if (configString.startsWith("[") || configString.startsWith("{") ) {
 			return new JsonConfig(configString);

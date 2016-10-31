@@ -4,7 +4,9 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.directory.WritableResourceNode;
 
 @DefaultImplementation(DefaultConfigFile.class)
-public abstract class IConfig extends WritableResourceNode {
+public abstract class IConfig extends WritableResourceNode<IConfig> {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public boolean isValid() {

@@ -7,9 +7,7 @@ import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
-import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
-import de.mhus.lib.core.util.MNlsFactory;
 
 public class PojoForm extends Form {
 

@@ -1,6 +1,5 @@
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.ObjectContainer;
 

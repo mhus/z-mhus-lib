@@ -5,8 +5,8 @@ import java.util.HashMap;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.activator.MutableActivator;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
 
 public class LayoutBuilder extends MObject {
@@ -35,10 +35,10 @@ public class LayoutBuilder extends MObject {
 	public LayoutBuilder() {
 	}
 	
-	public LayoutBuilder doBuild(ResourceNode layout) throws Exception {
+	public LayoutBuilder doBuild(IConfig layout) throws Exception {
 		
 		if (layout.getName().equals(DefRoot.ROOT))
-			layout = layout.getNode("layout").getNodes()[0];
+			layout = layout.getNode("layout").getNodes().iterator().next();
 	
 		XLayElement root = getActivator().createObject(XLayElement.class, layout.getName());
 		root.setConfig(layout);
@@ -53,11 +53,11 @@ public class LayoutBuilder extends MObject {
 		return MSingleton.baseLookup(this,MActivator.class);
 	}
 
-	protected void build(XLayElement parent, ResourceNode layout) throws Exception {
-		ResourceNode layoutLayout = layout.getNode("layout");
+	protected void build(XLayElement parent, IConfig layout) throws Exception {
+		IConfig layoutLayout = layout.getNode("layout");
 		if (layoutLayout == null) return;
 		
-		for (ResourceNode cChild : layoutLayout.getNodes()) {
+		for (IConfig cChild : layoutLayout.getNodes()) {
 			XLayElement child = getActivator().createObject(XLayElement.class, cChild.getName());
 			parent.doAppendChild(child,cChild);
 			child.setConfig(cChild);

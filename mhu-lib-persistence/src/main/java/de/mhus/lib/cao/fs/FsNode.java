@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -57,7 +57,7 @@ public class FsNode extends PropertiesNode {
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public CaoNode getNode(String key) {
 		File f = new File(file, key);
 		if (f.exists())
 			return new FsNode((FsConnection) getConnection(), f, this);
@@ -65,31 +65,32 @@ public class FsNode extends PropertiesNode {
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		LinkedList<ResourceNode> out = new LinkedList<>();
+	public Collection<CaoNode> getNodes() {
+		LinkedList<CaoNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
 			out.add( new FsNode((FsConnection) getConnection(), f, this));
 		}
-		return out.toArray(new ResourceNode[ out.size() ]);
+		return out;
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		ResourceNode out = getNode(key);
-		if (out == null)
-			return new ResourceNode[0];
-		return new ResourceNode[] {out};
+	public Collection<CaoNode> getNodes(String key) {
+		CaoNode out = getNode(key);
+		LinkedList<CaoNode> list = new LinkedList<>();
+		if (out != null)
+			list.add(out);
+		return list;
 	}
 
 	@Override
-	public String[] getNodeKeys() {
+	public Collection<String> getNodeKeys() {
 		LinkedList<String> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".")) continue;
 			out.add( f.getName() );
 		}
-		return out.toArray(new String[ out.size() ]);
+		return out;
 	}
 
 	@Override

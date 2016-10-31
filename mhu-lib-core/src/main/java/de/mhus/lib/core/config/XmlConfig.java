@@ -4,7 +4,10 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,9 +16,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -63,46 +65,45 @@ public class XmlConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode getNode(String key) {
+	public IConfig getNode(String key) {
 		Element e = MXml.getElementByPath(element, key);
 		if (e == null) return null;
 		return new XmlConfig(this, e);
 	}
 
 	@Override
-	public WritableResourceNode[] getNodes() {
+	public Collection<IConfig> getNodes() {
 		NodeList list = MXml.getLocalElements(element);
-		WritableResourceNode[] out = new WritableResourceNode[list.getLength()];
+		LinkedList<IConfig> out = new LinkedList<>();
 		for ( int i = 0; i < list.getLength(); i++ )
-			out[i] = new XmlConfig(this,(Element)list.item(i));
+			out.add( new XmlConfig(this,(Element)list.item(i)) );
 		return out;		
 	}
 	
 	@Override
-	public WritableResourceNode[] getNodes(String key) {
+	public Collection<IConfig> getNodes(String key) {
 		NodeList list = MXml.getLocalElements(element, key);
-		WritableResourceNode[] out = new WritableResourceNode[list.getLength()];
+		LinkedList<IConfig> out = new LinkedList<>();
 		for ( int i = 0; i < list.getLength(); i++ )
-			out[i] = new XmlConfig(this,(Element)list.item(i));
+			out.add( new XmlConfig(this,(Element)list.item(i)) );
 		return out;
 	}
 
 	@Override
-	public String[] getNodeKeys() {
+	public Collection<String> getNodeKeys() {
 		NodeList list = MXml.getLocalElements(element);
 		HashSet<String> set = new HashSet<String>();
 		for ( int i = 0; i < list.getLength(); i++ )
 			set.add(list.item(i).getNodeName());
-				
-		return set.toArray(new String[set.size()]);
+		return set;
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
+	public Collection<String> getPropertyKeys() {
 		NamedNodeMap list = element.getAttributes();
-		String[] out = new String[ list.getLength()];
+		HashSet<String> out = new HashSet<>();
 		for ( int i = 0; i < list.getLength(); i++ )
-			out[i] = list.item(i).getNodeName();
+			out.add( list.item(i).getNodeName() );
 		return out;
 	}
 
@@ -154,7 +155,7 @@ public class XmlConfig extends IConfig {
 	}
 
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 		if (!(config instanceof XmlConfig)) 
 			throw new MException("not a xmlconfig");
 		
@@ -220,7 +221,7 @@ public class XmlConfig extends IConfig {
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 		if (!(config instanceof XmlConfig)) 
 			throw new MException("not a xmlconfig");
 		
@@ -236,7 +237,7 @@ public class XmlConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode getParent() {
+	public IConfig getParent() {
 		return parent;
 	}
 	

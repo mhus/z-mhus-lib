@@ -3,9 +3,7 @@ package de.mhus.lib.karaf.jms;
 import java.util.Date;
 
 import org.apache.karaf.shell.api.action.Action;
-import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
-import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MDate;

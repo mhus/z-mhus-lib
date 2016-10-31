@@ -5,7 +5,7 @@ import java.util.Set;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
-public abstract class CaoNode extends ResourceNode {
+public abstract class CaoNode extends ResourceNode<CaoNode> {
 
 	private static final long serialVersionUID = 1L;
 	private CaoConnection con;

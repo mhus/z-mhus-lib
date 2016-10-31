@@ -8,7 +8,6 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
-import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
 
 public class UiText extends UiVaadin {

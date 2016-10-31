@@ -3,11 +3,8 @@ package de.mhus.lib.vaadin.form;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.ui.AbstractLayout;
-
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
 

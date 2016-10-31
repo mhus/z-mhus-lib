@@ -1,11 +1,11 @@
 package de.mhus.lib.core.util.lambda;
 
 
+import java.lang.reflect.Method;
+
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-
-import java.lang.reflect.Method;
 
 /**
  * Adapted from https://github.com/benjiman/benjiql

@@ -1,8 +1,5 @@
 package de.mhus.lib.form;
 
-import de.mhus.lib.form.DataSource;
-import de.mhus.lib.form.UiComponent;
-
 public class DummyDataSource extends FormControlAdapter implements DataSource {
 
 	public boolean getBoolean(UiComponent component, String name, boolean def) {

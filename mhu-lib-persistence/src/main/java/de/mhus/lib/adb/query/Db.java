@@ -1,7 +1,6 @@
 package de.mhus.lib.adb.query;
 
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.AttributeMap;

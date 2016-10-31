@@ -13,12 +13,9 @@ import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class ClientJms extends JmsChannel implements MessageListener {
 

@@ -4,7 +4,6 @@ package de.mhus.lib.portlet.actions;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 
 /**

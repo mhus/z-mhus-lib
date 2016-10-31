@@ -5,7 +5,7 @@ import java.util.Date;
 
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.core.MSql;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 /**
  * This class can compare a configuration with a database table structure
@@ -53,7 +53,7 @@ public class DialectMysql extends DialectDefault {
 	}
 
 	@Override
-	protected void createTableLastCheck(ResourceNode ctable, String tn, StringBuffer sql) {
+	protected void createTableLastCheck(IConfig ctable, String tn, StringBuffer sql) {
 		sql.append(" ENGINE=InnoDb");
 	}
 

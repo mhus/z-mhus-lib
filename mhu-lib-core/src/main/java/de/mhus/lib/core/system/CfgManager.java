@@ -7,16 +7,13 @@ import java.util.TreeMap;
 import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.FileWatch;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.TimerIfc;
 
 @DefaultFactory(DefaultSingletonFactory.class)
@@ -61,13 +58,13 @@ public class CfgManager {
 		}
 	}
 	
-	public ResourceNode getCfg(Object owner, ResourceNode def) {
+	public IConfig getCfg(Object owner, IConfig def) {
 		initCfg();
 		
 		Class<?> c = null;
 		if (owner instanceof String) {
 			String name = (String)owner;
-			ResourceNode cClass = getCfg(name);
+			IConfig cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (1)",name);
 				return cClass;
@@ -80,7 +77,7 @@ public class CfgManager {
 		}
 		while (c != null) {
 			String name = c.getCanonicalName();
-			ResourceNode cClass = getCfg(name);
+			IConfig cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (2)",owner.getClass(),name);
 				return cClass;
@@ -96,24 +93,24 @@ public class CfgManager {
 		
 	}
 
-	public ResourceNode getCfg(String owner) {
+	public IConfig getCfg(String owner) {
 		initCfg();
 		
 		CfgProvider p = configurations.get(owner);
 		if (p != null) {
-			ResourceNode cOwner = p.getConfig();
+			IConfig cOwner = p.getConfig();
 			if (cOwner != null) return cOwner;
 		}
 		IConfig defaultConfig = provider.getConfig();
 		if (defaultConfig == null) return null;
-		ResourceNode  cOwner = defaultConfig.getNode(owner);
+		IConfig  cOwner = defaultConfig.getNode(owner);
 		return cOwner;
 	}
 	
-	public ResourceNode getCfg(String owner, ResourceNode def) {
+	public IConfig getCfg(String owner, IConfig def) {
 		initCfg();
 
-		ResourceNode cClass = getCfg(owner);
+		IConfig cClass = getCfg(owner);
 		if (cClass != null) {
 //			log().t("found (3)",owner.getClass(),owner);
 			return cClass;
@@ -127,7 +124,7 @@ public class CfgManager {
 		Class<?> c = null;
 		if (owner instanceof String) {
 			String name = (String)owner;
-			ResourceNode cClass = getCfg(name);
+			IConfig cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (1)",name);
 				return name.equals(n);
@@ -140,7 +137,7 @@ public class CfgManager {
 		}
 		while (c != null) {
 			String name = c.getCanonicalName();
-			ResourceNode cClass = getCfg(name);
+			IConfig cClass = getCfg(name);
 			if (cClass != null) {
 //				log().t("found (2)",owner.getClass(),name);
 				return name.equals(n);
@@ -167,10 +164,10 @@ public class CfgManager {
 			
 			// init initiators
 			try {
-				ResourceNode system = MSingleton.get().getCfgManager().getCfg("system");
+				IConfig system = MSingleton.get().getCfgManager().getCfg("system");
 				if (system != null) {
 					MActivator activator = MSingleton.get().createActivator();
-					for (ResourceNode node : system.getNodes()) {
+					for (IConfig node : system.getNodes()) {
 						if ("initiator".equals(node.getName())) {
 							String clazzName = node.getString("class");
 							String name = node.getString("name", clazzName);

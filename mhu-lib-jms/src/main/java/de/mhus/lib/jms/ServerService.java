@@ -8,7 +8,6 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 
 public class ServerService<T> extends ServerJms implements JmsChannelService {

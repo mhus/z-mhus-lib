@@ -21,7 +21,7 @@ package de.mhus.lib.sql;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
@@ -38,7 +38,7 @@ public abstract class DbProvider extends MObject {
 
 	//	private static Log log = Log.getLog(DbProvider.class);
 
-	protected ResourceNode config;
+	protected IConfig config;
 	protected MActivator activator;
 
 	/**
@@ -55,7 +55,7 @@ public abstract class DbProvider extends MObject {
 	 * @param config
 	 * @param activator
 	 */
-	public void doInitialize(ResourceNode config,MActivator activator) {
+	public void doInitialize(IConfig config,MActivator activator) {
 		if (config == null) config = new HashConfig();
 		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
 		this.config = config;
@@ -71,7 +71,7 @@ public abstract class DbProvider extends MObject {
 	 */
 	public String[] getQuery(String name) {
 		try {
-			ResourceNode query = config.getNode("queries");
+			IConfig query = config.getNode("queries");
 			if (query == null) return new String[0];
 			
 			String queryLanguage = null;
@@ -79,7 +79,7 @@ public abstract class DbProvider extends MObject {
 			String[] out = new String[] { queryLanguage, queryString };
 
 			if (queryString == null) {
-				for (ResourceNode q : query.getNodes("query") ) {
+				for (IConfig q : query.getNodes("query") ) {
 					if (q.getString("name", "").equals(name)) {
 						queryLanguage = q.getExtracted("language");
 						queryString = q.getExtracted("string");

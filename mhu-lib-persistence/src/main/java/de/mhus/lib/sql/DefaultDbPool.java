@@ -27,7 +27,7 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 /**
  * The pool handles a bundle of connections. The connections should have the same
@@ -60,7 +60,7 @@ public class DefaultDbPool extends DbPool {
 	 * @param activator Activator or null. null will use the central MSingleton Activator.
 	 * @throws java.lang.Exception if any.
 	 */
-	public DefaultDbPool(ResourceNode config,MActivator activator) throws Exception {
+	public DefaultDbPool(IConfig config,MActivator activator) throws Exception {
 		super(config,activator);
 		initHousekeeper();
 	}

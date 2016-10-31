@@ -2,12 +2,15 @@ package de.mhus.lib.core.directory;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class EmptyResourceNode extends ResourceNode {
+public class EmptyResourceNode<E extends ResourceNode<?>> extends ResourceNode<E> {
 
+	private static final long serialVersionUID = 1L;
 	private String name;
 
 	public EmptyResourceNode() {}
@@ -17,28 +20,28 @@ public class EmptyResourceNode extends ResourceNode {
 	}
 	
 	@Override
-	public String[] getPropertyKeys() {
-		return new String[0];
+	public List<String> getPropertyKeys() {
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public E getNode(String key) {
 		return null;
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		return new ResourceNode[0];
+	public List<E> getNodes() {
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		return new ResourceNode[0];
+	public List<E> getNodes(String key) {
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public String[] getNodeKeys() {
-		return new String[0];
+	public List<String> getNodeKeys() {
+		return MCollection.getEmptyList();
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class EmptyResourceNode extends ResourceNode {
 	}
 
 	@Override
-	public ResourceNode getParent() {
+	public ResourceNode<?> getParent() {
 		return null;
 	}
 

@@ -1,7 +1,5 @@
 package de.mhus.lib.jms;
 
-import java.io.IOException;
-
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;

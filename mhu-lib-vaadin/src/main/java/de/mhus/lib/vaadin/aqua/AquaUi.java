@@ -1,12 +1,8 @@
 package de.mhus.lib.vaadin.aqua;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.TreeMap;
 
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar;
@@ -14,9 +10,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.AccessControl;

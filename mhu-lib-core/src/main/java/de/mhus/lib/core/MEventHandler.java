@@ -18,7 +18,6 @@
 
 package de.mhus.lib.core;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.WeakHashMap;

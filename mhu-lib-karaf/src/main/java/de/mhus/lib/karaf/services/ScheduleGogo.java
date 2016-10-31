@@ -3,8 +3,6 @@ package de.mhus.lib.karaf.services;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.apache.felix.service.command.CommandProcessor;
-import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.api.console.Session;
 import org.apache.karaf.shell.api.console.SessionFactory;
 

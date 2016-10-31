@@ -6,7 +6,6 @@ import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;

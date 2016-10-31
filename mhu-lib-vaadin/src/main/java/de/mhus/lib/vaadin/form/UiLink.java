@@ -1,15 +1,10 @@
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
-import com.vaadin.ui.TextField;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.util.Rfc1738;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;

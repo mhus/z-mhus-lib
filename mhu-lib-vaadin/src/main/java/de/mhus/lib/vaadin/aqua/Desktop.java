@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;

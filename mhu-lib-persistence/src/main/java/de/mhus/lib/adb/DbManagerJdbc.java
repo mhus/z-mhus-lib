@@ -20,7 +20,6 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.concurrent.ThreadLock;
-import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;

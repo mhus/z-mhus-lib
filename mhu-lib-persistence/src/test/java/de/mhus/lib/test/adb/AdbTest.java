@@ -3,9 +3,6 @@ package de.mhus.lib.test.adb;
 import java.util.List;
 import java.util.UUID;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
@@ -26,6 +23,9 @@ import de.mhus.lib.test.adb.model.Person;
 import de.mhus.lib.test.adb.model.Person2;
 import de.mhus.lib.test.adb.model.Regal;
 import de.mhus.lib.test.adb.model.Store;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class AdbTest extends TestCase {
 

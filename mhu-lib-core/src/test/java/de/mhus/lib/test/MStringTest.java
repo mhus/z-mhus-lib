@@ -1,7 +1,7 @@
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MString;
+import junit.framework.TestCase;
 
 public class MStringTest extends TestCase {
 

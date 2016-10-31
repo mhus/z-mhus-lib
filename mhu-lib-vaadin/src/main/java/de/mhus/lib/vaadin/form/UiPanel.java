@@ -1,25 +1,9 @@
 package de.mhus.lib.vaadin.form;
 
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.Map;
-
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
@@ -27,7 +11,6 @@ import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.UiComponent;
-import de.mhus.lib.form.UiWizard;
 
 public class UiPanel extends UiLayout {
 

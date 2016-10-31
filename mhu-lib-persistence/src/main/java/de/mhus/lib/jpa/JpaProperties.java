@@ -3,27 +3,27 @@ package de.mhus.lib.jpa;
 import java.util.Properties;
 
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
 public class JpaProperties extends Properties {
 
 	protected JpaSchema schema;
-	protected ResourceNode config;
+	protected IConfig config;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public JpaProperties(ResourceNode config) {
+	public JpaProperties(IConfig config) {
 		super();
 		this.config = config;
 		// fill from config
-		ResourceNode cproperties = config.getNode("properties");
+		IConfig cproperties = config.getNode("properties");
 		if (cproperties != null) {
-			for (ResourceNode prop : cproperties.getNodes("property")) {
+			for (IConfig prop : cproperties.getNodes("property")) {
 				try {
 					setProperty(prop.getExtracted("name"), prop.getExtracted("value"));
 				} catch (MException e) {
@@ -69,7 +69,7 @@ public class JpaProperties extends Properties {
 
 	}
 
-	public ResourceNode getConfig() {
+	public IConfig getConfig() {
 		return config;
 	}
 }

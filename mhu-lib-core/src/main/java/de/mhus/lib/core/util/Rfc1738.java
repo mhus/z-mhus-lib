@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;

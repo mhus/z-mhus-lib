@@ -1,20 +1,21 @@
 package de.mhus.lib.core.system;
 
 import java.io.PrintStream;
+import java.util.Collection;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.directory.EmptyResourceNode;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.PropertiesConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MutableParameterMapper;
 import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.logging.ParameterMapper;
-import de.mhus.lib.core.logging.Log.LEVEL;
 
 public class LogCfgInitiator implements CfgInitiator {
 
@@ -28,10 +29,10 @@ public class LogCfgInitiator implements CfgInitiator {
 	@Override
 	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
 
-		ResourceNode system = manager.getCfg("system");
+		IConfig system = manager.getCfg("system");
 		
 		
-		if (system == null) system = new EmptyResourceNode();
+		if (system == null) system = new PropertiesConfig(); // empty
 		
 		internal.getLogTrace().clear();
 		for (String p : system.getPropertyKeys()) {
@@ -70,9 +71,9 @@ public class LogCfgInitiator implements CfgInitiator {
 		
 		if (logFactory.getParameterMapper() != null && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
 			try {
-				ResourceNode[] mappers = system.getNodes(MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS);
-				if (mappers.length > 0) ((MutableParameterMapper)logFactory.getParameterMapper()).clear();
-				for (ResourceNode mapper : mappers) {
+				Collection<IConfig> mappers = system.getNodes(MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS);
+				if (mappers.size() > 0) ((MutableParameterMapper)logFactory.getParameterMapper()).clear();
+				for (IConfig mapper : mappers) {
 					String name = mapper.getString("name");
 					String clazz = mapper.getString("class");
 					if (MString.isSet(name) && MString.isSet(clazz))

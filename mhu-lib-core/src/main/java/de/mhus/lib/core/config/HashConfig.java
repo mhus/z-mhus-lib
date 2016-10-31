@@ -4,31 +4,33 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
 public class HashConfig extends IConfig {
 
+	private static final long serialVersionUID = 1L;
 	private HashMap<String, String> 	properties 	= null;
-	private HashMap<String, LinkedList<HashConfig>> children	= null;
+	private HashMap<String, LinkedList<IConfig>> children	= null;
 	private LinkedList<HashConfig> childrenAll	= null;
 	private String name;
-	private WritableResourceNode parent;
+	private IConfig parent;
 	
 	public HashConfig() {
 		this(null,null);
 	}
 	
-	public HashConfig(String name,WritableResourceNode parent) {
+	public HashConfig(String name,IConfig parent) {
 		this.name = name;
 		this.parent = parent;
 		properties = new HashMap<String, String>();
-		children = new HashMap<String, LinkedList<HashConfig>>();
+		children = new HashMap<String, LinkedList<IConfig>>();
 		childrenAll = new LinkedList<HashConfig>();
 	}
 
@@ -38,32 +40,34 @@ public class HashConfig extends IConfig {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
-		return properties.keySet().toArray(new String[properties.size()]);
+	public List<String> getPropertyKeys() {
+		return MCollection.toList( properties.keySet() );
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
-		LinkedList<HashConfig> list = children.get(key);
+	public IConfig getNode(String key) {
+		LinkedList<IConfig> list = children.get(key);
 		if (list == null || list.size() == 0) return null;
 		return list.getFirst();
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		LinkedList<HashConfig> list = children.get(key);
-		if (list == null || list.size() == 0) return new ResourceNode[0];
-		return list.toArray(new HashConfig[list.size()]);
+	public List<IConfig> getNodes(String key) {
+		LinkedList<IConfig> list = children.get(key);
+		if (list == null || list.size() == 0) return MCollection.getEmptyList();
+		return MCollection.toReadOnlyList(list);
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		return childrenAll.toArray(new HashConfig[childrenAll.size()]);
+	public List<IConfig> getNodes() {
+		return MCollection.toReadOnlyList(childrenAll);
 	}
 	
 	@Override
-	public String[] getNodeKeys() {
-		return children.keySet().toArray(new String[children.size()]);
+	public List<String> getNodeKeys() {
+		LinkedList<String> out = new LinkedList<>();
+		out.addAll( children.keySet() );
+		return out;
 	}
 
 	@Override
@@ -72,11 +76,11 @@ public class HashConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
+	public IConfig createConfig(String key) throws MException {
 		HashConfig child = new HashConfig(key,this);
-		LinkedList<HashConfig> list = children.get(key);
+		LinkedList<IConfig> list = children.get(key);
 		if (list == null) {
-			list = new LinkedList<HashConfig>();
+			list = new LinkedList<>();
 			children.put(key, list);
 		}
 		list.add(child);
@@ -90,11 +94,11 @@ public class HashConfig extends IConfig {
 		parent = null;
 	}
 	
-	public ResourceNode setConfig(String key, HashConfig child) throws MException {
+	public IConfig setConfig(String key, HashConfig child) throws MException {
 		if (child.parent != null) throw new MException("Config already linked");
-		LinkedList<HashConfig> list = children.get(key);
+		LinkedList<IConfig> list = children.get(key);
 		if (list == null) {
-			list = new LinkedList<HashConfig>();
+			list = new LinkedList<>();
 			children.put(key, list);
 		}
 		child.parent = this;
@@ -106,12 +110,12 @@ public class HashConfig extends IConfig {
 	
 	// TODO move in childAll list
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 
 		if (!(config instanceof HashConfig))
 			throw new MException("not a hashconfig");
 
-		LinkedList<HashConfig> list = children.get(config.getName());
+		LinkedList<IConfig> list = children.get(config.getName());
 		if (list == null || list.size() == 0 || !list.contains(config))
 			throw new MException("config not in my list");
 		
@@ -161,11 +165,11 @@ public class HashConfig extends IConfig {
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 
 		if (!(config instanceof HashConfig)) return;
 			
-		LinkedList<HashConfig> list = children.get(config.getName());
+		LinkedList<IConfig> list = children.get(config.getName());
 		if (list == null) return;
 		list.remove(config);
 		if (list.size() == 0)

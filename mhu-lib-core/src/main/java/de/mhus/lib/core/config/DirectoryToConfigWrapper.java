@@ -3,17 +3,19 @@ package de.mhus.lib.core.config;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
+// TODO need to be rewritten - mapping is not working because instance node is not a IConfig
 public class DirectoryToConfigWrapper extends IConfig {
 
+	private static final long serialVersionUID = 1L;
 	private WritableResourceNode node;
 
 	public DirectoryToConfigWrapper(WritableResourceNode node) {
@@ -26,12 +28,12 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
-		return node.createConfig(key);
+	public IConfig createConfig(String key) throws MException {
+		return (IConfig) node.createConfig(key);
 	}
 
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 		return node.moveConfig(config, newPos);
 	}
 
@@ -41,13 +43,13 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
+	public Collection<String> getPropertyKeys() {
 		return node.getPropertyKeys();
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
-		return node.getNode(key);
+	public IConfig getNode(String key) {
+		return (IConfig) node.getNode(key);
 	}
 
 	@Override
@@ -56,12 +58,12 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 		node.removeConfig(config);
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
+	public Collection<IConfig> getNodes() {
 		return node.getNodes();
 	}
 
@@ -71,7 +73,7 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
+	public Collection<IConfig> getNodes(String key) {
 		return node.getNodes(key);
 	}
 
@@ -91,7 +93,7 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public String[] getNodeKeys() {
+	public Collection<String> getNodeKeys() {
 		return node.getNodeKeys();
 	}
 

@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -15,7 +16,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.node.TextNode;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;
 
@@ -41,7 +42,7 @@ public class JsonConfig extends IConfig {
 		this(null,null,node);
 	}
 	
-	public JsonConfig(String name, WritableResourceNode parent, ObjectNode node) {
+	public JsonConfig(String name, IConfig parent, ObjectNode node) {
 		this.node = node;
 		this.name = name;
 		this.parent = parent;
@@ -59,25 +60,25 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode getNode(String name) {
+	public IConfig getNode(String name) {
 		JsonNode child = node.get(name);
 		if (child == null || !child.isArray() || child.size() < 1) return null;
 		return new JsonConfig(name, this, (ObjectNode)((ArrayNode)child).get(0));
 	}
 
 	@Override
-	public WritableResourceNode[] getNodes(String name) {
+	public List<IConfig> getNodes(String name) {
 		JsonNode child = node.get(name);
-		if (child==null || !child.isArray()) return new WritableResourceNode[0];
-		WritableResourceNode[] out = new WritableResourceNode[child. size()];
+		if (child==null || !child.isArray()) return MCollection.getEmptyList();
+		LinkedList<IConfig> out = new LinkedList<>();
 		for (int i = 0; i < child.size(); i++) {
 			JsonNode obj = child.get(i);
 			if (obj instanceof ObjectNode) {
-				out[i] = new JsonConfig(name, this, (ObjectNode)child.get(i));
+				out.add( new JsonConfig(name, this, (ObjectNode)child.get(i)) );
 			} else
 			if (obj instanceof org.codehaus.jackson.node.TextNode) {
 				try {
-					out[i] = new JsonConfig(name, this, (org.codehaus.jackson.node.TextNode)child.get(i));
+					out.add( new JsonConfig(name, this, (org.codehaus.jackson.node.TextNode)child.get(i)) );
 				} catch (Exception e) {
 					log().d(name,e);
 				}
@@ -88,8 +89,8 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode[] getNodes() {
-		LinkedList<WritableResourceNode> out = new LinkedList<WritableResourceNode>();
+	public List<IConfig> getNodes() {
+		LinkedList<IConfig> out = new LinkedList<>();
 		for ( JsonNode  child : node ) {
 			if (child !=null && child.isArray()) {
 				for (int i = 0; i < child.size(); i++)
@@ -97,12 +98,11 @@ public class JsonConfig extends IConfig {
 			}
 			
 		}
-		if (out == null || out.size() == 0) return new WritableResourceNode[0];
-		return out.toArray(new HashConfig[out.size()]);
+		return out;
 	}
 	
 	@Override
-	public String[] getNodeKeys() {
+	public List<String> getNodeKeys() {
 		LinkedList<String> out = new LinkedList<String>();
 		for (Iterator<String> i = node.getFieldNames(); i.hasNext();) {
 			String name = i.next();
@@ -110,7 +110,7 @@ public class JsonConfig extends IConfig {
 			if (child.isArray())
 				out.add(name);
 		}
-		return out.toArray(new String[out.size()]);
+		return out;
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
+	public List<String> getPropertyKeys() {
 		LinkedList<String> out = new LinkedList<String>();
 		for (Iterator<String> i = node.getFieldNames(); i.hasNext();) {
 			String name = i.next();
@@ -129,7 +129,7 @@ public class JsonConfig extends IConfig {
 			if (!child.isArray())
 				out.add(name);
 		}
-		return out.toArray(new String[out.size()]);
+		return out;
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 		if (!(config instanceof JsonConfig))
 			throw new MException("not JsonConfig");
 		
@@ -241,7 +241,7 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 		
 		if (!(config instanceof JsonConfig)) return;
 		

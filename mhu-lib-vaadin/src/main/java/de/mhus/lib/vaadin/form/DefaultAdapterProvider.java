@@ -2,7 +2,6 @@ package de.mhus.lib.vaadin.form;
 
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.form.ActivatorAdapterProvider;
-import de.mhus.lib.form.definition.FmText;
 
 public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 

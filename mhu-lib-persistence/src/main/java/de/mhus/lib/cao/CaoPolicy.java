@@ -2,11 +2,14 @@ package de.mhus.lib.cao;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -165,28 +168,28 @@ public class CaoPolicy extends CaoNode {
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
-		return new String[0];
+	public Collection<String> getPropertyKeys() {
+		return new EmptyList<>();
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public CaoNode getNode(String key) {
 		return null;
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		return new ResourceNode[0];
+	public List<CaoNode> getNodes() {
+		return new LinkedList<>();
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		return new ResourceNode[0];
+	public List<CaoNode> getNodes(String key) {
+		return new LinkedList<>();
 	}
 
 	@Override
-	public String[] getNodeKeys() {
-		return new String[0];
+	public Collection<String> getNodeKeys() {
+		return new EmptyList<>();
 	}
 
 	@Override

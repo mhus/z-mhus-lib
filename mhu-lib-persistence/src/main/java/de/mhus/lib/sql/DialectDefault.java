@@ -12,7 +12,7 @@ import de.mhus.lib.cao.CaoMetaDefinition;
 import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 /**
  * This class can compare a configuration with a database table structure
@@ -42,14 +42,14 @@ public class DialectDefault extends Dialect {
 	 * @throws Exception
 	 */
 	@Override
-	public void createTables(ResourceNode data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception {
+	public void createTables(IConfig data, DbConnection db, MetadataBundle caoBundle, boolean cleanup) throws Exception {
 
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
 		DatabaseMetaData meta = con.getMetaData();
 
 		// first check tables
-		for (ResourceNode ctable : data.getNodes("table")) {
+		for (IConfig ctable : data.getNodes("table")) {
 			String tName = ctable.getExtracted("name");
 			String tPrefix = ctable.getExtracted("prefix","");
 
@@ -85,7 +85,7 @@ public class DialectDefault extends Dialect {
 				if (cleanup)
 					fieldsInTable = new LinkedList<>();
 
-					for (ResourceNode cfield : ctable.getNodes("field")) {
+					for (IConfig cfield : ctable.getNodes("field")) {
 
 						String fNameOrg = cfield.getExtracted("name");
 						String fName = normalizeColumnName(fNameOrg);
@@ -172,7 +172,7 @@ public class DialectDefault extends Dialect {
 				}
 
 				createTable(sth,tn,ctable);
-				for (ResourceNode f:ctable.getNodes("field")) {
+				for (IConfig f:ctable.getNodes("field")) {
 					if (caoMeta != null) {
 						List<CaoMetaDefinition> metaMap = caoMeta.getMap();
 						CaoMetaDefinition.TYPE caoType = getCaoType(f);
@@ -219,11 +219,11 @@ public class DialectDefault extends Dialect {
 		sth.close();
 	}
 
-	protected void createTable(Statement sth, String tn, ResourceNode ctable) {
+	protected void createTable(Statement sth, String tn, IConfig ctable) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("create table " + tn + " ( ");
 		boolean first = true;
-		for (ResourceNode f:ctable.getNodes("field")) {
+		for (IConfig f:ctable.getNodes("field")) {
 			if (!first) sql.append(",");
 			sql.append(getFieldConfig(f));
 			first = false;
@@ -238,7 +238,7 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	protected void createTableLastCheck(ResourceNode ctable, String tn, StringBuffer sql) {
+	protected void createTableLastCheck(IConfig ctable, String tn, StringBuffer sql) {
 
 	}
 
@@ -273,7 +273,7 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	protected void alterColumnAdd(Statement sth, String tn, ResourceNode cfield) {
+	protected void alterColumnAdd(Statement sth, String tn, IConfig cfield) {
 		//		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
 		String sql = "ALTER TABLE " + tn + " ADD COLUMN " + getFieldConfig(cfield);
 		log().t("alter table",sql);
@@ -285,7 +285,7 @@ public class DialectDefault extends Dialect {
 	}
 
 	protected void alterColumnSetDefault(Statement sth, String tn, String fName,
-			ResourceNode cfield) {
+			IConfig cfield) {
 		String sql = null;
 		try {
 			sql = "ALTER TABLE " + tn + " ALTER COLUMN " + fName + " SET DEFAULT " + getDbDef(cfield.getString("default",null));
@@ -306,7 +306,7 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	protected void alterColumn(Statement sth,String tn, ResourceNode cfield) {
+	protected void alterColumn(Statement sth,String tn, IConfig cfield) {
 		String sql = "ALTER TABLE " + tn + " MODIFY COLUMN " + getFieldConfig(cfield);
 		log().t("alter table",sql);
 		try {
@@ -340,14 +340,14 @@ public class DialectDefault extends Dialect {
 	 * @throws Exception
 	 */
 	@Override
-	public void createIndexes(ResourceNode data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception {
+	public void createIndexes(IConfig data, DbConnection db, MetadataBundle caoMeta, boolean cleanup) throws Exception {
 
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
 		DatabaseMetaData meta = con.getMetaData();
 
 		// first check tables
-		for (ResourceNode cindex : data.getNodes("index")) {
+		for (IConfig cindex : data.getNodes("index")) {
 			String  iNameOrg   = cindex.getExtracted("name");
 			String iName = normalizeIndexName(iNameOrg);
 			String  tableName   = cindex.getExtracted("table");
@@ -464,12 +464,12 @@ public class DialectDefault extends Dialect {
 	 * @throws Exception
 	 */
 	@Override
-	public void createData(ResourceNode data, DbConnection db) throws Exception {
+	public void createData(IConfig data, DbConnection db) throws Exception {
 		Connection con = ((JdbcConnection)db.instance()).getConnection();
 		Statement sth = con.createStatement();
 
 		// first check tables
-		for (ResourceNode cdata : data.getNodes("data")) {
+		for (IConfig cdata : data.getNodes("data")) {
 			//String table  = cdata.getExtracted("table");
 			String select = cdata.getExtracted("select");
 			String set    = cdata.getExtracted("set");
@@ -503,7 +503,7 @@ public class DialectDefault extends Dialect {
 			}
 
 			if (accepted) {
-				for (ResourceNode cexecute : cdata.getNodes("execute")) {
+				for (IConfig cexecute : cdata.getNodes("execute")) {
 					String sql = cexecute.getExtracted("sql");
 					if(sql != null) {
 						log().t("execute",sql);

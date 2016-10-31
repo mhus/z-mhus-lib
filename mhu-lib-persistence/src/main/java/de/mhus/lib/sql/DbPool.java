@@ -30,10 +30,9 @@ import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.UniqueId;
-import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -61,7 +60,7 @@ public abstract class DbPool extends MJmx {
 	
 	private DbProvider provider;
 	private String name;
-	private ResourceNode config;
+	private IConfig config;
 
 
 	/**
@@ -81,7 +80,7 @@ public abstract class DbPool extends MJmx {
 	 * @param activator Activator or null. null will use the central MSingleton Activator.
 	 * @throws Exception
 	 */
-	public DbPool(ResourceNode config,MActivator activator) throws Exception {
+	public DbPool(IConfig config,MActivator activator) throws Exception {
 
 		this.config = config;
 
@@ -104,7 +103,7 @@ public abstract class DbPool extends MJmx {
 		setProvider(provider);
 	}
 
-	protected ResourceNode getConfig() {
+	protected IConfig getConfig() {
 		return config;
 	}
 

@@ -3,12 +3,9 @@ package de.mhus.lib.vaadin.form;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.MNls;

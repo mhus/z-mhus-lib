@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 

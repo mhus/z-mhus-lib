@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MTimeInterval;
 
 /**

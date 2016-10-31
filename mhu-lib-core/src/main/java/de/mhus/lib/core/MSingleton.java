@@ -6,11 +6,10 @@ import java.util.WeakHashMap;
 
 import de.mhus.lib.core.cfg.UpdaterCfg;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.core.system.DefaultSingleton;
 import de.mhus.lib.core.system.DummyClass;
 import de.mhus.lib.core.system.ISingleton;
@@ -22,7 +21,7 @@ public class MSingleton {
 	private static ISingleton singleton;
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
-	private static ResourceNode emptyConfig = null;
+	private static IConfig emptyConfig = null;
 	private static UpdaterCfg configUpdater;
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
@@ -106,7 +105,7 @@ public class MSingleton {
 		}
 	}
 
-	public static ResourceNode getCfg(Object owner, ResourceNode def) {
+	public static IConfig getCfg(Object owner, IConfig def) {
 		return get().getCfgManager().getCfg(owner, def);
 	}
 	
@@ -116,7 +115,7 @@ public class MSingleton {
 	 * @param owner
 	 * @return
 	 */
-	public static ResourceNode getCfg(Object owner) {
+	public static IConfig getCfg(Object owner) {
 		if (emptyConfig == null) emptyConfig = new HashConfig();
 		return get().getCfgManager().getCfg(owner, emptyConfig);
 	}

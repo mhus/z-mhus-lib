@@ -2,14 +2,12 @@ package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
-import de.mhus.lib.form.Form;
 import de.mhus.lib.form.UiComponent;
 
 public class UiPassword extends UiVaadin {

@@ -1,7 +1,6 @@
 package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
-import de.mhus.lib.core.definition.IDefDefinition;
 
 public class FmRootLayout50x50 extends DefAttribute {
 

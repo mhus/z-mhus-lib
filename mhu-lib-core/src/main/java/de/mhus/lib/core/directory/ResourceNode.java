@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Set;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.core.parser.DefaultScriptPart;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
-import de.mhus.lib.core.util.ArraySet;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -23,7 +23,7 @@ import de.mhus.lib.errors.NotSupportedException;
  * 
  */
 
-public abstract class ResourceNode extends AbstractProperties {
+public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractProperties {
 
 	private static final long serialVersionUID = 1L;
 	protected ConfigStringCompiler compiler;
@@ -34,7 +34,7 @@ public abstract class ResourceNode extends AbstractProperties {
 	 *  
 	 * @return
 	 */
-	public abstract String[] getPropertyKeys();
+	public abstract Collection<String> getPropertyKeys();
 
 	/**
 	 * Returns a inner configuration by the name. Inner configurations
@@ -44,7 +44,7 @@ public abstract class ResourceNode extends AbstractProperties {
 	 * @param key
 	 * @return
 	 */
-	public abstract ResourceNode getNode(String key);
+	public abstract T getNode(String key);
 
 	/**
 	 * Return all inner configurations ignoring the name. The order
@@ -53,7 +53,7 @@ public abstract class ResourceNode extends AbstractProperties {
 	 * @param key
 	 * @return
 	 */
-	public abstract ResourceNode[] getNodes();
+	public abstract Collection<T> getNodes();
 
 	/**
 	 * Return all inner configurations by the given name. The order
@@ -62,13 +62,13 @@ public abstract class ResourceNode extends AbstractProperties {
 	 * @param key
 	 * @return
 	 */
-	public abstract ResourceNode[] getNodes(String key);
+	public abstract Collection<T> getNodes(String key);
 
 	/**
 	 * Return all possible, existing inner configuration names.
 	 * @return
 	 */
-	public abstract String[] getNodeKeys();
+	public abstract Collection<String> getNodeKeys();
 
 	/**
 	 * Return a name of this config element could also be null.
@@ -118,11 +118,11 @@ public abstract class ResourceNode extends AbstractProperties {
 	 * 
 	 * @return
 	 */
-	public abstract ResourceNode getParent();
+	public abstract ResourceNode<?> getParent();
 
 	@Override
 	public Set<String> keys() {
-		return new ArraySet<String>(getPropertyKeys());
+		return MCollection.toSet(getPropertyKeys());
 	}
 
 	protected String getExtracted(String key, String def,int level) throws MException {
@@ -230,7 +230,7 @@ public abstract class ResourceNode extends AbstractProperties {
 
 	}
 	
-	private class ConfigMap implements Map<String,Object> {
+	private static class ConfigMap implements Map<String,Object> {
 
 		private int level;
 
@@ -308,15 +308,16 @@ public abstract class ResourceNode extends AbstractProperties {
 	
 	public abstract boolean hasContent();
 
-	public ResourceNode getNodeByPath(String path) {
+	@SuppressWarnings("unchecked")
+	public T getNodeByPath(String path) {
 		if (path == null) return null;
 		while (path.startsWith("/")) path = path.substring(1);
-		if (path.length() == 0) return this;
+		if (path.length() == 0) return (T) this;
 		int p = path.indexOf('/');
 		if (p < 0) return getNode(path);
-		ResourceNode next = getNode(path.substring(0, p));
+		T next = getNode(path.substring(0, p));
 		if (next == null) return null;
-		return next.getNodeByPath(path.substring(p+1));
+		return (T) next.getNodeByPath(path.substring(p+1));
 	}
 	
 	public String dump() throws MException {
@@ -325,13 +326,13 @@ public abstract class ResourceNode extends AbstractProperties {
 		return sb.toString();
 	}
 
-	private void dump(StringBuffer sb, int level) throws MException {
+	void dump(StringBuffer sb, int level) throws MException {
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append('<').append(getName());
 		for (String key : keys())
 			sb.append('\n').append(MString.getRepeatig(level+1, ' ')).append(key).append("='").append(getString(key)).append("'");
 		sb.append(">\n");
-		for (ResourceNode node : getNodes())
+		for (T node : getNodes())
 			node.dump(sb, level+1);
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append("</").append(getName()).append(">\n");
@@ -340,9 +341,9 @@ public abstract class ResourceNode extends AbstractProperties {
 	
 	@Override
 	public int size() {
-		String[] keys = getPropertyKeys();
+		Collection<String> keys = getPropertyKeys();
 		if (keys == null) return 0;
-		return keys.length;
+		return keys.size();
 	}
 	
 	@Override

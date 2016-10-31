@@ -3,7 +3,6 @@ package de.mhus.lib.core.schedule;
 import java.util.Observer;
 
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;

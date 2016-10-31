@@ -14,14 +14,15 @@
  */
 package de.mhus.lib.karaf.ldap;
 
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.net.ssl.SSLSocketFactory;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.karaf.jaas.config.KeystoreManager;
 import org.osgi.framework.BundleContext;

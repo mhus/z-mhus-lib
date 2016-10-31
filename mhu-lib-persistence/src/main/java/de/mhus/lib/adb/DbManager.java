@@ -1,33 +1,19 @@
 package de.mhus.lib.adb;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.DbProperties;
-import de.mhus.lib.adb.util.Property;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.cao.util.MetadataBundle;
-import de.mhus.lib.cao.util.NoneDriver;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MDate;
-import de.mhus.lib.core.MString;
-import de.mhus.lib.core.concurrent.Lock;
-import de.mhus.lib.core.concurrent.ThreadLock;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.util.FallbackMap;
-import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
-import de.mhus.lib.sql.DbStatement;
 
 /**
  * The implementation hold the table definitions and handle all operations on

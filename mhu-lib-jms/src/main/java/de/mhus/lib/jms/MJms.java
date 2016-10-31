@@ -8,16 +8,15 @@ import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.directory.EmptyResourceNode;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.EmptyConfig;
+import de.mhus.lib.core.config.IConfig;
 
 public class MJms {
 
-	private static ResourceNode config;
+	private static IConfig config;
 
 	public static void setProperties(IProperties prop, Message msg) throws JMSException {
 		setProperties("",prop, msg);
@@ -130,9 +129,9 @@ public class MJms {
 		return String.valueOf(in);
 	}
 
-	public synchronized static ResourceNode getConfig() {
+	public synchronized static IConfig getConfig() {
 		if (config == null)
-			config = MSingleton.get().getCfgManager().getCfg("jms", new EmptyResourceNode());
+			config = MSingleton.get().getCfgManager().getCfg("jms", new EmptyConfig());
 		 return config;
 	}
 	

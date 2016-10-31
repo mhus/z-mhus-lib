@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.mhus.lib.core.MTimeInterval;
-
 public class QueueList implements SchedulerQueue {
 
 	private LinkedList<SchedulerJob> list = new LinkedList<>();

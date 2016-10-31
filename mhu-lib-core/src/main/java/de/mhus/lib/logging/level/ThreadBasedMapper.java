@@ -1,13 +1,10 @@
 package de.mhus.lib.logging.level;
 
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.system.ISingleton;
 
 public class ThreadBasedMapper implements TrailLevelMapper {
 	

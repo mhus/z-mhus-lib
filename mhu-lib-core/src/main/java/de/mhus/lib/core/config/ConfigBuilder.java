@@ -17,7 +17,7 @@ import de.mhus.lib.errors.MException;
  */
 public class ConfigBuilder extends MLog {
 	
-	public void cloneConfig(ResourceNode src, WritableResourceNode tar) {
+	public void cloneConfig(ResourceNode<?> src, WritableResourceNode tar) {
 		
 		preProcess(src,tar);
 		
@@ -34,7 +34,7 @@ public class ConfigBuilder extends MLog {
 		
 		// copy sub configurations
 		for (String key : src.getNodeKeys()) {
-			for (ResourceNode srcSub : src.getNodes(key)) {
+			for (ResourceNode<?> srcSub : src.getNodes(key)) {
 				if (accept(srcSub)) {
 					try {
 						WritableResourceNode tarSub = tar.createConfig(key);

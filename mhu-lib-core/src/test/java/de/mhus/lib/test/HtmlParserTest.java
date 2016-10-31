@@ -7,9 +7,9 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 
-import junit.framework.TestCase;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.HtmlParser;
+import junit.framework.TestCase;
 
 public class HtmlParserTest extends TestCase {
 

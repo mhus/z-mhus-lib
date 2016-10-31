@@ -2,7 +2,6 @@ package de.mhus.lib.portlet.resource;
 
 import javax.portlet.ResourceRequest;
 
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 
 /**

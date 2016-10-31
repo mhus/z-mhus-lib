@@ -8,8 +8,7 @@ import com.sun.jdmk.comm.HtmlAdaptorServer;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.cfg.CfgProvider;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.jmx.MRemoteManager;
 import de.mhus.lib.errors.MException;
@@ -18,9 +17,9 @@ import de.mhus.lib.errors.MException;
 public class JmxHttpServer extends MJmx {
 
 	private HtmlAdaptorServer server;
-	private ResourceNode config;
+	private IConfig config;
 
-	public void setConfig(ResourceNode config) {
+	public void setConfig(IConfig config) {
 		this.config = config;
 	}
 	
@@ -32,7 +31,7 @@ public class JmxHttpServer extends MJmx {
 		if (config == null || server != null) return;
 		server = new HtmlAdaptorServer(config.getInt("port", 1098));
 		
-		for (ResourceNode cuser : config.getNodes("user")) {
+		for (IConfig cuser : config.getNodes("user")) {
 			server.addUserAuthenticationInfo(new AuthInfo(cuser.getExtracted("name"), MPassword.decode(cuser.getExtracted("password")) ));
 		}
 		

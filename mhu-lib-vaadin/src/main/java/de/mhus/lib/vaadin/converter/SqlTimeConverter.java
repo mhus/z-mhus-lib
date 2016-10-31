@@ -1,7 +1,6 @@
 package de.mhus.lib.vaadin.converter;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import com.vaadin.data.util.converter.Converter;

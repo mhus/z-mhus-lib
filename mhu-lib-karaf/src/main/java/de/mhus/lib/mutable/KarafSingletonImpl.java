@@ -1,20 +1,14 @@
 package de.mhus.lib.mutable;
 
 import java.io.File;
-import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
-import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
@@ -26,7 +20,6 @@ import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.logging.JavaLoggerFactory;
-import de.mhus.lib.logging.level.ThreadBasedMapper;
 
 /**
  * TODO: Map config to service

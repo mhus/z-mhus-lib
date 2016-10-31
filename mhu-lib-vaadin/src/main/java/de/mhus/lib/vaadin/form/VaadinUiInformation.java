@@ -1,12 +1,9 @@
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
-import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.UiInformation;
 
 public class VaadinUiInformation extends Panel implements UiInformation {

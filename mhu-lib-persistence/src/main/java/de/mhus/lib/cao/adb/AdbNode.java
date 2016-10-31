@@ -2,6 +2,8 @@ package de.mhus.lib.cao.adb;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoConnection;
@@ -9,8 +11,8 @@ import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.adb.AdbNodeData.TYPE;
 import de.mhus.lib.cao.util.PropertiesNode;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -65,7 +67,7 @@ public class AdbNode extends PropertiesNode {
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public CaoNode getNode(String key) {
 		try {
 			AdbNodeData childData = ((AdbConnection)getConnection()).getChild(data.getId(), key);
 			if (childData != null) return new AdbNode(this, childData);
@@ -76,43 +78,43 @@ public class AdbNode extends PropertiesNode {
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
+	public List<CaoNode> getNodes() {
 		try {
 			AdbNodeData[] childData = ((AdbConnection)getConnection()).getChildren(data.getId());
-			ResourceNode[] out = new ResourceNode[childData.length];
+			LinkedList<CaoNode> out = new LinkedList<>();
 			for (int i = 0; i < childData.length; i++)
-				out[i] = new AdbNode(this, childData[i]);
+				out.add( new AdbNode(this, childData[i]) );
 			return out;
 		} catch (MException e) {
 			log().d(e);
 		}
-		return new ResourceNode[0];
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
+	public List<CaoNode> getNodes(String key) {
 		try {
 			AdbNodeData[] childData = ((AdbConnection)getConnection()).getChildren(data.getId(), key);
-			ResourceNode[] out = new ResourceNode[childData.length];
+			LinkedList<CaoNode> out = new LinkedList<>();
 			for (int i = 0; i < childData.length; i++)
-				out[i] = new AdbNode(this, childData[i]);
+				out.add( new AdbNode(this, childData[i]) );
 			return out;
 		} catch (MException e) {
 			log().d(e);
 		}
-		return new ResourceNode[0];
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public String[] getNodeKeys() {
-		ResourceNode[] nodes = getNodes();
-		String[] out = new String[nodes.length];
+	public List<String> getNodeKeys() {
+		List<CaoNode> nodes = getNodes();
+		LinkedList<String> out = new LinkedList<>();
 		try {
-			for (int i = 0; i < nodes.length; i++)
-				out[i] = nodes[i].getName();
+			for (CaoNode node : nodes)
+				out.add( node.getName() );
 		} catch (MException e) {
 			log().d(e);
-			out = new String[0];
+			out = MCollection.getEmptyList();
 		}
 		return out;
 	}

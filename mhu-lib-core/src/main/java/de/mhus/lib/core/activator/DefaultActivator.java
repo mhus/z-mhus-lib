@@ -20,14 +20,14 @@ public class DefaultActivator extends MActivator implements MutableActivator {
 		super(loader);
 	}
 	
-	public DefaultActivator(ResourceNode cactivator, ClassLoader loader) throws MException {
+	public DefaultActivator(ResourceNode<?> cactivator, ClassLoader loader) throws MException {
 		super(loader);
 		if (cactivator != null) {
 			if (cactivator instanceof IFlatConfig) {
 				for (String key : cactivator.getPropertyKeys())
 					addMap(key, cactivator.getExtracted(key));
 			} else {
-				for (ResourceNode entry : cactivator.getNodes("map"))
+				for (ResourceNode<?> entry : cactivator.getNodes("map"))
 					addMap(entry.getExtracted("name",""), entry.getExtracted("class",""));
 			}
 		}

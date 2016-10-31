@@ -3,7 +3,6 @@ package de.mhus.lib.core.logging;
 import java.util.UUID;
 
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 /**

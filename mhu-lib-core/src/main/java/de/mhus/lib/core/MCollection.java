@@ -14,8 +14,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import de.mhus.lib.core.util.EmptyList;
+
 public class MCollection {
 
+	public static final List<?> EMPTY_LIST = new EmptyList<>();
+	
 	/**
 	 * Returns true of array is not null and the value of item is included in
 	 * the array. It compares with the equals() method of the array item. Also
@@ -207,6 +211,27 @@ public class MCollection {
 	public static <T> void addAll(Set<T> list, T[] items) {
 		for (T i : items)
 			if (i != null) list.add(i);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends List<?>> T getEmptyList() {
+		return (T)EMPTY_LIST;
+	}
+
+	public static <T> List<T> toReadOnlyList(List<? extends T> in) {
+		return new ReadOnlyList<T>(in);
+	}
+
+	public static <T> List<T> toList(Collection<? extends T> set) {
+		LinkedList<T> out = new LinkedList<>();
+		out.addAll(set);
+		return out;
+	}
+
+	public static <T> Set<T> toSet(Collection<? extends T> list) {
+		HashSet<T> set = new HashSet<>();
+		set.addAll(list);
+		return set;
 	}
 	
 }

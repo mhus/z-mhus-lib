@@ -12,7 +12,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.lang.Base;
 
 public class MNlsFactory extends MNlsBundle {
 

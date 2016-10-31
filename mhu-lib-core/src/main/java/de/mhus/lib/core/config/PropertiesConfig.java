@@ -24,11 +24,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.directory.WritableResourceNode;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.errors.MException;
 
 /**
@@ -40,6 +41,7 @@ import de.mhus.lib.errors.MException;
  */
 public class PropertiesConfig extends IConfig implements IFlatConfig {
 
+	private static final long serialVersionUID = 1L;
 	protected Properties properties = null;
 	protected boolean changed = false;
 	protected String name;
@@ -75,29 +77,32 @@ public class PropertiesConfig extends IConfig implements IFlatConfig {
 	}
 
 	@Override
-	public ResourceNode getNode(String key) {
+	public IConfig getNode(String key) {
 		return null;
 	}
 
 	@Override
-	public ResourceNode[] getNodes(String key) {
-		return new WritableResourceNode[0];
+	public List<IConfig> getNodes(String key) {
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public ResourceNode[] getNodes() {
-		return new WritableResourceNode[0];
+	public List<IConfig> getNodes() {
+		return MCollection.getEmptyList();
 	}
 	
 	@Override
-	public String[] getNodeKeys() {
+	public List<String> getNodeKeys() {
 		//return (String[]) properties.keySet().toArray(new String[properties.size()]);
-		return new String[0];
+		return MCollection.getEmptyList();
 	}
 
 	@Override
-	public String[] getPropertyKeys() {
-		return (String[]) properties.keySet().toArray(new String[properties.size()]);
+	public List<String> getPropertyKeys() {
+		LinkedList<String> out = new LinkedList<>();
+		for (Object key : properties.keySet())
+			out.add( key.toString() );
+		return out;
 	}
 
 	@Override
@@ -132,17 +137,17 @@ public class PropertiesConfig extends IConfig implements IFlatConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
+	public IConfig createConfig(String key) throws MException {
 		throw new MException("not supported");
 	}
 
 	@Override
-	public int moveConfig(ResourceNode config, int newPos) throws MException {
+	public int moveConfig(IConfig config, int newPos) throws MException {
 		throw new MException("not supported");
 	}
 
 	@Override
-	public void removeConfig(ResourceNode config) throws MException {
+	public void removeConfig(IConfig config) throws MException {
 		throw new MException("not supported");
 	}
 
@@ -152,7 +157,7 @@ public class PropertiesConfig extends IConfig implements IFlatConfig {
 	}
 
 	@Override
-	public WritableResourceNode getParent() {
+	public IConfig getParent() {
 		return null;
 	}
 

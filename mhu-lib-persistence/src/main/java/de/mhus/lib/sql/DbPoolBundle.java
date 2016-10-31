@@ -6,9 +6,8 @@ import java.util.Map;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -21,7 +20,7 @@ import de.mhus.lib.errors.MRuntimeException;
 public class DbPoolBundle extends MObject {
 
 
-	private ResourceNode config;
+	private IConfig config;
 	private MActivator activator;
 	private Map<String, DbPool> bundle = new HashMap<String, DbPool>();
 
@@ -39,7 +38,7 @@ public class DbPoolBundle extends MObject {
 	 * @param config Config element or null. null will use the central MSingleton configuration.
 	 * @param activator Activator or null. null will use the central MSingleton activator.
 	 */
-	public DbPoolBundle(ResourceNode config, MActivator activator) {
+	public DbPoolBundle(IConfig config, MActivator activator) {
 
 		if (config == null) config = MSingleton.get().getCfgManager().getCfg(DbPoolBundle.class, null);
 		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
@@ -62,7 +61,7 @@ public class DbPoolBundle extends MObject {
 		synchronized (bundle) {
 			DbPool pool = bundle.get(name);
 			if (pool == null) {
-				ResourceNode poolCon = config.getNode(name);
+				IConfig poolCon = config.getNode(name);
 				if (poolCon != null) {
 					pool = new DefaultDbPool(poolCon, activator);
 					bundle.put(name, pool);
@@ -81,7 +80,7 @@ public class DbPoolBundle extends MObject {
 	 */
 	public String[] getNames() {
 		LinkedList<String> out = new LinkedList<String>();
-		for (ResourceNode c : config.getNodes()) {
+		for (IConfig c : config.getNodes()) {
 			try {
 				out.add(c.getName());
 			} catch (MException e) {
@@ -97,7 +96,7 @@ public class DbPoolBundle extends MObject {
 	 * @param name a {@link java.lang.String} object.
 	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
-	public ResourceNode getConfig(String name) {
+	public IConfig getConfig(String name) {
 		return config.getNode(name);
 	}
 
@@ -106,7 +105,7 @@ public class DbPoolBundle extends MObject {
 	 *
 	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
-	public ResourceNode getConfig() {
+	public IConfig getConfig() {
 		return config;
 	}
 

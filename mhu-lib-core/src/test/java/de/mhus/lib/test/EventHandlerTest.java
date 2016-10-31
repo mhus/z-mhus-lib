@@ -1,12 +1,11 @@
 package de.mhus.lib.test;
 
-import java.lang.reflect.Method;
 import java.util.ConcurrentModificationException;
 
+import de.mhus.lib.core.MEventHandler;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import de.mhus.lib.core.MEventHandler;
 
 /**
  * Unit test for simple App.

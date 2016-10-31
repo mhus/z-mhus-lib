@@ -1,7 +1,5 @@
 package de.mhus.lib.core.matcher;
 
-import java.util.Map;
-
 public abstract class ModelPattern extends ModelPart {
 
 	public abstract void setPattern(String pattern);

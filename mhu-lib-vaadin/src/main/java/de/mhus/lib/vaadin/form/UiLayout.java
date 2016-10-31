@@ -5,8 +5,6 @@ import java.io.Serializable;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.DataSource;
-import de.mhus.lib.form.UiComponent;
 
 public abstract class UiLayout extends UiVaadin implements Serializable {
 
