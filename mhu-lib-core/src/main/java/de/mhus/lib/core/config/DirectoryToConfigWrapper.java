@@ -231,5 +231,10 @@ public class DirectoryToConfigWrapper extends IConfig {
 	public URL getUrl() {
 		return node.getUrl();
 	}
+
+	@Override
+	public Collection<String> getRenditions() {
+		return null;
+	}
 	
 }

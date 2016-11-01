@@ -1,0 +1,129 @@
+package de.mhus.lib.cao.auth;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Set;
+
+import de.mhus.lib.cao.CaoMetadata;
+import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.CaoOperation;
+import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.errors.MException;
+
+public class AuthWritableNode extends CaoWritableElement {
+
+	private static final long serialVersionUID = 1L;
+	private CaoWritableElement instance;
+
+	public AuthWritableNode(AuthNode parent, CaoWritableElement writableNode) {
+		super(parent.getConnection(), parent);
+		this.instance = writableNode;
+	}
+
+	@Override
+	public CaoOperation getUpdateOperation() throws MException {
+		return new AuthOperation((AuthConnection) getConnection(), instance.getUpdateOperation());
+	}
+
+	@Override
+	public CaoWritableElement getWritableNode() throws MException {
+		return instance.getWritableNode();
+	}
+
+	@Override
+	public CaoMetadata getMetadata() {
+		return instance.getMetadata();
+	}
+
+	@Override
+	public String getId() throws MException {
+		return instance.getId();
+	}
+
+	@Override
+	public String getName() throws MException {
+		return instance.getName();
+	}
+
+	@Override
+	public boolean isNode() {
+		return instance.isNode();
+	}
+
+	@Override
+	public void reload() throws MException {
+		instance.reload();
+	}
+
+	@Override
+	public boolean isValid() {
+		return instance.isValid();
+	}
+
+	@Override
+	public Collection<String> getPropertyKeys() {
+		return instance.getPropertyKeys();
+	}
+
+	@Override
+	public CaoNode getNode(String key) {
+		return instance.getNode(key);
+	}
+
+	@Override
+	public Collection<CaoNode> getNodes() {
+		return instance.getNodes();
+	}
+
+	@Override
+	public Collection<CaoNode> getNodes(String key) {
+		return instance.getNodes(key);
+	}
+
+	@Override
+	public Collection<String> getNodeKeys() {
+		return instance.getNodeKeys();
+	}
+
+	@Override
+	public InputStream getInputStream(String rendition) {
+		return instance.getInputStream(rendition);
+	}
+
+	@Override
+	public URL getUrl() {
+		return instance.getUrl();
+	}
+
+	@Override
+	public boolean hasContent() {
+		return instance.hasContent();
+	}
+
+	@Override
+	public Object getProperty(String name) {
+		return instance.getProperty(name);
+	}
+
+	@Override
+	public boolean isProperty(String name) {
+		return instance.isProperty(name);
+	}
+
+	@Override
+	public void removeProperty(String key) {
+		instance.removeProperty(key);
+	}
+
+	@Override
+	public void setProperty(String key, Object value) {
+		instance.setProperty(key, value);
+	}
+
+	@Override
+	public Collection<String> getRenditions() {
+		return instance.getRenditions();
+	}
+
+}

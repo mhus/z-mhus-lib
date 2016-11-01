@@ -82,6 +82,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * Return the default content input stream.
 	 * 
 	 * @return
+	 * @throws MException 
 	 */
 	public InputStream getInputStream() {
 		return getInputStream(null);
@@ -91,8 +92,16 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * Return the input stream of a content resource.
 	 * @param rendition Name of a rendition or null for the default content
 	 * @return
+	 * @throws MException 
 	 */
 	public abstract InputStream getInputStream(String rendition);
+	
+	/**
+	 * Returns a list of available renditions. Will not return the default rendition.
+	 * 
+	 * @return The list or null if hasContent() is false
+	 */
+	public abstract Collection<String> getRenditions();
 	
 	/**
 	 * Returns a compiled and executed string. The string is compiled with StringCompiler and is cached. Example

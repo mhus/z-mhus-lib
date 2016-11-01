@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;

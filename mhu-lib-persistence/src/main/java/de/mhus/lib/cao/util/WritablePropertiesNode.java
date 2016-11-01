@@ -155,20 +155,10 @@ public class WritablePropertiesNode extends CaoWritableElement {
 		for (java.util.Map.Entry<String, Object> entry : getOriginalElement().entrySet())
 			properties.put(entry.getKey(), entry.getValue());
 	}
+
+	@Override
+	public Collection<String> getRenditions() {
+		return getOriginalElement().getRenditions();
+	}
 	
-	@Override
-	public String getVersionLabel() throws MException {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public Set<String> getVersions() {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public CaoNode getVersion(String version) {
-		throw new NotSupportedException();
-	}
-
 }

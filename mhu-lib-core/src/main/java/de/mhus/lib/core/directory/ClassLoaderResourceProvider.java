@@ -2,6 +2,7 @@ package de.mhus.lib.core.directory;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
 import de.mhus.lib.core.MCollection;
@@ -123,9 +124,14 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode<
 
 		@Override
 		public boolean hasContent() {
-			return true;
+			return false;
 		}
 		
+		@Override
+		public Collection<String> getRenditions() {
+			return null;
+		}
+
 	}
 
 	@Override

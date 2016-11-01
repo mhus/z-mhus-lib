@@ -197,5 +197,14 @@ public class FileResource extends ResourceNode<FileResource> {
 	public boolean hasContent() {
 		return file.isFile();
 	}
+	
+	@Override
+	public Collection<String> getRenditions() {
+		if (hasContent()) {
+			return new EmptyList<>();
+		}
+		return null;
+	}
+
 
 }

@@ -146,10 +146,4 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 		return (T) factory.getAspectFor(this);
 	}
 	
-	public abstract String getVersionLabel() throws MException;
-	
-	public abstract Set<String> getVersions() throws MException;
-	
-	public abstract CaoNode getVersion(String version) throws MException;
-	
 }

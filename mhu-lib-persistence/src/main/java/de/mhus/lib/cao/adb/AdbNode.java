@@ -2,6 +2,7 @@ package de.mhus.lib.cao.adb;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -159,18 +160,8 @@ public class AdbNode extends PropertiesNode {
 	}
 
 	@Override
-	public String getVersionLabel() throws MException {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public Set<String> getVersions() {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public CaoNode getVersion(String version) {
-		throw new NotSupportedException();
+	public Collection<String> getRenditions() {
+		return null;
 	}
 
 }

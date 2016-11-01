@@ -14,6 +14,7 @@ import java.util.Set;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -143,18 +144,12 @@ public class FsNode extends PropertiesNode {
 	}
 
 	@Override
-	public String getVersionLabel() throws MException {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public Set<String> getVersions() {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public CaoNode getVersion(String version) {
-		throw new NotSupportedException();
+	public Collection<String> getRenditions() {
+		if (hasContent()) {
+			// TODO if use meta collect list of renditions
+			return new EmptyList<>();
+		}
+		return null;
 	}
 
 }

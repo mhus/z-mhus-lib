@@ -2,6 +2,7 @@ package de.mhus.lib.core.directory;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 
 import de.mhus.lib.core.MCollection;
@@ -97,5 +98,11 @@ public class EmptyResourceNode<E extends ResourceNode<?>> extends ResourceNode<E
 	public boolean isEditable() {
 		return false;
 	}
+	
+	@Override
+	public Collection<String> getRenditions() {
+		return null;
+	}
+
 
 }

@@ -1,5 +1,7 @@
 package de.mhus.lib.core.directory;
 
+import java.util.Collection;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.MObject;
 
@@ -17,5 +19,6 @@ public abstract class MResourceProvider<T extends ResourceNode> extends MObject 
 	
 	@Override
 	public abstract T getResourceById(String id);
+	
 	
 }

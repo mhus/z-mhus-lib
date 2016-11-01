@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.aaa;
+package de.mhus.lib.cao.auth;
 
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoActionList;
@@ -11,7 +11,7 @@ import de.mhus.lib.core.logging.Log;
 
 public class AuthConnection extends CaoConnection {
 
-	private CaoConnection instance;
+	protected CaoConnection instance;
 
 	public AuthConnection(CaoConnection instance) {
 		super(instance.getName(), instance.getDriver());

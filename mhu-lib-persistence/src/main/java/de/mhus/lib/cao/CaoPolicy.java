@@ -228,18 +228,8 @@ public class CaoPolicy extends CaoNode {
 	}
 
 	@Override
-	public String getVersionLabel() throws MException {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public Set<String> getVersions() {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public CaoNode getVersion(String version) {
-		throw new NotSupportedException();
+	public Collection<String> getRenditions() {
+		return null;
 	}
 
 }

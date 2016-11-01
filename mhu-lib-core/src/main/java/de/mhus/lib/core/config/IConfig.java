@@ -1,5 +1,7 @@
 package de.mhus.lib.core.config;
 
+import java.util.Collection;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.directory.WritableResourceNode;
 
@@ -15,7 +17,12 @@ public abstract class IConfig extends WritableResourceNode<IConfig> {
 	
 	@Override
 	public boolean hasContent() {
-		return true;
+		return false;
 	}
 	
+	@Override
+	public Collection<String> getRenditions() {
+		return null;
+	}
+
 }
