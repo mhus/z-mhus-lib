@@ -1,14 +1,13 @@
 package de.mhus.lib.core.security;
 
-public interface AccessControl {
+public interface AccessControl extends Rightful {
 
-    public void signOut();
-    
-    public boolean signIn(String username, String password);
+	boolean signIn(String username, String password);
 
-    public boolean isUserSignedIn();
+	boolean isUserSignedIn();
 
-    public boolean isUserInRole(String role);
+	void signOut();
 
-    public String getPrincipalName();
+	Account getAccount();
+
 }

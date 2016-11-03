@@ -1,6 +1,6 @@
 package de.mhus.lib.cao;
 
-public interface CaoAspectFactory {
+public interface CaoAspectFactory<T extends CaoAspect> {
 
-	CaoAspect getAspectFor(CaoNode node);
+	T getAspectFor(CaoNode node);
 }

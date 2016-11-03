@@ -13,6 +13,8 @@ import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
+//TODO need to be rewritten as aspect
+
 public class CaoPolicy extends CaoNode {
 
 	private static final long serialVersionUID = 1L;
@@ -154,7 +156,7 @@ public class CaoPolicy extends CaoNode {
 
 	@Override
 	public void reload() throws MException {
-		proxy = element.getAccessPolicy();
+	//	proxy = element.getAccessPolicy();
 	}
 
 	@Override

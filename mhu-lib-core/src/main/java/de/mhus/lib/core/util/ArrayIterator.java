@@ -2,7 +2,9 @@ package de.mhus.lib.core.util;
 
 import java.util.Iterator;
 
-public class ArrayIterator<T> implements Iterator<T> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class ArrayIterator<T> implements Iterator<T>, ReadOnly {
 
 	private T[] from;
 	private int pos;

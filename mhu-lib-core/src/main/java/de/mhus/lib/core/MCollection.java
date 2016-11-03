@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import de.mhus.lib.core.util.EmptyList;
+import de.mhus.lib.core.util.ReadOnlyList;
 
 public class MCollection {
 

@@ -20,7 +20,9 @@ package de.mhus.lib.core.util;
 
 import java.util.Iterator;
 
-public class EmptyIterator<E> implements Iterator<E> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class EmptyIterator<E> implements Iterator<E>, ReadOnly {
 
 	@Override
 	public boolean hasNext() {

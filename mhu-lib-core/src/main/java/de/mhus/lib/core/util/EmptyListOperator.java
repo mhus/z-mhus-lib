@@ -2,7 +2,9 @@ package de.mhus.lib.core.util;
 
 import java.util.ListIterator;
 
-public class EmptyListOperator<E> implements ListIterator<E> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class EmptyListOperator<E> implements ListIterator<E>, ReadOnly {
 
 	@Override
 	public boolean hasNext() {

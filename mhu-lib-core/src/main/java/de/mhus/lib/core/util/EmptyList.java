@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class EmptyList<E> implements List<E> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class EmptyList<E> implements List<E>, ReadOnly {
 
 	@Override
 	public int size() {

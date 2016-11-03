@@ -119,10 +119,6 @@ public class AdbConnection extends CaoConnection {
 		}
 	}
 
-//	public DbSchema getShema() {
-//		return schema;
-//	}
-
 	public Class<? extends AdbNodeData> getType() {
 		return type;
 	}
@@ -130,16 +126,6 @@ public class AdbConnection extends CaoConnection {
 	public String getCollection() {
 		return collection;
 	}
-
-	@Override
-	public boolean supportVersions() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-//	public DbManager getManager() {
-//		return manager;
-//	}
 
 	
 }

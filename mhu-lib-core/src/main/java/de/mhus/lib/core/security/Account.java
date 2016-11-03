@@ -1,6 +1,6 @@
 package de.mhus.lib.core.security;
 
-public interface Account {
+public interface Account extends Rightful {
 	
 	String MAP_ADMIN = "admin";
 	String ACT_READ = "read";
@@ -9,16 +9,12 @@ public interface Account {
 	String ACT_MODIFY = "modify";
 	String ACT_DELETE = "delete";
 
-	String getAccount();
-
-	boolean isValide();
+	boolean isValid();
 
 	boolean validatePassword(String password);
 
 	boolean isSyntetic();
 
 	String getDisplayName();
-
-	boolean hasGroup(String group);
 	
 }

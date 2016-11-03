@@ -4,12 +4,13 @@ import java.util.HashMap;
 
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.directory.MResourceProvider;
+import de.mhus.lib.errors.MException;
 
 public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 
 	protected CaoDriver driver;
 	protected MutableActionList actionList = new MutableActionList();
-	protected HashMap<Class<? extends CaoAspect>,CaoAspectFactory> aspectFactory = new HashMap<>();
+	protected HashMap<Class<? extends CaoAspect>,CaoAspectFactory<?>> aspectFactory = new HashMap<>();
 	protected String name;
 
 	public CaoConnection(String name, CaoDriver driver) {
@@ -31,18 +32,19 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	public CaoActionList getActions() {
 		return actionList;
 	}
-	
-	public abstract boolean supportVersions();
-	
-	public void addAspectFactory(Class<? extends CaoAspect> ifc,CaoAspectFactory factory) {
+		
+	public <T extends CaoAspect> void addAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
+		if (aspectFactory.containsKey(ifc))
+			throw new MException("Aspect already registered",ifc);
 		aspectFactory.put(ifc, factory);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends CaoAspectFactory> T getAspectFactory(Class<? extends CaoAspect> ifc) {
-		return (T) aspectFactory.get(ifc);
+	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
+		return (CaoAspectFactory<T>)aspectFactory.get(ifc);
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

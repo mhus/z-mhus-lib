@@ -2,15 +2,15 @@ package de.mhus.lib.cao;
 
 import java.util.Set;
 
+import de.mhus.lib.cao.auth.AuthConnection;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
 public abstract class CaoNode extends ResourceNode<CaoNode> {
 
 	private static final long serialVersionUID = 1L;
-	private CaoConnection con;
-	private CaoNode parent;
-	protected CaoPolicyProvider policyProvider;
+	protected CaoConnection con;
+	protected CaoNode parent;
 
 	public CaoNode(CaoNode parent) {
 		this(parent.getConnection(),parent);
@@ -128,20 +128,9 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 		return false;
 	}
 
-	/**
-	 * Return the current access policy for this element.
-	 * 
-	 * @return x
-	 * @throws MException 
-	 */
-	public CaoPolicy getAccessPolicy() throws MException {
-		if (policyProvider == null) return null;
-		return policyProvider.getAccessPolicy(this);
-	}
-
 	@SuppressWarnings("unchecked")
 	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
-		CaoAspectFactory factory = getConnection().getAspectFactory(ifc);
+		CaoAspectFactory<? extends CaoAspect> factory = getConnection().getAspectFactory(ifc);
 		if (factory == null) return null;
 		return (T) factory.getAspectFor(this);
 	}

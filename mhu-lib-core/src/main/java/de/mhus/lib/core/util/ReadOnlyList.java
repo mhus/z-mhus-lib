@@ -1,4 +1,4 @@
-package de.mhus.lib.core;
+package de.mhus.lib.core.util;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -11,7 +11,9 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-public class ReadOnlyList<E> implements List<E> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class ReadOnlyList<E> implements List<E>, ReadOnly {
 
 	private List<? extends E> instance;
 

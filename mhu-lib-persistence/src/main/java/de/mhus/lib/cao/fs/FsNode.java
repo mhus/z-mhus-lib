@@ -29,7 +29,6 @@ public class FsNode extends PropertiesNode {
 		this.file = file;
 		reload();
 		this.metadata = ((FsConnection)getConnection()).getMetadata();
-		this.policyProvider = ((FsConnection)getConnection()).getPolicyProvider();
 	}
 
 	@Override

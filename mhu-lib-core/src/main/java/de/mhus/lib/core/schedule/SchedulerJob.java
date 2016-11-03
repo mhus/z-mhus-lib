@@ -104,7 +104,12 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	}
 	
 	protected OperationResult doExecute2(TaskContext context) throws Exception {
-		if (task != null) task.update(null, context);
+		try {
+			if (task != null) task.update(null, context);
+		} catch (LinkageError le) {
+			log.d("cancel task because of fatal errors",this, le);
+			cancel();
+		}
 		return null;
 	}
 

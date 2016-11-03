@@ -10,25 +10,29 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class AuthWritableNode extends CaoWritableElement {
 
 	private static final long serialVersionUID = 1L;
 	private CaoWritableElement instance;
+	private CaoNode readable;
 
-	public AuthWritableNode(AuthNode parent, CaoWritableElement writableNode) {
+	public AuthWritableNode(AuthNode parent, CaoNode readable, CaoWritableElement writableNode) {
 		super(parent.getConnection(), parent);
 		this.instance = writableNode;
+		this.readable = readable;
 	}
 
 	@Override
 	public CaoOperation getUpdateOperation() throws MException {
+		if (!((AuthConnection)con).hasWriteAccess(readable)) return null;
 		return new AuthOperation((AuthConnection) getConnection(), instance.getUpdateOperation());
 	}
 
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
-		return instance.getWritableNode();
+		return this;
 	}
 
 	@Override
@@ -68,27 +72,27 @@ public class AuthWritableNode extends CaoWritableElement {
 
 	@Override
 	public CaoNode getNode(String key) {
-		return instance.getNode(key);
+		throw new NotSupportedException();
 	}
 
 	@Override
 	public Collection<CaoNode> getNodes() {
-		return instance.getNodes();
+		throw new NotSupportedException();
 	}
 
 	@Override
 	public Collection<CaoNode> getNodes(String key) {
-		return instance.getNodes(key);
+		throw new NotSupportedException();
 	}
 
 	@Override
 	public Collection<String> getNodeKeys() {
-		return instance.getNodeKeys();
+		throw new NotSupportedException();
 	}
 
 	@Override
 	public InputStream getInputStream(String rendition) {
-		return instance.getInputStream(rendition);
+		throw new NotSupportedException();
 	}
 
 	@Override
@@ -103,27 +107,31 @@ public class AuthWritableNode extends CaoWritableElement {
 
 	@Override
 	public Object getProperty(String name) {
+		if (!((AuthConnection)con).hasReadAccess(instance, name)) return null;
 		return instance.getProperty(name);
 	}
 
 	@Override
 	public boolean isProperty(String name) {
+		if (!((AuthConnection)con).hasReadAccess(instance, name)) return false;
 		return instance.isProperty(name);
 	}
 
 	@Override
 	public void removeProperty(String key) {
+		if (!((AuthConnection)con).hasWriteAccess(instance, key)) return;
 		instance.removeProperty(key);
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
+		if (!((AuthConnection)con).hasWriteAccess(instance, key)) return;
 		instance.setProperty(key, value);
 	}
 
 	@Override
 	public Collection<String> getRenditions() {
-		return instance.getRenditions();
+		throw new NotSupportedException();
 	}
 
 }

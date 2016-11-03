@@ -20,7 +20,9 @@ package de.mhus.lib.core.util;
 
 import java.util.Iterator;
 
-public class SingleIterator<E> implements Iterator<E> {
+import de.mhus.lib.basics.ReadOnly;
+
+public class SingleIterator<E> implements Iterator<E>, ReadOnly {
 
 	private E element = null;
 

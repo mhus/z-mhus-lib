@@ -8,14 +8,19 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.errors.MException;
 
 public class AuthConnection extends CaoConnection {
 
 	protected CaoConnection instance;
+	private Authorizator auth;
+	private AuthNode root;
 
-	public AuthConnection(CaoConnection instance) {
+	public AuthConnection(CaoConnection instance, Authorizator auth) throws MException {
 		super(instance.getName(), instance.getDriver());
 		this.instance = instance;
+		this.auth = auth;
+		addAspectFactory(AuthAccess.class, new AuthAccessFactory(this));
 	}
 
 	public AuthConnection(String name, CaoConnection instance) {
@@ -25,7 +30,9 @@ public class AuthConnection extends CaoConnection {
 	
 	@Override
 	public CaoNode getResourceByPath(String path) {
-		return new AuthNode( this, instance.getResourceByPath(path) );
+		CaoNode n = instance.getResourceByPath(path);
+		if (!hasReadAccess(n)) return null;
+		return new AuthNode( this, n );
 	}
 
 	@Override
@@ -40,34 +47,32 @@ public class AuthConnection extends CaoConnection {
 
 	@Override
 	public CaoNode getResourceById(String id) {
-		return new AuthNode(this, instance.getResourceById(id) );
+		CaoNode n = instance.getResourceById(id);
+		if (!hasReadAccess(n)) return null;
+		return new AuthNode(this, n );
 	}
 
 	@Override
 	public CaoNode getRoot() {
-		return new AuthNode(this, instance.getRoot() );
+		if (root == null)
+			root = new AuthNode(this, instance.getRoot() );
+		if (!hasReadAccess(instance.getRoot())) return null;
+		return root;
 	}
 
 	@Override
 	public CaoActionList getActions() {
 		MutableActionList out = new MutableActionList();
 		for (CaoAction action : instance.getActions() )
-			out.add(new AuthAction(this, action));
+			if (hasActionAccess(action))
+				out.add(new AuthAction(this, action));
 		return out;
 	}
-
-	@Override
-	public boolean supportVersions() {
-		return instance.supportVersions();
-	}
-
-	@Override
-	public void addAspectFactory(Class<? extends CaoAspect> ifc, CaoAspectFactory factory) {
-		instance.addAspectFactory(ifc, factory);
-	}
-
-	@Override
-	public <T extends CaoAspectFactory> T getAspectFactory(Class<? extends CaoAspect> ifc) {
+	
+	@SuppressWarnings("unchecked")
+	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
+		CaoAspectFactory<T> mine = super.getAspectFactory(ifc);
+		if (mine != null) return mine;
 		return instance.getAspectFactory(ifc);
 	}
 
@@ -76,4 +81,42 @@ public class AuthConnection extends CaoConnection {
 		return instance.equals(obj);
 	}
 	
+	public Authorizator getAuthorizator() {
+		return auth;
+	}
+	
+	public boolean hasReadAccess(CaoNode node) {
+		if (auth == null) return true;
+		return auth.hasReadAccess(node);
+	}
+	
+	public boolean hasWriteAccess(CaoNode node) {
+		if (auth == null) return true;
+		return auth.hasWriteAccess(node);
+	}
+	
+	public boolean hasActionAccess(CaoAction action) {
+		if (auth == null) return true;
+		return auth.hasActionAccess(action);
+	}
+
+	public boolean hasReadAccess(CaoNode node, String name) {
+		if (auth == null) return true;
+		return auth.hasReadAccess(node, name);
+	}
+
+	public boolean hasWriteAccess(CaoNode node, String name) {
+		if (auth == null) return true;
+		return auth.hasWriteAccess(node, name);
+	}
+	
+	public boolean hasContentAccess(CaoNode node, String rendition) {
+		if (auth == null) return true;
+		return auth.hasContentAccess(node, rendition);
+	}
+
+	public boolean hasAspectAccess(CaoNode node, Class<? extends CaoAspect> ifc) {
+		if (auth == null) return true;
+		return auth.hasAspectAccess(node, ifc);
+	}
 }

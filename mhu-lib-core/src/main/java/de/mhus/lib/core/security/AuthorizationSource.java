@@ -8,9 +8,8 @@ public interface AuthorizationSource {
 	 * @param api
 	 * @param account
 	 * @param mappingName
-	 * @param id
-	 * @param action
+	 * @param role
 	 * @return
 	 */
-	Boolean hasResourceAccess(Account account, String mappingName, String id, String action);
+	Boolean hasResourceAccess(Account account, String acl);
 }
