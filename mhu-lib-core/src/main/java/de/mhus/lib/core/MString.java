@@ -1606,4 +1606,12 @@ public class MString {
 		}
 		return null;
 	}
+
+	public static String beforeIndexOrAll(String _s, char _c) {
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _s;
+
+		return _s.substring(0, p);
+	}
 }
