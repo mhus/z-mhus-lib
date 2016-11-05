@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -140,6 +141,51 @@ public class MJson {
 	public static Object getValue(JsonNode node) {
 		if (node == null) return null;
 		return getValue(node, (TransformHelper)null);
+	}
+	
+	public static void setValue(ObjectNode node, String name, Object value) {
+		if (value == null) {
+			node.putNull(name);
+			return;
+		}
+		if (value instanceof Boolean) {
+			node.put(name, (Boolean)value);
+			return;
+		}
+		if (value instanceof Double) {
+			node.put(name, (Double)value);
+			return;
+		}
+		if (value instanceof BigDecimal) {
+			node.put(name, (BigDecimal)value);
+			return;
+		}
+		if (value instanceof Float) {
+			node.put(name, (Float)value);
+			return;
+		}
+		if (value instanceof Integer) {
+			node.put(name, (Integer)value);
+			return;
+		}
+		if (value instanceof Long) {
+			node.put(name, (Long)value);
+			return;
+		}
+		if (value instanceof byte[]) {
+			node.put(name, (byte[])value);
+			return;
+		}
+		if (value instanceof Date) {
+			node.put(name, ((Date)value).getTime());
+			return;
+		}
+		if (value instanceof JsonNode) {
+			node.put(name, (JsonNode)value);
+			return;
+		}
+		node.put(name, value.toString());
+		
 	}
 	
 	public static Object getValue(JsonNode node, TransformHelper helper) {
