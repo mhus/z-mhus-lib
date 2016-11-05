@@ -20,7 +20,7 @@ public class AuthConnection extends CaoConnection {
 		super(instance.getName(), instance.getDriver());
 		this.instance = instance;
 		this.auth = auth;
-		addAspectFactory(AuthAccess.class, new AuthAccessFactory(this));
+		registerAspectFactory(AuthAccess.class, new AuthAccessFactory(this));
 	}
 
 	public AuthConnection(String name, CaoConnection instance) {

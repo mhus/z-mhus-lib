@@ -7,11 +7,13 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.CaoPolicy;
 import de.mhus.lib.cao.CaoPolicyProvider;
 import de.mhus.lib.cao.util.MutableMetadata;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.errors.MException;
 
 public class FsConnection extends CaoConnection {
 
@@ -19,19 +21,19 @@ public class FsConnection extends CaoConnection {
 	private FsNode root;
 	private WeakHashMap<String, FsNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
-	private CaoPolicyProvider policyProvider;
 	private boolean useMetaFile;
 	
-	public FsConnection(String name, String root, boolean useMetaFile, boolean useCache) {
+	public FsConnection(String name, String root, boolean useMetaFile, boolean useCache) throws MException {
 		this(name, new File(root), useMetaFile, useCache);
 	}
 	
-	public FsConnection(String name, File root, boolean useMetaFile, boolean useCache) {
+	public FsConnection(String name, File root, boolean useMetaFile, boolean useCache) throws MException {
 		this(name, new FsDriver(), root);
 		this.useMetaFile = useMetaFile;
 		if (!useCache)
 			cache = null;
 		if (this.root != null) this.root.reload();
+		registerAspectFactory(CaoPolicy.class, new FsPolicyProvider());
 	}
 	
 	public FsConnection(String name, FsDriver driver, File root) {
@@ -39,9 +41,7 @@ public class FsConnection extends CaoConnection {
 		
 		metadata = new MutableMetadata(driver)
 				.addDefinition(MODIFIED, TYPE.LONG, 0);
-		
-		policyProvider = new FsPolicyProvider();
-		
+				
 		this.root = new FsNode(this,root, null);
 		
 	}
@@ -99,14 +99,6 @@ public class FsConnection extends CaoConnection {
 
 	public CaoMetadata getMetadata() {
 		return metadata;
-	}
-
-	public CaoPolicyProvider getPolicyProvider() {
-		return policyProvider;
-	}
-
-	public void setPolicyProvider(CaoPolicyProvider policyProvider) {
-		this.policyProvider = policyProvider;
 	}
 
 	@Override

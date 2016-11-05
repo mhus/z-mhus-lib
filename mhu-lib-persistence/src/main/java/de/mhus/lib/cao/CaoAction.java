@@ -1,5 +1,6 @@
 package de.mhus.lib.cao;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.lang.MObject;
@@ -22,6 +23,8 @@ public abstract class CaoAction extends MObject {
 	public static final String MOVE   = "moveNode";
 	public static final String RENAME = "renameNode";
 	public static final String CREATE = "createNode";
+	public static final String UPLOAD_RENDITION = "uploadRendition"; // CREATE or UPDATE; CREATE would suggest to generate from default rendition, e.g. create a thumbnail
+	public static final String DELETE_RENDITION = "deleteRendition";
 
 	private MNls resourceBundle;
 
@@ -46,9 +49,9 @@ public abstract class CaoAction extends MObject {
 	 * @return x
 	 * @throws CaoException 
 	 */
-	public abstract MForm createConfiguration(CaoList list,Object...initConfig) throws CaoException;
+	public abstract MForm createConfiguration(CaoList list,IProperties configuration) throws CaoException;
 
-	public abstract boolean canExecute(CaoList list, Object...initConfig);
+	public abstract boolean canExecute(CaoList list, IProperties configuration);
 
 	/**
 	 * Executes a defined action. Is the action need to execute an operation it will
@@ -59,7 +62,7 @@ public abstract class CaoAction extends MObject {
 	 * @return x
 	 * @throws CaoException
 	 */
-	public abstract CaoOperation createOperation(CaoList list, Object configuration) throws CaoException;
+	public abstract CaoOperation createOperation(CaoList list, IProperties configuration) throws CaoException;
 
 	@Override
 	public String toString() {

@@ -15,7 +15,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 //TODO need to be rewritten as aspect
 
-public class CaoPolicy extends CaoNode {
+public class CaoPolicy extends CaoNode implements CaoAspect {
 
 	private static final long serialVersionUID = 1L;
 	public static final String READ = "read";

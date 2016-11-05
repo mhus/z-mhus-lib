@@ -13,6 +13,7 @@ import java.util.Set;
 
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.PropertiesNode;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.AccessDeniedException;

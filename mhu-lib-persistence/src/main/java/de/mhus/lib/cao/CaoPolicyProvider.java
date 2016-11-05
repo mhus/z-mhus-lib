@@ -1,7 +1,8 @@
 package de.mhus.lib.cao;
 
-public interface CaoPolicyProvider {
+public interface CaoPolicyProvider extends CaoAspectFactory<CaoPolicy>{
 
-	CaoPolicy getAccessPolicy(CaoNode caoNode);
+	@Override
+	CaoPolicy getAspectFor(CaoNode node);
 	
 }

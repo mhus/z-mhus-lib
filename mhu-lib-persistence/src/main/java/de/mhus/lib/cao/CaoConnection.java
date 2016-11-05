@@ -33,10 +33,11 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 		return actionList;
 	}
 		
-	public <T extends CaoAspect> void addAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
+	public <T extends CaoAspect> void registerAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
 		if (aspectFactory.containsKey(ifc))
 			throw new MException("Aspect already registered",ifc);
 		aspectFactory.put(ifc, factory);
+		factory.doInitialize(this, actionList);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -13,8 +13,12 @@ import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.strategy.NotSuccessful;
+import de.mhus.lib.core.strategy.OperationResult;
+import de.mhus.lib.core.strategy.Successful;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -114,19 +118,20 @@ public class WritablePropertiesNode extends CaoWritableElement {
 
 	private class SaveThis extends CaoOperation {
 
-		@Override
-		public void initialize() throws CaoException {
+		public SaveThis() {
+			super(WritablePropertiesNode.this.getConnection());
 		}
 
 		@Override
-		public void execute() throws CaoException {
-			((PropertiesNode)getOriginalElement()).doUpdate(properties);
+		public OperationResult doExecute(IProperties properties) {
+			try {
+				((PropertiesNode)getOriginalElement()).doUpdate(WritablePropertiesNode.this.properties);
+				return new Successful(this, "ok");
+			} catch (Throwable e) {
+				return new NotSuccessful(this, e.toString(), -1);
+			}
 		}
 
-		@Override
-		public void dispose() throws CaoException {
-		}
-		
 	}
 
 	@Override
