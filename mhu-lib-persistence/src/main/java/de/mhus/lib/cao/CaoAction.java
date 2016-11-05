@@ -1,12 +1,16 @@
 package de.mhus.lib.cao;
 
+import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.strategy.DefaultMonitor;
+import de.mhus.lib.core.strategy.Monitor;
+import de.mhus.lib.core.strategy.Operation;
+import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsFactory;
-import de.mhus.lib.form.MForm;
 
 /**
  * A action is doing something with one or more objects. The main
@@ -45,24 +49,24 @@ public abstract class CaoAction extends MObject {
 	 * it depends on the operation.
 	 * 
 	 * @param list
-	 * @param initConfig specific initial attributes
+	 * @param configuration specific initial attributes
 	 * @return x
 	 * @throws CaoException 
 	 */
-	public abstract MForm createConfiguration(CaoList list,IProperties configuration) throws CaoException;
+	public abstract CaoConfiguration createConfiguration(CaoList list,IProperties configuration) throws CaoException;
 
-	public abstract boolean canExecute(CaoList list, IProperties configuration);
+	public abstract boolean canExecute(CaoConfiguration configuration);
 
 	/**
 	 * Executes a defined action. Is the action need to execute an operation it will
 	 * return the operation object to be executed by the caller.
 	 * 
-	 * @param list
 	 * @param configuration
+	 * @param monitor 
 	 * @return x
 	 * @throws CaoException
 	 */
-	public abstract CaoOperation createOperation(CaoList list, IProperties configuration) throws CaoException;
+	public abstract OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException;
 
 	@Override
 	public String toString() {
@@ -71,6 +75,12 @@ public abstract class CaoAction extends MObject {
 
 	public MNls getResourceBundle() {
 		return resourceBundle;
+	}
+
+	protected Monitor checkMonitor(Monitor monitor) {
+		if (monitor == null)
+			monitor = new DefaultMonitor(getClass());
+		return monitor;
 	}
 
 }

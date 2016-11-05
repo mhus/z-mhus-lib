@@ -6,19 +6,22 @@ import java.util.Collection;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoAction;
+import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
+import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -109,27 +112,45 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public CaoOperation getUpdateOperation() throws CaoException {
+	public CaoActionStarter getUpdateAction() throws CaoException {
 		try {
-			return getOriginalElement().getConnection().getActions().getAction(CaoAction.UPDATE).createOperation(new CaoList(getOriginalElement()).append(this), null);
+			CaoAction action = getOriginalElement().getConnection().getActions().getAction(CaoAction.UPDATE);
+			CaoList list = new CaoList(null);
+			list.add(this);
+			CaoConfiguration config = action.createConfiguration(list, null);
+			return new CaoActionStarter(action, config);
 		} catch (Throwable t) {}
 		return new SaveThis();
 	}
 
-	private class SaveThis extends CaoOperation {
+	private class SaveThis extends CaoActionStarter {
 
 		public SaveThis() {
-			super(WritablePropertiesNode.this.getConnection());
+			super(null, null);
 		}
-
+		
 		@Override
-		public OperationResult doExecute(IProperties properties) {
+		public String getName() {
+			return CaoAction.UPDATE;
+		}
+		@Override
+		public boolean canExecute() {
+			return true;
+		}
+		
+		@Override
+		public OperationResult doExecute(Monitor monitor) throws CaoException {
 			try {
 				((PropertiesNode)getOriginalElement()).doUpdate(WritablePropertiesNode.this.properties);
-				return new Successful(this, "ok");
+				return new Successful(CaoAction.UPDATE, "ok", 0);
 			} catch (Throwable e) {
-				return new NotSuccessful(this, e.toString(), -1);
+				return new NotSuccessful(CaoAction.UPDATE, e.toString(), -1);
 			}
+		}
+		
+		@Override
+		public MNls getResourceBundle() {
+			return null;
 		}
 
 	}

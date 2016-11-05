@@ -5,10 +5,10 @@ import java.util.WeakHashMap;
 
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.cao.aspect.CaoPolicyAspectFactory;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
-import de.mhus.lib.cao.CaoPolicyProvider;
 import de.mhus.lib.cao.util.MutableMetadata;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
@@ -34,6 +34,12 @@ public class FsConnection extends CaoConnection {
 			cache = null;
 		if (this.root != null) this.root.reload();
 		registerAspectFactory(CaoPolicy.class, new FsPolicyProvider());
+		
+		actionList.add(new FsCreate());
+		actionList.add(new FsDelete());
+		actionList.add(new FsUploadRendition());
+		actionList.add(new FsDeleteRendition());
+		
 	}
 	
 	public FsConnection(String name, FsDriver driver, File root) {
@@ -118,7 +124,7 @@ public class FsConnection extends CaoConnection {
 		if (useMetaFile) {
 			if (rendition == null) rendition = "content";
 			rendition = MFile.normalize(rendition);
-			return new File(file, "__cao." + rendition);
+			return new File(file, "__cao.content." + rendition);
 		}
 		
 		return null;

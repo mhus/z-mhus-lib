@@ -5,9 +5,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
+import de.mhus.lib.cao.CaoAction;
+import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.CaoOperation;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -25,9 +26,9 @@ public class AuthWritableNode extends CaoWritableElement {
 	}
 
 	@Override
-	public CaoOperation getUpdateOperation() throws MException {
+	public CaoActionStarter getUpdateAction() throws MException {
 		if (!((AuthConnection)con).hasWriteAccess(readable)) return null;
-		return new AuthOperation((AuthConnection) getConnection(), instance.getUpdateOperation());
+		return new AuthActionStarter(instance.getUpdateAction());
 	}
 
 	@Override

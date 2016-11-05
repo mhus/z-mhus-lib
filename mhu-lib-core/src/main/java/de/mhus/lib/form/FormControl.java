@@ -5,7 +5,7 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 @DefaultImplementation(FormControlAdapter.class)
 public interface FormControl {
 
-	void attachedForm(Form form);
+	void attachedForm(MForm form);
 	
 	void focus(UiComponent component);
 	

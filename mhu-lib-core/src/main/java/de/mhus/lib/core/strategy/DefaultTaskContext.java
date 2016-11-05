@@ -5,6 +5,10 @@ import de.mhus.lib.core.config.IConfig;
 
 public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 
+	public DefaultTaskContext(Class<?> owner) {
+		super(owner);
+	}
+
 	protected IConfig config;
 	protected boolean test;
 	protected IProperties parameters;

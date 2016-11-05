@@ -21,7 +21,7 @@ public class FormControlAdapter implements FormControl {
 	}
 
 	@Override
-	public void attachedForm(Form form) {
+	public void attachedForm(MForm form) {
 		
 	}
 

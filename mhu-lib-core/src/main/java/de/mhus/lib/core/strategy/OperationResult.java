@@ -1,5 +1,6 @@
 package de.mhus.lib.core.strategy;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MSystem;
 
 public class OperationResult {
@@ -70,6 +71,14 @@ public class OperationResult {
 	}
 	public void setResult(Object result) {
 		this.result = result;
+	}
+	
+	public boolean isPropertiesResult() {
+		return result != null && result instanceof IProperties;
+	}
+	
+	public IProperties getResultAsProperties() {
+		return (IProperties) result;
 	}
 	
 	@Override

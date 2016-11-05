@@ -10,15 +10,15 @@ public abstract class UiComponent {
 	public static final String FULL_SIZE_DEFAULT = "fullSizeDefault";
 	private static final String WIZARD = null;
 	
-	private Form form;
+	private MForm form;
 	private IConfig config;
 
-	public void doInit(Form form, IConfig config) {
+	public void doInit(MForm form, IConfig config) {
 		this.form = form;
 		this.config = config;
 	}
 
-	public Form getForm() {
+	public MForm getForm() {
 		return form;
 	}
 

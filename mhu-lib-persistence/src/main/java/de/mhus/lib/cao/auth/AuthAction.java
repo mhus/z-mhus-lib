@@ -3,9 +3,10 @@ package de.mhus.lib.cao.auth;
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
-import de.mhus.lib.cao.CaoOperation;
+import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.form.MForm;
+import de.mhus.lib.core.strategy.Monitor;
+import de.mhus.lib.core.strategy.OperationResult;
 
 public class AuthAction extends CaoAction {
 
@@ -23,18 +24,18 @@ public class AuthAction extends CaoAction {
 	}
 
 	@Override
-	public MForm createConfiguration(CaoList list, IProperties configuration) throws CaoException {
+	public CaoConfiguration createConfiguration(CaoList list, IProperties configuration) throws CaoException {
 		return instance.createConfiguration(list, configuration);
 	}
 
 	@Override
-	public boolean canExecute(CaoList list, IProperties configuration) {
-		return instance.canExecute(list, configuration);
+	public boolean canExecute(CaoConfiguration configuration) {
+		return instance.canExecute(configuration);
 	}
 
 	@Override
-	public CaoOperation createOperation(CaoList list, IProperties configuration) throws CaoException {
-		return new AuthOperation(con, instance.createOperation(list, configuration) );
+	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+		return instance.doExecute(configuration, monitor);
 	}
 
 }

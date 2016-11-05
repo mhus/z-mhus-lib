@@ -48,7 +48,7 @@ public class FsNode extends PropertiesNode {
 		this.name = file.getName();
 	}
 
-	private File getFile() {
+	File getFile() {
 		return file;
 	}
 

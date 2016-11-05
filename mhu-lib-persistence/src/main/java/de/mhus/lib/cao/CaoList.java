@@ -16,6 +16,13 @@ public class CaoList extends LinkedList<CaoNode> {
 	private static final long serialVersionUID = 1L;
 	private CaoNode parent;
 
+	public CaoList(CaoNode parent, CaoNode ... nodes) {
+		this.parent = parent;
+		if (nodes != null)
+			for (CaoNode n : nodes)
+				add(n);
+	}
+
 	/**
 	 * <p>Constructor for CaoList.</p>
 	 *

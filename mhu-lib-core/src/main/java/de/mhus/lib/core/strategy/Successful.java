@@ -34,6 +34,10 @@ public class Successful extends OperationResult {
 		this(operation.getDescription().getPath(), msg, 0, keyValues);
 	}
 	
+	public Successful(String path) {
+		this(path, "ok", 0);
+	}
+	
 	public Successful(String path, String msg, long rc, String ... keyValues) {
 		setOperationPath(path);
 		setTitle("");

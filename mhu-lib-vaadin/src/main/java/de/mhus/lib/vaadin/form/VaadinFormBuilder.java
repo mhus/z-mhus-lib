@@ -5,12 +5,12 @@ import java.util.Map;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.form.Form;
+import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.UiComponent;
 
 public class VaadinFormBuilder {
 
-	private Form form;
+	private MForm form;
 	private UiLayout layout;
 	private HashMap<String, UiVaadin> index = new HashMap<>();
 	
@@ -86,11 +86,11 @@ public class VaadinFormBuilder {
 		return layout;
 	}
 
-	public Form getForm() {
+	public MForm getForm() {
 		return form;
 	}
 
-	public void setForm(Form form) {
+	public void setForm(MForm form) {
 		this.form = form;
 	}
 

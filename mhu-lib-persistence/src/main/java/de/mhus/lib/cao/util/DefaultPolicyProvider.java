@@ -3,10 +3,10 @@ package de.mhus.lib.cao.util;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
-import de.mhus.lib.cao.CaoPolicyProvider;
+import de.mhus.lib.cao.aspect.CaoPolicyAspectFactory;
 import de.mhus.lib.errors.MException;
 
-public class DefaultPolicyProvider implements CaoPolicyProvider {
+public class DefaultPolicyProvider implements CaoPolicyAspectFactory {
 
 	@Override
 	public CaoPolicy getAspectFor(CaoNode node) {

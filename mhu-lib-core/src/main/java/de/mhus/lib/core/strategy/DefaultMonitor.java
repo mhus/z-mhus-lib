@@ -1,14 +1,18 @@
 package de.mhus.lib.core.strategy;
 
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.logging.Log;
 
-public class DefaultMonitor extends MLog implements Monitor {
+public class DefaultMonitor implements Monitor {
 
 	private long steps;
 	private long step;
 	private StringBuffer lineBuffer = new StringBuffer();
+	private Log log = null;
 
+	public DefaultMonitor(Class<?> owner) {
+		log = Log.getLog(owner);
+	}
+	
 	public long getSteps() {
 		return steps;
 	}
@@ -29,7 +33,7 @@ public class DefaultMonitor extends MLog implements Monitor {
 
 	@Override
 	public Log log() {
-		return super.log();
+		return log;
 	}
 
 	@Override

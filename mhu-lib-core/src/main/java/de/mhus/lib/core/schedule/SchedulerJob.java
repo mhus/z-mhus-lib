@@ -162,6 +162,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	protected static class MyTaskContext extends DefaultTaskContext {
 		
+		public MyTaskContext() {
+			super(SchedulerJob.class);
+		}
+
 		public void clear() {
 			errorMessage = null;
 		}

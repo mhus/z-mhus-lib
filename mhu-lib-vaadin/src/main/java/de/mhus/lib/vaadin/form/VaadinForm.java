@@ -5,14 +5,14 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.form.ActivatorAdapterProvider;
-import de.mhus.lib.form.Form;
+import de.mhus.lib.form.MForm;
 
 public class VaadinForm extends VerticalLayout {
 
 	public enum SHOW {MODEL,YES,NO};
 	
 	private VaadinFormBuilder builder;
-	private Form form;
+	private MForm form;
 	private SHOW showInformation = SHOW.MODEL;
 	private VaadinUiInformation informationPane;
 	private UiLayout layout;
@@ -20,7 +20,7 @@ public class VaadinForm extends VerticalLayout {
 	
 	public VaadinForm() {}
 	
-	public VaadinForm(Form form) {
+	public VaadinForm(MForm form) {
 		setForm(form);
 	}
 	
@@ -87,11 +87,11 @@ public class VaadinForm extends VerticalLayout {
 		this.builder = builder;
 	}
 
-	public Form getForm() {
+	public MForm getForm() {
 		return form;
 	}
 
-	public void setForm(Form form) {
+	public void setForm(MForm form) {
 		this.form = form;
 	}
 

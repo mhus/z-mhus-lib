@@ -9,7 +9,7 @@ import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.util.MNlsBundle;
 
-public class PojoForm extends Form {
+public class PojoForm extends MForm {
 
 	public PojoForm(PojoProvider pojo) throws Exception {
 		this(pojo, "");

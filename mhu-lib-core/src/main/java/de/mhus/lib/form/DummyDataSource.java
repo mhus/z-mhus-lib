@@ -44,7 +44,7 @@ public class DummyDataSource extends FormControlAdapter implements DataSource {
 	}
 
 	@Override
-	public void attachedForm(Form form) {
+	public void attachedForm(MForm form) {
 		System.out.println("Attached " + form.getClass());
 	}
 

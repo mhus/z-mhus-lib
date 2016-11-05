@@ -38,8 +38,7 @@ public class PropertiesDataSource implements DataSource {
 
 	@Override
 	public void setObject(UiComponent component, String name, Object value) {
-		// TODO Auto-generated method stub
-		
+		properties.put(name, value);
 	}
 
 	@Override
