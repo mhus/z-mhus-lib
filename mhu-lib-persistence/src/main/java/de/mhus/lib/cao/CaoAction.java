@@ -43,6 +43,17 @@ public abstract class CaoAction extends MObject {
 	public abstract String getName();
 
 	/**
+	 * 
+	 * @param node
+	 * @param configuration
+	 * @return
+	 * @throws CaoException
+	 */
+	public CaoConfiguration createConfiguration(CaoNode node,IProperties configuration) throws CaoException {
+		return createConfiguration(new CaoList(null, node), configuration);
+	}
+
+	/**
 	 * Returns a configuration Form for the operation. The list of elements
 	 * should be a representative list. The configuration use most time the
 	 * first element of this list. In other cases the hole list is needed,

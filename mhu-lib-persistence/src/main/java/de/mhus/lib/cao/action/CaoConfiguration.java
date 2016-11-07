@@ -11,15 +11,17 @@ import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.UiComponent;
 
-public abstract class CaoConfiguration extends MForm implements DataSource {
+public abstract class CaoConfiguration extends MForm {
 
 	protected MProperties properties = new MProperties();
 	protected CaoConfiguration con;
 	protected CaoList list;
+	protected MyDataSource dataSource;
 	
 	/**
 	 * 
 	 * @param con Connection
+	 * @param list 
 	 * @param model If null use the default model
 	 */
 	public CaoConfiguration(CaoConfiguration con, CaoList list, IConfig model) {
@@ -27,7 +29,8 @@ public abstract class CaoConfiguration extends MForm implements DataSource {
 		if (this.model == null) this.model = createDefaultModel();
 		this.con = con;
 		this.list = list;
-		setDataSource(this);
+		dataSource = new MyDataSource();
+		setDataSource(dataSource);
 	}
 	
 	protected abstract IConfig createDefaultModel();
@@ -35,39 +38,7 @@ public abstract class CaoConfiguration extends MForm implements DataSource {
 	public IProperties getProperties() {
 		return properties;
 	}
-	
-	@Override
-	public boolean getBoolean(UiComponent component, String name, boolean def) {
-		return properties.getBoolean(component.getName() + "." + name, def);
-	}
 
-	@Override
-	public int getInt(UiComponent component, String name, int def) {
-		return properties.getInt(component.getName() + "." + name, def);
-	}
-
-	@Override
-	public String getString(UiComponent component, String name, String def) {
-		return properties.getString(component.getName() + "." + name, def);
-	}
-
-	@Override
-	public Object getObject(UiComponent component, String name, Object def) {
-		Object val = properties.getProperty(component.getName() + "." + name);
-		if (val == null) return def;
-		return val;
-	}
-
-	@Override
-	public void setObject(UiComponent component, String name, Object value) {
-		properties.put(name, value);
-	}
-
-	@Override
-	public DataSource getNext() {
-		return null;
-	}
-	
 	public CaoConfiguration getConnection() {
 		return con;
 	}
@@ -76,4 +47,37 @@ public abstract class CaoConfiguration extends MForm implements DataSource {
 		return list;
 	}
 
+	private class MyDataSource implements DataSource {
+		@Override
+		public boolean getBoolean(UiComponent component, String name, boolean def) {
+			return properties.getBoolean(component.getName() + "." + name, def);
+		}
+
+		@Override
+		public int getInt(UiComponent component, String name, int def) {
+			return properties.getInt(component.getName() + "." + name, def);
+		}
+
+		@Override
+		public String getString(UiComponent component, String name, String def) {
+			return properties.getString(component.getName() + "." + name, def);
+		}
+
+		@Override
+		public Object getObject(UiComponent component, String name, Object def) {
+			Object val = properties.getProperty(component.getName() + "." + name);
+			if (val == null) return def;
+			return val;
+		}
+
+		@Override
+		public void setObject(UiComponent component, String name, Object value) {
+			properties.put(name, value);
+		}
+
+		@Override
+		public DataSource getNext() {
+			return null;
+		}
+	}
 }
