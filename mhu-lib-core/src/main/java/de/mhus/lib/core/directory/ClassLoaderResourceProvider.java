@@ -132,6 +132,10 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode<
 			return null;
 		}
 
+		@Override
+		public void clear() {
+		}
+
 	}
 
 	@Override

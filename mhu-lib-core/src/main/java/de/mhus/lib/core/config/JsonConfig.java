@@ -299,4 +299,9 @@ public class JsonConfig extends IConfig {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		node.removeAll();
+	}
+
 }

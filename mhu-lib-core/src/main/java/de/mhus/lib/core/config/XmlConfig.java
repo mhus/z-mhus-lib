@@ -263,4 +263,10 @@ public class XmlConfig extends IConfig {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			element.removeAttribute(name);
+	}
+
 }

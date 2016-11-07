@@ -80,4 +80,10 @@ public class VaadinSessionWrapper extends AbstractProperties {
 		throw new NotSupportedException();
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			remove(key);
+	}
+
 }

@@ -186,5 +186,10 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	public Collection<String> getRenditions() {
 		return getOriginalElement().getRenditions();
 	}
+
+	@Override
+	public void clear() {
+		properties.clear();
+	}
 	
 }

@@ -224,4 +224,9 @@ public class HashConfig extends IConfig {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		properties.clear();
+	}
+
 }

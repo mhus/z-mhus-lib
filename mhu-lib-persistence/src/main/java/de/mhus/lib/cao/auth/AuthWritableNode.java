@@ -135,4 +135,10 @@ public class AuthWritableNode extends CaoWritableElement {
 		throw new NotSupportedException();
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			removeProperty(key);
+	}
+
 }

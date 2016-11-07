@@ -234,4 +234,8 @@ public class CaoPolicy extends CaoNode implements CaoAspect {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

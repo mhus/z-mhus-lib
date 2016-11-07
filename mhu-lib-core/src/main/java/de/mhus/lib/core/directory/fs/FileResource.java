@@ -206,5 +206,9 @@ public class FileResource extends ResourceNode<FileResource> {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 
 }

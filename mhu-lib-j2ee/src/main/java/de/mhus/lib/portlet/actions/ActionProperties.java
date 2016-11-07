@@ -94,4 +94,8 @@ public class ActionProperties extends AbstractProperties {
 		throw new NotSupportedException();
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

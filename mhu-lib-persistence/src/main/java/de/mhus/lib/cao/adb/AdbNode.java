@@ -164,4 +164,8 @@ public class AdbNode extends PropertiesNode {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

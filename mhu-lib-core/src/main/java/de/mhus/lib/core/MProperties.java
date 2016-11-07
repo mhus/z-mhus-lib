@@ -558,5 +558,10 @@ public class MProperties extends AbstractProperties implements Externalizable {
    private static char toHex(int nibble) {
        return hexDigit[(nibble & 0xF)];
    }
+
+	@Override
+	public void clear() {
+		properties.clear();
+	}
    
 }

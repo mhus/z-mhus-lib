@@ -369,11 +369,12 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 			put(e.getKey(),e.getValue());
 	}
 
-	@Override
-	public void clear() {
-		for (String name : keys())
-			removeProperty(name);
-	}
+//	@Override
+//	public void clear() {
+//		
+//		for (String name : keys())
+//			removeProperty(name);
+//	}
 
 	@Override
 	public Set<String> keySet() {

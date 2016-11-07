@@ -167,4 +167,8 @@ public class EmptyConfig extends IConfig implements IFlatConfig {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

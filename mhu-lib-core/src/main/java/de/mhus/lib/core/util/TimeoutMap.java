@@ -19,6 +19,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
 	private long lastCheck = System.currentTimeMillis();
 	private long checkTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	private Invalidator<K,V> invalidator;
 
 	@Override
 	public int size() {
@@ -42,17 +43,25 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 
 	@Override
 	public V get(Object key) {
-		check();
+		doValidationCheck();
 		TimeoutMap<K, V>.Container<V> ret = map.get(key);
 		return ret == null ? null : ret.getValue();
 	}
 
-	private synchronized void check() {
+	public long getAccessCount(Object key) {
+		doValidationCheck();
+		TimeoutMap<K, V>.Container<V> ret = map.get(key);
+		return ret == null ? -1 : ret.accessed;
+	}
+	
+	public synchronized void doValidationCheck() {
 		if (System.currentTimeMillis() - lastCheck > checkTimeout) {
 			Iterator<java.util.Map.Entry<K, TimeoutMap<K, V>.Container<V>>> entries = map.entrySet().iterator();
 			while (entries.hasNext()) {
 				 java.util.Map.Entry<K, TimeoutMap<K, V>.Container<V>> next = entries.next();
-				 if (next.getValue().isTimeout())
+				 if (invalidator != null && invalidator.isInvalid(next.getKey(), next.getValue().value, next.getValue().time, next.getValue().accessed )
+					 ||
+					 invalidator == null && next.getValue().isTimeout())
 					 entries.remove();
 			}
 			lastCheck = System.currentTimeMillis();
@@ -61,14 +70,14 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 
 	@Override
 	public V put(K key, V value) {
-		check();
+		doValidationCheck();
 		TimeoutMap<K, V>.Container<V> ret = map.put(key, new Container<V>(value));
 		return ret == null ? null : ret.value;
 	}
 
 	@Override
 	public V remove(Object key) {
-		check();
+		doValidationCheck();
 		TimeoutMap<K, V>.Container<V> ret = map.remove(key);
 		return ret == null ? null : ret.value;
 	}
@@ -86,7 +95,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 
 	@Override
 	public Set<K> keySet() {
-		check();
+		doValidationCheck();
 		return map.keySet();
 	}
 
@@ -97,7 +106,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		check();
+		doValidationCheck();
 		HashSet<java.util.Map.Entry<K, V>> out = new HashSet<>();
 		for (Map.Entry<K, Container<V>>entry : map.entrySet())
 			out.add(new MapEntry<K,V>( entry.getKey(), entry.getValue().value) );
@@ -187,21 +196,37 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 		this.checkTimeout = checkTimeout;
 	}
 
+	public Invalidator<K,V> getInvalidator() {
+		return invalidator;
+	}
+
+	public void setInvalidator(Invalidator<K,V> invalidator) {
+		this.invalidator = invalidator;
+	}
+
 	private class Container<Z> {
 		Z value;
 		long time = System.currentTimeMillis();
-		
+		long accessed = 0;
+
 		public Container(Z value) {
 			this.value = value;
 		}
 
 		public Z getValue() {
 			time = System.currentTimeMillis();
+			accessed++;
 			return value;
 		}
 
 		boolean isTimeout() {
 			return System.currentTimeMillis() - time > getTimeout();
 		}
+	}
+	
+	public static interface Invalidator<K,V> {
+
+		boolean isInvalid(K key, V value, long time, long accessed);
+		
 	}
 }

@@ -58,4 +58,7 @@ public interface IProperties extends Map<String,Object>, Serializable, Iterable<
 
 	Set<String> keys();
 	
+	@Override
+	void clear();
+
 }

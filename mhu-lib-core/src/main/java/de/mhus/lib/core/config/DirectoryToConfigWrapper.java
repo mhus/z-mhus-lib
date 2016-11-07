@@ -236,5 +236,10 @@ public class DirectoryToConfigWrapper extends IConfig {
 	public Collection<String> getRenditions() {
 		return null;
 	}
+
+	@Override
+	public void clear() {
+		node.clear();
+	}
 	
 }

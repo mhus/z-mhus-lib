@@ -4,6 +4,7 @@ import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
+import de.mhus.lib.cao.CaoDataSource;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.karaf.MOsgi;
 
@@ -15,7 +16,7 @@ public class CmdDs implements Action {
 	public Object execute() throws Exception {
 		ConsoleTable out = new ConsoleTable();
 		out.setHeaderValues("Name","Type","Status");
-		for (CaoDatasource ds : MOsgi.getServices(CaoDatasource.class, null)) {
+		for (CaoDataSource ds : MOsgi.getServices(CaoDataSource.class, null)) {
 			out.addRowValues(ds.getName(), ds.getType(), ds);
 		}
 		out.print(System.out);

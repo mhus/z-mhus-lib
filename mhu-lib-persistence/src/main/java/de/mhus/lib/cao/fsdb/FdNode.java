@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fs;
+package de.mhus.lib.cao.fsdb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,16 +20,16 @@ import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class FsNode extends PropertiesNode {
+public class FdNode extends PropertiesNode {
 
 	private static final long serialVersionUID = 1L;
 	private File file;
 
-	public FsNode(FsConnection connection, File file, FsNode parent) {
+	public FdNode(FdConnection connection, File file, FdNode parent) {
 		super(connection, parent);
 		this.file = file;
 		reload();
-		this.metadata = ((FsConnection)getConnection()).getMetadata();
+		this.metadata = ((FdConnection)getConnection()).getMetadata();
 	}
 
 	@Override
@@ -39,12 +39,9 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public void reload() {
-		((FsConnection)getConnection()).fillProperties(file, properties);
-		FsNode root = ((FsNode)((FsConnection)getConnection()).getRoot());
-		if (root == null)
-			this.id = "";
-		else
-			this.id = file.getPath().substring( root.getFile().getPath().length() );
+		((FdConnection)getConnection()).fillProperties(file, properties);
+//		FdNode root = ((FdNode)((FdConnection)getConnection()).getRoot());
+		this.id = properties.getString("_id", "");
 		this.name = file.getName();
 	}
 
@@ -61,7 +58,7 @@ public class FsNode extends PropertiesNode {
 	public CaoNode getNode(String key) {
 		File f = new File(file, key);
 		if (f.exists())
-			return new FsNode((FsConnection) getConnection(), f, this);
+			return new FdNode((FdConnection) getConnection(), f, this);
 		return null;
 	}
 
@@ -70,7 +67,7 @@ public class FsNode extends PropertiesNode {
 		LinkedList<CaoNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
-			out.add( new FsNode((FsConnection) getConnection(), f, this));
+			out.add( new FdNode((FdConnection) getConnection(), f, this));
 		}
 		return out;
 	}
@@ -97,7 +94,7 @@ public class FsNode extends PropertiesNode {
 	@Override
 	public InputStream getInputStream(String rendition) {
 		
-		File contentFile = ((FsConnection)getConnection()).getContentFileFor(file, rendition);
+		File contentFile = ((FdConnection)getConnection()).getContentFileFor(file, rendition);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return new FileInputStream(contentFile);
@@ -110,7 +107,7 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public URL getUrl() {
-		File contentFile = ((FsConnection)getConnection()).getContentFileFor(file, null);
+		File contentFile = ((FdConnection)getConnection()).getContentFileFor(file, null);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return contentFile.toURL();
@@ -122,13 +119,13 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public boolean hasContent() {
-		return file.isFile() || ((FsConnection)getConnection()).isUseMetaFile();
+		return true;
 	}
 
 	@Override
 	protected void doUpdate(MProperties modified) {
 		if (!isEditable()) throw new AccessDeniedException(file);
-		File metaFile = ((FsConnection)getConnection()).getMetaFileFor(file);
+		File metaFile = ((FdConnection)getConnection()).getMetaFileFor(file);
 		modified.remove("id");
 		try {
 			modified.save(metaFile);
@@ -140,7 +137,7 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public boolean isEditable() {
-		return ((FsConnection)getConnection()).isUseMetaFile() && file.canWrite() && file.getParentFile().canWrite();
+		return file.canWrite() && file.getParentFile().canWrite();
 	}
 
 	@Override

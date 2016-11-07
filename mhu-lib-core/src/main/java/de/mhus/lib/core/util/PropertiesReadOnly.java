@@ -70,4 +70,8 @@ public class PropertiesReadOnly extends AbstractProperties {
 		return parent.entrySet();
 	}
 
+	@Override
+	public void clear() {
+	}
+
 }

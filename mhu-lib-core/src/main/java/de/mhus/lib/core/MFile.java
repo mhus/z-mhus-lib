@@ -25,6 +25,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -32,12 +33,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
@@ -736,5 +742,32 @@ public class MFile {
 	public static File getUserHome() {
 		return new File(System.getProperty("user.home"));
 	}
-	
+
+	public static void releaseLock(FileLock lock) {
+		try {
+			FileChannel channel = lock.channel();
+			lock.close();
+			channel.close();
+		} catch (IOException e) {
+			log.d(e);
+		}
+	}
+
+	public static FileLock aquireLock(File lockFile, long timeout) throws IOException, TimeoutException {
+		if (!lockFile.exists()) lockFile.createNewFile();
+		@SuppressWarnings("resource")
+		FileChannel channel = new RandomAccessFile(lockFile, "rw").getChannel();
+		FileLock lock = null;
+		long start = System.currentTimeMillis();
+		while (true) {
+			try {
+				lock = channel.lock();
+				return lock;
+			} catch (OverlappingFileLockException e) {
+				MThread.sleep(200);
+			}
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutException(lockFile.getAbsolutePath());
+		}
+	}
+
 }

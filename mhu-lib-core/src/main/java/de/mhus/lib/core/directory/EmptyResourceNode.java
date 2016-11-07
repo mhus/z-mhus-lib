@@ -104,5 +104,9 @@ public class EmptyResourceNode<E extends ResourceNode<?>> extends ResourceNode<E
 		return null;
 	}
 
+	@Override
+	public void clear() {
+	}
+
 
 }

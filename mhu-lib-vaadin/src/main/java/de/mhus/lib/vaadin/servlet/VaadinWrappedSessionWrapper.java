@@ -87,4 +87,10 @@ public class VaadinWrappedSessionWrapper extends AbstractProperties {
 		return instance.getAttributeNames().size();
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			remove(key);
+	}
+
 }

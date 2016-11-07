@@ -171,4 +171,9 @@ public class PropertiesConfig extends IConfig implements IFlatConfig {
 		return null;
 	}
 
+	@Override
+	public void clear() {
+		properties.clear();
+	}
+
 }

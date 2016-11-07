@@ -96,5 +96,11 @@ public class PortletSessionWrapper  extends AbstractProperties {
 		return cnt;
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			remove(key);
+	}
+
 
 }

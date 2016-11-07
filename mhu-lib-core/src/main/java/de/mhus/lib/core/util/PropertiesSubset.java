@@ -87,4 +87,10 @@ public class PropertiesSubset extends AbstractProperties {
 		throw new NotSupportedException(); //TODO implement
 	}
 
+	@Override
+	public void clear() {
+		for (String key : keys())
+			remove(key);
+	}
+
 }

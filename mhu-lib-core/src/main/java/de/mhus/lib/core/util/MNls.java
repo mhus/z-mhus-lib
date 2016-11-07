@@ -103,7 +103,7 @@ public class MNls extends AbstractProperties {
 
 	@Override
 	public boolean isEditable() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -146,6 +146,11 @@ public class MNls extends AbstractProperties {
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
 		throw new NotSupportedException();
+	}
+
+	@Override
+	public void clear() {
+		properties.clear();
 	}
 
 }
