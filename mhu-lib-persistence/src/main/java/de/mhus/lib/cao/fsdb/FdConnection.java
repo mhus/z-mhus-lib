@@ -11,6 +11,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
 import de.mhus.lib.cao.aspect.CaoPolicyAspectFactory;
 import de.mhus.lib.cao.CaoMetadata;
@@ -25,7 +26,6 @@ import de.mhus.lib.errors.MException;
 
 public class FdConnection extends CaoConnection {
 
-	public static final String MODIFIED = "modified";
 	private FdNode root;
 	private WeakHashMap<String, FdNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
@@ -57,7 +57,7 @@ public class FdConnection extends CaoConnection {
 		super(name, driver);
 		
 		metadata = new MutableMetadata(driver)
-				.addDefinition(MODIFIED, TYPE.LONG, 0);
+				.addDefinition(CaoConst.MODIFIED, TYPE.LONG, 0);
 				
 		rootDir = root;
 		filesDir = new File(root, "repository/files");
@@ -180,7 +180,7 @@ public class FdConnection extends CaoConnection {
 				p.putAll(meta);
 			}
 		
-		p.setLong(MODIFIED, file.lastModified());
+		p.setLong(CaoConst.MODIFIED, file.lastModified());
 	}
 	
 	public File getMetaFileFor(File file) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
 import de.mhus.lib.cao.aspect.CaoPolicyAspectFactory;
 import de.mhus.lib.cao.CaoMetadata;
@@ -17,7 +18,6 @@ import de.mhus.lib.errors.MException;
 
 public class FsConnection extends CaoConnection {
 
-	public static final String MODIFIED = "modified";
 	private FsNode root;
 	private WeakHashMap<String, FsNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
@@ -46,7 +46,7 @@ public class FsConnection extends CaoConnection {
 		super(name, driver);
 		
 		metadata = new MutableMetadata(driver)
-				.addDefinition(MODIFIED, TYPE.LONG, 0);
+				.addDefinition(CaoConst.MODIFIED, TYPE.LONG, 0);
 				
 		this.root = new FsNode(this,root, null);
 		
@@ -91,7 +91,7 @@ public class FsConnection extends CaoConnection {
 			}
 		}
 		
-		p.setLong(MODIFIED, file.lastModified());
+		p.setLong(CaoConst.MODIFIED, file.lastModified());
 	}
 	
 	public File getMetaFileFor(File file) {
