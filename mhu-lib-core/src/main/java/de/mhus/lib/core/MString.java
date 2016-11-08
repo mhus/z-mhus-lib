@@ -233,6 +233,7 @@ public class MString {
 	 */
 
 	public static boolean isIndex(String _s, char _c) {
+		if (_s == null) return false;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return false;
