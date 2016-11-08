@@ -73,7 +73,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public CaoNode getNode(String key) {
 		CaoNode n = instance.getNode(key);
-		if (!((AuthConnection)con).hasReadAccess(n)) return null;
+		if (n == null || !((AuthConnection)con).hasReadAccess(n)) return null;
 		return new AuthNode( (AuthConnection)getConnection(), this, n );
 	}
 
