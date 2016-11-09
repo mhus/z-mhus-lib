@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.cao.action.CaoConfiguration;
+import de.mhus.lib.core.strategy.OperationResult;
 
 public class CaoUtil {
 
@@ -19,6 +21,18 @@ public class CaoUtil {
 		//return TYPE.ELEMENT;
 		//return TYPE.TEXT;
 		return TYPE.OBJECT;
+	}
+
+	public static void deleteRecursive(CaoNode res, int levels) throws CaoException {
+		if (levels < 0) return;
+		levels--;
+		for (CaoNode child : res.getNodes())
+			deleteRecursive(child, levels);
+		
+		CaoAction action = res.getConnection().getAction(CaoAction.DELETE);
+		CaoConfiguration config = action.createConfiguration(res, null);
+		OperationResult result = action.doExecute(config, null);
+		
 	}
 	
 }

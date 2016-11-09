@@ -86,4 +86,8 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 		throw new NotSupportedException();
 	}
 
+	public CaoAction getAction(String name) {
+		return getActions().getAction(name);
+	}
+
 }

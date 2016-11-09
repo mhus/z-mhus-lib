@@ -33,7 +33,7 @@ public class FdCreate extends CaoAction {
 	@Override
 	public boolean canExecute(CaoConfiguration configuration) {
 		try {
-			return configuration.getList().size() != 1 
+			return configuration.getList().size() == 1 
 					&& 
 					configuration.getList().get(0) instanceof FdNode 
 					&&
