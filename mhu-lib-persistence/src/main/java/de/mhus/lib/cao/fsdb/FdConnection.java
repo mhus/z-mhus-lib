@@ -150,6 +150,7 @@ public class FdConnection extends CaoConnection {
 
 	@Override
 	public CaoNode getResourceByPath(String path) {
+		if (path == null) return null;
 		synchronized (this) {
 			FdNode node = cache == null ? null : cache.get(path);
 			if (node != null) {

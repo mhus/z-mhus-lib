@@ -31,7 +31,7 @@ public class AuthConnection extends CaoConnection {
 	@Override
 	public CaoNode getResourceByPath(String path) {
 		CaoNode n = instance.getResourceByPath(path);
-		if (!hasReadAccess(n)) return null;
+		if (n == null || !hasReadAccess(n)) return null;
 		return new AuthNode( this, n );
 	}
 
@@ -48,7 +48,7 @@ public class AuthConnection extends CaoConnection {
 	@Override
 	public CaoNode getResourceById(String id) {
 		CaoNode n = instance.getResourceById(id);
-		if (!hasReadAccess(n)) return null;
+		if (n == null || !hasReadAccess(n)) return null;
 		return new AuthNode(this, n );
 	}
 

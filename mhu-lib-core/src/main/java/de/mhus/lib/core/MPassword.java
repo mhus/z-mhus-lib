@@ -159,4 +159,9 @@ public class MPassword {
 		    return new String(buf);
 	}
 
+	public static boolean validatePassword(String current, String saved) {
+		// TODO check encoding or null values
+		return encodePasswordMD5(current).equals(saved);
+	}
+
 }
