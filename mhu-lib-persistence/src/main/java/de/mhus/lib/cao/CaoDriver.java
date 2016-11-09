@@ -1,5 +1,6 @@
 package de.mhus.lib.cao;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -24,6 +25,10 @@ public abstract class CaoDriver extends MObject {
 	 * @throws java.net.URISyntaxException if any.
 	 */
 	public CaoConnection connect(String uri, String authentication) throws URISyntaxException {
+		if (uri == null)
+			return connect((URI)null, authentication);
+		if (uri.indexOf(':') < 0)
+			return connect(new File(uri).toURI(), authentication);
 		return connect(new URI(uri), authentication);
 	}
 

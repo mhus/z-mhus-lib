@@ -6,6 +6,6 @@ public interface CaoDataSource {
 
 	String getType();
 
-	CaoConnection getConnection();
+	CaoConnection getConnection() throws Exception;
 	
 }
