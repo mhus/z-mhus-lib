@@ -28,7 +28,7 @@ public class CaoPrincipal extends CaoPolicy {
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		return name;
 	}
 

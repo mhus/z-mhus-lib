@@ -70,13 +70,13 @@ public class CaoPolicy extends CaoNode implements CaoAspect {
 	}
 
 	@Override
-	public String getId() throws MException {
+	public String getId() {
 		if (proxy != null) return proxy.getId();
 		return null;
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		if (proxy != null) return proxy.getName();
 		return null;
 	}

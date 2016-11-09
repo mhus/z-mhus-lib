@@ -59,18 +59,16 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 	 * 
 	 * @return Unique ID or null
 	 * @throws CaoException
-	 * @throws MException 
 	 */
-	public abstract String getId() throws MException;
+	public abstract String getId();
 
 	/**
 	 * Return a display name of this object.
 	 * 
 	 * @return The display name
-	 * @throws MException
 	 */
 	@Override
-	public abstract String getName() throws MException;
+	public abstract String getName();
 
 	/**
 	 * return true if this node can have children. If the node is only a
@@ -92,11 +90,7 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 
 	@Override
 	public String toString() {
-		try {
-			return getName() + " ("+getId()+")";
-		} catch (MException e) {
-		}
-		return super.toString();
+		return getName() + " ("+getId()+")";
 	}
 
 	/**

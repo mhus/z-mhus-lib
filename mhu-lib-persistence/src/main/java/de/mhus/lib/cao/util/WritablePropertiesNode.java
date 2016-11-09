@@ -56,7 +56,7 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		return getOriginalElement().getName();
 	}
 
@@ -166,7 +166,7 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getId() throws MException {
+	public String getId() {
 		return getOriginalElement().getId();
 	}
 

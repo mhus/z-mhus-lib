@@ -42,12 +42,12 @@ public class AuthWritableNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getId() throws MException {
+	public String getId() {
 		return instance.getId();
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		return instance.getName();
 	}
 

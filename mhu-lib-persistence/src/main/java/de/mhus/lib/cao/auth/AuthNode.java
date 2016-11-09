@@ -89,7 +89,7 @@ public class AuthNode extends CaoNode {
 	}
 
 	@Override
-	public String getId() throws MException {
+	public String getId() {
 		return instance.getId();
 	}
 
@@ -116,7 +116,7 @@ public class AuthNode extends CaoNode {
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		return instance.getName();
 	}
 
@@ -152,10 +152,7 @@ public class AuthNode extends CaoNode {
 	public Collection<String> getNodeKeys() {
 		HashSet<String> out = new HashSet<>();
 		for (CaoNode n : getNodes())
-			try {
-				out.add(n.getName());
-			} catch (MException e) {
-			}
+			out.add(n.getName());
 		return out;
 	}
 

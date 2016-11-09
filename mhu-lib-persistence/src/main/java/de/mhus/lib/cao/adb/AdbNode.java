@@ -110,13 +110,10 @@ public class AdbNode extends PropertiesNode {
 	public List<String> getNodeKeys() {
 		List<CaoNode> nodes = getNodes();
 		LinkedList<String> out = new LinkedList<>();
-		try {
-			for (CaoNode node : nodes)
-				out.add( node.getName() );
-		} catch (MException e) {
-			log().d(e);
-			out = MCollection.getEmptyList();
-		}
+
+		for (CaoNode node : nodes)
+			out.add( node.getName() );
+
 		return out;
 	}
 

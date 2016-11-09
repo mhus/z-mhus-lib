@@ -44,12 +44,12 @@ public abstract class PropertiesNode extends CaoNode {
 	}
 
 	@Override
-	public String getId() throws CaoException {
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public String getName() throws MException {
+	public String getName() {
 		return name;
 	}
 
