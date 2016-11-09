@@ -2,6 +2,7 @@ package de.mhus.lib.core.system;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
@@ -275,5 +276,5 @@ public class CfgManager {
 		}
 			
 	}
-	
+
 }

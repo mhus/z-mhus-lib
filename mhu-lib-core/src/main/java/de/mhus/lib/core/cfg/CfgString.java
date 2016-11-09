@@ -19,4 +19,9 @@ public class CfgString extends CfgValue<String>{
 		return node.getString(getPath().substring(p+1), getDefault());
 	}
 
+	@Override
+	protected String loadValue(String value) {
+		return value;
+	}
+
 }

@@ -17,4 +17,9 @@ public class CfgNode extends CfgValue<IConfig>{
 		return (IConfig) node;
 	}
 
+	@Override
+	protected IConfig loadValue(String value) {
+		return null;
+	}
+
 }

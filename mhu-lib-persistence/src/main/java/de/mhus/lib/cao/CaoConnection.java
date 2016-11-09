@@ -2,9 +2,11 @@ package de.mhus.lib.cao;
 
 import java.util.HashMap;
 
+import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 
@@ -49,5 +51,39 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	public String getName() {
 		return name;
 	}
-	
+
+	/**
+	 * Send a query into the data store system. This method opens the possibility to
+	 * access more then the content structure. But it's not specified and must be
+	 * known by the caller.
+	 *  e.g. get access to the underlying type or user system or send proprietary queries
+	 *  to the system.
+	 * 
+	 * @param space The data space, e.g. users, types, content
+	 * @param query The query itself
+	 * @return A list of results.
+	 * @throws MException Throws NotSupportedException if the method is not implemented at all
+	 */
+	public CaoList executeQuery(String space, String query) throws MException {
+		throw new NotSupportedException();
+	}
+
+	/**
+	 * 
+	 * Send a query into the data store system. This method opens the possibility to
+	 * access more then the content structure. But it's not specified and must be
+	 * known by the caller.
+	 *  e.g. get access to the underlying type or user system or send proprietary queries
+	 *  to the system.
+	 *  
+	 * @param space The data space, e.g. users, types, content
+	 * @param query The query itself
+	 * @return A list of results.
+	 * @throws MException Throws NotSupportedException if the method is not implemented at all
+	 */
+	public <T> CaoList executeQuery(String space, AQuery<T> query) throws MException {
+		// return executeQuery(space, query.toQualification(dbManager) );
+		throw new NotSupportedException();
+	}
+
 }

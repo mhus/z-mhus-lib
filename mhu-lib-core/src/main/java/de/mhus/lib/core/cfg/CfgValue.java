@@ -30,6 +30,12 @@ public abstract class CfgValue<T> {
 		return owner;
 	}
 	
+	public Class<?> getOwnerClass() {
+		if (owner == null) return null;
+		if (owner instanceof Class<?>) return (Class<?>)owner;
+		return owner.getClass();
+	}
+	
 	public T getDefault() {
 		return def;
 	}
@@ -44,6 +50,8 @@ public abstract class CfgValue<T> {
 
 	protected abstract T loadValue();
 	
+	protected abstract T loadValue(String value);
+	
 	protected void onPreUpdate(T newValue) {
 		
 	}
@@ -54,6 +62,15 @@ public abstract class CfgValue<T> {
 
 	public boolean isOwner(String name) {
 		return MSingleton.get().getCfgManager().isOwner(owner, name);
+	}
+
+	public void setValue(String v) {
+		T newValue = loadValue(v);
+		if (newValue == null) return;
+		if (MSystem.equals(value, newValue)) return;
+		onPreUpdate(newValue);
+		this.value = newValue;
+		onPostUpdate(value);
 	}
 	
 }

@@ -33,4 +33,9 @@ public class CfgFile extends CfgValue<File>{
 		return new File(str);
 	}
 
+	@Override
+	protected File loadValue(String value) {
+		return new File(value);
+	}
+
 }

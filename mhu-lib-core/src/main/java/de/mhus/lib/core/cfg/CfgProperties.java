@@ -24,4 +24,9 @@ public class CfgProperties extends CfgValue<IProperties> {
 		return new PropertiesSubset(node, getPath());
 	}
 
+	@Override
+	protected IProperties loadValue(String value) {
+		return MProperties.explodeToMProperties(value.split("\n"));
+	}
+
 }

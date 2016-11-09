@@ -73,14 +73,21 @@ public class OperationResult {
 		this.result = result;
 	}
 	
-	public boolean isPropertiesResult() {
-		return result != null && result instanceof IProperties;
+	public boolean isResult(Class<?> clazz) {
+		return result != null && clazz.isInstance(result);
 	}
 	
-	public IProperties getResultAsProperties() {
-		return (IProperties) result;
+	@SuppressWarnings("unchecked")
+	public <T> T getResultAs(Class<T> clazz) {
+		// TODO try to cast or convert
+		return (T)result;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public <T> T getResultAs() {
+		return (T)result;
+	}
+
 	@Override
 	public String toString() {
 		return MSystem.toString(this, operationPath, successful, msg, nextOperation ); // result ?

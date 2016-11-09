@@ -1,5 +1,6 @@
 package de.mhus.lib.core.cfg;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.directory.ResourceNode;
 
@@ -17,6 +18,11 @@ public class CfgBoolean extends CfgValue<Boolean>{
 		ResourceNode node = MSingleton.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
 		return node.getBoolean(getPath().substring(p+1), getDefault());
+	}
+
+	@Override
+	protected Boolean loadValue(String value) {
+		return MCast.toboolean(value, false);
 	}
 
 }
