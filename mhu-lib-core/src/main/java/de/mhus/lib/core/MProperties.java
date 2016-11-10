@@ -114,13 +114,21 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	}
 	
 	public static MProperties explodeToMProperties(String[] properties) {
+		return explodeToMProperties(properties, '=');
+	}
+	
+	public static MProperties explodeToMProperties(String[] properties, char separator) {
 		MProperties p = new MProperties();
 		if (properties != null) {
+			int cnt = 0;
 			for (String i : properties) {
 				if (i != null) {
-					int idx = i.indexOf('=');
+					int idx = i.indexOf(separator);
 					if (idx >= 0) {
 						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
+					} else {
+						p.setProperty(String.valueOf(cnt), i);
+						cnt++;
 					}
 				}
 			}
