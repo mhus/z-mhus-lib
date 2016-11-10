@@ -8,6 +8,7 @@ import java.util.Set;
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoMetadata;
@@ -30,7 +31,7 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	private static final long serialVersionUID = 1L;
 	protected MProperties properties = new MProperties();
 
-	public WritablePropertiesNode(CaoConnection con, PropertiesNode parent) throws CaoException {
+	public WritablePropertiesNode(CaoCore con, PropertiesNode parent) throws CaoException {
 		super(con, parent);
 		reload();
 	}

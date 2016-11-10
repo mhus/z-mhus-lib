@@ -4,14 +4,15 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoAspectFactory;
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.MutableActionList;
 
 public class AuthAccessFactory implements CaoAspectFactory<AuthAccess> {
 
-	private AuthConnection con;
+	private AuthCore con;
 
-	public AuthAccessFactory(AuthConnection con) {
+	public AuthAccessFactory(AuthCore con) {
 		this.con = con;
 	}
 
@@ -27,10 +28,10 @@ public class AuthAccessFactory implements CaoAspectFactory<AuthAccess> {
 
 	private static class Access implements AuthAccess {
 
-		private AuthConnection con;
+		private AuthCore con;
 		private CaoNode node;
 
-		public Access(AuthConnection con, CaoNode node) {
+		public Access(AuthCore con, CaoNode node) {
 			this.con = con;
 			this.node = node;
 		}
@@ -59,7 +60,7 @@ public class AuthAccessFactory implements CaoAspectFactory<AuthAccess> {
 	}
 
 	@Override
-	public void doInitialize(CaoConnection caoConnection, MutableActionList actionList) {
+	public void doInitialize(CaoCore caoConnection, MutableActionList actionList) {
 	}
 	
 }

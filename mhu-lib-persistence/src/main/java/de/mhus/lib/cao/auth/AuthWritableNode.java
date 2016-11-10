@@ -19,15 +19,15 @@ public class AuthWritableNode extends CaoWritableElement {
 	private CaoWritableElement instance;
 	private CaoNode readable;
 
-	public AuthWritableNode(AuthNode parent, CaoNode readable, CaoWritableElement writableNode) {
-		super(parent.getConnection(), parent);
+	public AuthWritableNode(AuthCore core, AuthNode parent, CaoNode readable, CaoWritableElement writableNode) {
+		super(core, parent);
 		this.instance = writableNode;
 		this.readable = readable;
 	}
 
 	@Override
 	public CaoActionStarter getUpdateAction() throws MException {
-		if (!((AuthConnection)con).hasWriteAccess(readable)) return null;
+		if (!((AuthCore)core).hasWriteAccess(readable)) return null;
 		return new AuthActionStarter(instance.getUpdateAction());
 	}
 
@@ -108,25 +108,25 @@ public class AuthWritableNode extends CaoWritableElement {
 
 	@Override
 	public Object getProperty(String name) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return null;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
 		return instance.getProperty(name);
 	}
 
 	@Override
 	public boolean isProperty(String name) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return false;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return false;
 		return instance.isProperty(name);
 	}
 
 	@Override
 	public void removeProperty(String key) {
-		if (!((AuthConnection)con).hasWriteAccess(instance, key)) return;
+		if (!((AuthCore)core).hasWriteAccess(instance, key)) return;
 		instance.removeProperty(key);
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
-		if (!((AuthConnection)con).hasWriteAccess(instance, key)) return;
+		if (!((AuthCore)core).hasWriteAccess(instance, key)) return;
 		instance.setProperty(key, value);
 	}
 

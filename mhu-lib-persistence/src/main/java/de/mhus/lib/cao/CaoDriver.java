@@ -24,7 +24,7 @@ public abstract class CaoDriver extends MObject {
 	 * @return a {@link de.mhus.lib.cao.CaoConnection} object.
 	 * @throws java.net.URISyntaxException if any.
 	 */
-	public CaoConnection connect(String uri, String authentication) throws URISyntaxException {
+	public CaoCore connect(String uri, String authentication) throws URISyntaxException {
 		if (uri == null)
 			return connect((URI)null, authentication);
 		if (uri.indexOf(':') < 0)
@@ -39,7 +39,7 @@ public abstract class CaoDriver extends MObject {
 	 * @param authentication a {@link java.lang.String} object.
 	 * @return a {@link de.mhus.lib.cao.CaoConnection} object.
 	 */
-	public abstract CaoConnection connect(URI uri, String authentication);
+	public abstract CaoCore connect(URI uri, String authentication);
 
 	/**
 	 * <p>Getter for the field <code>scheme</code>.</p>

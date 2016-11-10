@@ -32,12 +32,12 @@ public class AuthNode extends CaoNode {
 	protected CaoNode instance;
 	AuthAccess access;
 
-	public AuthNode(AuthConnection connection, AuthNode parent, CaoNode instance) {
+	public AuthNode(AuthCore connection, AuthNode parent, CaoNode instance) {
 		super(connection, parent);
 		this.instance = instance;
 	}
 
-	public AuthNode(AuthConnection connection, CaoNode instance) {
+	public AuthNode(AuthCore connection, CaoNode instance) {
 		super(connection, null);
 		this.instance = instance;
 	}
@@ -49,13 +49,13 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public Object getProperty(String name) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return null;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
 		return instance.getProperty(name);
 	}
 
 	@Override
 	public String getString(String name, String def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getString(name, def);
 	}
 
@@ -66,15 +66,15 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
-		if (!((AuthConnection)con).hasWriteAccess(instance)) return null;
-		return new AuthWritableNode( this, instance, instance.getWritableNode() );
+		if (!((AuthCore)core).hasWriteAccess(instance)) return null;
+		return new AuthWritableNode( (AuthCore)core, this, instance, instance.getWritableNode() );
 	}
 
 	@Override
 	public CaoNode getNode(String key) {
 		CaoNode n = instance.getNode(key);
-		if (n == null || !((AuthConnection)con).hasReadAccess(n)) return null;
-		return new AuthNode( (AuthConnection)getConnection(), this, n );
+		if (n == null || !((AuthCore)core).hasReadAccess(n)) return null;
+		return new AuthNode( (AuthCore)core, this, n );
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public String getString(String name) throws MException {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return null;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
 		return instance.getString(name);
 	}
 
@@ -98,15 +98,15 @@ public class AuthNode extends CaoNode {
 		Collection<CaoNode> in = instance.getNodes();
 		LinkedList<CaoNode> out = new LinkedList<>();
 		for (CaoNode n : in) {
-			if (((AuthConnection)con).hasReadAccess(n))
-			out.add(new AuthNode((AuthConnection) getConnection(), this,  n));
+			if (((AuthCore)core).hasReadAccess(n))
+			out.add(new AuthNode((AuthCore) core, this,  n));
 		}
 		return out;
 	}
 
 	@Override
 	public boolean getBoolean(String name, boolean def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getBoolean(name, def);
 	}
 
@@ -125,15 +125,15 @@ public class AuthNode extends CaoNode {
 		Collection<CaoNode> in = instance.getNodes(key);
 		LinkedList<CaoNode> out = new LinkedList<>();
 		for (CaoNode n : in) {
-			if (((AuthConnection)con).hasReadAccess(n))
-			out.add(new AuthNode((AuthConnection) getConnection(), this,  n));
+			if (((AuthCore)core).hasReadAccess(n))
+			out.add(new AuthNode((AuthCore) core, this,  n));
 		}
 		return out;
 	}
 
 	@Override
 	public boolean getBoolean(String name) throws MException {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) throw new AccessDeniedException(name);
+		if (!((AuthCore)core).hasReadAccess(instance, name)) throw new AccessDeniedException(name);
 		return instance.getBoolean(name);
 	}
 
@@ -158,7 +158,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public int getInt(String name, int def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getInt(name, def);
 	}
 
@@ -169,19 +169,19 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public long getLong(String name, long def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getLong(name, def);
 	}
 
 	@Override
 	public InputStream getInputStream() {
-		if (!((AuthConnection)con).hasContentAccess(instance, null)) return null;
+		if (!((AuthCore)core).hasContentAccess(instance, null)) return null;
 		return instance.getInputStream();
 	}
 
 	@Override
 	public float getFloat(String name, float def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getFloat(name, def);
 	}
 
@@ -192,13 +192,13 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public InputStream getInputStream(String rendition) {
-		if (!((AuthConnection)con).hasContentAccess(instance, rendition)) return null;
+		if (!((AuthCore)core).hasContentAccess(instance, rendition)) return null;
 		return instance.getInputStream(rendition);
 	}
 
 	@Override
 	public double getDouble(String name, double def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getDouble(name, def);
 	}
 
@@ -209,13 +209,13 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public String getExtracted(String key) throws MException {
-		if (!((AuthConnection)con).hasReadAccess(instance, key)) throw new AccessDeniedException();
+		if (!((AuthCore)core).hasReadAccess(instance, key)) throw new AccessDeniedException();
 		return instance.getExtracted(key);
 	}
 
 	@Override
 	public Calendar getCalendar(String name) throws MException {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) throw new AccessDeniedException();
+		if (!((AuthCore)core).hasReadAccess(instance, name)) throw new AccessDeniedException();
 		return instance.getCalendar(name);
 	}
 
@@ -226,7 +226,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public Date getDate(String name) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return null;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
 		return instance.getDate(name);
 	}
 
@@ -236,7 +236,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public String getExtracted(String key, String def) throws MException {
-		if (!((AuthConnection)con).hasReadAccess(instance, key)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, key)) return def;
 		return instance.getExtracted(key, def);
 	}
 
@@ -246,7 +246,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public boolean isEditable() {
-		if (!((AuthConnection)con).hasWriteAccess(instance)) return false;
+		if (!((AuthCore)core).hasWriteAccess(instance)) return false;
 		return instance.isEditable();
 	}
 
@@ -273,7 +273,7 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
-		if ( !((AuthConnection)con).hasAspectAccess(instance, ifc)) return null;
+		if ( !((AuthCore)core).hasAspectAccess(instance, ifc)) return null;
 		return super.adaptTo(ifc);
 	}
 
@@ -291,13 +291,13 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public Number getNumber(String name, Number def) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return def;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
 		return instance.getNumber(name, def);
 	}
 
 	@Override
 	public boolean isProperty(String name) {
-		if (!((AuthConnection)con).hasReadAccess(instance, name)) return false;
+		if (!((AuthCore)core).hasReadAccess(instance, name)) return false;
 		return instance.isProperty(name);
 	}
 
@@ -326,13 +326,13 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public boolean containsKey(Object key) {
-		if (!((AuthConnection)con).hasReadAccess(instance, String.valueOf(key))) return false;
+		if (!((AuthCore)core).hasReadAccess(instance, String.valueOf(key))) return false;
 		return instance.containsKey(key);
 	}
 
 	@Override
 	public Object get(Object key) {
-		if (!((AuthConnection)con).hasReadAccess(instance, String.valueOf(key))) return null;
+		if (!((AuthCore)core).hasReadAccess(instance, String.valueOf(key))) return null;
 		return instance.get(key);
 	}
 
@@ -363,8 +363,8 @@ public class AuthNode extends CaoNode {
 	@Override
 	public CaoNode getNodeByPath(String path) {
 		CaoNode n = instance.getNodeByPath(path);
-		if (!((AuthConnection)con).hasReadAccess(n)) return null;
-		return new AuthNode((AuthConnection) con, n);
+		if (!((AuthCore)core).hasReadAccess(n)) return null;
+		return new AuthNode((AuthCore) core, n);
 	}
 
 	@Override
@@ -472,7 +472,7 @@ public class AuthNode extends CaoNode {
 		if (p == null) {
 			CaoNode ip = instance.getParent();
 			if (ip == null) return null;
-			parent = new AuthNode((AuthConnection)getConnection(), ip);
+			parent = new AuthNode((AuthCore)core, ip);
 			p = parent;
 		}
 		return p;

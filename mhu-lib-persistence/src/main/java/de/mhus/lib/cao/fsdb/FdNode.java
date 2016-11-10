@@ -25,11 +25,11 @@ public class FdNode extends PropertiesNode {
 	private static final long serialVersionUID = 1L;
 	private File file;
 
-	public FdNode(FdConnection connection, File file, FdNode parent) {
+	public FdNode(FdCore connection, File file, FdNode parent) {
 		super(connection, parent);
 		this.file = file;
 		reload();
-		this.metadata = ((FdConnection)getConnection()).getMetadata();
+		this.metadata = ((FdCore)core).getMetadata();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class FdNode extends PropertiesNode {
 
 	@Override
 	public void reload() {
-		((FdConnection)getConnection()).fillProperties(file, properties);
+		((FdCore)core).fillProperties(file, properties);
 //		FdNode root = ((FdNode)((FdConnection)getConnection()).getRoot());
 		this.id = properties.getString("_id", "");
 		this.name = file.getName();
@@ -58,7 +58,7 @@ public class FdNode extends PropertiesNode {
 	public CaoNode getNode(String key) {
 		File f = new File(file, key);
 		if (f.exists())
-			return new FdNode((FdConnection) getConnection(), f, this);
+			return new FdNode((FdCore)core, f, this);
 		return null;
 	}
 
@@ -67,7 +67,7 @@ public class FdNode extends PropertiesNode {
 		LinkedList<CaoNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
-			out.add( new FdNode((FdConnection) getConnection(), f, this));
+			out.add( new FdNode((FdCore)core, f, this));
 		}
 		return out;
 	}
@@ -94,7 +94,7 @@ public class FdNode extends PropertiesNode {
 	@Override
 	public InputStream getInputStream(String rendition) {
 		
-		File contentFile = ((FdConnection)getConnection()).getContentFileFor(file, rendition);
+		File contentFile = ((FdCore)core).getContentFileFor(file, rendition);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return new FileInputStream(contentFile);
@@ -107,7 +107,7 @@ public class FdNode extends PropertiesNode {
 
 	@Override
 	public URL getUrl() {
-		File contentFile = ((FdConnection)getConnection()).getContentFileFor(file, null);
+		File contentFile = ((FdCore)core).getContentFileFor(file, null);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return contentFile.toURL();
@@ -125,7 +125,7 @@ public class FdNode extends PropertiesNode {
 	@Override
 	protected void doUpdate(MProperties modified) {
 		if (!isEditable()) throw new AccessDeniedException(file);
-		File metaFile = ((FdConnection)getConnection()).getMetaFileFor(file);
+		File metaFile = ((FdCore)core).getMetaFileFor(file);
 		modified.remove("id");
 		try {
 			modified.save(metaFile);

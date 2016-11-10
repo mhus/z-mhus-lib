@@ -54,7 +54,7 @@ public class FdCreate extends CaoAction {
 			
 			File nextFile = new File(parent.getFile(), configuration.getProperties().getString(CreateConfiguration.NAME) );
 			nextFile.mkdir();
-			((FdConnection)parent.getConnection()).indexFile(nextFile);
+			((FdCore)parent.getConnection()).indexFile(nextFile);
 			
 			CaoNode nextNode = parent.getNode(nextFile.getName());
 			CaoWritableElement nextWrite = nextNode.getWritableNode();

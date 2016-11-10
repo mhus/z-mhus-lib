@@ -7,7 +7,7 @@ public abstract class CaoWritableElement extends CaoNode {
 	private static final long serialVersionUID = 1L;
 	private CaoNode parent;
 
-	public CaoWritableElement(CaoConnection con, CaoNode parent) {
+	public CaoWritableElement(CaoCore con, CaoNode parent) {
 		super(con, parent.getParent());
 		this.parent = parent;
 	}

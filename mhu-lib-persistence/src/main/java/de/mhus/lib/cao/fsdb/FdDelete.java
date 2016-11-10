@@ -50,7 +50,7 @@ public class FdDelete extends CaoAction {
 					else {
 						monitor.log().d("=== Delete",item);
 						File f = n.getFile();
-						((FdConnection)n.getConnection()).deleteIndex(n.getString("_id", null));
+						((FdCore)n.getConnection()).deleteIndex(n.getString("_id", null));
 						MFile.deleteDir(f);
 						deleted = true;
 					}

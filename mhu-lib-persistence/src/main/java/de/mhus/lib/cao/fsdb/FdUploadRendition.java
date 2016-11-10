@@ -55,7 +55,7 @@ public class FdUploadRendition extends CaoAction {
 			File file = new File(path);
 			if (!file.exists() || !file.isFile()) throw new NotFoundException(path);
 			
-			File renditionFile = ((FdConnection)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
+			File renditionFile = ((FdCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
 			if (renditionFile == null) throw new MException("can't create rendition to internal file", rendition);
 			MFile.copyFile(file, renditionFile);
 			

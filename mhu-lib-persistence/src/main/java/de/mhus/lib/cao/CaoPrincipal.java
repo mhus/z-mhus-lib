@@ -14,9 +14,9 @@ public class CaoPrincipal extends CaoPolicy {
 	private String name;
 	protected int principalType;
 
-	public CaoPrincipal(CaoNode element, String name, PRINCIPAL_TYPES type, boolean readable, boolean writable)
+	public CaoPrincipal(CaoCore core, CaoNode element, String name, PRINCIPAL_TYPES type, boolean readable, boolean writable)
 			throws MException {
-		super(element, readable, writable);
+		super(core, element, readable, writable);
 		this.name = name;
 		principalType = type.ordinal();
 	}

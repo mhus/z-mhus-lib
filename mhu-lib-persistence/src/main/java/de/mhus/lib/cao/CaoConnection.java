@@ -3,26 +3,16 @@ package de.mhus.lib.cao;
 import java.util.HashMap;
 
 import de.mhus.lib.adb.query.AQuery;
+import de.mhus.lib.basics.Named;
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public abstract class CaoConnection extends MResourceProvider<CaoNode> {
+public abstract class CaoConnection extends MResourceProvider<CaoNode> implements Named {
 
-	protected CaoDriver driver;
-	protected MutableActionList actionList = new MutableActionList();
-	protected HashMap<Class<? extends CaoAspect>,CaoAspectFactory<?>> aspectFactory = new HashMap<>();
-	protected String name;
 
-	public CaoConnection(String name, CaoDriver driver) {
-		this.driver = driver;
-		this.name = name;
-	}
-
-	public CaoDriver getDriver() {
-		return driver;
-	}
+	public abstract CaoDriver getDriver();
 
 	/**
 	 * Request the first resource.
@@ -31,26 +21,13 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	 */
 	public abstract CaoNode getRoot();
 
-	public CaoActionList getActions() {
-		return actionList;
-	}
-		
-	public <T extends CaoAspect> void registerAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
-		if (aspectFactory.containsKey(ifc))
-			throw new MException("Aspect already registered",ifc);
-		aspectFactory.put(ifc, factory);
-		factory.doInitialize(this, actionList);
-	}
+	public abstract CaoActionList getActions();
 	
 	@SuppressWarnings("unchecked")
-	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
-		return (CaoAspectFactory<T>)aspectFactory.get(ifc);
-	}
+	public abstract <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc);
 
 	@Override
-	public String getName() {
-		return name;
-	}
+	public abstract String getName();
 
 	/**
 	 * Send a query into the data store system. This method opens the possibility to
@@ -64,9 +41,7 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	 * @return A list of results.
 	 * @throws MException Throws NotSupportedException if the method is not implemented at all
 	 */
-	public CaoList executeQuery(String space, String query) throws MException {
-		throw new NotSupportedException();
-	}
+	public abstract CaoList executeQuery(String space, String query) throws MException;
 
 	/**
 	 * 
@@ -81,13 +56,8 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> {
 	 * @return A list of results.
 	 * @throws MException Throws NotSupportedException if the method is not implemented at all
 	 */
-	public <T> CaoList executeQuery(String space, AQuery<T> query) throws MException {
-		// return executeQuery(space, query.toQualification(dbManager) );
-		throw new NotSupportedException();
-	}
+	public abstract <T> CaoList executeQuery(String space, AQuery<T> query) throws MException;
 
-	public CaoAction getAction(String name) {
-		return getActions().getAction(name);
-	}
+	public abstract CaoAction getAction(String name);
 
 }

@@ -12,9 +12,9 @@ import de.mhus.lib.core.strategy.OperationResult;
 public class AuthAction extends CaoAction {
 
 	protected CaoAction instance;
-	private AuthConnection con;
+	private AuthCore con;
 
-	public AuthAction(AuthConnection con, CaoAction instance) {
+	public AuthAction(AuthCore con, CaoAction instance) {
 		this.con = con;
 		this.instance = instance;
 	}

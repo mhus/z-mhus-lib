@@ -1,6 +1,7 @@
 package de.mhus.lib.cao.util;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoNode;
 
@@ -10,7 +11,7 @@ import de.mhus.lib.cao.CaoNode;
  * @author mikehummel
  * @version $Id: $Id
  */
-public class NoneConnection extends CaoConnection {
+public class NoneConnection extends CaoCore {
 
 	/**
 	 * <p>Constructor for NoneConnection.</p>
@@ -19,6 +20,7 @@ public class NoneConnection extends CaoConnection {
 	 */
 	public NoneConnection(String name, CaoDriver driver) {
 		super(name, driver);
+		this.con = this;
 	}
 
 	/** {@inheritDoc} */

@@ -32,8 +32,8 @@ public class CaoPolicy extends CaoNode implements CaoAspect {
 	protected CaoPolicy proxy = null;
 	protected CaoMetadata meta;
 
-	public CaoPolicy(CaoNode element, boolean readable, boolean writable) throws MException {
-		super(element);
+	public CaoPolicy(CaoCore core, CaoNode element, boolean readable, boolean writable) throws MException {
+		super(core, element);
 		this.element = element;
 		this.readable = readable;
 		this.writable = writable;

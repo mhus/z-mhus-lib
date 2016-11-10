@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDataSource;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.core.MSystem;
@@ -24,7 +25,14 @@ public class DriverDataSource implements CaoDataSource {
 
 	@Override
 	public CaoConnection getConnection() throws Exception {
-		return driver.connect(uri, credentials);
+		CaoCore core = driver.connect(uri, credentials);
+		doPrepare(core);
+		return core.getConnection();
+	}
+
+	protected void doPrepare(CaoCore core) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public CaoDriver getDriver() {

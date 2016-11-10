@@ -1,12 +1,13 @@
 package de.mhus.lib.cao.util;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDataSource;
 import de.mhus.lib.core.MSystem;
 
 public class SharedDataSource implements CaoDataSource {
 
-	private CaoConnection shared;
+	private CaoCore shared;
 	private String name;
 	private String type;
 
@@ -14,17 +15,17 @@ public class SharedDataSource implements CaoDataSource {
 		
 	}
 	
-	public SharedDataSource(CaoConnection shared) {
+	public SharedDataSource(CaoCore shared) {
 		this(shared.getName(), shared);
 	}
 	
-	public SharedDataSource(String name, CaoConnection shared) {
+	public SharedDataSource(String name, CaoCore shared) {
 		this.shared = shared;
 		this.name = name;
 		this.type = shared.getClass().getSimpleName();
 	}
 
-	public void setConnection(CaoConnection connection) {
+	public void setConnection(CaoCore connection) {
 		this.shared = connection;
 		this.type = connection.getClass().getCanonicalName();
 		if (name == null) name = connection.getName();
@@ -46,7 +47,7 @@ public class SharedDataSource implements CaoDataSource {
 
 	@Override
 	public CaoConnection getConnection() {
-		return shared;
+		return shared.getConnection();
 	}
 
 	@Override

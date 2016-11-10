@@ -52,7 +52,7 @@ public class FsDeleteRendition extends CaoAction {
 			FsNode parent = (FsNode)configuration.getList().get(0);
 			
 			String rendition = configuration.getProperties().getString(DeleteRenditionConfiguration.RENDITION);
-			File renditionFile = ((FsConnection)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
+			File renditionFile = ((FsCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
 			if (renditionFile == null || !renditionFile.exists() || !renditionFile.isFile()) throw new MException("rendition not found", rendition);
 			
 			if (!renditionFile.delete())

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoConnection;
+import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.adb.AdbNodeData.TYPE;
@@ -21,14 +22,8 @@ public class AdbNode extends PropertiesNode {
 
 	private AdbNodeData data;
 
-	public AdbNode(CaoConnection con, CaoNode parent, AdbNodeData data) {
+	public AdbNode(CaoCore con, CaoNode parent, AdbNodeData data) {
 		super(con, parent);
-		this.data = data;
-		init();
-	}
-
-	public AdbNode(CaoNode parent, AdbNodeData data) {
-		super(parent);
 		this.data = data;
 		init();
 	}
@@ -70,8 +65,8 @@ public class AdbNode extends PropertiesNode {
 	@Override
 	public CaoNode getNode(String key) {
 		try {
-			AdbNodeData childData = ((AdbConnection)getConnection()).getChild(data.getId(), key);
-			if (childData != null) return new AdbNode(this, childData);
+			AdbNodeData childData = ((AdbCore)core).getChild(data.getId(), key);
+			if (childData != null) return new AdbNode(core, this, childData);
 		} catch (MException e) {
 			log().d(e);
 		}
@@ -81,10 +76,10 @@ public class AdbNode extends PropertiesNode {
 	@Override
 	public List<CaoNode> getNodes() {
 		try {
-			AdbNodeData[] childData = ((AdbConnection)getConnection()).getChildren(data.getId());
+			AdbNodeData[] childData = ((AdbCore)core).getChildren(data.getId());
 			LinkedList<CaoNode> out = new LinkedList<>();
 			for (int i = 0; i < childData.length; i++)
-				out.add( new AdbNode(this, childData[i]) );
+				out.add( new AdbNode(core, this, childData[i]) );
 			return out;
 		} catch (MException e) {
 			log().d(e);
@@ -95,10 +90,10 @@ public class AdbNode extends PropertiesNode {
 	@Override
 	public List<CaoNode> getNodes(String key) {
 		try {
-			AdbNodeData[] childData = ((AdbConnection)getConnection()).getChildren(data.getId(), key);
+			AdbNodeData[] childData = ((AdbCore)core).getChildren(data.getId(), key);
 			LinkedList<CaoNode> out = new LinkedList<>();
 			for (int i = 0; i < childData.length; i++)
-				out.add( new AdbNode(this, childData[i]) );
+				out.add( new AdbNode(core, this, childData[i]) );
 			return out;
 		} catch (MException e) {
 			log().d(e);
@@ -151,7 +146,7 @@ public class AdbNode extends PropertiesNode {
 	public CaoNode getParent() {
 		CaoNode p = super.getParent();
 		if (p == null && data != null && data.getParent() != null) {
-			p = ((AdbConnection)getConnection()).getResourceById(data.getParent().toString());
+			p = ((AdbCore)core).getResourceById(data.getParent().toString());
 		}
 		return p;
 	}

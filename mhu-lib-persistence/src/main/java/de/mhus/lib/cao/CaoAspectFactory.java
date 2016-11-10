@@ -6,6 +6,6 @@ public interface CaoAspectFactory<T extends CaoAspect> {
 
 	T getAspectFor(CaoNode node);
 
-	void doInitialize(CaoConnection caoConnection, MutableActionList actionList);
+	void doInitialize(CaoCore core, MutableActionList actionList);
 	
 }

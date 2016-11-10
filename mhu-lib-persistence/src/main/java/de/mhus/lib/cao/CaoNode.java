@@ -2,27 +2,23 @@ package de.mhus.lib.cao;
 
 import java.util.Set;
 
-import de.mhus.lib.cao.auth.AuthConnection;
+import de.mhus.lib.cao.auth.AuthCore;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
 public abstract class CaoNode extends ResourceNode<CaoNode> {
 
 	private static final long serialVersionUID = 1L;
-	protected CaoConnection con;
+	protected CaoCore core;
 	protected CaoNode parent;
 
-	public CaoNode(CaoNode parent) {
-		this(parent.getConnection(),parent);
-	}
-
-	public CaoNode(CaoConnection con, CaoNode parent) {
-		this.con = con;
+	public CaoNode(CaoCore con, CaoNode parent) {
+		this.core = con;
 		this.parent = parent;
 	}
 
 	public CaoConnection getConnection() {
-		return con;
+		return core.getConnection();
 	}
 
 	/**

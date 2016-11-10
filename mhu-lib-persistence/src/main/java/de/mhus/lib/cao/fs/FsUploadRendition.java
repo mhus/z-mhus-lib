@@ -55,7 +55,7 @@ public class FsUploadRendition extends CaoAction {
 			File file = new File(path);
 			if (!file.exists() || !file.isFile()) throw new NotFoundException(path);
 			
-			File renditionFile = ((FsConnection)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
+			File renditionFile = ((FsCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
 			if (renditionFile == null) throw new MException("can't create rendition to internal file", rendition);
 			MFile.copyFile(file, renditionFile);
 			
