@@ -1,5 +1,7 @@
 package de.mhus.lib.cao.auth;
 
+import java.util.Collection;
+
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoNode;
@@ -19,5 +21,13 @@ public interface Authorizator {
 	boolean hasWriteAccess(CaoNode node, String name);
 
 	boolean hasAspectAccess(CaoNode node, Class<? extends CaoAspect> ifc);
+
+	String mapReadName(CaoNode node, String name);
+
+	String mapReadRendition(CaoNode node, String rendition);
+
+	Collection<String> mapReadNames(CaoNode node, Collection<String> set);
+
+	String mapWriteName(CaoNode node, String name);
 
 }

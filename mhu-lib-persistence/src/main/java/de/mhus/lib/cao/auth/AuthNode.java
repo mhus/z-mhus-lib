@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import de.mhus.lib.basics.ReadOnly;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoAspectFactory;
 import de.mhus.lib.cao.CaoMetadata;
@@ -23,6 +25,7 @@ import de.mhus.lib.cao.CaoPolicy;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.MapEntry;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -51,18 +54,28 @@ public class AuthNode extends CaoNode {
 	@Override
 	public Object getProperty(String name) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
-		return instance.getProperty(name);
+		return instance.getProperty(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
 	public String getString(String name, String def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getString(name, def);
+		return instance.getString(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
 	public Collection<String> getPropertyKeys() {
-		return instance.getPropertyKeys();
+		Collection<String> ret = instance.getPropertyKeys();
+		if (ret instanceof ReadOnly)
+			ret = new LinkedList<>( ret );
+		
+		for (Iterator<String> iter = ret.iterator(); iter.hasNext(); ) {
+			String next = iter.next();
+			if (!((AuthCore)core).hasReadAccess(instance, next))
+				iter.remove();
+		}
+				
+		return ((AuthCore)core).mapReadNames(this, ret);
 	}
 
 	@Override
@@ -81,7 +94,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public String getString(String name) throws MException {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
-		return instance.getString(name);
+		return instance.getString(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
@@ -103,7 +116,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public boolean getBoolean(String name, boolean def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getBoolean(name, def);
+		return instance.getBoolean(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
@@ -130,7 +143,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public boolean getBoolean(String name) throws MException {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) throw new AccessDeniedException(name);
-		return instance.getBoolean(name);
+		return instance.getBoolean(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
@@ -155,7 +168,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public int getInt(String name, int def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getInt(name, def);
+		return instance.getInt(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
@@ -166,7 +179,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public long getLong(String name, long def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getLong(name, def);
+		return instance.getLong(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
@@ -178,7 +191,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public float getFloat(String name, float def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getFloat(name, def);
+		return instance.getFloat(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
@@ -189,13 +202,13 @@ public class AuthNode extends CaoNode {
 	@Override
 	public InputStream getInputStream(String rendition) {
 		if (!((AuthCore)core).hasContentAccess(instance, rendition)) return null;
-		return instance.getInputStream(rendition);
+		return instance.getInputStream(((AuthCore)core).mapReadRendition(instance, rendition));
 	}
 
 	@Override
 	public double getDouble(String name, double def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getDouble(name, def);
+		return instance.getDouble(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
@@ -206,13 +219,13 @@ public class AuthNode extends CaoNode {
 	@Override
 	public String getExtracted(String key) throws MException {
 		if (!((AuthCore)core).hasReadAccess(instance, key)) throw new AccessDeniedException();
-		return instance.getExtracted(key);
+		return instance.getExtracted(((AuthCore)core).mapReadName(instance, key));
 	}
 
 	@Override
 	public Calendar getCalendar(String name) throws MException {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) throw new AccessDeniedException();
-		return instance.getCalendar(name);
+		return instance.getCalendar(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
@@ -223,7 +236,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public Date getDate(String name) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
-		return instance.getDate(name);
+		return instance.getDate(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
@@ -233,7 +246,7 @@ public class AuthNode extends CaoNode {
 	@Override
 	public String getExtracted(String key, String def) throws MException {
 		if (!((AuthCore)core).hasReadAccess(instance, key)) return def;
-		return instance.getExtracted(key, def);
+		return instance.getExtracted(((AuthCore)core).mapReadName(instance, key), def);
 	}
 
 	@Override
@@ -288,13 +301,13 @@ public class AuthNode extends CaoNode {
 	@Override
 	public Number getNumber(String name, Number def) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return def;
-		return instance.getNumber(name, def);
+		return instance.getNumber(((AuthCore)core).mapReadName(instance, name), def);
 	}
 
 	@Override
 	public boolean isProperty(String name) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return false;
-		return instance.isProperty(name);
+		return instance.isProperty(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
@@ -323,13 +336,13 @@ public class AuthNode extends CaoNode {
 	@Override
 	public boolean containsKey(Object key) {
 		if (!((AuthCore)core).hasReadAccess(instance, String.valueOf(key))) return false;
-		return instance.containsKey(key);
+		return instance.containsKey(((AuthCore)core).mapReadName(instance,  String.valueOf(key) ));
 	}
 
 	@Override
 	public Object get(Object key) {
 		if (!((AuthCore)core).hasReadAccess(instance, String.valueOf(key))) return null;
-		return instance.get(key);
+		return instance.get(((AuthCore)core).mapReadName(instance, String.valueOf(key)));
 	}
 
 	@Override
@@ -395,18 +408,24 @@ public class AuthNode extends CaoNode {
 
 	@Override
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-//		return instance.entrySet();
-		throw new NotSupportedException();
+		HashSet<java.util.Map.Entry<String, Object>> ret = new HashSet<>();
+		for (String name : getPropertyKeys())
+			ret.add(new MapEntry<String,Object>(name, get(name)) );
+		return ret;
 	}
 
 	@Override
 	public  Object getOrDefault(Object key, Object defaultValue) {
-		throw new NotSupportedException();
+		Object ret = get(key);
+		if (ret == null) return defaultValue;
+		return ret;
 	}
 
 	@Override
 	public  void forEach(BiConsumer<? super String, ? super Object> action) {
-		throw new NotSupportedException();
+		for (String name : getPropertyKeys())
+			if (((AuthCore)core).hasReadAccess(instance, name))
+	            action.accept(name, get(name));
 	}
 
 	@Override

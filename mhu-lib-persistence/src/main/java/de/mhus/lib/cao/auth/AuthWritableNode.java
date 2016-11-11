@@ -3,8 +3,12 @@ package de.mhus.lib.cao.auth;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
+import de.mhus.lib.basics.ReadOnly;
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoMetadata;
@@ -64,32 +68,60 @@ public class AuthWritableNode extends CaoWritableElement {
 
 	@Override
 	public Collection<String> getPropertyKeys() {
-		return instance.getPropertyKeys();
+		Collection<String> ret = instance.getPropertyKeys();
+		if (ret instanceof ReadOnly)
+			ret = new LinkedList<>( ret );
+		
+		for (Iterator<String> iter = ret.iterator(); iter.hasNext(); ) {
+			String next = iter.next();
+			if (!((AuthCore)core).hasReadAccess(instance, next))
+				iter.remove();
+		}
+				
+		return ((AuthCore)core).mapReadNames(instance, ret);
 	}
 
 	@Override
 	public CaoNode getNode(String key) {
-		throw new NotSupportedException();
+		CaoNode n = instance.getNode(key);
+		if (n == null || !((AuthCore)core).hasReadAccess(n)) return null;
+		return new AuthNode( (AuthCore)core, (AuthNode) getParent(), n );
 	}
 
 	@Override
 	public Collection<CaoNode> getNodes() {
-		throw new NotSupportedException();
+		Collection<CaoNode> in = instance.getNodes();
+		LinkedList<CaoNode> out = new LinkedList<>();
+		for (CaoNode n : in) {
+			if (((AuthCore)core).hasReadAccess(n))
+			out.add(new AuthNode((AuthCore) core, (AuthNode) getParent(),  n));
+		}
+		return out;
 	}
 
 	@Override
 	public Collection<CaoNode> getNodes(String key) {
-		throw new NotSupportedException();
+		Collection<CaoNode> in = instance.getNodes(key);
+		LinkedList<CaoNode> out = new LinkedList<>();
+		for (CaoNode n : in) {
+			if (((AuthCore)core).hasReadAccess(n))
+			out.add(new AuthNode((AuthCore) core, (AuthNode) getParent(),  n));
+		}
+		return out;
 	}
 
 	@Override
 	public Collection<String> getNodeKeys() {
-		throw new NotSupportedException();
+		HashSet<String> out = new HashSet<>();
+		for (CaoNode n : getNodes())
+			out.add(n.getName());
+		return out;
 	}
 
 	@Override
 	public InputStream getInputStream(String rendition) {
-		throw new NotSupportedException();
+		if (!((AuthCore)core).hasContentAccess(instance, null)) return null;
+		return instance.getInputStream();
 	}
 
 	@Override
@@ -105,30 +137,30 @@ public class AuthWritableNode extends CaoWritableElement {
 	@Override
 	public Object getProperty(String name) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return null;
-		return instance.getProperty(name);
+		return instance.getProperty(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
 	public boolean isProperty(String name) {
 		if (!((AuthCore)core).hasReadAccess(instance, name)) return false;
-		return instance.isProperty(name);
+		return instance.isProperty(((AuthCore)core).mapReadName(instance, name));
 	}
 
 	@Override
 	public void removeProperty(String key) {
 		if (!((AuthCore)core).hasWriteAccess(instance, key)) return;
-		instance.removeProperty(key);
+		instance.removeProperty(((AuthCore)core).mapWriteName(instance, key));
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
 		if (!((AuthCore)core).hasWriteAccess(instance, key)) return;
-		instance.setProperty(key, value);
+		instance.setProperty(((AuthCore)core).mapWriteName(instance, key), value);
 	}
 
 	@Override
 	public Collection<String> getRenditions() {
-		throw new NotSupportedException();
+		return instance.getRenditions();
 	}
 
 	@Override
@@ -150,7 +182,7 @@ public class AuthWritableNode extends CaoWritableElement {
 	@Override
 	public IProperties getRenditionProperties(String rendition) {
 		if (!((AuthCore)core).hasContentAccess(instance, rendition)) return null;
-		return instance.getRenditionProperties(rendition);
+		return instance.getRenditionProperties(((AuthCore)core).mapReadRendition(instance, rendition));
 	}
 
 }

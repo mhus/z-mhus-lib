@@ -1,5 +1,7 @@
 package de.mhus.lib.cao.auth;
 
+import java.util.Collection;
+
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoActionList;
 import de.mhus.lib.cao.CaoAspect;
@@ -121,4 +123,25 @@ public class AuthCore extends CaoCore {
 		if (auth == null) return true;
 		return auth.hasAspectAccess(node, ifc);
 	}
+
+	public String mapReadName(CaoNode node, String name) {
+		if (auth == null) return name;
+		return auth.mapReadName(node, name);
+	}
+
+	public String mapReadRendition(CaoNode node, String rendition) {
+		if (auth == null) return rendition;
+		return auth.mapReadRendition(node, rendition);
+	}
+
+	public Collection<String> mapReadNames(CaoNode node, Collection<String> set) {
+		if (auth == null) return set;
+		return auth.mapReadNames(node, set);
+	}
+
+	public String mapWriteName(CaoNode node, String name) {
+		if (auth == null) return name;
+		return auth.mapWriteName(node, name);
+	}
+
 }
