@@ -10,6 +10,7 @@ import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -34,11 +35,6 @@ public class AuthWritableNode extends CaoWritableElement {
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
 		return this;
-	}
-
-	@Override
-	public CaoMetadata getMetadata() {
-		return instance.getMetadata();
 	}
 
 	@Override
@@ -139,6 +135,22 @@ public class AuthWritableNode extends CaoWritableElement {
 	public void clear() {
 		for (String key : keys())
 			removeProperty(key);
+	}
+
+	@Override
+	public String getPath() {
+		return instance.getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return instance.getPaths();
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		if (!((AuthCore)core).hasContentAccess(instance, rendition)) return null;
+		return instance.getRenditionProperties(rendition);
 	}
 
 }

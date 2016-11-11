@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fsdb;
+package de.mhus.lib.cao.fdb;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
 
-public class FdDelete extends CaoAction {
+public class FdbDelete extends CaoAction {
 
 	@Override
 	public String getName() {
@@ -42,15 +42,15 @@ public class FdDelete extends CaoAction {
 			monitor.setSteps(configuration.getList().size());
 			for (CaoNode item : configuration.getList()) {
 				monitor.log().i(">>>",item);
-				if (item instanceof FdNode) {
+				if (item instanceof FdbNode) {
 					monitor.incrementStep();
-					FdNode n = (FdNode)item;
+					FdbNode n = (FdbNode)item;
 					if (n.getNodes().size() > 0)
 						monitor.log().i("*** Node is not empty",item);
 					else {
 						monitor.log().d("=== Delete",item);
 						File f = n.getFile();
-						((FdCore)n.getConnection()).deleteIndex(n.getString("_id", null));
+						((FdbCore)n.getConnection()).deleteIndex(n.getString("_id", null));
 						MFile.deleteDir(f);
 						deleted = true;
 					}

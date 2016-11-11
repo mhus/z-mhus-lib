@@ -1,5 +1,6 @@
 package de.mhus.lib.cao;
 
+import java.util.Collection;
 import java.util.Set;
 
 import de.mhus.lib.cao.auth.AuthCore;
@@ -42,13 +43,6 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 	public abstract CaoWritableElement getWritableNode() throws MException;
 
 	/**
-	 * Returns the meta structure definition for this data.
-	 * 
-	 * @return The meta structure definition
-	 */
-	public abstract CaoMetadata getMetadata();
-
-	/**
 	 * Returns the unique id of this object for this connection. If the
 	 * object is not unique, it returns null. For joining selects the
 	 * unique id could not be returned.
@@ -74,6 +68,20 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 	 */
 	public abstract boolean isNode();
 
+	/**
+	 * Return the main path of the node.
+	 * 
+	 * @return
+	 */
+	public abstract String getPath();
+
+	/**
+	 * Return all pathes of the node.
+	 * 
+	 * @return
+	 */
+	public abstract Collection<String> getPaths();
+	
 	/**
 	 * If the object is changed but not written this will recover the
 	 * original state of the object. It will also load the new state from the

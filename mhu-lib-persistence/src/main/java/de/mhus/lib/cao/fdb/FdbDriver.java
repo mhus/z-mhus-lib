@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fsdb;
+package de.mhus.lib.cao.fdb;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoLoginForm;
 
-public class FdDriver extends CaoDriver {
+public class FdbDriver extends CaoDriver {
 
 	@Override
 	public CaoCore connect(URI uri, String authentication) {
 		try {
-			return new FdCore("fd_" + UUID.randomUUID(), this, new File(  uri.getPath() ) );
+			return new FdbCore("fd_" + UUID.randomUUID(), this, new File(  uri.getPath() ) );
 		} catch (IOException | TimeoutException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

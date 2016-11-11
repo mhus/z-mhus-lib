@@ -19,10 +19,11 @@
 package de.mhus.lib.core.util;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 
 import de.mhus.lib.basics.ReadOnly;
 
-public class SingleIterator<E> implements Iterator<E>, ReadOnly {
+public class SingleIterator<E> implements Iterator<E>, ListIterator<E>, ReadOnly {
 
 	private E element = null;
 
@@ -44,6 +45,34 @@ public class SingleIterator<E> implements Iterator<E>, ReadOnly {
 
 	@Override
 	public void remove() {
+	}
+
+	@Override
+	public boolean hasPrevious() {
+		return false;
+	}
+
+	@Override
+	public E previous() {
+		return null;
+	}
+
+	@Override
+	public int nextIndex() {
+		return hasNext() ? 0 : -1;
+	}
+
+	@Override
+	public int previousIndex() {
+		return -1;
+	}
+
+	@Override
+	public void set(E e) {
+	}
+
+	@Override
+	public void add(E e) {
 	}
 
 }

@@ -162,11 +162,6 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	}
 
 	@Override
-	public CaoMetadata getMetadata() {
-		return getOriginalElement().getMetadata();
-	}
-
-	@Override
 	public String getId() {
 		return getOriginalElement().getId();
 	}
@@ -191,6 +186,21 @@ public class WritablePropertiesNode extends CaoWritableElement {
 	@Override
 	public void clear() {
 		properties.clear();
+	}
+
+	@Override
+	public String getPath() {
+		return getParent().getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return getParent().getPaths();
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		return getParent().getRenditionProperties(rendition);
 	}
 	
 }

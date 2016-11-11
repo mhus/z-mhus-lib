@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -106,6 +107,11 @@ public class EmptyResourceNode<E extends ResourceNode<?>> extends ResourceNode<E
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		return null;
 	}
 
 

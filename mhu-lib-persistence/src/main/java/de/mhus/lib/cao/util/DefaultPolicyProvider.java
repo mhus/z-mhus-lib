@@ -1,13 +1,13 @@
 package de.mhus.lib.cao.util;
 
+import de.mhus.lib.cao.CaoAspectFactory;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
-import de.mhus.lib.cao.aspect.CaoPolicyAspectFactory;
 import de.mhus.lib.errors.MException;
 
-public class DefaultPolicyProvider implements CaoPolicyAspectFactory {
+public class DefaultPolicyProvider implements CaoAspectFactory<CaoPolicy> {
 
 	private CaoCore core;
 

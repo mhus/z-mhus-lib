@@ -1,7 +1,7 @@
 package de.mhus.lib.cao;
 
 
-public class CaoMetaDefinition {
+public class CaoMetaDefinition implements CaoAspect {
 
 	public enum TYPE { STRING, BOOLEAN, LONG, DOUBLE, DATETIME, LIST, OBJECT, TEXT, BINARY, ELEMENT }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
@@ -81,7 +82,6 @@ public class CaoPolicy extends CaoNode implements CaoAspect {
 		return null;
 	}
 
-	@Override
 	public CaoMetadata getMetadata() {
 		if (proxy != null) return proxy.getMetadata();
 		return meta;
@@ -236,6 +236,21 @@ public class CaoPolicy extends CaoNode implements CaoAspect {
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public String getPath() {
+		return element.getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return element.getPaths();
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		return null;
 	}
 
 }

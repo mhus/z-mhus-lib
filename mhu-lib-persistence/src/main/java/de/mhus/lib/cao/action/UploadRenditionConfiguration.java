@@ -16,8 +16,8 @@ public class UploadRenditionConfiguration extends CaoConfiguration {
 	}
 
 
-	public static final String RENDITION = "rendition";
-	public static final String FILE = "file";
+	public static final String RENDITION = "_rendition";
+	public static final String FILE = "_file";
 	
 	@Override
 	protected IConfig createDefaultModel() {

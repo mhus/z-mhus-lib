@@ -11,6 +11,7 @@ import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.UploadRenditionConfiguration;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
@@ -58,6 +59,12 @@ public class FsUploadRendition extends CaoAction {
 			File renditionFile = ((FsCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
 			if (renditionFile == null) throw new MException("can't create rendition to internal file", rendition);
 			MFile.copyFile(file, renditionFile);
+			
+			MProperties p = new MProperties(configuration.getProperties());
+			p.remove(UploadRenditionConfiguration.RENDITION);
+			p.remove(UploadRenditionConfiguration.FILE);
+			p.save( new File(renditionFile.getParentFile(), renditionFile.getName() + ".meta" ) );
+			
 			
 			return new Successful(getName());
 		} catch (Throwable t) {

@@ -13,8 +13,10 @@ import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.adb.AdbNodeData.TYPE;
 import de.mhus.lib.cao.util.PropertiesNode;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -158,6 +160,29 @@ public class AdbNode extends PropertiesNode {
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public String getPath() {
+		CaoNode n = this;
+		StringBuffer out = new StringBuffer();
+		while (true) {
+			out.insert(0, n.getName());
+			out.insert(0, '/');
+			n = n.getParent();
+			if (n == null) break;
+		}
+		return out.toString();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return new SingleList<String>(getPath());
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		return null;
 	}
 
 }

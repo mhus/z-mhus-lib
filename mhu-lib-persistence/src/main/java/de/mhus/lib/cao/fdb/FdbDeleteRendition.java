@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fsdb;
+package de.mhus.lib.cao.fdb;
 
 import java.io.File;
 
@@ -19,7 +19,7 @@ import de.mhus.lib.core.strategy.Successful;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 
-public class FdDeleteRendition extends CaoAction {
+public class FdbDeleteRendition extends CaoAction {
 
 	@Override
 	public String getName() {
@@ -36,7 +36,7 @@ public class FdDeleteRendition extends CaoAction {
 		try {
 			return configuration.getList().size() != 1 
 					&& 
-					configuration.getList().get(0) instanceof FdNode 
+					configuration.getList().get(0) instanceof FdbNode 
 					;
 		} catch (Throwable t) {
 			log().d(t);
@@ -49,10 +49,10 @@ public class FdDeleteRendition extends CaoAction {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 
 		try {
-			FdNode parent = (FdNode)configuration.getList().get(0);
+			FdbNode parent = (FdbNode)configuration.getList().get(0);
 			
 			String rendition = configuration.getProperties().getString(DeleteRenditionConfiguration.RENDITION);
-			File renditionFile = ((FdCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
+			File renditionFile = ((FdbCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
 			if (renditionFile == null || !renditionFile.exists() || !renditionFile.isFile()) throw new MException("rendition not found", rendition);
 			
 			if (!renditionFile.delete())

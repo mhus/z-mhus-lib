@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fsdb;
+package de.mhus.lib.cao.fdb;
 
 import java.io.File;
 import java.util.Map.Entry;
@@ -18,7 +18,7 @@ import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
 
-public class FdCreate extends CaoAction {
+public class FdbCreate extends CaoAction {
 
 	@Override
 	public String getName() {
@@ -35,9 +35,9 @@ public class FdCreate extends CaoAction {
 		try {
 			return configuration.getList().size() == 1 
 					&& 
-					configuration.getList().get(0) instanceof FdNode 
+					configuration.getList().get(0) instanceof FdbNode 
 					&&
-					! new File( ((FdNode)configuration.getList().get(0)).getFile(), configuration.getProperties().getString(CreateConfiguration.NAME) ).exists()
+					! new File( ((FdbNode)configuration.getList().get(0)).getFile(), configuration.getProperties().getString(CreateConfiguration.NAME) ).exists()
 					;
 		} catch (Throwable t) {
 			log().d(t);
@@ -50,11 +50,11 @@ public class FdCreate extends CaoAction {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 
 		try {
-			FdNode parent = (FdNode)configuration.getList().get(0);
+			FdbNode parent = (FdbNode)configuration.getList().get(0);
 			
 			File nextFile = new File(parent.getFile(), configuration.getProperties().getString(CreateConfiguration.NAME) );
 			nextFile.mkdir();
-			((FdCore)parent.getConnection()).indexFile(nextFile);
+			((FdbCore)parent.getConnection()).indexFile(nextFile);
 			
 			CaoNode nextNode = parent.getNode(nextFile.getName());
 			CaoWritableElement nextWrite = nextNode.getWritableNode();

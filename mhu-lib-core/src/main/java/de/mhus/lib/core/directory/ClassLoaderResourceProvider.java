@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
@@ -134,6 +135,11 @@ public class ClassLoaderResourceProvider extends MResourceProvider<ResourceNode<
 
 		@Override
 		public void clear() {
+		}
+
+		@Override
+		public IProperties getRenditionProperties(String rendition) {
+			return null;
 		}
 
 	}

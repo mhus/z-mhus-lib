@@ -21,6 +21,7 @@ import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
 import de.mhus.lib.cao.CaoWritableElement;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
@@ -75,11 +76,6 @@ public class AuthNode extends CaoNode {
 		CaoNode n = instance.getNode(key);
 		if (n == null || !((AuthCore)core).hasReadAccess(n)) return null;
 		return new AuthNode( (AuthCore)core, this, n );
-	}
-
-	@Override
-	public CaoMetadata getMetadata() {
-		return instance.getMetadata();
 	}
 
 	@Override
@@ -476,6 +472,22 @@ public class AuthNode extends CaoNode {
 			p = parent;
 		}
 		return p;
+	}
+
+	@Override
+	public String getPath() {
+		return instance.getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return instance.getPaths();
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		if (!((AuthCore)core).hasContentAccess(instance, rendition)) return null;
+		return instance.getRenditionProperties(rendition);
 	}
 
 }

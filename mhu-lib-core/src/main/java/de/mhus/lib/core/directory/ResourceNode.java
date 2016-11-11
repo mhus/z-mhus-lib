@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.mhus.lib.core.AbstractProperties;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.CompiledString;
@@ -102,6 +103,18 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * @return The list or null if hasContent() is false
 	 */
 	public abstract Collection<String> getRenditions();
+	
+	public IProperties getRenditionProperties() {
+		return getRenditionProperties(null);
+	}
+	
+	/**
+	 * Returns a set of properties to define the rendition.
+	 * 
+	 * @param rendition
+	 * @return
+	 */
+	public abstract IProperties getRenditionProperties(String rendition);
 	
 	/**
 	 * Returns a compiled and executed string. The string is compiled with StringCompiler and is cached. Example

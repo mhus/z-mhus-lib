@@ -1,4 +1,4 @@
-package de.mhus.lib.cao.fsdb;
+package de.mhus.lib.cao.fdb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,20 +16,21 @@ import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.util.EmptyList;
+import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class FdNode extends PropertiesNode {
+public class FdbNode extends PropertiesNode {
 
 	private static final long serialVersionUID = 1L;
 	private File file;
 
-	public FdNode(FdCore connection, File file, FdNode parent) {
+	public FdbNode(FdbCore connection, File file, FdbNode parent) {
 		super(connection, parent);
 		this.file = file;
 		reload();
-		this.metadata = ((FdCore)core).getMetadata();
+//		this.metadata = ((FdCore)core).getMetadata();
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class FdNode extends PropertiesNode {
 
 	@Override
 	public void reload() {
-		((FdCore)core).fillProperties(file, properties);
+		((FdbCore)core).fillProperties(file, properties);
 //		FdNode root = ((FdNode)((FdConnection)getConnection()).getRoot());
 		this.id = properties.getString("_id", "");
 		this.name = file.getName();
@@ -58,7 +59,7 @@ public class FdNode extends PropertiesNode {
 	public CaoNode getNode(String key) {
 		File f = new File(file, key);
 		if (f.exists())
-			return new FdNode((FdCore)core, f, this);
+			return new FdbNode((FdbCore)core, f, this);
 		return null;
 	}
 
@@ -67,7 +68,7 @@ public class FdNode extends PropertiesNode {
 		LinkedList<CaoNode> out = new LinkedList<>();
 		for (File f : file.listFiles()) {
 			if (f.isHidden() || f.getName().startsWith(".") || f.getName().startsWith("__cao.")) continue;
-			out.add( new FdNode((FdCore)core, f, this));
+			out.add( new FdbNode((FdbCore)core, f, this));
 		}
 		return out;
 	}
@@ -94,7 +95,7 @@ public class FdNode extends PropertiesNode {
 	@Override
 	public InputStream getInputStream(String rendition) {
 		
-		File contentFile = ((FdCore)core).getContentFileFor(file, rendition);
+		File contentFile = ((FdbCore)core).getContentFileFor(file, rendition);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return new FileInputStream(contentFile);
@@ -107,7 +108,7 @@ public class FdNode extends PropertiesNode {
 
 	@Override
 	public URL getUrl() {
-		File contentFile = ((FdCore)core).getContentFileFor(file, null);
+		File contentFile = ((FdbCore)core).getContentFileFor(file, null);
 		if (contentFile == null || !contentFile.exists()) return null;
 		try {
 			return contentFile.toURL();
@@ -125,7 +126,7 @@ public class FdNode extends PropertiesNode {
 	@Override
 	protected void doUpdate(MProperties modified) {
 		if (!isEditable()) throw new AccessDeniedException(file);
-		File metaFile = ((FdCore)core).getMetaFileFor(file);
+		File metaFile = ((FdbCore)core).getMetaFileFor(file);
 		modified.remove("id");
 		try {
 			modified.save(metaFile);
@@ -151,6 +152,24 @@ public class FdNode extends PropertiesNode {
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public String getPath() {
+		return file.getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return new SingleList<String>(getPath());
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		File contentFile = ((FdbCore)core).getContentFileFor(file, rendition);
+		contentFile = new File(contentFile.getParent(), contentFile.getName() + ".meta");
+		if (contentFile == null || !contentFile.exists()) return null;
+		return MProperties.load( contentFile );
 	}
 
 }

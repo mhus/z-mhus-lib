@@ -16,6 +16,7 @@ import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.util.EmptyList;
+import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -29,7 +30,7 @@ public class FsNode extends PropertiesNode {
 		super(connection, parent);
 		this.file = file;
 		reload();
-		this.metadata = ((FsCore)core).getMetadata();
+//		this.metadata = ((FsCore)core).getMetadata();
 	}
 
 	@Override
@@ -154,6 +155,22 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public String getPath() {
+		return file.getPath();
+	}
+
+	@Override
+	public Collection<String> getPaths() {
+		return new SingleList<String>(getPath());
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

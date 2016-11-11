@@ -19,24 +19,17 @@ public abstract class PropertiesNode extends CaoNode {
 
 	private static final long serialVersionUID = 1L;
 	protected MProperties properties = new MProperties();
-	protected CaoMetadata metadata;
 	protected String id;
 	protected String name;
 	
 	public PropertiesNode(CaoCore core, CaoNode parent) {
 		super(core, parent);
-		metadata = new MutableMetadata(core.getDriver());
 	}
 	
 	@Override
 	public CaoWritableElement getWritableNode() throws MException {
 		if (isEditable()) return new WritablePropertiesNode(core, this);
 		return null;
-	}
-
-	@Override
-	public CaoMetadata getMetadata() {
-		return metadata;
 	}
 
 	@Override
@@ -74,10 +67,12 @@ public abstract class PropertiesNode extends CaoNode {
 		throw new NotSupportedException();
 	}
 
-	protected void createMetadataByProperties() {
+	protected CaoMetadata createMetadataByProperties() {
+		MutableMetadata metadata = new MutableMetadata(core.getDriver());
 		for (java.util.Map.Entry<String, Object> entry : properties.entrySet()) {
 			((MutableMetadata)metadata).addDefinition(entry.getKey(), CaoUtil.objectToMetaType(entry.getValue()), 700);
 		}
+		return metadata;
 	}
 
 	protected abstract void doUpdate(MProperties modified) throws CaoException;

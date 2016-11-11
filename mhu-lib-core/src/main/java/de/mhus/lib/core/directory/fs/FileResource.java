@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.util.EmptyList;
@@ -208,6 +209,11 @@ public class FileResource extends ResourceNode<FileResource> {
 
 	@Override
 	public void clear() {
+	}
+
+	@Override
+	public IProperties getRenditionProperties(String rendition) {
+		return null;
 	}
 
 
