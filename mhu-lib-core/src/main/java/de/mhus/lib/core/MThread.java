@@ -20,7 +20,9 @@
 package de.mhus.lib.core;
 
 import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.errors.TimeoutRuntimeException;
 
 
 /**
@@ -226,6 +228,19 @@ public class MThread extends MObject implements Runnable {
 
 	public static void asynchron(Runnable task) {
 		new MThread(task).start();
+	}
+
+	public static <T> T getWithTimeout( ValueProvider<T> provider, long timeout, boolean nullAllowed) {
+		long start = System.currentTimeMillis();
+		while (true) {
+			try {
+				T val = provider.getValue();
+				if (nullAllowed || val != null)
+					return val;
+			} catch (Throwable t) {}
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+			sleep(200);
+		}
 	}
 
 }
