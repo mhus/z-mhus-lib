@@ -9,6 +9,7 @@ import de.mhus.lib.cao.CaoAspectFactory;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
@@ -142,6 +143,11 @@ public class AuthCore extends CaoCore {
 	public String mapWriteName(CaoNode node, String name) {
 		if (auth == null) return name;
 		return auth.mapWriteName(node, name);
+	}
+
+	public boolean hasActionAccess(CaoConfiguration configuration, CaoAction action) {
+		if (auth == null) return true;
+		return auth.hasActionAccess(configuration, action);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.action.CaoConfiguration;
 
 public interface Authorizator {
 
@@ -29,5 +30,7 @@ public interface Authorizator {
 	Collection<String> mapReadNames(CaoNode node, Collection<String> set);
 
 	String mapWriteName(CaoNode node, String name);
+
+	boolean hasActionAccess(CaoConfiguration configuration, CaoAction action);
 
 }

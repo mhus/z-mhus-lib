@@ -7,6 +7,7 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
+import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 
 public class AuthAction extends CaoAction {
@@ -39,11 +40,15 @@ public class AuthAction extends CaoAction {
 
 	@Override
 	public boolean canExecute(CaoConfiguration configuration) {
+		if (!con.hasActionAccess(configuration,this)) return false;
 		return instance.canExecute(configuration);
 	}
 
 	@Override
 	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+		
+		if (!con.hasActionAccess(configuration,this)) return new NotSuccessful(getName(), "access denied", OperationResult.ACCESS_DENIED);
+		
 		OperationResult res = instance.doExecute(configuration, monitor);
 		
 		if (res != null) {
