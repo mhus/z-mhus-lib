@@ -169,5 +169,10 @@ public class HttpServletRequestWrapper implements RequestWrapper {
 	public IProperties getSession() {
 		return getSession(true);
 	}
+
+	@Override
+	public String getSessionId() {
+		return instance.getSession().getId();
+	}
 	
 }

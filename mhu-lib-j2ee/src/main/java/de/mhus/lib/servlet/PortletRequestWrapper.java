@@ -169,5 +169,10 @@ public class PortletRequestWrapper implements RequestWrapper {
 	public IProperties getSession() {
 		return getSession(true);
 	}
+
+	@Override
+	public String getSessionId() {
+		return instance.getPortletSession().getId(); // This is not the http session id ... look for cookie?
+	}
 	
 }

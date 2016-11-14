@@ -71,4 +71,6 @@ public interface RequestWrapper {
 
 	IProperties getSession();
 
+	String getSessionId();
+
 }
