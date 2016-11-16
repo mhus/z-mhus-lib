@@ -20,6 +20,12 @@ public class StreamToLogAdapter extends PrintStream {
 		this.forward = forward;
 		((MyOutputStream)out).setAdapter(this);
 	}
+	
+	public void close() {
+		if (line.length() > 0)
+			writeLine();
+		super.close();
+	}
 
 	private static class MyOutputStream extends OutputStream {
 

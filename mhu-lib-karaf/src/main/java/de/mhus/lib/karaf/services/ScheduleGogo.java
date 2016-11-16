@@ -59,12 +59,12 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 		if (command == null || timer == null) return;
 		log().i(name,"execute",command);
 		
+		StreamToLogAdapter out = new StreamToLogAdapter(LEVEL.INFO, null);
+		StreamToLogAdapter err = new StreamToLogAdapter(LEVEL.ERROR, null);
 		try {
 		  SessionFactory commandProcessor=MOsgi.getService(SessionFactory.class);
 		  
 		  ByteArrayInputStream in = new ByteArrayInputStream(new byte[0]);
-		  StreamToLogAdapter out = new StreamToLogAdapter(LEVEL.INFO, null);
-		  StreamToLogAdapter err = new StreamToLogAdapter(LEVEL.ERROR, null);
 		  
 		  Session commandSession=commandProcessor.create(in,out,err);						
 		  
@@ -73,10 +73,14 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 		  commandSession.put("USER","karaf");
 
 		  commandSession.execute(command);
+		  
+		  
 		} catch (Throwable t) {
 			log().w(name,t);
 		}
 		
+		out.close();
+		err.close();
 	}
 	
 	public void init() {
