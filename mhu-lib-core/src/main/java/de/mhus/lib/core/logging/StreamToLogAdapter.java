@@ -21,6 +21,13 @@ public class StreamToLogAdapter extends PrintStream {
 		((MyOutputStream)out).setAdapter(this);
 	}
 
+	@Override
+	public void close() {
+		if (line.length() > 0)
+			writeLine();
+		super.close();
+	}
+
 	private static class MyOutputStream extends OutputStream {
 
 		private StreamToLogAdapter adapter;
