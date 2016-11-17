@@ -156,7 +156,7 @@ public class FdbNode extends PropertiesNode {
 
 	@Override
 	public String getPath() {
-		return file.getPath();
+		return file.getPath().substring(((FdbCore)core).getFilesDir().getPath().length());
 	}
 
 	@Override

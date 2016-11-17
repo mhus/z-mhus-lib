@@ -159,7 +159,7 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public String getPath() {
-		return file.getPath();
+		return file.getPath().substring(((FsCore)core).getDir().getPath().length());
 	}
 
 	@Override

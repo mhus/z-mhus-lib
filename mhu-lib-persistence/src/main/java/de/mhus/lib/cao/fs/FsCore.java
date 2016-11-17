@@ -131,4 +131,8 @@ public class FsCore extends CaoCore {
 		return null;
 	}
 
+	public File getDir() {
+		return root.getFile();
+	}
+
 }

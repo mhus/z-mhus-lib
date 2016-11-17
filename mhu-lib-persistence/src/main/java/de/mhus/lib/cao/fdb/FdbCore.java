@@ -222,5 +222,9 @@ public class FdbCore extends CaoCore {
 		File iFile = new File(indexDir, idCut(id) );
 		if (iFile.exists()) iFile.delete();
 	}
+	
+	File getFilesDir() {
+		return filesDir;
+	}
 
 }

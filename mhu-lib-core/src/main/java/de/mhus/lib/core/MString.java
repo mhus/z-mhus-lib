@@ -1394,6 +1394,13 @@ public class MString {
 		return in.substring(0,length - 3) + "...";
 	}
 	
+	public static String truncateNiceLeft(String in, int length) {
+		if (in.length() <= length) return in;
+		int s = in.length();
+		if (length < 4) return in.substring(s-length,s);
+		return "..." + in.substring(s-length+3, s);
+	}
+	
 	/**
 	 * Search in a string the selected paragraph indicated be empty lines. If the caret position outside
 	 * the string it will return null.
