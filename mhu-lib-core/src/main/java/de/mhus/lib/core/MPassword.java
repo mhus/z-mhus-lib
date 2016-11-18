@@ -152,6 +152,13 @@ public class MPassword {
 		return generate(max == min ? min : (random.nextInt(max-min)+max), symbols, i);
 	}
 	
+	public static String generate(int length, String symbols) {
+		char[] buf = new char[length];
+		for (int idx = 0; idx < buf.length; ++idx) 
+		      buf[idx] = symbols.charAt(random.nextInt(symbols.length()));
+		    return new String(buf);
+	}
+	
 	public static String generate(int length, char[] symbols, int symbolLength) {
 		char[] buf = new char[length];
 		for (int idx = 0; idx < buf.length; ++idx) 
