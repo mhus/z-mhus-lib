@@ -158,6 +158,13 @@ public class MPassword {
 		      buf[idx] = symbols[random.nextInt(symbolLength)];
 		    return new String(buf);
 	}
+	
+	public static String generate(int length, String symbols) {
+		char[] buf = new char[length];
+		for (int idx = 0; idx < buf.length; ++idx) 
+		      buf[idx] = symbols.charAt(random.nextInt(symbols.length()));
+		    return new String(buf);
+	}
 
 	public static boolean validatePassword(String current, String saved) {
 		// TODO check encoding or null values
