@@ -13,20 +13,14 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.karaf.MOsgi;
 
-@Command(scope = "mhus", name = "simpleservice", description = "Simple Service Interaction")
+@Command(scope = "mhus", name = "cache", description = "Cache Control Service Control")
 @Service
 public class CmdCacheControl extends MLog implements Action {
 
-	@Argument(index=0, name="cmd", required=true, description="list,cmd", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="list,clear", multiValued=false)
     String cmd;
 
-	@Argument(index=1, name="service", required=false, description="Service Name", multiValued=false)
-    String serviceName;
-	
-	@Argument(index=2, name="service cmd", required=false, description="Cmd to the service", multiValued=false)
-    String serviceCmd;
-
-	@Argument(index=3, name="paramteters", required=false, description="Parameters", multiValued=true)
+	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
 
 	@Override
