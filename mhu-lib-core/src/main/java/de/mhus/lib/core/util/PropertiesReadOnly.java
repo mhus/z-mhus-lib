@@ -1,14 +1,20 @@
 package de.mhus.lib.core.util;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
+import de.mhus.lib.basics.ReadOnly;
 import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.IReadProperties;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class PropertiesReadOnly extends AbstractProperties {
+public class PropertiesReadOnly implements IReadProperties, ReadOnly {
 
+	private static final long serialVersionUID = 1L;
 	private IProperties parent;
 
 	public PropertiesReadOnly(IProperties parent) {
@@ -26,28 +32,8 @@ public class PropertiesReadOnly extends AbstractProperties {
 	}
 
 	@Override
-	public void removeProperty(String key) {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public void setProperty(String key, Object value) {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public boolean isEditable() {
-		return false;
-	}
-
-	@Override
 	public Set<String> keys() {
 		return parent.keys();
-	}
-
-	@Override
-	public int size() {
-		return parent.size();
 	}
 
 	@Override
@@ -71,7 +57,58 @@ public class PropertiesReadOnly extends AbstractProperties {
 	}
 
 	@Override
-	public void clear() {
+	public String getString(String name, String def) {
+		return parent.getString(name, def);
+	}
+
+	@Override
+	public String getString(String name) throws MException {
+		return parent.getString(name);
+	}
+
+	@Override
+	public boolean getBoolean(String name, boolean def) {
+		return parent.getBoolean(name,def);
+	}
+
+	@Override
+	public boolean getBoolean(String name) throws MException {
+		return parent.getBoolean(name);
+	}
+
+	@Override
+	public int getInt(String name, int def) {
+		return parent.getInt(name, def);
+	}
+
+	@Override
+	public long getLong(String name, long def) {
+		return parent.getLong(name, def);
+	}
+
+	@Override
+	public float getFloat(String name, float def) {
+		return parent.getFloat(name, def);
+	}
+
+	@Override
+	public double getDouble(String name, double def) {
+		return parent.getDouble(name, def);
+	}
+
+	@Override
+	public Calendar getCalendar(String name) throws MException {
+		return parent.getCalendar(name);
+	}
+
+	@Override
+	public Date getDate(String name) {
+		return parent.getDate(name);
+	}
+
+	@Override
+	public Number getNumber(String name, Number def) {
+		return parent.getNumber(name, def);
 	}
 
 }

@@ -8,27 +8,8 @@ import java.util.Set;
 
 import de.mhus.lib.errors.MException;
 
-public interface IProperties extends Map<String,Object>, Serializable, Iterable<Map.Entry<String,Object>> {
+public interface IProperties extends IReadProperties, Map<String,Object>, Serializable, Iterable<Map.Entry<String,Object>> {
 
-	String getString(String name, String def);
-
-	String getString(String name) throws MException;
-
-	boolean getBoolean(String name, boolean def);
-
-	boolean getBoolean(String name) throws MException;
-
-	int getInt(String name, int def);
-
-	long getLong(String name, long def);
-
-	float getFloat(String name, float def);
-
-	double getDouble(String name, double def);
-
-	Calendar getCalendar(String name) throws MException;
-
-	Date getDate(String name);
 
 	void setString(String name, String value);
 
@@ -48,15 +29,9 @@ public interface IProperties extends Map<String,Object>, Serializable, Iterable<
 
 	void setNumber(String name, Number value);
 
-	Number getNumber(String name, Number def);
-
-	boolean isProperty(String name);
-
 	void removeProperty(String key);
 
 	boolean isEditable();
-
-	Set<String> keys();
 	
 	@Override
 	void clear();

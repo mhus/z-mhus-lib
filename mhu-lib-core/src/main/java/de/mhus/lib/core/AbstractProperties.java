@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
+import de.mhus.lib.basics.IsNull;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
@@ -366,9 +368,20 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	@Override
 	public void putAll(Map<? extends String, ? extends Object> m) {
 		for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
-			put(e.getKey(),e.getValue());
+			if (e.getValue() instanceof IsNull)
+				remove(e.getKey());
+			else
+				put(e.getKey(),e.getValue());
 	}
 
+	public void putReadProperties(IReadProperties m) {
+		for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
+			if (e.getValue() instanceof IsNull)
+				remove(e.getKey());
+			else
+				put(e.getKey(),e.getValue());
+	}
+	
 //	@Override
 //	public void clear() {
 //		

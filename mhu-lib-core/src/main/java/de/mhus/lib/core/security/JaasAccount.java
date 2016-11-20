@@ -2,6 +2,10 @@ package de.mhus.lib.core.security;
 
 import javax.security.auth.Subject;
 
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.IReadProperties;
+import de.mhus.lib.errors.NotSupportedException;
+
 public class JaasAccount implements Account {
 
 	public JaasAccount(String realm, Subject subject) {
@@ -42,6 +46,16 @@ public class JaasAccount implements Account {
 	public String getDisplayName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public IReadProperties getAttributes() {
+		return null;
+	}
+
+	@Override
+	public void putAttributes(IReadProperties properties) throws NotSupportedException {
+		throw new NotSupportedException();
 	}
 
 }
