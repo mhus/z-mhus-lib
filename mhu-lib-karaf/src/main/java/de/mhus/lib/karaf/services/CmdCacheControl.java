@@ -30,7 +30,11 @@ public class CmdCacheControl extends MLog implements Action {
 			ConsoleTable table = new ConsoleTable();
 			table.setHeaderValues("Name","Size");
 			for (CacheControlIfc c : MOsgi.getServices(CacheControlIfc.class, null))
-				table.addRowValues(c.getName(), c.getSize());
+				try {
+					table.addRowValues(c.getName(), c.getSize());
+				} catch (Throwable t) {
+					table.addRowValues(c.getName(), t.getMessage());
+				}
 			table.print(System.out);
 		} else
 		if (cmd.equals("clear")) {
