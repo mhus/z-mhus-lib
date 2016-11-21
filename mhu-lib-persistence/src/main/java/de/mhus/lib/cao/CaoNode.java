@@ -3,11 +3,13 @@ package de.mhus.lib.cao;
 import java.util.Collection;
 import java.util.Set;
 
+import de.mhus.lib.basics.Named;
 import de.mhus.lib.cao.auth.AuthCore;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.errors.MException;
 
-public abstract class CaoNode extends ResourceNode<CaoNode> {
+public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable<CaoAspect>, Named {
 
 	private static final long serialVersionUID = 1L;
 	protected CaoCore core;
@@ -126,6 +128,7 @@ public abstract class CaoNode extends ResourceNode<CaoNode> {
 		return false;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
 		CaoAspectFactory<? extends CaoAspect> factory = getConnection().getAspectFactory(ifc);
