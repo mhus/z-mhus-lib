@@ -517,7 +517,7 @@ public abstract class Table extends MObject {
 
 		for (FieldRelation field : relationList) {
 			if (field.isChanged(obj)) {
-				log().i("debug rel",field);
+				log().i("relation changed",getName(), field, field.getName());
 				return true;
 			}
 		}
@@ -531,7 +531,7 @@ public abstract class Table extends MObject {
 		DbResult ret = sqlPrimary.getStatement(con).executeQuery(attributes);
 		if (!ret.next()) {
 			ret.close();
-			log().i("debug not found");
+			log().i("row not found");
 			return true;
 		}
 
@@ -542,7 +542,7 @@ public abstract class Table extends MObject {
 		for (Field f : fList) {
 			if (!f.isTechnical() && f.changed(ret,obj)) {
 				ret.close();
-				log().i("debug f",f);
+				log().i("changed field",getName(), f, f.getName());
 				return true;
 			}
 		}
