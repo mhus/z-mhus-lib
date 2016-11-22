@@ -108,8 +108,8 @@ public abstract class Field extends MObject {
 				objValue = ((DbDynamic)obj).getValue(dynamicField);
 			else
 				objValue = attribute.get(obj);
-log().i("DEBUG Compare Enum", String.valueOf(value), String.valueOf(objValue), MSystem.equals(String.valueOf(value), String.valueOf(objValue)) );
-			return MSystem.equals(String.valueOf(value), String.valueOf(objValue));
+
+			return !MSystem.equals(String.valueOf(value), String.valueOf(objValue));
 		}
 
 		for (Feature f : table.getFeatures())
@@ -131,7 +131,7 @@ log().i("DEBUG Compare Enum", String.valueOf(value), String.valueOf(objValue), M
 		//		for (Feature f : table.getFeatures())
 		//			objValue = f.get(obj, this, objValue);
 
-		return MSystem.equals(value, objValue);
+		return !MSystem.equals(value, objValue);
 	}
 
 	public Object get(Object obj) throws Exception {
