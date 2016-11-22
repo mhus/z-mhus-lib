@@ -658,6 +658,7 @@ public abstract class Table extends MObject {
 	public boolean objectChanged(DbConnection con, Object obj, Object[] keys) throws Exception {
 
 		for (FieldRelation field : relationList) {
+			log().d("relation changed",getName(), field, field.getName());
 			if (field.isChanged(obj)) return true;
 		}
 
@@ -670,6 +671,7 @@ public abstract class Table extends MObject {
 		DbResult ret = sqlPrimary.getStatement(con).executeQuery(attributes);
 		if (!ret.next()) {
 			ret.close();
+			log().d("row not found");
 			return true;
 		}
 
@@ -678,8 +680,9 @@ public abstract class Table extends MObject {
 
 		// check object
 		for (Field f : fList) {
-			if (f.changed(ret,obj)) {
+			if (!f.isTechnical() && f.changed(ret,obj)) {
 				ret.close();
+				log().d("changed field",getName(), f, f.getName());
 				return true;
 			}
 		}

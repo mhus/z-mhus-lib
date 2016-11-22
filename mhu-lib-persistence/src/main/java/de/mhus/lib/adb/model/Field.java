@@ -102,6 +102,14 @@ public abstract class Field extends MObject {
 
 			value = values[index];
 
+			Object objValue = null;
+
+			if (dynamicField != null && obj instanceof DbDynamic)
+				objValue = ((DbDynamic)obj).getValue(dynamicField);
+			else
+				objValue = attribute.get(obj);
+
+			return !MSystem.equals(String.valueOf(value), String.valueOf(objValue));
 		}
 
 		for (Feature f : table.getFeatures())
@@ -123,7 +131,7 @@ public abstract class Field extends MObject {
 		//		for (Feature f : table.getFeatures())
 		//			objValue = f.get(obj, this, objValue);
 
-		return MSystem.equals(value, objValue);
+		return !MSystem.equals(value, objValue);
 	}
 
 	public Object get(Object obj) throws Exception {
@@ -169,6 +177,22 @@ public abstract class Field extends MObject {
 	}
 	public boolean isReadOnly() {
 		return readOnly;
+	}
+
+	public boolean isTechnical() {
+		return isHint("technical");
+	}
+	
+	public boolean isHint(String string) {
+		if (hints == null) return false;
+		for (String h : hints)
+			if (h.equals(string)) return true;
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return MSystem.toString(this, name);
 	}
 
 }
