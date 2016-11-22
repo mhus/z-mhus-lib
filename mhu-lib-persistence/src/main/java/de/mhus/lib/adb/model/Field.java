@@ -101,7 +101,15 @@ public abstract class Field extends MObject {
 			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
 
 			value = values[index];
+			
+			Object objValue = null;
 
+			if (dynamicField != null && obj instanceof DbDynamic)
+				objValue = ((DbDynamic)obj).getValue(dynamicField);
+			else
+				objValue = attribute.get(obj);
+			
+			return MSystem.equals(String.valueOf(value), String.valueOf(objValue));
 		}
 
 		for (Feature f : table.getFeatures())
@@ -122,7 +130,7 @@ public abstract class Field extends MObject {
 		//
 		//		for (Feature f : table.getFeatures())
 		//			objValue = f.get(obj, this, objValue);
-log().i("Compare",getName(),value,objValue);
+
 		return MSystem.equals(value, objValue);
 	}
 
