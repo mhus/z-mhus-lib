@@ -181,4 +181,7 @@ public abstract class Field extends MObject {
 		return false;
 	}
 
+	public String toString() {
+		return MSystem.toString(this, name);
+	}
 }
