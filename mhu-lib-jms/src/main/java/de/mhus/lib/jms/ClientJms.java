@@ -187,7 +187,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 					break;
 			}
 			
-			log().d("sendJmsBroadcastAnswer",dest,res);
+			log().d("sendJmsBroadcastAnswer",dest);
+			log().t("sendJmsBroadcastAnswer",dest,res);
 			return res.toArray(new Message[res.size()]);
 		} catch (JMSException e) {
 			reset();
