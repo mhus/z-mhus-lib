@@ -94,8 +94,8 @@ public abstract class Field extends MObject {
 			if (value == null)
 				index= MCast.toint(defValue, -1);
 			else
-				if (value instanceof Number)
-					index = ((Number)value).intValue();
+			if (value instanceof Number)
+				index = ((Number)value).intValue();
 
 			Object[] values=attribute.getType().getEnumConstants();
 			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
@@ -122,7 +122,7 @@ public abstract class Field extends MObject {
 		//
 		//		for (Feature f : table.getFeatures())
 		//			objValue = f.get(obj, this, objValue);
-
+log().i("Compare",getName(),value,objValue);
 		return MSystem.equals(value, objValue);
 	}
 
