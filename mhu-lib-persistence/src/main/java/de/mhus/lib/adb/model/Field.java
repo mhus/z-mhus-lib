@@ -170,5 +170,15 @@ public abstract class Field extends MObject {
 	public boolean isReadOnly() {
 		return readOnly;
 	}
+	public boolean isTechnical() {
+		return isHint("technical");
+	}
+	
+	public boolean isHint(String string) {
+		if (hints == null) return false;
+		for (String h : hints)
+			if (h.equals(string)) return true;
+		return false;
+	}
 
 }

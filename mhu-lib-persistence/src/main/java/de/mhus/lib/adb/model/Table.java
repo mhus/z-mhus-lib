@@ -536,7 +536,7 @@ public abstract class Table extends MObject {
 
 		// check object
 		for (Field f : fList) {
-			if (f.changed(ret,obj)) {
+			if (!f.isTechnical() && f.changed(ret,obj)) {
 				ret.close();
 				return true;
 			}
