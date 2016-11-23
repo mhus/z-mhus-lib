@@ -21,14 +21,18 @@ public class MServiceMap<T> extends MServiceTracker<T> {
 	@Override
 	protected void removeService(ServiceReference<T> reference, T service) {
 		synchronized (map) {
-			map.remove(MOsgi.getServiceName(reference));
+			map.remove(getServiceName(reference, service));
 		}
+	}
+
+	protected String getServiceName(ServiceReference<T> reference, T service) {
+		return MOsgi.getServiceName(reference);
 	}
 
 	@Override
 	protected void addService(ServiceReference<T> reference, T service) {
 		synchronized (map) {
-			map.put(MOsgi.getServiceName(reference), service);
+			map.put(getServiceName(reference, service), service);
 		}
 	}
 	
