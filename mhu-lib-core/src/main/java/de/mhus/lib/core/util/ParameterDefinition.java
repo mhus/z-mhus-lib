@@ -34,6 +34,12 @@ public class ParameterDefinition {
 			
 		} else {
 			name = line;
+			if (name.startsWith("*")) {
+				mandatory = true;
+				name = name.substring(1);
+			}
+			type = "string";
+			return;
 		}
 		
 		if (name.startsWith("*")) {
@@ -47,16 +53,6 @@ public class ParameterDefinition {
 		mapping = properties.getString("mapping",null);
 		format = properties.getString("format", null);
 		
-	}
-
-	public static Map<String,ParameterDefinition> createDefinitions(Collection<String> definitions) {
-		HashMap<String,ParameterDefinition> out = new HashMap<>();
-		for (String line : definitions) {
-			ParameterDefinition def = new ParameterDefinition(line);
-			out.put(def.getName(), def);
-		}
-		
-		return out;
 	}
 
 	public String getName() {
@@ -115,10 +111,19 @@ public class ParameterDefinition {
 				if (isMandatory()) throw new MException("field is mandatory", name);
 				return "";
 			}
+			case "string":
+			case "text": {
+				return String.valueOf(object);
+			}
 			default:
 				log.d("Unknown Type",name,type);
 			}
 			return object;
+	}
+	
+	@Override
+	public String toString() {
+		return name + ":" + type;
 	}
 	
 }

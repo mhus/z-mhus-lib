@@ -13,6 +13,7 @@ import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.core.util.ParameterDefinitions;
 
 public class OperationDescription {
 
@@ -23,6 +24,8 @@ public class OperationDescription {
 	private String group;
 	private String form;
 	private HashMap<String, Object> parameters;
+
+	private ParameterDefinitions parameterDef;
 	
 	public OperationDescription() {}
 	
@@ -39,6 +42,7 @@ public class OperationDescription {
 	public void setForm(DefRoot form) {
 		try {
 			form = form.build();
+			parameterDef = ParameterDefinitions.create(form);
 			Document document = MXml.createDocument();
 			Element de = document.createElement("root");
 			XmlConfig c = new XmlConfig(de);
@@ -48,6 +52,10 @@ public class OperationDescription {
 		} catch (Exception e) {
 			log.w("invalid form",group,id,e);
 		}
+	}
+	
+	public ParameterDefinitions getParameterDefinitions() {
+		return parameterDef;
 	}
 
 	public OperationDescription(OperationGroupDescription group, String id, String title) {
