@@ -18,4 +18,16 @@ public class Pair<K,V> {
 		return value;
 	}
 	
+	@Override
+	public String toString() {
+		return String.valueOf(key);
+	}
+	
+	@Override
+	public boolean equals(Object in) {
+		if (in == null) return false;
+		if (in instanceof Pair<?, ?>)
+			return ((Pair<?, ?>)in).getKey().equals(key);
+		return key.equals(in);
+	}
 }

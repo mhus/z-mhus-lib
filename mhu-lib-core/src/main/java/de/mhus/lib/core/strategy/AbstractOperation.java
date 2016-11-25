@@ -3,10 +3,11 @@ package de.mhus.lib.core.strategy;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
 
-public abstract class AbstractOperation extends MLog implements Operation, MNlsProvider {
+public abstract class AbstractOperation extends MLog implements Operation, MNlsProvider, Nls {
 
 	private Object owner;
 	private OperationDescription description;
@@ -94,4 +95,9 @@ public abstract class AbstractOperation extends MLog implements Operation, MNlsP
 		return nls;
 	}
 
+	@Override
+	public String nls(String text) {
+		return MNls.find(this, text);
+	}
+	
 }
