@@ -44,5 +44,10 @@ public class SkipExecuteStrategy extends ExecuteStrategy {
 		if (executable == null) return false;
 		return executable.hasAccess();
 	}
+
+	@Override
+	protected OperationDescription createDescription() {
+		return null;
+	}
 	
 }

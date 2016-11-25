@@ -4,10 +4,7 @@ import java.util.UUID;
 
 public class MRuntimeException extends RuntimeException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9157017165376262494L;
+	private static final long serialVersionUID = 1L;
 	private UUID errorId = UUID.randomUUID();
 	
 	public MRuntimeException(Object ... in) {

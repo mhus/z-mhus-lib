@@ -1,11 +1,12 @@
 package de.mhus.lib.errors;
 
-public class SyntaxError extends MException {
+public class UsageException extends MRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SyntaxError(Object... in) {
+	public UsageException(Object... in) {
 		super(in);
 	}
 
+	
 }

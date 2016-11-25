@@ -22,10 +22,7 @@ import java.util.UUID;
 
 public class MException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7100404828615087028L;
+	private static final long serialVersionUID = 1L;
 	
 	private UUID errorId = UUID.randomUUID();
 	

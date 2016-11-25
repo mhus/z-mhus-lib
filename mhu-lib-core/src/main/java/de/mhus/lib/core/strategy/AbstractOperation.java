@@ -1,10 +1,13 @@
 package de.mhus.lib.core.strategy;
 
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.util.ParameterDefinition;
+import de.mhus.lib.core.util.ParameterDefinitions;
 
 public abstract class AbstractOperation extends MLog implements Operation {
 
 	private Object owner;
+	private OperationDescription description;
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
@@ -51,4 +54,33 @@ public abstract class AbstractOperation extends MLog implements Operation {
 		return true;
 	}
 
+	@Override
+	public boolean canExecute(TaskContext context) {
+		if (getDescription() == null) return true; // no definition, no check
+		return validateParameters(getDescription().getParameterDefinitions(), context);
+	}
+
+	@Override
+	public OperationDescription getDescription() {
+		if (description == null)
+			description = createDescription();
+		return description;
+	}
+
+	/**
+	 * Create and return a operation definition. The method
+	 * is called only one time.
+	 * 
+	 * @return
+	 */
+	protected abstract OperationDescription createDescription();
+
+	public static boolean validateParameters(ParameterDefinitions definitions, TaskContext context) {
+		if (definitions == null) return true;
+		for (ParameterDefinition def : definitions.values()) {
+			Object v = context.getParameters().get(def.getName());
+			if (def.isMandatory() && v == null) return false;
+		}
+		return true;
+	}
 }

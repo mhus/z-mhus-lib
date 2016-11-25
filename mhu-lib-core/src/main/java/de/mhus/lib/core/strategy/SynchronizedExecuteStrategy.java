@@ -45,4 +45,9 @@ public class SynchronizedExecuteStrategy extends ExecuteStrategy {
 		return executable.hasAccess();
 	}
 
+	@Override
+	protected OperationDescription createDescription() {
+		return null;
+	}
+
 }
