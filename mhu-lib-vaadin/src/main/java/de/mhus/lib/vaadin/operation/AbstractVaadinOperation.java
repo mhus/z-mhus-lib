@@ -9,6 +9,7 @@ import de.mhus.lib.core.strategy.DefaultTaskContext;
 import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
+import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.errors.UsageException;
 import de.mhus.lib.vaadin.DialogControl;
 
@@ -22,6 +23,8 @@ public abstract class AbstractVaadinOperation extends AbstractOperation implemen
 	@Override
 	public Component createEditor(IProperties editorProperties, DialogControl control) {
 		AbstractVaadinOperationEditor editor = createEditor();
+		editor.setSizeFull();
+		editor.setCaption(getDescription().findTitle(this));
 		editor.initialize(editorProperties,control);
 		return editor;
 	}

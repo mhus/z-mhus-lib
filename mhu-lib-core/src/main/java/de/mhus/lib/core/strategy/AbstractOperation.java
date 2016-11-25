@@ -1,13 +1,16 @@
 package de.mhus.lib.core.strategy;
 
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
 
-public abstract class AbstractOperation extends MLog implements Operation {
+public abstract class AbstractOperation extends MLog implements Operation, MNlsProvider {
 
 	private Object owner;
 	private OperationDescription description;
+	private MNls nls;
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
@@ -83,4 +86,12 @@ public abstract class AbstractOperation extends MLog implements Operation {
 		}
 		return true;
 	}
+	
+	@Override
+	public MNls getNls() {
+		if (nls == null)
+			nls = MNls.lookup(this);
+		return nls;
+	}
+
 }
