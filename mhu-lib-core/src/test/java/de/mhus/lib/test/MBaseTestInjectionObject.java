@@ -5,10 +5,11 @@ import java.util.LinkedList;
 import org.junit.Assert;
 
 import de.mhus.lib.annotations.base.Bind;
+import de.mhus.lib.core.lang.MBaseObject;
 import de.mhus.lib.core.lang.MObject;
 
 @Bind
-public class MBaseTestInjectionObject extends MObject {
+public class MBaseTestInjectionObject extends MBaseObject {
 
 	@Bind
 	private LinkedList<String> list;
