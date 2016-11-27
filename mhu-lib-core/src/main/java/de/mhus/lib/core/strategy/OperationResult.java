@@ -19,7 +19,7 @@ public class OperationResult {
 	public static final long WRONG_STATUS = -506;
 
 	private String operationPath;
-	private String title;
+	private String caption;
 	private String msg;
 	private Object result; // technical result
 	private boolean successful;
@@ -33,7 +33,7 @@ public class OperationResult {
 	public OperationResult(OperationDescription description) {
 		if (description != null) {
 			setOperationPath(description.getGroup() + "/" + description.getId());
-			setTitle(description.getTitle());
+			setCaption(description.getCaption());
 		}
 	}
 	public String getOperationPath() {
@@ -42,11 +42,11 @@ public class OperationResult {
 	public void setOperationPath(String operationPath) {
 		this.operationPath = operationPath;
 	}
-	public String getTitle() {
-		return title;
+	public String getCaption() {
+		return caption;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setCaption(String title) {
+		this.caption = title;
 	}
 	public String getMsg() {
 		return msg;

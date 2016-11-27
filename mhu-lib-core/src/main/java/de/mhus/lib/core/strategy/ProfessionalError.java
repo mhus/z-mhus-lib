@@ -19,7 +19,7 @@ public class ProfessionalError extends OperationResult {
 		setReturnCode(rc);
 		if (operation != null && operation.getDescription() != null) {
 			setOperationPath(operation.getDescription().getPath());
-			setTitle(operation.getDescription().getTitle());
+			setCaption(operation.getDescription().getCaption());
 		}
 	}
 
@@ -30,7 +30,7 @@ public class ProfessionalError extends OperationResult {
 		setReturnCode(rc);
 		if (operation != null && operation.getDescription() != null) {
 			setOperationPath(operation.getDescription().getPath());
-			setTitle(operation.getDescription().getTitle());
+			setCaption(operation.getDescription().getCaption());
 		}
 	}
 

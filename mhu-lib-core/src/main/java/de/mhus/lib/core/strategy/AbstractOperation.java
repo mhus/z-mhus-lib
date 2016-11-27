@@ -7,11 +7,16 @@ import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
 
-public abstract class AbstractOperation extends MLog implements Operation, MNlsProvider, Nls {
+public abstract class AbstractOperation extends MLog implements Operation {
 
 	private Object owner;
 	private OperationDescription description;
 	private MNls nls;
+
+	@Override
+	public boolean hasAccess() {
+		return true;
+	}
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {

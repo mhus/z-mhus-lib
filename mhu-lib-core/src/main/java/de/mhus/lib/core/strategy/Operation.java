@@ -1,6 +1,9 @@
 package de.mhus.lib.core.strategy;
 
-public interface Operation {
+import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.core.util.Nls;
+
+public interface Operation extends MNlsProvider, Nls{
 
 	boolean hasAccess();
 	boolean canExecute(TaskContext context);

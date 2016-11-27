@@ -13,6 +13,7 @@ import de.mhus.lib.core.strategy.Operation;
 import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
+import de.mhus.lib.core.util.MNls;
 
 public abstract class SchedulerJob extends MTimerTask implements Operation {
 
@@ -31,6 +32,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long scheduledTime;
 	private long timeoutInMinutes;
 	private Thread thread;
+	private MNls nls;
 	
 	public SchedulerJob(Observer task) {
 		setTask(task);
@@ -284,4 +286,16 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		this.nextExecutionTime = nextExecutionTime;
 	}
 
+	@Override
+	public MNls getNls() {
+		if (nls == null)
+			nls = MNls.lookup(this);
+		return nls;
+	}
+
+	@Override
+	public String nls(String text) {
+		return MNls.find(this, text);
+	}
+	
 }

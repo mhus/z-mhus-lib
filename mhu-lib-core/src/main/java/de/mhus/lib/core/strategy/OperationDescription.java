@@ -10,12 +10,14 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.config.ConfigBuilder;
 import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinitions;
 
-public class OperationDescription {
+public class OperationDescription implements MNlsProvider, Nls {
 
 	private static Log log = Log.getLog(OperationDescription.class);
 	
@@ -26,15 +28,22 @@ public class OperationDescription {
 	private HashMap<String, Object> parameters;
 
 	private ParameterDefinitions parameterDef;
+
+	private MNls nls;
+	private MNlsProvider nlsProvider;
 	
 	public OperationDescription() {}
 	
-	public OperationDescription(Class<?> clazz, String title) {
-		this(clazz, title, null);
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title) {
+		this(clazz, nlsProvider, title, null);
 	}
 	
-	public OperationDescription(Class<?> clazz, String title, DefRoot form) {
-		this(clazz.getPackage().getName(), clazz.getSimpleName(), title);
+	public OperationDescription(Operation owner, String title, DefRoot form) {
+		this(owner.getClass(), owner, title, form);
+	}
+	
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title, DefRoot form) {
+		this(clazz.getPackage().getName(), clazz.getSimpleName(), nlsProvider, title);
 		if (form != null)
 			setForm(form);
 	}
@@ -48,7 +57,7 @@ public class OperationDescription {
 			XmlConfig c = new XmlConfig(de);
 			new ConfigBuilder().cloneConfig(form, c);
 			String formStr = MXml.toString(de, false);
-			setForm(formStr);
+			this.form = formStr;
 		} catch (Exception e) {
 			log.w("invalid form",group,id,e);
 		}
@@ -58,39 +67,31 @@ public class OperationDescription {
 		return parameterDef;
 	}
 
-	public OperationDescription(OperationGroupDescription group, String id, String title) {
-		this(group.getGroup(),id,title);
+	public OperationDescription(OperationGroupDescription group, String id, MNlsProvider nlsProvider, String title ) {
+		this(group.getGroup(),id,nlsProvider, title);
 	}
 	
-	public OperationDescription(String group, String id, String title) {
-		setGroup(group);
-		setId(id);
-		setTitle(title);
+	public OperationDescription(String group, String id, MNlsProvider nlsProvider, String title) {
+		this.id = id;
+		this.group = group;
+		this.nlsProvider = nlsProvider;
+		this.title = title;
 	}
 	
 	public String getId() {
 		return id;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
+
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	
 	public String getGroup() {
 		return group;
 	}
-	public void setGroup(String group) {
-		this.group = group;
-	}
+
 	public String getForm() {
 		return form;
-	}
-	public void setForm(String form) {
-		this.form = form;
 	}
 	
 	public String getPath() {
@@ -113,14 +114,25 @@ public class OperationDescription {
 		return super.equals(o);
 	}
 	
-	public String findTitle(MNlsProvider p) {
-		return MNls.find(p, getTitle());
-	}
-	
 	@Override
 	public String toString() {
 		return MSystem.toString(this, group, id, parameters);
 	}
 	
+	@Override
+	public MNls getNls() {
+		if (nls == null)
+			nls = nlsProvider.getNls();
+		return nls;
+	}
+
+	@Override
+	public String nls(String text) {
+		return MNls.find(this, text);
+	}
+
+	public String getCaption() {
+		return nls("caption=" + getTitle());
+	}
 	
 }

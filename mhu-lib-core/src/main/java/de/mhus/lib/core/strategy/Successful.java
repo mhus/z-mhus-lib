@@ -14,7 +14,7 @@ public class Successful extends OperationResult {
 	
 	public Successful(Operation operation, String msg, long rc, Object result) {
 		setOperationPath(operation.getDescription().getPath());
-		setTitle(operation.getDescription().getTitle());
+		setCaption(operation.getDescription().getCaption());
 		setMsg(msg);
 		setResult(result);
 		setReturnCode(rc);
@@ -23,7 +23,7 @@ public class Successful extends OperationResult {
 	
 	public Successful(String path, String msg, long rc, Object result) {
 		setOperationPath(path);
-		setTitle("");
+		setCaption("");
 		setMsg(msg);
 		setResult(result);
 		setReturnCode(rc);
@@ -40,7 +40,7 @@ public class Successful extends OperationResult {
 	
 	public Successful(String path, String msg, long rc, String ... keyValues) {
 		setOperationPath(path);
-		setTitle("");
+		setCaption("");
 		setMsg(msg);
 		setReturnCode(rc);
 		setSuccessful(true);

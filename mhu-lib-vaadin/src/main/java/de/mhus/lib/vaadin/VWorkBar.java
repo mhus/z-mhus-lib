@@ -24,23 +24,25 @@ public abstract class VWorkBar extends HorizontalLayout {
 	private Button bModify;
 	private Button bAdd;
 	private Label tStatus;
-	private ComboBox menu;
+	private ComboBox menuDelete;
+	private ComboBox menuModify;
+	private ComboBox menuAdd;
 
 	public VWorkBar() {
 
-		menu = new ComboBox();
-		menu.setTextInputAllowed(false);
-		menu.setId("a" + UUID.randomUUID().toString().replace('-', 'x'));
-		menu.setWidth("0px");
-		menu.setNullSelectionAllowed(false);
-		menu.addValueChangeListener(new Property.ValueChangeListener() {
+		menuDelete = new ComboBox();
+		menuDelete.setTextInputAllowed(false);
+		menuDelete.setId("a" + UUID.randomUUID().toString().replace('-', 'x'));
+		menuDelete.setWidth("0px");
+		menuDelete.setNullSelectionAllowed(false);
+		menuDelete.addValueChangeListener(new Property.ValueChangeListener() {
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				doMenuSelected();
 			}
 		});
-		addComponent(menu);
+		addComponent(menuDelete);
 		
 		bDelete = new Button(FontAwesome.MINUS);
 		addComponent(bDelete);
@@ -51,6 +53,22 @@ public abstract class VWorkBar extends HorizontalLayout {
 				doDelete();
 			}
 		});
+		
+		menuModify = menuDelete;
+//		menuModify = new ComboBox();
+//		menuModify.setTextInputAllowed(false);
+//		menuModify.setId("a" + UUID.randomUUID().toString().replace('-', 'x'));
+//		menuModify.setWidth("0px");
+//		menuModify.setNullSelectionAllowed(false);
+//		menuModify.addValueChangeListener(new Property.ValueChangeListener() {
+//			
+//			@Override
+//			public void valueChange(ValueChangeEvent event) {
+//				doMenuSelected();
+//			}
+//		});
+//		addComponent(menuModify);
+		
 		bModify = new Button(FontAwesome.COG);
 		addComponent(bModify);
 		bModify.addClickListener(new Button.ClickListener() {
@@ -60,7 +78,22 @@ public abstract class VWorkBar extends HorizontalLayout {
 				doModify();
 			}
 		});
-		
+
+		menuAdd = menuDelete;
+//		menuAdd = new ComboBox();
+//		menuAdd.setTextInputAllowed(false);
+//		menuAdd.setId("a" + UUID.randomUUID().toString().replace('-', 'x'));
+//		menuAdd.setWidth("0px");
+//		menuAdd.setNullSelectionAllowed(false);
+//		menuAdd.addValueChangeListener(new Property.ValueChangeListener() {
+//			
+//			@Override
+//			public void valueChange(ValueChangeEvent event) {
+//				doMenuSelected();
+//			}
+//		});
+//		addComponent(menuAdd);
+
 		bAdd = new Button(FontAwesome.PLUS);
 		addComponent(bAdd);
 		bAdd.addClickListener(new Button.ClickListener() {
@@ -77,83 +110,89 @@ public abstract class VWorkBar extends HorizontalLayout {
 		
 	}
 	
+	public void setButtonStyleName(String style) {
+		bAdd.setStyleName(style);
+		bModify.setStyleName(style);
+		bDelete.setStyleName(style);
+	}
+	
 	protected void doMenuSelected() {
-		Pair<String,String> item = (Pair<String, String>) menu.getValue();
+		Pair<String,Object[]> item = (Pair<String,Object[]>) menuDelete.getValue();
 		if (item == null) return;
-		String val = item.getValue();
-		if (val.startsWith("add:"))
-			doAdd(val.substring(4));
+		Object[] val = item.getValue();
+		if (((String)val[0]).equals("add"))
+			doAdd(val[1]);
 		else
-		if (val.startsWith("mod:"))
-			doModify(val.substring(4));
+		if (((String)val[0]).equals("mod"))
+			doModify(val[1]);
 		else
-		if (val.startsWith("del:"))
-			doDelete(val.substring(4));
+		if (((String)val[0]).equals("del"))
+			doDelete(val[1]);
 			
 	}
 
 	protected void doAdd() {
-		List<Pair<String,String>> options = getAddOptions();
+		List<Pair<String,Object>> options = getAddOptions();
 		if (options == null || options.size() <= 0) return;
-		if (options.size() == 1) {
-			doAdd(options.get(0).getValue());
-		} else {
+//		if (options.size() == 1) {
+//			doAdd(options.get(0).getValue());
+//		} else {
 			
-			menu.removeAllItems();
-			for (Pair<String, String> item : options) {
-				item = new Pair<String, String>(item.getKey(), "add:" + item.getValue());
-				menu.addItem(item);
+			menuAdd.removeAllItems();
+			for (Pair<String, Object> item : options) {
+				Pair<String, Object[]> out = new Pair<String, Object[]>(item.getKey(), new Object[] {"add", item.getValue()} );
+				menuAdd.addItem(out);
 			}
-			String myCode = "$('#" + menu.getId() + "').find('input')[0].click();";
+			String myCode = "$('#" + menuAdd.getId() + "').find('input')[0].click();";
 			Page.getCurrent().getJavaScript().execute(myCode);
-		}
+//		}
 	}
 	
-	public abstract List<Pair<String, String>> getAddOptions();
+	public abstract List<Pair<String, Object>> getAddOptions();
 
-	public abstract List<Pair<String, String>> getModifyOptions();
+	public abstract List<Pair<String, Object>> getModifyOptions();
 	
-	public abstract List<Pair<String, String>> getDeleteOptions();
+	public abstract List<Pair<String, Object>> getDeleteOptions();
 
 	protected void doModify() {
-		List<Pair<String,String>> options = getModifyOptions();
+		List<Pair<String,Object>> options = getModifyOptions();
 		if (options == null || options.size() <= 0) return;
-		if (options.size() == 1) {
-			doModify(options.get(0).getValue());
-		} else {
+//		if (options.size() == 1) {
+//			doModify(options.get(0).getValue());
+//		} else {
 			
-			menu.removeAllItems();
-			for (Pair<String, String> item : options) {
-				item = new Pair<String, String>(item.getKey(), "mod:" + item.getValue());
-				menu.addItem(item);
+			menuModify.removeAllItems();
+			for (Pair<String, Object> item : options) {
+				Pair<String, Object[]> out = new Pair<String, Object[]>(item.getKey(), new Object[] {"mod", item.getValue()} );
+				menuModify.addItem(out);
 			}
-			String myCode = "$('#" + menu.getId() + "').find('input')[0].click();";
+			String myCode = "$('#" + menuModify.getId() + "').find('input')[0].click();";
 			Page.getCurrent().getJavaScript().execute(myCode);
-		}
+//		}
 	}
 
 	protected void doDelete() {
-		List<Pair<String,String>> options = getModifyOptions();
+		List<Pair<String,Object>> options = getDeleteOptions();
 		if (options == null || options.size() <= 0) return;
-		if (options.size() == 1) {
-			doDelete(options.get(0).getValue());
-		} else {
+//		if (options.size() == 1) {
+//			doDelete(options.get(0).getValue());
+//		} else {
 			
-			menu.removeAllItems();
-			for (Pair<String, String> item : options) {
-				item = new Pair<String, String>(item.getKey(), "del:" + item.getValue());
-				menu.addItem(item);
+			menuDelete.removeAllItems();
+			for (Pair<String, Object> item : options) {
+				Pair<String, Object[]> out = new Pair<String, Object[]>(item.getKey(), new Object[] {"del", item.getValue()} );
+				menuDelete.addItem(out);
 			}
-			String myCode = "$('#" + menu.getId() + "').find('input')[0].click();";
+			String myCode = "$('#" + menuDelete.getId() + "').find('input')[0].click();";
 			Page.getCurrent().getJavaScript().execute(myCode);
-		}
+//		}
 	}
 
-	protected abstract void doModify(String action);
+	protected abstract void doModify(Object action);
 
-	protected abstract void doDelete(String action);
+	protected abstract void doDelete(Object action);
 
-	protected abstract void doAdd(String action);
+	protected abstract void doAdd(Object action);
 
 	public void setStatus(String msg) {
 		tStatus.setCaption(msg);

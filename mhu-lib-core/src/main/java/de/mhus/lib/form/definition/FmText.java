@@ -5,7 +5,7 @@ import de.mhus.lib.core.definition.IDefAttribute;
 public class FmText extends FmElement {
 
 	public FmText(String name, String title, String description, IDefAttribute ... definitions) {
-		this(name, new FmNls(title, description));
+		this(name, new FmNls(name + ".title=" + title, name + ".description=" + description));
 		addDefinition(definitions);
 	}
 	
