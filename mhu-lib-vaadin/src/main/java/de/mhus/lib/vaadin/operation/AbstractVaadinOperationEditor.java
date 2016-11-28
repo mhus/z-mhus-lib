@@ -1,12 +1,13 @@
 package de.mhus.lib.vaadin.operation;
 
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.vaadin.DialogControl;
 
-public abstract class AbstractVaadinOperationEditor extends Panel {
+public abstract class AbstractVaadinOperationEditor extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 	protected DialogControl control;

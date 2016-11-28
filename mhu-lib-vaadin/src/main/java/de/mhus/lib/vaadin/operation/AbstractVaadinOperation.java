@@ -24,7 +24,7 @@ public abstract class AbstractVaadinOperation extends AbstractOperation implemen
 	public Component createEditor(IProperties editorProperties, DialogControl control) {
 		AbstractVaadinOperationEditor editor = createEditor();
 		editor.setSizeFull();
-		editor.setCaption(getDescription().getCaption());
+		//editor.setCaption(getDescription().getCaption());
 		editor.initialize(editorProperties,control);
 		return editor;
 	}
