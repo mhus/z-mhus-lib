@@ -21,7 +21,7 @@ public class MObject extends MLog implements MNlsProvider, Nls {
 
 	@Override
 	public String nls(String text) {
-		return getNls().find(text);
+		return MNls.find(this, text);
 	}
 
 	@Override

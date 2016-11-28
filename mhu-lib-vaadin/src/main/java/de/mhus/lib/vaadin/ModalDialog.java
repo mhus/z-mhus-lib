@@ -129,6 +129,7 @@ public abstract class ModalDialog extends Window {
 				}
 			});
 			buttonBar.addComponent(b);
+			a.setButton(b);
 		}
 	}
 
@@ -145,12 +146,22 @@ public abstract class ModalDialog extends Window {
 		private String id;
 		private String title;
 		private boolean defaultAction;
+		private Button button;
 
 		public Action(String id, String title) {
 			this.id = id;
 			this.title = title;
 		}
 
+		public void setButton(Button b) {
+			button = b;
+		}
+
+		public void setEnabled(boolean enabled) {
+			if (button != null)
+				button.setEnabled(enabled);
+		}
+		
 		public String getTitle() {
 			return title;
 		}
