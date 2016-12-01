@@ -405,6 +405,8 @@ public class Db {
 	 * The value can have place holders at the beginning and end to generate a like statement. The placeholder
 	 * is a asterisk.
 	 *
+	 * Use +search=name[ asc|desc] to set sorting.
+	 *
 	 * @param query The query to extend
 	 * @param search The search string
 	 * @param helper The helper or null for the default helper
