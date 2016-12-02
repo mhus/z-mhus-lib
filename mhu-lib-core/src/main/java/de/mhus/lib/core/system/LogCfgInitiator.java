@@ -60,6 +60,15 @@ public class LogCfgInitiator implements CfgInitiator {
 				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
 			}
 		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		
+		try {
+			String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE;
+			String size = system.getString(key);
+			if (size != null) {
+				logFactory.setMaxMessageSize(Integer.valueOf(size));
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+
 		try {
 			String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
 			String name = system.getString(key);

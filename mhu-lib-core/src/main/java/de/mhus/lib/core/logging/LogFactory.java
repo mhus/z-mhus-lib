@@ -16,6 +16,7 @@ public abstract class LogFactory implements IBase {
 	protected LEVEL level = LEVEL.INFO;
 	protected LevelMapper levelMapper;
     private ParameterMapper parameterMapper;
+	private int maxMsgSize = 1024 * 100; // 100kb default max
 
     /**
      * Convenience method to derive a name from the specified class and
@@ -118,6 +119,15 @@ public abstract class LogFactory implements IBase {
 	public void setParameterMapper(ParameterMapper parameterMapper) {
 		this.parameterMapper = parameterMapper;
 	}
+	
+	public int getMaxMessageSize() {
+		return maxMsgSize;
+	}
+	
+	public void setMaxMessageSize(int max) {
+		maxMsgSize = max;
+	}
+
 	
 //    public void update(Observable o, Object arg) {
 //        setTrace(MSingleton.instance().getConfig().getBoolean(name + ".TRACE" , MSingleton.instance().getConfig().getBoolean("TRACE",false) ));

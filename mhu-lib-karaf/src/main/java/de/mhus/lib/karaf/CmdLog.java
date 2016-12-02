@@ -38,7 +38,20 @@ public class CmdLog extends MLog implements Action {
     @Reference
     private Session session;
 
-	@Argument(index=0, name="cmd", required=true, description="Command:\n clear - reset all loggers,\n add <path> - add a trace log,\n full - enable full trace logging,\n dirty - enable dirty logging,\n level - set log level (console logger),\n reloadconfig,\n settrail [<config>] - enable trail logging for this thread,\n istrail - output the traillog config,\n releasetrail - unset the current trail log config\n general - enable general logging\n off - log mapping off\n trace,debug,info,warn,error,fatal <msg>\nconsole [console=ansi] [file=data/log/karaf.log] [color=true]", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command:\n"
+			+ " clear - reset all loggers,\n"
+			+ " add <path> - add a trace log,\n"
+			+ " full - enable full trace logging,\n"
+			+ " dirty - enable dirty logging,\n"
+			+ " level - set log level (console logger),\n"
+			+ " reloadconfig,\n"
+			+ " settrail [<config>] - enable trail logging for this thread,\n"
+			+ " istrail - output the traillog config,\n"
+			+ " releasetrail - unset the current trail log config\n"
+			+ " general - enable general logging\n"
+			+ " off - log mapping off\n"
+			+ " trace,debug,info,warn,error,fatal <msg>\nconsole [console=ansi] [file=data/log/karaf.log] [color=true]\n"
+			+ " maxmsgsize [new size] - show or set maximum message size, disable with 0", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -133,6 +146,12 @@ public class CmdLog extends MLog implements Action {
 			} else {
 				System.out.println("Wrong Mapper " + mapper);
 			}
+		} break;
+		case "maxmsgsize": {
+			if (parameters != null && parameters.length > 0)
+				singleton.getLogFactory().setMaxMessageSize(MCast.toint(parameters[0], 0));
+			else
+				System.out.println("Max Message Size: "  + singleton.getLogFactory().getMaxMessageSize() );
 		} break;
 		case "general": {
 			ThreadMapperConfig config = new ThreadMapperConfig();
