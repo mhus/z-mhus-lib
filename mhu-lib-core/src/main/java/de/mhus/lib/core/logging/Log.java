@@ -108,6 +108,7 @@ public class Log {
 			error = MSystem.serialize(sb,o, error);
 			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
 				sb.setLength(maxMsgSize);
+				sb.append("...");
 				break;
 			}
 //   		cnt++;
