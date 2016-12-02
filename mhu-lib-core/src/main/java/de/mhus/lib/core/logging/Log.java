@@ -23,6 +23,7 @@ public class Log {
     protected ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     protected UUID id = UUID.randomUUID();
+	private int maxMsgSize = 0;
 	
 	public Log(Object owner) {
 		
@@ -106,6 +107,10 @@ public class Log {
 //    	int cnt=0;
     	for (Object o : msg) {
 			error = MSystem.serialize(sb,o, error);
+			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
+				sb.setLength(maxMsgSize);
+				break;
+			}
 //   		cnt++;
     	}
     	
@@ -236,6 +241,7 @@ public class Log {
 		localTrace = MSingleton.isTrace(name);
 		levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
 		parameterMapper = MSingleton.get().getLogFactory().getParameterMapper();
+		maxMsgSize = MSingleton.get().getLogFactory().getMaxMessageSize();
 	}
 
 	public ParameterMapper getParameterMapper() {

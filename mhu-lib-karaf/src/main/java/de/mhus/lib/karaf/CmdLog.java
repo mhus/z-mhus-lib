@@ -134,6 +134,12 @@ public class CmdLog extends MLog implements Action {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
+		case "maxmsgsize": {
+			if (parameters != null && parameters.length > 0)
+				singleton.getLogFactory().setMaxMessageSize(MCast.toint(parameters[0], 0));
+			else
+				System.out.println("Max Message Size: "  + singleton.getLogFactory().getMaxMessageSize() );
+		} break;
 		case "general": {
 			ThreadMapperConfig config = new ThreadMapperConfig();
 			config.doConfigure(parameters == null || parameters.length < 1 ? "" : parameters[0]);

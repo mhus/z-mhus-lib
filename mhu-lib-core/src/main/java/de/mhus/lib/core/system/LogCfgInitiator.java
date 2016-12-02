@@ -2,6 +2,7 @@ package de.mhus.lib.core.system;
 
 import java.io.PrintStream;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
@@ -65,6 +66,14 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
 				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).newInstance() );
+			}
+		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		
+		try {
+			String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE;
+			String size = system.getString(key);
+			if (size != null) {
+				logFactory.setMaxMessageSize(Integer.valueOf(size));
 			}
 		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
 		
