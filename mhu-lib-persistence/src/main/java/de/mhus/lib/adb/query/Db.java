@@ -405,7 +405,7 @@ public class Db {
 	 * The value can have place holders at the beginning and end to generate a like statement. The placeholder
 	 * is a asterisk.
 	 *
-	 * Use +search=name[ asc|desc] to set sorting.
+	 * Use _search=name[ asc|desc] to set sorting.
 	 *
 	 * @param query The query to extend
 	 * @param search The search string
@@ -432,7 +432,7 @@ public class Db {
 	 * @param helper a {@link de.mhus.lib.adb.query.SearchHelper} object.
 	 */
 	public static void extendObjectQueryFromParameter(AQuery<?> query, String part, SearchHelper helper) {
-		if (part.equals("+sort")) {
+		if (part.equals("_sort")) {
 			// implemented sort option
 			int p = part.indexOf(' ');
 			String order = null;
