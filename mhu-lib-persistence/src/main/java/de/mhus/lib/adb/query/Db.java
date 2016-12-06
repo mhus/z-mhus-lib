@@ -233,7 +233,7 @@ public class Db {
 	}
 
 	public static void extendObjectQueryFromParameter(AQuery<?> query, String part, SearchHelper helper) {
-		if (part.equals("+sort")) {
+		if (part.equals("_sort")) {
 			// implemented sort option
 			int p = part.indexOf(' ');
 			String order = null;
