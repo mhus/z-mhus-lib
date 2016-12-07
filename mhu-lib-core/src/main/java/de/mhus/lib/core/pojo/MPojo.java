@@ -119,7 +119,7 @@ public class MPojo {
 			if (deep) {
 				ObjectNode too = to.objectNode();
 				to.add(too);
-				pojoToJson(value, too, null, level+1);
+				pojoToJson(value, too, factory, level+1);
 			} else {
 				to.add(String.valueOf(value));
 			}
