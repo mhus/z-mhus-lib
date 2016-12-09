@@ -24,7 +24,7 @@ public class OperationDescription implements MNlsProvider, Nls {
 	private String id;
 	private String title;
 	private String group;
-	private String form;
+	private DefRoot form;
 	private HashMap<String, Object> parameters;
 
 	private ParameterDefinitions parameterDef;
@@ -52,12 +52,12 @@ public class OperationDescription implements MNlsProvider, Nls {
 		try {
 			form = form.build();
 			parameterDef = ParameterDefinitions.create(form);
-			Document document = MXml.createDocument();
-			Element de = document.createElement("root");
-			XmlConfig c = new XmlConfig(de);
-			new ConfigBuilder().cloneConfig(form, c);
-			String formStr = MXml.toString(de, false);
-			this.form = formStr;
+//			Document document = MXml.createDocument();
+//			Element de = document.createElement("root");
+//			XmlConfig c = new XmlConfig(de);
+//			new ConfigBuilder().cloneConfig(form, c);
+//			String formStr = MXml.toString(de, false);
+			this.form = form;
 		} catch (Exception e) {
 			log.w("invalid form",group,id,e);
 		}
@@ -90,7 +90,7 @@ public class OperationDescription implements MNlsProvider, Nls {
 		return group;
 	}
 
-	public String getForm() {
+	public DefRoot getForm() {
 		return form;
 	}
 	

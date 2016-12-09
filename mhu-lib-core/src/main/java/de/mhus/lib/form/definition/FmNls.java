@@ -9,7 +9,7 @@ import de.mhus.lib.errors.MException;
 public class FmNls extends DefAttribute {
 
 	private String title;
-	private String descritpion;
+	private String description;
 
 	public FmNls(String value) {
 		this(value,null,null);
@@ -22,7 +22,7 @@ public class FmNls extends DefAttribute {
 	public FmNls(String value, String title, String description) {
 		super("nls", value == null ? UUID.randomUUID().toString() : value);
 		this.title = title;
-		this.descritpion = description;
+		this.description = description;
 
 	}
 
@@ -30,7 +30,7 @@ public class FmNls extends DefAttribute {
 	public void inject(DefComponent root) throws MException {
 		super.inject(root);
 		if (title != null) root.setString("caption", title);
-		if (descritpion != null) root.setString("description", descritpion);
+		if (description != null) root.setString("description", description);
 	}
 
 }

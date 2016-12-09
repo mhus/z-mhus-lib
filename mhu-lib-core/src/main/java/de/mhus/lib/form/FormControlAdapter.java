@@ -1,5 +1,7 @@
 package de.mhus.lib.form;
 
+import de.mhus.lib.core.util.MNls;
+
 public class FormControlAdapter implements FormControl {
 
 	@Override
@@ -8,7 +10,9 @@ public class FormControlAdapter implements FormControl {
 		UiInformation info = component.getForm().getInformationPane();
 		DataSource ds = component.getForm().getDataSource();
 		if (info == null || ds == null) return;
-		info.setInformation(ds.getString(component, DataSource.CAPTION, component.getName()), ds.getString(component, DataSource.DESCRIPTION, ""));
+		info.setInformation(
+				MNls.find(component.getForm(), ds.getString(component, DataSource.CAPTION, component.getConfigString(DataSource.CAPTION,  component.getName()))), 
+				MNls.find(component.getForm(), ds.getString(component, DataSource.DESCRIPTION, component.getConfigString(DataSource.DESCRIPTION,  "")) ));
 	}
 
 	@Override

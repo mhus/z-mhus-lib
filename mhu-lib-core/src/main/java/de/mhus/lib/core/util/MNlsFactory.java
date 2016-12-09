@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -39,9 +40,7 @@ public class MNlsFactory extends MNlsBundle {
 		if (owner == null) return null;
 		if (owner instanceof String)
 			return (String)owner;
-		if (owner instanceof Class)
-			return ((Class<?>)owner).getCanonicalName().replace('.', '/');
-		return owner.getClass().getCanonicalName().replace('.', '/');
+		return MSystem.getClassName(owner).replace('.', '/');
 	}
 	
 	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale) {

@@ -286,17 +286,22 @@ public class MSystem {
 		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String getClassName(Object obj) {
-		if (obj == null) return "null";
+		Class<? extends Object> clazz = getMainClass(obj);
+		if (clazz == null) return "null";
+		return clazz.getCanonicalName();
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Class<?> getMainClass(Object obj) {
+		if (obj == null) return null;
 		Class<? extends Object> clazz = obj.getClass();
 		if (obj instanceof Class)
 			clazz = (Class)obj;
 		while (clazz != null && clazz.isAnonymousClass())
 			clazz = clazz.getEnclosingClass();
-		if (clazz == null) return "null";
-		
-		return clazz.getCanonicalName();
+		if (clazz == null) return null;
+		return clazz;
 	}
 	
 }

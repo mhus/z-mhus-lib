@@ -9,6 +9,8 @@ import de.mhus.lib.form.MForm;
 
 public class VaadinForm extends VerticalLayout {
 
+	private static final long serialVersionUID = 1L;
+
 	public enum SHOW {MODEL,YES,NO};
 	
 	private VaadinFormBuilder builder;

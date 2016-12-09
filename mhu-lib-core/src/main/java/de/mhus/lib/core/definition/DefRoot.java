@@ -6,6 +6,7 @@ public class DefRoot extends DefComponent {
 
 	private static final long serialVersionUID = 1L;
 	public static final String ROOT = "root";
+	private boolean build = false;
 
 	public DefRoot(IDefDefinition ... definitions) {
 		this(ROOT,definitions);
@@ -19,9 +20,15 @@ public class DefRoot extends DefComponent {
 		throw new MException("can't link root into another container");
 	}
 	
-	public DefRoot build() throws MException {
+	public synchronized DefRoot build() throws MException {
+		if (build) return this;
+		build = true;
 		super.inject(null);
 		return this;
+	}
+	
+	public boolean isBuild() {
+		return build;
 	}
 	
 }

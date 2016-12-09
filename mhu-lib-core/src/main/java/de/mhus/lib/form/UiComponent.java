@@ -66,5 +66,11 @@ public abstract class UiComponent {
 	
 	public abstract void clearError();
 
+	public String getConfigString(String name, String def) {
+		IConfig c = getConfig();
+		if (c == null) return def;
+		return c.getString(name, def);
+	}
+
 
 }
