@@ -36,8 +36,15 @@ public class Unzip extends MObject {
         File dstFile = new File(dst,entry.getName());
         if (filter == null || !filter.accept(dstFile)) {
 	        log().t("Unzip file: " + entry.getName());
-	        MFile.copyFile(zipFile.getInputStream(entry),
-	           new BufferedOutputStream(new FileOutputStream(dstFile)));
+	        File parent = dstFile.getParentFile();
+	        if (!parent.exists()) {
+	        	log().t("  Create parent");
+	        	parent.mkdirs();
+	        }
+	        BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(dstFile));
+	        MFile.copyFile(zipFile.getInputStream(entry), os);
+	        os.flush();
+	        os.close();
         }
       }
 

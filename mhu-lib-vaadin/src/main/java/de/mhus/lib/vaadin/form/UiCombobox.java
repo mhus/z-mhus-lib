@@ -16,7 +16,10 @@ public class UiCombobox extends UiVaadin {
 
 	@Override
 	public Component createEditor() {
-		return new ComboBox();
+		ComboBox ret = new ComboBox();
+		ret.setNullSelectionAllowed(false);
+		ret.setTextInputAllowed(false);
+		return ret;
 	}
 
 	@Override

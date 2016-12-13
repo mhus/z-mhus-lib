@@ -14,6 +14,7 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
+import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;
@@ -51,6 +52,7 @@ public class FdbCore extends CaoCore {
 		actionList.add(new FdbUploadRendition());
 		actionList.add(new FdbDeleteRendition());
 		
+//		registerAspectFactory(StructureControl.class, new FdbStructureControl());
 	}
 	
 	public FdbCore(String name, FdbDriver driver, File root) throws IOException, TimeoutException {
