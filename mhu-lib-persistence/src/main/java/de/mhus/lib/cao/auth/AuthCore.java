@@ -10,7 +10,9 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
+import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.util.MutableActionList;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
@@ -100,6 +102,16 @@ public class AuthCore extends CaoCore {
 		return auth.hasWriteAccess(node);
 	}
 	
+	public boolean hasStructureAccess(CaoNode node) {
+		if (auth == null) return true;
+		return auth.hasStructureAccess(node);
+	}
+	
+	public boolean hasDeleteAccess(CaoNode node) {
+		if (auth == null) return true;
+		return auth.hasDeleteAccess(node);
+	}
+	
 	public boolean hasActionAccess(CaoAction action) {
 		if (auth == null) return true;
 		return auth.hasActionAccess(action);
@@ -118,6 +130,16 @@ public class AuthCore extends CaoCore {
 	public boolean hasContentAccess(CaoNode node, String rendition) {
 		if (auth == null) return true;
 		return auth.hasContentAccess(node, rendition);
+	}
+
+	public boolean hasContentWriteAccess(CaoNode node, String rendition) {
+		if (auth == null) return true;
+		return auth.hasContentWriteAccess(node, rendition);
+	}
+	
+	public boolean hasCreateAccess(CaoNode node, String name, IProperties properties) {
+		if (auth == null) return true;
+		return auth.hasCreateAccess(node, name, properties);
 	}
 
 	public boolean hasAspectAccess(CaoNode node, Class<? extends CaoAspect> ifc) {
@@ -149,5 +171,10 @@ public class AuthCore extends CaoCore {
 		if (auth == null) return true;
 		return auth.hasActionAccess(configuration, action);
 	}
+
+	public CaoNode getInstance(AuthNode node) {
+		return node.instance;
+	}
+
 
 }

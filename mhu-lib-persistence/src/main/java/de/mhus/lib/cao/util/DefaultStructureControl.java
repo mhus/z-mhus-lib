@@ -20,6 +20,7 @@ import de.mhus.lib.cao.action.MoveConfiguration;
 import de.mhus.lib.cao.action.RenameConfiguration;
 import de.mhus.lib.cao.action.UploadRenditionConfiguration;
 import de.mhus.lib.cao.aspect.StructureControl;
+import de.mhus.lib.cao.aspect.StructureControl.Behavior;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
@@ -28,10 +29,14 @@ import de.mhus.lib.errors.MException;
 
 public class DefaultStructureControl extends MLog implements CaoAspectFactory<StructureControl> {
 
-	private SortAttribute sortAttribute;
+	private Behavior<?> defaultBehavior;
 
-	public DefaultStructureControl(SortAttribute sortAttribute) {
-		this.sortAttribute = sortAttribute;
+	public DefaultStructureControl(Behavior<?> defaultBehavior) {
+		this.defaultBehavior = defaultBehavior;
+	}
+	
+	public DefaultStructureControl(String attributeName) {
+		this.defaultBehavior = new DefaultBehavior(attributeName);
 	}
 	
 	@Override
@@ -47,6 +52,8 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 	private class Aspect implements StructureControl {
 
 		private CaoNode node;
+		@SuppressWarnings("unchecked")
+		private Behavior<Object> behavior = (Behavior<Object>) defaultBehavior;
 
 		public Aspect(CaoNode node) {
 			this.node = node;
@@ -59,7 +66,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 		}
 
 		private void sortAll(List<WritableNode> all) {
-			all.sort(sortAttribute);
+			all.sort(behavior);
 		}
 		
 		private void repairAll(List<WritableNode> all) {
@@ -68,21 +75,21 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			LinkedList<WritableNode> rest = new LinkedList<>();
 			Object max = null;
 			for (WritableNode n :all) {
-				Object pos = sortAttribute.getPosition(n);
+				Object pos = behavior.getPosition(n);
 				if (pos == null) {
 					rest.add(n);
 				} else {
 					if (index.contains(pos)) {
-						while (index.contains(pos)) pos = sortAttribute.inc(pos);
-						sortAttribute.setPosition(n, pos);
+						while (index.contains(pos)) pos = behavior.inc(pos);
+						behavior.setPosition(n, pos);
 					}
 					index.add(pos);
-					max = sortAttribute.max(max,pos);
+					max = behavior.max(max,pos);
 				}
 			}
 			for (WritableNode n : rest) {
-				max = sortAttribute.inc(max);
-				sortAttribute.setPosition(n, max);
+				max = behavior.inc(max);
+				behavior.setPosition(n, max);
 			}
 		}
 
@@ -101,7 +108,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 
 		private LinkedList<WritableNode> loadAll() {
 			
-			LinkedList<WritableNode> out = sortAttribute.loadAll(node);
+			LinkedList<WritableNode> out = behavior.loadAll(node);
 			if (out != null) return out;
 			
 			out = new LinkedList<WritableNode>();
@@ -126,10 +133,10 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				if (n.equals(node)) {
 					if (last != null) {
 						// switch pos
-						Object lastPos = sortAttribute.getPosition(last);
-						Object myPos = sortAttribute.getPosition(n);
-						sortAttribute.setPosition(last, myPos);
-						sortAttribute.setPosition(n, lastPos);
+						Object lastPos = behavior.getPosition(last);
+						Object myPos = behavior.getPosition(n);
+						behavior.setPosition(last, myPos);
+						behavior.setPosition(n, lastPos);
 					}
 					break;
 				}
@@ -149,10 +156,10 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			for (WritableNode n : all) {
 				if (last != null) {
 					// switch pos
-					Object lastPos = sortAttribute.getPosition(last);
-					Object myPos = sortAttribute.getPosition(n);
-					sortAttribute.setPosition(last, myPos);
-					sortAttribute.setPosition(n, lastPos);
+					Object lastPos = behavior.getPosition(last);
+					Object myPos = behavior.getPosition(n);
+					behavior.setPosition(last, myPos);
+					behavior.setPosition(n, lastPos);
 					break;
 				}
 				if (n.equals(node)) last = n;
@@ -171,7 +178,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			WritableNode me = null;
 			Object max = null;
 			for (WritableNode n : all) {
-				Object pos = sortAttribute.getPosition(n);
+				Object pos = behavior.getPosition(n);
 				max = pos;
 				if (n.equals(node)) {
 					me = n;
@@ -180,14 +187,14 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				if (firstPos == null)
 					firstPos = pos;
 				if (last != null)
-					sortAttribute.setPosition(last, pos);
+					behavior.setPosition(last, pos);
 				last = n;
 			}
-			max = sortAttribute.inc(max);
-			sortAttribute.setPosition(last, max);
+			max = behavior.inc(max);
+			behavior.setPosition(last, max);
 			
 			if (firstPos != null)
-				sortAttribute.setPosition(me, firstPos);
+				behavior.setPosition(me, firstPos);
 
 			return saveAll(all);
 		}
@@ -199,15 +206,15 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			sortAll(all);
 			Object max = null;
 			for (WritableNode n :all) {
-				Object pos = sortAttribute.getPosition(n);
-				max = sortAttribute.max(max, pos);
+				Object pos = behavior.getPosition(n);
+				max = behavior.max(max, pos);
 			}
 			if (max == null) return false;
 			WritableNode me = findMyself(all);
-			Object pos = sortAttribute.getPosition(me);
-			if (sortAttribute.equals(max, pos)) return false;
-			max = sortAttribute.inc(max);
-			sortAttribute.setPosition(me, max);
+			Object pos = behavior.getPosition(me);
+			if (behavior.equals(max, pos)) return false;
+			max = behavior.inc(max);
+			behavior.setPosition(me, max);
 			fillGaps(all);
 			return saveAll(all);
 		}
@@ -229,11 +236,11 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				}
 				
 				if (found) {
-					Object pos = sortAttribute.getPosition(n);
+					Object pos = behavior.getPosition(n);
 					if (lastPos == null) {
 						myPos = pos;
 					} else {
-						sortAttribute.setPosition(n, lastPos);
+						behavior.setPosition(n, lastPos);
 					}
 					lastPos = pos;
 				} else
@@ -242,7 +249,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				}
 			}
 			if (me != null && myPos != null)
-				sortAttribute.setPosition(me, myPos);
+				behavior.setPosition(me, myPos);
 			
 			return saveAll(all);
 		}
@@ -373,23 +380,20 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			}
 			return false;
 		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public void setBehavior(Behavior<?> behavior) {
+			this.behavior = (Behavior<Object>) behavior;
+		}
 		
 	}
-	
-	public static interface SortAttribute<S> extends Comparator<CaoNode> {
-		S getPosition(CaoNode node);
-		LinkedList<WritableNode> loadAll(CaoNode node);
-		S max(S max, S pos);
-		S inc(S pos);
-		void setPosition(CaoNode node, S pos);
-		boolean equals(S p1, S p2);
-	}
-	
-	public static class DefaultSortAttribute implements SortAttribute<Integer> {
+		
+	public static class DefaultBehavior implements Behavior<Integer> {
 
 		private String attributeName;
 
-		public DefaultSortAttribute(String attributeName) {
+		public DefaultBehavior(String attributeName) {
 			this.attributeName = attributeName;
 		}
 		

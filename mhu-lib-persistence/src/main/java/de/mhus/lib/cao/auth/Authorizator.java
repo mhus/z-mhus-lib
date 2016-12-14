@@ -6,6 +6,7 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
+import de.mhus.lib.core.IProperties;
 
 public interface Authorizator {
 
@@ -32,5 +33,13 @@ public interface Authorizator {
 	String mapWriteName(CaoNode node, String name);
 
 	boolean hasActionAccess(CaoConfiguration configuration, CaoAction action);
+
+	boolean hasStructureAccess(CaoNode node);
+
+	boolean hasDeleteAccess(CaoNode node);
+
+	boolean hasCreateAccess(CaoNode node, String name, IProperties properties);
+
+	boolean hasContentWriteAccess(CaoNode node, String rendition);
 
 }

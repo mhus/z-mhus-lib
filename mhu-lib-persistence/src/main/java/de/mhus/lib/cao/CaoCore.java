@@ -25,19 +25,22 @@ public abstract class CaoCore extends CaoConnection {
 		return con;
 	}
 	
+	@Override
 	public CaoDriver getDriver() {
 		return driver;
 	}
 
+	@Override
 	public CaoActionList getActions() {
 		return actionList;
 	}
 		
-	public <T extends CaoAspect> void registerAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
+	public <T extends CaoAspect> CaoCore registerAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
 		if (aspectFactory.containsKey(ifc))
 			throw new MException("Aspect already registered",ifc);
 		aspectFactory.put(ifc, factory);
 		factory.doInitialize(this, actionList);
+		return this;
 	}
 
 	public void doInitializeActions() {
@@ -45,6 +48,7 @@ public abstract class CaoCore extends CaoConnection {
 			action.doInitialize(this);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
 		return (CaoAspectFactory<T>)aspectFactory.get(ifc);
@@ -67,6 +71,7 @@ public abstract class CaoCore extends CaoConnection {
 	 * @return A list of results.
 	 * @throws MException Throws NotSupportedException if the method is not implemented at all
 	 */
+	@Override
 	public CaoList executeQuery(String space, String query) throws MException {
 		throw new NotSupportedException();
 	}

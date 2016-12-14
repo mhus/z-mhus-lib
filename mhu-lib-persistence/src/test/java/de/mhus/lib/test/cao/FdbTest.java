@@ -54,7 +54,7 @@ public class FdbTest extends TestCase {
 	
 	public void testGeneral() throws Exception {
 		createEnvironment(false);
-		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl(new DefaultStructureControl.DefaultSortAttribute("sort") ));
+		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
 
 		// check if index was created
 		assertEquals(true, new File(to, "repository/index/04115234/aad1/4e0e/a0aa/2f887a6e672a").exists());
@@ -89,7 +89,7 @@ public class FdbTest extends TestCase {
 
 	public void testMove() throws Exception {
 		createEnvironment(false);
-		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl(new DefaultStructureControl.DefaultSortAttribute("sort") ));
+		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
 		
 		CaoNode f = core.getResourceByPath("/page/sub1");
 		System.out.println(f);
@@ -117,7 +117,7 @@ public class FdbTest extends TestCase {
 	
 	public void testCopy() throws Exception {
 		createEnvironment(false);
-		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl(new DefaultStructureControl.DefaultSortAttribute("sort") ));
+		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
 		
 		CaoNode f = core.getResourceByPath("/page/sub1");
 		System.out.println(f);
@@ -182,7 +182,7 @@ public class FdbTest extends TestCase {
 	
 	public void testReorder() throws Exception {
 		createEnvironment(false);
-		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl(new DefaultStructureControl.DefaultSortAttribute("sort") ));
+		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
 
 		{
 			CaoNode n = core.getResourceByPath("/page/sub1/sub1sub1");
