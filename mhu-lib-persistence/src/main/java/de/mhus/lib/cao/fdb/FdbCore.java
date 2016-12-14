@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeoutException;
 
+import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoCore;
@@ -27,6 +28,8 @@ import de.mhus.lib.errors.MException;
 
 public class FdbCore extends CaoCore {
 
+	public static final String CONTROL_FILE_PREFIX = "__cao.";
+	
 	private FdbNode root;
 	private WeakHashMap<String, FdbNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
@@ -35,6 +38,8 @@ public class FdbCore extends CaoCore {
 	private File indexDir;
 	private File lockFile;
 	private int fileSub;
+
+	private FileLock lock;
 	
 	public FdbCore(String name, String root, boolean useCache) throws MException, IOException, TimeoutException {
 		this(name, new File(root), useCache);
@@ -49,9 +54,13 @@ public class FdbCore extends CaoCore {
 		
 		actionList.add(new FdbCreate());
 		actionList.add(new FdbDelete());
+		actionList.add(new FdbMove());
+		actionList.add(new FdbCopy());
+		actionList.add(new FdbRename());
+
 		actionList.add(new FdbUploadRendition());
 		actionList.add(new FdbDeleteRendition());
-		
+		doInitializeActions();
 //		registerAspectFactory(StructureControl.class, new FdbStructureControl());
 	}
 	
@@ -77,18 +86,18 @@ public class FdbCore extends CaoCore {
 	
 	private void fullIndex() throws IOException, TimeoutException {
 		
-		FileLock lock = MFile.aquireLock(lockFile, MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+		lock();
 		try {
 			log().d("Full index", getName());
 			indexDir(filesDir);
 			
 		} finally {
-			MFile.releaseLock(lock);
+			release();
 		}
 		
 	}
 
-	private void indexDir(File dir) {
+	void indexDir(File dir) {
 		for (File f : dir.listFiles()) {
 			
 			if (f.isFile() && !f.getName().startsWith(".") && !f.getName().startsWith("_")) {
@@ -128,7 +137,7 @@ public class FdbCore extends CaoCore {
 		if (id == null) return;
 		String c = f.getAbsolutePath().substring(fileSub);
 		File iFile = new File(indexDir, idCut(id) );
-		String cc = MFile.readFile(iFile);
+		String cc = iFile.exists() ? MFile.readFile(iFile) : null;
 		if (!c.equals(cc)) {
 			iFile.getParentFile().mkdirs();
 			MFile.writeFile(iFile, c );
@@ -227,6 +236,40 @@ public class FdbCore extends CaoCore {
 	
 	File getFilesDir() {
 		return filesDir;
+	}
+
+	public File getFileForId(String id) {
+		String  path = getPathForId(id);
+		synchronized (this) {
+			FdbNode node = cache == null ? null : cache.get(path);
+			if (node != null) {
+				if (node.isValid()) return node.getFile();
+				cache.remove(path);
+			}
+			
+			File ret = new File(filesDir, path);
+			if (ret.exists()) return ret;
+			return null;
+		}
+
+	}
+
+	public void lock() throws IOException, TimeoutException {
+		lock(MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+	}
+
+	public void lock(long timeout) throws IOException, TimeoutException {
+		synchronized (this) {
+			lock = MFile.aquireLock(lockFile, timeout);
+		}
+	}
+	
+	public void release() {
+		synchronized (this) {
+			if (lock == null) return;
+			MFile.releaseLock(lock);
+			lock = null;
+		}
 	}
 
 }

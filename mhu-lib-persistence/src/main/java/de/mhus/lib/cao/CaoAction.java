@@ -29,15 +29,15 @@ public abstract class CaoAction extends MObject {
 	public static final String CREATE = "createNode";
 	public static final String UPLOAD_RENDITION = "uploadRendition"; // CREATE or UPDATE; CREATE would suggest to generate from default rendition, e.g. create a thumbnail
 	public static final String DELETE_RENDITION = "deleteRendition";
+	public static final String COPY = "copyNode";
 
 	private MNls resourceBundle;
+	protected CaoCore core;
 
-	public CaoAction() {
-		resourceBundle = new MNls();
-	}
-
-	public CaoAction(MResourceProvider<?> res, String resourceName) {
-		resourceBundle = MSingleton.baseLookup(this,MNlsFactory.class).load(res,this.getClass(), resourceName, null);
+	public void doInitialize(CaoCore core) {
+		if (this.core != null) return;
+		this.core = core;
+		resourceBundle = MNls.lookup(this);
 	}
 
 	public abstract String getName();
@@ -77,7 +77,19 @@ public abstract class CaoAction extends MObject {
 	 * @return x
 	 * @throws CaoException
 	 */
-	public abstract OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException;
+	public final OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+		if (monitor == null) monitor = new DefaultMonitor(getClass());
+		monitor.log().d(">>>",configuration.getProperties());
+		OperationResult res = doExecuteInternal(configuration, monitor);
+		monitor.log().d("<<<",res);
+		return res;
+	}
+
+	public final OperationResult doExecute(CaoConfiguration configuration) throws CaoException {
+		return doExecute(configuration, null);
+	}
+	
+	protected abstract OperationResult doExecuteInternal(CaoConfiguration configuration, Monitor monitor) throws CaoException;
 
 	@Override
 	public String toString() {

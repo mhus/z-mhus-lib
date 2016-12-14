@@ -1,6 +1,7 @@
 package de.mhus.lib.cao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.basics.Named;
@@ -59,5 +60,21 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> implement
 	public abstract <T> CaoList executeQuery(String space, AQuery<T> query) throws MException;
 
 	public abstract CaoAction getAction(String name);
+
+	/**
+	 * Return if the given node is managed by this connection.
+	 * 
+	 * @param node The node to test
+	 * @return True if the node has this connection or is manageable by this connection.
+	 */
+	public boolean containsNode(CaoNode node) {
+		return this.equals(node.getConnection());
+	}
+	
+	public boolean containsNodes(List<CaoNode> list) {
+		for (CaoNode n : list)
+			if (!containsNode(n)) return false;
+		return true;
+	}
 
 }

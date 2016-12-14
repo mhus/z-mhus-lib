@@ -1,5 +1,6 @@
 package de.mhus.lib.cao.aspect;
 
+import java.io.File;
 import java.io.InputStream;
 
 import de.mhus.lib.cao.CaoAspect;
@@ -17,7 +18,8 @@ public interface StructureControl extends CaoAspect {
 	boolean isAtBottom();
 	boolean moveTo(CaoNode parent);
 	boolean delete(boolean recursive);
-	CaoNode createChildNode(IProperties properties);
-	boolean createRendition(String name, InputStream data);
+	CaoNode createChildNode(String name, IProperties properties);
+	boolean uploadRendition(String name, File file);
 	CaoNode copyTo(CaoNode parent, boolean recursive);
+	boolean rename(String name);
 }

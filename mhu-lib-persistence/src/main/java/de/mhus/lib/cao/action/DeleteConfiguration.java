@@ -6,6 +6,7 @@ import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.form.ComponentAdapterProvider;
+import de.mhus.lib.form.definition.FmCheckbox;
 import de.mhus.lib.form.definition.FmText;
 
 public class DeleteConfiguration extends CaoConfiguration {
@@ -15,18 +16,17 @@ public class DeleteConfiguration extends CaoConfiguration {
 	}
 
 
-	public static final String NAME = "name";
+	public static final String RECURSIVE = "recursive";
 	
 	@Override
 	protected IConfig createDefaultModel() {
 		return new DefRoot(
-				new FmText(NAME, "name.name=Name", "name.description=Technical name of the new node")
+				new FmCheckbox(RECURSIVE, "recursive.name=Recursive", "recursive.description=Delete also sub structures")
 				);
 	}
 
-
-	public void setName(String name) {
-		properties.setString(NAME, name);
+	public void setRecursive(boolean recursive) {
+		properties.setBoolean(RECURSIVE, recursive);
 	}
 	
 }

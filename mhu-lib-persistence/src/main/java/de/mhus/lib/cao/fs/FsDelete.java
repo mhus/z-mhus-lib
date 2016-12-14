@@ -34,21 +34,21 @@ public class FsDelete extends CaoAction {
 	}
 
 	@Override
-	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+	public OperationResult doExecuteInternal(CaoConfiguration configuration, Monitor monitor) throws CaoException {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 		try {
 			boolean deleted = false;
 			monitor = checkMonitor(monitor);
 			monitor.setSteps(configuration.getList().size());
 			for (CaoNode item : configuration.getList()) {
-				monitor.log().i(">>>",item);
+				monitor.log().i("===",item);
 				if (item instanceof FsNode) {
 					monitor.incrementStep();
 					FsNode n = (FsNode)item;
 					if (n.getNodes().size() > 0)
 						monitor.log().i("*** Node is not empty",item);
 					else {
-						monitor.log().d("=== Delete",item);
+						monitor.log().d("--- Delete",item);
 						File f = n.getFile();
 						MFile.deleteDir(f);
 						deleted = true;

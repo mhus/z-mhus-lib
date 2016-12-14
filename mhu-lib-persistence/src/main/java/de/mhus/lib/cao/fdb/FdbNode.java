@@ -172,4 +172,9 @@ public class FdbNode extends PropertiesNode {
 		return MProperties.load( contentFile );
 	}
 
+	public void reloadById() {
+		file = ((FdbCore)core).getFileForId(getId());
+		reload();
+	}
+
 }

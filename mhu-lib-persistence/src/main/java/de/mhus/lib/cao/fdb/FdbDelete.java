@@ -30,28 +30,36 @@ public class FdbDelete extends CaoAction {
 
 	@Override
 	public boolean canExecute(CaoConfiguration configuration) {
-		return configuration.getList().size() > 0;
+		return configuration.getList().size() > 0
+				&&
+				core.containsNodes(configuration.getList());
 	}
 
 	@Override
-	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+	public OperationResult doExecuteInternal(CaoConfiguration configuration, Monitor monitor) throws CaoException {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 		try {
 			boolean deleted = false;
 			monitor = checkMonitor(monitor);
+			boolean recursive = configuration.getProperties().getBoolean(DeleteConfiguration.RECURSIVE, false);
 			monitor.setSteps(configuration.getList().size());
 			for (CaoNode item : configuration.getList()) {
-				monitor.log().i(">>>",item);
+				monitor.log().i("===",item);
 				if (item instanceof FdbNode) {
 					monitor.incrementStep();
 					FdbNode n = (FdbNode)item;
-					if (n.getNodes().size() > 0)
+					if (n.getNodes().size() > 0 && !recursive)
 						monitor.log().i("*** Node is not empty",item);
 					else {
 						monitor.log().d("=== Delete",item);
 						File f = n.getFile();
-						((FdbCore)n.getConnection()).deleteIndex(n.getString("_id", null));
-						MFile.deleteDir(f);
+						((FdbCore)core).lock();
+						try {
+							((FdbCore)n.getConnection()).deleteIndex(n.getString("_id", null));
+							MFile.deleteDir(f);
+						} finally {
+							((FdbCore)core).release();
+						}
 						deleted = true;
 					}
 				}

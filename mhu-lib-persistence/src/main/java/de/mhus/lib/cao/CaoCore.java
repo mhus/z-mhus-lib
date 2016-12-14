@@ -39,7 +39,12 @@ public abstract class CaoCore extends CaoConnection {
 		aspectFactory.put(ifc, factory);
 		factory.doInitialize(this, actionList);
 	}
-	
+
+	public void doInitializeActions() {
+		for (CaoAction action : actionList)
+			action.doInitialize(this);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
 		return (CaoAspectFactory<T>)aspectFactory.get(ifc);
@@ -79,13 +84,20 @@ public abstract class CaoCore extends CaoConnection {
 	 * @return A list of results.
 	 * @throws MException Throws NotSupportedException if the method is not implemented at all
 	 */
+	@Override
 	public <T> CaoList executeQuery(String space, AQuery<T> query) throws MException {
 		// return executeQuery(space, query.toQualification(dbManager) );
 		throw new NotSupportedException();
 	}
 
+	@Override
 	public CaoAction getAction(String name) {
 		return getActions().getAction(name);
+	}
+
+	@Override
+	public boolean containsNode(CaoNode node) {
+		return con.equals(node.getConnection());
 	}
 
 }

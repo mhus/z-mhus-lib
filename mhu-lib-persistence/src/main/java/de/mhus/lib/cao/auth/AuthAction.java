@@ -45,7 +45,7 @@ public class AuthAction extends CaoAction {
 	}
 
 	@Override
-	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+	public OperationResult doExecuteInternal(CaoConfiguration configuration, Monitor monitor) throws CaoException {
 		
 		if (!con.hasActionAccess(configuration,this)) return new NotSuccessful(getName(), "access denied", OperationResult.ACCESS_DENIED);
 		

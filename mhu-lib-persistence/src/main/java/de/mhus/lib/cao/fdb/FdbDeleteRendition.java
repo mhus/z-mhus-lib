@@ -45,7 +45,7 @@ public class FdbDeleteRendition extends CaoAction {
 	}
 
 	@Override
-	public OperationResult doExecute(CaoConfiguration configuration, Monitor monitor) throws CaoException {
+	public OperationResult doExecuteInternal(CaoConfiguration configuration, Monitor monitor) throws CaoException {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 
 		try {
