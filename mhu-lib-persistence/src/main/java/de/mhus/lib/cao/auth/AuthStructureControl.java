@@ -102,7 +102,9 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 		@Override
 		public CaoNode createChildNode(String name, IProperties properties) {
 			if (!core.hasCreateAccess(orgNode, name, properties)) return null;
-			return instance.createChildNode(name, properties);
+			CaoNode res = instance.createChildNode(name, properties);
+			if (res == null) return null;
+			return new AuthNode(core, res);
 		}
 
 		@Override
@@ -114,7 +116,9 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 		@Override
 		public CaoNode copyTo(CaoNode parent, boolean recursive) {
 			if (!core.hasWriteAccess(parent)) return null;
-			return instance.copyTo(parent, recursive);
+			CaoNode res = instance.copyTo(parent, recursive);
+			if (res == null) return null;
+			return new AuthNode(core, res);
 		}
 
 		@Override
