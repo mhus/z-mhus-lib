@@ -40,13 +40,12 @@ public abstract class AbstractVaadinOperation extends AbstractOperation implemen
 	protected abstract OperationResult doExecute2(TaskContext context) throws Exception;
 
 	@Override
-	public OperationResult doExecute(Component editor) throws Exception {
+	public OperationResult doExecute(IProperties editorProperties, Component editor) throws Exception {
 		if (editor == null || !(editor instanceof AbstractVaadinOperationEditor)) throw new UsageException("editor need to be a AbstractVaadinOperationEditor");
-		MProperties p = new MProperties();
-		((AbstractVaadinOperationEditor)editor).fillOperationParameters(p);
+		((AbstractVaadinOperationEditor)editor).fillOperationParameters(editorProperties);
 		
 		DefaultTaskContext context = new DefaultTaskContext(this.getClass());
-		context.setParameters(p);
+		context.setParameters(editorProperties);
 		return doExecute2(context);
 	}
 

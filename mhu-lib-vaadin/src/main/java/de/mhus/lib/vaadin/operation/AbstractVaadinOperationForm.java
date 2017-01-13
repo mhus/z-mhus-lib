@@ -1,5 +1,6 @@
 package de.mhus.lib.vaadin.operation;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.util.MNlsFactory;
@@ -53,7 +54,7 @@ public abstract class AbstractVaadinOperationForm extends AbstractVaadinOperatio
 	protected abstract void initDataSource(PropertiesDataSource ds);
 
 	@Override
-	public void fillOperationParameters(MProperties param) {
+	public void fillOperationParameters(IProperties param) {
 		param.putAll(dataSource.getProperties());
 	}
 

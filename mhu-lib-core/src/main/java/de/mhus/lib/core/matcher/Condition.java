@@ -4,6 +4,7 @@ import java.util.Map;
 
 import de.mhus.lib.core.parser.StringTokenizerParser;
 import de.mhus.lib.core.parser.TechnicalStringParser;
+import de.mhus.lib.core.util.Rfc1738;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.SyntaxError;
 
@@ -46,7 +47,7 @@ public class Condition {
 			String lp = part.toLowerCase();
 			
 			boolean isPattern = false;
-			if (condition.isTokenEncapsulated()) {
+			if (condition.isEnclosuredToken()) {
 				isPattern = true;
 			} else {
 				switch (lp) {
@@ -122,7 +123,7 @@ public class Condition {
 				}
 			}
 			
-			if (isPattern && lp.startsWith("$")) {
+			if (isPattern && !condition.isEnclosuredToken() && lp.startsWith("$")) {
 				param = part.substring(1);
 				if (param.endsWith("$")) param = param.substring(0, param.length()-1);
 				isPattern = false;

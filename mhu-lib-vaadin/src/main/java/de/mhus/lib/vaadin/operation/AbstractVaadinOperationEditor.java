@@ -23,6 +23,6 @@ public abstract class AbstractVaadinOperationEditor extends VerticalLayout {
 
 	protected abstract void initUI();
 
-	public abstract void fillOperationParameters(MProperties param);
+	public abstract void fillOperationParameters(IProperties param);
 	
 }

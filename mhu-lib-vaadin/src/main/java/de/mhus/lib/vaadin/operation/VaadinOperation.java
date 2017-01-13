@@ -10,6 +10,6 @@ import de.mhus.lib.vaadin.DialogControl;
 public interface VaadinOperation extends Operation {
 
 	Component createEditor(IProperties editorProperties, DialogControl control);
-	OperationResult doExecute(Component editor) throws Exception;
+	OperationResult doExecute(IProperties editorProperties, Component editor) throws Exception;
 	
 }

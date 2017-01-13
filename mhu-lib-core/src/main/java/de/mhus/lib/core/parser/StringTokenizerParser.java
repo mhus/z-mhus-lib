@@ -22,6 +22,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 	private int line = 0;
 	private char current;
 	private String original;
+	private boolean wasEnclosured;
 	
 	public StringTokenizerParser(String condition) {
 		original = condition;
@@ -43,6 +44,8 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 
 	protected void findNextToken() {
 		
+		wasEnclosured = false;
+		
 		part = null;
 		if (condition == null) return;
 		
@@ -61,6 +64,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 				} else
 				if (isEnclosureCharacter()) {
 					enclosure = current;
+					wasEnclosured = true;
 				} else
 				if (isWhiteSpace()) {
 					foundToken(i);
@@ -205,6 +209,10 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 	
 	public boolean isTokenEncapsulated() {
 		return encapsulated != 0;
+	}
+	
+	public boolean isEnclosuredToken() {
+		return wasEnclosured;
 	}
 	
 }

@@ -17,7 +17,15 @@ public class MatcherTest extends TestCase {
 			assertEquals(true, filter.matches("blablaaabla"));
 			assertEquals(false, filter.matches("xyz"));
 		}
-		
+/*		
+		{
+			Matcher filter = new Matcher("'.*aaa.*'");
+			System.out.println(filter);
+			assertEquals(true, filter.matches("aaa"));
+			assertEquals(true, filter.matches("blablaaabla"));
+			assertEquals(false, filter.matches("xyz"));
+		}
+*/		
 		{
 			Matcher filter = new Matcher(".*aaa.* or .*bbb.*");
 			System.out.println(filter);
