@@ -131,7 +131,8 @@ public class MatcherTest extends TestCase {
 		HashMap<String, Object> val = new HashMap<String,Object>();
 		val.put("param1", "aloa");
 		val.put("param2", "nix");
-		
+		val.put("param3", "round cube");
+
 		{
 			Condition cond = new Condition("$param1 aloa");
 			System.out.println(cond);
@@ -157,7 +158,11 @@ public class MatcherTest extends TestCase {
 			System.out.println(cond);
 			assertEquals(true, cond.matches(val));
 		}
-		
+		{
+			Condition cond = new Condition("$param3 'round cube'");
+			System.out.println(cond);
+			assertEquals(true, cond.matches(val));
+		}
 		
 	}
 	
