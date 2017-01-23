@@ -43,14 +43,21 @@ public class MStopWatch extends MJmx {
 	}
 	
 	public MStopWatch start() {
-		if (start == 0)
-			start = System.currentTimeMillis();
+		synchronized (this) {
+			if (start != 0 && stop != 0) {
+				start = System.currentTimeMillis() - (stop-start);
+				stop = 0;
+			} else
+			if (start == 0)
+				start = System.currentTimeMillis();
+		}
 		return this;
 	}
 
 	public MStopWatch stop() {
-		if (start != 0 && stop == 0) {
-			stop = System.currentTimeMillis();
+		synchronized (this) {
+			if (start != 0 && stop == 0) {
+				stop = System.currentTimeMillis();
 			
 //			try {
 //				if (MSingleton.instance().isPersistence()) {
@@ -63,6 +70,7 @@ public class MStopWatch extends MJmx {
 //				log().t(t);
 //			}
 			
+			}
 		}
 		return this;
 	}
@@ -76,8 +84,10 @@ public class MStopWatch extends MJmx {
 	}
 
 	public MStopWatch reset() {
-		start = 0;
-		stop = 0;
+		synchronized (this) {
+			start = 0;
+			stop = 0;
+		}
 		return this;
 	}
 
