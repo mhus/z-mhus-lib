@@ -149,7 +149,6 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 			if (disabled) return DISABLED_TIME;
 			
 			Calendar next = Calendar.getInstance();
-			
 			// obligatory next minute
 			next.set(Calendar.MILLISECOND, 0);
 			next.set(Calendar.SECOND, 0);
@@ -159,12 +158,12 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 				int[] d = findNextAllowed( allowedMinutes, next.get(Calendar.MINUTE) );
 				next.set(Calendar.MINUTE, d[1]);
 				if (d[2] == 1)
-					next.add(Calendar.HOUR, 1);
+					next.add(Calendar.HOUR_OF_DAY, 1);
 			}
 			
 			if (allowedHours != null) {
-				int[] d = findNextAllowed( allowedHours, next.get(Calendar.HOUR) );
-				next.set(Calendar.HOUR, d[1]);
+				int[] d = findNextAllowed( allowedHours, next.get(Calendar.HOUR_OF_DAY) );
+				next.set(Calendar.HOUR_OF_DAY, d[1]);
 				if (d[2] == 1)
 					next.add(Calendar.DATE, 1);
 			}
