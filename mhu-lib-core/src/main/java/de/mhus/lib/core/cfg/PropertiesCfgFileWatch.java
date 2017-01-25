@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.PropertiesConfigFile;
 import de.mhus.lib.core.io.FileWatch;
-import de.mhus.lib.core.util.TimerIfc;
 
 public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 

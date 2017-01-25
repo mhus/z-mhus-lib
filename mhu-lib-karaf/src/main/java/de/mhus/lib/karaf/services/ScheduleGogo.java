@@ -9,11 +9,11 @@ import org.apache.karaf.shell.api.console.SessionFactory;
 
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.base.service.TimerFactory;
+import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.StreamToLogAdapter;
 import de.mhus.lib.core.schedule.CronJob;
-import de.mhus.lib.core.util.TimerFactory;
-import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.karaf.MOsgi;
 
 public class ScheduleGogo extends MLog implements SimpleServiceIfc {

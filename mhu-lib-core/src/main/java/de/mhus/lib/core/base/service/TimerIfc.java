@@ -1,10 +1,11 @@
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.base.service;
 
 import java.util.Date;
 import java.util.TimerTask;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.schedule.SchedulerJob;
+import de.mhus.lib.core.util.DefaultTimerFactory;
 
 @DefaultFactory(DefaultTimerFactory.class)
 public interface TimerIfc {

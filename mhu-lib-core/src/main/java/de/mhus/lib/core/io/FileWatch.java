@@ -3,7 +3,7 @@ package de.mhus.lib.core.io;
 import java.io.File;
 import java.util.TimerTask;
 
-import de.mhus.lib.core.util.TimerIfc;
+import de.mhus.lib.core.base.service.TimerIfc;
 
 public class FileWatch {
 

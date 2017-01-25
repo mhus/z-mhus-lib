@@ -7,9 +7,9 @@ import java.util.Observer;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.schedule.IntervalJob;
-import de.mhus.lib.core.util.TimerIfc;
 
 public class KarafHousekeeper extends MObject implements MHousekeeper {
 

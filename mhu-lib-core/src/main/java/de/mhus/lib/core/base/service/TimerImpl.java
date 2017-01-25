@@ -1,4 +1,4 @@
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.base.service;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.schedule.SchedulerJob;
+import de.mhus.lib.core.util.TimerTaskSelfControl;
 
 public class TimerImpl extends MLog implements TimerIfc {
 	

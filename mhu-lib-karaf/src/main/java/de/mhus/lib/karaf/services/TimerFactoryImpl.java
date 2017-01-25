@@ -17,12 +17,12 @@ import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
+import de.mhus.lib.core.base.service.TimerFactory;
+import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
-import de.mhus.lib.core.util.TimerFactory;
-import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")

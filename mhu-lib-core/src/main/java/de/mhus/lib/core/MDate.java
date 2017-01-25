@@ -247,4 +247,9 @@ public class MDate extends Date {
 		return toString(format, d);
 	}
 
+	public static Date toDateOnly(Date date) {
+		if (date == null) return null;
+		return new Date( date.getTime() / MTimeInterval.DAY_IN_MILLISECOUNDS * MTimeInterval.DAY_IN_MILLISECOUNDS );
+	}
+
 }

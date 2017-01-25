@@ -121,5 +121,21 @@ public class MValidator {
         
         return false;
     }
+
+	public static boolean isNumber(String nr) {
+		if (nr == null) return false;
+		// http://www.regular-expressions.info/floatingpoint.html
+		return nr.matches("^[-+]?[0-9]*\\.?[0-9]+$");
+	}
+	
+	public static boolean isInteger(String nr) {
+		if (nr == null) return false;
+		return nr.matches("^[-+]?[0-9]*$");
+	}
+	
+	public static boolean isIPv4(String ip) {
+		if (ip == null) return false;
+		return ip.matches("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+	}
 	
 }

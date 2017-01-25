@@ -9,10 +9,10 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import de.mhus.lib.core.base.service.TimerFactory;
+import de.mhus.lib.core.base.service.TimerIfc;
+import de.mhus.lib.core.base.service.TimerImpl;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.TimerFactory;
-import de.mhus.lib.core.util.TimerIfc;
-import de.mhus.lib.core.util.TimerImpl;
 import de.mhus.lib.errors.NotFoundException;
 
 public class MOsgi {

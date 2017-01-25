@@ -9,6 +9,8 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.activator.DefaultActivator;
+import de.mhus.lib.core.base.service.TimerFactory;
+import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
@@ -16,8 +18,6 @@ import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
-import de.mhus.lib.core.util.TimerFactory;
-import de.mhus.lib.core.util.TimerIfc;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.logging.JavaLoggerFactory;
 

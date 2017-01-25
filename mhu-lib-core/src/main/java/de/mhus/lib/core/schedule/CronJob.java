@@ -4,7 +4,9 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.base.service.HolidayProviderIfc;
 
 /**
  * Schedule tasks like Crontab (man -S 5 crontab). Next scheduling is done after execution of a task. Example * * * * * every minute,
@@ -15,6 +17,8 @@ import de.mhus.lib.core.MTimeInterval;
  *          day of month  1-31
  *          month         1-12 (or names, see below)
  *          day of week   1-7 (1 is Sunday)
+ *          specials      w = only working days
+ *                        disabled = disabled by default
  *          
  * @author mikehummel
  *
@@ -97,6 +101,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		private int[] allowedDaysWeek;
 		private String definition;
 		private boolean disabled = false;
+		private boolean onlyWorkingDays = false;
 
 		public Definition() {
 		}
@@ -137,8 +142,10 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 				allowedDaysWeek = MCast.toIntIntervalValues(parts[4], 1, 7);
 			
 			if (parts.length > 5) {
-				if (parts[5].equals("disabled"))
+				if (parts[5].indexOf("disabled") >= 0)
 					disabled = true;
+				if (parts[5].indexOf("w") >= 0)
+					onlyWorkingDays = true;
 			}
 			
 		}
@@ -185,6 +192,15 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 				if (d[2] == 1)
 					next.add(Calendar.WEEK_OF_YEAR, 1);
 			}
+			
+			if (onlyWorkingDays) {
+				HolidayProviderIfc holidayProvider = MSingleton.baseLookup(this, HolidayProviderIfc.class);
+				if (holidayProvider != null) {
+					while (!holidayProvider.isWorkingDay(null, next.getTime()))
+						next.add(Calendar.DAY_OF_MONTH, 1);
+				}
+			}
+			
 			return next.getTimeInMillis();
 		}
 

@@ -17,12 +17,12 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.schedule.MutableSchedulerJob;
 import de.mhus.lib.core.schedule.OnceJob;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerTimer;
-import de.mhus.lib.core.util.TimerFactory;
 import de.mhus.lib.karaf.MOsgi;
 
 @Command(scope = "mhus", name = "timer", description = "Default Timer Handling")
