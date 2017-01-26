@@ -69,7 +69,10 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 		@Override
 		public boolean moveAfter(CaoNode predecessor) {
 			if (!core.hasStructureAccess(orgNode)) return false;
-			return instance.moveAfter(predecessor);
+			if (predecessor instanceof AuthNode)
+				return instance.moveAfter(((AuthNode)predecessor).instance);
+			else				
+				return instance.moveAfter(predecessor);
 		}
 
 		@Override
@@ -90,7 +93,10 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 		@Override
 		public boolean moveTo(CaoNode parent) {
 			if (!core.hasStructureAccess(orgNode)) return false;
-			return instance.moveTo(parent);
+			if (parent instanceof AuthNode)
+				return instance.moveTo(((AuthNode)parent).instance);
+			else
+				return instance.moveTo(parent);
 		}
 
 		@Override
@@ -116,7 +122,11 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 		@Override
 		public CaoNode copyTo(CaoNode parent, boolean recursive) {
 			if (!core.hasWriteAccess(parent)) return null;
-			CaoNode res = instance.copyTo(parent, recursive);
+			CaoNode res = null;
+			if (parent instanceof AuthNode)
+				res = instance.copyTo(((AuthNode)parent).instance, recursive);
+			else
+				res = instance.copyTo(parent, recursive);
 			if (res == null) return null;
 			return new AuthNode(core, res);
 		}
