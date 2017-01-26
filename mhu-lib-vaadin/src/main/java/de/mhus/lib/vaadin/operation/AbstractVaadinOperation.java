@@ -23,6 +23,7 @@ public abstract class AbstractVaadinOperation extends AbstractOperation implemen
 	@Override
 	public Component createEditor(IProperties editorProperties, DialogControl control) {
 		AbstractVaadinOperationEditor editor = createEditor();
+		if (editor == null) return null;
 		editor.setSizeFull();
 		//editor.setCaption(getDescription().getCaption());
 		editor.initialize(editorProperties,control);
@@ -41,8 +42,8 @@ public abstract class AbstractVaadinOperation extends AbstractOperation implemen
 
 	@Override
 	public OperationResult doExecute(IProperties editorProperties, Component editor) throws Exception {
-		if (editor == null || !(editor instanceof AbstractVaadinOperationEditor)) throw new UsageException("editor need to be a AbstractVaadinOperationEditor");
-		((AbstractVaadinOperationEditor)editor).fillOperationParameters(editorProperties);
+		if (editor != null && (editor instanceof AbstractVaadinOperationEditor))
+			((AbstractVaadinOperationEditor)editor).fillOperationParameters(editorProperties);
 		
 		DefaultTaskContext context = new DefaultTaskContext(this.getClass());
 		context.setParameters(editorProperties);
