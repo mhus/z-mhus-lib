@@ -55,7 +55,7 @@ public class FdbDelete extends CaoAction {
 						File f = n.getFile();
 						((FdbCore)core).lock();
 						try {
-							((FdbCore)n.getConnection()).deleteIndex(n.getString("_id", null));
+							((FdbCore)core).deleteIndex(n.getString("_id", null));
 							MFile.deleteDir(f);
 						} finally {
 							((FdbCore)core).release();
@@ -70,7 +70,7 @@ public class FdbDelete extends CaoAction {
 			else
 				return new NotSuccessful(getName(), "no nodes deleted", -1);
 		} catch (Throwable t) {
-			log().d(t);
+			log().w(t);
 			return new NotSuccessful(getName(),t.toString(),-1);
 		}
 	}
