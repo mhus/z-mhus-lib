@@ -18,11 +18,12 @@
 
 package de.mhus.lib.core;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-public abstract class MEventHandler<L> extends MLog {
+public class MEventHandler<L> extends MLog {
 
 	private HashMap<L,String> listeners = new HashMap<L,String>();
 	private WeakHashMap<L, String> weak = new WeakHashMap<L, String>();
@@ -161,17 +162,32 @@ public abstract class MEventHandler<L> extends MLog {
 		return weakHandler;
 	}
 
-	public void fire(Object ... values) {
+	public void fire() {
+		fire(null);
+	}
+	
+	public void fire( Object event, Object ... values) {
 		for (Object obj : getListenersArray()) {
 			try {
-				onFire((L)obj, values);
+				onFire((L)obj, event, values);
 //				method.invoke(obj, values);
 			} catch (Throwable t) {
-				log().d(obj,values);
+				log().d(obj,event,values);
+			}
+		}
+	}
+
+	public void fireMethod( Method method, Object ... values) {
+		for (Object obj : getListenersArray()) {
+			try {
+				method.invoke(obj, values);
+			} catch (Throwable t) {
+				log().d(obj,method,values);
 			}
 		}
 	}
 	
-	public abstract void onFire(L listener, Object ... values);
+	public void onFire(L listener, Object event, Object ... values) {
+	}
 	
 }

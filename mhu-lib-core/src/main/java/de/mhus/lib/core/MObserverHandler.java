@@ -9,8 +9,8 @@ public class MObserverHandler extends MEventHandler<Observer> {
 	}
 
 	@Override
-	public void onFire(Observer listener, Object... values) {
-		listener.update(null, values[0]);
+	public void onFire(Observer listener, Object event, Object... values) {
+		listener.update(null, event);
 	}
 
 	

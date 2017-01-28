@@ -39,7 +39,7 @@ public class EventHandlerTest
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 			}
     	};
     	MyListener l1 = new MyListener();
@@ -65,7 +65,7 @@ public class EventHandlerTest
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 			}
     	};
     	MyListener l1 = new MyListener();
@@ -90,7 +90,7 @@ public class EventHandlerTest
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 			}
     	};
     	MyListener l1 = new MyListener();
@@ -112,7 +112,7 @@ public class EventHandlerTest
     public void testIterator() {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 			}
     	};
     	MyListener l1 = new MyListener();
@@ -134,7 +134,7 @@ public class EventHandlerTest
     	
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 			}
     	};
     	MyListener l1 = new MyListenerModify(eh);
@@ -162,7 +162,7 @@ public class EventHandlerTest
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
 
 			@Override
-			public void onFire(MyListener listener, Object... values) {
+			public void onFire(MyListener listener, Object event, Object... values) {
 				listener.doIt();
 			}
     		

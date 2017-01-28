@@ -30,7 +30,7 @@ public class ExpandingTable extends Table {
 	private MEventHandler<RenderListener> renderEventHandler = new MEventHandler<RenderListener>() {
 
 		@Override
-		public void onFire(RenderListener listener, Object... values) {
+		public void onFire(RenderListener listener, Object event, Object... values) {
 			listener.onRender(ExpandingTable.this, (Integer)values[0], (Integer)values[1]);
 		}
 		
@@ -38,7 +38,7 @@ public class ExpandingTable extends Table {
 	private MEventHandler<SortListener> sortEventHandler = new MEventHandler<SortListener>() {
 
 		@Override
-		public void onFire(SortListener listener, Object... values) {
+		public void onFire(SortListener listener, Object event, Object... values) {
 			listener.onSortChanged(ExpandingTable.this);
 		}
 		
@@ -107,7 +107,7 @@ public class ExpandingTable extends Table {
         	int last = MCast.toint(variables.get("lastToBeRendered"), -1);
         	int first = MCast.toint(variables.get("firstToBeRendered"), -1);
         	if (last >= 0) {
-        		renderEventHandler.fire(first, last);
+        		renderEventHandler.fire(null, first, last);
         	}
         }
     }
