@@ -13,6 +13,7 @@ import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.RenameConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
@@ -61,6 +62,10 @@ public class FdbRename extends CaoAction {
 				((FdbCore)core).indexFile(toFile);
 				((FdbCore)core).indexDir(toFile);
 				n.reloadById();
+				
+				Changes change = n.adaptTo(Changes.class);
+				if (change != null) change.modified();
+
 			} finally {
 				((FdbCore)core).release();
 			}

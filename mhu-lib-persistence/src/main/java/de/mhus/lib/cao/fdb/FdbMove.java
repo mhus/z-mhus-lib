@@ -15,6 +15,7 @@ import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.MoveConfiguration;
 import de.mhus.lib.cao.action.RenameConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
@@ -56,6 +57,9 @@ public class FdbMove extends CaoAction {
 				monitor.log().d("===",item);
 				if (item instanceof FdbNode) {
 					monitor.incrementStep();
+					CaoNode oldParent = null;
+					Changes change = item.adaptTo(Changes.class);
+					if (change != null) oldParent = item.getParent();
 					FdbNode n = (FdbNode)item;
 					File toFile = new File(to.getFile(), n.getFile().getName() );
 					((FdbCore)core).lock();
@@ -67,6 +71,9 @@ public class FdbMove extends CaoAction {
 					} finally {
 						((FdbCore)core).release();
 					}
+					
+					if (change != null) change.movedFrom(oldParent);
+
 				}
 			}
 			

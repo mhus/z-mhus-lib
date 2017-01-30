@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-public class MEventHandler<L> extends MLog {
+public class MEventHandler<L> extends MLog implements MRegistry<L> {
 
 	private HashMap<L,String> listeners = new HashMap<L,String>();
 	private WeakHashMap<L, String> weak = new WeakHashMap<L, String>();
@@ -182,7 +182,7 @@ public class MEventHandler<L> extends MLog {
 			try {
 				method.invoke(obj, values);
 			} catch (Throwable t) {
-				log().d(obj,method,values);
+				log().d(obj,method,values, t);
 			}
 		}
 	}

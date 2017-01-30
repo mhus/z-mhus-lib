@@ -12,6 +12,7 @@ import de.mhus.lib.cao.action.CantExecuteException;
 import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
@@ -54,7 +55,7 @@ public class FdbCreate extends CaoAction {
 			
 			File nextFile = new File(parent.getFile(), configuration.getProperties().getString(CreateConfiguration.NAME) );
 			nextFile.mkdir();
-			((FdbCore)parent.getConnection()).indexFile(nextFile);
+			((FdbCore)core).indexFile(nextFile);
 			
 			CaoNode nextNode = parent.getNode(nextFile.getName());
 			CaoWritableElement nextWrite = nextNode.getWritableNode();
@@ -66,6 +67,9 @@ public class FdbCreate extends CaoAction {
 			nextWrite.getUpdateAction().doExecute(monitor);
 			nextNode.reload();
 			
+			Changes change = nextNode.adaptTo(Changes.class);
+			if (change != null) change.created();
+
 			return new Successful(getName(),"ok",0,nextNode);
 		} catch (Throwable t) {
 			log().d(t);

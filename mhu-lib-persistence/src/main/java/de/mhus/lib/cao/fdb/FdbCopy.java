@@ -16,6 +16,7 @@ import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CopyConfiguration;
 import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
@@ -88,6 +89,9 @@ public class FdbCopy extends CaoAction {
 						((FdbCore)core).release();
 					}
 					createdNode = new FdbNode((FdbCore)core, toFile, null);
+					
+					Changes change = createdNode.adaptTo(Changes.class);
+					if (change != null) change.deleted();
 				}
 			}
 			
