@@ -136,6 +136,15 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 			if (!core.hasStructureAccess(orgNode)) return false;
 			return instance.rename(name);
 		}
+
+		@Override
+		public boolean moveBefore(CaoNode successor) {
+			if (!core.hasStructureAccess(orgNode)) return false;
+			if (successor instanceof AuthNode)
+				return instance.moveBefore(((AuthNode)successor).instance);
+			else				
+				return instance.moveBefore(successor);
+		}
 		
 	}
 }

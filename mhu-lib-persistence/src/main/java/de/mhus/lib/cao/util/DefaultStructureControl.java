@@ -19,6 +19,7 @@ import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.MoveConfiguration;
 import de.mhus.lib.cao.action.RenameConfiguration;
 import de.mhus.lib.cao.action.UploadRenditionConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.aspect.StructureControl.Behavior;
 import de.mhus.lib.core.IProperties;
@@ -143,7 +144,12 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				last = n;
 			}
 			
-			return saveAll(all);
+			boolean ret = saveAll(all);
+			if (ret) {
+				Changes change = node.adaptTo(Changes.class);
+				if (change != null) change.moved();
+			}
+			return ret;
 		}
 		
 		@Override
@@ -164,7 +170,12 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				}
 				if (n.equals(node)) last = n;
 			}
-			return saveAll(all);
+			boolean ret = saveAll(all);
+			if (ret) {
+				Changes change = node.adaptTo(Changes.class);
+				if (change != null) change.moved();
+			}
+			return ret;
 		}
 
 		@Override
@@ -196,7 +207,12 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			if (firstPos != null)
 				behavior.setPosition(me, firstPos);
 
-			return saveAll(all);
+			boolean ret = saveAll(all);
+			if (ret) {
+				Changes change = node.adaptTo(Changes.class);
+				if (change != null) change.moved();
+			}
+			return ret;
 		}
 
 		@Override
@@ -216,11 +232,22 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			max = behavior.inc(max);
 			behavior.setPosition(me, max);
 			fillGaps(all);
-			return saveAll(all);
+			boolean ret = saveAll(all);
+			if (ret) {
+				Changes change = node.adaptTo(Changes.class);
+				if (change != null) change.moved();
+			}
+			return ret;
 		}
 
 		@Override
 		public boolean moveAfter(CaoNode predecessor) {
+			
+			if (!node.getParent().getId().equals(predecessor.getParent().getId())) {
+				if (!moveTo(predecessor))
+					return false;
+			}
+			
 			List<WritableNode> all = loadAll();
 			repairAll(all);
 			sortAll(all);
@@ -251,7 +278,18 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 			if (me != null && myPos != null)
 				behavior.setPosition(me, myPos);
 			
-			return saveAll(all);
+			boolean ret = saveAll(all);
+			if (ret) {
+				Changes change = node.adaptTo(Changes.class);
+				if (change != null) change.moved();
+			}
+			return ret;
+		}
+
+		@Override
+		public boolean moveBefore(CaoNode successor) {
+			if (!moveAfter(successor)) return false;
+			return moveUp();
 		}
 
 		@Override
@@ -294,7 +332,12 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				configuration.setNewParent(parent);
 				OperationResult ret = action.doExecute(configuration, null);
 				log().d("result",ret);
-				return ret != null && ret.isSuccessful();
+				boolean ret2 = ret != null && ret.isSuccessful();
+				if (ret2) {
+					Changes change = node.adaptTo(Changes.class);
+					if (change != null) change.moved();
+				}
+				return ret2;
 			} catch (Exception e) {
 				log().e("moveTo",node,parent,e);
 			}

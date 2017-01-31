@@ -36,5 +36,7 @@ public interface StructureControl extends CaoAspect {
 		void setPosition(CaoNode node, S pos);
 		boolean equals(S p1, S p2);
 	}
+
+	boolean moveBefore(CaoNode successor);
 	
 }
