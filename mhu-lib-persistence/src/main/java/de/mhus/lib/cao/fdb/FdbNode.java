@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
@@ -134,6 +135,10 @@ public class FdbNode extends PropertiesNode {
 			log().w(metaFile,e);
 		}
 		reload();
+		
+		Changes change = adaptTo(Changes.class);
+		if (change != null) change.modified();
+
 	}
 
 	@Override
