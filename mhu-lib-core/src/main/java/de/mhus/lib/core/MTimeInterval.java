@@ -397,11 +397,11 @@ public class MTimeInterval {
 	}
 
 	public static boolean isTimeOut(long start, long stop, long timeout) {
-		return stop - start > timeout;
+		return timeout > -1 && stop - start > timeout;
 	}
 	
 	public static boolean isTimeOut(long start, long timeout) {
-		return System.currentTimeMillis() - start > timeout;
+		return timeout > -1 && System.currentTimeMillis() - start > timeout;
 	}
 
 	public static long toTime(String in, long def) {
