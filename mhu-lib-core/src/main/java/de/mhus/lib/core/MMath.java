@@ -78,4 +78,17 @@ public class MMath {
 		return sb.toString();
 	}
 
+	public static double truncateDecimals(double d, int len) {
+		long p = pow(10, len);
+		long l = (long)(d * p);
+		return (double)l / (double)p;
+	}
+
+	public static long pow(long a, int b) {
+		long result = 1;
+		for (int i = 1; i <= b; i++) {
+		   result *= a;
+		}
+		return result;
+	}
 }

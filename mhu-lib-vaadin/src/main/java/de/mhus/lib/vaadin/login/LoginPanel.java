@@ -1,4 +1,4 @@
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.login;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
@@ -15,6 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.vaadin.ui.HelpManager;
 
 public class LoginPanel extends VerticalLayout implements MNlsProvider {
 

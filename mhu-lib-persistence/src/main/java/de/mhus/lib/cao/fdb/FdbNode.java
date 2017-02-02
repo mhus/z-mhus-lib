@@ -182,4 +182,8 @@ public class FdbNode extends PropertiesNode {
 		reload();
 	}
 
+	protected void setParent(CaoNode to) {
+		this.parent = to;
+	}
+
 }

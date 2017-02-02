@@ -1,16 +1,18 @@
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.desktop;
 
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 import de.mhus.lib.core.security.AccessControl;
 
-public interface AquaSpace {
+public interface GuiSpaceService {
 
 	String getName();
 	String getDisplayName();
 	AbstractComponent createSpace();
 	boolean hasAccess(AccessControl control);
-	void createMenu(MenuItem menu);
-	
+	void createMenu(AbstractComponent space, MenuItem[] menu);
+	boolean isHiddenSpace();
+	AbstractComponent createTile();
+	int getTileSize();
 }

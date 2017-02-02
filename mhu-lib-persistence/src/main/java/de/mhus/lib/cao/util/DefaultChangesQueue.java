@@ -12,7 +12,7 @@ import de.mhus.lib.core.MTimeInterval;
 
 public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Changes> {
 
-	public enum EVENT {DELETED,CREATED, MODIFIED, MOVED, UNLINK, LINK, BIG_CHANGE, RENAMED, RENDITION_MODIFIED}
+	public enum EVENT {DELETED,CREATED, MODIFIED, MOVED, UNLINK, LINK, BIG_CHANGE, RENAMED, RENDITION_MODIFIED, RENDITION_DELETED}
 
 	private LinkedList<Change> queue = new LinkedList<>();
 
@@ -78,11 +78,13 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 		private EVENT event;
 		private String node;
 		private String parent;
+		private String info;
 		
-		public Change(EVENT event, String node, String parent) {
+		public Change(EVENT event, String node, String parent, String info) {
 			this.event = event;
 			this.node = node;
 			this.parent = parent;
+			this.info = info;
 		}
 		
 		public EVENT getEvent() {
@@ -97,9 +99,13 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 			return parent;
 		}
 		
+		public String getInfo() {
+			return info;
+		}
+		
 		@Override
 		public String toString() {
-			return MSystem.toString(this, event, node);
+			return MSystem.toString(this, event, node, info);
 		}
 		
 	}
@@ -137,10 +143,29 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 			addEvent(EVENT.UNLINK, node, oldParent);
 			addEvent(EVENT.LINK, node, node.getParent());
 		}
+
+		@Override
+		public void renamed() {
+			addEvent(EVENT.RENAMED, node, node.getParent());
+		}
+
+		@Override
+		public void uploadedRendition(String rendition) {
+			addEvent(EVENT.RENDITION_MODIFIED, node, node.getParent(), rendition);
+		}
+
+		@Override
+		public void deletedRendition(String rendition) {
+			addEvent(EVENT.RENDITION_DELETED, node, node.getParent(), rendition);
+		}
 		
 	}
 
 	public void addEvent(EVENT event, CaoNode node, CaoNode parent) {
+		addEvent(event, node, parent, null);
+	}
+	
+	public void addEvent(EVENT event, CaoNode node, CaoNode parent, String info ) {
 		// It's an smart queue .... act like it
 		
 		if (event == null || node == null) return;
@@ -160,7 +185,7 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 			
 			// search the same or overwriting event ...
 			for (Change item : queue) {
-				if (item.getEvent() == event && item.getNode().equals(nodeId)) {
+				if (item.getEvent() == event && item.getNode().equals(nodeId) && MSystem.equals(item.info, info) ) {
 					item.parent = parentId; // maybe parent changed again
 					return;
 				}
@@ -169,13 +194,13 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 			// queue is just full - remove all and set a full refresh event
 			if (queue.size() > maxQueueSize) {
 				queue.clear();
-				queue.add(new Change(EVENT.BIG_CHANGE,null,null));
+				queue.add(new Change(EVENT.BIG_CHANGE,null,null,null));
 				log().d(name,"Event queue is full");
 				return;
 			}
 			
 			log().t(name, event,node,parent);
-			queue.add(new Change(event, nodeId, parentId));
+			queue.add(new Change(event, nodeId, parentId, info));
 		}
 	}
 

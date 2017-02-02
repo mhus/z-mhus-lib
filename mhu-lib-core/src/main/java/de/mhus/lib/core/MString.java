@@ -1622,4 +1622,17 @@ public class MString {
 
 		return _s.substring(0, p);
 	}
+
+	public static String toByteDisplayString(long bytes) {
+		if (bytes < 2048) return bytes + " B";
+		if (bytes < 1024 * 1024) return bytes/1024 + " KB";
+		if (bytes < 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d, 2) + " MB";
+		if (bytes < 1024 * 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d, 2) + " GB"; 
+		if (bytes < 1024 * 1024 * 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d, 2) + " TB"; 
+		if (bytes < 1024 * 1024 * 1024 * 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d/1024d, 2) + " PB"; // Peta
+		if (bytes < 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d/1024d/1024d, 2) + " EB"; // Exa
+		if (bytes < 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024) return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d/1024d/1024d/1024d, 2) + " ZB"; // Zetta
+		//if (bytes < 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024) 
+		return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d/1024d/1024d/1024d/1024d, 2) + " YB"; // Yotta
+	}
 }

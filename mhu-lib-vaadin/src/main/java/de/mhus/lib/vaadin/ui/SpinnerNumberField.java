@@ -1,4 +1,4 @@
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.ui;
 
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.ui.TextField;

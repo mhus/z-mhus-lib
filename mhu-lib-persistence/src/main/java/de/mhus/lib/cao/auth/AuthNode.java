@@ -513,4 +513,9 @@ public class AuthNode extends CaoNode {
 		return instance.getRenditionProperties(rendition);
 	}
 
+	@Override
+	public String getParentId() {
+		return instance.getParentId();
+	}
+
 }

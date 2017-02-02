@@ -5,7 +5,7 @@
  * 
  */
 
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.List;

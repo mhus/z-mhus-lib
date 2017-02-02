@@ -9,6 +9,7 @@ import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.UploadRenditionConfiguration;
+import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
@@ -36,7 +37,7 @@ public class FdbUploadRendition extends CaoAction {
 		try {
 			return configuration.getList().size() != 1 
 					&& 
-					configuration.getList().get(0) instanceof FdbNode 
+					core.containsNodes(configuration.getList())
 					;
 		} catch (Throwable t) {
 			log().d(t);
@@ -64,6 +65,9 @@ public class FdbUploadRendition extends CaoAction {
 			p.remove(UploadRenditionConfiguration.RENDITION);
 			p.remove(UploadRenditionConfiguration.FILE);
 			p.save( new File(renditionFile.getParentFile(), renditionFile.getName() + ".meta" ) );
+
+			Changes changes = parent.adaptTo(Changes.class);
+			if (changes != null) changes.uploadedRendition(rendition);
 
 			return new Successful(getName());
 		} catch (Throwable t) {

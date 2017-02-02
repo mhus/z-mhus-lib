@@ -1,7 +1,7 @@
 /**
  * Taken from vaadin demo. will be rewritten and extended. Currently it's a placeholder.
  */
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.ui;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;

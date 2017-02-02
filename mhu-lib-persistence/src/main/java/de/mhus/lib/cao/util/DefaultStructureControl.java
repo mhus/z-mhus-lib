@@ -125,6 +125,9 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 
 		@Override
 		public boolean moveUp() {
+			
+			if (node.getParentId() == null) return false;
+
 			// switch place with note before
 			List<WritableNode> all = loadAll();
 			repairAll(all);
@@ -154,6 +157,9 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 		
 		@Override
 		public boolean moveDown() {
+			
+			if (node.getParentId() == null) return false;
+
 			// switch place with next node
 			List<WritableNode> all = loadAll();
 			repairAll(all);
@@ -180,6 +186,9 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 
 		@Override
 		public boolean moveToTop() {
+			
+			if (node.getParentId() == null) return false;
+
 			// move all one down up to me
 			List<WritableNode> all = loadAll();
 			repairAll(all);
@@ -202,9 +211,10 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				last = n;
 			}
 			max = behavior.inc(max);
-			behavior.setPosition(last, max);
+			if (last != null)
+				behavior.setPosition(last, max);
 			
-			if (firstPos != null)
+			if (me != null && firstPos != null)
 				behavior.setPosition(me, firstPos);
 
 			boolean ret = saveAll(all);
@@ -217,6 +227,9 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 
 		@Override
 		public boolean moveToBottom() {
+			
+			if (node.getParentId() == null) return false;
+
 			List<WritableNode> all = loadAll();
 			repairAll(all);
 			sortAll(all);
@@ -243,8 +256,10 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 		@Override
 		public boolean moveAfter(CaoNode predecessor) {
 			
-			if (!node.getParent().getId().equals(predecessor.getParent().getId())) {
-				if (!moveTo(predecessor, false))
+			if (node.getParentId() == null) return false;
+			
+			if (!node.getParentId().equals(predecessor.getParentId())) {
+				if (!moveTo(predecessor.getParent(), false))
 					return false;
 			}
 			
@@ -352,6 +367,7 @@ public class DefaultStructureControl extends MLog implements CaoAspectFactory<St
 				log().d("result",ret);
 				boolean ret2 = ret != null && ret.isSuccessful();
 				if (ret2) {
+					node.reload();
 					if (moveToTop)
 						moveToTop();
 					Changes change = node.adaptTo(Changes.class);

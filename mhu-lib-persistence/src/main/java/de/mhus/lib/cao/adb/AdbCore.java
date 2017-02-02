@@ -40,7 +40,17 @@ public class AdbCore extends CaoCore {
 				}
 			}
 		if (type == null) throw new IOException("Managing type not found");
-			
+		
+		actionList.add(new AdbCreate());
+		actionList.add(new AdbDelete());
+		actionList.add(new AdbMove());
+		actionList.add(new AdbCopy());
+		actionList.add(new AdbRename());
+
+		actionList.add(new AdbUploadRendition());
+		actionList.add(new AdbDeleteRendition());
+		doInitializeActions();
+		
 	}
 	
 	public AdbNodeData[] getChildren(UUID parent) throws MException {

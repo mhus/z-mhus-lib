@@ -17,7 +17,7 @@ public class FdbDriver extends CaoDriver {
 	public CaoCore connect(URI uri, String authentication) {
 		try {
 			return new FdbCore("fd_" + UUID.randomUUID(), this, new File(  uri.getPath() ) );
-		} catch (IOException | TimeoutException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

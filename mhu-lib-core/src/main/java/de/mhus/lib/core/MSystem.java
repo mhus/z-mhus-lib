@@ -303,5 +303,30 @@ public class MSystem {
 		if (clazz == null) return null;
 		return clazz;
 	}
+
+	public static <T extends Comparable<T>> int compareTo(T s1, T s2) {
+		if (s1 == null && s2 == null) return 0;
+		if (s1 == null) return -1;
+		if (s2 == null) return 1;
+		return s1.compareTo(s2);
+	}
+
+	public static String freeMemoryAsString() {
+		long free = freeMemory();
+		return MString.toByteDisplayString(free);
+	}
+
+	public static String maxMemoryAsString() {
+		return MString.toByteDisplayString(Runtime.getRuntime().maxMemory());
+	}
+	
+	public static String memDisplayString() {
+		return freeMemoryAsString() + " / " + maxMemoryAsString();
+	}
+	
+	public static long freeMemory() {
+		Runtime r = Runtime.getRuntime();
+		return r.maxMemory() - r.totalMemory() + r.freeMemory();
+	}
 	
 }

@@ -1,26 +1,21 @@
-package de.mhus.lib.cao.fdb;
-
-import java.io.File;
+package de.mhus.lib.cao.adb;
 
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
+import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
-import de.mhus.lib.cao.action.CreateConfiguration;
-import de.mhus.lib.cao.action.DeleteConfiguration;
+import de.mhus.lib.cao.action.CopyConfiguration;
 import de.mhus.lib.cao.action.DeleteRenditionConfiguration;
-import de.mhus.lib.cao.action.UploadRenditionConfiguration;
 import de.mhus.lib.cao.aspect.Changes;
+import de.mhus.lib.cao.fdb.FdbNode;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
-import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotFoundException;
 
-public class FdbDeleteRendition extends CaoAction {
+public class AdbDeleteRendition extends CaoAction {
 
 	@Override
 	public String getName() {
@@ -50,15 +45,12 @@ public class FdbDeleteRendition extends CaoAction {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 
 		try {
-			FdbNode parent = (FdbNode)configuration.getList().get(0);
+			AdbNode parent = (AdbNode)configuration.getList().get(0);
 			
 			String rendition = configuration.getProperties().getString(DeleteRenditionConfiguration.RENDITION);
-			File renditionFile = ((FdbCore)parent.getConnection()).getContentFileFor(parent.getFile(), rendition);
-			if (renditionFile == null || !renditionFile.exists() || !renditionFile.isFile()) throw new MException("rendition not found", rendition);
-			
-			if (!renditionFile.delete())
-				throw new MException("can't delete rendition",rendition);
 
+			// TODO delete rendition
+			
 			Changes changes = parent.adaptTo(Changes.class);
 			if (changes != null) changes.deletedRendition(rendition);
 			
@@ -67,5 +59,7 @@ public class FdbDeleteRendition extends CaoAction {
 			log().d(t);
 			return new NotSuccessful(getName(),t.toString(),-1);
 		}
+
 	}
+	
 }

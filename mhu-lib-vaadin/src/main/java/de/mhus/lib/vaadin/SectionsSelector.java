@@ -8,7 +8,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MObserverHandler;
-import de.mhus.lib.vaadin.aqua.Border;
+import de.mhus.lib.vaadin.ui.Border;
 
 public class SectionsSelector extends VerticalLayout {
 

@@ -17,5 +17,5 @@ public abstract class CaoWritableElement extends CaoNode {
 	}
 	
 	public abstract CaoActionStarter getUpdateAction() throws MException;
-
+	
 }

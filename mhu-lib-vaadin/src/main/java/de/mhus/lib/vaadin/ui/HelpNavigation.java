@@ -1,4 +1,4 @@
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.ui;
 
 import java.util.Map;
 import java.util.Map.Entry;

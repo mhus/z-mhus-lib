@@ -1,26 +1,21 @@
-package de.mhus.lib.cao.fdb;
-
-import java.io.File;
-import java.util.Map.Entry;
+package de.mhus.lib.cao.adb;
 
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.CaoWritableElement;
-import de.mhus.lib.cao.action.CantExecuteException;
 import de.mhus.lib.cao.action.CaoConfiguration;
-import de.mhus.lib.cao.action.CreateConfiguration;
-import de.mhus.lib.cao.action.DeleteConfiguration;
+import de.mhus.lib.cao.action.CopyConfiguration;
 import de.mhus.lib.cao.action.RenameConfiguration;
 import de.mhus.lib.cao.aspect.Changes;
+import de.mhus.lib.cao.fdb.FdbNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
 
-public class FdbRename extends CaoAction {
+public class AdbRename extends CaoAction {
 
 	@Override
 	public String getName() {
@@ -38,8 +33,6 @@ public class FdbRename extends CaoAction {
 			return configuration.getList().size() == 1 
 					&&
 					core.containsNodes(configuration.getList())
-					&&
-					! new File( ((FdbNode)configuration.getList().get(0)).getFile(), configuration.getProperties().getString(RenameConfiguration.NAME) ).exists()
 					;
 		} catch (Throwable t) {
 			log().d(t);
@@ -53,29 +46,19 @@ public class FdbRename extends CaoAction {
 
 		try {
 			String name = configuration.getProperties().getString(RenameConfiguration.NAME);
-			FdbNode n = (FdbNode)configuration.getList().get(0);
-			File toFile = new File(n.getFile().getParentFile(), name );
-			
-			((FdbCore)core).lock();
-			try {
-				n.getFile().renameTo(toFile);
-				((FdbCore)core).indexFile(toFile);
-				((FdbCore)core).indexDir(toFile);
-				n.reloadById();
-				
-				Changes change = n.adaptTo(Changes.class);
-				if (change != null) change.renamed();
+			AdbNode n = (AdbNode)configuration.getList().get(0);
 
-			} finally {
-				((FdbCore)core).release();
-			}
-
+			// TODO rename
 			
+			Changes change = n.adaptTo(Changes.class);
+			if (change != null) change.renamed();
+
 			return new Successful(getName(),"ok",0);
 		} catch (Throwable t) {
 			log().d(t);
 			return new NotSuccessful(getName(),t.toString(),-1);
 		}
-	}
 
+	}
+	
 }

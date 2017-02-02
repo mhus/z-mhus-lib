@@ -50,21 +50,9 @@ public class FdbCore extends CaoCore {
 		if (!useCache)
 			cache = null;
 		if (this.root != null) this.root.reload();
-		registerAspectFactory(CaoPolicy.class, new FdbPolicyProvider());
-		
-		actionList.add(new FdbCreate());
-		actionList.add(new FdbDelete());
-		actionList.add(new FdbMove());
-		actionList.add(new FdbCopy());
-		actionList.add(new FdbRename());
-
-		actionList.add(new FdbUploadRendition());
-		actionList.add(new FdbDeleteRendition());
-		doInitializeActions();
-//		registerAspectFactory(StructureControl.class, new FdbStructureControl());
 	}
 	
-	public FdbCore(String name, FdbDriver driver, File root) throws IOException, TimeoutException {
+	public FdbCore(String name, FdbDriver driver, File root) throws IOException, TimeoutException, MException {
 		super(name, driver);
 		this.con = new FdbConnection(this);
 		
@@ -82,6 +70,22 @@ public class FdbCore extends CaoCore {
 		this.root = new FdbNode(this,filesDir, null);
 		
 		fullIndex();
+		
+		registerAspectFactory(CaoPolicy.class, new FdbPolicyProvider());
+		
+		actionList.add(new FdbCreate());
+		actionList.add(new FdbDelete());
+		actionList.add(new FdbMove());
+		actionList.add(new FdbCopy());
+		actionList.add(new FdbRename());
+
+		actionList.add(new FdbUploadRendition());
+		actionList.add(new FdbDeleteRendition());
+		doInitializeActions();
+//		registerAspectFactory(StructureControl.class, new FdbStructureControl());
+
+		
+		
 	}
 	
 	private void fullIndex() throws IOException, TimeoutException {

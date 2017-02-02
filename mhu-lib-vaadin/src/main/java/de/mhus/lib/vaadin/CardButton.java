@@ -4,7 +4,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.BaseTheme;
 
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.vaadin.aqua.Border;
+import de.mhus.lib.vaadin.ui.Border;
 
 public class CardButton extends Button {
 

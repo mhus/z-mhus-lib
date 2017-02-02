@@ -224,6 +224,16 @@ public class FdbTest extends TestCase {
 			control.moveAfter(x);
 			assertEquals(1, control.getPositionIndex());
 
+			x = core.getResourceByPath("/page/sub1/sub1sub1");
+			control.moveBefore(x);
+			assertEquals(0, control.getPositionIndex());
+			
+			// move after and change parent same time
+			x = core.getResourceByPath("/page/sub1");
+			assertNotSame(x.getParentId(), n.getParentId());
+			control.moveAfter(x);
+			assertEquals(x.getParentId(), n.getParentId());
+			
 		}
 	}
 	

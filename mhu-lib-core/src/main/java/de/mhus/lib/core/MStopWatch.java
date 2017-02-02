@@ -29,6 +29,7 @@ public class MStopWatch extends MJmx {
 	private static final int STATUS_RUNNING = 1;
 	private static final int STATUS_STOPPED = 2;
 
+	private long count = 0;
 	private long start = 0;
 	private long stop = 0;
 
@@ -47,9 +48,12 @@ public class MStopWatch extends MJmx {
 			if (start != 0 && stop != 0) {
 				start = System.currentTimeMillis() - (stop-start);
 				stop = 0;
+				count++;
 			} else
-			if (start == 0)
+			if (start == 0) {
 				start = System.currentTimeMillis();
+				count++;
+			}
 		}
 		return this;
 	}
@@ -140,6 +144,10 @@ public class MStopWatch extends MJmx {
 	@Override
 	public String toString() {
 		return name + "=" + getCurrentTimeAsString();
+	}
+	
+	public long getCount() {
+		return count;
 	}
 	
 }

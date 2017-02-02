@@ -1,4 +1,4 @@
-package de.mhus.lib.vaadin.aqua;
+package de.mhus.lib.vaadin.login;
 
 
 import java.io.Serializable;
@@ -21,7 +21,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.security.AccessControl;
 import de.mhus.lib.core.util.MNls;
@@ -31,6 +30,7 @@ import de.mhus.lib.vaadin.VaadinAccessControl;
 public class LoginScreen extends CssLayout implements MNlsProvider {
 
 	private static final long serialVersionUID = 1L;
+//	private static final String MAIN_USER_ROLE = "USER";
 	private TextField username;
     private PasswordField password;
     private Button login;
@@ -65,8 +65,7 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
         CssLayout loginInformation = buildLoginInformation();
 
         addComponent(centeringLayout);
-        if (loginInformation != null)
-        	addComponent(loginInformation);
+        addComponent(loginInformation);
     }
 
     private Component buildLoginForm() {
@@ -76,16 +75,16 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
         loginForm.setSizeUndefined();
         loginForm.setMargin(false);
 
-        loginForm.addComponent(username = new TextField(MNls.find(this, "username=Username"), ""));
+        loginForm.addComponent(username = new TextField(MNls.find(this,"username=Username"), ""));
         username.setWidth(15, Unit.EM);
-        loginForm.addComponent(password = new PasswordField(MNls.find(this, "password=Password")));
+        loginForm.addComponent(password = new PasswordField(MNls.find(this,"password=Passwors")));
         password.setWidth(15, Unit.EM);
-//        password.setDescription();
+        password.setDescription(MNls.find(this,"password.description=Your password"));
         CssLayout buttons = new CssLayout();
         buttons.setStyleName("buttons");
         loginForm.addComponent(buttons);
 
-        buttons.addComponent(login = new Button(MNls.find(this, "signin=Sign In")));
+        buttons.addComponent(login = new Button(MNls.find(this,"signin=Sign In")));
         login.setDisableOnClick(true);
         login.addClickListener(new Button.ClickListener() {
             @Override
@@ -112,39 +111,38 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
     }
 
     private CssLayout buildLoginInformation() {
-    	String description = MNls.find(this, "help.description");
-    	if (MString.isSet(description)) {
-	        CssLayout loginInformation = new CssLayout();
-	        loginInformation.setStyleName("login-information");
-	        Label loginInfoText = new Label(description,
-	                ContentMode.HTML);
-	        loginInformation.addComponent(loginInfoText);
-	        return loginInformation;
-    	}
-    	return null;
+        CssLayout loginInformation = new CssLayout();
+        loginInformation.setStyleName("login-information");
+        Label loginInfoText = new Label(MNls.find(this,"info.text=Content Editor"), ContentMode.HTML);
+        loginInformation.addComponent(loginInfoText);
+        return loginInformation;
     }
 
-    protected void login() {
+    private void login() {
         if (accessControl.signIn(username.getValue(), password.getValue())) {
         	
         	Subject subject = (Subject)UI.getCurrent().getSession().getAttribute(VaadinAccessControl.SUBJECT_ATTR);
         	if (subject == null)
         		MLogUtil.log().i("no subject");
-        	else {
+        	else
         		MLogUtil.log().i("Login",subject);
+        	
+//        	if (MSecurity.hasRole(subject,MAIN_USER_ROLE)) {
+        		loginListener.loginSuccessful();
         		return;
-        	}        	
+//        	} else {
+//        		accessControl.signOut();
+//        	}
         }
         
-        showNotification(new Notification(MNls.find(this, "error.login.caption=Login failed"),
-        		MNls.find(this, "error.login.description=Wrong username or password."),
+        showNotification(new Notification(MNls.find(this,"error.title=Login failed"),
+        		MNls.find(this,"error.text=Please check your username and password and try again."),
                 Notification.Type.HUMANIZED_MESSAGE));
-        
         username.focus();
 
     }
 
-    protected void showNotification(Notification notification) {
+    private void showNotification(Notification notification) {
         // keep the notification visible a little while after moving the
         // mouse, or until clicked
         notification.setDelayMsec(2000);
@@ -154,14 +152,10 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
     public interface LoginListener extends Serializable {
         void loginSuccessful();
     }
-    
+
 	@Override
 	public MNls getNls() {
+		if (nls == null) nls = MNls.lookup(this);
 		return nls;
 	}
-
-	public void setNls(MNls nls) {
-		this.nls = nls;
-	}
-
 }

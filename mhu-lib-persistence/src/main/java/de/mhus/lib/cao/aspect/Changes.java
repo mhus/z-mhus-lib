@@ -10,5 +10,8 @@ public interface Changes extends CaoAspect {
 	void created();
 	void moved();
 	void movedFrom(CaoNode oldParent);
+	void renamed();
+	void uploadedRendition(String rendition);
+	void deletedRendition(String rendition);
 	
 }

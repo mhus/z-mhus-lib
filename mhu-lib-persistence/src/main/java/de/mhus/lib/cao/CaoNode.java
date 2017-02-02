@@ -55,6 +55,18 @@ public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable
 	public abstract String getId();
 
 	/**
+	 * Returns the id of the parent even if you have not access to the parent node you
+	 * will get the pratent's ident.
+	 * 
+	 * @return Parent id or null if root
+	 */
+	public String getParentId() {
+		CaoNode p = getParent();
+		if (p == null) return null;
+		return p.getId();
+	}
+	
+	/**
 	 * Return a display name of this object.
 	 * 
 	 * @return The display name
