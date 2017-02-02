@@ -91,11 +91,7 @@ public class Desktop extends CssLayout {
 		menuSpace[2] = menuBar.addItem("", null);
 		menuSpace[3] = menuBar.addItem("", null);
 		
-		String name = "?";
-		try {
-			name = getApi().getAccessControl().getAccount().getDisplayName();
-		} catch (Throwable t) {}
-		menuUser = menuBar.addItem( name, null);
+		menuUser = menuBar.addItem( "?", null);
 		menuUser.setStyleName("right");
 		menuLogout = menuUser.addItem("Logout", new MenuBar.Command() {
 			
@@ -135,6 +131,13 @@ public class Desktop extends CssLayout {
 	}
 
 	public void refreshSpaceList() {
+		
+		String name = "?";
+		try {
+			name = getApi().getAccessControl().getAccount().getDisplayName();
+		} catch (Throwable t) {}
+		menuUser.setText(name == null ? "?" : name);
+		
 		menuSpaces.removeChildren();
 		overView.removeAllComponents();
 		
@@ -183,14 +186,16 @@ public class Desktop extends CssLayout {
 			tile.setHeight("160px");
 			overView.addComponent(tile);
 			
-			MenuItem item = menuSpaces.addItem(space.getDisplayName(), new MenuBar.Command() {
-				
-				@Override
-				public void menuSelected(MenuItem selectedItem) {
-					openSpace(space.getName(), null, null); // not directly to support history
-				}
-			});
-			item.setEnabled(true);
+			if (!space.isHiddenInMenu()) {
+				MenuItem item = menuSpaces.addItem(space.getDisplayName(), new MenuBar.Command() {
+					
+					@Override
+					public void menuSelected(MenuItem selectedItem) {
+						openSpace(space.getName(), null, null); // not directly to support history
+					}
+				});
+				item.setEnabled(true);
+			}
 		}
 		
 		if (componentList.size() > 0)
@@ -337,12 +342,14 @@ public class Desktop extends CssLayout {
 		spaceInstanceList.clear();
 	}
 
-	public void addSpace(de.mhus.lib.vaadin.desktop.GuiSpaceService service) {
+	public void addSpace(GuiSpaceService service) {
+		log.d("add space", service);
 		spaceList.put(service.getName(),service);
 		refreshSpaceList();
 	}
 
-	public void removeSpace(de.mhus.lib.vaadin.desktop.GuiSpaceService service) {
+	public void removeSpace(GuiSpaceService service) {
+		log.d("remove space",service);
 		spaceList.remove(service.getName());
 		AbstractComponent v = spaceInstanceList.remove(service.getName());
 		if (v != null && v instanceof GuiLifecycle) ((GuiLifecycle)v).doDestroy();

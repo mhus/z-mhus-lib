@@ -15,4 +15,5 @@ public interface GuiSpaceService {
 	boolean isHiddenSpace();
 	AbstractComponent createTile();
 	int getTileSize();
+	boolean isHiddenInMenu();
 }
