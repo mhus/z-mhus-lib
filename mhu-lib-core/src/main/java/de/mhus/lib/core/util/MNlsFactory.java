@@ -56,8 +56,12 @@ public class MNlsFactory extends MNlsBundle {
 		try {
 			// if (res == null) res = base(MDirectory.class);
 			
-			if (resourceName == null)
-				resourceName = owner.getCanonicalName().replace('.', '/');
+			if (resourceName == null) {
+				if (owner.getCanonicalName() != null)
+					resourceName = owner.getCanonicalName().replace('.', '/');
+				else
+					owner.getEnclosingClass().getCanonicalName().replace('.', '/');
+			}
 			
 			if ( res == null ) {
 				if (owner != null)
@@ -103,10 +107,8 @@ public class MNlsFactory extends MNlsBundle {
 			} else {
 				log().d("Resource not found",resourceName,locale);
 			}
-
-			return null;
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log().i(e);
 		}
 

@@ -23,8 +23,10 @@ import com.vaadin.ui.VerticalLayout;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.MNls;
+import de.mhus.lib.core.util.MNlsProvider;
 
-public class Desktop extends CssLayout {
+public class Desktop extends CssLayout implements MNlsProvider {
 
 	private MenuBar menuBar;
 	private MenuItem menuSpaces;
@@ -42,7 +44,8 @@ public class Desktop extends CssLayout {
 	private LinkedList<String> history = new LinkedList<>();
 	private TreeMap<String,GuiSpaceService> spaceList = new TreeMap<String, GuiSpaceService>();
 	private HashMap<String, AbstractComponent> spaceInstanceList = new HashMap<String, AbstractComponent>();
-	private GuiApi api; 
+	private GuiApi api;
+	private MNls nls; 
 
 	public Desktop(GuiApi api) {
 		this.api = api;
@@ -56,10 +59,10 @@ public class Desktop extends CssLayout {
 		overView.setStyleName("overview");
 		
 		menuBar = new MenuBar();
-		menuSpaces = menuBar.addItem("Bereiche", null);
+		menuSpaces = menuBar.addItem(MNls.find(this, "menu.spaces=Spaces"), null);
 
-		menuHistory = menuBar.addItem("", null);
-		menuBack = menuHistory.addItem("Back", new MenuBar.Command() {
+		menuHistory = menuBar.addItem(MNls.find(this, "menu.history=History"), null);
+		menuBack = menuHistory.addItem(MNls.find(this, "menu.back=Back"), new MenuBar.Command() {
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -93,7 +96,7 @@ public class Desktop extends CssLayout {
 		
 		menuUser = menuBar.addItem( "?", null);
 		menuUser.setStyleName("right");
-		menuLogout = menuUser.addItem("Logout", new MenuBar.Command() {
+		menuLogout = menuUser.addItem(MNls.find(this, "menu.logout=Logout"), new MenuBar.Command() {
 			
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -126,10 +129,6 @@ public class Desktop extends CssLayout {
 		showOverview();
 	}
 
-	protected void doTick() {
-		
-	}
-
 	public void refreshSpaceList() {
 		
 		String name = "?";
@@ -141,7 +140,7 @@ public class Desktop extends CssLayout {
 		menuSpaces.removeChildren();
 		overView.removeAllComponents();
 		
-		menuOverview = menuSpaces.addItem("Übersicht", new MenuBar.Command() {
+		menuOverview = menuSpaces.addItem(MNls.find(this, "menu.overview=Overview"), new MenuBar.Command() {
 			
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -177,11 +176,12 @@ public class Desktop extends CssLayout {
 					}
 				});
 				tile = button;
+				tile.addStyleName("cursorhand");
 			}
 			int tileSize = space.getTileSize();
 			if (tileSize < 1) tileSize = 1;
 			if (tileSize > 3) tileSize = 3;
-			tile.setStyleName("thumbnail" + tileSize);
+			tile.addStyleName("thumbnail" + tileSize);
 			tile.setWidth(200 * tileSize + "px");
 			tile.setHeight("160px");
 			overView.addComponent(tile);
@@ -201,7 +201,7 @@ public class Desktop extends CssLayout {
 		if (componentList.size() > 0)
 			menuSpaces.addSeparator();
 		
-		menuLeave = menuSpaces.addItem("Verlassen", new MenuBar.Command() {
+		menuLeave = menuSpaces.addItem(MNls.find(this, "menu.leave=Leave Space"), new MenuBar.Command() {
 			
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -230,7 +230,7 @@ public class Desktop extends CssLayout {
 		contentScreen.removeAllComponents();
 		cleanupMenu();
 		if (component == null) {
-			contentScreen.addComponent(new Label("Der Space ist aktuell nicht erreichbar " + space.getName()));
+			contentScreen.addComponent(new Label(MNls.find(this, "spaces.unavailable=Space currently not available") + space.getName()));
 			addComponent(contentScreen);
 			return null;
 		}
@@ -255,6 +255,8 @@ public class Desktop extends CssLayout {
 		cleanupMenu();
 		currentSpace = null;
 		contentScreen.addComponent(overView);
+		menuHistory.setText(MNls.find(this, "menu.history=History"));
+		UI.getCurrent().getPage().setUriFragment("");
 	}
 
 	private void cleanupMenu() {
@@ -367,6 +369,12 @@ public class Desktop extends CssLayout {
 			spaceInstanceList.put(name, instance);
 		}
 		return instance;
+	}
+
+	@Override
+	public MNls getNls() {
+		if (nls == null) nls = MNls.lookup(this);
+		return nls;
 	}
 
 }
