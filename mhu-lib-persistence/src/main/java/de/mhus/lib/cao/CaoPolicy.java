@@ -9,10 +9,8 @@ import java.util.Set;
 
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 
 //TODO need to be rewritten as aspect
 

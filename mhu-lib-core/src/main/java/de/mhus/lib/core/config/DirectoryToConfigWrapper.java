@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.errors.MException;

@@ -1,16 +1,11 @@
 package de.mhus.lib.core.util;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.definition.DefComponent;
-import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.definition.FmElement;
-import de.mhus.lib.form.definition.FmText;
 
 public class ParameterDefinitions extends TreeMap<String, ParameterDefinition>{
 

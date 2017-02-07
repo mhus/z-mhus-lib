@@ -2,15 +2,11 @@ package de.mhus.lib.cao;
 
 import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.strategy.DefaultMonitor;
 import de.mhus.lib.core.strategy.Monitor;
-import de.mhus.lib.core.strategy.Operation;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.util.MNls;
-import de.mhus.lib.core.util.MNlsFactory;
 
 /**
  * A action is doing something with one or more objects. The main

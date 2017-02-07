@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.UUID;
 
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoLoginForm;

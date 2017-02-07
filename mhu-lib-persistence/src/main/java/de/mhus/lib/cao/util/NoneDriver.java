@@ -2,7 +2,6 @@ package de.mhus.lib.cao.util;
 
 import java.net.URI;
 
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoLoginForm;

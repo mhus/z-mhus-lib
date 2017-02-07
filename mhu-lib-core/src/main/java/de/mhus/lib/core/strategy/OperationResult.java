@@ -1,6 +1,5 @@
 package de.mhus.lib.core.strategy;
 
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MSystem;
 
 public class OperationResult {

@@ -3,7 +3,6 @@ package de.mhus.lib.cao.fs;
 import java.io.File;
 import java.util.WeakHashMap;
 
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;

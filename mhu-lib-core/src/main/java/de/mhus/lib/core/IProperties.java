@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
-
-import de.mhus.lib.errors.MException;
 
 public interface IProperties extends IReadProperties, Map<String,Object>, Serializable, Iterable<Map.Entry<String,Object>> {
 

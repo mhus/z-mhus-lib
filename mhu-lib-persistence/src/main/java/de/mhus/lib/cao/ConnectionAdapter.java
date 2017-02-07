@@ -1,7 +1,6 @@
 package de.mhus.lib.cao;
 
 import de.mhus.lib.adb.query.AQuery;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
 public class ConnectionAdapter extends CaoConnection {

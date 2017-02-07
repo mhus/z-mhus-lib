@@ -2,15 +2,8 @@ package de.mhus.lib.core.strategy;
 
 import java.util.HashMap;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.config.ConfigBuilder;
-import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;

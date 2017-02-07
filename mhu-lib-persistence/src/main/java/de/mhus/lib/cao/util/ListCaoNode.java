@@ -3,9 +3,7 @@ package de.mhus.lib.cao.util;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
 
-import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.IProperties;

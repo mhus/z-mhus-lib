@@ -1,7 +1,6 @@
 package de.mhus.lib.core.lang;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;

@@ -1,37 +1,17 @@
 package de.mhus.lib.karaf;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.lang.reflect.Field;
-
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
-import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgValue;
-import de.mhus.lib.core.console.ANSIConsole;
-import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.core.console.Console.COLOR;
-import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.core.io.TailInputStream;
-import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ISingleton;
-import de.mhus.lib.logging.level.GeneralMapper;
-import de.mhus.lib.logging.level.ThreadBasedMapper;
-import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafSingletonImpl;
 
 @Command(scope = "mhus", name = "config", description = "Manipulate Configuration Values")

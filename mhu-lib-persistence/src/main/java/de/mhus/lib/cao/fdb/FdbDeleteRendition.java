@@ -6,19 +6,14 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.action.CaoConfiguration;
-import de.mhus.lib.cao.action.CreateConfiguration;
-import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.cao.action.DeleteRenditionConfiguration;
-import de.mhus.lib.cao.action.UploadRenditionConfiguration;
 import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotFoundException;
 
 public class FdbDeleteRendition extends CaoAction {
 

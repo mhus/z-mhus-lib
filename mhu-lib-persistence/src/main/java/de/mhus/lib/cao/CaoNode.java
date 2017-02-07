@@ -1,10 +1,8 @@
 package de.mhus.lib.cao;
 
 import java.util.Collection;
-import java.util.Set;
 
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.cao.auth.AuthCore;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.errors.MException;

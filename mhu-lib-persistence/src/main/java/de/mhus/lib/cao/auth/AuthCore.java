@@ -10,7 +10,6 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
-import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;

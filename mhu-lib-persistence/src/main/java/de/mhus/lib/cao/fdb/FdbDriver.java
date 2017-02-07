@@ -1,12 +1,9 @@
 package de.mhus.lib.cao.fdb;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoLoginForm;

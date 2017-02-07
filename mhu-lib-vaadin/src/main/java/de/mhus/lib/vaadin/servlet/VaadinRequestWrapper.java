@@ -8,13 +8,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServletRequest;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.util.EnumerationIterator;
 import de.mhus.lib.errors.NotSupportedException;
-import de.mhus.lib.servlet.HttpSessionWrapper;
 import de.mhus.lib.servlet.RequestWrapper;
 
 public class VaadinRequestWrapper implements RequestWrapper {

@@ -1,9 +1,7 @@
 package de.mhus.lib.cao.auth;
 
-import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoAspectFactory;
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.MutableActionList;

@@ -2,7 +2,6 @@ package de.mhus.lib.core.security;
 
 import javax.security.auth.Subject;
 
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.errors.NotSupportedException;
 

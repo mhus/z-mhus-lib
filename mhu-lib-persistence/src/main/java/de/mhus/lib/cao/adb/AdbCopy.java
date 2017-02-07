@@ -7,7 +7,6 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CopyConfiguration;
 import de.mhus.lib.cao.aspect.Changes;
-import de.mhus.lib.cao.fdb.FdbNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.NotSuccessful;

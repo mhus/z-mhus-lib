@@ -2,17 +2,12 @@ package de.mhus.lib.vaadin.desktop;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.TreeMap;
 
-import com.vaadin.event.LayoutEvents;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -22,7 +17,6 @@ import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 

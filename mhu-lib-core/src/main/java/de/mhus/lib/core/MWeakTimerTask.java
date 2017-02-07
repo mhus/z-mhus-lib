@@ -1,6 +1,5 @@
 package de.mhus.lib.core;
 
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.Observable;
 import java.util.Observer;

@@ -1,21 +1,15 @@
 package de.mhus.lib.cao.fdb;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeoutException;
 
-import de.mhus.lib.cao.CaoAction;
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoConst;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoMetaDefinition.TYPE;
-import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoPolicy;

@@ -6,11 +6,9 @@ import java.util.Date;
 import java.util.Set;
 
 import de.mhus.lib.basics.ReadOnly;
-import de.mhus.lib.core.AbstractProperties;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 
 public class PropertiesReadOnly implements IReadProperties, ReadOnly {
 

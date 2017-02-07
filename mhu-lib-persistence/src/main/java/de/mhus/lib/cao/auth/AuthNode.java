@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,10 +17,7 @@ import java.util.function.Function;
 
 import de.mhus.lib.basics.ReadOnly;
 import de.mhus.lib.cao.CaoAspect;
-import de.mhus.lib.cao.CaoAspectFactory;
-import de.mhus.lib.cao.CaoMetadata;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.CaoPolicy;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;

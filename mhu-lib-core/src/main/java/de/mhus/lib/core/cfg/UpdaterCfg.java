@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-import de.mhus.lib.core.MSingleton;
-
 public class UpdaterCfg {
 
 	@SuppressWarnings("rawtypes")

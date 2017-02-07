@@ -1,9 +1,6 @@
 package de.mhus.lib.cao.util;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +9,6 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspectFactory;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.CopyConfiguration;
 import de.mhus.lib.cao.action.CreateConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;

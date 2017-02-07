@@ -8,7 +8,6 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.query.Db;
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoNode;

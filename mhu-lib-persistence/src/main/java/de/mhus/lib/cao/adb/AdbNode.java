@@ -5,9 +5,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoNode;
@@ -18,7 +16,6 @@ import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 
 public class AdbNode extends PropertiesNode {
 

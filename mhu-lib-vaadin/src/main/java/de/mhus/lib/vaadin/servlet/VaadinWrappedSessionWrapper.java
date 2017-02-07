@@ -1,23 +1,15 @@
 package de.mhus.lib.vaadin.servlet;
 
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
 import com.vaadin.server.WrappedSession;
 
 import de.mhus.lib.core.AbstractProperties;
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.util.MapEntry;
-import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class VaadinWrappedSessionWrapper extends AbstractProperties {

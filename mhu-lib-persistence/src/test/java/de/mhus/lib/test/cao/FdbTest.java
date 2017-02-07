@@ -1,10 +1,8 @@
 package de.mhus.lib.test.cao;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.aspect.StructureControl;
@@ -13,8 +11,6 @@ import de.mhus.lib.cao.util.DefaultStructureControl;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.errors.MException;
-import de.mhus.lib.test.adb.AdbTest;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

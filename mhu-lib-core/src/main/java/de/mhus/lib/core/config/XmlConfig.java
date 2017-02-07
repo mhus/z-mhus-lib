@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +15,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.errors.MException;
 

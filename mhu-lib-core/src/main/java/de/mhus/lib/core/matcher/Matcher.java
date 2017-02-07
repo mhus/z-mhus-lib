@@ -2,7 +2,6 @@ package de.mhus.lib.core.matcher;
 
 import de.mhus.lib.core.parser.StringTokenizerParser;
 import de.mhus.lib.core.parser.TechnicalStringParser;
-import de.mhus.lib.core.util.Rfc1738;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.SyntaxError;
 

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;

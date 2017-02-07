@@ -3,14 +3,11 @@ package de.mhus.lib.vaadin.operation;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.strategy.AbstractOperation;
 import de.mhus.lib.core.strategy.DefaultTaskContext;
 import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
-import de.mhus.lib.core.util.MNlsProvider;
-import de.mhus.lib.errors.UsageException;
 import de.mhus.lib.vaadin.DialogControl;
 
 public abstract class AbstractVaadinOperation extends AbstractOperation implements VaadinOperation {

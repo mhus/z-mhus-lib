@@ -1,8 +1,6 @@
 package de.mhus.lib.cao.auth;
 
-import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoAspect;
-import de.mhus.lib.cao.CaoNode;
 
 public interface AuthAccess extends CaoAspect {
 

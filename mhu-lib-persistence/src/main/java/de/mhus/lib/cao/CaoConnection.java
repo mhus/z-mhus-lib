@@ -1,14 +1,11 @@
 package de.mhus.lib.cao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.cao.util.MutableActionList;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class CaoConnection extends MResourceProvider<CaoNode> implements Named {
 

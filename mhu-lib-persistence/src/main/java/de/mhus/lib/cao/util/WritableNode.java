@@ -17,7 +17,6 @@ import java.util.function.Function;
 import de.mhus.lib.cao.CaoActionStarter;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoConnection;
-import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoWritableElement;
 import de.mhus.lib.core.IProperties;

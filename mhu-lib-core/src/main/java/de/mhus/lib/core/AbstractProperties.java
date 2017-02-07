@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import de.mhus.lib.basics.IsNull;
 import de.mhus.lib.core.lang.MObject;

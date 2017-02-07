@@ -1,7 +1,6 @@
 package de.mhus.lib.cao;
 
 import de.mhus.lib.cao.action.CaoConfiguration;
-import de.mhus.lib.core.strategy.DefaultMonitor;
 import de.mhus.lib.core.strategy.Monitor;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.util.MNls;

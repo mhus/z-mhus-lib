@@ -1,7 +1,5 @@
 package de.mhus.lib.core.directory;
 
-import java.util.Collection;
-
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.MObject;
 

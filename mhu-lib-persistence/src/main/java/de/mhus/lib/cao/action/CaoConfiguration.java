@@ -1,12 +1,9 @@
 package de.mhus.lib.cao.action;
 
-import java.util.Locale;
-
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.form.ComponentAdapterProvider;
 import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.UiComponent;

@@ -8,14 +8,12 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Label;
 
 import de.mhus.lib.core.util.Pair;
-
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
 
 public abstract class VWorkBar extends HorizontalLayout {
 

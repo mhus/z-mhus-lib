@@ -1,11 +1,7 @@
 package de.mhus.lib.core.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;

@@ -6,7 +6,6 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
 import de.mhus.lib.cao.CaoList;
 import de.mhus.lib.cao.CaoNode;
-import de.mhus.lib.cao.action.CantExecuteException;
 import de.mhus.lib.cao.action.CaoConfiguration;
 import de.mhus.lib.cao.action.DeleteConfiguration;
 import de.mhus.lib.core.IProperties;
