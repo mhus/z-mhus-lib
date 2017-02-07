@@ -28,6 +28,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 
 public class Desktop extends CssLayout implements MNlsProvider {
 
+	private static final long serialVersionUID = 1L;
 	private MenuBar menuBar;
 	private MenuItem menuSpaces;
 	private VerticalLayout contentScreen;
@@ -45,7 +46,10 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	private TreeMap<String,GuiSpaceService> spaceList = new TreeMap<String, GuiSpaceService>();
 	private HashMap<String, AbstractComponent> spaceInstanceList = new HashMap<String, AbstractComponent>();
 	private GuiApi api;
-	private MNls nls; 
+	private MNls nls;
+	private int tileWidth = 200;
+	private int tileHeight = 160;
+	private int tileHorizontalGap = 20; 
 
 	public Desktop(GuiApi api) {
 		this.api = api;
@@ -126,7 +130,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		addComponent(contentScreen);
 		setSizeFull();
 		
-		showOverview();
+		showOverview(false);
 	}
 
 	public void refreshSpaceList() {
@@ -144,7 +148,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				showOverview();
+				showOverview(true);
 			}
 		});
 
@@ -182,8 +186,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			if (tileSize < 1) tileSize = 1;
 			if (tileSize > 3) tileSize = 3;
 			tile.addStyleName("thumbnail" + tileSize);
-			tile.setWidth(200 * tileSize + "px");
-			tile.setHeight("160px");
+			tile.setWidth(( tileWidth * tileSize + (tileSize - 1) * tileHorizontalGap ) + "px");
+			tile.setHeight( tileHeight + "px");
 			overView.addComponent(tile);
 			
 			if (!space.isHiddenInMenu()) {
@@ -208,7 +212,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 				if (currentSpace == null) return;
 				removeSpaceComponent(currentSpace.getName());
 				currentSpace = null;
-				showOverview();
+				showOverview(true);
 			}
 		});
 		menuLeave.setEnabled(false);
@@ -225,6 +229,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	}
 
 	protected String showSpace(GuiSpaceService space, String subSpace, String search) {
+		boolean exists = spaceInstanceList.containsKey(space.getName());
 		AbstractComponent component = getSpaceComponent(space.getName());
 		
 		contentScreen.removeAllComponents();
@@ -243,20 +248,24 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		currentSpace = space;
 		space.createMenu(component,menuSpace);
 		
-		if (component instanceof Navigable && (MString.isSet(subSpace) || MString.isSet(search)))
-			return ((Navigable)component).navigateTo(subSpace, search);
-		
+		if (component instanceof Navigable) {
+			if ( (MString.isSet(subSpace) || MString.isSet(search))) 
+				return ((Navigable)component).navigateTo(subSpace, search);
+			else
+				((Navigable)component).onShowSpace(!exists);
+		}
 		return space.getDisplayName();
 	}
 
-	protected void showOverview() {
+	protected void showOverview(boolean setLinking) {
 		if (menuLeave != null) menuLeave.setEnabled(false);
 		contentScreen.removeAllComponents();
 		cleanupMenu();
 		currentSpace = null;
 		contentScreen.addComponent(overView);
 		menuHistory.setText(MNls.find(this, "menu.history=History"));
-		UI.getCurrent().getPage().setUriFragment("");
+		if (setLinking)
+			UI.getCurrent().getPage().setUriFragment("");
 	}
 
 	private void cleanupMenu() {
@@ -375,6 +384,30 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	public MNls getNls() {
 		if (nls == null) nls = MNls.lookup(this);
 		return nls;
+	}
+
+	public int getTileWidth() {
+		return tileWidth;
+	}
+
+	public void setTileWidth(int tileWidth) {
+		this.tileWidth = tileWidth;
+	}
+
+	public int getTileHeight() {
+		return tileHeight;
+	}
+
+	public void setTileHeight(int tileHeight) {
+		this.tileHeight = tileHeight;
+	}
+
+	public int getTileHorizontalGap() {
+		return tileHorizontalGap;
+	}
+
+	public void setTileHorizontalGap(int tileHorizontalGap) {
+		this.tileHorizontalGap = tileHorizontalGap;
 	}
 
 }

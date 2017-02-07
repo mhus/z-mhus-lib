@@ -18,13 +18,21 @@
 
 package de.mhus.lib.core;
 
+import java.lang.reflect.Field;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public abstract class MTimerTask extends TimerTask implements Observer, Named {
+
+    public static final int UNKNOWN = -1;
+    public static final int VIRGIN = 0;
+    public static final int SCHEDULED   = 1;
+    public static final int EXECUTED    = 2;
+    public static final int CANCELLED   = 3;
 
 	private boolean canceled = false;
 	private String name;
@@ -88,4 +96,17 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 		this.name = name;
 	}
 
+	public static int getStatus(TimerTask task) {
+		if (task == null) return -1;
+		try {
+			Field field = task.getClass().getField("state");
+			if (!field.isAccessible())
+				field.setAccessible(true);
+			return field.getInt(task);
+		} catch (Throwable t) {
+			MLogUtil.log().d(t);
+			return -1;
+		}
+	}
+	
 }
