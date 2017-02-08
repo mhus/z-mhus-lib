@@ -141,12 +141,20 @@ public class MSystem {
 	      ClassLoader loader = Thread.currentThread().getContextClassLoader();
 	      if (url == null && loader != null)
 	         url = loader.getResource(propertyFile);
-	      	      
-	      if (owner !=null && url == null) {
-	         url = owner.getClass().getResource("/" + owner.getClass().getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
+	      
+	      Class<?> ownerClass = null;
+	      if (owner != null) {
+	    	  if (owner instanceof Class)
+	    		  ownerClass = (Class<?>) owner;
+	    	  else
+	    		  ownerClass = owner.getClass();
 	      }
-	      if (owner !=null && url == null) {
-		         url = owner.getClass().getResource( owner.getClass().getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
+	      
+	      if (ownerClass !=null && url == null) {
+	         url = ownerClass.getResource("/" + ownerClass.getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
+	      }
+	      if (ownerClass !=null && url == null) {
+		         url = ownerClass.getResource( ownerClass.getPackage().getName().replaceAll( "\\.", "/" ) + "/" + propertyFile );
 		  }
 	      
 	      if (url != null) return url;

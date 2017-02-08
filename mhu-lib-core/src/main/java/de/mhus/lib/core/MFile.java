@@ -42,8 +42,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
+import de.mhus.lib.core.cfg.CfgProperties;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
@@ -54,9 +57,9 @@ import de.mhus.lib.errors.MException;
  */
 public class MFile {
 	
-	private static final String DEFAULT_MIME = "plain/text";
+	private static final String DEFAULT_MIME = "text/plain";
 	private static ResourceNode mimeConfigCache;
-	private static ResourceNode mhuMimeConfigCache;
+	private static Properties mhuMimeConfigCache;
 	private static Log log = Log.getLog(MFile.class);
 
 
@@ -596,62 +599,37 @@ public class MFile {
 		return MString.beforeLastIndex(name, '.') + "." + newExtension;
 	}
 	
+	private static CfgProperties mimeProperties = new CfgProperties(MFile.class, "mime");
+	
 	/**
 	 * Searching for the mime type in config and as last option have a static list of extensions.
-	 * @param extension
+	 * @param extension full file name or only extension
 	 * @return 
 	 */
 	public static String getMimeType(String extension) {
 		if (extension == null) return null;
 		extension = extension.trim().toLowerCase();
+		if (MString.isIndex(extension, '.')) extension = MString.afterLastIndex(extension, '.');
 		
 		String mime = null;
-		ResourceNode config = MSingleton.get().getCfgManager().getCfg(MFile.class, null);
-		if (config != null) {
-			ResourceNode map = config.getNode("mapping");
-			if (map != null)
-				try {
-					mime = map.getExtracted(extension);
-				} catch (MException e) {
-				}
-		}
-		if (mime == null && config != null) {
-			try {
-				String file = config.getExtracted("file");
-				if (file != null) {
-					if (mimeConfigCache == null) {
-						try {
-	// TODO change way to load properties
-	//						mimeConfigCache = MConfigFactory.getInstance().createConfigFor(new File(file));
-						} catch (Exception e) {
-							log.w(file,e);
-						}
-					}
-					if (mimeConfigCache != null) {
-						mime = mimeConfigCache.getExtracted(extension);
-						if (mime == null)
-							mime = mimeConfigCache.getExtracted("default");
-					}
-				}
-			} catch (MException e) {
-			}
-		}
+		try {
+			if (mimeProperties.value() != null)
+				mime = mimeProperties.value().getString(extension, null);
+		} catch (Throwable t) {}
 		
 		if (mime == null) {
 			if (mhuMimeConfigCache == null) {
 				try {
-//					mhuMimeConfigCache = ConfigUtil.loadPropertiesForClass(MFile.class);
+					mhuMimeConfigCache = new Properties();
+					MSystem.loadProperties(MFile.class, mhuMimeConfigCache, "mime-types.properties");
 				} catch (Exception e) {
 					
 				}
 			}
-			try {
-				if (mhuMimeConfigCache != null) {
-					mime = mhuMimeConfigCache.getExtracted(extension);
-					if (mime == null)
-						mime = mhuMimeConfigCache.getExtracted("default");
-				}
-			} catch (MException e) {
+			if (mhuMimeConfigCache != null) {
+				mime = mhuMimeConfigCache.getProperty(extension, null);
+				if (mime == null)
+					mime = mhuMimeConfigCache.getProperty("default", null);
 			}
 		}
 		
