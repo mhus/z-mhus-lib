@@ -29,8 +29,8 @@ public class MRemoteManager extends MObject implements IBase {
 
 	public MRemoteManager() throws MException {
 		housekeeper = new Housekeeper(this);
-		ResourceNode config = MSingleton.baseLookup(this,CfgManager.class).getCfg(this,new HashConfig());
-		MSingleton.baseLookup(this,MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
+		ResourceNode config = MSingleton.lookup(CfgManager.class).getCfg(this,new HashConfig());
+		MSingleton.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
 	}
 	
 	public void register(JmxObject object) throws Exception {

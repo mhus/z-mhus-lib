@@ -130,10 +130,14 @@ public class MSingleton {
 		return get().getFile(path);
 	}
 
-	public static <T> T baseLookup(Object owner, Class<T> class1) {
-		return get().getBaseControl().base(owner).lookup(class1);
+	public static <T> T lookup(Class<T> class1) {
+		return get().getBaseControl().base().lookup(class1);
 	}
 
+	public static <T,D extends T> T lookup(Class<T> class1, Class<D> def) {
+		return get().getBaseControl().base().lookup(class1, def);
+	}
+	
 	public static void dirtyLog(Object ... string) {
 		if (isDirtyTrace())
 			System.out.println(string);

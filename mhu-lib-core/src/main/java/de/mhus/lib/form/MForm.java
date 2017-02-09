@@ -51,7 +51,7 @@ public class MForm extends MObject implements MNlsProvider {
 	}
 
 	public DataSource getDataSource() {
-		if (dataSource == null) dataSource = MSingleton.baseLookup(this,DataSource.class);
+		if (dataSource == null) dataSource = MSingleton.lookup(DataSource.class);
 		return dataSource;
 	}
 
@@ -79,7 +79,7 @@ public class MForm extends MObject implements MNlsProvider {
 	}
 	
 	public FormControl getControl() {
-		if (control == null) setControl(MSingleton.baseLookup(this,FormControl.class));
+		if (control == null) setControl(MSingleton.lookup(FormControl.class));
 		return control;
 	}
 	

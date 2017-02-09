@@ -16,7 +16,7 @@ public class KarafHousekeeper extends MObject implements MHousekeeper {
 	@Override
 	public void register(MHousekeeperTask task, long sleep, boolean weak) {
 		log().d("register",task,sleep,weak);
-		TimerIfc timer = MSingleton.baseLookup(this,TimerIfc.class);
+		TimerIfc timer = MSingleton.lookup(TimerIfc.class);
 		if (weak) {
 			WeakObserver t = new WeakObserver(task);
 			IntervalJob job = new IntervalJob(sleep, t);

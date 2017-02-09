@@ -20,7 +20,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	private static CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false);
 	
 	private DbConnection instance;
-	private long id = MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
+	private long id = MSingleton.lookup(UniqueId.class).nextUniqueId();
 //	private StackTraceElement[] createStackTrace;
 	private DbPool pool;
 

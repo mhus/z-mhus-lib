@@ -15,8 +15,12 @@ public abstract class Base {
 	
 	public abstract boolean isDestroyed();
 	
-	public abstract <T> T lookup(Class<T> ifc);
+	public <T> T lookup(Class<T> ifc) {
+		return lookup(ifc, null);
+	}
 
+	public abstract <T, D extends T> T lookup(Class<T> ifc, Class<D> def);
+	
 	public abstract boolean isBase(Class<?> ifc);
 
 	public abstract void addObject(Class<?> ifc, Object obj);

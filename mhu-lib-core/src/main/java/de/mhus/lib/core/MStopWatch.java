@@ -36,7 +36,7 @@ public class MStopWatch extends MJmx {
 	private String name;
 	
 	public MStopWatch() {
-		name = "StopWatch " + MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
+		name = "StopWatch " + MSingleton.lookup(UniqueId.class).nextUniqueId();
 	}
 	
 	public MStopWatch(String name) {

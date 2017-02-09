@@ -57,7 +57,7 @@ public abstract class DbProvider extends MObject {
 	 */
 	public void doInitialize(IConfig config,MActivator activator) {
 		if (config == null) config = new HashConfig();
-		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
+		if (activator == null) activator = MSingleton.lookup(MActivator.class);
 		this.config = config;
 		this.activator = activator;
 	}

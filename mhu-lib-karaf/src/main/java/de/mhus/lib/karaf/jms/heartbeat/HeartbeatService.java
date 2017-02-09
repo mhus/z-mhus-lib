@@ -27,7 +27,7 @@ public class HeartbeatService extends JmsDataChannelImpl {
 	}
 	
 	public void doActivate() {
-		((DefaultBase)MSingleton.get().getBaseControl().base(this)).addObject(HeartbeatListener.class, new HeartbeatListener() {
+		((DefaultBase)MSingleton.get().getBaseControl().base()).addObject(HeartbeatListener.class, new HeartbeatListener() {
 			
 			@Override
 			public void heartbeatReceived(String txt) {

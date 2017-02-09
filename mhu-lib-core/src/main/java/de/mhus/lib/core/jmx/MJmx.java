@@ -17,7 +17,7 @@ public class MJmx extends JmxObject {
 		if (!isJmxRegistered()) {
 			try {
 				setJmxName(name);
-				MSingleton.baseLookup(this,MRemoteManager.class).register(this,weak);
+				MSingleton.lookup(MRemoteManager.class).register(this,weak);
 			} catch (Exception e) {
 				log().t(e);
 			}

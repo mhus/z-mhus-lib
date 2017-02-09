@@ -194,7 +194,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 			}
 			
 			if (onlyWorkingDays) {
-				HolidayProviderIfc holidayProvider = MSingleton.baseLookup(this, HolidayProviderIfc.class);
+				HolidayProviderIfc holidayProvider = MSingleton.lookup(HolidayProviderIfc.class);
 				if (holidayProvider != null) {
 					while (!holidayProvider.isWorkingDay(null, next.getTime()))
 						next.add(Calendar.DAY_OF_MONTH, 1);

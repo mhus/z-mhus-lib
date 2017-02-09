@@ -64,7 +64,7 @@ public class MThread extends MObject implements Runnable {
 	}
 
 	public MThread start() {
-		tc = MSingleton.baseLookup(this,MThreadManager.class).start(this, name);
+		tc = MSingleton.lookup(MThreadManager.class).start(this, name);
 		return this;
 	}
 

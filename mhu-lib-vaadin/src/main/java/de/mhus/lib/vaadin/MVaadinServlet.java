@@ -48,7 +48,7 @@ public class MVaadinServlet extends VaadinServlet {
 			}
         if (mhusConfigUrl != null)
 	        try {
-	        	config = MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(mhusConfigUrl.toURI());
+	        	config = MSingleton.lookup(MConfigFactory.class).createConfigFor(mhusConfigUrl.toURI());
 	        } catch (Exception e) {
 	        	log.i(mhusConfigPath,e);
 	        }

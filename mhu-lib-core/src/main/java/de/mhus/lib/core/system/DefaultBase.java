@@ -34,20 +34,31 @@ public class DefaultBase extends Base {
 	}
 
 	@Override
-	public <T> T lookup(Class<T> ifc) {
+	public <T, D extends T> T lookup(Class<T> ifc, Class<D> def) {
 		try {
 			if (activator == null) {
 				if (parent != null)
-					return parent.lookup(ifc);
-				return null;
+					return parent.lookup(ifc, def);
+			} else {
+			
+				if (parent != null && !activator.isInstance(ifc) && ( local == null || !local.contains(ifc.getCanonicalName()) ) )
+					return parent.lookup(ifc, def);
 			}
 			
-			if (parent != null && !activator.isInstance(ifc) && ( local == null || !local.contains(ifc.getCanonicalName()) ) )
-				return parent.lookup(ifc);
+			T ret = activator.getObject(ifc);
+			if (ret != null)
+				return ret;
 			
-			return activator.getObject(ifc);
 		} catch (Exception e) {
-			e.printStackTrace(); // TODO use logger
+			MSingleton.dirtyLog(ifc,e);
+		}
+		
+		if (def == null) return null;
+		
+		try {
+			return def.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			MSingleton.dirtyLog(ifc,e);
 		}
 		return null;
 	}

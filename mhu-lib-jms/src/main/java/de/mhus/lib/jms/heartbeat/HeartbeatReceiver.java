@@ -30,7 +30,7 @@ public class HeartbeatReceiver extends ServerJms {
 		String txt = "";
 		if (msg instanceof TextMessage) txt =((TextMessage)msg).getText();
 		log().d("received",txt);
-		HeartbeatListener listener = MSingleton.baseLookup(this, HeartbeatListener.class);
+		HeartbeatListener listener = MSingleton.lookup(HeartbeatListener.class);
 		if (listener != null)
 			listener.heartbeatReceived(txt);
 		TextMessage ret = getSession().createTextMessage(MSystem.getAppIdent());

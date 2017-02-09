@@ -40,5 +40,9 @@ public class ObserverTimerTaskAdapter extends MTimerTask implements Observer {
 			
 		task.run();
 	}
+
+	public TimerTask getTask() {
+		return task;
+	}
 	
 }

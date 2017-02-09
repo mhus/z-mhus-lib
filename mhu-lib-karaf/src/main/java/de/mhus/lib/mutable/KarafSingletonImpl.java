@@ -19,6 +19,7 @@ import de.mhus.lib.core.system.ISingleton;
 import de.mhus.lib.core.system.ISingletonInternal;
 import de.mhus.lib.core.system.SingletonInitialize;
 import de.mhus.lib.karaf.MOsgi;
+import de.mhus.lib.karaf.services.TimerFactoryImpl;
 import de.mhus.lib.logging.JavaLoggerFactory;
 
 /**
@@ -75,6 +76,7 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 		logFactory = new JavaLoggerFactory();
 		
 		getCfgManager(); // init
+		TimerFactoryImpl.doCheckTimers();
 		
 		try {
 			housekeeper = new KarafHousekeeper();
@@ -83,20 +85,6 @@ public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISin
 			System.out.println("Can't initialize housekeeper base: " + t);
 		}
 		
-		MThread.asynchron( new Runnable() {
-
-			@Override
-			public void run() {
-				MThread.sleep(1000);
-				try {
-					TimerFactory timerFactory = MOsgi.getService(TimerFactory.class);
-					TimerIfc timerIfc = timerFactory.getTimer();
-					getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
-				} catch (Throwable t) {
-					System.out.println("Can't initialize timer base: " + t);
-				}
-			}
-		});
 		getCfgManager().reConfigure();
 
 		//logFactory.setLevelMapper(new ThreadBasedMapper() );

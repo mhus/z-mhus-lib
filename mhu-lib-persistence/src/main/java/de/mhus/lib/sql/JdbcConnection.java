@@ -64,7 +64,7 @@ public class JdbcConnection extends InternalDbConnection {
 	public JdbcConnection(DbProvider provider,Connection con) {
 		this.provider=provider;
 		this.connection = con;
-		id = MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
+		id = MSingleton.lookup(UniqueId.class).nextUniqueId();
 	}
 
 	/** {@inheritDoc} */

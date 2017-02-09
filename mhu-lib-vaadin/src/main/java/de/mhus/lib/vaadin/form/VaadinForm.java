@@ -4,6 +4,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.form.ActivatorAdapterProvider;
 import de.mhus.lib.form.MForm;
 
@@ -36,7 +37,7 @@ public class VaadinForm extends VerticalLayout {
 	public void doBuild() throws Exception {
 
 		if (form.getAdapterProvider() == null)
-			form.setAdapterProvider(new DefaultAdapterProvider());
+			form.setAdapterProvider(MSingleton.lookup(ActivatorAdapterProvider.class, DefaultAdapterProvider.class ) );
 
 		if (isShowInformation()) {
 			informationPane = new VaadinUiInformation();

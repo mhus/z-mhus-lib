@@ -3,6 +3,7 @@ package de.mhus.lib.karaf.services;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Observer;
 import java.util.TimerTask;
 
 import org.osgi.framework.Bundle;
@@ -29,33 +30,39 @@ import de.mhus.lib.core.util.TimerTaskSelfControl;
 public class TimerFactoryImpl implements TimerFactory {
 	
 //	private Log log = Log.getLog(TimerFactoryImpl.class); // this will cause a cycle!
-	private SchedulerTimer myTimer;
+	private static SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
+	static {
+		MLogUtil.log().i("start common timer");
+		myTimer.start();
+		
+		// set to base
+		try {
+			TimerIfc timerIfc = new TimerWrap();
+			MSingleton.get().getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+		} catch (Throwable t) {
+			System.out.println("Can't initialize timer base: " + t);
+		}
+
+	}
 //	private TreeMap<Long, MTimerTask> queue = new TreeMap<>();
+		
+	public static TimerIfc getTimerIfc() {
+		return new TimerWrap();
+	}
 	
 	public TimerFactoryImpl() {
 	}
 	
 	@Deactivate
 	void doDeactivate(ComponentContext ctx) {
-		MLogUtil.log().i("cancel common timer");
-		myTimer.cancel();
-		myTimer = null;
+//		MLogUtil.log().i("cancel common timer");
+//		myTimer.cancel();
+//		myTimer = null;
 	}
 
 	@Activate
 	void doActivate(ComponentContext ctx) {
-		MLogUtil.log().i("start common timer");
-		myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
-		myTimer.start();
-		
-		// set to base
-		try {
-			TimerFactory timerFactory = this;
-			TimerIfc timerIfc = timerFactory.getTimer();
-			MSingleton.get().getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
-		} catch (Throwable t) {
-			System.out.println("Can't initialize timer base: " + t);
-		}
+		doCheckTimers();
 
 		
 //		myTimer.schedule(new TimerTask() {
@@ -67,7 +74,7 @@ public class TimerFactoryImpl implements TimerFactory {
 //		}, 1000, 1000); // tick every second
 	}
 
-	
+
 //	protected void doTick() {
 //		
 //	}
@@ -80,7 +87,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		return null;
 	}
 
-	private class TimerWrap implements TimerIfc {
+	private static class TimerWrap implements TimerIfc {
 		
 		LinkedList<Wrap> tasks = new LinkedList<>();
 		
@@ -139,7 +146,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		
 	}
 	
-	private class TimerTaskWrap extends MTimerTask implements Wrap {
+	private static class TimerTaskWrap extends MTimerTask implements Wrap {
 
 		private TimerTask task;
 		private Bundle bundle;
@@ -170,11 +177,7 @@ public class TimerFactoryImpl implements TimerFactory {
 //					cancel();
 //					return;
 //				}
-				if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
-					MLogUtil.log().d("stop timertask",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
-					cancel();
-					return;
-				}
+				if (!doCheck()) return;
 				task.run();
 			} catch (Throwable t) {
 				MLogUtil.log().i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
@@ -184,6 +187,15 @@ public class TimerFactoryImpl implements TimerFactory {
 				} else
 					cancel();
 			}
+		}
+		
+		public boolean doCheck() {
+			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
+				MLogUtil.log().d("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+				cancel();
+				return false;
+			}
+			return true;
 		}
 		
 		@Override
@@ -203,9 +215,12 @@ public class TimerFactoryImpl implements TimerFactory {
 		public String toString() {
 			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + (task == null ? "null" : task.toString());
 		}
+		public TimerTask getTask() {
+			return task;
+		}
 	}
 	
-	private class SchedulerJobWrap extends SchedulerJobProxy implements Wrap {
+	private static class SchedulerJobWrap extends SchedulerJobProxy implements Wrap {
 
 		private Bundle bundle;
 		private long modified = 0;
@@ -226,13 +241,18 @@ public class TimerFactoryImpl implements TimerFactory {
 		@Override
 		public void doTick(boolean forced) {
 			
-			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
-				log.d("stop scheduled task",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
-				cancel();
-				return;
-			}
-
+			if (!doCheck()) return;
+			
 			super.doTick(forced);
+		}
+		
+		boolean doCheck() {
+			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
+				log.d("stop scheduled task 1",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
+				cancel();
+				return false;
+			}
+			return true;
 		}
 		
 		@Override
@@ -269,6 +289,48 @@ public class TimerFactoryImpl implements TimerFactory {
 	@Override
 	public TimerIfc getTimer() {
 		return new TimerWrap();
+	}
+
+	public static void doCheckTimers() {
+		int cnt = 0;
+		for (SchedulerJob job : myTimer.getScheduledJobs()) {
+			if (job instanceof SchedulerJobWrap) {
+				if (!((SchedulerJobWrap)job).doCheck()) cnt++;
+			} else {
+				Object task = job.getTask();
+				if (task == null) {} else
+				if (task instanceof de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)
+					task = ((de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)task).getTask();
+				if (task == null) {} else
+				if (task instanceof TimerTaskWrap) {
+					if (!((TimerTaskWrap)task).doCheck()) cnt++;
+				} else {
+					Bundle bundle = FrameworkUtil.getBundle(task.getClass());
+					if (bundle.getState() != Bundle.ACTIVE) {
+						MLogUtil.log().d("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+						job.cancel();
+						cnt++;
+					}
+				}
+			}
+		}
+		MLogUtil.log().i("check common timer","removed",cnt);
+	}
+
+	public static void doDebugInfo() {
+		for (SchedulerJob job : myTimer.getScheduledJobs()) {
+			Object task = job.getTask();
+			String info = " ";
+			if (task instanceof de.mhus.lib.core.schedule.ObserverTimerTaskAdapter) {
+				task = ((de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)task).getTask();
+				info+="ObserverTimerTaskAdapter ";
+			}
+			if (task instanceof TimerTaskWrap) {
+				task = ((TimerTaskWrap)task).getTask();
+				info+="TimerTaskWrap ";
+			}
+			MLogUtil.log().i("JOB",job.getClass(),job.getName(),info,task == null ? "null" : task.getClass());
+		}
 	}
 	
 }

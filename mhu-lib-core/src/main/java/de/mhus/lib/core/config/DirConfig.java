@@ -39,7 +39,7 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				if (f.isDirectory() && f.getName().equals(key) ||
 					!f.isDirectory() && f.getName().startsWith(keyDot))
-					return MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f);
+					return MSingleton.lookup(MConfigFactory.class).createConfigFor(f);
 		} catch (Throwable e) {
 			
 		}
@@ -54,7 +54,7 @@ public class DirConfig extends PropertiesConfig {
 				try {
 					if (f.isDirectory() && f.getName().equals(key) ||
 						!f.isDirectory() && f.getName().startsWith(keyDot))
-						out.add(MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f));
+						out.add(MSingleton.lookup(MConfigFactory.class).createConfigFor(f));
 				} catch (Throwable e) {
 					
 				}
@@ -68,10 +68,10 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				try {
 					if (f.isDirectory() && !f.getName().startsWith(".") && !f.isHidden())
-						out.add(MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f));
+						out.add(MSingleton.lookup(MConfigFactory.class).createConfigFor(f));
 					else
 					if (!f.isDirectory() && !f.isHidden()) {
-						IConfig conf = MSingleton.baseLookup(this,MConfigFactory.class).createConfigFor(f);
+						IConfig conf = MSingleton.lookup(MConfigFactory.class).createConfigFor(f);
 						if (conf != null)
 							out.add(conf);
 					}

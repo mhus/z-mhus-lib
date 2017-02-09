@@ -85,7 +85,7 @@ public abstract class DbPool extends MJmx {
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
-		if (activator == null) activator = MSingleton.baseLookup(this,MActivator.class);
+		if (activator == null) activator = MSingleton.lookup(MActivator.class);
 
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
@@ -128,7 +128,7 @@ public abstract class DbPool extends MJmx {
 		this.provider = provider;
 		name = provider.getName();
 		if (name == null) name = "pool";
-		name = name + MSingleton.baseLookup(this,UniqueId.class).nextUniqueId();
+		name = name + MSingleton.lookup(UniqueId.class).nextUniqueId();
 	}
 
 	/**
