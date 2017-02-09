@@ -190,8 +190,8 @@ public class TimerFactoryImpl implements TimerFactory {
 		}
 		
 		public boolean doCheck() {
-			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
-				MLogUtil.log().d("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+			if (bundle.getState() != Bundle.ACTIVE /* || bundle.getLastModified() != modified */ || bundleContext != bundle.getBundleContext()) {
+				MLogUtil.log().i("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 				cancel();
 				return false;
 			}
@@ -247,8 +247,8 @@ public class TimerFactoryImpl implements TimerFactory {
 		}
 		
 		boolean doCheck() {
-			if (bundle.getState() != Bundle.ACTIVE || bundle.getLastModified() != modified || bundleContext != bundle.getBundleContext()) {
-				log.d("stop scheduled task 1",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
+			if (bundle.getState() != Bundle.ACTIVE /* || bundle.getLastModified() != modified */ || bundleContext != bundle.getBundleContext()) {
+				log.i("stop scheduled task 1",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
 				cancel();
 				return false;
 			}
@@ -307,7 +307,7 @@ public class TimerFactoryImpl implements TimerFactory {
 				} else {
 					Bundle bundle = FrameworkUtil.getBundle(task.getClass());
 					if (bundle.getState() != Bundle.ACTIVE) {
-						MLogUtil.log().d("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+						MLogUtil.log().i("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 						job.cancel();
 						cnt++;
 					}
