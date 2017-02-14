@@ -50,7 +50,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool() throws Exception {
 		super(null,null);
-		initHousekeeper();
 	}
 
 	/**
@@ -62,7 +61,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool(IConfig config,MActivator activator) throws Exception {
 		super(config,activator);
-		initHousekeeper();
 	}
 
 	/**
@@ -72,16 +70,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool(DbProvider provider) {
 		super(provider);
-		initHousekeeper();
-	}
-
-	/**
-	 * <p>initHousekeeper.</p>
-	 */
-	protected void initHousekeeper() {
-
-		Housekeeper housekeeper = new Housekeeper(this);
-		MSingleton.lookup(MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
 	}
 
 	/**
@@ -203,30 +191,6 @@ public class DefaultDbPool extends DbPool {
 			}
 		}
 		return out.toString();
-	}
-
-	private static class Housekeeper extends MHousekeeperTask {
-
-		private WeakReference<DefaultDbPool> pool;
-		private String name;
-
-		private Housekeeper(DefaultDbPool pool) {
-			this.pool = new WeakReference<DefaultDbPool>(pool);
-			this.name = pool.getPoolId();
-		}
-
-		@Override
-		public void doit() throws Exception {
-			DefaultDbPool obj = pool.get();
-			if (obj == null || obj.isClosed()) {
-				log().t(name,"close");
-				cancel();
-				return;
-			}
-			log().t(getClass(),name,"Housekeeping");
-			obj.cleanup(false);
-		}
-
 	}
 
 	/** {@inheritDoc} */
