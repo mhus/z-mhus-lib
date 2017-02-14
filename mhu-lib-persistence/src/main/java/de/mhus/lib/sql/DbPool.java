@@ -25,6 +25,8 @@ import java.util.Map;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MHousekeeper;
+import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MSingleton;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgBoolean;
@@ -58,10 +60,13 @@ public abstract class DbPool extends MJmx {
 		}
 	};
 	private CfgLong traceWait = new CfgLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private CfgBoolean autoCleanup = new CfgBoolean(DbConnection.class, "autoCleanup", true);
+	private CfgBoolean autoCleanupUnused = new CfgBoolean(DbConnection.class, "autoCleanupUnused", true);
 	
 	private DbProvider provider;
 	private String name;
 	private ResourceNode config;
+	private MHousekeeperTask housekeeperTask;
 
 
 	/**
@@ -92,6 +97,24 @@ public abstract class DbPool extends MJmx {
 		provider.doInitialize(this.config,activator);
 
 		this.provider = provider;
+		
+		housekeeperTask = new MHousekeeperTask() {
+			
+			@Override
+			public void doit() throws Exception {
+				if (!isClosed() && autoCleanup.value()) {
+					log().t(DbPool.this.getName(),"autoCleanup connections");
+					cleanup(autoCleanupUnused.value());
+				}
+				if (isClosed()) cancel();
+			}
+		};
+		MHousekeeper housekeeper = MSingleton.baseLookup(this, MHousekeeper.class);
+		if (housekeeper != null) {
+			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000), true);
+		} else {
+			log().i("Housekeeper not found - autoCleanup disabled");
+		}
 	}
 
 	/**

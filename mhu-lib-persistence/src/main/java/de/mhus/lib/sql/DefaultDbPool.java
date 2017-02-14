@@ -41,7 +41,6 @@ public class DefaultDbPool extends DbPool {
 
 	private List<InternalDbConnection> pool = new LinkedList<InternalDbConnection>();
 
-
 	/**
 	 * Create a new pool from central configuration.
 	 * It's used the MSingleton configuration with the key of this class.
@@ -50,7 +49,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool() throws Exception {
 		super(null,null);
-		initHousekeeper();
 	}
 
 	/**
@@ -62,7 +60,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool(ResourceNode config,MActivator activator) throws Exception {
 		super(config,activator);
-		initHousekeeper();
 	}
 
 	/**
@@ -72,13 +69,6 @@ public class DefaultDbPool extends DbPool {
 	 */
 	public DefaultDbPool(DbProvider provider) {
 		super(provider);
-		initHousekeeper();
-	}
-
-	protected void initHousekeeper() {
-
-		Housekeeper housekeeper = new Housekeeper(this);
-		MSingleton.baseLookup(this,MHousekeeper.class).register(housekeeper, getConfig().getLong("housekeeper_sleep",30000), true);
 	}
 
 	/**
@@ -198,31 +188,7 @@ public class DefaultDbPool extends DbPool {
 		}
 		return out.toString();
 	}
-
-	private static class Housekeeper extends MHousekeeperTask {
-
-		private WeakReference<DefaultDbPool> pool;
-		private String name;
-
-		private Housekeeper(DefaultDbPool pool) {
-			this.pool = new WeakReference<DefaultDbPool>(pool);
-			this.name = pool.getPoolId();
-		}
-
-		@Override
-		public void doit() throws Exception {
-			DefaultDbPool obj = pool.get();
-			if (obj == null || obj.isClosed()) {
-				log().t(name,"close");
-				cancel();
-				return;
-			}
-			log().t(getClass(),name,"Housekeeping");
-			obj.cleanup(false);
-		}
-
-	}
-
+	
 	@Override
 	public boolean isClosed() {
 		return pool == null;
