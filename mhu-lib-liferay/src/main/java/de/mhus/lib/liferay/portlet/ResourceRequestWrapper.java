@@ -11,7 +11,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.filter.PortletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
 
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import de.mhus.lib.core.logging.Log;
 

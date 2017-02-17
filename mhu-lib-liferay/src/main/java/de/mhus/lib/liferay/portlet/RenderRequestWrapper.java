@@ -7,7 +7,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.filter.PortletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
 
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+
 
 public class RenderRequestWrapper extends PortletRequestWrapper implements RenderRequest {
 

@@ -11,6 +11,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import de.mhus.lib.core.MString;
@@ -18,7 +19,7 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.portlet.actions.ActionRequestHandler;
 import de.mhus.lib.portlet.resource.ResourceRequestHandler;
 
-public abstract class LiferayMVCPortlet extends com.liferay.util.bridges.mvc.MVCPortlet {
+public abstract class LiferayMVCPortlet extends MVCPortlet {
 
 	public static final String PUBLIC_PREFIX = "public_";
 

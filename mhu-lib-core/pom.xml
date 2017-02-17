@@ -47,7 +47,8 @@
 	            *,
 	            org.apache.log4j*;version=1.2.14;resolution:=optional,
 	            org.slf4j*;version=1.7.5;resolution:=optional,
-	            de.mhus.lib.mutable;version=${project.version};resolution:=optional
+	            de.mhus.lib.mutable;version=${project.version};resolution:=optional,
+	            net.sf.cglib.*;version=3.2.2;resolution:=optional
 	            </Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 <!-- 
@@ -124,6 +125,16 @@
 		<artifactId>cglib</artifactId>
 		<version>3.2.2</version>
 	</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+<!-- 
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>4.1.9.RELEASE</version>
+    <scope>provided</scope>
+</dependency>
+-->
 
         
   </dependencies>
