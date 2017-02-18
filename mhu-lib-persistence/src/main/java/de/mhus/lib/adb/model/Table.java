@@ -26,7 +26,7 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.lang.Raw;
-import de.mhus.lib.core.util.Rfc1738;
+import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
@@ -713,7 +713,7 @@ public abstract class Table extends MObject {
 			cfield.setProperty(Dialect.K_DEFAULT, f.defValue);
 			cfield.setProperty(Dialect.K_NOT_NULL, f.nullable ? "no" : "yes");
 			cfield.setProperty(Dialect.K_DESCRIPTION, f.description);
-			cfield.setProperty(Dialect.K_HINTS, Rfc1738.implodeArray(f.hints));
+			cfield.setProperty(Dialect.K_HINTS, MUri.implodeArray(f.hints));
 			LinkedList<String> cat = new LinkedList<String>();
 			if (!f.isPersistent()) cat.add(Dialect.C_VIRTUAL);
 			if (f.isPrimary) cat.add(Dialect.C_PRIMARY_KEY);
@@ -843,9 +843,9 @@ public abstract class Table extends MObject {
 			if (!MString.isEmpty(type))
 				out.append("&type=").append(type);
 
-			out.append("&description=").append(Rfc1738.encode(pa.description()));
+			out.append("&description=").append(MUri.encode(pa.description()));
 			if (pa.hints().length > 0)
-				out.append("&hints=").append(Rfc1738.encode(Rfc1738.implodeArray(pa.hints())));
+				out.append("&hints=").append(MUri.encode(MUri.implodeArray(pa.hints())));
 			
 			String more = pa.more();
 			if (!MString.isEmpty(more))

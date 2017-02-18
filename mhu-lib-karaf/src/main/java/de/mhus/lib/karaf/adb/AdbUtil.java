@@ -14,7 +14,7 @@ import org.osgi.framework.ServiceReference;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.util.Rfc1738;
+import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 
 public class AdbUtil {
@@ -73,10 +73,10 @@ public class AdbUtil {
 			if (str.startsWith("[") && str.endsWith("]")) {
 				String[] parts = str.substring(1, str.length()-1).split(",");
 				for (int i = 0; i < parts.length; i++)
-					parts[i] = Rfc1738.decode(parts[i]);
+					parts[i] = MUri.decode(parts[i]);
 				value = parts;
 			} else {
-				value = Rfc1738.decode(str);
+				value = MUri.decode(str);
 			}
 		}
 		

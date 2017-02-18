@@ -31,38 +31,40 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 
 /**
- * The class encodes/decodes strings in rfc1738 format.
+ * The class encodes/decodes strings in rfc1738 format and provide helpers to handle with URI / URL and URN.
+ * 
+ * German resource for URI and URL: http://t3n.de/news/url-uri-unterschiede-516483/
+ * https://tools.ietf.org/html/rfc3986
+ * https://tools.ietf.org/html/rfc1738
  * 
  * @author jesus
  */
-public class Rfc1738 extends TreeMap<String,String> {
+public class MUri {
 
-
-	/**
-	 * serial ID
-	 */
-	private static final long serialVersionUID = -3321101084525120985L;
-
-	public void put(String _key, int _value) {
-		put(_key, MCast.toString(_value));
+	public static class Query extends TreeMap<String,String> {
+		private static final long serialVersionUID = -1;
+		
+		public void put(String _key, int _value) {
+			put(_key, MCast.toString(_value));
+		}
+	
+		public int getInt(String _key, int _def) {
+			String v = get(_key);
+			if (v == null)
+				return _def;
+			return MCast.toint(v,0);
+		}
+	
+		public int getInt(String _key) {
+			return getInt(_key, -1);
+		}
+	
+		@Override
+		public String toString() {
+			return implode(this);
+		}
 	}
-
-	public int getInt(String _key, int _def) {
-		String v = get(_key);
-		if (v == null)
-			return _def;
-		return MCast.toint(v,0);
-	}
-
-	public int getInt(String _key) {
-		return getInt(_key, -1);
-	}
-
-	@Override
-	public String toString() {
-		return implode(this);
-	}
-
+	
 	/**
 	 * Decode a string with rfc1738 spec.
 	 * 
@@ -362,6 +364,32 @@ public class Rfc1738 extends TreeMap<String,String> {
 		}
 
 		return sb.toString();
+	}
+
+	public static void setParameterValue(String url, String name, String value) {
+		
+		
+		name = encode(name) + "=";
+		value = encode(value);
+		
+		int pos = url.indexOf("&" + name);
+		if (pos < 0) {
+			pos = url.indexOf("?" + name);
+		}
+		if (pos < 0) {
+			if (url.contains("?"))
+				url = url + "&";
+			else
+				url = url + "?";
+			url = url + name + value;
+		} else {
+			int pos2 = url.indexOf("&",pos+1);
+			if (pos2 < 0) {
+				url = url.substring(0, pos+1+name.length()) + value;
+			} else {
+				url = url.substring(0, pos+1+name.length()) + value + url.substring(pos2);
+			}
+		}
 	}
 	
 }

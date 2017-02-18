@@ -18,7 +18,7 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.MObjectInputStream;
 import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.pojo.PojoAttribute;
-import de.mhus.lib.core.util.Rfc1738;
+import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbResult;
 
@@ -88,7 +88,7 @@ public class FieldPersistent extends Field {
 		defValue = attr.getString("default", null);
 		nullable = attr.getBoolean("nullable", true);
 		description = attr.getExtracted("description");
-		hints = Rfc1738.explodeArray(attr.getString("hints"));
+		hints = MUri.explodeArray(attr.getString("hints"));
 		if (isPrimary) nullable = false;
 
 		super.init(features);

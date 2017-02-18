@@ -8,7 +8,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.lang.IBase;
-import de.mhus.lib.core.util.Rfc1738;
+import de.mhus.lib.core.util.MUri;
 
 public class MConfigFactory implements IBase {
 
@@ -142,7 +142,7 @@ public class MConfigFactory implements IBase {
 		
 		if (configString.contains("=")) {
 			if (configString.contains("&"))
-				return new HashConfig(Rfc1738.explode(configString));
+				return new HashConfig(MUri.explode(configString));
 			else
 				return new PropertiesConfig(configString);
 		}

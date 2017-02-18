@@ -747,4 +747,12 @@ public class MFile {
 		}
 	}
 
+	public static String replaceSuffix(String name, String newSuffix) {
+		if (name == null) return null;
+		int pos = name.lastIndexOf('.');
+		if (pos >= 0)
+			name = name.substring(0, pos);
+		return name + '.' + newSuffix;
+	}
+
 }
