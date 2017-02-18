@@ -105,4 +105,14 @@ public abstract class CaoCore extends CaoConnection {
 		return con.equals(node.getConnection());
 	}
 
+	public void setShared() {
+		shared = true;
+	}
+	
+	public void closeShared() {
+		if (!isShared() || isClosed()) return;
+		shared = false;
+		close();
+	}
+	
 }

@@ -6,9 +6,13 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.WrongStateEception;
 
 public abstract class CaoConnection extends MResourceProvider<CaoNode> implements Named {
 
+
+	protected boolean shared;
+	protected boolean closed;
 
 	public abstract CaoDriver getDriver();
 
@@ -21,7 +25,6 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> implement
 
 	public abstract CaoActionList getActions();
 	
-	@SuppressWarnings("unchecked")
 	public abstract <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc);
 
 	@Override
@@ -65,13 +68,39 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> implement
 	 * @return True if the node has this connection or is manageable by this connection.
 	 */
 	public boolean containsNode(CaoNode node) {
+		checkState();
 		return this.equals(node.getConnection());
 	}
 	
+	protected void checkState() {
+		if (isClosed()) throw new WrongStateEception(getName(),"already closed");
+	}
+
 	public boolean containsNodes(List<CaoNode> list) {
+		checkState();
 		for (CaoNode n : list)
 			if (!containsNode(n)) return false;
 		return true;
+	}
+	
+	public synchronized void close() {
+		if (isClosed() || isShared()) return;
+		try {
+			closeConnection();
+		} catch (Throwable t) {
+			log().e(getName(),"on close", t);
+		}
+		closed = true;
+	}
+
+	protected abstract void closeConnection() throws Exception;
+	
+	public boolean isShared() {
+		return shared;
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 
 }

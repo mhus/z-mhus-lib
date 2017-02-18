@@ -38,5 +38,10 @@ public class NoneConnection extends CaoCore {
 		return null;
 	}
 
+	@Override
+	protected void closeConnection() throws Exception {
+		
+	}
+
 
 }

@@ -138,5 +138,10 @@ public class AdbCore extends CaoCore {
 		return collection;
 	}
 
+	@Override
+	protected void closeConnection() throws Exception {
+		
+	}
+
 	
 }

@@ -160,6 +160,7 @@ public class FdbCore extends CaoCore {
 
 	@Override
 	public CaoNode getResourceByPath(String path) {
+		checkState();
 		if (path == null) return null;
 		synchronized (this) {
 			FdbNode node = cache == null ? null : cache.get(path);
@@ -183,7 +184,8 @@ public class FdbCore extends CaoCore {
 	}
 
 	public void fillProperties(File file, MProperties p) {
-		
+		checkState();
+
 			File metaFile = getMetaFileFor(file);
 			
 			if (metaFile.exists() && metaFile.isFile()) {
@@ -209,12 +211,14 @@ public class FdbCore extends CaoCore {
 
 	@Override
 	public CaoNode getResourceById(String id) {
+		checkState();
 		String  path = getPathForId(id);
 		return getResourceByPath(path);
 //		File f = new File(filesDir, path);
 	}
 
 	public File getContentFileFor(File file, String rendition) {
+		checkState();
 		if (file.isFile()) {
 			if (rendition != null) return null;
 			return file;
@@ -227,6 +231,7 @@ public class FdbCore extends CaoCore {
 	}
 
 	void deleteIndex(String id) {
+		checkState();
 		if (id == null) return;
 		File iFile = new File(indexDir, idCut(id) );
 		if (iFile.exists()) iFile.delete();
@@ -237,6 +242,7 @@ public class FdbCore extends CaoCore {
 	}
 
 	public File getFileForId(String id) {
+		checkState();
 		String  path = getPathForId(id);
 		synchronized (this) {
 			FdbNode node = cache == null ? null : cache.get(path);
@@ -257,6 +263,7 @@ public class FdbCore extends CaoCore {
 	}
 
 	public void lock(long timeout) throws IOException, TimeoutException {
+		checkState();
 		synchronized (this) {
 			lock = MFile.aquireLock(lockFile, timeout);
 		}
@@ -268,6 +275,11 @@ public class FdbCore extends CaoCore {
 			MFile.releaseLock(lock);
 			lock = null;
 		}
+	}
+
+	@Override
+	protected void closeConnection() throws Exception {
+		release();
 	}
 
 }

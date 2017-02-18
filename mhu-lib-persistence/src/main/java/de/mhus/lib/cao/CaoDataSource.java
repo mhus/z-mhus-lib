@@ -8,4 +8,10 @@ public interface CaoDataSource {
 
 	CaoConnection getConnection() throws Exception;
 	
+	/**
+	 * Returns a new CaoCore object if the action is not allowed it will throw an AccessDeniedException
+	 * @return
+	 * @throws Exception
+	 */
+	CaoCore getCore() throws Exception;
 }

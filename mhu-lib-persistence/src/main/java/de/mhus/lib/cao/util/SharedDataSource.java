@@ -4,12 +4,14 @@ import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDataSource;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.errors.AccessDeniedException;
 
 public class SharedDataSource implements CaoDataSource {
 
 	private CaoCore shared;
 	private String name;
 	private String type;
+	private boolean protectCore = true;
 
 	public SharedDataSource() {
 		
@@ -51,8 +53,22 @@ public class SharedDataSource implements CaoDataSource {
 	}
 
 	@Override
+	public CaoCore getCore() throws Exception {
+		if (protectCore) throw new AccessDeniedException("core is protected",name);
+		return shared;
+	}
+
+	@Override
 	public String toString() {
 		return MSystem.toString(this, shared );
+	}
+
+	public boolean isProtectCore() {
+		return protectCore;
+	}
+
+	public void setProtectCore(boolean protectCore) {
+		this.protectCore = protectCore;
 	}
 
 }

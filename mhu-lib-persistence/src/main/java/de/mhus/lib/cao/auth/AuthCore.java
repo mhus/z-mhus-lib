@@ -17,19 +17,23 @@ import de.mhus.lib.errors.MException;
 
 public class AuthCore extends CaoCore {
 
-	protected CaoConnection instance;
+	protected CaoCore instance;
 	private Authorizator auth;
 	private AuthNode root;
 
-	public AuthCore(CaoConnection instance, Authorizator auth) throws MException {
-		super(instance.getName(), instance.getDriver());
+	public AuthCore(CaoCore instance, Authorizator auth) throws MException {
+		this(instance.getName(), instance, auth);
+	}
+	
+	public AuthCore(String name, CaoCore instance, Authorizator auth) throws MException {
+		super(name, instance.getDriver());
 		this.con = new AuthConnection(this);
 		this.instance = instance;
 		this.auth = auth;
 		registerAspectFactory(AuthAccess.class, new AuthAccessFactory(this));
 	}
 
-	public AuthCore(String name, CaoConnection instance) {
+	public AuthCore(String name, CaoCore instance) {
 		super(name, instance.getDriver());
 		this.instance = instance;
 	}
@@ -175,5 +179,26 @@ public class AuthCore extends CaoCore {
 		return node.instance;
 	}
 
+	@Override
+	protected void closeConnection() throws Exception {
+	}
 
+	@Override
+	public void close() {
+		instance.close();
+	}
+
+	@Override
+	public boolean isClosed() {
+		return instance.isClosed();
+	}
+	
+	@Override
+	public boolean isShared() {
+		return instance.isShared();
+	}
+	
+	public void closeShared() {
+		instance.closeShared();
+	}
 }

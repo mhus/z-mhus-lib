@@ -5,6 +5,7 @@ import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDataSource;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.errors.AccessDeniedException;
 
 public class DriverDataSource implements CaoDataSource {
 
@@ -13,7 +14,8 @@ public class DriverDataSource implements CaoDataSource {
 	private String credentials;
 	private String type;
 	private String name;
-	
+	private boolean protectCore = true;
+
 	@Override
 	public String getType() {
 		return type;
@@ -24,6 +26,14 @@ public class DriverDataSource implements CaoDataSource {
 		CaoCore core = driver.connect(uri, credentials);
 		doPrepare(core);
 		return core.getConnection();
+	}
+
+	@Override
+	public CaoCore getCore() throws Exception {
+		if (protectCore) throw new AccessDeniedException("core is protected",name);
+		CaoCore core = driver.connect(uri, credentials);
+		doPrepare(core);
+		return core;
 	}
 
 	protected void doPrepare(CaoCore core) {
@@ -68,6 +78,14 @@ public class DriverDataSource implements CaoDataSource {
 	@Override
 	public String toString() {
 		return MSystem.toString(this, driver, uri );
+	}
+
+	public boolean isProtectCore() {
+		return protectCore;
+	}
+
+	public void setProtectCore(boolean protectCore) {
+		this.protectCore = protectCore;
 	}
 	
 }

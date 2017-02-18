@@ -69,5 +69,10 @@ public class ConnectionAdapter extends CaoConnection {
 	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
 		return core.getAspectFactory(ifc);
 	}
+
+	@Override
+	protected void closeConnection() throws Exception {
+		core.closeConnection();
+	}
 	
 }

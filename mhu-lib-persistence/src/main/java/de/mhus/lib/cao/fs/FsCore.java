@@ -59,6 +59,7 @@ public class FsCore extends CaoCore {
 
 	@Override
 	public CaoNode getResourceByPath(String path) {
+		checkState();
 		synchronized (this) {
 			FsNode node = cache == null ? null : cache.get(path);
 			if (node != null) {
@@ -81,6 +82,7 @@ public class FsCore extends CaoCore {
 	}
 
 	public void fillProperties(File file, MProperties p) {
+		checkState();
 		
 		if (useMetaFile) {
 			File metaFile = getMetaFileFor(file);
@@ -95,6 +97,7 @@ public class FsCore extends CaoCore {
 	}
 	
 	public File getMetaFileFor(File file) {
+		checkState();
 		File metaFile = null;
 		if (file.isDirectory()) 
 			metaFile = new File(file, "__cao.meta");
@@ -117,6 +120,7 @@ public class FsCore extends CaoCore {
 	}
 
 	public File getContentFileFor(File file, String rendition) {
+		checkState();
 		if (file.isFile()) {
 			if (rendition != null) return null;
 			return file;
@@ -132,6 +136,11 @@ public class FsCore extends CaoCore {
 
 	public File getDir() {
 		return root.getFile();
+	}
+
+	@Override
+	protected void closeConnection() throws Exception {
+		
 	}
 
 }
