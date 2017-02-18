@@ -106,6 +106,7 @@ public abstract class CaoCore extends CaoConnection {
 	}
 
 	public void setShared() {
+		if (isClosed()) return;
 		shared = true;
 	}
 	
@@ -113,6 +114,14 @@ public abstract class CaoCore extends CaoConnection {
 		if (!isShared() || isClosed()) return;
 		shared = false;
 		close();
+	}
+	
+	@Override
+	protected void finalize() {
+		if (isShared()) 
+			closeShared();
+		else
+			close();
 	}
 	
 }

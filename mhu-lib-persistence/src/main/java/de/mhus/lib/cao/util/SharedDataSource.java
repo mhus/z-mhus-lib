@@ -18,13 +18,19 @@ public class SharedDataSource implements CaoDataSource {
 	}
 	
 	public SharedDataSource(CaoCore shared) {
-		this(shared.getName(), shared);
+		this(shared.getName(), shared, true);
 	}
 	
-	public SharedDataSource(String name, CaoCore shared) {
+	public SharedDataSource(CaoCore shared, boolean isProtected) {
+		this(shared.getName(), shared, isProtected);
+	}
+	
+	public SharedDataSource(String name, CaoCore shared, boolean isProtected) {
 		this.shared = shared;
 		this.name = name;
 		this.type = shared.getClass().getSimpleName();
+		this.protectCore = isProtected;
+		shared.setShared();
 	}
 
 	public void setConnection(CaoCore connection) {
