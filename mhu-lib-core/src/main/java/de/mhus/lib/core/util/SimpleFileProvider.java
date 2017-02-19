@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SimpleFileProvider implements FileProvider {
+public class SimpleFileProvider implements FileResolver {
 
 	private File root;
 	
@@ -31,6 +31,11 @@ public class SimpleFileProvider implements FileProvider {
 			} catch (Throwable t) {}
 		}
 		return out;
+	}
+
+	@Override
+	public File getRoot() {
+		return root;
 	}
 
 }

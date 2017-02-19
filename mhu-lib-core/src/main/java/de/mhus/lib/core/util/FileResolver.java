@@ -3,7 +3,7 @@ package de.mhus.lib.core.util;
 import java.io.File;
 import java.util.Set;
 
-public interface FileProvider {
+public interface FileResolver {
 
 	File getFile(String path);
 	
@@ -14,5 +14,7 @@ public interface FileProvider {
 	 * @return
 	 */
 	Set<String> getContent(String path);
+
+	File getRoot();
 	
 }
