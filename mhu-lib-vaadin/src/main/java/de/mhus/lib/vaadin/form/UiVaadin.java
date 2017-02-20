@@ -153,16 +153,16 @@ public abstract class UiVaadin extends UiComponent {
 		Component e = getComponentEditor();
 		DataSource ds = getForm().getDataSource();
 		if (e == null || ds == null) return;
-		if (e instanceof AbstractField) {
-			Object newValue = ((AbstractField)e).getValue();
+		Object newValue = null;
+		try {
+			newValue = getValue();
 			if (getForm().getControl().newValue(this, newValue)) {
-				try {
-					ds.setObject(this, DataSource.VALUE, newValue );
-				} catch (Throwable t) {
-					getForm().getControl().newValueError(this, newValue, t);
-				}
+				ds.setObject(this, DataSource.VALUE, newValue );
 			}
+		} catch (Throwable t) {
+			getForm().getControl().newValueError(this, newValue, t);
 		}
+
 	}
 
 	public void focusEvent() {
