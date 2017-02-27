@@ -193,7 +193,7 @@ public class FdbCore extends CaoCore {
 				p.putAll(meta);
 			}
 		
-		p.setLong(CaoConst.MODIFIED, file.lastModified());
+		p.setLong(CaoConst.MODIFIED, metaFile.lastModified());
 	}
 	
 	public File getMetaFileFor(File file) {

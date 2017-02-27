@@ -99,14 +99,17 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 	public static int getStatus(TimerTask task) {
 		if (task == null) return -1;
 		try {
-			Field field = task.getClass().getField("state");
-			if (!field.isAccessible())
-				field.setAccessible(true);
-			return field.getInt(task);
+			Class<? extends TimerTask> clazz = task.getClass();
+			Field field = MSystem.getDeclaredField(clazz,"state");
+			if (field != null) {
+				if (!field.isAccessible())
+					field.setAccessible(true);
+				return field.getInt(task);
+			}
 		} catch (Throwable t) {
-			MLogUtil.log().d(t);
-			return -1;
+			MLogUtil.log().d(task,t);
 		}
+		return -1;
 	}
 	
 }

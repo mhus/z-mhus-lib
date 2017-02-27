@@ -203,9 +203,9 @@ public class MThread extends MObject implements Runnable {
 					setName(name + '[' + getId() + "] "
 							+ currentTask.getTask().getClass().getName());
 					try {
-						log.d("Enter Thread Task");
+						log.t("Enter Thread Task");
 						currentTask.getTask().run();
-						log.d("Leave Thread Task");
+						log.t("Leave Thread Task");
 					} catch (Throwable t) {
 						try {
 							log.i("Thread Task Error", getName(), t);
@@ -214,7 +214,7 @@ public class MThread extends MObject implements Runnable {
 							log.i("Thread Task Finish Error", getName(), t2);
 						}
 					}
-					log.d("###: LEAVE THREAD");
+					log.t("###: LEAVE THREAD");
 					setName(name + " sleeping");
 				}
 				if (currentTask != null)

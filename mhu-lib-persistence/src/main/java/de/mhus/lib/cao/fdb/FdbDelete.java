@@ -1,6 +1,8 @@
 package de.mhus.lib.cao.fdb;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoException;
@@ -17,6 +19,8 @@ import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.Successful;
 
 public class FdbDelete extends CaoAction {
+
+	private static final int MAX_LEVEL = 1000;
 
 	@Override
 	public String getName() {
@@ -48,21 +52,12 @@ public class FdbDelete extends CaoAction {
 				if (item instanceof FdbNode) {
 					monitor.incrementStep();
 					FdbNode n = (FdbNode)item;
-					if (n.getNodes().size() > 0 && !recursive)
+					if (!recursive && n.getNodes().size() > 0)
 						monitor.log().i("*** Node is not empty",item);
 					else {
 						monitor.log().d("=== Delete",item);
-						File f = n.getFile();
-						((FdbCore)core).lock();
-						try {
-							((FdbCore)core).deleteIndex(n.getString("_id", null));
-							MFile.deleteDir(f);
-						} finally {
-							((FdbCore)core).release();
-						}
+						deleteRecursive(item, 0);
 						deleted = true;
-						Changes change = item.adaptTo(Changes.class);
-						if (change != null) change.deleted();
 					}
 				}
 				
@@ -75,6 +70,28 @@ public class FdbDelete extends CaoAction {
 		} catch (Throwable t) {
 			log().w(t);
 			return new NotSuccessful(getName(),t.toString(),-1);
+		}
+	}
+
+	private void deleteRecursive(CaoNode item, int level) throws IOException, TimeoutException {
+		
+		if (level > MAX_LEVEL) return;
+		FdbNode n = (FdbNode)item;
+		for (CaoNode child : n.getNodes()) {
+			deleteRecursive(child, level+1);
+		}
+		
+		File f = n.getFile();
+		((FdbCore)core).lock();
+		try {
+			((FdbCore)core).deleteIndex(n.getString("_id", null));
+			MFile.deleteDir(f);
+		} finally {
+			((FdbCore)core).release();
+		}
+		Changes change = item.adaptTo(Changes.class);
+		if (change != null) {
+			change.deleted();
 		}
 	}
 

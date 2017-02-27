@@ -9,9 +9,11 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimerTask;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -335,6 +337,15 @@ public class MSystem {
 	public static long freeMemory() {
 		Runtime r = Runtime.getRuntime();
 		return r.maxMemory() - r.totalMemory() + r.freeMemory();
+	}
+
+	public static Field getDeclaredField(Class<?> clazz, String name) {
+		if (clazz == null || name == null) return null;
+		try {
+			Field field = clazz.getDeclaredField(name);
+			return field;
+		} catch (NoSuchFieldException e) {}
+		return getDeclaredField(clazz.getSuperclass(), name);
 	}
 	
 }

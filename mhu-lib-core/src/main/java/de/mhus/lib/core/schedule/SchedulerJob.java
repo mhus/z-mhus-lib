@@ -91,7 +91,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
-		log.d("execute",context.getParameters());
+		log.t("execute",getClass(),context.getParameters());
 		if (!hasAccess()) {
 			log.d("access denied",context,context.getErrorMessage());
 			return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
@@ -101,7 +101,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			return new NotSuccessful(this, context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute", OperationResult.NOT_EXECUTABLE);
 		}
 		OperationResult ret = doExecute2(context);
-		log.d("result",ret);
+		log.t("result",getClass(),ret);
 		return ret;
 	}
 	
