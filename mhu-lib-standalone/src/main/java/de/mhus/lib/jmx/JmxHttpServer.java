@@ -38,9 +38,9 @@ public class JmxHttpServer extends MJmx {
 		// TODO load user auth infos into server
 		//server.setMBeanServer(mbs);
 		try {
-			MSingleton.baseLookup(this,MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
+			MSingleton.lookup(MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
 //			mbs.registerMBean(server, new ObjectName("adaptor:proptocol=HTTP"));
-			server.setMBeanServer(MSingleton.baseLookup(this,MRemoteManager.class).getMBeanServer());
+			server.setMBeanServer(MSingleton.lookup(MRemoteManager.class).getMBeanServer());
 		} catch (Exception e) {
 			log().w(e);
 			server = null;

@@ -12,7 +12,7 @@ public class DefaultTasks extends MObject {
 
 	@SuppressWarnings("unchecked")
 	public DefaultTasks() {
-		Main main = MSingleton.baseLookup(this,Main.class);
+		Main main = MSingleton.lookup(Main.class);
 		main.appendList(new TaskListDefinition("q","Quit", new Class[] {
 				Quit.class
 		}));

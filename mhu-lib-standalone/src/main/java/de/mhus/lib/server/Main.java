@@ -19,7 +19,7 @@ import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.io.CSVReader;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.system.DefaultBase;
-import de.mhus.lib.core.util.Rfc1738;
+import de.mhus.lib.core.util.MUri;
 
 @JmxManaged
 public class Main extends MJmx {
@@ -41,12 +41,12 @@ public class Main extends MJmx {
 
 		boolean exitOnEnd = false;
 		
-		((MutableActivator)((DefaultBase)MSingleton.get().getBaseControl().base(this)).getActivator()).addObject(Main.class, null, this);
+		((MutableActivator)((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator()).addObject(Main.class, null, this);
 		lists = new TreeMap<String, TaskListDefinition>();
 		
-		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MSingleton.get().getBaseControl().base(this)).getActivator() ).initialize();
+		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator() ).initialize();
 		
-		Console console = MSingleton.baseLookup(this,Console.class);
+		Console console = MSingleton.lookup(Console.class);
 		while (true) {
 			// menu 
 			//console.printLine();
@@ -162,7 +162,7 @@ public class Main extends MJmx {
 							}
 							if (optionsString != null) {
 								optionsString = optionsString.trim();
-								options = Rfc1738.explode(optionsString);
+								options = MUri.explode(optionsString);
 							}
 							
 						}

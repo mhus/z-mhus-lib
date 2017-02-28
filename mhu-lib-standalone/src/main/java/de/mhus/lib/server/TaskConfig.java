@@ -16,7 +16,7 @@ public class TaskConfig extends MJmx {
 	private Map<String,Object> objects = new HashMap<String, Object>();
 	
 	public void init() throws Exception {
-		init( MSingleton.baseLookup(this,IConfig.class));
+		init( MSingleton.lookup(IConfig.class));
 	}
 
 	public void init(IConfig config) throws Exception {
