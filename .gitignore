@@ -1,9 +1,4 @@
-*/target/**
-target/*
+.classpath
+.project
+.settings/
 target/
-*.jar
-*.war
-*.ear
-*.class
-*.log
-/tmp/

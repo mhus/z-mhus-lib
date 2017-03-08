@@ -5,9 +5,16 @@ import de.mhus.lib.core.system.ISingleton;
 
 public class MLogUtil {
 
-	private static Log log = Log.getLog(MLogUtil.class);
+	private static Log log = null;
 	
-	public static Log log() {
+	public synchronized static Log log() {
+		if (log == null) {
+			try {
+				log = Log.getLog(MLogUtil.class);
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
 		return log;
 	}
 	
