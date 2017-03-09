@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.ReadOnlyList;
@@ -233,6 +234,54 @@ public class MCollection {
 		HashSet<T> set = new HashSet<>();
 		set.addAll(list);
 		return set;
+	}
+	
+	/**
+	 * Returns true if the given item is part of the list. The list itself is a
+	 * char separated list of items. White spaces are not allowed! The search is
+	 * case sensitive.
+	 * 
+	 * @param list The list of items
+	 * @param separator The separator between the list items
+	 * @param item The searched item
+	 * @return true if the item is part of the list
+	 */
+	public static boolean contains(String list, char separator, String item) {
+		if (list == null || item == null) return false;
+		// (.*,|)test(,.*|)
+		String s = Pattern.quote(String.valueOf(separator));
+		return list.matches( "(.*" + s + "|)" + Pattern.quote(item) + "(" + s + ".*|)" );
+	}
+	
+	/**
+	 * Append the item to the end of the list using the separator.
+	 * If list is empty the item will be the first element.
+	 * 
+	 * @param list The list of items
+	 * @param separator The item separator
+	 * @param item New item to append
+	 * @return The new list
+	 */
+	public static String append(String list, char separator, String item) {
+		if (list == null || item == null) return list;
+		if (MString.isEmpty(list)) return item;
+		return list + separator + item;
+	}
+	
+	/**
+	 * Remove the given item from the list once.
+	 * 
+	 * @param list List of items
+	 * @param separator Separator between the items
+	 * @param item The item to remove
+	 * @return New list with removed item
+	 */
+	public static String remove(String list, char separator, String item) {
+		if (list == null || item == null || list.length() == 0) return list;
+		if (list.equals(item)) return ""; // last element
+		if (list.startsWith(item + separator)) return list.substring(item.length()+1); // first element
+		if (list.endsWith(separator + item)) return list.substring(0, list.length() - 1 - item.length()); // last element
+		return list.replaceFirst(Pattern.quote(separator + item + separator), String.valueOf(separator)); // somewhere in the middle
 	}
 	
 }

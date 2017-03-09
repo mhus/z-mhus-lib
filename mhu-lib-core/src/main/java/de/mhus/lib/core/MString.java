@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 /**
  * @author hummel
@@ -1635,4 +1636,17 @@ public class MString {
 		//if (bytes < 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024) 
 		return MMath.truncateDecimals( (double)bytes/1024d/1024d/1024d/1024d/1024d/1024d/1024d/1024d, 2) + " YB"; // Yotta
 	}
+	
+	/**
+	 * Encode a string to be used in an regular expression.
+	 * Use Pattern.quote instead !
+	 * 
+	 * @param in String
+	 * @return Encoded String
+	 */
+	@Deprecated
+	public static String regexEncode(String in) {
+		return Pattern.quote(in);
+	}
+	
 }
