@@ -120,6 +120,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 	@Override
 	public void addConnection(String name, JmsConnection con) {
+		log().d("add connection",name);
 		synchronized (this) {
 			connections.put(name, con);
 		}
@@ -147,6 +148,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public void removeConnection(String name) {
+		log().d("remove connection",name);
 		synchronized (this) {
 			JmsConnection old = connections.remove(name);
 			if (old != null)
@@ -160,6 +162,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public void addChannel(JmsDataChannel channel) {
+		log().d("add channel",channel.getName());
 		synchronized (channels) {
 			channels.put(channel.getName(), channel);
 		}
@@ -268,6 +271,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public void removeChannel(String name) {
+		log().d("remove channel",name);
 		synchronized (channels) {
 			channels.remove(name);
 		}
