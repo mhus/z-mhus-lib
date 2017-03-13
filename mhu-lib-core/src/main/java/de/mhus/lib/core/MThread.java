@@ -22,6 +22,7 @@ package de.mhus.lib.core;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 
@@ -137,6 +138,7 @@ public class MThread extends MObject implements Runnable {
 		private MThread task = null;
 		private String name;
 		private long sleepStart;
+		private String trailConfig;
 
 		public ThreadContainer(ThreadGroup group, String pName) {
 			super(group, pName);
@@ -148,7 +150,10 @@ public class MThread extends MObject implements Runnable {
 			synchronized (this) {
 				if (task != null || !running)
 					return false;
+				// remember next task
 				task = _task;
+				// remember trail log
+				trailConfig = MLogUtil.getTrailConfig();
 				notify();
 			}
 			return true;
@@ -202,6 +207,11 @@ public class MThread extends MObject implements Runnable {
 					// run ....
 					setName(name + '[' + getId() + "] "
 							+ currentTask.getTask().getClass().getName());
+
+					// set trail log if set
+					if (trailConfig != null)
+						MLogUtil.setTrailConfig(trailConfig);
+					
 					try {
 						log.t("Enter Thread Task");
 						currentTask.getTask().run();
@@ -214,11 +224,15 @@ public class MThread extends MObject implements Runnable {
 							log.i("Thread Task Finish Error", getName(), t2);
 						}
 					}
+					
 					log.t("###: LEAVE THREAD");
+					MLogUtil.setTrailConfig(null); // reset trail log
 					setName(name + " sleeping");
+				
 				}
 				if (currentTask != null)
 					currentTask.taskFinish();
+				trailConfig = null;
 				task = null; // don't need sync
 
 			}
