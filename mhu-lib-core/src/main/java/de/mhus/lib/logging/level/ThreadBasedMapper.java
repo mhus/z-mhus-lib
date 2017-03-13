@@ -91,4 +91,9 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		return MSystem.toString(this, map.get());
 	}
 
+	@Override
+	public void doResetAllTrails() {
+		map = new ThreadLocal<>();
+	}
+
 }

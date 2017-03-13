@@ -54,6 +54,15 @@ public class MLogUtil {
 		}
 	}
 
+	public static void resetTrailConfig() {
+		ISingleton singleton = MSingleton.get();
+		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		if (mapper != null && mapper instanceof TrailLevelMapper) {
+			TrailLevelMapper m = (TrailLevelMapper)mapper;
+			m.doResetAllTrails();
+		}
+	}
+	
 	public static boolean isTrailLevelMapper() {
 		ISingleton singleton = MSingleton.get();
 		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
