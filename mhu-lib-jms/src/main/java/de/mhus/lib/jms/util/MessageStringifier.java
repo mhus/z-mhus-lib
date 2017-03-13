@@ -27,7 +27,8 @@ public class MessageStringifier {
 			//sb.append("Type          : ").append(msg.getJMSType()).append('\n');
 			sb.append("Reply         : ").append(msg.getJMSReplyTo()).append('\n');
 			// sb.append("Timestamp     : ").append(msg.getJMSTimestamp()).append('\n');
-			sb.append("Expiration    : ").append(msg.getJMSExpiration()).append(" (").append(msg.getJMSExpiration() - msg.getJMSTimestamp()).append(")\n");
+			if (msg.getJMSExpiration() != 0)
+				sb.append("Expiration    : ").append(msg.getJMSExpiration()).append(" (").append(msg.getJMSExpiration() - msg.getJMSTimestamp()).append(")\n");
 			sb.append("Correlation ID: ").append(msg.getJMSCorrelationID()).append('\n');
 			
 			for (@SuppressWarnings("unchecked")Enumeration<String> e = msg.getPropertyNames();e.hasMoreElements();) {

@@ -51,7 +51,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		prepareMessage(msg);
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
-		log().d("sendJmsOneWay",dest,msg);
+		log().d("sendJmsOneWay",dest,producer.getTimeToLive(),msg);
 		try {
 			producer.send(msg);
 		} catch (IllegalStateException ise) {
@@ -83,7 +83,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		if (interceptorOut != null)
 			interceptorOut.prepare(msg);
 		try {
-			log().d("sendJms",dest,msg);
+			log().d("sendJms",dest,producer.getTimeToLive(),msg);
 			try {
 				producer.send(msg);
 			} catch (IllegalStateException ise) {
@@ -150,7 +150,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		msg.setJMSCorrelationID(id);
 		addAllowedId(id);
 		try {
-			log().d("sendJmsBroadcast",dest,msg);
+			log().d("sendJmsBroadcast",dest,producer.getTimeToLive(),msg);
 			try {
 				producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
 			} catch (IllegalStateException ise) {
