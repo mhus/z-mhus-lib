@@ -226,7 +226,7 @@ public class MThread extends MObject implements Runnable {
 					}
 					
 					log.t("###: LEAVE THREAD");
-					MLogUtil.setTrailConfig(null); // reset trail log
+					MLogUtil.releaseTrailConfig(); // reset trail log
 					setName(name + " sleeping");
 				
 				}
