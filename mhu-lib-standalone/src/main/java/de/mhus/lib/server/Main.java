@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MDate;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.activator.MutableActivator;
@@ -41,12 +41,12 @@ public class Main extends MJmx {
 
 		boolean exitOnEnd = false;
 		
-		((MutableActivator)((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator()).addObject(Main.class, null, this);
+		((MutableActivator)((DefaultBase)MApi.get().getBaseControl().base()).getActivator()).addObject(Main.class, null, this);
 		lists = new TreeMap<String, TaskListDefinition>();
 		
-		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MSingleton.get().getBaseControl().base()).getActivator() ).initialize();
+		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MApi.get().getBaseControl().base()).getActivator() ).initialize();
 		
-		Console console = MSingleton.lookup(Console.class);
+		Console console = MApi.lookup(Console.class);
 		while (true) {
 			// menu 
 			//console.printLine();
@@ -83,7 +83,7 @@ public class Main extends MJmx {
 			console.println(">>> Execute: " + line);
 			
 			// INIT 
-//			((Standalone)MSingleton.instance()).initConfig(null); // reload
+//			((Standalone)MApi.instance()).initConfig(null); // reload
 			if (initializer == null) {
 				resetInitializer();
 			}

@@ -15,7 +15,7 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
@@ -38,7 +38,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		// set to base
 		try {
 			TimerIfc timerIfc = new TimerWrap();
-			MSingleton.get().getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
+			MApi.get().getBaseControl().getCurrentBase().addObject(TimerIfc.class, timerIfc);
 		} catch (Throwable t) {
 			System.out.println("Can't initialize timer base: " + t);
 		}

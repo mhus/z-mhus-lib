@@ -1,6 +1,6 @@
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.directory.ResourceNode;
 
 public class CfgString extends CfgValue<String>{
@@ -13,8 +13,8 @@ public class CfgString extends CfgValue<String>{
 	protected String loadValue() {
 		int p = getPath().indexOf('@');
 		if (p < 0) 
-			return MSingleton.getCfg(getOwner()).getString(getPath(), getDefault());
-		ResourceNode node = MSingleton.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+			return MApi.getCfg(getOwner()).getString(getPath(), getDefault());
+		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
 		return node.getString(getPath().substring(p+1), getDefault());
 	}

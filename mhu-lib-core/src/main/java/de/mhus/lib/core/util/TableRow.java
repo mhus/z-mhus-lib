@@ -10,7 +10,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundException;
 
@@ -59,7 +59,7 @@ public class TableRow implements Serializable {
 				String clazzName = in.readUTF();
 				Object obj;
 				try {
-					obj = MSingleton.get().base().lookup(MActivator.class).createObject(clazzName);
+					obj = MApi.get().base().lookup(MActivator.class).createObject(clazzName);
 				} catch (Exception e) {
 					throw new IOException(e);
 				}

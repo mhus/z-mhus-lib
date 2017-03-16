@@ -1,7 +1,7 @@
 import java.io.PrintStream;
 import java.util.logging.Logger;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log;
 
 
@@ -26,7 +26,7 @@ public class TestConfig {
 		
 		try {
 			System.setProperty("mhus.lib.config.file", "mhus-config.xml");
-			MSingleton.setDirtyTrace(true);
+			MApi.setDirtyTrace(true);
 			
 			Log log = Log.getLog(TestConfig.class);
 			log.i("aha");

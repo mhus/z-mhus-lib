@@ -10,15 +10,15 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.system.DefaultSingleton;
+import de.mhus.lib.core.system.DefaultMApi;
 import de.mhus.lib.core.system.DummyClass;
-import de.mhus.lib.core.system.ISingleton;
-import de.mhus.lib.core.system.ISingletonFactory;
-import de.mhus.lib.core.system.SingletonInitialize;
+import de.mhus.lib.core.system.IApi;
+import de.mhus.lib.core.system.IApiFactory;
+import de.mhus.lib.core.system.ApiInitialize;
 
-public class MSingleton {
+public class MApi {
 
-	private static ISingleton singleton;
+	private static IApi api;
 	protected static Boolean trace;
 	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	private static IConfig emptyConfig = null;
@@ -26,30 +26,30 @@ public class MSingleton {
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
-	private MSingleton() {}
+	private MApi() {}
 	
-	public static synchronized ISingleton get() {
-		if (singleton == null) {
+	public static synchronized IApi get() {
+		if (api == null) {
 			try {
-				ISingleton obj = null;
-				String path = "de.mhus.lib.mutable.SingletonFactory";
-				if (System.getProperty("mhu.lib.singleton.factory") != null) path = System.getProperty(MConstants.PROP_SINGLETON_FACTORY_CLASS);
-				if (isDirtyTrace()) System.out.println("--- MSingletonFactory:" + path);
-				ISingletonFactory factory = (ISingletonFactory)Class.forName(path).newInstance();
+				IApi obj = null;
+				String path = "de.mhus.lib.mutable.MApiFactory";
+				if (System.getProperty("mhu.lib.api.factory") != null) path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
+				if (isDirtyTrace()) System.out.println("--- MApiFactory:" + path);
+				IApiFactory factory = (IApiFactory)Class.forName(path).newInstance();
 				if (factory != null) {
-					obj = factory.createSingleton();
+					obj = factory.createApi();
 				}
-				singleton = obj;
+				api = obj;
 			} catch (Throwable t) {
 				if (isDirtyTrace()) t.printStackTrace();
 			}
-			if (singleton == null)
-				singleton = new DefaultSingleton();
-			if (isDirtyTrace()) System.out.println("--- MSingleton: " + singleton.getClass().getCanonicalName());
-			if (singleton instanceof SingletonInitialize)
-				((SingletonInitialize)singleton).doInitialize(DummyClass.class.getClassLoader());
+			if (api == null)
+				api = new DefaultMApi();
+			if (isDirtyTrace()) System.out.println("--- MApi: " + api.getClass().getCanonicalName());
+			if (api instanceof ApiInitialize)
+				((ApiInitialize)api).doInitialize(DummyClass.class.getClassLoader());
 		}
-		return singleton;
+		return api;
 	}
 	
 	
@@ -101,7 +101,7 @@ public class MSingleton {
 					loggers.get(logId).update();
 			}
 		} catch(Throwable t) {
-			if (MSingleton.isDirtyTrace()) t.printStackTrace();
+			if (MApi.isDirtyTrace()) t.printStackTrace();
 		}
 	}
 

@@ -6,7 +6,7 @@ import java.io.PrintStream;
 import java.util.Date;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -65,7 +65,7 @@ public class ConsoleFactory extends LogFactory {
 			out = new PrintStream(f,true);
 		} else
 		if ("console".equals(io)) {
-			out = MSingleton.lookup(Console.class);
+			out = MApi.lookup(Console.class);
 		} else
 		if ("err".equals(io))
 		{
@@ -82,7 +82,7 @@ public class ConsoleFactory extends LogFactory {
 
 //	@Override
 //    public void update(Observable o, Object arg) {
-//        level = Log.LEVEL.valueOf(MSingleton.instance().getConfig().getString("LEVEL",level.name()).toUpperCase()); 
+//        level = Log.LEVEL.valueOf(MApi.instance().getConfig().getString("LEVEL",level.name()).toUpperCase()); 
 //        super.update(o, arg);
 //	}
 

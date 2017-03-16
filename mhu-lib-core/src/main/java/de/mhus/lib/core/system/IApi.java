@@ -7,7 +7,7 @@ import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
 
-public interface ISingleton {
+public interface IApi {
 
 	//Log createLog(Object owner);
 

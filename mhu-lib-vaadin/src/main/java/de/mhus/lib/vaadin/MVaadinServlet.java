@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 
 import com.vaadin.server.VaadinServlet;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.MConfigFactory;
@@ -48,7 +48,7 @@ public class MVaadinServlet extends VaadinServlet {
 			}
         if (mhusConfigUrl != null)
 	        try {
-	        	config = MSingleton.lookup(MConfigFactory.class).createConfigFor(mhusConfigUrl.toURI());
+	        	config = MApi.lookup(MConfigFactory.class).createConfigFor(mhusConfigUrl.toURI());
 	        } catch (Exception e) {
 	        	log.i(mhusConfigPath,e);
 	        }

@@ -7,7 +7,7 @@ import com.sun.jdmk.comm.HtmlAdaptorServer;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MPassword;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.jmx.MRemoteManager;
@@ -26,7 +26,7 @@ public class JmxHttpServer extends MJmx {
 	@JmxManaged
 	public void openServer() throws MException {
 		if (config == null) { // auto load config
-			config = MSingleton.getCfg(this);
+			config = MApi.getCfg(this);
 		}
 		if (config == null || server != null) return;
 		server = new HtmlAdaptorServer(config.getInt("port", 1098));
@@ -38,9 +38,9 @@ public class JmxHttpServer extends MJmx {
 		// TODO load user auth infos into server
 		//server.setMBeanServer(mbs);
 		try {
-			MSingleton.lookup(MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
+			MApi.lookup(MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
 //			mbs.registerMBean(server, new ObjectName("adaptor:proptocol=HTTP"));
-			server.setMBeanServer(MSingleton.lookup(MRemoteManager.class).getMBeanServer());
+			server.setMBeanServer(MApi.lookup(MRemoteManager.class).getMBeanServer());
 		} catch (Exception e) {
 			log().w(e);
 			server = null;

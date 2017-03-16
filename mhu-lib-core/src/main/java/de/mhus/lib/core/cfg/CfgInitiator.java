@@ -1,10 +1,10 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.system.CfgManager;
-import de.mhus.lib.core.system.ISingletonInternal;
+import de.mhus.lib.core.system.IApiInternal;
 
 public interface CfgInitiator {
 
-	void doInitialize(ISingletonInternal internal, CfgManager manager);
+	void doInitialize(IApiInternal internal, CfgManager manager);
 	
 }

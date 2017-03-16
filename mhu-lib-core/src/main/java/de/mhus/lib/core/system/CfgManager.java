@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
@@ -16,12 +16,12 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.io.FileWatch;
 
-@DefaultFactory(DefaultSingletonFactory.class)
+@DefaultFactory(DefaultMApiFactory.class)
 public class CfgManager {
 
 	private HashMap<String, CfgProvider> configurations = new HashMap<>();
 	private CentralMhusCfgProvider provider;
-	private ISingletonInternal internal;
+	private IApiInternal internal;
 	
 	private IConfig config;
 	private FileWatch fileWatch;
@@ -34,7 +34,7 @@ public class CfgManager {
 	}
 
 	
-	public CfgManager(ISingletonInternal internal) {
+	public CfgManager(IApiInternal internal) {
 		this.internal = internal;
 		provider = new CentralMhusCfgProvider();
 		provider.doInitialize();
@@ -155,18 +155,18 @@ public class CfgManager {
 	class CentralMhusCfgProvider implements CfgProvider {
 
 		public void doInitialize() {
-			configFile = MSingleton.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE);
+			configFile = MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE);
 		}
 
 		public void reConfigure() {
 			
-			MSingleton.dirtyLog("Load mhu-lib configuration");
+			MApi.dirtyLog("Load mhu-lib configuration");
 			
 			// init initiators
 			try {
-				IConfig system = MSingleton.get().getCfgManager().getCfg("system");
+				IConfig system = MApi.get().getCfgManager().getCfg("system");
 				if (system != null) {
-					MActivator activator = MSingleton.get().createActivator();
+					MActivator activator = MApi.get().createActivator();
 					for (IConfig node : system.getNodes()) {
 						if ("initiator".equals(node.getName())) {
 							String clazzName = node.getString("class");
@@ -175,11 +175,11 @@ public class CfgManager {
 							name = level + "_" + name;
 							
 							if ("none".equals(clazzName)) {
-								MSingleton.dirtyLog("remove initiator",name);
+								MApi.dirtyLog("remove initiator",name);
 								initiators.remove(name);
 							} else
 							if (clazzName != null && !initiators.containsKey(name)) {
-								MSingleton.dirtyLog("add initiator",name);
+								MApi.dirtyLog("add initiator",name);
 								CfgInitiator initiator = activator.createObject(CfgInitiator.class, clazzName);
 								initiators.put(name, initiator);
 							}
@@ -189,24 +189,24 @@ public class CfgManager {
 				
 				for (CfgInitiator initiator : initiators.values())
 					try {
-						MSingleton.dirtyLog("run initiator",initiator.getClass());
-						initiator.doInitialize(internal, MSingleton.get().getCfgManager() );
+						MApi.dirtyLog("run initiator",initiator.getClass());
+						initiator.doInitialize(internal, MApi.get().getCfgManager() );
 					} catch (Throwable t) {
-						MSingleton.dirtyLog("Can't initiate",initiator.getClass(),t);
-						if (MSingleton.isDirtyTrace()) {
+						MApi.dirtyLog("Can't initiate",initiator.getClass(),t);
+						if (MApi.isDirtyTrace()) {
 							System.out.println("Can't initiate " + initiator.getClass() + " Error: " + t);
 							t.printStackTrace();
 						}
 					}
 				
 			} catch (Throwable t) {
-				MSingleton.dirtyLog("Can't initiate config",t);
-				if (MSingleton.isDirtyTrace()) {
+				MApi.dirtyLog("Can't initiate config",t);
+				if (MApi.isDirtyTrace()) {
 					System.out.println("Can't initiate config " + t);
 					t.printStackTrace();
 				}
 			}
-			MSingleton.getCfgUpdater().doUpdate(null);
+			MApi.getCfgUpdater().doUpdate(null);
 			
 		}
 
@@ -217,11 +217,11 @@ public class CfgManager {
 					config = c;
 					return true;
 				} catch (Exception e) {
-					if (MSingleton.isDirtyTrace())
+					if (MApi.isDirtyTrace())
 						e.printStackTrace();
 				}
 			
-			if (MSingleton.isDirtyTrace())
+			if (MApi.isDirtyTrace())
 				System.out.println("*** MHUS Config file not found" + file);
 			
 			return false;
@@ -239,11 +239,11 @@ public class CfgManager {
 				}
 				
 				File f = new File(configFile);
-				if (MSingleton.isDirtyTrace())
+				if (MApi.isDirtyTrace())
 					System.out.println("--- Try to load mhus config from " + f.getAbsolutePath());
 				internalLoadConfig(f);
 				
-				TimerIfc timer = MSingleton.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
+				TimerIfc timer = MApi.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
 				fileWatch = new FileWatch(f, timer, new FileWatch.Listener() {
 
 					@Override
@@ -255,7 +255,7 @@ public class CfgManager {
 
 					@Override
 					public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-						if (MSingleton.isDirtyTrace())
+						if (MApi.isDirtyTrace())
 							t.printStackTrace();
 					}
 					

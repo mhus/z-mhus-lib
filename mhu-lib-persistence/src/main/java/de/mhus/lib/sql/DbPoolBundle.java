@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
@@ -25,7 +25,7 @@ public class DbPoolBundle extends MObject {
 	private Map<String, DbPool> bundle = new HashMap<String, DbPool>();
 
 	/**
-	 * Create a new bundle from default configuration. Load it from MSingleton with the
+	 * Create a new bundle from default configuration. Load it from MApi with the
 	 * key of this class.
 	 */
 	public DbPoolBundle() {
@@ -35,13 +35,13 @@ public class DbPoolBundle extends MObject {
 	/**
 	 * Create a new Bundle from configuration.
 	 *
-	 * @param config Config element or null. null will use the central MSingleton configuration.
-	 * @param activator Activator or null. null will use the central MSingleton activator.
+	 * @param config Config element or null. null will use the central MApi configuration.
+	 * @param activator Activator or null. null will use the central MApi activator.
 	 */
 	public DbPoolBundle(IConfig config, MActivator activator) {
 
-		if (config == null) config = MSingleton.get().getCfgManager().getCfg(DbPoolBundle.class, null);
-		if (activator == null) activator = MSingleton.lookup(MActivator.class);
+		if (config == null) config = MApi.get().getCfgManager().getCfg(DbPoolBundle.class, null);
+		if (activator == null) activator = MApi.lookup(MActivator.class);
 
 		this.config = config;
 		this.activator = activator;

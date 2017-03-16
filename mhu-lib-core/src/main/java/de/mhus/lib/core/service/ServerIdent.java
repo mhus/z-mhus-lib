@@ -4,7 +4,7 @@ import java.io.File;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.cfg.CfgString;
 
 public class ServerIdent {
@@ -12,7 +12,7 @@ public class ServerIdent {
 	private CfgString ident;
 	
 	public ServerIdent() {
-		String persistence = MSingleton.getCfg(ServerIdent.class).getString("persistence", MSingleton.getFile(".ident.txt").getAbsolutePath() );
+		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(".ident.txt").getAbsolutePath() );
 		File file = new File(persistence);
 		String def = "";
 		if (file.exists() && file.isFile())

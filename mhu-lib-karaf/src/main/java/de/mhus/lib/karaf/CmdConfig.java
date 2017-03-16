@@ -8,11 +8,11 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.cfg.CfgValue;
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.core.system.ISingleton;
-import de.mhus.lib.mutable.KarafSingletonImpl;
+import de.mhus.lib.core.system.IApi;
+import de.mhus.lib.mutable.KarafMApiImpl;
 
 @Command(scope = "mhus", name = "config", description = "Manipulate Configuration Values")
 @Service
@@ -32,24 +32,24 @@ public class CmdConfig extends MLog implements Action {
 	@Override
 	public Object execute() throws Exception {
 
-		ISingleton s = MSingleton.get();
-		if (! (s instanceof KarafSingletonImpl)) {
-			System.out.println("Karaf Singleton not set");
+		IApi s = MApi.get();
+		if (! (s instanceof KarafMApiImpl)) {
+			System.out.println("Karaf MApi not set");
 			return null;
 		}
-		KarafSingletonImpl singleton = (KarafSingletonImpl)s;
+		KarafMApiImpl api = (KarafMApiImpl)s;
 		
 		switch (cmd) {
 		case "list": {
 			ConsoleTable out = new ConsoleTable();
 			out.setHeaderValues("Owner", "Path", "Value", "Default");
-			for (CfgValue<?> value : MSingleton.getCfgUpdater().getList()) {
+			for (CfgValue<?> value : MApi.getCfgUpdater().getList()) {
 				out.addRowValues(value.getOwnerClass().getCanonicalName(), value.getPath(), value.value(), value.getDefault() );
 			}
 			out.print(System.out);
 		} break;
 		case "set": {
-			for (CfgValue<?> value : MSingleton.getCfgUpdater().getList()) {
+			for (CfgValue<?> value : MApi.getCfgUpdater().getList()) {
 				if (value.getOwnerClass().getCanonicalName().equals(parameters[0]) && value.getPath().equals(parameters[1])) {
 					value.setValue(parameters[2]);
 					System.out.println("OK");

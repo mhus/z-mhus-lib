@@ -3,7 +3,7 @@ package de.mhus.lib.core.logging;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -32,7 +32,7 @@ public abstract class LogFactory implements IBase {
     public abstract void init(ResourceNode config) throws Exception;
 
 	public void init() throws Exception {
-		ResourceNode config = MSingleton.lookup(CfgManager.class).getCfg(this, null);
+		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this, null);
 		init(config);
 	}
 	
@@ -130,7 +130,7 @@ public abstract class LogFactory implements IBase {
 
 	
 //    public void update(Observable o, Object arg) {
-//        setTrace(MSingleton.instance().getConfig().getBoolean(name + ".TRACE" , MSingleton.instance().getConfig().getBoolean("TRACE",false) ));
+//        setTrace(MApi.instance().getConfig().getBoolean(name + ".TRACE" , MApi.instance().getConfig().getBoolean("TRACE",false) ));
 //    }
 
 }

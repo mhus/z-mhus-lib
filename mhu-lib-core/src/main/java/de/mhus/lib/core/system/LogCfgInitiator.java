@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
@@ -27,7 +27,7 @@ public class LogCfgInitiator implements CfgInitiator {
 	}
 	
 	@Override
-	public void doInitialize(ISingletonInternal internal, CfgManager manager) {
+	public void doInitialize(IApiInternal internal, CfgManager manager) {
 
 		IConfig system = manager.getCfg("system");
 		
@@ -48,7 +48,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory = (LogFactory) Class.forName(name.trim()).newInstance();
 			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}	
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}	
 		if (logFactory == null)
 			logFactory = new ConsoleFactory();
 
@@ -59,7 +59,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
 			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
 		
 		try {
 			String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE;
@@ -67,7 +67,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (size != null) {
 				logFactory.setMaxMessageSize(Integer.valueOf(size));
 			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
 
 		try {
 			String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
@@ -76,7 +76,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).newInstance() );
 			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
 		
 		if (logFactory.getParameterMapper() != null && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
 			try {
@@ -88,7 +88,7 @@ public class LogCfgInitiator implements CfgInitiator {
 					if (MString.isSet(name) && MString.isSet(clazz))
 						((MutableParameterMapper)logFactory.getParameterMapper()).put(name, (ParameterEntryMapper) Class.forName(clazz.trim()).newInstance() );
 				}
-			} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+			} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
 		}
 			
 		try {
@@ -101,12 +101,12 @@ public class LogCfgInitiator implements CfgInitiator {
 					System.setOut(new SecureStreamToLogAdapter(LEVEL.INFO, out));
 				}
 			}
-		} catch (Throwable t) {if (MSingleton.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
 		
 		internal.setLogFactory(logFactory);
 
 		
-		MSingleton.updateLoggers();
+		MApi.updateLoggers();
 		
 	}
 

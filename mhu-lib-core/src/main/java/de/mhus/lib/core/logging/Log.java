@@ -2,7 +2,7 @@ package de.mhus.lib.core.logging;
 
 import java.util.UUID;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 
 /**
@@ -43,7 +43,7 @@ public class Log {
 //			}
 		}
 		this.name = name;
-		localTrace = MSingleton.isTrace(name);
+		localTrace = MApi.isTrace(name);
 		
 		update();
 		
@@ -51,11 +51,11 @@ public class Log {
 	}
 
     protected void register() {
-		MSingleton.registerLogger(this);
+		MApi.registerLogger(this);
 	}
     
     protected void unregister() {
-		MSingleton.unregisterLogger(this);
+		MApi.unregisterLogger(this);
     }
 
 
@@ -232,16 +232,16 @@ public class Log {
 	
 	public static Log getLog(Object owner) {
 		// return new StaticBase(owner).log();
-//		return MSingleton.get().createLog(owner);
+//		return MApi.get().createLog(owner);
 		return new Log(owner);
 	}
 
 	public void update() {
-		engine = MSingleton.get().getLogFactory().getInstance(getName());
-		localTrace = MSingleton.isTrace(name);
-		levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
-		parameterMapper = MSingleton.get().getLogFactory().getParameterMapper();
-		maxMsgSize = MSingleton.get().getLogFactory().getMaxMessageSize();
+		engine = MApi.get().getLogFactory().getInstance(getName());
+		localTrace = MApi.isTrace(name);
+		levelMapper = MApi.get().getLogFactory().getLevelMapper();
+		parameterMapper = MApi.get().getLogFactory().getParameterMapper();
+		maxMsgSize = MApi.get().getLogFactory().getMaxMessageSize();
 	}
 
 	public ParameterMapper getParameterMapper() {

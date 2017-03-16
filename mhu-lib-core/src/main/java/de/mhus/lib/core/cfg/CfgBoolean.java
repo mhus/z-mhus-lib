@@ -1,7 +1,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.directory.ResourceNode;
 
 public class CfgBoolean extends CfgValue<Boolean>{
@@ -14,8 +14,8 @@ public class CfgBoolean extends CfgValue<Boolean>{
 	protected Boolean loadValue() {
 		int p = getPath().indexOf('@');
 		if (p < 0) 
-			return MSingleton.getCfg(getOwner()).getBoolean(getPath(), getDefault());
-		ResourceNode node = MSingleton.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+			return MApi.getCfg(getOwner()).getBoolean(getPath(), getDefault());
+		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
 		return node.getBoolean(getPath().substring(p+1), getDefault());
 	}

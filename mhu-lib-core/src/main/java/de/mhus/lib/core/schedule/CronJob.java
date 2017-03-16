@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.base.service.HolidayProviderIfc;
 
@@ -194,7 +194,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 			}
 			
 			if (onlyWorkingDays) {
-				HolidayProviderIfc holidayProvider = MSingleton.lookup(HolidayProviderIfc.class);
+				HolidayProviderIfc holidayProvider = MApi.lookup(HolidayProviderIfc.class);
 				if (holidayProvider != null) {
 					while (!holidayProvider.isWorkingDay(null, next.getTime()))
 						next.add(Calendar.DAY_OF_MONTH, 1);

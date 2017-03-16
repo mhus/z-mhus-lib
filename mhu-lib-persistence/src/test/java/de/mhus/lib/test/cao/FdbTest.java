@@ -9,7 +9,7 @@ import de.mhus.lib.cao.aspect.StructureControl;
 import de.mhus.lib.cao.fdb.FdbCore;
 import de.mhus.lib.cao.util.DefaultStructureControl;
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -24,7 +24,7 @@ public class FdbTest extends TestCase {
 	public FdbTest(String name) {
 		super(name);
 		try {
-			MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
+			MApi.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,6 @@
 package de.mhus.lib.core.system;
 
-public interface SingletonInitialize {
+public interface ApiInitialize {
 
 	void doInitialize(ClassLoader coreLoader);
 

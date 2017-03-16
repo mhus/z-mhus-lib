@@ -38,7 +38,7 @@ public abstract class Console extends PrintStream implements IBase {
 	}
 
 //	public void initializeAsDefault() {
-//		MSingleton.instance().setBaseDefault(Console.class,this);
+//		MApi.instance().setBaseDefault(Console.class,this);
 //	}
 	
 	protected LinkedList<String> history = new LinkedList<String>();

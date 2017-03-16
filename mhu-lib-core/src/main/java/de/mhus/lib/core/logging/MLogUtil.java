@@ -1,7 +1,7 @@
 package de.mhus.lib.core.logging;
 
-import de.mhus.lib.core.MSingleton;
-import de.mhus.lib.core.system.ISingleton;
+import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.system.IApi;
 
 public class MLogUtil {
 
@@ -23,8 +23,8 @@ public class MLogUtil {
 	}
 	
 	public static void setTrailConfig(String parameters) {
-		ISingleton singleton = MSingleton.get();
-		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		IApi api = MApi.get();
+		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper) {
 			TrailLevelMapper m = (TrailLevelMapper)mapper;
 //			ThreadMapperConfig config = new ThreadMapperConfig();
@@ -36,8 +36,8 @@ public class MLogUtil {
 	}
 
 	public static String getTrailConfig() {
-		ISingleton singleton = MSingleton.get();
-		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		IApi api = MApi.get();
+		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper) {
 			TrailLevelMapper m = (TrailLevelMapper)mapper;
 			return m.doSerializeTrail();
@@ -46,8 +46,8 @@ public class MLogUtil {
 	}
 
 	public static void releaseTrailConfig() {
-		ISingleton singleton = MSingleton.get();
-		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		IApi api = MApi.get();
+		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper) {
 			TrailLevelMapper m = (TrailLevelMapper)mapper;
 			m.doResetTrail();
@@ -55,8 +55,8 @@ public class MLogUtil {
 	}
 
 	public static void resetTrailConfig() {
-		ISingleton singleton = MSingleton.get();
-		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		IApi api = MApi.get();
+		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper) {
 			TrailLevelMapper m = (TrailLevelMapper)mapper;
 			m.doResetAllTrails();
@@ -64,8 +64,8 @@ public class MLogUtil {
 	}
 	
 	public static boolean isTrailLevelMapper() {
-		ISingleton singleton = MSingleton.get();
-		LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+		IApi api = MApi.get();
+		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		return (mapper != null && mapper instanceof TrailLevelMapper);
 	}
 	

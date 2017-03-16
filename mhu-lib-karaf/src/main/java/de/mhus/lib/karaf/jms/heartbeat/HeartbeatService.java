@@ -2,7 +2,7 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import javax.jms.JMSException;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.system.DefaultBase;
 import de.mhus.lib.jms.heartbeat.Heartbeat;
@@ -27,7 +27,7 @@ public class HeartbeatService extends JmsDataChannelImpl {
 	}
 	
 	public void doActivate() {
-		((DefaultBase)MSingleton.get().getBaseControl().base()).addObject(HeartbeatListener.class, new HeartbeatListener() {
+		((DefaultBase)MApi.get().getBaseControl().base()).addObject(HeartbeatListener.class, new HeartbeatListener() {
 			
 			@Override
 			public void heartbeatReceived(String txt) {

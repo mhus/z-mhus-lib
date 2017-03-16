@@ -3,7 +3,7 @@ package de.mhus.lib.sql;
 import java.util.UUID;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.NodeConfig;
 
 /**
@@ -33,7 +33,7 @@ public class HsqlDbProvider extends JdbcProvider {
 		config.setProperty("user", "sa");
 		config.setProperty("pass", "");
 		config.setProperty("name", memoryDbName);
-		activator = MSingleton.lookup(MActivator.class);
+		activator = MApi.lookup(MActivator.class);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class HsqlDbProvider extends JdbcProvider {
 		config.setProperty("user", user);
 		config.setProperty("pass", pass);
 		config.setProperty("name", file);
-		activator = MSingleton.lookup(MActivator.class);
+		activator = MApi.lookup(MActivator.class);
 	}
 	
 }

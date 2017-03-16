@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.schedule.SchedulerJob;
@@ -96,7 +96,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 			synchronized (timer) {
 				timer.tasks.add(this);
 			}
-			LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+			LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
 			if (lm != null && lm instanceof TrailLevelMapper)
 				log = ((TrailLevelMapper)lm).doSerializeTrail();
 		}
@@ -108,7 +108,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 //					return;
 //				}
 				if (log != null) {
-					LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+					LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
 					if (lm != null && lm instanceof TrailLevelMapper)
 						((TrailLevelMapper)lm).doConfigureTrail(log);
 				}
@@ -124,7 +124,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 					cancel();
 			} finally {
 				if (log != null) {
-					LevelMapper lm = MSingleton.get().getLogFactory().getLevelMapper();
+					LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
 					if (lm != null && lm instanceof TrailLevelMapper)
 						((TrailLevelMapper)lm).doResetTrail();
 				}

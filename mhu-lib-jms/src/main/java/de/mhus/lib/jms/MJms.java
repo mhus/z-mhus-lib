@@ -10,7 +10,7 @@ import javax.jms.Message;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.EmptyConfig;
 import de.mhus.lib.core.config.IConfig;
 
@@ -131,7 +131,7 @@ public class MJms {
 
 	public synchronized static IConfig getConfig() {
 		if (config == null)
-			config = MSingleton.get().getCfgManager().getCfg("jms", new EmptyConfig());
+			config = MApi.get().getCfgManager().getCfg("jms", new EmptyConfig());
 		 return config;
 	}
 	

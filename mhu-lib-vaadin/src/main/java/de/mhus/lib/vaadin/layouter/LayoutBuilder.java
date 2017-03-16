@@ -3,7 +3,7 @@ package de.mhus.lib.vaadin.layouter;
 import java.util.HashMap;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
@@ -50,7 +50,7 @@ public class LayoutBuilder extends MObject {
 	}
 	
 	public MActivator getActivator() {
-		return MSingleton.lookup(MActivator.class);
+		return MApi.lookup(MActivator.class);
 	}
 
 	protected void build(XLayElement parent, IConfig layout) throws Exception {

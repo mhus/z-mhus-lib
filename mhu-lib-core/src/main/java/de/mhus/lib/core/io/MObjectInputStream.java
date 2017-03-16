@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 
 public class MObjectInputStream extends ObjectInputStream {
 
@@ -48,7 +48,7 @@ public class MObjectInputStream extends ObjectInputStream {
     	String name = desc.getName();
     	
     	if (act == null && cl == null) {
-    		act = MSingleton.get().base().lookup(MActivator.class); // load default activator
+    		act = MApi.get().base().lookup(MActivator.class); // load default activator
     	}
     	
     	try {

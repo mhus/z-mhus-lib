@@ -36,7 +36,7 @@ public class MStopWatch extends MJmx {
 	private String name;
 	
 	public MStopWatch() {
-		name = "StopWatch " + MSingleton.lookup(UniqueId.class).nextUniqueId();
+		name = "StopWatch " + MApi.lookup(UniqueId.class).nextUniqueId();
 	}
 	
 	public MStopWatch(String name) {
@@ -64,9 +64,9 @@ public class MStopWatch extends MJmx {
 				stop = System.currentTimeMillis();
 			
 //			try {
-//				if (MSingleton.instance().isPersistence()) {
-//					IConfig persistence = MSingleton.instance().getPersistenceManager().sessionScope().getPersistence("de.mhus.lib");
-//					long uid = MSingleton.instance().nextUniqueId();
+//				if (MApi.instance().isPersistence()) {
+//					IConfig persistence = MApi.instance().getPersistenceManager().sessionScope().getPersistence("de.mhus.lib");
+//					long uid = MApi.instance().nextUniqueId();
 //					persistence.setString(getJmxName() + "_" + name + "_" + uid, getCurrentTimeAsString());
 //					persistence.save();
 //				}

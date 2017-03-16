@@ -9,7 +9,7 @@ import java.util.Map;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 
 public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
@@ -35,9 +35,9 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 		if (map == null) {
 			// load map file
 			File f = null;
-			f = MSingleton.getFile("holidays_" + locale.toString() + "_" + year + ".txt");
+			f = MApi.getFile("holidays_" + locale.toString() + "_" + year + ".txt");
 			if (f == null || !f.exists())
-				f = MSingleton.getFile("holidays_" + year + ".txt");
+				f = MApi.getFile("holidays_" + year + ".txt");
 			if (f != null && f.exists()) {
 				try {
 					map = new HashMap<>();

@@ -1,7 +1,7 @@
 package de.mhus.lib.core.system;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.lang.Base;
 
@@ -11,7 +11,7 @@ public class DefaultBase extends Base {
 
 	public DefaultBase(Base parent) {
 		super(parent);
-		this.activator = MSingleton.get().createActivator();
+		this.activator = MApi.get().createActivator();
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class DefaultBase extends Base {
 				return ret;
 			
 		} catch (Exception e) {
-			MSingleton.dirtyLog(ifc,e);
+			MApi.dirtyLog(ifc,e);
 		}
 		
 		if (def == null) return null;
@@ -58,7 +58,7 @@ public class DefaultBase extends Base {
 		try {
 			return def.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			MSingleton.dirtyLog(ifc,e);
+			MApi.dirtyLog(ifc,e);
 		}
 		return null;
 	}

@@ -2,7 +2,7 @@ package de.mhus.lib.core.cfg;
 
 import java.io.File;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
@@ -18,12 +18,12 @@ public class CfgFile extends CfgValue<File>{
 		if (p < 0) {
 			String str = null;
 			try {
-				str = MSingleton.getCfg(getOwner()).getExtracted(getPath(), null);
+				str = MApi.getCfg(getOwner()).getExtracted(getPath(), null);
 			} catch (MException e) {}
 			if (str == null) return getDefault();
 			return new File(str);
 		}
-		ResourceNode node = MSingleton.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
 		String str = null;
 		try {

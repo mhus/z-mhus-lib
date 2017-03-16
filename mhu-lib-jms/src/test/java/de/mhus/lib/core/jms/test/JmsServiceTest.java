@@ -10,7 +10,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.jms.ClientService;
@@ -23,7 +23,7 @@ public class JmsServiceTest extends TestCase {
 
 	public void testCommunication() throws JMSException {
 		
-		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		
 		JmsConnection con1 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
 		JmsConnection con2 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
@@ -123,7 +123,7 @@ public class JmsServiceTest extends TestCase {
 	
 	public void testBroadcast() throws JMSException {
 			
-			MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+			MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 			
 			JmsConnection con1 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
 			JmsConnection con2 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");

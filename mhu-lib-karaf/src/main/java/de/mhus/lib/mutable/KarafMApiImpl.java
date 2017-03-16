@@ -15,9 +15,9 @@ import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.system.CfgManager;
-import de.mhus.lib.core.system.ISingleton;
-import de.mhus.lib.core.system.ISingletonInternal;
-import de.mhus.lib.core.system.SingletonInitialize;
+import de.mhus.lib.core.system.IApi;
+import de.mhus.lib.core.system.IApiInternal;
+import de.mhus.lib.core.system.ApiInitialize;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.services.TimerFactoryImpl;
 import de.mhus.lib.logging.JavaLoggerFactory;
@@ -29,7 +29,7 @@ import de.mhus.lib.logging.JavaLoggerFactory;
  * @author mikehummel
  *
  */
-public class KarafSingletonImpl implements ISingleton, SingletonInitialize, ISingletonInternal {
+public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 	
 	private LogFactory logFactory;
 	private BaseControl baseControl;

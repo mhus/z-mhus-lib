@@ -1,6 +1,6 @@
 package de.mhus.lib.core.jmx;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 
 public class MJmx extends JmxObject {
@@ -17,7 +17,7 @@ public class MJmx extends JmxObject {
 		if (!isJmxRegistered()) {
 			try {
 				setJmxName(name);
-				MSingleton.lookup(MRemoteManager.class).register(this,weak);
+				MApi.lookup(MRemoteManager.class).register(this,weak);
 			} catch (Exception e) {
 				log().t(e);
 			}

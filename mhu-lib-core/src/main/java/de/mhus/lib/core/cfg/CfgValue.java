@@ -1,6 +1,6 @@
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 
 public abstract class CfgValue<T> {
@@ -14,7 +14,7 @@ public abstract class CfgValue<T> {
 		this.owner = owner;
 		this.path = path;
 		this.def = def;
-		MSingleton.getCfgUpdater().register(this);
+		MApi.getCfgUpdater().register(this);
 		update();
 	}
 	
@@ -61,7 +61,7 @@ public abstract class CfgValue<T> {
 	}
 
 	public boolean isOwner(String name) {
-		return MSingleton.get().getCfgManager().isOwner(owner, name);
+		return MApi.get().getCfgManager().isOwner(owner, name);
 	}
 
 	public void setValue(String v) {

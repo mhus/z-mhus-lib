@@ -11,7 +11,7 @@ import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LogFactory;
 
-public class DefaultSingleton implements ISingleton, SingletonInitialize, ISingletonInternal {
+public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	
 	private LogFactory logFactory = new ConsoleFactory();
 	private BaseControl baseControl;

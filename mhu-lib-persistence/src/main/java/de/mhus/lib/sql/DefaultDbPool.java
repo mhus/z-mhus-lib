@@ -26,7 +26,7 @@ import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 
 /**
@@ -44,7 +44,7 @@ public class DefaultDbPool extends DbPool {
 
 	/**
 	 * Create a new pool from central configuration.
-	 * It's used the MSingleton configuration with the key of this class.
+	 * It's used the MApi configuration with the key of this class.
 	 *
 	 * @throws java.lang.Exception if any.
 	 */
@@ -55,8 +55,8 @@ public class DefaultDbPool extends DbPool {
 	/**
 	 * Create a new pool from a configuration.
 	 *
-	 * @param config Config element or null. null will use the central MSingleton configuration.
-	 * @param activator Activator or null. null will use the central MSingleton Activator.
+	 * @param config Config element or null. null will use the central MApi configuration.
+	 * @param activator Activator or null. null will use the central MApi Activator.
 	 * @throws java.lang.Exception if any.
 	 */
 	public DefaultDbPool(IConfig config,MActivator activator) throws Exception {

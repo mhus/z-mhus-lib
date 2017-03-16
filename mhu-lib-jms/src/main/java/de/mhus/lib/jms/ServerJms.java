@@ -11,7 +11,7 @@ import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQSession;
 
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -273,7 +273,7 @@ do not block jms driven threads !!! This will cause a deadlock
 			
 		} finally {
 			if (releaseLog) {
-				LevelMapper levelMapper = MSingleton.get().getLogFactory().getLevelMapper();
+				LevelMapper levelMapper = MApi.get().getLogFactory().getLevelMapper();
 				if (levelMapper != null && levelMapper instanceof TrailLevelMapper)
 					((TrailLevelMapper)levelMapper).doResetTrail();
 			}

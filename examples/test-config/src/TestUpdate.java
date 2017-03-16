@@ -3,7 +3,7 @@ import java.io.File;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProperties;
@@ -24,7 +24,7 @@ public class TestUpdate {
 		
 		System.setProperty(MConstants.PROP_CONFIG_FILE , "../test_config.xml");
 
-		MSingleton.get().getCfgManager().registerCfgInitiator("demo", new CfgInitiator() {
+		MApi.get().getCfgManager().registerCfgInitiator("demo", new CfgInitiator() {
 			
 			@Override
 			public void doInitialize(ISingletonInternal internal, CfgManager manager) {
@@ -57,7 +57,7 @@ public class TestUpdate {
 		File fp = new File("../testprop.properties");
 		if (fp.exists()) fp.delete();
 		String configData2 = "prop=abc";
-		MSingleton.get().getCfgManager().registerCfgProvider(TestUpdate.class.getCanonicalName(), new PropertiesCfgFileWatch(fp));
+		MApi.get().getCfgManager().registerCfgProvider(TestUpdate.class.getCanonicalName(), new PropertiesCfgFileWatch(fp));
 		
 		CfgProperties p = new CfgProperties(TestUpdate.class, null) {
 			protected void onPostUpdate(IProperties newValue) {

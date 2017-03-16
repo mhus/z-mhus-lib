@@ -12,7 +12,7 @@ import javax.management.ObjectName;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
@@ -29,8 +29,8 @@ public class MRemoteManager extends MObject implements IBase {
 
 	public MRemoteManager() throws MException {
 		housekeeper = new Housekeeper(this);
-		ResourceNode config = MSingleton.lookup(CfgManager.class).getCfg(this,new HashConfig());
-		MSingleton.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
+		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this,new HashConfig());
+		MApi.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
 	}
 	
 	public void register(JmxObject object) throws Exception {

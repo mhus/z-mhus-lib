@@ -15,7 +15,7 @@ import org.apache.karaf.shell.api.console.Session;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.console.ANSIConsole;
 import de.mhus.lib.core.console.Console;
@@ -25,11 +25,11 @@ import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.system.ISingleton;
+import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.logging.level.GeneralMapper;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
 import de.mhus.lib.logging.level.ThreadMapperConfig;
-import de.mhus.lib.mutable.KarafSingletonImpl;
+import de.mhus.lib.mutable.KarafMApiImpl;
 
 @Command(scope = "mhus", name = "log", description = "Manipulate Log behavior.")
 @Service
@@ -66,64 +66,64 @@ public class CmdLog extends MLog implements Action {
 	@Override
 	public Object execute() throws Exception {
 
-		ISingleton s = MSingleton.get();
-		if (! (s instanceof KarafSingletonImpl)) {
-			System.out.println("Karaf Singleton not set");
+		IApi s = MApi.get();
+		if (! (s instanceof KarafMApiImpl)) {
+			System.out.println("Karaf MApi not set");
 			return null;
 		}
-		KarafSingletonImpl singleton = (KarafSingletonImpl)s;
+		KarafMApiImpl api = (KarafMApiImpl)s;
 		
 		switch (cmd) {
 		case "clear": {
-			singleton.clearTrace();
-			singleton.setFullTrace(false);
-			MSingleton.updateLoggers();
+			api.clearTrace();
+			api.setFullTrace(false);
+			MApi.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "full": {
-			singleton.setFullTrace(MCast.toboolean(parameters.length >= 1 ? parameters[0] : "1", false));
-			MSingleton.updateLoggers();
+			api.setFullTrace(MCast.toboolean(parameters.length >= 1 ? parameters[0] : "1", false));
+			MApi.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "dirty": {
-			MSingleton.setDirtyTrace(MCast.toboolean(parameters.length >= 1 ? parameters[0] : "1", false));
+			MApi.setDirtyTrace(MCast.toboolean(parameters.length >= 1 ? parameters[0] : "1", false));
 			System.out.println("OK");
 		} break;
 		case "add": {
 			for (String p : parameters)
-				singleton.setTrace(p);
-			MSingleton.updateLoggers();
+				api.setTrace(p);
+			MApi.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "list": {
-			System.out.println("Default Level  : " + singleton.getLogFactory().getDefaultLevel());
-			System.out.println("Trace          : " + singleton.isFullTrace());
-			System.out.println("LogFoctory     : " + singleton.getLogFactory().getClass().getSimpleName());
-			System.out.println("DirtyTrace     : " + MSingleton.isDirtyTrace());
-			LevelMapper lm = singleton.getLogFactory().getLevelMapper();
+			System.out.println("Default Level  : " + api.getLogFactory().getDefaultLevel());
+			System.out.println("Trace          : " + api.isFullTrace());
+			System.out.println("LogFoctory     : " + api.getLogFactory().getClass().getSimpleName());
+			System.out.println("DirtyTrace     : " + MApi.isDirtyTrace());
+			LevelMapper lm = api.getLogFactory().getLevelMapper();
 			if (lm != null) {
 			System.out.println("LevelMapper    : " + lm.getClass().getSimpleName());
 			if (lm instanceof TrailLevelMapper)
 			System.out.println("   Configurtion: " + ((TrailLevelMapper)lm).doSerializeTrail() );
 			}
-			if (singleton.getLogFactory().getParameterMapper() != null)
-			System.out.println("ParameterMapper: " + singleton.getLogFactory().getParameterMapper().getClass().getSimpleName());
+			if (api.getLogFactory().getParameterMapper() != null)
+			System.out.println("ParameterMapper: " + api.getLogFactory().getParameterMapper().getClass().getSimpleName());
 			
-			for (String name : singleton.getTraceNames())
+			for (String name : api.getTraceNames())
 				System.out.println(name);
 		} break;
 		case "reloadconfig": { //TODO need single command class
-			singleton.getCfgManager().reConfigure();
-			MSingleton.updateLoggers();
+			api.getCfgManager().reConfigure();
+			MApi.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "level": {
-			singleton.getLogFactory().setDefaultLevel(Log.LEVEL.valueOf(parameters[0].toUpperCase()));
-			MSingleton.updateLoggers();
+			api.getLogFactory().setDefaultLevel(Log.LEVEL.valueOf(parameters[0].toUpperCase()));
+			MApi.updateLoggers();
 			System.out.println("OK");
 		} break;
 		case "settrail": {
-			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			LevelMapper mapper = api.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				MLogUtil.setTrailConfig(parameters == null || parameters.length < 1 ? "" : parameters[0]);
 				System.out.println("Trail Config: " + MLogUtil.getTrailConfig() );
@@ -132,7 +132,7 @@ public class CmdLog extends MLog implements Action {
 			}
 		} break;
 		case "istrail": {
-			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			LevelMapper mapper = api.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				System.out.println("LevelMapper: " + MLogUtil.getTrailConfig());
 			} else {
@@ -140,7 +140,7 @@ public class CmdLog extends MLog implements Action {
 			}
 		} break;
 		case "releasetrail": {
-			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			LevelMapper mapper = api.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				MLogUtil.releaseTrailConfig();
 				System.out.println("OK");
@@ -149,7 +149,7 @@ public class CmdLog extends MLog implements Action {
 			}
 		} break;
 		case "resettrail": {
-			LevelMapper mapper = singleton.getLogFactory().getLevelMapper();
+			LevelMapper mapper = api.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
 				MLogUtil.resetTrailConfig();
 				System.out.println("OK");
@@ -159,25 +159,25 @@ public class CmdLog extends MLog implements Action {
 		} break;
 		case "maxmsgsize": {
 			if (parameters != null && parameters.length > 0)
-				singleton.getLogFactory().setMaxMessageSize(MCast.toint(parameters[0], 0));
+				api.getLogFactory().setMaxMessageSize(MCast.toint(parameters[0], 0));
 			else
-				System.out.println("Max Message Size: "  + singleton.getLogFactory().getMaxMessageSize() );
+				System.out.println("Max Message Size: "  + api.getLogFactory().getMaxMessageSize() );
 		} break;
 		case "general": {
 			ThreadMapperConfig config = new ThreadMapperConfig();
 			config.doConfigure(parameters == null || parameters.length < 1 ? "" : parameters[0]);
 			GeneralMapper mapper = new GeneralMapper();
 			mapper.setConfig(config);
-			singleton.getLogFactory().setLevelMapper(mapper);
-			System.out.println("Sel Global Mapper: OK " + singleton.getLogFactory().getLevelMapper() + " " + config.getTrailId());
+			api.getLogFactory().setLevelMapper(mapper);
+			System.out.println("Sel Global Mapper: OK " + api.getLogFactory().getLevelMapper() + " " + config.getTrailId());
 		} break;
 		case "trail": {
-			singleton.getLogFactory().setLevelMapper(new ThreadBasedMapper());
-			System.out.println("Set Trail Mapper OK " + singleton.getLogFactory().getLevelMapper() );
+			api.getLogFactory().setLevelMapper(new ThreadBasedMapper());
+			System.out.println("Set Trail Mapper OK " + api.getLogFactory().getLevelMapper() );
 		} break;
 		case "off": {
-			singleton.getLogFactory().setLevelMapper(null);
-			System.out.println("Remove Mapper OK " + singleton.getLogFactory().getLevelMapper() );
+			api.getLogFactory().setLevelMapper(null);
+			System.out.println("Remove Mapper OK " + api.getLogFactory().getLevelMapper() );
 		} break;
 		case "trace": {
 			log().t((Object[])parameters);

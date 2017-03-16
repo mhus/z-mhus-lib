@@ -4,7 +4,7 @@ package de.mhus.lib.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
@@ -16,13 +16,13 @@ public class TaskConfig extends MJmx {
 	private Map<String,Object> objects = new HashMap<String, Object>();
 	
 	public void init() throws Exception {
-		init( MSingleton.lookup(IConfig.class));
+		init( MApi.lookup(IConfig.class));
 	}
 
 	public void init(IConfig config) throws Exception {
 		
 //		if (config == null)
-//			config = MSingleton.instance().getConfig();
+//			config = MApi.instance().getConfig();
     	this.config = config;
 				
 	}

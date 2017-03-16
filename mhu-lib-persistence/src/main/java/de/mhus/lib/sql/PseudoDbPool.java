@@ -14,8 +14,8 @@ public class PseudoDbPool extends DbPool {
 	/**
 	 * Create a new pool from a configuration.
 	 * 
-	 * @param config Config element or null. null will use the central MSingleton configuration.
-	 * @param activator Activator or null. null will use the central MSingleton Activator.
+	 * @param config Config element or null. null will use the central MApi configuration.
+	 * @param activator Activator or null. null will use the central MApi Activator.
 	 * @throws Exception
 	 */
 	public PseudoDbPool(IConfig config,MActivator activator) throws Exception {

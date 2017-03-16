@@ -27,7 +27,7 @@ import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -70,7 +70,7 @@ public abstract class DbPool extends MJmx {
 
 	/**
 	 * Create a new pool from central configuration.
-	 * It's used the MSingleton configuration with the key of this class.
+	 * It's used the MApi configuration with the key of this class.
 	 * 
 	 * @throws Exception
 	 */
@@ -81,8 +81,8 @@ public abstract class DbPool extends MJmx {
 	/**
 	 * Create a new pool from a configuration.
 	 * 
-	 * @param config Config element or null. null will use the central MSingleton configuration.
-	 * @param activator Activator or null. null will use the central MSingleton Activator.
+	 * @param config Config element or null. null will use the central MApi configuration.
+	 * @param activator Activator or null. null will use the central MApi Activator.
 	 * @throws Exception
 	 */
 	public DbPool(IConfig config,MActivator activator) throws Exception {
@@ -90,7 +90,7 @@ public abstract class DbPool extends MJmx {
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
-		if (activator == null) activator = MSingleton.lookup(MActivator.class);
+		if (activator == null) activator = MApi.lookup(MActivator.class);
 
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
@@ -108,7 +108,7 @@ public abstract class DbPool extends MJmx {
 				if (isClosed()) cancel();
 			}
 		};
-		MHousekeeper housekeeper = MSingleton.lookup(MHousekeeper.class);
+		MHousekeeper housekeeper = MApi.lookup(MHousekeeper.class);
 		if (housekeeper != null) {
 			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000), true);
 		} else {
@@ -137,7 +137,7 @@ public abstract class DbPool extends MJmx {
 
 	protected void doCreateConfig() {
 		try {
-			config = MSingleton.get().getCfgManager().getCfg(this,null);
+			config = MApi.get().getCfgManager().getCfg(this,null);
 		} catch (Throwable t) {
 		}
 		if (config == null) config = new HashConfig();
@@ -152,7 +152,7 @@ public abstract class DbPool extends MJmx {
 		this.provider = provider;
 		name = provider.getName();
 		if (name == null) name = "pool";
-		name = name + MSingleton.lookup(UniqueId.class).nextUniqueId();
+		name = name + MApi.lookup(UniqueId.class).nextUniqueId();
 	}
 
 	/**

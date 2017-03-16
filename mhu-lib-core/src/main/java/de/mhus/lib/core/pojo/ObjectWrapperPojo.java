@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.io.MObjectInputStream;
 
 public class ObjectWrapperPojo<T> {
@@ -21,7 +21,7 @@ public class ObjectWrapperPojo<T> {
 	}
 	
 	public T pojoGetObject() throws IOException, ClassNotFoundException {
-		return pojoGetObject(MSingleton.get().createActivator());
+		return pojoGetObject(MApi.get().createActivator());
 	}
 	
 	@SuppressWarnings("unchecked")

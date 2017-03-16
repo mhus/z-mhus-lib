@@ -9,7 +9,7 @@ import java.util.Date;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
@@ -201,7 +201,7 @@ public class FileLogger extends Log {
 			try {
 				out = new PrintStream(new BufferedOutputStream(new FileOutputStream(file)));
 			} catch (FileNotFoundException e) {
-				if (MSingleton.isDirtyTrace())
+				if (MApi.isDirtyTrace())
 					e.printStackTrace();
 			}
 		}

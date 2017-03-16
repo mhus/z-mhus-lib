@@ -8,7 +8,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -32,7 +32,7 @@ public class AdbTest extends TestCase {
 	public AdbTest(String name) {
 		super(name);
 		try {
-			MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
+			MApi.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,9 +88,9 @@ public class AdbTest extends TestCase {
 		MStopWatch timer = new MStopWatch();
 		timer.start();
 
-//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+//		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		DbManager manager = new DbManagerJdbc(pool, schema);
-//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
+//		MApi.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
 		// create persons
 		Person p = new Person();
@@ -461,7 +461,7 @@ public class AdbTest extends TestCase {
 	public void testReconnect() throws Exception {
 		DbPool pool = createPool("testReconnect").getPool("test");
 
-//		MSingleton.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+//		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
 		DbManager manager1 = new DbManagerJdbc(pool, schema1);
 

@@ -1,11 +1,11 @@
 package de.mhus.lib.core.base;
 
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.lang.Base;
 
 public class SingleBaseStrategy extends BaseFindStrategy {
 	
-	private Base defaultBase = MSingleton.get().getBaseControl().createBase(null, null);
+	private Base defaultBase = MApi.get().getBaseControl().createBase(null, null);
 	
 	@Override
 	public Base find(Object... attributes) {

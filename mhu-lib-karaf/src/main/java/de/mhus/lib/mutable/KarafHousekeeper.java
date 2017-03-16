@@ -6,7 +6,7 @@ import java.util.Observer;
 
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.schedule.IntervalJob;
@@ -16,7 +16,7 @@ public class KarafHousekeeper extends MObject implements MHousekeeper {
 	@Override
 	public void register(MHousekeeperTask task, long sleep, boolean weak) {
 		log().d("register",task,sleep,weak);
-		TimerIfc timer = MSingleton.lookup(TimerIfc.class);
+		TimerIfc timer = MApi.lookup(TimerIfc.class);
 		if (weak) {
 			WeakObserver t = new WeakObserver(task);
 			IntervalJob job = new IntervalJob(sleep, t);

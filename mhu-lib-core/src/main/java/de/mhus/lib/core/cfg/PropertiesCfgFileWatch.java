@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.PropertiesConfigFile;
@@ -28,16 +28,16 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 	public void doStart(final String name) {
 		this.name = name;
 		load();
-		MSingleton.getCfgUpdater().doUpdate(name);
+		MApi.getCfgUpdater().doUpdate(name);
 		
-		TimerIfc timer = MSingleton.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
+		TimerIfc timer = MApi.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
 		fileWatch = new FileWatch(file, timer, new FileWatch.Listener() {
 
 			@Override
 			public void onFileChanged(FileWatch fileWatch) {
 				log().d("update cfg properties file",file);
 				load();
-				MSingleton.getCfgUpdater().doUpdate(name);
+				MApi.getCfgUpdater().doUpdate(name);
 			}
 
 			@Override

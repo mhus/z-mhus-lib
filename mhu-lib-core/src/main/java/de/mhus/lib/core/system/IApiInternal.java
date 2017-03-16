@@ -6,7 +6,7 @@ import java.util.Set;
 
 import de.mhus.lib.core.logging.LogFactory;
 
-public interface ISingletonInternal {
+public interface IApiInternal {
 
 	void setLogFactory(LogFactory logFactory);
 

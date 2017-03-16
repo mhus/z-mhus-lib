@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MSingleton;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.base.service.TimerIfc;
 
@@ -75,7 +75,7 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 	}
 
 	private MProperties loadConfiguration() {
-		MProperties properties = MProperties.load(MSingleton.get().getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)); // TODO configurable via mhu-config
+		MProperties properties = MProperties.load(MApi.get().getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)); // TODO configurable via mhu-config
 		return properties;
 	}
 

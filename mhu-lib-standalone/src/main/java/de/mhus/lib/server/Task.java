@@ -39,7 +39,7 @@ public abstract class Task extends MJmx {
 		boolean ret = true;
 		log().i("-----------------------------------------------");
 		log().i(">>> EXECUTE", getClass().getCanonicalName(), options);
-//		MSingleton.instance().getConsole().println("EXECUTE: " + getClass().getCanonicalName());
+//		MApi.instance().getConsole().println("EXECUTE: " + getClass().getCanonicalName());
 		MStopWatch watch = new MStopWatch(getClass().getCanonicalName());
 		watch.start();
 		try {
@@ -51,7 +51,7 @@ public abstract class Task extends MJmx {
 		watch.stop();
 		log().i("-----------------------------------------------");
 		log().i("TIME: " + watch.getCurrentTimeAsString());
-//		MSingleton.instance().getConsole().println("TIME: " + getClass().getCanonicalName() + ": " + watch.getCurrentTimeAsString());
+//		MApi.instance().getConsole().println("TIME: " + getClass().getCanonicalName() + ": " + watch.getCurrentTimeAsString());
 		return ret;
 	}
 	
