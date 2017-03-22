@@ -137,6 +137,9 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 			return;
 		}
 		JmsConnection con = service.getConnection(connectionName);
+		if (con == null) {
+			log().i("connection not found",name,connectionName);
+		}
 		
 		if (channel == null) {
 			if (MString.isSet(implementation)) {
