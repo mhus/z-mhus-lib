@@ -27,8 +27,8 @@ public class CmdChannelList implements Action {
 		
 		ConsoleTable table = new ConsoleTable();
 		table.setHeaderValues("Name","Connection","Destination","Type","Information","Connected","Closed", "Last Activity");
-		for (String name : service.listChannels()) {
-			JmsDataChannel chd = service.getChannel(name);
+		for (JmsDataChannel chd : service.getChannels()) {
+//			JmsDataChannel chd = service.getChannel(name);
 			JmsChannel ch = chd.getChannel();
 			JmsConnection con = null;
 			if (ch !=null && ch.getDestination() != null)
