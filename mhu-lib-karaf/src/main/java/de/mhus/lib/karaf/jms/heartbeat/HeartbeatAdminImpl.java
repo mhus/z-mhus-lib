@@ -67,6 +67,9 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 		synchronized (services) {
 			JmsManagerService jmsService = JmsUtil.getService();
 			if (jmsService == null) return;
+			
+			jmsService.doChannelBeat();
+
 			List<Service<JmsDataSource>> conList = jmsService.getDataSources();
 			HashSet<String> existList = new HashSet<>();
 			existList.addAll(services.keySet());

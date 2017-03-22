@@ -88,10 +88,10 @@ public class HeartbeatService extends JmsDataChannelImpl {
 
 	protected void doTimerTask(String cmd) {
 		if (getChannel().isClosed()) return;
-		JmsManagerService service = JmsUtil.getService();
-		if (service == null) return;
+//		JmsManagerService service = JmsUtil.getService();
+//		if (service == null) return;
 		try {
-			service.doChannelBeat();
+//			service.doChannelBeat();
 			heartbeat.sendHeartbeat(cmd);
 		} catch (Throwable t) {
 			log().t(t);
