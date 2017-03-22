@@ -74,7 +74,7 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 						service = new HeartbeatService();
 						service.setName(service.getName() + ":" + conName);
 						service.setConnectionName(conName);
-						jmsService.addChannel(service);
+//						jmsService.addChannel(service);
 						services.put(conName, service);
 						service.doActivate();
 					} else {
@@ -89,7 +89,7 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 			// remove overlapping
 			for (String conName : existList) {
 				HeartbeatService service = services.get(conName);
-				jmsService.removeChannel(service.getName());
+//				jmsService.removeChannel(service.getName());
 				service.doDeactivate();
 			}
 			

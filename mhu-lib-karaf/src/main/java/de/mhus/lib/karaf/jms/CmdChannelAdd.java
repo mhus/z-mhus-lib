@@ -28,8 +28,8 @@ public class CmdChannelAdd implements Action {
 	@Argument(index=3, name="interface", required=true, description="Interface or Implementation", multiValued=false)
     String ifc;
 
-    @Option(name = "-o", aliases = { "--online" }, description = "Create the datasource online and not a blueprint", required = false, multiValued = false)
-    boolean online;
+//    @Option(name = "-o", aliases = { "--online" }, description = "Create the datasource online and not a blueprint", required = false, multiValued = false)
+//    boolean online;
 	
     @Option(name = "-t", aliases = { "--topic" }, description = "Destinantion is a topic", required = false, multiValued = false)
     boolean topic;
@@ -40,27 +40,27 @@ public class CmdChannelAdd implements Action {
 	@Override
 	public Object execute() throws Exception {
 
-		if (online) {
-			
-			JmsManagerService service = JmsUtil.getService();
-			if (service == null) {
-				System.out.println("Service not found");
-				return null;
-			}
-
-			JmsDataChannelImpl impl = new JmsDataChannelImpl();
-			impl.setName(name);
-			impl.setConnectionName(connection);
-			impl.setDestination(destination);
-			impl.setDestinationTopic(topic);
-			if (this.service)
-				impl.setImplementation(ifc);
-			else
-				impl.setIfc(ifc);
-			
-			service.addChannel(impl);
-			
-		} else {
+//		if (online) {
+//			
+//			JmsManagerService service = JmsUtil.getService();
+//			if (service == null) {
+//				System.out.println("Service not found");
+//				return null;
+//			}
+//
+//			JmsDataChannelImpl impl = new JmsDataChannelImpl();
+//			impl.setName(name);
+//			impl.setConnectionName(connection);
+//			impl.setDestination(destination);
+//			impl.setDestinationTopic(topic);
+//			if (this.service)
+//				impl.setImplementation(ifc);
+//			else
+//				impl.setIfc(ifc);
+//			
+//			service.addChannel(impl);
+//			
+//		} else {
 			
 	        File karafBase = new File(System.getProperty("karaf.base"));
 	        File deployFolder = new File(karafBase, "deploy");
@@ -81,7 +81,7 @@ public class CmdChannelAdd implements Action {
             TemplateUtils.createFromTemplate(outFile, is, properties);
 
 			
-		}
+//		}
 		
 		return null;
 	}

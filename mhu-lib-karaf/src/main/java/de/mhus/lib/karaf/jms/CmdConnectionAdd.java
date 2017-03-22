@@ -28,22 +28,22 @@ public class CmdConnectionAdd implements Action {
 	@Argument(index=3, name="password", required=true, description="password", multiValued=false)
     String password;
 
-    @Option(name = "-o", aliases = { "--online" }, description = "Create the datasource online and not a blueprint", required = false, multiValued = false)
-    boolean online;
+//    @Option(name = "-o", aliases = { "--online" }, description = "Create the datasource online and not a blueprint", required = false, multiValued = false)
+//    boolean online;
 
 	@Override
 	public Object execute() throws Exception {
 
-		if (online) {
-			JmsManagerService service = JmsUtil.getService();
-			if (service == null) {
-				System.out.println("Service not found");
-				return null;
-			}
-			
-			service.addConnection(name, url, user, password);
-			System.out.println("OK");
-		} else {
+//		if (online) {
+//			JmsManagerService service = JmsUtil.getService();
+//			if (service == null) {
+//				System.out.println("Service not found");
+//				return null;
+//			}
+//			
+//			service.addConnection(name, url, user, password);
+//			System.out.println("OK");
+//		} else {
 			
 	        File karafBase = new File(System.getProperty("karaf.base"));
 	        File deployFolder = new File(karafBase, "deploy");
@@ -61,7 +61,7 @@ public class CmdConnectionAdd implements Action {
             }
             TemplateUtils.createFromTemplate(outFile, is, properties);
 	        
-		}
+//		}
 		return null;
 	}
 
