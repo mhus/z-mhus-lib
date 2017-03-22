@@ -22,5 +22,6 @@ public interface JmsManagerService {
 	void doChannelBeat();
 	List<JmsDataChannel> getChannels();
 	List<JmsConnection> getConnections();
+	List<JmsDataSource> getDataSources();
 
 }

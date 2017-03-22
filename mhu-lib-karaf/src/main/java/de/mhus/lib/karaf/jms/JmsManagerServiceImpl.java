@@ -139,7 +139,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //			return connections.keySet().toArray(new String[0]);
 //		}
 		LinkedList<String> out = new LinkedList<>();
-		for (MOsgi.Service<JmsConnection> ref : MOsgi.getServiceRefs(JmsConnection.class, null))
+		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null))
 			out.add(ref.getName());
 		return out.toArray(new String[out.size()]);
 	}
@@ -150,7 +150,22 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //			return connections.keySet().toArray(new String[0]);
 //		}
 		LinkedList<JmsConnection> out = new LinkedList<>();
-		for (JmsConnection obj : MOsgi.getServices(JmsConnection.class, null))
+		for (JmsDataSource obj : MOsgi.getServices(JmsDataSource.class, null))
+			try {
+				out.add(obj.getConnection());
+			} catch (JMSException e) {
+				log().w(e);
+			}
+		return out;
+	}
+
+	@Override
+	public List<JmsDataSource> getDataSources() {
+//		synchronized (this) {
+//			return connections.keySet().toArray(new String[0]);
+//		}
+		LinkedList<JmsDataSource> out = new LinkedList<>();
+		for (JmsDataSource obj : MOsgi.getServices(JmsDataSource.class, null))
 			out.add(obj);
 		return out;
 	}
@@ -160,7 +175,14 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //		synchronized (this) {
 //			return connections.get(name);
 //		}
-		return MOsgi.getService(JmsConnection.class,MOsgi.filterServiceName(name));
+		JmsDataSource src = MOsgi.getService(JmsDataSource.class,MOsgi.filterServiceName(name));
+		if (src == null) return null;
+		try {
+			return src.getConnection();
+		} catch (JMSException e) {
+			log().w(name,e);
+			return null;
+		}
 	}
 
 //	@Override

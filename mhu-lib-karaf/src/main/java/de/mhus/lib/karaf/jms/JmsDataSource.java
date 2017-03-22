@@ -8,6 +8,8 @@ public interface JmsDataSource {
 
 	String getName();
 
+	JmsConnection getConnection() throws JMSException;
+	void resetConnection() throws JMSException;
 	JmsConnection createConnection() throws JMSException;
 	
 }
