@@ -315,8 +315,14 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //			return channels.keySet().toArray(new String[channels.size()]);
 //		}
 		LinkedList<String> out = new LinkedList<>();
-		for (MOsgi.Service<JmsDataChannel> ref : MOsgi.getServiceRefs(JmsDataChannel.class, null))
-			out.add(ref.getName());
+		for (MOsgi.Service<JmsDataChannel> ref : MOsgi.getServiceRefs(JmsDataChannel.class, null)) {
+			String name = ref.getName();
+			if (name == null && ref.getService() != null) {
+				name = ref.getService().getName();
+			}
+			if (name != null)
+				out.add(name);
+		}
 		return out.toArray(new String[out.size()]);
 	}
 

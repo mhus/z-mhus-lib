@@ -8,6 +8,7 @@ import org.osgi.framework.FrameworkUtil;
 import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.jms.ClientJsonService;
@@ -215,4 +216,8 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return MSystem.toString(this, name,connectionName);
+	}
 }

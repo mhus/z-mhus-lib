@@ -98,17 +98,16 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 			JmsManagerService service = JmsUtil.getService();
 			if (service == null) return;
 
-			for (String cName : service.listChannels()) {
+			for (JmsDataChannel c : service.getChannels()) {
 				try {
-					JmsDataChannel c = service.getChannel(cName);
 					if (c.getChannel() != null) {
-						log().d("heart-beat",cName,cmd);
+						log().d("heart-beat",c,cmd);
 						c.getChannel().doBeat();
 //						c.getChannel().reset();
 //						c.getChannel().open();
 					}
 				} catch (Throwable t) {
-					log().w(cName,cmd,t);
+					log().w(c,cmd,t);
 				}
 			}
 						
