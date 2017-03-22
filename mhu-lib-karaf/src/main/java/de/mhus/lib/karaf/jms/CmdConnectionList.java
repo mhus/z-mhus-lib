@@ -20,12 +20,12 @@ public class CmdConnectionList implements Action {
 		}
 		
 		ConsoleTable table = new ConsoleTable();
-		table.setHeaderValues("Name","Url","User","Connected","Closed");
+		table.setHeaderValues("Id","Name","Url","User","Connected","Closed");
 		for (de.mhus.lib.karaf.MOsgi.Service<JmsDataSource> ref : service.getDataSources()) {
 			try {
 				JmsConnection con = ref.getService().getConnection();
 				String name = service.getServiceName(ref);
-				table.addRowValues(name,con.getUrl(),con.getUser(),con.isConnected(),con.isClosed());
+				table.addRowValues(name,ref.getService().getName(),con.getUrl(),con.getUser(),con.isConnected(),con.isClosed());
 			} catch (Throwable t) {}
 		}
 		table.print(System.out);
