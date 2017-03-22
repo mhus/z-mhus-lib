@@ -173,12 +173,13 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 //			}
 		}
 		if (channel != null) {
-			if (!initialized || channel.getDestination() == null) {
+			if (!initialized && channel.getDestination() == null) {
 				JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
 				channel.reset(dest);
-				initialized = true;
 			}
-			channel.getDestination().setConnection(con);
+			initialized = true;
+			if (channel.getDestination() != null)
+				channel.getDestination().setConnection(con);
 			channel.checkConnection();
 		}
 		doAfterReset();

@@ -184,6 +184,13 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 			if (src == null) return null;
 			return src.getConnection();
 		} catch (NotFoundException nfe) { 
+			for (Service<JmsDataSource> c : getDataSources())
+				if (name.equals(c.getService().getName()))
+					try {
+						return c.getService().getConnection();
+					} catch (JMSException e) {
+						log().w(name,e);
+					}
 			return null;
 		} catch (JMSException e) {
 			log().w(name,e);
@@ -317,7 +324,14 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //		synchronized (channels) {
 //			return channels.get(name);
 //		}
-		return MOsgi.getService(JmsDataChannel.class,MOsgi.filterServiceName(name));
+		try {
+			return MOsgi.getService(JmsDataChannel.class,"(osgi.jndi.service.name=jmschannel_" + name + ")");
+		} catch (NotFoundException nfe) {
+			for (JmsDataChannel c : getChannels())
+			if (name.equals(c.getName()))
+				return c;
+			return null;
+		}
 	}
 
 	@Override

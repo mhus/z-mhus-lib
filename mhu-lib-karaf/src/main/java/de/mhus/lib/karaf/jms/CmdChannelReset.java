@@ -38,6 +38,10 @@ public class CmdChannelReset implements Action {
 			}
 		else {
 			JmsDataChannel channel = service.getChannel(name);
+			if (channel == null) {
+				System.out.println("Channel not found");
+				return null;
+			}
 			channel.getChannel().reset();
 			channel.getChannel().open();
 		}
