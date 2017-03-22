@@ -43,6 +43,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		this.name = name;
 		this.connectionName = connectionName;
 		this.channel = channel;
+		reset();
 	}
 
 	@Override
@@ -138,7 +139,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 		}
 		JmsConnection con = service.getConnection(connectionName);
 		if (con == null) {
-			log().i("connection not found",name,connectionName);
+			log().d("connection not found",name,connectionName);
 		}
 		
 		if (channel == null) {
@@ -181,10 +182,13 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 				JmsDestination dest = new JmsDestination(getDestination(), isDestinationTopic());
 				channel.reset(dest);
 			}
-			initialized = true;
-			if (channel.getDestination() != null)
+			if (channel.getDestination() != null) {
 				channel.getDestination().setConnection(con);
-			channel.checkConnection();
+				if (con != null) {
+					initialized = true;
+					channel.checkConnection();
+				}
+			}
 		}
 		doAfterReset();
 	}

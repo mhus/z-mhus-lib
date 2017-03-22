@@ -2,6 +2,7 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.osgi.service.component.ComponentContext;
@@ -71,16 +72,18 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 			existList.addAll(services.keySet());
 			// work over all existing connections
 			for (Service<JmsDataSource> src : conList) {
-				String conName = src.getName();
+				String conName = src.getService().getName();
 				try {
 					HeartbeatService service = services.get(conName);
 					if (service == null) {
+						log().i("create",conName);
 						service = new HeartbeatService();
 						service.setName(service.getName() + ":" + conName);
 						service.setConnectionName(conName);
-//						jmsService.addChannel(service);
+						jmsService.addChannel(service);
 						services.put(conName, service);
 						service.doActivate();
+						service.doTimerTask(cmd);
 					} else {
 						if (!service.getChannel().isClosed())
 							service.doTimerTask(cmd);
@@ -92,8 +95,9 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 			}
 			// remove overlapping
 			for (String conName : existList) {
+				log().i("remove",conName);
 				HeartbeatService service = services.get(conName);
-//				jmsService.removeChannel(service.getName());
+				jmsService.removeChannel(service.getName());
 				service.doDeactivate();
 			}
 			
@@ -126,5 +130,10 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 	@Override
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+	@Override
+	public List<HeartbeatService> getServices() {
+		return new LinkedList<>(services.values());
 	}
 }

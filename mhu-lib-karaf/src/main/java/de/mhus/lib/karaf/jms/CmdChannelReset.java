@@ -41,6 +41,7 @@ public class CmdChannelReset implements Action {
 				System.out.println("Channel not found");
 				return null;
 			}
+			channel.reset();
 			channel.getChannel().reset();
 			channel.getChannel().open();
 		}

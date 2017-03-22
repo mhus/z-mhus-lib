@@ -16,8 +16,8 @@ public interface JmsManagerService {
 //	void removeConnection(String name);
 //	String[] listChannels();
 	JmsDataChannel getChannel(String name);
-//	void addChannel(JmsDataChannel channel);
-//	void removeChannel(String name);
+	void addChannel(JmsDataChannel channel);
+	void removeChannel(String name);
 	<I> I getObjectForInterface(Class<? extends I> ifc);
 	void resetChannels();
 	void doChannelBeat();

@@ -9,7 +9,7 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 @Service
 public class CmdChannelBeat implements Action {
 
-	@Argument(index=0, name="name", required=true, description="ID of the channel", multiValued=false)
+	@Argument(index=0, name="name", required=false, description="ID of the channel", multiValued=false)
     String name;
 
 	@Override
@@ -21,17 +21,18 @@ public class CmdChannelBeat implements Action {
 			return null;
 		}
 
-		if (name.equals("*")) {
-			for (JmsDataChannel c : service.getChannels()) {
-				try {
-					System.out.println(c);
-					if (c.getChannel() == null)
-						c.reset();
-					c.getChannel().doBeat();
-				} catch (Throwable t) {
-					t.printStackTrace();
-				}
-			}
+		if (name == null || name.equals("*")) {
+			service.doChannelBeat();
+//			for (JmsDataChannel c : service.getChannels()) {
+//				try {
+//					System.out.println(c);
+//					if (c.getChannel() == null)
+//						c.reset();
+//					c.getChannel().doBeat();
+//				} catch (Throwable t) {
+//					t.printStackTrace();
+//				}
+//			}
 		} else {
 			if (service.getChannel(name).getChannel() == null)
 				service.getChannel(name).reset();

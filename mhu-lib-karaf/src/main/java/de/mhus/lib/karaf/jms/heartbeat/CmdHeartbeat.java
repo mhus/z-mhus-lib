@@ -26,6 +26,10 @@ public class CmdHeartbeat implements Action {
 			return null;
 		}
 
+		if ("list".equals(cmd)) {
+			for (HeartbeatService s : service.getServices())
+				System.out.println(s.getName());
+		} else
 		if ("enable".equals(cmd) || "disbale".equals(cmd)) {
 			service.setEnabled("enable".equals(cmd));
 			System.out.println("OK " + cmd);

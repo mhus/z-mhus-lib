@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.WeakHashMap;
 
 import javax.jms.JMSException;
 
@@ -53,6 +54,8 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 //	private BundleContext context;
 //	private TimerIfc timer;
+
+	private WeakHashMap<String, JmsDataChannel> channels = new WeakHashMap<>();
 	
 	@Activate
 	public void doActivate(ComponentContext ctx) {
@@ -329,9 +332,10 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 			return MOsgi.getService(JmsDataChannel.class,"(osgi.jndi.service.name=jmschannel_" + name + ")");
 		} catch (NotFoundException nfe) {
 			for (JmsDataChannel c : getChannels())
-			if (name.equals(c.getName()))
-				return c;
-			return null;
+				if (name.equals(c.getName()))
+					return c;
+			return channels.get(name);
+//			return null;
 		}
 	}
 
@@ -343,6 +347,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		LinkedList<JmsDataChannel> out = new LinkedList<>();
 		for (JmsDataChannel obj : MOsgi.getServices(JmsDataChannel.class, null))
 			out.add(obj);
+		out.addAll(channels.values());
 		return out;
 	}
 	
@@ -379,14 +384,21 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public void doChannelBeat() {
-//		synchronized (this) {
+		synchronized (this) {
 			for (JmsConnection con : getConnections())
 				try {
 					con.doChannelBeat();
 				} catch (Throwable t) {
 					log().t(con,t);
 				}
-//		}
+			
+			for (JmsDataChannel c : getChannels()) {
+				if (c.getChannel() != null && !c.getChannel().isClosed() && !c.getChannel().isConnected()) {
+					log().d("beat reset",c);
+					c.reset();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -395,6 +407,16 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		if (p != null && p instanceof String && ((String)p).length() > 4 && ((String)p).startsWith("jms_"))
 			return ((String)p).substring(4);
 		return null;
+	}
+
+	@Override
+	public void addChannel(JmsDataChannel channel) {
+		channels.put(channel.getName(), channel);
+	}
+
+	@Override
+	public void removeChannel(String name) {
+		channels.remove(name);
 	}
 	
 }
