@@ -10,9 +10,8 @@ public class BeatTimerTask extends TimerTask {
 	public void run() {
 		JmsManagerService service = JmsUtil.getService();
 		if (service == null) return;
-		for (String conName : service.listConnections()) {
+		for (JmsConnection con: service.getConnections()) {
 			try {
-				JmsConnection con = service.getConnection(conName);
 				con.doChannelBeat();
 			} catch (Throwable t) {
 				

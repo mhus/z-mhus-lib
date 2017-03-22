@@ -24,9 +24,8 @@ public class CmdConnectionReset implements Action {
 		}
 		
 		if (name.equals("*")) {
-			for (String conName : service.listConnections()) {
-				System.out.println(conName);
-				JmsConnection con = service.getConnection(conName);
+			for (JmsConnection con : service.getConnections()) {
+				System.out.println(con);
 				con.reset();
 			}
 		} else {

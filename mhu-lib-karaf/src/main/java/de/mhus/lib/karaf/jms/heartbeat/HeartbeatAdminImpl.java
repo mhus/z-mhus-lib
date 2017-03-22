@@ -2,6 +2,7 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 import org.osgi.service.component.ComponentContext;
 
@@ -13,7 +14,9 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
+import de.mhus.lib.karaf.MOsgi.Service;
 import de.mhus.lib.karaf.jms.JmsDataChannel;
+import de.mhus.lib.karaf.jms.JmsDataSource;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 
@@ -63,11 +66,12 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 		synchronized (services) {
 			JmsManagerService jmsService = JmsUtil.getService();
 			if (jmsService == null) return;
-			String[] conList = jmsService.listConnections();
+			List<Service<JmsDataSource>> conList = jmsService.getDataSources();
 			HashSet<String> existList = new HashSet<>();
 			existList.addAll(services.keySet());
 			// work over all existing connections
-			for (String conName : conList) {
+			for (Service<JmsDataSource> src : conList) {
+				String conName = src.getName();
 				try {
 					HeartbeatService service = services.get(conName);
 					if (service == null) {

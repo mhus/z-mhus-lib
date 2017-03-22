@@ -22,10 +22,9 @@ public class CmdChannelBeat implements Action {
 		}
 
 		if (name.equals("*")) {
-			for (String cName : service.listChannels()) {
+			for (JmsDataChannel c : service.getChannels()) {
 				try {
-					System.out.println(cName);
-					JmsDataChannel c = service.getChannel(cName);
+					System.out.println(c);
 					if (c.getChannel() == null)
 						c.reset();
 					c.getChannel().doBeat();

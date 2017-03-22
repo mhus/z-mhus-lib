@@ -11,10 +11,10 @@ public interface JmsManagerService {
 	
 //	void addConnection(String name, JmsConnection con);
 //	void addConnection(String name, String url, String user, String password) throws JMSException;
-	String[] listConnections();
+//	String[] listConnections();
 	JmsConnection getConnection(String name);
 //	void removeConnection(String name);
-	String[] listChannels();
+//	String[] listChannels();
 	JmsDataChannel getChannel(String name);
 //	void addChannel(JmsDataChannel channel);
 //	void removeChannel(String name);

@@ -134,19 +134,16 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //		addConnection(name, new JmsConnection(url, user, password));
 //	}
 
-	@Override
-	public String[] listConnections() {
-//		synchronized (this) {
-//			return connections.keySet().toArray(new String[0]);
+//	@Override
+//	public String[] listConnections() {
+//		LinkedList<String> out = new LinkedList<>();
+//		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null)) {
+//			String name = getServiceName(ref);
+//			if (name != null)
+//				out.add(name);
 //		}
-		LinkedList<String> out = new LinkedList<>();
-		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null)) {
-			String name = getServiceName(ref);
-			if (name != null)
-				out.add(name);
-		}
-		return out.toArray(new String[out.size()]);
-	}
+//		return out.toArray(new String[out.size()]);
+//	}
 
 	@Override
 	public List<JmsConnection> getConnections() {
@@ -309,22 +306,19 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		
 	}
 */
-	@Override
-	public String[] listChannels() {
-//		synchronized (channels) {
-//			return channels.keySet().toArray(new String[channels.size()]);
+//	@Override
+//	public String[] listChannels() {
+//		LinkedList<String> out = new LinkedList<>();
+//		for (MOsgi.Service<JmsDataChannel> ref : MOsgi.getServiceRefs(JmsDataChannel.class, null)) {
+//			String name = ref.getName();
+//			if (name == null && ref.getService() != null) {
+//				name = ref.getService().getName();
+//			}
+//			if (name != null)
+//				out.add(name);
 //		}
-		LinkedList<String> out = new LinkedList<>();
-		for (MOsgi.Service<JmsDataChannel> ref : MOsgi.getServiceRefs(JmsDataChannel.class, null)) {
-			String name = ref.getName();
-			if (name == null && ref.getService() != null) {
-				name = ref.getService().getName();
-			}
-			if (name != null)
-				out.add(name);
-		}
-		return out.toArray(new String[out.size()]);
-	}
+//		return out.toArray(new String[out.size()]);
+//	}
 
 	@Override
 	public JmsDataChannel getChannel(String name) {

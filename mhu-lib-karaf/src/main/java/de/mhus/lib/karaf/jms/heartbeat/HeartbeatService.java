@@ -64,16 +64,15 @@ public class HeartbeatService extends JmsDataChannelImpl {
 			public void run() {
 				MThread.sleep(1000);
 	
-				for (String cName : service.listChannels()) {
+				for (JmsDataChannel c : service.getChannels()) {
 					try {
-						log().d("heartbeat reset", cName);
-						JmsDataChannel c = service.getChannel(cName);
+						log().d("heartbeat reset", c);
 						c.reset();
 						if (c.getChannel() != null) {
 							c.getChannel().reset();
 							c.getChannel().open();
 						}else
-							log().w("channel is null",cName);
+							log().w("channel is null",c);
 					} catch (Throwable t) {
 						log().w(t);
 					}
