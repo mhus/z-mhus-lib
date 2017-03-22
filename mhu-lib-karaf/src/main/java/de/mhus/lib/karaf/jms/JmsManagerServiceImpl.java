@@ -25,6 +25,7 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.karaf.MOsgi;
+import de.mhus.lib.karaf.MOsgi.Service;
 
 /**
  * Note: because of a 'new behavior' or bug in Felix we need to delay the start of the
@@ -139,8 +140,11 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //			return connections.keySet().toArray(new String[0]);
 //		}
 		LinkedList<String> out = new LinkedList<>();
-		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null))
-			out.add(ref.getName());
+		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null)) {
+			String name = getServiceName(ref);
+			if (name != null)
+				out.add(name);
+		}
 		return out.toArray(new String[out.size()]);
 	}
 
@@ -160,12 +164,12 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	}
 
 	@Override
-	public List<JmsDataSource> getDataSources() {
+	public List<MOsgi.Service<JmsDataSource>> getDataSources() {
 //		synchronized (this) {
 //			return connections.keySet().toArray(new String[0]);
 //		}
-		LinkedList<JmsDataSource> out = new LinkedList<>();
-		for (JmsDataSource obj : MOsgi.getServices(JmsDataSource.class, null))
+		LinkedList<MOsgi.Service<JmsDataSource>> out = new LinkedList<>();
+		for (MOsgi.Service<JmsDataSource> obj : MOsgi.getServiceRefs(JmsDataSource.class, null))
 			out.add(obj);
 		return out;
 	}
@@ -175,10 +179,12 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 //		synchronized (this) {
 //			return connections.get(name);
 //		}
-		JmsDataSource src = MOsgi.getService(JmsDataSource.class,MOsgi.filterServiceName(name));
-		if (src == null) return null;
 		try {
+			JmsDataSource src = MOsgi.getService(JmsDataSource.class,"(osgi.jndi.service.name=jms_" + name + ")");
+			if (src == null) return null;
 			return src.getConnection();
+		} catch (NotFoundException nfe) { 
+			return null;
 		} catch (JMSException e) {
 			log().w(name,e);
 			return null;
@@ -366,6 +372,14 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 					log().t(con,t);
 				}
 //		}
+	}
+
+	@Override
+	public String getServiceName(Service<JmsDataSource> ref) {
+		Object p = ref.getReference().getProperty("osgi.jndi.service.name");
+		if (p != null && p instanceof String && ((String)p).length() > 4 && ((String)p).startsWith("jms_"))
+			return ((String)p).substring(4);
+		return null;
 	}
 	
 }

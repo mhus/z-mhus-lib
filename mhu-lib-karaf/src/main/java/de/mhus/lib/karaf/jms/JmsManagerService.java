@@ -5,6 +5,7 @@ import java.util.List;
 import javax.jms.JMSException;
 
 import de.mhus.lib.jms.JmsConnection;
+import de.mhus.lib.karaf.MOsgi.Service;
 
 public interface JmsManagerService {
 	
@@ -22,6 +23,7 @@ public interface JmsManagerService {
 	void doChannelBeat();
 	List<JmsDataChannel> getChannels();
 	List<JmsConnection> getConnections();
-	List<JmsDataSource> getDataSources();
+	List<Service<JmsDataSource>> getDataSources();
+	String getServiceName(de.mhus.lib.karaf.MOsgi.Service<JmsDataSource> ref);
 
 }

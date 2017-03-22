@@ -68,8 +68,7 @@ public class MOsgi {
 		LinkedList<Service<T>> out = new LinkedList<>();
 		try {
 			for (ServiceReference<T> ref : context.getServiceReferences(ifc, filter)) {
-				T obj = context.getService(ref);
-				out.add(new Service<T>(ref,obj));
+				out.add(new Service<T>(ref,context));
 			}
 		} catch (Exception e) {
 			log.d(ifc,filter,e);
@@ -125,13 +124,17 @@ public class MOsgi {
 
 		private ServiceReference<T> ref;
 		private T obj;
+		private BundleContext context;
 
-		public Service(ServiceReference<T> ref, T obj) {
+		public Service(ServiceReference<T> ref, BundleContext context) {
 			this.ref = ref;
-			this.obj = obj;
+			this.obj = null;
+			this.context = context;
 		}
 		
 		public T getService() {
+			if (obj == null)
+				obj = context.getService(ref);
 			return obj;
 		}
 		
