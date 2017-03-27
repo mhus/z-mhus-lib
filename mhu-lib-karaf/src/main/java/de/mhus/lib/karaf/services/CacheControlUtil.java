@@ -10,4 +10,10 @@ public class CacheControlUtil {
 				c.clear();
 	}
 
+	public static void enable(String name, boolean enabled) {
+		for (CacheControlIfc c : MOsgi.getServices(CacheControlIfc.class, null))
+			if (name == null || name.equals(c.getName()))
+				c.setEnabled(enabled);
+	}
+	
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.core.util.lambda.Recorder;
 import de.mhus.lib.core.util.lambda.RecordingObject;
@@ -706,8 +707,13 @@ public class AQuery<T> extends APrint {
         fieldName = fieldName.toLowerCase();
         if (fieldName.startsWith("is")) fieldName = fieldName.substring(2);
         else
-        if (fieldName.startsWith("get") || fieldName.startsWith("set")) fieldName = fieldName.substring(3);
-        
+        if (fieldName.startsWith("get")) fieldName = fieldName.substring(3);
+        else
+        if (fieldName.startsWith("set")) {
+        	MLogUtil.log().w("Using setter to get attribute name is not clever",fieldName,Thread.currentThread().getStackTrace());
+        	fieldName = fieldName.substring(3);
+        }
+        	
         return fieldName;
 	}
 
