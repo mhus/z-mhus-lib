@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -263,11 +264,27 @@ public class MCollection {
 	 * @return The new list
 	 */
 	public static String append(String list, char separator, String item) {
-		if (list == null || item == null) return list;
+		if (item == null) return list;
 		if (MString.isEmpty(list)) return item;
 		return list + separator + item;
 	}
-	
+
+	/**
+	 * Append the item to the end of the list using the separator if not already exists.
+	 * If list is empty the item will be the first element.
+	 * 
+	 * @param list The list of items
+	 * @param separator The item separator
+	 * @param item New item to append
+	 * @return The new list
+	 */
+	public static String set(String list, char separator, String item) {
+		if (item == null) return list;
+		if (MString.isEmpty(list)) return item;
+		if (contains(list, separator, item)) return list;
+		return list + separator + item;
+	}
+
 	/**
 	 * Remove the given item from the list once.
 	 * 
@@ -282,6 +299,64 @@ public class MCollection {
 		if (list.startsWith(item + separator)) return list.substring(item.length()+1); // first element
 		if (list.endsWith(separator + item)) return list.substring(0, list.length() - 1 - item.length()); // last element
 		return list.replaceFirst(Pattern.quote(separator + item + separator), String.valueOf(separator)); // somewhere in the middle
+	}
+	
+	/**
+	 * Returns a new instance of Map with sorted keys.
+	 * 
+	 * @param in
+	 * @return
+	 */
+	public static <K,V> Map<K,V> sorted(Map<K,V> in) {
+		return new TreeMap<K,V>(in);
+	}
+	
+	/**
+	 * If sort is possible (instance of Comparable) the function will create a new
+	 * instance of list, copy and sort all the entries from the source into the new list and
+	 * returns the created list.
+	 * 
+	 * If the list could not be sorted the original list object will be returned.
+	 * 
+	 * @param in
+	 * @return A ne
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <K> List<K> sorted(List<K> in) {
+		if (in != null && in.size() > 0 && in.get(0) instanceof Comparable) {
+			LinkedList<Comparable> l = new LinkedList<>();
+			for (K item : in)
+				if (item instanceof Comparable)
+					l.add((Comparable)item);
+			Collections.sort(l);
+			return (List<K>) l;
+		} else
+		if (in == null)
+			return new LinkedList<>();
+		else
+			return in;
+	}
+
+	public static <K,V> Map<K,V> sorted(Map<K,V> in, Comparator<K> comp) {
+		TreeMap<K, V> out = new TreeMap<K,V>(comp);
+		out.putAll(in);
+		return out;
+	}
+	
+	/**
+	 * The function will create a new instance of list, copy and sort all the entries from 
+	 * the source into the new list and returns the created list.
+	 * 
+	 * @param in
+	 * @return A ne
+	 */
+	public static <K> List<K> sorted(List<K> in, Comparator<K> comp) {
+		if (in != null && in.size() > 0) {
+			LinkedList<K> l = new LinkedList<>(in);
+			Collections.sort(l, comp);
+			return (List<K>) l;
+		} else
+			return new LinkedList<>();
 	}
 	
 }

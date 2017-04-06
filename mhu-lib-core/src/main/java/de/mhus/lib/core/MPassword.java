@@ -22,9 +22,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.Rot13;
 
 /**
  * Decode / Encode passwords. Attention: This do not give security in any way.

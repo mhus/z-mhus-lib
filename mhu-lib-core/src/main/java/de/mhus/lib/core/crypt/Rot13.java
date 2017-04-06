@@ -16,7 +16,7 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.crypt;
 
 public class Rot13 {
 
