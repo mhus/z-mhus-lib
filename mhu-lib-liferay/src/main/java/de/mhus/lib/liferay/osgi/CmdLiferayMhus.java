@@ -5,6 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +23,10 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.VirtualHost;
+import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
+import com.liferay.portal.kernel.scheduler.SchedulerException;
+import com.liferay.portal.kernel.scheduler.TriggerState;
+import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -228,4 +233,15 @@ public class CmdLiferayMhus implements CommandProvider {
 		
 	}
 	
+	public Object _jobs(CommandInterpreter ci) throws SchedulerException {
+		ConsoleTable out = new ConsoleTable();
+		out.setHeaderValues("Name", "Group", "Storage Type", "Next", "State");
+		for (  SchedulerResponse job : SchedulerEngineHelperUtil.getScheduledJobs()) {
+			Date next = SchedulerEngineHelperUtil.getNextFireTime(job.getJobName(), job.getGroupName(),job.getStorageType());
+			TriggerState state = SchedulerEngineHelperUtil.getJobState(job.getJobName(), job.getGroupName(), job.getStorageType());
+			out.addRowValues(job.getJobName(), job.getGroupName(), job.getStorageType(), next, state );
+		}
+		ci.println(out);
+		return null;
+	}
 }
