@@ -43,7 +43,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	private MNls nls;
 	private int tileWidth = 200;
 	private int tileHeight = 160;
-	private int tileHorizontalGap = 20; 
+	private int tileHorizontalGap = 20;
+	private MenuItem menuHelp; 
 
 	public Desktop(GuiApi api) {
 		this.api = api;
@@ -112,6 +113,14 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			}
 		});
 		menuUser.addSeparator();
+		menuHelp = menuUser.addItem("Help", new MenuBar.Command() {
+			@Override
+			public void menuSelected(MenuItem selectedItem) {
+				doShowHelp();
+			}
+		});
+		menuHelp.setEnabled(false);
+		menuUser.addSeparator();
 		
 		setStyleName("desktop-screen");
 		menuBar.setStyleName("menubar");
@@ -125,6 +134,11 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		setSizeFull();
 		
 		showOverview(false);
+	}
+
+	protected void doShowHelp() {
+		if (currentSpace == null) return;
+		//XXX do it !
 	}
 
 	public void refreshSpaceList() {

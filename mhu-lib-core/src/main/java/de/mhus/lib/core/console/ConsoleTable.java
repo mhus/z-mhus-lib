@@ -1,6 +1,11 @@
 package de.mhus.lib.core.console;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +66,23 @@ public class ConsoleTable {
         }
     }
 
+    public void print(PrintWriter out)  {
+        int[] sizes = new int[header.size()];
+        updateSizes(sizes, header);
+        for (List<String> row : content) {
+            updateSizes(sizes, row);
+        }
+        String headerLine = getRow(sizes, header, " | ");
+        out.println(headerLine);
+        out.println(underline(headerLine.length()));
+        boolean first = true;
+        for (List<String> row : content) {
+        	if (!first && lineSpacer) out.println();
+            out.println(getRow(sizes, row, " | "));
+            first = false;
+        }
+    }
+    
     private String underline(int length) {
         char[] exmarks = new char[length];
         Arrays.fill(exmarks, '-');
@@ -123,5 +145,31 @@ public class ConsoleTable {
 
 	public void setLineSpacer(boolean lineSpacer) {
 		this.lineSpacer = lineSpacer;
+	}
+	
+	@Override
+	public String toString() {
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter ps = new PrintWriter(sw);
+		print(ps);
+		
+		return sw.toString();
+	}
+	
+	public static ConsoleTable fromJdbcResult(ResultSet res) throws SQLException {
+		ResultSetMetaData resMeta = res.getMetaData();
+		ConsoleTable out = new ConsoleTable();
+		String[] h = new String[resMeta.getColumnCount()];
+		for (int i = 0; i < resMeta.getColumnCount(); i++)
+			h[i] = resMeta.getColumnName(i+1);
+		
+		out.setHeaderValues(h);
+		while (res.next()) {
+			List<String> r = out.addRow();
+			for (int i = 0; i < resMeta.getColumnCount(); i++)
+				r.add(String.valueOf(res.getObject(i+1)));
+		}
+		return out;
 	}
 }

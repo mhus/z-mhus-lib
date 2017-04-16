@@ -89,6 +89,21 @@ dependencies {
   		<artifactId>javax.servlet-api</artifactId>
   		<version>3.0.1</version>
   	</dependency>
+  	
+    <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>${osgi.version}</version>
+    </dependency>
+  	
+	<!-- https://mvnrepository.com/artifact/org.eclipse.osgi/org.eclipse.osgi -->
+	<dependency>
+	    <groupId>org.eclipse.osgi</groupId>
+	    <artifactId>org.eclipse.osgi</artifactId>
+	    <version>3.9.1.v20140110-1610</version>
+	</dependency>
+
+
   	<!-- 
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
@@ -115,6 +130,7 @@ dependencies {
                         <Import-Package>
                             *
                         </Import-Package>
+                        <Bundle-Activator>de.mhus.lib.liferay.LiferayActivator</Bundle-Activator>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <!-- 
                         <Service-Component>*</Service-Component>
@@ -124,4 +140,11 @@ dependencies {
             </plugin>
         </plugins>
      </build>
+     
+     <repositories>
+     	<repository>
+     		<id>wso2</id>
+     		<url>http://dist.wso2.org/maven2</url>
+     	</repository>
+     </repositories>
 </project>
