@@ -24,7 +24,9 @@ public class InsecureHttpClientBuilder extends MHttpClientBuilder {
     private SocketConfig defaultSocketConfig;
     private ConnectionConfig defaultConnectionConfig;
 
+	@Override
 	protected void configureProtocolHandling(HttpClientBuilder build) {
+		super.configureProtocolHandling(build);
 		
 //        PublicSuffixMatcher publicSuffixMatcher = PublicSuffixMatcherLoader.getDefault();
 //        DefaultHostnameVerifier hostnameVerifier = new DefaultHostnameVerifier(publicSuffixMatcher);

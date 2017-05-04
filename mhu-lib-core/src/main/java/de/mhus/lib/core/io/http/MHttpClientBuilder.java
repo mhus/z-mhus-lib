@@ -18,6 +18,7 @@ public class MHttpClientBuilder extends MObject {
 	private String proxyHost;
 	private int proxyPort = 3128;
 	private BasicCookieStore cookieStore;
+	private boolean useSystemProperties;
 
 	/**
 	 * The function will return the http client. If the http client not exists or was closed the
@@ -53,6 +54,8 @@ public class MHttpClientBuilder extends MObject {
 	}
 
 	protected void configureProtocolHandling(HttpClientBuilder build) {
+		if (useSystemProperties)
+			build.useSystemProperties();
 	}
 	
 	protected void configureCookieStore(HttpClientBuilder build) {
@@ -73,23 +76,35 @@ public class MHttpClientBuilder extends MObject {
 		return proxyHost;
 	}
 
-	public void setProxyHost(String proxyHost) {
+	public MHttpClientBuilder setProxyHost(String proxyHost) {
 		this.proxyHost = proxyHost;
+		return this;
 	}
 
 	public int getProxyPort() {
 		return proxyPort;
 	}
 
-	public void setProxyPort(int proxyPort) {
+	public MHttpClientBuilder setProxyPort(int proxyPort) {
 		this.proxyPort = proxyPort;
+		return this;
 	}
 
 	public BasicCookieStore getCookieStore() {
 		return cookieStore;
 	}
 
-	public void setCookieStore(BasicCookieStore cookieStore) {
+	public MHttpClientBuilder setCookieStore(BasicCookieStore cookieStore) {
 		this.cookieStore = cookieStore;
+		return this;
+	}
+
+	public boolean isUseSystemProperties() {
+		return useSystemProperties;
+	}
+
+	public MHttpClientBuilder setUseSystemProperties(boolean useSystemProperties) {
+		this.useSystemProperties = useSystemProperties;
+		return this;
 	}
 }
