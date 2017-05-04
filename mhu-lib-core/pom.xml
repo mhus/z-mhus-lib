@@ -49,6 +49,7 @@
 		            de.mhus.lib.mutable;version=${project.version};resolution:=optional,
 		            net.sf.cglib.*;version=3.2.2;resolution:=optional,
 		            org.bouncycastle.*;version=1.56;resolution:=optional,
+		            org.apache.http.*;version=1.56;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
@@ -131,6 +132,12 @@
 	    <groupId>org.bouncycastle</groupId>
 	    <artifactId>bcprov-jdk15on</artifactId>
 	    <version>1.56</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.5.3</version>
 	</dependency>
 
 

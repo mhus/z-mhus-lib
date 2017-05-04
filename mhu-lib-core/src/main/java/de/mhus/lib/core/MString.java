@@ -1648,5 +1648,24 @@ public class MString {
 	public static String regexEncode(String in) {
 		return Pattern.quote(in);
 	}
+
+	public static String wrap(String in, int length) {
+		if (in == null || length < 1 || in.length() < length) return in;
+		StringBuffer out = new StringBuffer();
+		while (true) {
+			
+			if (out.length() != 0)
+				out.append('\n');
+			
+			if (in.length() <= length) {
+				out.append(in);
+				break;
+			} else {
+				out.append(in.substring(0,length));
+				in = in.substring(length);
+			}
+		}
+		return out.toString();
+	}
 	
 }

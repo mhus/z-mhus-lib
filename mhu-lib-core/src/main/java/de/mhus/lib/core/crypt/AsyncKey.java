@@ -2,6 +2,8 @@ package de.mhus.lib.core.crypt;
 
 import java.math.BigInteger;
 
+import de.mhus.lib.core.MSystem;
+
 public class AsyncKey {
 	private BigInteger modulus;
 	private BigInteger publicExponent;
@@ -74,5 +76,10 @@ public class AsyncKey {
 	}
 	protected void setCoefficient(BigInteger coefficient) {
 		this.coefficient = coefficient;
+	}
+	
+	@Override
+	public String toString() {
+		return MSystem.toString(this, publicExponent, modulus);
 	}
 }
