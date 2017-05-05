@@ -40,18 +40,20 @@ public class MPortalDelegateServlet extends PortalDelegateServlet {
         if (servlet == null) {
             return "";
         }
-        return super.getServletInfo();
+        String ret = super.getServletInfo();
+        if (ret == null) return "";
+        return ret;
     }
 
 	@Override
 	protected void doPortalDestroy() {
-		System.out.println("Destroy Servlet " + getServletName());
+		System.out.println("*** Destroy Servlet " + getServletName());
 		super.doPortalDestroy();
 	}
 
 	@Override
 	protected void doPortalInit() throws Exception {
-		System.out.println("Init Servlet " + getServletName());
+		System.out.println("*** Init Servlet " + getServletName());
 		super.doPortalInit();
 	}
     
