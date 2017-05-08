@@ -2,6 +2,7 @@ package de.mhus.lib.core.util;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -128,6 +129,13 @@ public class MNls extends AbstractProperties {
 		return null;
 	}
 
+	public static MNls lookup(Object owner, Locale locale) {
+		MNlsFactory factory = MNlsFactory.lookup(owner);
+		if (factory != null)
+			return factory.load(owner.getClass(), locale);
+		return null;
+	}
+	
 	@Override
 	public int size() {
 		return properties.size();

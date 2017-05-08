@@ -42,7 +42,11 @@ public class MNlsFactory extends MNlsBundle {
 			return (String)owner;
 		return MSystem.getClassName(owner).replace('.', '/');
 	}
-	
+
+	public MNls load(Class<?> owner, Locale locale) {
+		return load(null, owner, null, locale == null ? null : locale.toString());
+	}
+
 	public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale) {
 		return load(res,owner,resourceName,locale, true);
 	}

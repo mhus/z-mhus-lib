@@ -134,6 +134,7 @@ public class CryptTest extends TestCase {
 			BigInteger[] b62enc = MBigMath.fromBase62Array(b62);
 			byte[] copy = AsyncUtil.decodeBytes(pair, b62enc);
 			System.out.println(new String(copy));
+			System.out.println("62 Size: " + b62.length());
 			assertEquals(new String(org), new String(copy));
 		}
 		{
@@ -147,6 +148,7 @@ public class CryptTest extends TestCase {
 			BigInteger[] b62enc = MBigMath.fromBase62Array(b62);
 			byte[] copy = AsyncUtil.decodeBytes(pair, b62enc);
 			System.out.println(new String(copy));
+			System.out.println("62 Size: " + b62.length());
 			assertEquals(new String(org), new String(copy));
 		}
 	}
@@ -179,7 +181,70 @@ public class CryptTest extends TestCase {
 			String n = MBigMath.fromBase62(b62).toString();
 			System.out.println(m + "\n" + b62 + "\n" + n);
 			assertEquals(m, n);
-			System.out.println("Size: " + m.length() + " -> " + b62.length());
+			System.out.println("62 Size: " + m.length() + " -> " + b62.length());
+		}
+	}
+
+	public void testBase91Encode() throws IOException {
+		{
+			System.out.println("--- 256 bit key");
+			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key256);
+			byte[] org = "Hello World!".getBytes();
+			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			String b = MBigMath.toBase91(enc);
+			b = MString.wrap(b,100);
+			System.out.println(b);
+			BigInteger[] benc = MBigMath.fromBase91Array(b);
+			byte[] copy = AsyncUtil.decodeBytes(pair, benc);
+			System.out.println(new String(copy));
+			System.out.println("91 Size: " + b.length());
+			assertEquals(new String(org), new String(copy));
+		}
+		{
+			System.out.println("--- 2048 bit key");
+			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key2048);
+			byte[] org = "Hello World!".getBytes();
+			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			String b = MBigMath.toBase91(enc);
+			b = MString.wrap(b,100);
+			System.out.println(b);
+			BigInteger[] benc = MBigMath.fromBase91Array(b);
+			byte[] copy = AsyncUtil.decodeBytes(pair, benc);
+			System.out.println(new String(copy));
+			System.out.println("91 Size: " + b.length());
+			assertEquals(new String(org), new String(copy));
+		}
+	}
+	
+	public void testBase91() {
+		{
+			int m = Integer.MAX_VALUE;
+			String b62 = MBigMath.toBase91(BigInteger.valueOf(m));
+			int n = MBigMath.fromBase91(b62).intValue();
+			System.out.println(m + " " + b62 + " " + n);
+			assertEquals(m, n);
+		}
+		{
+			int m = Integer.MIN_VALUE;
+			String b62 = MBigMath.toBase91(BigInteger.valueOf(m));
+			int n = MBigMath.fromBase91(b62).intValue();
+			System.out.println(m + " " + b62 + " " + n);
+			assertEquals(m, n);
+		}
+		{
+			int m = 0;
+			String b62 = MBigMath.toBase91(BigInteger.valueOf(m));
+			int n = MBigMath.fromBase91(b62).intValue();
+			System.out.println(m + " " + b62 + " " + n);
+			assertEquals(m, n);
+		}
+		{
+			String m = "20362187185641719740744354144518944735575949959856858868198444658825667466984270784929654204614580514689002872397300330656664561831814098832695775153878115027562330791292701943761254258386134072241633320460815291031714014496633155881788866223406018609362093078216332925891836454970304283868408313426082512669633657354469746229309116875207499950872538992343485180039215301661855418632786237406531379449599695768733862836388927907549255503769238544123030194101611094996705530387720100026063425333350613562296206296883503866883085316253987741357241342223657485340474646359731670857982325029246463452542949298851914572037";
+			String b62 = MBigMath.toBase91(new BigInteger(m));
+			String n = MBigMath.fromBase91(b62).toString();
+			System.out.println(m + "\n" + b62 + "\n" + n);
+			assertEquals(m, n);
+			System.out.println("91 Size: " + m.length() + " -> " + b62.length());
 		}
 	}
 	
