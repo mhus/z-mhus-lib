@@ -1,5 +1,7 @@
 package de.mhus.lib.vaadin.desktop;
 
+import java.util.Locale;
+
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar.MenuItem;
 
@@ -7,13 +9,66 @@ import de.mhus.lib.core.security.AccessControl;
 
 public interface GuiSpaceService {
 
+	/**
+	 * Return the technical unique name of the space.
+	 * @return
+	 */
 	String getName();
-	String getDisplayName();
+	/**
+	 * Return the display name for the country.
+	 * @return
+	 */
+	String getDisplayName(Locale locale);
+	/**
+	 * Create a space UI component.
+	 * @return
+	 */
 	AbstractComponent createSpace();
+	/**
+	 * Return true if the current user have access. Return true if you are unsure.
+	 * The desktop will have a separate access control.
+	 * @param control
+	 * @return
+	 */
 	boolean hasAccess(AccessControl control);
+	/**
+	 * This method is called EVERY time the space is shown.
+	 * It allows the space to create a custom menu. Best practice
+	 * is to delegate the call into the space object.
+	 * 
+	 * @param space
+	 * @param menu
+	 */
 	void createMenu(AbstractComponent space, MenuItem[] menu);
+	/**
+	 * If the space should not have a preview return true.
+	 * @return
+	 */
 	boolean isHiddenSpace();
+	/**
+	 * If the service needs to create a custom tile preview return
+	 * a preview component. If not return null.
+	 * @return
+	 */
 	AbstractComponent createTile();
+	/**
+	 * Return the width of the preview tile. The with could be between
+	 * 1 and 3. If you are not sure, return 0.
+	 * @return
+	 */
 	int getTileSize();
+	/**
+	 * Return true if this space should not be shown in the spaces menu.
+	 * @return
+	 */
 	boolean isHiddenInMenu();
+	/**
+	 * Creates a new Help Context instance for the given locale or a fallback instance.
+	 * If the service do not support help. The function should return null.
+	 * 
+	 * @param locale
+	 * 
+	 * @return
+	 */
+	HelpContext createHelpContext(Locale locale);
 }

@@ -2,12 +2,15 @@ package de.mhus.lib.vaadin.desktop;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -19,13 +22,14 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.vaadin.ui.HelpManager;
 
 public class Desktop extends CssLayout implements MNlsProvider {
 
 	private static final long serialVersionUID = 1L;
 	private MenuBar menuBar;
 	private MenuItem menuSpaces;
-	private VerticalLayout contentScreen;
+	private HorizontalLayout contentScreen;
 	private MenuItem[] menuSpace = new MenuItem[4];
 	private MenuItem menuLeave;
 	protected MenuItem menuUser;
@@ -39,12 +43,15 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	private LinkedList<String> history = new LinkedList<>();
 	private TreeMap<String,GuiSpaceService> spaceList = new TreeMap<String, GuiSpaceService>();
 	private HashMap<String, AbstractComponent> spaceInstanceList = new HashMap<String, AbstractComponent>();
+	private HashMap<String, HelpContext> helpInstanceList = new HashMap<String, HelpContext>();
 	private GuiApi api;
 	private MNls nls;
 	private int tileWidth = 200;
 	private int tileHeight = 160;
 	private int tileHorizontalGap = 20;
-	private MenuItem menuHelp; 
+	private MenuItem menuHelp;
+	private boolean helpActive;
+	private VerticalLayout helpView;
 
 	public Desktop(GuiApi api) {
 		this.api = api;
@@ -52,6 +59,10 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	}
 
 	protected void initGui() {
+		
+		helpView = new VerticalLayout();
+		helpView.setSizeFull();
+		helpView.setStyleName("help-panel");
 		
 		overView = new CssLayout();
 		overView.setSizeFull();
@@ -127,7 +138,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		
 		addComponent(menuBar);
 		
-		contentScreen = new VerticalLayout();
+		contentScreen = new HorizontalLayout();
 		contentScreen.addStyleName("content");
 		contentScreen.setSizeFull();
 		addComponent(contentScreen);
@@ -138,9 +149,47 @@ public class Desktop extends CssLayout implements MNlsProvider {
 
 	protected void doShowHelp() {
 		if (currentSpace == null) return;
-		//XXX do it !
+		
+		if (helpActive) {
+			hideHelp();
+			return;
+		}
+		
+		showHelpTopic(null);
 	}
 
+	public void hideHelp() {
+		synchronized (this) {
+			if (!helpActive) return;
+			helpView.removeAllComponents();
+			contentScreen.removeComponent(helpView);
+			helpActive = false;
+		}
+	}
+	
+	public void showHelpTopic(String topic) {
+		
+		HelpContext help = getHelpContext(currentSpace.getName());
+		if (help == null) {
+			menuHelp.setEnabled(false);
+			return;
+		}
+		Component component = help.getComponent();
+		if (component == null) return;
+
+		synchronized (this) {
+			if (!helpActive) {
+				contentScreen.addComponent(helpView);
+				contentScreen.setExpandRatio(helpView, 0.5f);
+			};
+			helpView.removeAllComponents();
+			helpView.addComponent(component);
+			
+		}
+		helpActive = true;
+	}
+	
+	
 	public void refreshSpaceList() {
 		
 		String name = "?";
@@ -172,14 +221,16 @@ public class Desktop extends CssLayout implements MNlsProvider {
 				log.d(space,t);
 			}
 		}
-		
+
+		Locale locale = UI.getCurrent().getPage().getWebBrowser().getLocale();
+
 		for (final GuiSpaceService space : componentList ) {
 			
 			AbstractComponent tile = space.createTile();
 			if (tile == null) {
 				NativeButton button = new NativeButton();
 				button.setHtmlContentAllowed(false);
-				button.setCaption( space.getDisplayName());
+				button.setCaption( space.getDisplayName(locale));
 				button.addClickListener(new NativeButton.ClickListener() {
 					
 					@Override
@@ -199,7 +250,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			overView.addComponent(tile);
 			
 			if (!space.isHiddenInMenu()) {
-				MenuItem item = menuSpaces.addItem(space.getDisplayName(), new MenuBar.Command() {
+				MenuItem item = menuSpaces.addItem(space.getDisplayName(locale), new MenuBar.Command() {
 					
 					@Override
 					public void menuSelected(MenuItem selectedItem) {
@@ -239,6 +290,10 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	protected String showSpace(GuiSpaceService space, String subSpace, String search) {
 		boolean exists = spaceInstanceList.containsKey(space.getName());
 		AbstractComponent component = getSpaceComponent(space.getName());
+		HelpContext help = getHelpContext(space.getName());
+		
+		menuHelp.setEnabled(false);
+		helpActive = false;
 		
 		contentScreen.removeAllComponents();
 		cleanupMenu();
@@ -250,11 +305,18 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		
 		component.setSizeFull();
 		contentScreen.addComponent(component);
+		contentScreen.setExpandRatio(component, 1f);
 		
-		menuHistory.setText(space.getDisplayName());
+		Locale locale = UI.getCurrent().getPage().getWebBrowser().getLocale();
+
+		menuHistory.setText(space.getDisplayName(locale));
 		menuLeave.setEnabled(true);
 		currentSpace = space;
 		space.createMenu(component,menuSpace);
+		
+		if (help != null) {
+			menuHelp.setEnabled(true);
+		}
 		
 		if (component instanceof Navigable) {
 			if ( (MString.isSet(subSpace) || MString.isSet(search))) 
@@ -262,7 +324,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			else
 				((Navigable)component).onShowSpace(!exists);
 		}
-		return space.getDisplayName();
+		return space.getDisplayName(locale);
 	}
 
 	protected void showOverview(boolean setLinking) {
@@ -271,6 +333,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		cleanupMenu();
 		currentSpace = null;
 		contentScreen.addComponent(overView);
+		contentScreen.setExpandRatio(overView, 1f);
+
 		menuHistory.setText(MNls.find(this, "menu.history=History"));
 		if (setLinking)
 			UI.getCurrent().getPage().setUriFragment("");
@@ -388,6 +452,20 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		return instance;
 	}
 
+	public HelpContext getHelpContext(String name) {
+		GuiSpaceService space = spaceList.get(name);
+		if (space == null) return null;
+		HelpContext instance = helpInstanceList.get(name);
+		if (instance == null) {
+			Locale locale = UI.getCurrent().getPage().getWebBrowser().getLocale();
+			instance = space.createHelpContext(locale);
+			if (instance == null) return null;
+			if (instance instanceof GuiLifecycle) ((GuiLifecycle)instance).doInitialize();
+			helpInstanceList.put(name, instance);
+		}
+		return instance;
+	}
+	
 	@Override
 	public MNls getNls() {
 		if (nls == null) nls = MNls.lookup(this);
