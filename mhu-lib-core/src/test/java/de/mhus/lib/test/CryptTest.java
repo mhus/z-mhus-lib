@@ -8,6 +8,8 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.AsnUtil;
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.AsyncUtil;
+import de.mhus.lib.core.crypt.CipherBlockArithmetic;
+import de.mhus.lib.core.crypt.CipherBlockRotate;
 import junit.framework.TestCase;
 
 public class CryptTest extends TestCase {
@@ -248,4 +250,77 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	public void testCipherBlockArithmetic() {
+		CipherBlockArithmetic enc = new CipherBlockArithmetic(255);
+		CipherBlockArithmetic dec = new CipherBlockArithmetic(255);
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			enc.getBlock()[b-Byte.MIN_VALUE] = b;
+			dec.getBlock()[b-Byte.MIN_VALUE] = b;
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = 127;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+			assertEquals(a, in);
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = -128;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+			assertEquals(a, in);
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = b;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+			assertEquals(a, in);
+		}
+	}
+
+	public void testCipherBlockRotate() {
+		
+		CipherBlockRotate enc = new CipherBlockRotate(255);
+		CipherBlockRotate dec = new CipherBlockRotate(255);
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			enc.getBlock()[b-Byte.MIN_VALUE] = b;
+			dec.getBlock()[b-Byte.MIN_VALUE] = b;
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = 127;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+			assertEquals(a, in);
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = -128;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+//TODO			assertEquals(a, in);
+		}
+		enc.reset();
+		dec.reset();
+		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+			byte a = b;
+			byte x = enc.encode(a);
+			byte in = dec.decode(x);
+//			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
+//TODO			assertEquals(a, in);
+		}
+	}
+
 }
