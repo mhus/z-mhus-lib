@@ -28,5 +28,14 @@ public interface HelpContext {
 	 * @return List of 'Display Name' and 'topic' ordered by score
 	 */
 	List<Pair<String,String>> searchTopics(String search);
-	
+
+	/**
+	 * Return the index of all (important) topics. If you need sub topics add
+	 * space or spaces in front of the display name.
+	 * 
+	 * If you don't support an index return null.
+	 * 
+	 * @return List of 'Display Name' and 'topic' 
+	 */
+	List<Pair<String,String>> getIndex();
 }

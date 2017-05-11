@@ -72,4 +72,9 @@ public class NlsIFrameHelpContext extends MLog implements HelpContext {
 		return null;
 	}
 
+	@Override
+	public List<Pair<String, String>> getIndex() {
+		return null;
+	}
+
 }
