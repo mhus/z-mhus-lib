@@ -5,17 +5,17 @@ import java.util.UUID;
 import javax.jms.DeliveryMode;
 import javax.jms.Session;
 
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 public abstract class JmsChannel extends JmsObject {
 
 	protected JmsDestination dest;
 	protected int deliveryMode = DeliveryMode.NON_PERSISTENT;
 	protected int priority = 0; // default
-	protected long timeToLive = 60 * 60 * 1000; // TODO check this !!!
+	protected long timeToLive = 60 * 60 * 1000;
 
 	{
-		ResourceNode cfg = MJms.getConfig();
+		 IConfig cfg = MJms.getConfig();
 		timeToLive = cfg.getLong("msgTimeToLive", timeToLive);
 	}
 	

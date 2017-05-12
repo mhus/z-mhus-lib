@@ -290,7 +290,7 @@ do not block jms driven threads !!! This will cause a deadlock
 	@Override
 	public void doBeat() {
 		if (isClosed()) return;
-		log().d("beat");
+		log().d("beat",dest);
 		try {
 			Session session = getSession();
 			if ( session instanceof ActiveMQSession && ((ActiveMQSession)getSession()).isClosed() ) {
