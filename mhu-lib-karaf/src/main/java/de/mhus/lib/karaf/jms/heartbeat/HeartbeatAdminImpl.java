@@ -116,7 +116,8 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 						c.getChannel().doBeat();
 //						c.getChannel().reset();
 //						c.getChannel().open();
-					}
+					} else
+						c.reset();
 				} catch (Throwable t) {
 					log().w(c,cmd,t);
 				}
