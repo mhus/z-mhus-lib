@@ -137,6 +137,9 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 			log().d("JmsManagerService not found");
 			return;
 		}
+		
+		service.addChannel(this); // remember me :)
+		
 		JmsConnection con = service.getConnection(connectionName);
 		if (con == null) {
 			log().d("connection not found",name,connectionName);
