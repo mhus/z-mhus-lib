@@ -52,6 +52,7 @@
         <karaf.version>4.0.4</karaf.version>
         <bndlib.version>1.50.0</bndlib.version>
         <felix.metatype.version>1.0.10</felix.metatype.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compileSource>1.8</compileSource>
 		<osgi.version>5.0.0</osgi.version>
 		<activemq.version>5.7.0</activemq.version>
