@@ -80,7 +80,6 @@ public class CmdLiferayMhus implements CommandProvider {
 		String virtualHost = ci.nextArgument();
 		Company company = CompanyServiceUtil.getCompanyByVirtualHost(virtualHost);
 		long companyId = company.getCompanyId();
-		ci.println("6");
 		
 		ConsoleTable out = new ConsoleTable();
 		out.setHeaderValues("Id","Screen Name","EMail", "Full Name");
@@ -92,6 +91,42 @@ public class CmdLiferayMhus implements CommandProvider {
 		return null;
 		
 	}
+	
+	public Object _user(CommandInterpreter ci) throws Exception {
+
+		String virtualHost = ci.nextArgument();
+		Company company = CompanyServiceUtil.getCompanyByVirtualHost(virtualHost);
+		long companyId = company.getCompanyId();
+		
+		String screenName = ci.nextArgument();
+		User u = UserLocalServiceUtil.getUserByScreenName(company.getCompanyId(), screenName);
+		ci.println("UserId             : " + u.getUserId());
+		ci.println("UserUUID           : " + u.getUserUuid());
+		ci.println("ScreenName         : " + u.getScreenName());
+		ci.println("EMail..............: " + u.getEmailAddress());
+		ci.println("Display EMail      : " + u.getDisplayEmailAddress());
+		ci.println("Original EMail     : " + u.getOriginalEmailAddress());
+		ci.println("Greeting           : " + u.getGreeting());
+		ci.println("Initials...........: " + u.getInitials());
+		ci.println("FirstName          : " + u.getFirstName());
+		ci.println("MiddleName         : " + u.getMiddleName());
+		ci.println("LastName           : " + u.getLastName());
+		ci.println("FullName...........: " + u.getFullName());
+		ci.println("Comments           : " + u.getComments());
+		ci.println("LastLoginDate      : " + u.getLastLoginDate());
+		ci.println("LastLoginIP        : " + u.getLastLoginIP());
+		ci.println("LastFailedLogin....: " + u.getLastFailedLoginDate());
+		ci.println("FailedLoginAttempts: " + u.getFailedLoginAttempts());
+		ci.println("IsActive           : " + u.isActive());
+		ci.println("IsAgreedTermsOfUse : " + u.isAgreedToTermsOfUse());
+		ci.println("IsMale.............: " + u.isMale());
+		ci.println("IsFemale           : " + u.isFemale());
+		ci.println("IsPasswordReset    : " + u.isPasswordReset());
+		
+		return null;
+
+	}
+	
 	
 	public Object _setpassword(CommandInterpreter ci) throws PortalException {
 		try {
