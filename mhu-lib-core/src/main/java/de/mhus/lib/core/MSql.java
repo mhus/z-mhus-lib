@@ -274,7 +274,10 @@ public class MSql {
 	 * @throws SQLException 
 	 */
 	public static String column(String name) throws SQLException {
-		if (!name.matches("^[a-zA-Z_]+[a-zA-Z0-9._]*$"))
+		String n = name;
+		if (n.length() > 2 && n.startsWith("`") && n.endsWith("`"))
+			n = n.substring(1, n.length()-1);
+		if (!n.matches("^[a-zA-Z_]+[a-zA-Z0-9._]*$"))
 			throw new SQLException("name is not a column identifier, possible injection");
 		return name;
 	}

@@ -73,6 +73,16 @@ public class MValidatorTest extends TestCase {
 		} catch (SQLException e) {
 			
 		}
+
+		MSql.column("`table.servus_mr_nobody`");
+		try {
+			MSql.column("`_servus_mr_nobody");
+			assertEquals(true, false);
+		} catch (SQLException e) {}
+		try {
+			MSql.column("_servus_mr_nobody`");
+			assertEquals(true, false);
+		} catch (SQLException e) {}
 	}
 	
 }
