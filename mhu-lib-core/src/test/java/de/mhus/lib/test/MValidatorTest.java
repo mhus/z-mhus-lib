@@ -1,7 +1,9 @@
 package de.mhus.lib.test;
 
+import java.sql.SQLException;
 import java.util.Locale;
 
+import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MValidator;
 import junit.framework.TestCase;
 
@@ -46,6 +48,31 @@ public class MValidatorTest extends TestCase {
 		assertEquals(false, MValidator.isPhoneNumber("+49") );
 		assertEquals(false, MValidator.isPhoneNumber("+49 40 12345 12345 12345 12345") );
 		assertEquals(false, MValidator.isPhoneNumber("+49-40/1234") );
+	}
+	
+	public void testSqlColumnName() throws SQLException {
+		MSql.column("_servus_mr_nobody");
+		MSql.column("_servus_mr_nobody0");
+		MSql.column("_Servus_Mr_Nobody");
+		MSql.column("table.servus_mr_nobody");
+		try {
+			MSql.column("_servus_mr_nobody;");
+			assertEquals(true, false);
+		} catch (SQLException e) {
+			
+		}
+		try {
+			MSql.column("0_servus_mr_nobody");
+			assertEquals(true, false);
+		} catch (SQLException e) {
+			
+		}
+		try {
+			MSql.column("._servus_mr_nobody");
+			assertEquals(true, false);
+		} catch (SQLException e) {
+			
+		}
 	}
 	
 }

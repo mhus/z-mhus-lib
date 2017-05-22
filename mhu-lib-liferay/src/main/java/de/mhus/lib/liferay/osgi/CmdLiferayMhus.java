@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.VirtualHost;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CompanyServiceUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupRoleServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -122,11 +124,31 @@ public class CmdLiferayMhus implements CommandProvider {
 		ci.println("IsMale.............: " + u.isMale());
 		ci.println("IsFemale           : " + u.isFemale());
 		ci.println("IsPasswordReset    : " + u.isPasswordReset());
+		ci.println();
+		
+		for (Group s : GroupLocalServiceUtil.getUserSitesGroups(u.getUserId())) {
+			ci.println("Site  : " + s.getGroupId() + " " + s.getFriendlyURL() + " " + s.getName());
+		}
+		for (Group s : GroupLocalServiceUtil.getUserGroups(u.getUserId())) {
+			ci.println("Group : " + s.getGroupId() + " " + s.getFriendlyURL() + " " + s.getName());
+		}
+		
 		
 		return null;
 
 	}
 	
+	public Object _groups(CommandInterpreter ci) {
+		
+		ConsoleTable out = new ConsoleTable();
+		out.setHeaderValues("Id","Company","Active","Site","URL");
+		for (Group s : GroupLocalServiceUtil.getGroups(0,GroupLocalServiceUtil.getGroupsCount())) {
+			if (!s.isUser())
+				out.addRowValues(s.getGroupId(), s.getCompanyId(), s.getActive(), s.isSite(), s.getFriendlyURL());
+		}
+		ci.print(out);
+		return null;
+	}
 	
 	public Object _setpassword(CommandInterpreter ci) throws PortalException {
 		try {

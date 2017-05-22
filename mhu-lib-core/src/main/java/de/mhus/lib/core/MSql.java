@@ -265,4 +265,18 @@ public class MSql {
 		
 	}
 		
+	/**
+	 * Validate the name as a column name. If the name contains not
+	 * allowed characters the method will throw a sql exception. Use this
+	 * method to deny sql injection for column names.
+	 * @param name The name of the column
+	 * @return The name. The method can be used in line.
+	 * @throws SQLException 
+	 */
+	public static String column(String name) throws SQLException {
+		if (!name.matches("^[a-zA-Z_]+[a-zA-Z0-9._]*$"))
+			throw new SQLException("name is not a column identifier, possible injection");
+		return name;
+	}
+	
 }
