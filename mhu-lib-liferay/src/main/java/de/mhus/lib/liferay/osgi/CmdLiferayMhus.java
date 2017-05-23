@@ -5,6 +5,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.scheduler.messaging.SchedulerResponse;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.CompanyServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
@@ -188,6 +190,24 @@ public class CmdLiferayMhus implements CommandProvider {
 		return role;
 	}
 	
+	public Object _companies(CommandInterpreter ci) throws PortalException {
+		
+		ConsoleTable out = new ConsoleTable();
+		out.setHeaderValues("Id","Active","Name","AccoutnId","DefaultUser","DefaultWebId","GroupId");
+		for ( Company c : CompanyLocalServiceUtil.getCompanies()) {
+			out.addRowValues(c.getCompanyId(),c.getActive(),c.getName(),c.getAccountId(),c.getDefaultUser().getUserId(),c.getDefaultWebId(),c.getGroupId());
+		}
+		ci.println(out);
+		return null;
+	}
+
+	public Object _company(CommandInterpreter ci) throws PortalException {
+		long id = MCast.tolong(ci.nextArgument(), -1);
+		Company c = CompanyLocalServiceUtil.getCompany(id);
+		ci.println(c.toXmlString());
+		return null;
+	}
+	
 	public Object _user_delete(CommandInterpreter ci) throws PortalException {
 		long id = MCast.tolong(ci.nextArgument(), -1);
 		if (id < 0) return null;
@@ -252,7 +272,19 @@ public class CmdLiferayMhus implements CommandProvider {
 		return role;
 	}
 	
-	public Object _db_table_list(CommandInterpreter ci) throws SQLException {
+	public Object _db_commit(CommandInterpreter ci) throws SQLException {
+		Connection con = DataAccess.getConnection();
+		con.commit();
+		return null;
+	}
+	
+	public Object _db_rollback(CommandInterpreter ci) throws SQLException {
+		Connection con = DataAccess.getConnection();
+		con.rollback();
+		return null;
+	}
+	
+	public Object _db_tables(CommandInterpreter ci) throws SQLException {
 		Connection con = DataAccess.getConnection();
 		DatabaseMetaData meta = con.getMetaData();
 		ResultSet res = meta.getTables(null, null, null, new String[] {"TABLE"});
@@ -261,7 +293,18 @@ public class CmdLiferayMhus implements CommandProvider {
 		return null;
 	}
 	
-	public Object _db_index_list(CommandInterpreter ci) throws SQLException {
+	public Object _db_table(CommandInterpreter ci) throws SQLException {
+		String name = ci.nextArgument();
+
+		Connection con = DataAccess.getConnection();
+		DatabaseMetaData meta = con.getMetaData();
+		ResultSet res = meta.getColumns(null, null, name, "%");
+		ConsoleTable out = ConsoleTable.fromJdbcResult(res);
+		ci.println(out);
+		return null;
+	}
+	
+	public Object _db_indexes(CommandInterpreter ci) throws SQLException {
 		String idxName = ci.nextArgument();
 		Connection con = DataAccess.getConnection();
 		DatabaseMetaData meta = con.getMetaData();
@@ -288,6 +331,26 @@ public class CmdLiferayMhus implements CommandProvider {
 		ci.println(out);
 		return null;
 		
+	}
+	
+	public Object _db_select(CommandInterpreter ci) throws SQLException {
+		String sql = ci.nextArgument();
+		Connection con = DataAccess.getConnection();
+		Statement sth = con.createStatement();
+		ResultSet res = sth.executeQuery(sql);
+		ConsoleTable out = ConsoleTable.fromJdbcResult(res);
+		sth.close();
+		ci.println(out);
+		return null;
+	}
+
+	public Object _db_update(CommandInterpreter ci) throws SQLException {
+		String sql = ci.nextArgument();
+		Connection con = DataAccess.getConnection();
+		Statement sth = con.createStatement();
+		int res = sth.executeUpdate(sql);
+		ci.println("Result: " + res);
+		return null;
 	}
 	
 	public Object _jobs(CommandInterpreter ci) throws SchedulerException {

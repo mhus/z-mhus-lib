@@ -393,4 +393,9 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return keys();
 	}
 
+	public String getFormatted(String name, String def, Object ... values ) {
+		String format = getString(name, def);
+		return String.format(format, values);
+	}
+
 }

@@ -184,6 +184,12 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return out;
 	}
 
+	public static MProperties loadOrEmpty(File f) {
+		MProperties out = load(f);
+		if (out == null) out = new MProperties();
+		return out;
+	}
+	
 	public static MProperties load(File f) {
 		try {
 			FileInputStream fis = new FileInputStream(f);
@@ -571,5 +577,5 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	public void clear() {
 		properties.clear();
 	}
-   
+   	
 }

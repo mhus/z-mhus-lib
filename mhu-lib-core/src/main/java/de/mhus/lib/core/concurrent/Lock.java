@@ -54,7 +54,39 @@ public class Lock {
 		  }
 	  }
 	
-	  public boolean unlockOwned(){
+	  /**
+	   * Run the given task in a locked environment.
+	   * @param task
+	   */
+	  public void lock(Runnable task) {
+		  try {
+			  lock();
+			  task.run();
+		  } finally {
+			  unlock();
+		  }
+	  }
+	  
+	  /**
+	   * Run the given task in a locked environment.
+	   * @param task
+	   * @param timeout 
+	   */
+	  public void lock(Runnable task, long timeout) {
+		  try {
+			  lockWithException(timeout);
+			  task.run();
+		  } finally {
+			  unlock();
+		  }
+	  }
+	  
+	  /**
+	   * Unlock if the current thread is also the owner.
+	   * 
+	   * @return
+	   */
+	  public boolean unlock(){
 		  synchronized (this) {
 			if (lock != Thread.currentThread()) return false;
 		    lock = null;
@@ -62,6 +94,11 @@ public class Lock {
 		    return true;
 		  }
 	  }
+	  
+	  /**
+	   * Unlock in every case !!! This can break a locked area.
+	   * 
+	   */
 	  public void unlockHard(){
 		  synchronized (this) {
 		    lock = null;
@@ -69,6 +106,10 @@ public class Lock {
 		  }
 	  }
 	  
+	  /**
+	   * Sleeps until the lock is released.
+	   * 
+	   */
 	  public void waitUntilUnlock() {
 		  synchronized (this) {
 			    while(isLocked()){

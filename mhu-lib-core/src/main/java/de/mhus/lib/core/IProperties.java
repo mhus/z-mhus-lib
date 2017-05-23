@@ -33,4 +33,6 @@ public interface IProperties extends IReadProperties, Map<String,Object>, Serial
 	@Override
 	void clear();
 
+	String getFormatted(String name, String def, Object ... values );
+
 }

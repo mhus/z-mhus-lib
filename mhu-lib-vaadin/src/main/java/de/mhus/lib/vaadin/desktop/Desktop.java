@@ -195,7 +195,9 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		String name = "?";
 		try {
 			name = getApi().getAccessControl().getAccount().getDisplayName();
-		} catch (Throwable t) {}
+		} catch (Throwable t) {
+			log.d(t);
+		}
 		menuUser.setText(name == null ? "?" : name);
 		
 		menuSpaces.removeChildren();

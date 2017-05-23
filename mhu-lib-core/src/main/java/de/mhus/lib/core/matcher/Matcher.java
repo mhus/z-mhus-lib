@@ -6,6 +6,34 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.SyntaxError;
 
 /**
+ * Matches a single value against a condition. The Matcher will compile the condition
+ * and speedup if you use the same condition often.
+ * 
+ * Syntax:
+ * 
+ * [ [type] [not] pattern ]* with operator.
+ * 
+ * Types:
+ * - fs - file sysytem like pattern with *
+ * - sql - sql like pattern with %
+ * - regex (default) - regular expression
+ * 
+ * Operators:
+ * - and, && - And
+ * - or, || - Or
+ * - Brackets - How brackets work ...
+ * - not, ! as negative operator
+ * 
+ * e.g.
+ * .*aaa.*
+ * .*aaa.* or .*bbb.*
+ * .*aaa.* and .*bbb.*
+ * .*aaa.* and not .*bbb.*
+ * not (.*aaa.* or .*bbb.*)
+ * .*xyz.* or (.*aaa.* and .*bbb.*)
+ * fs *aaa*
+ * sql %aaa%
+ * 
  * 
  * @author mikehummel
  *
@@ -93,15 +121,15 @@ public class Matcher {
 					
 				} break;
 				case "fs":
-					if (pattern != null) throw new SyntaxError("type before type");
+					if (pattern != null) throw new SyntaxError("type after pattern");
 					pattern = new ModelFs();
 					break;
 				case "sql":
-					if (pattern != null) throw new SyntaxError("type before type");
+					if (pattern != null) throw new SyntaxError("type after pattern");
 					pattern = new ModelSql();
 					break;
 				case "regex":
-					if (pattern != null) throw new SyntaxError("type before type");
+					if (pattern != null) throw new SyntaxError("type after pattern");
 					pattern = new ModelRegex();
 					break;
 					
