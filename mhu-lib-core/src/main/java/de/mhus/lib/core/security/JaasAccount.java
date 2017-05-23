@@ -1,11 +1,7 @@
 package de.mhus.lib.core.security;
 
-import java.nio.file.attribute.GroupPrincipal;
-import java.nio.file.attribute.UserPrincipal;
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
@@ -21,26 +17,29 @@ public class JaasAccount implements Account {
 	private Subject subject;
 	private String userName;
 	private HashSet<String> groups;
+	private MProperties attr;
 
 	public JaasAccount(String realm, Subject subject) {
 		this.realm = realm;
 		this.subject = subject;
 		
 		{  // find user name
-			Set<UserPrincipal> principals = subject.getPrincipals(UserPrincipal.class);
-			Iterator<UserPrincipal> iter = principals.iterator();
-			if (iter.hasNext()) {
-				Principal next = iter.next();
-				userName = next.getName();
+			groups = new HashSet<>();
+			attr = new MProperties();
+			int cnt = 0;
+			for (Principal principal : subject.getPrincipals()) {
+				switch (principal.getClass().getSimpleName()) {
+				case "UserPrincipal":
+					userName = principal.getName();
+					break;
+				case "RolePrincipal":
+					groups.add(principal.getName());
+					break;
+				}
+				attr.put(principal.getClass().getSimpleName() + "." + cnt, principal.getName());
+				cnt++;
 			}
 		}
-		
-		{ // find groups
-			groups = new HashSet<>();
-			for (GroupPrincipal principal : subject.getPrincipals(GroupPrincipal.class)) {
-				groups.add(principal.getName());
-			}
-		}	
 	}
 
 	@Override
@@ -86,13 +85,7 @@ public class JaasAccount implements Account {
 
 	@Override
 	public IReadProperties getAttributes() {
-		MProperties a = new MProperties();
-		int cnt = 0;
-		for (Principal principal : subject.getPrincipals()) {
-			a.put(principal.getClass().getSimpleName() + "." + cnt, principal.getName());
-			cnt++;
-		}
-		return a;
+		return attr;
 	}
 
 	@Override
