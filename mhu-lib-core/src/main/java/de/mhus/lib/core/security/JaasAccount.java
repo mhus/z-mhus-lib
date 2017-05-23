@@ -1,55 +1,98 @@
 package de.mhus.lib.core.security;
 
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.UserPrincipal;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
 import de.mhus.lib.core.IReadProperties;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class JaasAccount implements Account {
 
+	private String realm;
+	private Subject subject;
+	private String userName;
+	private HashSet<String> groups;
+
 	public JaasAccount(String realm, Subject subject) {
-		// TODO Auto-generated constructor stub
+		this.realm = realm;
+		this.subject = subject;
+		
+		{  // find user name
+			Set<UserPrincipal> principals = subject.getPrincipals(UserPrincipal.class);
+			Iterator<UserPrincipal> iter = principals.iterator();
+			if (iter.hasNext()) {
+				Principal next = iter.next();
+				userName = next.getName();
+			}
+		}
+		
+		{ // find groups
+			groups = new HashSet<>();
+			for (GroupPrincipal principal : subject.getPrincipals(GroupPrincipal.class)) {
+				groups.add(principal.getName());
+			}
+		}	
 	}
 
 	@Override
 	public boolean hasGroup(String role) {
-		// TODO Auto-generated method stub
-		return false;
+		return groups.contains(role);
 	}
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return userName;
 	}
 
 	@Override
 	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
+		return subject != null;
 	}
 
 	@Override
 	public boolean validatePassword(String password) {
-		// TODO Auto-generated method stub
+		LoginContext lc;
+		try {
+			LoginCallbackHandler handler = new LoginCallbackHandler(userName,password);
+			lc = new LoginContext(realm, handler);
+			lc.login();
+			
+			return true;
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
 
 	@Override
 	public boolean isSyntetic() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
+		return userName;
 	}
 
 	@Override
 	public IReadProperties getAttributes() {
-		return null;
+		MProperties a = new MProperties();
+		int cnt = 0;
+		for (Principal principal : subject.getPrincipals()) {
+			a.put(principal.getClass().getSimpleName() + "." + cnt, principal.getName());
+			cnt++;
+		}
+		return a;
 	}
 
 	@Override

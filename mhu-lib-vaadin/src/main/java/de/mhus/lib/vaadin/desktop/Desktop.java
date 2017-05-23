@@ -196,7 +196,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		try {
 			name = getApi().getAccessControl().getAccount().getDisplayName();
 		} catch (Throwable t) {
-			log.d(t);
+			log.t(t);
 		}
 		menuUser.setText(name == null ? "?" : name);
 		
