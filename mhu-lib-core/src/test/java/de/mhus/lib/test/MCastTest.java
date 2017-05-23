@@ -194,4 +194,22 @@ public class MCastTest extends TestCase {
 		assertEquals("20.07.2016", str);
 	}
 	
+	public void testDouble() {
+		Locale def = Locale.getDefault();
+		Locale.setDefault(Locale.GERMANY);
+		assertEquals(10.01, MCast.todouble("10.01", 0));
+		Locale.setDefault(Locale.US);
+		assertEquals(10.01, MCast.todouble("10.01", 0));
+		Locale.setDefault(Locale.FRANCE);
+		assertEquals(10.01, MCast.todouble("10.01", 0));
+		Locale.setDefault(def);
+		assertEquals(10.01, MCast.todouble("10.01", 0));
+
+		assertEquals(4294967295.01, MCast.todoubleUS("4,294,967,295.01", 0));
+		assertEquals(4294967295.01, MCast.todoubleUS("4 294 967 295.01", 0));
+		assertEquals(4294967295.01, MCast.todoubleEuropean("4 294 967.295,01", 0));
+		assertEquals(4294967295.01, MCast.todoubleEuropean("4.294.967.295,01", 0));
+		
+	}
+	
 }

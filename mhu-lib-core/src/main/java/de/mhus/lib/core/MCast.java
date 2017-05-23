@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -322,13 +323,72 @@ public final class MCast {
 
 	/**
 	 * Convert a string to double. If the string is malformed it returns
-	 * "def".
+	 * "def". This method will use the default double format without
+	 * thousands separator and a dot as decimal separator.
 	 * @param in 
 	 * @param def 
 	 * @return 
 	 */
 	public static double todouble(Object in, double def) {
 		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
+	}
+
+	/**
+	 * 
+	 * Convert a string to double. If the string is malformed it returns
+	 * "def". This method will use the european format expect GB. As
+	 * thousands separator space or dot and as decimal comma separator.
+	 * 4 294 967.295,000
+	 * 
+	 * Reference to http://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
+	 * 
+	 * @param in
+	 * @param def
+	 * @return
+	 */
+	public static double todoubleEuropean(String in, double def) {
+		if (in == null) return def;
+		in = in.replaceAll(" ", "").replaceAll("\\.", "").replace(',', '.');
+		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
+	}
+	
+	/**
+	 * 
+	 * Convert a string to double. If the string is malformed it returns
+	 * "def". This method will use the US and GB format. As
+	 * thousands separator space or comma and as decimal dot separator.
+	 * 4,294,967,295.00
+	 * 
+	 * Reference to http://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
+	 * 
+	 * @param in
+	 * @param def
+	 * @return
+	 */
+	public static double todoubleUS(String in, double def) {
+		if (in == null) return def;
+		in = in.replaceAll(" ", "").replaceAll(",", "");
+		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
+	}
+	
+	/**
+	 * Convert a string to double. If the string is malformed it returns
+	 * "def". This method will use NumberFormat to parse the string.
+	 * 
+	 * @param in
+	 * @param def
+	 * @param locale Locale or null for default locale
+	 * @return
+	 */
+	public static double todouble(String in, double def, Locale locale) {
+		if (in == null) return def;
+		if (locale == null) locale = Locale.getDefault();
+		try {
+			NumberFormat nf = NumberFormat.getInstance(locale);
+			return nf.parse(in).doubleValue();
+		} catch (Throwable t) {
+			return def;
+		}
 	}
 
 	/**
