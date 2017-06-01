@@ -179,6 +179,16 @@ public class MSystem {
 		return "?";
 	}
 
+	public static String findSource() {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		for (StackTraceElement step : stack) {
+			String n = step.getClassName();
+			if (!n.startsWith("java.lang") && !n.startsWith("de.mhus.lib.core"))
+				return n;
+		}
+		return "?";
+	}
+	
 	/**
 	 * Return the name of the main class or null if not found.
 	 * @return

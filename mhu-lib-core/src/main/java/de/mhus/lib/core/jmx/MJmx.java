@@ -6,7 +6,7 @@ import de.mhus.lib.core.MSystem;
 public class MJmx extends JmxObject {
 
 	public MJmx() {
-		this(true,MSystem.findSource(4));
+		this(true,MSystem.findSource());
 	}
 	
 	public MJmx(boolean weak,String name) {

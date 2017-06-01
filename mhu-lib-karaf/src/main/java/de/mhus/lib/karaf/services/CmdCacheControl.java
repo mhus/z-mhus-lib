@@ -5,13 +5,15 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
+import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.console.ConsoleTable;
+import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.karaf.MOsgi;
 
 @Command(scope = "mhus", name = "cache", description = "Cache Control Service Control")
 @Service
-public class CmdCacheControl extends MLog implements Action {
+public class CmdCacheControl extends MJmx implements Action {
 
 	@Argument(index=0, name="cmd", required=true, description="list,clear", multiValued=false)
     String cmd;
@@ -60,6 +62,7 @@ public class CmdCacheControl extends MLog implements Action {
 		}
 
 		return null;
-	}
-	
+	}	
+
 }
+

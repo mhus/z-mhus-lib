@@ -38,6 +38,7 @@ public class MRemoteManager extends MObject implements IBase {
 	}
 	
 	public void register(JmxObject object,boolean weak) throws Exception {
+		open();
 		if (object instanceof JmxPackage) {
 		  ((JmxPackage)object).open(this);
 		} else {
@@ -70,7 +71,7 @@ public class MRemoteManager extends MObject implements IBase {
 		synchronized (this) {
 			if (mbs != null)
 				try {
-					log().t("register",name);
+					log().i("register",name);
 					mbs.registerMBean(proxy, name);
 				} catch (InstanceAlreadyExistsException e) {
 					if (object instanceof JmxObject) {

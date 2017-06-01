@@ -68,10 +68,7 @@ public class ConsoleTable {
 
     public void print(PrintWriter out)  {
         int[] sizes = new int[header.size()];
-        updateSizes(sizes, header);
-        for (List<String> row : content) {
-            updateSizes(sizes, row);
-        }
+        updateSizes(sizes);
         String headerLine = getRow(sizes, header, " | ");
         out.println(headerLine);
         out.println(underline(headerLine.length()));
@@ -119,6 +116,13 @@ public class ConsoleTable {
         return line.toString();
     }
 
+    private void updateSizes(int[] sizes) {
+        updateSizes(sizes, header);
+        for (List<String> row : content) {
+            updateSizes(sizes, row);
+        }
+    }
+    
     private void updateSizes(int[] sizes, List<String> row) {
         int c = 0;
         for (String cellContent : row) {
@@ -171,5 +175,35 @@ public class ConsoleTable {
 				r.add(String.valueOf(res.getObject(i+1)));
 		}
 		return out;
+	}
+
+	public String[] toStringArray(boolean showHeader) {
+		int i = showHeader ? 1 : 0;
+		String[] out = new String[content.size() + i];
+        int[] sizes = new int[header.size()];
+        updateSizes(sizes);
+        if (showHeader)
+        	out[0] = getRow(sizes, header, " | ");
+        for (List<String> row : content) {
+            out[i] = getRow(sizes, row, " | ");
+            i++;
+        }
+		return out;
+	}
+
+	public String[][] toStringMatrix(boolean showHeader) {
+		int i = showHeader ? 1 : 0;
+		String[][] out = new String[content.size() + i][];
+        if (showHeader)
+        	out[0] = getRowArray(header);
+        for (List<String> row : content) {
+            out[i] = getRowArray(row);
+            i++;
+        }
+		return out;
+	}
+
+	private String[] getRowArray(List<String> row) {
+		return row.toArray(new String[row.size()]);
 	}
 }
