@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class MDate extends Date {
 
@@ -86,7 +87,17 @@ public class MDate extends Date {
 	 * @return
 	 */
 	public static String toIso8601(Date date) {
-		return iso8601DateFormat.format(date);
+		synchronized (iso8601DateFormat) {
+			iso8601DateFormat.setTimeZone(TimeZone.getDefault());
+			return iso8601DateFormat.format(date);
+		}
+	}
+	
+	public static String toIso8601(Date date, TimeZone tz) {
+		synchronized (iso8601DateFormat) {
+			iso8601DateFormat.setTimeZone(tz);
+			return iso8601DateFormat.format(date);
+		}
 	}
 	
 	public static String toDateTimeString(Date date) {
@@ -95,9 +106,19 @@ public class MDate extends Date {
 	
 	public static String toDateTimeString(Date date, Locale locale) {
 	    DateFormat df = getLocaleDateFormater(locale);
-	    return df.format(date) + " " + timeFormat.format(date);
+	    synchronized (timeFormat) {
+			timeFormat.setTimeZone(TimeZone.getDefault());
+	    	return df.format(date) + " " + timeFormat.format(date);
+		}
 	}
 	
+	public static String toDateTimeString(Date date, Locale locale, TimeZone tz) {
+	    DateFormat df = getLocaleDateFormater(locale);
+	    synchronized (timeFormat) {
+			timeFormat.setTimeZone(tz);
+	    	return df.format(date) + " " + timeFormat.format(date);
+		}
+	}
 
 	public static String toDateTimeSecondsString(Date date) {
 		return toDateTimeSecondsString(date, null);
@@ -105,9 +126,20 @@ public class MDate extends Date {
 	
 	public static String toDateTimeSecondsString(Date date, Locale locale) {
 	    DateFormat df = getLocaleDateFormater(locale);
-	    return df.format(date) + " " + timeSecFormat.format(date);
+	    synchronized (timeSecFormat) {
+			timeSecFormat.setTimeZone(TimeZone.getDefault());
+	    	return df.format(date) + " " + timeSecFormat.format(date);
+		}
 	}
 
+	public static String toDateTimeSecondsString(Date date, Locale locale, TimeZone tz) {
+	    DateFormat df = getLocaleDateFormater(locale);
+	    synchronized (timeSecFormat) {
+			timeSecFormat.setTimeZone(tz);
+	    	return df.format(date) + " " + timeSecFormat.format(date);
+		}
+	}
+	
 	public static String toDateString(Date date) {
 		return toDateString(date, null);
 	}
@@ -138,7 +170,10 @@ public class MDate extends Date {
 	 * @return
 	 */
 	public static String toFileFormat(Date date) {
-		return fileDateFormat.format(date);
+		synchronized (fileDateFormat) {
+			fileDateFormat.setTimeZone(TimeZone.getDefault());
+			return fileDateFormat.format(date);
+		}
 	}
 	
 	/**
@@ -209,7 +244,17 @@ public class MDate extends Date {
 	 * @return
 	 */
 	public static String toIso8601(Calendar date) {
-		return iso8601DateFormat.format(date);
+		synchronized (iso8601DateFormat) {
+			iso8601DateFormat.setTimeZone(TimeZone.getDefault());
+			return iso8601DateFormat.format(date);
+		}
+	}
+	
+	public static String toIso8601(Calendar date, TimeZone tz) {
+		synchronized (iso8601DateFormat) {
+			iso8601DateFormat.setTimeZone(tz);
+			return iso8601DateFormat.format(date);
+		}
 	}
 	
 	/**
@@ -230,13 +275,33 @@ public class MDate extends Date {
 	}
 
 	public static String toTimeString(Date date) {
-		return timeFormat.format(date);
+		synchronized (timeFormat) {
+			timeFormat.setTimeZone(TimeZone.getDefault());
+			return timeFormat.format(date);
+		}
+	}
+	
+	public static String toTimeString(Date date, TimeZone tz) {
+		synchronized (timeFormat) {
+			timeFormat.setTimeZone(tz);
+			return timeFormat.format(date);
+		}
 	}
 	
 	public static String toTimeSecondsString(Date date) {
-		return timeSecFormat.format(date);
+		synchronized (timeSecFormat) {
+			timeSecFormat.setTimeZone(TimeZone.getDefault());
+			return timeSecFormat.format(date);
+		}
 	}
 
+	public static String toTimeSecondsString(Date date, TimeZone tz) {
+		synchronized (timeSecFormat) {
+			timeSecFormat.setTimeZone(tz);
+			return timeSecFormat.format(date);
+		}
+	}
+	
 	public static String toString(String format, Date date) {
 		return new SimpleDateFormat(format).format( date );
 	}

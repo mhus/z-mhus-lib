@@ -13,6 +13,11 @@ import junit.framework.TestCase;
 
 public class MCastTest extends TestCase {
 
+	@Override
+	protected void setUp() throws Exception {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
+	
 	public void testCurrencyString() {
 		
 		String out = null;
@@ -161,10 +166,8 @@ public class MCastTest extends TestCase {
 	}
 	
 	public void testLocalFormating() {
-		
-		TimeZone tz = TimeZone.getDefault();
-		TimeZone.setDefault(TimeZone.getTimeZone("CET"));
-		
+
+		System.out.println(TimeZone.getDefault());
 		Date date = MDate.toDate("1.2.2003 04:05:00", null, Locale.GERMANY);
 		System.out.println(date);
 		{
@@ -189,8 +192,6 @@ public class MCastTest extends TestCase {
 			assertEquals(date, ret);
 		}
 		
-		TimeZone.setDefault(tz);
-
 	}
 	
 	public void testDateTransform() {
