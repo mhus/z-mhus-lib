@@ -77,7 +77,7 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
 
         loginForm.addComponent(username = new TextField(MNls.find(this,"username=Username"), ""));
         username.setWidth(15, Unit.EM);
-        loginForm.addComponent(password = new PasswordField(MNls.find(this,"password=Passwors")));
+        loginForm.addComponent(password = new PasswordField(MNls.find(this,"password=Password")));
         password.setWidth(15, Unit.EM);
         password.setDescription(MNls.find(this,"password.description=Your password"));
         CssLayout buttons = new CssLayout();

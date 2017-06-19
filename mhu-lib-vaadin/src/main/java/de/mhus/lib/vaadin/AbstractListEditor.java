@@ -63,17 +63,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	private boolean modified = false;
 	private boolean initialized = false;
 
-	protected Map<String, String> labels = new HashMap<String, String>() {
-		private static final long serialVersionUID = 1L;
-		{
-			put(LABEL_SAVED_NEW,"Saved");
-			put(LABEL_SAVED,"Saved");
-			put(LABEL_DELETED,"Deleted");
-			put(LABEL_CANELED,"Canceled");
-			
-		}
-	};
-	
 	@Hidden
 	private Log log = Log.getLog(this);
 	private String sortedColumn;
