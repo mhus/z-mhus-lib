@@ -64,14 +64,11 @@ public class MNlsFactory extends MNlsBundle {
 				if (owner.getCanonicalName() != null)
 					resourceName = owner.getCanonicalName().replace('.', '/');
 				else
-					owner.getEnclosingClass().getCanonicalName().replace('.', '/');
+					resourceName = owner.getEnclosingClass().getCanonicalName().replace('.', '/');
 			}
 			
 			if ( res == null ) {
-				if (owner != null)
-					res = new ClassLoaderResourceProvider(owner.getClassLoader());
-				else
-					res = new ClassLoaderResourceProvider();
+				res = findResourceProvider(owner);
 			}
 
 			if (locale == null)
@@ -81,10 +78,16 @@ public class MNlsFactory extends MNlsBundle {
 			Properties properties = new Properties();
 			
 			is = res.getResourceByPath(locale.toString() + "/" + resourceName + ".properties" ).getInputStream();
+			String prefix = getResourcePrefix();
+			
 			if (searchAlternatives) {
 
+				if (prefix != null && is==null)
+					is = res.getResourceByPath(prefix + "/" + getDefaultLocale()  + "/" + resourceName + ".properties" ).getInputStream();
 				if (is==null)
 					is = res.getResourceByPath(getDefaultLocale()  + "/" + resourceName + ".properties" ).getInputStream();
+				if (prefix != null && is==null)
+					is = res.getResourceByPath(prefix + "/" + resourceName + ".properties" ).getInputStream();
 				if (is==null)
 					is = res.getResourceByPath(resourceName + ".properties" ).getInputStream();
 			
@@ -119,6 +122,17 @@ public class MNlsFactory extends MNlsBundle {
 		return new MNls();
 	}
 	
+	protected String getResourcePrefix() {
+		return null;
+	}
+
+	protected MResourceProvider<?> findResourceProvider(Class<?> owner) {
+		if (owner != null)
+			return new ClassLoaderResourceProvider(owner.getClassLoader());
+		else
+			return new ClassLoaderResourceProvider();
+	}
+
 	public String getDefaultLocale() {
 		return Locale.getDefault().toString();
 	}

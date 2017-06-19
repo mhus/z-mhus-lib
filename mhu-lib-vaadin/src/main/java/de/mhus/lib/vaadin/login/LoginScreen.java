@@ -75,16 +75,16 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
         loginForm.setSizeUndefined();
         loginForm.setMargin(false);
 
-        loginForm.addComponent(username = new TextField(MNls.find(this,"username=Username"), ""));
+        loginForm.addComponent(username = new TextField(MNls.find(this,"login.username=Username"), ""));
         username.setWidth(15, Unit.EM);
-        loginForm.addComponent(password = new PasswordField(MNls.find(this,"password=Password")));
+        loginForm.addComponent(password = new PasswordField(MNls.find(this,"login.password=Password")));
         password.setWidth(15, Unit.EM);
-        password.setDescription(MNls.find(this,"password.description=Your password"));
+        password.setDescription(MNls.find(this,"login.password.description=Your password"));
         CssLayout buttons = new CssLayout();
         buttons.setStyleName("buttons");
         loginForm.addComponent(buttons);
 
-        buttons.addComponent(login = new Button(MNls.find(this,"signin=Sign In")));
+        buttons.addComponent(login = new Button(MNls.find(this,"login.signin=Sign In")));
         login.setDisableOnClick(true);
         login.addClickListener(new Button.ClickListener() {
             @Override
@@ -113,7 +113,7 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
     private CssLayout buildLoginInformation() {
         CssLayout loginInformation = new CssLayout();
         loginInformation.setStyleName("login-information");
-        Label loginInfoText = new Label(MNls.find(this,"info.text=Content Editor"), ContentMode.HTML);
+        Label loginInfoText = new Label(MNls.find(this,"login.info.text=Content Editor"), ContentMode.HTML);
         loginInformation.addComponent(loginInfoText);
         return loginInformation;
     }
@@ -135,8 +135,8 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
 //        	}
         }
         
-        showNotification(new Notification(MNls.find(this,"error.title=Login failed"),
-        		MNls.find(this,"error.text=Please check your username and password and try again."),
+        showNotification(new Notification(MNls.find(this,"login.error.title=Login failed"),
+        		MNls.find(this,"login.error.text=Please check your username and password and try again."),
                 Notification.Type.HUMANIZED_MESSAGE));
         username.focus();
 

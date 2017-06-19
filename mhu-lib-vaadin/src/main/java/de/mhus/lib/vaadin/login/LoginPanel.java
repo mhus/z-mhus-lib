@@ -43,11 +43,11 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         helpManager.closeAll();
         
         
-		String welcomeTxt = MNls.find(this, "help.title");
+		String welcomeTxt = MNls.find(this, "login.help.title");
 		if (welcomeTxt != null) {
 			helpManager.showHelp(
 							welcomeTxt,
-	                		MNls.find(this, "help.description"),
+	                		MNls.find(this, "login.help.description"),
 	                        "login");
 		}
 		
@@ -67,13 +67,13 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         labels.addStyleName("labels");
         loginPanel.addComponent(labels);
 
-        Label welcome = new Label(MNls.find(this, "welcome=Welcome"));
+        Label welcome = new Label(MNls.find(this, "login.welcome=Welcome"));
         welcome.setSizeUndefined();
         welcome.addStyleName("h4");
         labels.addComponent(welcome);
         labels.setComponentAlignment(welcome, Alignment.MIDDLE_LEFT);
 
-        Label title = new Label(MNls.find(this, "title="));
+        Label title = new Label(MNls.find(this, "login.title="));
         title.setSizeUndefined();
         title.addStyleName("h2");
         title.addStyleName("light");
@@ -85,14 +85,14 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         fields.setMargin(true);
         fields.addStyleName("fields");
 
-        final TextField username = new TextField(MNls.find(this, "username=Username"));
+        final TextField username = new TextField(MNls.find(this, "login.username=Username"));
         username.focus();
         fields.addComponent(username);
 
-        final PasswordField password = new PasswordField(MNls.find(this, "password=Password"));
+        final PasswordField password = new PasswordField(MNls.find(this, "login.password=Password"));
         fields.addComponent(password);
 
-        final Button signin = new Button(MNls.find(this, "signin=Sign In"));
+        final Button signin = new Button(MNls.find(this, "login.signin=Sign In"));
         signin.addStyleName("default");
         fields.addComponent(signin);
         fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
@@ -106,7 +106,7 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
         loginPanel.addComponent(error);
         loginPanel.setComponentAlignment(error, Alignment.MIDDLE_CENTER);
 
-        final ShortcutListener enter = new ShortcutListener(MNls.find(this, "signin=Sign In"),
+        final ShortcutListener enter = new ShortcutListener(MNls.find(this, "login.signin=Sign In"),
                 KeyCode.ENTER, null) {
 					private static final long serialVersionUID = 1L;
 
@@ -133,7 +133,7 @@ public class LoginPanel extends VerticalLayout implements MNlsProvider {
                     signin.removeShortcutListener(enter);
                 } else {
                     // Add new error message
-                    error.setCaption(MNls.find(LoginPanel.this, "error=Wrong username or password."));
+                    error.setCaption(MNls.find(LoginPanel.this, "login.error=Wrong username or password."));
                     username.focus();
                 }
             }

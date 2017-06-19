@@ -7,10 +7,7 @@ import java.util.Set;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.base.service.TimerFactory;
-import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.LogFactory;
@@ -18,7 +15,6 @@ import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiInternal;
 import de.mhus.lib.core.system.ApiInitialize;
-import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.services.TimerFactoryImpl;
 import de.mhus.lib.logging.JavaLoggerFactory;
 
