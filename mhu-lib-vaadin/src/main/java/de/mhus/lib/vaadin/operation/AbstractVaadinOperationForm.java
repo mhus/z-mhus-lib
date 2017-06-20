@@ -3,7 +3,7 @@ package de.mhus.lib.vaadin.operation;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.util.MNlsFactory;
+import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.PropertiesDataSource;
 import de.mhus.lib.vaadin.form.VaadinForm;
@@ -24,7 +24,7 @@ public abstract class AbstractVaadinOperationForm extends AbstractVaadinOperatio
 		model = createForm();
 		model.setShowInformation(true);
         if (model.getForm().getNlsBundle() == null)
-        	model.getForm().setNlsBundle(new MNlsFactory().setOwner(this));
+        	model.getForm().setNlsBundle(MNlsBundle.lookup(this));
 //        model.doBuild(getActivator());
         try {
 			model.doBuild();

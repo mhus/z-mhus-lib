@@ -137,7 +137,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         	
 	        model = createForm();
 	        if (model.getForm().getNlsBundle() == null)
-	        	model.getForm().setNlsBundle(new MNlsFactory().setOwner(this));
+	        	model.getForm().setNlsBundle(MNlsBundle.lookup(this));
 //	        model.doBuild(getActivator());
 	        model.doBuild();
 	        detailsPanelContent.addComponent(model);
@@ -508,10 +508,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	@Override
 	public MNls getNls() {
-		if (nlsBundle == null) {
-			nlsBundle = new MNlsFactory();
-			nlsBundle.setOwner(this);
-		}
+		if (nlsBundle == null)
+			nlsBundle = MNlsBundle.lookup(this);
 		return nlsBundle.getNls(UI.getCurrent().getLocale());
 	}
 

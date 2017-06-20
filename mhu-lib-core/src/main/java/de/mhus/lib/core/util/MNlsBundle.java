@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.lang.MObject;
 
 @DefaultImplementation(MNlsFactory.class)
@@ -49,7 +50,7 @@ public abstract class MNlsBundle extends MObject {
 			return null;
 		}
 		out = createNls(locale);
-		if (out == null) out = new Object();
+		if (out == null || !(out instanceof MNls) || ((MNls)out).size() == 0) out = new Object();
 		cache.put(locale, out);
 		if (out instanceof MNls)
 			return (MNls)out;
@@ -75,6 +76,12 @@ public abstract class MNlsBundle extends MObject {
 	public MNlsBundle setOwner(Object owner) {
 		setPath(MNlsFactory.toResourceName(owner));
 		return this;
+	}
+
+	public static MNlsBundle lookup(Object owner) {
+		MNlsBundleFactory factory = MApi.lookup(MNlsBundleFactory.class);
+		MNlsBundle nlsBundle = factory.create(owner);
+		return nlsBundle;
 	}
 	
 }

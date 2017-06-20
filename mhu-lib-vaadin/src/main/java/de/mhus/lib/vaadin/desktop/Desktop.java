@@ -124,7 +124,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			}
 		});
 		menuUser.addSeparator();
-		menuHelp = menuUser.addItem("Help", new MenuBar.Command() {
+		menuHelp = menuUser.addItem("menu.help=Help", new MenuBar.Command() {
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				doShowHelp();
