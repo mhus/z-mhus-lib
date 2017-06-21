@@ -13,6 +13,7 @@ import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.logging.MutableParameterMapper;
 import de.mhus.lib.core.logging.ParameterEntryMapper;
 import de.mhus.lib.core.logging.ParameterMapper;
@@ -40,6 +41,18 @@ public class LogCfgInitiator implements CfgInitiator {
 				internal.getLogTrace().add(p.substring(6));
 		}
 
+		MLogFactory mlogFactory = null;
+		try {
+			String key = MConstants.PROP_LOG_MLOG_FACTORY_CLASS;
+			String name = system.getString(key);
+			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(name)) {
+				mlogFactory = (MLogFactory) Class.forName(name.trim()).newInstance();
+			}
+		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}	
+		if (mlogFactory != null)
+			internal.setMLogFactory(mlogFactory);
+		
 		LogFactory logFactory = null;
 		try {
 			String key = MConstants.PROP_LOG_FACTORY_CLASS;

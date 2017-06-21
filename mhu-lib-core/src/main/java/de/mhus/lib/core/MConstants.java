@@ -22,6 +22,8 @@ public class MConstants {
 	public static final String DEFAULT_MHUS_CONFIG_FILE = "mhus-config.xml";
 
 	public static final String PROP_LOG_FACTORY_CLASS = "log.factory";
+	
+	public static final String PROP_LOG_MLOG_FACTORY_CLASS = "log.mlog.factory";
 
 	public static final String PROP_LOG_LEVEL_MAPPER_CLASS = "level.mapper";
 

@@ -172,4 +172,9 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 		mlogFactory.update();
 	}
 
+	@Override
+	public void setMLogFactory(MLogFactory mlogFactory) {
+		this.mlogFactory = mlogFactory;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Set;
 
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.MLogFactory;
 
 public interface IApiInternal {
 
@@ -13,5 +14,7 @@ public interface IApiInternal {
 	Set<String> getLogTrace();
 
 	void setBaseDir(File file);
+
+	void setMLogFactory(MLogFactory mlogFactory);
 
 }
