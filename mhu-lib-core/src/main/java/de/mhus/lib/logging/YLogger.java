@@ -21,13 +21,13 @@ public class YLogger extends Log {
 	public void update() {
 	}
 	
-	@Override
-	public void register() {
-	}
-	
-	@Override
-	public void unregister() {
-	}
+//	@Override
+//	public void register() {
+//	}
+//	
+//	@Override
+//	public void unregister() {
+//	}
 
 	@Override
 	public boolean isLevelEnabled(LEVEL level) {

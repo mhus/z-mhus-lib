@@ -5,15 +5,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiInternal;
+import de.mhus.lib.core.system.SingleMLogInstanceFactory;
 import de.mhus.lib.core.system.ApiInitialize;
 import de.mhus.lib.karaf.services.TimerFactoryImpl;
 import de.mhus.lib.logging.JavaLoggerFactory;
@@ -36,6 +40,7 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 	private KarafHousekeeper housekeeper;
 	
 	private File baseDir = new File("data/mhus");
+	private MLogFactory mlogFactory;
 	{
 		baseDir.mkdirs();
 	}
@@ -70,6 +75,8 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
 		logFactory = new JavaLoggerFactory();
+		mlogFactory = new SingleMLogInstanceFactory();
+		getBaseControl().getCurrentBase().addObject(MLogFactory.class, mlogFactory);
 		
 		getCfgManager(); // init
 		TimerFactoryImpl.doCheckTimers();
@@ -80,6 +87,7 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 		} catch (Throwable t) {
 			System.out.println("Can't initialize housekeeper base: " + t);
 		}
+		
 		
 		getCfgManager().reConfigure();
 
@@ -150,5 +158,18 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 		}
 		return value;
 	}
+
+	@Override
+	public synchronized Log lookupLog(Object owner) {
+		if (mlogFactory == null)
+			mlogFactory = MApi.lookup(MLogFactory.class);
+		return mlogFactory.lookup(owner);
+	}
 	
+	@Override
+	public void updateLog() {
+		if (mlogFactory == null) return;
+		mlogFactory.update();
+	}
+
 }

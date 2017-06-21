@@ -5,11 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.ConsoleFactory;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.logging.MLogFactory;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	
@@ -18,6 +21,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	private CfgManager configProvider;
 	private HashSet<String> logTrace = new HashSet<>();
 	private File baseDir = new File(".");
+	private MLogFactory mlogFactory;
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
@@ -84,6 +88,19 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	@Override
 	public String getSystemProperty(String name, String def) {
 		return System.getProperty(name, def);
+	}
+
+	@Override
+	public synchronized Log lookupLog(Object owner) {
+		if (mlogFactory == null)
+			mlogFactory = MApi.lookup(MLogFactory.class);
+		return mlogFactory.lookup(owner);
+	}
+
+	@Override
+	public void updateLog() {
+		if (mlogFactory == null) return;
+		mlogFactory.update();
 	}
 	
 }

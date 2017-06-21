@@ -20,7 +20,7 @@ public class MApi {
 
 	private static IApi api;
 	protected static Boolean trace;
-	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
+//	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	private static IConfig emptyConfig = null;
 	private static UpdaterCfg configUpdater;
 	
@@ -82,27 +82,29 @@ public class MApi {
 			((TrailLevelMapper)mapper).doResetTrail();
 	}
 
-	public static void registerLogger(Log log) {
-		synchronized (loggers) {
-			loggers.put(log.getId(), log);
-		}
-	}
-
-	public static void unregisterLogger(Log log) {
-		synchronized (loggers) {
-			loggers.remove(log.getId());
-		}
-	}
-	
+//	public static void registerLogger(Log log) {
+//		synchronized (loggers) {
+//			loggers.put(log.getId(), log);
+//		}
+//	}
+//
+//	public static void unregisterLogger(Log log) {
+//		synchronized (loggers) {
+//			loggers.remove(log.getId());
+//		}
+//	}
+//	
 	public static void updateLoggers() {
-		try {
-			synchronized (loggers) {
-				for (UUID logId : loggers.keySet().toArray(new UUID[loggers.size()]))
-					loggers.get(logId).update();
-			}
-		} catch(Throwable t) {
-			if (MApi.isDirtyTrace()) t.printStackTrace();
-		}
+		Log.getLog(MApi.class);
+		get().updateLog();
+//		try {
+//			synchronized (loggers) {
+//				for (UUID logId : loggers.keySet().toArray(new UUID[loggers.size()]))
+//					loggers.get(logId).update();
+//			}
+//		} catch(Throwable t) {
+//			if (MApi.isDirtyTrace()) t.printStackTrace();
+//		}
 	}
 
 	public static IConfig getCfg(Object owner, IConfig def) {

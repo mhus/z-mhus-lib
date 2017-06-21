@@ -1,7 +1,5 @@
 package de.mhus.lib.core.logging;
 
-import java.util.UUID;
-
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 
@@ -18,14 +16,13 @@ public class Log {
 
 	protected boolean localTrace = true;
 	protected String name;
-	protected LevelMapper levelMapper;
-    protected ParameterMapper parameterMapper;
+	protected static LevelMapper levelMapper;
+    protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
-    protected UUID id = UUID.randomUUID();
-	private int maxMsgSize = 0;
+//    protected UUID id = UUID.randomUUID();
+	protected static int maxMsgSize = 0;
 
 	public Log(Object owner) {
-		
 		
 		String name = null;
 		if (owner == null) {
@@ -47,16 +44,16 @@ public class Log {
 		
 		update();
 		
-		register();
+//		register();
 	}
 
-    protected void register() {
-		MApi.registerLogger(this);
-	}
-    
-    protected void unregister() {
-		MApi.unregisterLogger(this);
-    }
+//    protected void register() {
+//		MApi.registerLogger(this);
+//	}
+//    
+//    protected void unregister() {
+//		MApi.unregisterLogger(this);
+//    }
 
 
     // -------------------------------------------------------- Logging Methods
@@ -231,9 +228,7 @@ public class Log {
 	}
 	
 	public static Log getLog(Object owner) {
-		// return new StaticBase(owner).log();
-//		return MApi.get().createLog(owner);
-		return new Log(owner);
+		return MApi.get().lookupLog(owner);
 	}
 
 	public void update() {
@@ -285,13 +280,13 @@ public class Log {
 	
 	public void close() {
 		if (engine == null) return;
-		unregister();
+//		unregister();
 		engine.close();
 		engine = null;
 	}
 	
-	public UUID getId() {
-		return id;
-	}
+//	public UUID getId() {
+//		return id;
+//	}
 	
 }

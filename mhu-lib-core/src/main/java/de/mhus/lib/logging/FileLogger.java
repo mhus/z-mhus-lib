@@ -265,13 +265,13 @@ public class FileLogger extends Log {
 		engine = new MyEngine(getName());
 	}
 	
-	@Override
-	public void register() {
-	}
-	
-	@Override
-	public void unregister() {
-	}
+//	@Override
+//	public void register() {
+//	}
+//	
+//	@Override
+//	public void unregister() {
+//	}
 	
 	@Override
 	public void close() {

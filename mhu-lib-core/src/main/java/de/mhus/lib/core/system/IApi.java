@@ -5,6 +5,7 @@ import java.io.File;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 
 public interface IApi {
@@ -32,4 +33,8 @@ public interface IApi {
 	File getFile(String dir);
 
 	String getSystemProperty(String name, String def);
+
+	Log lookupLog(Object owner);
+
+	void updateLog();
 }

@@ -18,7 +18,7 @@ public class MLog implements ILog {
 	@Override
 	public synchronized Log log() {
 		if (log == null) {
-			log = Log.getLog(this);
+			log = MApi.get().lookupLog(this);
 		}
 		return log;
 	}
