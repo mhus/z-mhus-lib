@@ -378,9 +378,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 
 	protected abstract void doSave(E entry) throws Exception;
 
-	protected E getEditableTarget(Object id) {
-		return getTarget(id);
-	}
+	protected abstract E getEditableTarget(Object id);
 	
 	protected abstract E getTarget(Object id);
 
