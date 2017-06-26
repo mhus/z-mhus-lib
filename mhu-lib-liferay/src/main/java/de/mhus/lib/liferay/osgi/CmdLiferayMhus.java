@@ -126,6 +126,9 @@ public class CmdLiferayMhus implements CommandProvider {
 		ci.println("IsMale.............: " + u.isMale());
 		ci.println("IsFemale           : " + u.isFemale());
 		ci.println("IsPasswordReset    : " + u.isPasswordReset());
+		ci.println("ReminderQuestion   : " + u.getReminderQueryQuestion());
+		ci.println("ReminderAnswer     : " + u.getReminderQueryAnswer());
+		
 		ci.println();
 		
 		for (Group s : GroupLocalServiceUtil.getUserSitesGroups(u.getUserId())) {
