@@ -324,6 +324,29 @@ public class MSystem {
 		return clazz;
 	}
 
+	/**
+	 * Compares two objects even if they are null.
+	 * 
+	 * compareTo(null, null ) === 0
+	 * compareTo("", "" ) === 0
+	 * compareTo(null, "" ) === -1
+	 * compareTo("", null ) === 1
+	 * 
+	 * returns s1.comareTo(s2)
+	 * 
+	 * groovy:000> s1 = new Date();
+	 * === Wed Jun 28 12:22:35 CEST 2017
+	 * groovy:000> s2 = new Date();
+	 * === Wed Jun 28 12:22:40 CEST 2017
+	 * groovy:000> 
+	 * groovy:000> s1.compareTo(s2)
+	 * === -1
+	 * groovy:000> s2.compareTo(s1)
+	 * === 1
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
 	public static <T extends Comparable<T>> int compareTo(T s1, T s2) {
 		if (s1 == null && s2 == null) return 0;
 		if (s1 == null) return -1;

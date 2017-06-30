@@ -18,11 +18,9 @@
 
 package de.mhus.lib.core;
 
-import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.UniqueId;
 
-@JmxManaged(descrition="Simple Stop Watch")
 public class MStopWatch extends MJmx {
 
 	private static final int STATUS_INITIAL = 0;
@@ -107,7 +105,6 @@ public class MStopWatch extends MJmx {
 		return getStatus() == STATUS_RUNNING;
 	}
 
-	@JmxManaged(descrition="Current status of the watch")
 	public String getStatusAsString() {
 		switch (getStatus()) {
 		case STATUS_INITIAL: return "initial";
@@ -131,12 +128,10 @@ public class MStopWatch extends MJmx {
 				+ MCast.toString((int) (sec % 60), 2);
 	}
 
-	@JmxManaged(descrition="Currently elapsed time")
 	public String getCurrentTimeAsString() {
 		return MTimeInterval.getIntervalAsString(getCurrentTime());
 	}
 
-	@JmxManaged(descrition="Name of the watch")
 	public String getName() {
 		return name;
 	}
