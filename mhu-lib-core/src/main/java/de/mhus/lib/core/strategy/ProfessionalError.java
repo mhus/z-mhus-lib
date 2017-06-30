@@ -12,8 +12,16 @@ public class ProfessionalError extends OperationResult {
 		setReturnCode(rc);
 	}
 	
+	public ProfessionalError(String path, String msg, String caption, long rc) {
+		setSuccessful(true);
+		setMsg(MUri.implodeKeyValues("m",msg, "c", caption));
+		setOperationPath(path);
+		if (rc >= 0) rc = INTERNAL_ERROR;
+		setReturnCode(rc);
+	}
+	
 	public ProfessionalError(Operation operation, String msg, long rc) {
-		setSuccessful(false);
+		setSuccessful(true);
 		setMsg(MUri.implodeKeyValues("m",msg));
 		if (rc >= 0) rc = INTERNAL_ERROR;
 		setReturnCode(rc);
@@ -24,7 +32,7 @@ public class ProfessionalError extends OperationResult {
 	}
 
 	public ProfessionalError(Operation operation, String msg, String caption, long rc) {
-		setSuccessful(false);
+		setSuccessful(true);
 		setMsg(MUri.implodeKeyValues("m",msg, "c", caption));
 		if (rc >= 0) rc = INTERNAL_ERROR;
 		setReturnCode(rc);
