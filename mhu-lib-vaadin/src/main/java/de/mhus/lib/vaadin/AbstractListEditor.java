@@ -334,9 +334,19 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 				@SuppressWarnings("unchecked")
 				E entity = (E) model.getPojo();
 				if (MY_NEW_MARKER.equals(editMode)) {
+					String error = doValidateNew(entity);
+					if (error != null) {
+						showError(error);
+						return;
+					}
 					doSaveNew(entity);
 					showInformation(MNls.find(AbstractListEditor.this,LABEL_SAVED_NEW));
 				} else {
+					String error = doValidate(entity);
+					if (error != null) {
+						showError(error);
+						return;
+					}
 					doSave(entity);
 					showInformation(MNls.find(AbstractListEditor.this,LABEL_SAVED));
 				}
@@ -355,10 +365,36 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		
 	}
 
-	public void showError(Throwable e) {
-		Notification.show(e.getMessage(), Notification.Type.ERROR_MESSAGE);
+	/**
+	 * Overwrite this function if you want to validate a new entity before saving. Return null if the
+	 * values are correct or return the internationalized error message.
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	protected String doValidateNew(E entity) {
+		return null;
 	}
 
+	/**
+	 * Overwrite this function if you want to validate an updated entity before saving. Return null if the
+	 * values are correct or return the internationalized error message.
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	protected String doValidate(E entity) {
+		return null;
+	}
+	
+	public void showError(Throwable e) {
+		showError(e.getMessage());
+	}
+
+	public void showError(String e) {
+		Notification.show(e, Notification.Type.ERROR_MESSAGE);
+	}
+	
 	public void showInformation(String msg) {
 		if (MString.isEmpty(msg)) return;
 		Notification.show(msg, Notification.Type.HUMANIZED_MESSAGE);
