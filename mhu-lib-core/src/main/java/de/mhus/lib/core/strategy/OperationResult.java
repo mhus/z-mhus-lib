@@ -1,6 +1,10 @@
 package de.mhus.lib.core.strategy;
 
+import java.util.Map;
+
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.util.MUri;
 
 public class OperationResult {
 
@@ -98,4 +102,20 @@ public class OperationResult {
 		this.returnCode = returnCode;
 	}
 
+	public String getMsgCaption() {
+		if (MString.isSet(msg) && msg.startsWith("m=")) {
+			Map<String, String> msgParts = MUri.explode(msg);
+			return msgParts.get("c");
+		}
+		return null;
+	}
+	
+	public String getMsgMessage() {
+		if (MString.isSet(msg) && msg.startsWith("m=")) {
+			Map<String, String> msgParts = MUri.explode(msg);
+			return msgParts.get("m");
+		}
+		return msg;
+	}
+	
 }
