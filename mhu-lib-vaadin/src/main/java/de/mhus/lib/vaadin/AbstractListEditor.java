@@ -40,7 +40,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final Object MY_NEW_MARKER = new Object();
+	protected static final Object MY_NEW_MARKER = new Object();
 
 	public static final String LABEL_SAVED_NEW = "entity.new=new";
 	public static final String LABEL_SAVED = "entity.saved=saved";
