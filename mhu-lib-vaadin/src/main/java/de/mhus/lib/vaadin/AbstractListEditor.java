@@ -105,8 +105,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			
 			@Override
 			public void itemClick(ItemClickEvent event) {
-				if (editMode == null && event.isDoubleClick())
-					doUpdate();
+				doItemClick(event);
 			}
 		});
         
@@ -187,6 +186,11 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         
         updateEnabled();
 
+	}
+
+	protected void doItemClick(ItemClickEvent event) {
+		if (editMode == null && event.isDoubleClick())
+			doUpdate();
 	}
 
 	protected MActivator getActivator() {
