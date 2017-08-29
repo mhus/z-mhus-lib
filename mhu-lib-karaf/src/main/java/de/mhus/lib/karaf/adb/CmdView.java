@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
@@ -121,11 +122,11 @@ public class CmdView implements Action {
 						// header
 						out.addRowValues(">>> " + name,  "", f.getType().getSimpleName() );
 						// data
-						for (Entry<?, ?> item : ((Map<?,?>)o).entrySet()) {
+						for (Entry<Object,Object> item : new TreeMap<Object,Object>( (Map)o ).entrySet()) {
 							String k = String.valueOf(item.getKey());
 							String v = String.valueOf(item.getValue());
 							if (!full && v.length() > max) v = MString.truncateNice(v, max);
-							out.addRowValues(name + "." + k,  v, f.getType().getSimpleName() );
+							out.addRowValues(name + "." + k,  v, item.getValue() == null ? "null" : item.getValue().getClass().getSimpleName() );
 						}
 						// footer
 						out.addRowValues("<<< " + name,  "", f.getType().getSimpleName() );
@@ -138,7 +139,7 @@ public class CmdView implements Action {
 						for (Object item : ((Collection<?>)object)) {
 							String v = String.valueOf(item);
 							if (!full && v.length() > max) v = MString.truncateNice(v, max);
-							out.addRowValues(name + "[" + cnt + "]",  v, f.getType().getSimpleName() );
+							out.addRowValues(name + "[" + cnt + "]",  v, item == null ? "null" : item.getClass().getSimpleName() );
 							cnt++;
 						}
 						// footer
