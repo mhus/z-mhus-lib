@@ -1,10 +1,13 @@
 package de.mhus.lib.karaf.adb;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
@@ -38,6 +41,9 @@ public class CmdView implements Action {
 	@Option(name="-f", aliases="--full", description="Print the full value content also if it's very long",required=false)
 	boolean full = false;
 
+	@Option(name="-v", aliases="--verbose", description="Try to analyse Objects and print the values separately",required=false)
+	boolean verbose = false;
+	
 	@Option(name="-m", aliases="--max", description="Maximum amount of chars for a value (if not full)",required=false)
 	int max = 40;
 
@@ -105,9 +111,49 @@ public class CmdView implements Action {
 			for (Field f : fieldList) {
 				String name = f.getName();
 				if (pkNames.contains(name)) name = name + "*";
-				String value = String.valueOf(f.get(object));
-				if (!full && value.length() > max) value = MString.truncateNice(value, max);
-				out.addRowValues(name,  value, f.getType().getSimpleName() );
+				Object o = f.get(object);
+				String value = null;
+				if (verbose) {
+					if (o == null) {
+						value = "[null]";
+					} else
+					if (o instanceof Map) {
+						// header
+						out.addRowValues(">>> " + name,  "", f.getType().getSimpleName() );
+						// data
+						for (Entry<?, ?> item : ((Map<?,?>)o).entrySet()) {
+							String k = String.valueOf(item.getKey());
+							String v = String.valueOf(item.getValue());
+							if (!full && v.length() > max) v = MString.truncateNice(v, max);
+							out.addRowValues(name + "." + k,  v, f.getType().getSimpleName() );
+						}
+						// footer
+						out.addRowValues("<<< " + name,  "", f.getType().getSimpleName() );
+					} else
+					if (o instanceof Collection) {
+						// header
+						out.addRowValues(">>> " + name,  "", f.getType().getSimpleName() );
+						// data
+						int cnt = 0;
+						for (Object item : ((Collection<?>)object)) {
+							String v = String.valueOf(item);
+							if (!full && v.length() > max) v = MString.truncateNice(v, max);
+							out.addRowValues(name + "[" + cnt + "]",  v, f.getType().getSimpleName() );
+							cnt++;
+						}
+						// footer
+						out.addRowValues("<<< " + name,  "", f.getType().getSimpleName() );
+						
+					} else {
+						value = String.valueOf(o);
+					}
+				} else {
+					value = String.valueOf(o);
+				}
+				if (value != null) {
+					if (!full && value.length() > max) value = MString.truncateNice(value, max);
+					out.addRowValues(name,  value, f.getType().getSimpleName() );
+				}
 			}
 			out.print(System.out);
 			output = object;
