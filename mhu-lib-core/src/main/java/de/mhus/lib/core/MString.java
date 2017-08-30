@@ -1360,7 +1360,7 @@ public class MString {
 		if (string == null) return null;
 		int pos = string.lastIndexOf(c);
 		if (pos < 0) return string;
-		return string.substring(pos+1);
+		return string.substring(pos+c.length());
 	}
 	
 	/**
