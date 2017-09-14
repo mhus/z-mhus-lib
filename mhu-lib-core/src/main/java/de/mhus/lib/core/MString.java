@@ -375,29 +375,33 @@ public class MString {
 	}
 
 	
-	public static boolean isUnicode(String _in, char _joker) {
+	public static boolean isUnicode(String _in, char _joker, boolean encodeCr) {
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
-			if (c > 255 || c == _joker)
+			if ( ( c < 32 || c > 127 || c == _joker) && (encodeCr || (c != '\n' && c != '\r') ) )
 				return true;
 		}
 		return false;
 	}
 
 	public static String encodeUnicode(String _in) {
+		return encodeUnicode(_in, false);
+	}
+	
+	public static String encodeUnicode(String _in, boolean encodeCr) {
 
 		if (_in == null)
 			return "";
 
-		if (!isUnicode(_in, '\\'))
+		if (!isUnicode(_in, '\\', encodeCr))
 			return _in;
 
 		StringBuffer out = new StringBuffer();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
-			if (c > 255) {
-				out.append("\\u" + MCast.toHex2String(c / 256)
-						+ MCast.toHex2String(c % 256));
+			if ( (c < 32 || c > 127) && (encodeCr || (c != '\n' && c != '\r') ) ) {
+				out.append("\\u" + MCast.toHex2LowerString(c / 256)
+						+ MCast.toHex2LowerString(c % 256));
 			} else if (c == '\\') {
 				out.append("\\\\");
 			} else

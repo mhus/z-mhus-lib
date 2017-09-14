@@ -25,4 +25,34 @@ public class MStringTest extends TestCase {
 		assertEquals("aHwhdh5H", res);
 
 	}
+	
+	public void testEncodeUnicode() {
+		{
+			String test = "Herr Müller";
+			String code = MString.encodeUnicode(test);
+			System.out.println(code);
+			assertEquals("Herr M\\u00fcller", code);
+			String deco = MString.decodeUnicode(code);
+			assertEquals(test, deco);
+		}
+		
+		{
+			String test = "Herr Müller\nFrau Müller";
+			String code = MString.encodeUnicode(test);
+			System.out.println(code);
+			assertEquals("Herr M\\u00fcller\nFrau M\\u00fcller", code);
+			String deco = MString.decodeUnicode(code);
+			assertEquals(test, deco);
+		}
+
+		{
+			String test = "Herr Müller\nFrau Müller";
+			String code = MString.encodeUnicode(test, true);
+			System.out.println(code);
+			assertEquals("Herr M\\u00fcller\\u000aFrau M\\u00fcller", code);
+			String deco = MString.decodeUnicode(code);
+			assertEquals(test, deco);
+		}
+		
+	}
 }

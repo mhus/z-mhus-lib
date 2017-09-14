@@ -14,6 +14,7 @@ import de.mhus.lib.core.system.DefaultMApi;
 import de.mhus.lib.core.system.DummyClass;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiFactory;
+import de.mhus.lib.errors.TimeoutRuntimeException;
 import de.mhus.lib.core.system.ApiInitialize;
 
 public class MApi {
@@ -139,6 +140,21 @@ public class MApi {
 	public static <T,D extends T> T lookup(Class<T> class1, Class<D> def) {
 		return get().getBaseControl().base().lookup(class1, def);
 	}
+
+	public static <T extends Object> T waitFor(Class<? extends T> ifc, long timeout) {
+		long start = System.currentTimeMillis();
+		while (true) {
+			try {
+				T api = lookup(ifc);
+				if (api != null) // should not happen
+					return api;
+			} catch (Throwable t) {}
+			if (System.currentTimeMillis() - start > timeout)
+				throw new TimeoutRuntimeException("timeout getting API",ifc);
+			MThread.sleep(500);
+		}
+	}
+	
 	
 	public static void dirtyLog(Object ... string) {
 		if (isDirtyTrace())

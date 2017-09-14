@@ -521,6 +521,12 @@ public final class MCast {
 			out = "0" + out;
 		return out;
 	}
+	public static String toHex2LowerString(int _in) {
+		String out = Integer.toHexString(_in);
+		if (out.length() == 1)
+			out = "0" + out;
+		return out;
+	}
 
 	/**
 	 * Convert integer to four letter hex code. Ignores negative values.
