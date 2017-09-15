@@ -90,6 +90,10 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LT,left,right);
 	}
 
+	public static APart lt(String attr, Object value) {
+		return new ACompare(ACompare.TYPE.LT,attr(attr),value(value));
+	}
+	
 	/**
 	 * <p>le.</p>
 	 *
