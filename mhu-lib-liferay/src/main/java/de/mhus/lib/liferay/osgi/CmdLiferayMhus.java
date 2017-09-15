@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.service.VirtualHostLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.UserGroupRoleUtil;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
 
 public class CmdLiferayMhus implements CommandProvider {
@@ -127,7 +128,8 @@ public class CmdLiferayMhus implements CommandProvider {
 		ci.println("IsFemale           : " + u.isFemale());
 		ci.println("IsPasswordReset    : " + u.isPasswordReset());
 		ci.println("ReminderQuestion   : " + u.getReminderQueryQuestion());
-		ci.println("ReminderAnswer     : " + u.getReminderQueryAnswer());
+		ci.println("ReminderAnswer.....: " + u.getReminderQueryAnswer());
+		ci.println("JobTitle           : " + u.getJobTitle() );
 		
 		ci.println();
 		
@@ -257,6 +259,79 @@ public class CmdLiferayMhus implements CommandProvider {
 					);
 			
 			return user;
+		} catch (Throwable t) {
+			ci.printStackTrace(t);
+			throw t;
+		}
+	}
+	
+	public Object _user_set(CommandInterpreter ci) throws PortalException {
+		try {
+			String virtualHost = ci.nextArgument();
+			Company company = CompanyServiceUtil.getCompanyByVirtualHost(virtualHost);
+			String screenName = ci.nextArgument();
+			
+			User u = UserLocalServiceUtil.getUserByScreenName(company.getCompanyId(), screenName);
+			
+			while (true) {
+				String pair = ci.nextArgument();
+				if (pair == null) break;
+				
+				if (MString.isIndex(pair, '=')) {
+					String key = MString.beforeIndex(pair, '=');
+					String val = MString.afterIndex(pair, '=');
+					key = key.toLowerCase().trim();
+					switch (key) {
+					case "screenname":
+						u.setScreenName(val);
+						break;
+					case "email":
+						u.setEmailAddress(val);
+						break;
+					case "greeting":
+						u.setGreeting(val);
+						break;
+					case "firstname":
+						u.setFirstName(val);
+						break;
+					case "middlename":
+						u.setMiddleName(val);
+						break;
+					case "lastname":
+						u.setLastName(val);
+						break;
+					case "comments":
+						u.setComments(val);
+						break;
+					case "lastlogindate":
+						u.setLastLoginDate(MCast.toDate(val, null));
+						break;
+					case "lastloginip":
+						u.setLastLoginIP(val);
+						break;
+					case "isagreedtermsofuse":
+						u.setAgreedToTermsOfUse(MCast.toboolean(val, false));
+						break;
+					case "ispasswordreset":
+						u.setPasswordReset(MCast.toboolean(val, false));
+						break;
+					case "jobtitle":
+						u.setJobTitle(val);
+						break;
+					default:
+						ci.println("Unknown parameter: " + key);
+					}
+					
+				}
+				
+				
+			}
+			
+			UserLocalServiceUtil.updateUser(u);
+			ci.println("UPDATED " + u);
+			
+			return u;
+
 		} catch (Throwable t) {
 			ci.printStackTrace(t);
 			throw t;
