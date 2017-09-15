@@ -1376,7 +1376,7 @@ public class MString {
 	 * @return truncated string
 	 */
 	public static String truncate(String in, int length) {
-		if (in.length() <= length) return in;
+		if (in == null || in.length() <= length) return in;
 		return in.substring(0,length);
 	}
 	
@@ -1392,7 +1392,7 @@ public class MString {
 	 * @return truncated string
 	 */
 	public static String truncateNice(String in, int length) {
-		if (in.length() <= length) return in;
+		if (in == null || in.length() <= length) return in;
 		if (length < 4) return in.substring(0,length);
 		if (in.length() - length > 8)
 			return in.substring(0,length - 8) + "..." + in.substring(in.length() - 5);
@@ -1400,7 +1400,7 @@ public class MString {
 	}
 	
 	public static String truncateNiceLeft(String in, int length) {
-		if (in.length() <= length) return in;
+		if (in == null || in.length() <= length) return in;
 		int s = in.length();
 		if (length < 4) return in.substring(s-length,s);
 		return "..." + in.substring(s-length+3, s);

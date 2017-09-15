@@ -74,6 +74,7 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 
 	@Override
 	public void doInitialize(ClassLoader coreLoader) {
+		baseControl = new KarafBaseControl();
 		logFactory = new JavaLoggerFactory();
 		mlogFactory = new SingleMLogInstanceFactory();
 		getBaseControl().getCurrentBase().addObject(MLogFactory.class, mlogFactory);
