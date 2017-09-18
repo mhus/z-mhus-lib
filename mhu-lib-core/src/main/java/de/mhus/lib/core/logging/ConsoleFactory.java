@@ -22,7 +22,7 @@ public class ConsoleFactory extends LogFactory {
 	private ResourceNode config;
 
 	public ConsoleFactory() {
-		out = System.out;
+		out = MApi.out;
 	}
 	
 	@Override

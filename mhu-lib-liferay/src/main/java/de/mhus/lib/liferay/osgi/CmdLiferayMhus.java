@@ -1,5 +1,6 @@
 package de.mhus.lib.liferay.osgi;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -42,6 +43,7 @@ import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.service.VirtualHostLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.UserGroupRoleUtil;
 
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.console.ConsoleTable;
@@ -442,4 +444,29 @@ public class CmdLiferayMhus implements CommandProvider {
 		ci.println(out);
 		return null;
 	}
+	
+	public Object _config_info(CommandInterpreter ci) throws SchedulerException {
+		ci.println(new File(".").getAbsolutePath() );
+		ci.println( MApi.get().getCfgManager() );
+		return null;
+	}
+	
+	public Object _dirty_trace(CommandInterpreter ci) throws SchedulerException {
+
+		MApi.setDirtyTrace( MCast.toboolean(ci.nextArgument(), false) );
+		ci.println("DirtyTrace: " + MApi.isDirtyTrace());
+		return null;
+	}
+	
+	public Object _config_reset(CommandInterpreter ci) throws SchedulerException {
+		MApi.get().getCfgManager().reConfigure();
+		ci.println("OK");
+		return null;
+	}
+	
+//	public Object _log_(CommandInterpreter ci) throws SchedulerException {
+//		
+//		return null;
+//	}
+	
 }

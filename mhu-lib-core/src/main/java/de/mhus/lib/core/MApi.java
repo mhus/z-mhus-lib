@@ -1,6 +1,8 @@
 package de.mhus.lib.core;
 
 import java.io.File;
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
@@ -24,6 +26,7 @@ public class MApi {
 //	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
 	private static IConfig emptyConfig = null;
 	private static UpdaterCfg configUpdater;
+	public static PrintStream out = System.out; // catch default system out while startup (gogo shell will change stdout)
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -35,7 +38,7 @@ public class MApi {
 				IApi obj = null;
 				String path = "de.mhus.lib.mutable.MApiFactory";
 				if (System.getProperty("mhu.lib.api.factory") != null) path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
-				if (isDirtyTrace()) System.out.println("--- MApiFactory:" + path);
+				dirtyLog("--- MApiFactory", path);
 				IApiFactory factory = (IApiFactory)Class.forName(path).newInstance();
 				if (factory != null) {
 					obj = factory.createApi();
@@ -64,8 +67,7 @@ public class MApi {
 	}
 
 	public static boolean isTrace(String name) {
-		if (isDirtyTrace()) 
-			System.out.println("--- Ask for trace: " + name);
+		dirtyLog("--- Ask for trace", name);
 //		String value = System.getProperty(name+".trace");
 //		if (value != null) return "true".equals(value);
 		return get().isTrace(name);
@@ -157,8 +159,11 @@ public class MApi {
 	
 	
 	public static void dirtyLog(Object ... string) {
-		if (isDirtyTrace())
-			System.out.println(string);
+		if (string == null || !isDirtyTrace()) return;
+		out .println(Arrays.toString(string));
+		for (Object s : string)
+			if (s instanceof Throwable)
+				((Throwable)s).printStackTrace(out);
 	}
 		
 }

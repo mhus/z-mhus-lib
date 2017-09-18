@@ -21,7 +21,7 @@ public class SystemCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) 
 				baseDirName = name;
 			internal.setBaseDir( new File(baseDirName) );
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
 	}
 
 }

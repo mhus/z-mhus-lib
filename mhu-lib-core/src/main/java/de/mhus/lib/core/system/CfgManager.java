@@ -58,6 +58,11 @@ public class CfgManager {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return configFile;
+	}
+	
 	public IConfig getCfg(Object owner, IConfig def) {
 		initCfg();
 		
@@ -192,19 +197,11 @@ public class CfgManager {
 						MApi.dirtyLog("run initiator",initiator.getClass());
 						initiator.doInitialize(internal, MApi.get().getCfgManager() );
 					} catch (Throwable t) {
-						MApi.dirtyLog("Can't initiate",initiator.getClass(),t);
-						if (MApi.isDirtyTrace()) {
-							System.out.println("Can't initiate " + initiator.getClass() + " Error: " + t);
-							t.printStackTrace();
-						}
+						MApi.dirtyLog("Can't initiate",initiator.getClass()," Error: ",t);
 					}
 				
 			} catch (Throwable t) {
-				MApi.dirtyLog("Can't initiate config",t);
-				if (MApi.isDirtyTrace()) {
-					System.out.println("Can't initiate config " + t);
-					t.printStackTrace();
-				}
+				MApi.dirtyLog("Can't initiate config ", t);
 			}
 			MApi.getCfgUpdater().doUpdate(null);
 			
@@ -217,12 +214,10 @@ public class CfgManager {
 					config = c;
 					return true;
 				} catch (Exception e) {
-					if (MApi.isDirtyTrace())
-						e.printStackTrace();
+					MApi.dirtyLog(e);
 				}
 			
-			if (MApi.isDirtyTrace())
-				System.out.println("*** MHUS Config file not found" + file);
+			MApi.dirtyLog("*** MHUS Config file not found", file);
 			
 			return false;
 		}
@@ -239,8 +234,7 @@ public class CfgManager {
 				}
 				
 				File f = new File(configFile);
-				if (MApi.isDirtyTrace())
-					System.out.println("--- Try to load mhus config from " + f.getAbsolutePath());
+				MApi.dirtyLog("--- Try to load mhus config from ", f.getAbsolutePath());
 				internalLoadConfig(f);
 				
 				TimerIfc timer = MApi.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
@@ -255,8 +249,7 @@ public class CfgManager {
 
 					@Override
 					public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-						if (MApi.isDirtyTrace())
-							t.printStackTrace();
+						MApi.dirtyLog(t);
 					}
 					
 				}).doStart();

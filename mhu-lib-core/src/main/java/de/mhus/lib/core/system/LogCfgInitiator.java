@@ -49,7 +49,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				mlogFactory = (MLogFactory) Class.forName(name.trim()).newInstance();
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}	
+		} catch (Throwable t) {MApi.dirtyLog(t);}	
 		if (mlogFactory != null)
 			internal.setMLogFactory(mlogFactory);
 		
@@ -61,7 +61,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory = (LogFactory) Class.forName(name.trim()).newInstance();
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}	
+		} catch (Throwable t) {MApi.dirtyLog(t);}	
 		if (logFactory == null)
 			logFactory = new ConsoleFactory();
 
@@ -72,7 +72,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
 		
 		try {
 			String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE;
@@ -80,7 +80,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (size != null) {
 				logFactory.setMaxMessageSize(Integer.valueOf(size));
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
 
 		try {
 			String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
@@ -89,7 +89,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			if (MString.isSet(name)) {
 				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).newInstance() );
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
 		
 		if (logFactory.getParameterMapper() != null && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
 			try {
@@ -101,7 +101,7 @@ public class LogCfgInitiator implements CfgInitiator {
 					if (MString.isSet(name) && MString.isSet(clazz))
 						((MutableParameterMapper)logFactory.getParameterMapper()).put(name, (ParameterEntryMapper) Class.forName(clazz.trim()).newInstance() );
 				}
-			} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+			} catch (Throwable t) {MApi.dirtyLog(t);}
 		}
 			
 		try {
@@ -114,7 +114,7 @@ public class LogCfgInitiator implements CfgInitiator {
 					System.setOut(new SecureStreamToLogAdapter(LEVEL.INFO, out));
 				}
 			}
-		} catch (Throwable t) {if (MApi.isDirtyTrace()) t.printStackTrace();}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
 		
 		internal.setLogFactory(logFactory);
 
