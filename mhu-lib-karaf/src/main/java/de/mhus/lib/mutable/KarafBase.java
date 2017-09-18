@@ -42,18 +42,20 @@ public class KarafBase extends DefaultBase {
 				Bundle bundle = FrameworkUtil.getBundle(KarafBase.class);
 				if (bundle != null) {
 					BundleContext context = bundle.getBundleContext();
-					ServiceReference<? extends T> ref = context.getServiceReference(ifc);
-					if (ref != null) {
-						T obj = context.getService(ref);
-						if (obj != null) {
-							MLogUtil.log().d("KarafBase","loaded from OSGi",ifc);
-							cached = new Container();
-							cached.bundle = ref.getBundle();
-							cached.api = obj;
-							cached.ifc = ifc;
-							cached.modified = cached.bundle.getLastModified();
-							apiCache.put(ifc.getCanonicalName(), cached);
-							
+					if (context != null) {
+						ServiceReference<? extends T> ref = context.getServiceReference(ifc);
+						if (ref != null) {
+							T obj = context.getService(ref);
+							if (obj != null) {
+								MLogUtil.log().d("KarafBase","loaded from OSGi",ifc);
+								cached = new Container();
+								cached.bundle = ref.getBundle();
+								cached.api = obj;
+								cached.ifc = ifc;
+								cached.modified = cached.bundle.getLastModified();
+								apiCache.put(ifc.getCanonicalName(), cached);
+								
+							}
 						}
 					}
 				}
