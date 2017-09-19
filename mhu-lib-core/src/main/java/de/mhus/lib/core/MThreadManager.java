@@ -20,7 +20,13 @@ public class MThreadManager extends MObject implements IBase {
 		public void doit() {
 			log().t(getClass(),"Housekeeper");
 			poolClean(PENDING_TIME);
-			MThreadDaemon.poolClean(PENDING_TIME);
+			try {
+				MThreadDaemon.poolClean(PENDING_TIME);
+			} catch (NoClassDefFoundError e) {
+				// this only happens in OSGi if the bundle was uninstalled
+				log().i("Close stale ThreadHousekeeper", e.toString() );
+				cancel();
+			}
 		}
 	}
 
