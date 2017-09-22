@@ -726,6 +726,14 @@ public class CSVReader {
 		return lineCount;
 	}
 	
+	public int getLineColumns() {
+		return currentLine.length;
+	}
+	
+	public String[] getCurrentLine() {
+		return currentLine;
+	}
+	
 	// --------------------------- main() method ---------------------------
 
 	/**

@@ -38,6 +38,7 @@ import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -48,6 +49,8 @@ import java.util.concurrent.TimeoutException;
 import de.mhus.lib.core.cfg.CfgProperties;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.io.FileChecker;
+import de.mhus.lib.core.io.PdfFileChecker;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
@@ -61,7 +64,13 @@ public class MFile {
 	private static ResourceNode mimeConfigCache;
 	private static Properties mhuMimeConfigCache;
 	private static Log log = Log.getLog(MFile.class);
-
+	
+	public static final String TYPE_PDF = "pdf";
+	
+	private static HashMap<String, FileChecker> fileChecker = new HashMap<>();
+	static {
+		fileChecker.put(TYPE_PDF, new PdfFileChecker());
+	}
 
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot.
@@ -755,4 +764,8 @@ public class MFile {
 		return name + '.' + newSuffix;
 	}
 
+	public static FileChecker getFileCheck(String type) {
+		return fileChecker.get(type);
+	}
+	
 }

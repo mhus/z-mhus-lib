@@ -49,7 +49,7 @@ public class Matcher {
 	}
 
 	public boolean matches(String str) {
-		if (str == null) return false;
+		if (str == null || root == null) return false;
 		return root.m(str);
 	}
 	

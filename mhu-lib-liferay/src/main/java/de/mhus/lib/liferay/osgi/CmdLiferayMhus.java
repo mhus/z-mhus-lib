@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserServiceUtil;
 import com.liferay.portal.kernel.service.VirtualHostLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.UserGroupRoleUtil;
+import com.liferay.portal.kernel.transaction.Transactional;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
@@ -189,6 +190,7 @@ public class CmdLiferayMhus implements CommandProvider {
 		return null;
 	}
 	
+	@Transactional
 	public Object _role_delete(CommandInterpreter ci) throws PortalException {
 		long id = MCast.tolong(ci.nextArgument(), -1);
 		if (id < 0) return null;
@@ -200,9 +202,9 @@ public class CmdLiferayMhus implements CommandProvider {
 	public Object _companies(CommandInterpreter ci) throws PortalException {
 		
 		ConsoleTable out = new ConsoleTable();
-		out.setHeaderValues("Id","Active","Name","AccoutnId","DefaultUser","DefaultWebId","GroupId");
+		out.setHeaderValues("Id","Active","Name","AccoutnId","DefaultUser","DefaultWebId","GroupId", "Mx");
 		for ( Company c : CompanyLocalServiceUtil.getCompanies()) {
-			out.addRowValues(c.getCompanyId(),c.getActive(),c.getName(),c.getAccountId(),c.getDefaultUser().getUserId(),c.getDefaultWebId(),c.getGroupId());
+			out.addRowValues(c.getCompanyId(),c.getActive(),c.getName(),c.getAccountId(),c.getDefaultUser().getUserId(),c.getDefaultWebId(),c.getGroupId(),c.getMx());
 		}
 		ci.println(out);
 		return null;
@@ -215,6 +217,7 @@ public class CmdLiferayMhus implements CommandProvider {
 		return null;
 	}
 	
+	@Transactional
 	public Object _user_delete(CommandInterpreter ci) throws PortalException {
 		long id = MCast.tolong(ci.nextArgument(), -1);
 		if (id < 0) return null;
@@ -267,6 +270,7 @@ public class CmdLiferayMhus implements CommandProvider {
 		}
 	}
 	
+	@Transactional
 	public Object _user_set(CommandInterpreter ci) throws PortalException {
 		try {
 			String virtualHost = ci.nextArgument();
@@ -340,6 +344,7 @@ public class CmdLiferayMhus implements CommandProvider {
 		}
 	}
 
+	@Transactional
 	public Object _role_add(CommandInterpreter ci) throws PortalException {
 		String virtualHost = ci.nextArgument();
 		Company company = CompanyServiceUtil.getCompanyByVirtualHost(virtualHost);
