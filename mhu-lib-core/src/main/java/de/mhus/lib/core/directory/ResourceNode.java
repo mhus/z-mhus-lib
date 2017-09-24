@@ -16,6 +16,7 @@ import de.mhus.lib.core.parser.DefaultScriptPart;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotSupportedException;
 
 /**
@@ -127,11 +128,11 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * @return
 	 * @throws MException 
 	 */
-	public String getExtracted(String key) throws MException {
+	public String getExtracted(String key) {
 		return getExtracted(key, null);
 	}
 	
-	public String getExtracted(String key, String def) throws MException {
+	public String getExtracted(String key, String def) {
 		return getExtracted(key,def,0);
 	}
 	
@@ -147,7 +148,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		return MCollection.toSet(getPropertyKeys());
 	}
 
-	protected String getExtracted(String key, String def,int level) throws MException {
+	protected String getExtracted(String key, String def,int level) {
 		
 		if (level > 10) return def;
 		
@@ -166,7 +167,11 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 				cached = compiler.compileString(value);
 				compiledCache.put(key, cached);
 			}
-			return cached.execute(level == 0 ?null : new ConfigMap(level));
+			try {
+				return cached.execute(level == 0 ?null : new ConfigMap(level));
+			} catch (MException e) {
+				throw new MRuntimeException(key,e);
+			}
 		}
 	}
 	

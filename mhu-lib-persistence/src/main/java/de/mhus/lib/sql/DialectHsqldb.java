@@ -28,24 +28,20 @@ public class DialectHsqldb extends DialectDefault {
 	/** {@inheritDoc} */
 	@Override
 	protected String getFieldConfig(IConfig f) {
-		try {
-			String type = getDbType(f);
-			String ret = f.getString("name",null).toUpperCase() + " " + type;
+		String type = getDbType(f);
+		String ret = f.getString("name",null).toUpperCase() + " " + type;
 
-			String def = f.getExtracted("default");
-			if (def != null) {
-				def = getDbDef(def);
-				ret = ret + " DEFAULT " + def;
-			}
-			boolean notNull = f.getBoolean("notnull", false);
-			if (notNull)
-				ret = ret + " NOT NULL";
-			else
-				ret = ret + " NULL";
-			return ret;
-		} catch (MException e) {
-			throw new MRuntimeException(e);
+		String def = f.getExtracted("default");
+		if (def != null) {
+			def = getDbDef(def);
+			ret = ret + " DEFAULT " + def;
 		}
+		boolean notNull = f.getBoolean("notnull", false);
+		if (notNull)
+			ret = ret + " NOT NULL";
+		else
+			ret = ret + " NULL";
+		return ret;
 	}
 
 	/**

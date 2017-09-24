@@ -281,7 +281,7 @@ public class WritableNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getExtracted(String key) throws MException {
+	public String getExtracted(String key) {
 		return current.getExtracted(key);
 	}
 
@@ -321,7 +321,7 @@ public class WritableNode extends CaoWritableElement {
 	}
 
 	@Override
-	public String getExtracted(String key, String def) throws MException {
+	public String getExtracted(String key, String def) {
 		return current.getExtracted(key, def);
 	}
 

@@ -147,25 +147,21 @@ public abstract class Dialect extends MObject implements ICompiler {
 	public abstract  void createData(IConfig data, DbConnection db) throws Exception;
 
 	protected String getFieldConfig(IConfig f) {
-		try {
-			String type = getDbType(f);
+		String type = getDbType(f);
 
-			String ret = normalizeColumnName(f.getString("name",null)) + " " + type;
+		String ret = normalizeColumnName(f.getString("name",null)) + " " + type;
 
-			String def = f.getExtracted("default");
-			if (def != null) {
-				def = getDbDef(def);
-				ret = ret + " DEFAULT " + def;
-			}
-			boolean notNull = f.getBoolean("notnull", false);
-			if (notNull)
-				ret = ret + " NOT NULL";
-			else
-				ret = ret + " NULL";
-			return ret;
-		} catch (MException e) {
-			throw new MRuntimeException(e);
+		String def = f.getExtracted("default");
+		if (def != null) {
+			def = getDbDef(def);
+			ret = ret + " DEFAULT " + def;
 		}
+		boolean notNull = f.getBoolean("notnull", false);
+		if (notNull)
+			ret = ret + " NOT NULL";
+		else
+			ret = ret + " NULL";
+		return ret;
 	}
 
 	/**

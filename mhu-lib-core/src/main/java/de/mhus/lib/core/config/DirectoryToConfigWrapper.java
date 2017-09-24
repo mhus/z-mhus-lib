@@ -118,7 +118,7 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public String getExtracted(String key) throws MException {
+	public String getExtracted(String key) {
 		return node.getExtracted(key);
 	}
 
@@ -133,7 +133,7 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public String getExtracted(String key, String def) throws MException {
+	public String getExtracted(String key, String def) {
 		return node.getExtracted(key, def);
 	}
 

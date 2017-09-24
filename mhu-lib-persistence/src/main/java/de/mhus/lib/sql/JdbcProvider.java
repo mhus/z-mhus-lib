@@ -21,36 +21,32 @@ public class JdbcProvider extends DbProvider {
 
 	@Override
 	public synchronized Dialect getDialect() {
-		try {
-			if (dialect == null) {
-				// ResourceNode concon = config.getNode("connection");
-				String dialectName = config.getExtracted("dialect");
-				if (dialect != null) {
-					try {
-						dialect = (Dialect)activator.getObject(dialectName);
-					} catch (Exception e) {
-						log().t(dialect,e);
-					}
+		if (dialect == null) {
+			// ResourceNode concon = config.getNode("connection");
+			String dialectName = config.getExtracted("dialect");
+			if (dialect != null) {
+				try {
+					dialect = (Dialect)activator.getObject(dialectName);
+				} catch (Exception e) {
+					log().t(dialect,e);
 				}
-				if (dialect == null) {
-					String driver = config.getExtracted("driver");
-					if (driver != null) {
-						if (driver.indexOf("hsqldb") > 0)
-							dialect = new DialectHsqldb();
-						else
-							if (driver.indexOf("mysql") > 0)
-								dialect = new DialectMysql();
-					}
-				}
-				if (dialect == null) {
-					dialect = new DialectDefault();
-				}
-				log().t("dialect",dialect.getClass().getCanonicalName());
 			}
-			return dialect;
-		} catch (MException e) {
-			throw new MRuntimeException(e);
+			if (dialect == null) {
+				String driver = config.getExtracted("driver");
+				if (driver != null) {
+					if (driver.indexOf("hsqldb") > 0)
+						dialect = new DialectHsqldb();
+					else
+						if (driver.indexOf("mysql") > 0)
+							dialect = new DialectMysql();
+				}
+			}
+			if (dialect == null) {
+				dialect = new DialectDefault();
+			}
+			log().t("dialect",dialect.getClass().getCanonicalName());
 		}
+		return dialect;
 	}
 
 	@Override

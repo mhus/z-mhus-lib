@@ -77,14 +77,10 @@ public class MySqlDatabaseExport {
 	 * @param writer 
 	 * @return x */
 	public static boolean dumpDB(IConfig props, PrintWriter writer) {
-		try {
-			Properties prop = new Properties();
-			for (String key : props.getNodeKeys())
-				prop.setProperty(key, props.getExtracted(key));
-			return dumpDB(prop, writer);
-		} catch (MException e) {
-			throw new MRuntimeException(e);
-		}
+		Properties prop = new Properties();
+		for (String key : props.getNodeKeys())
+			prop.setProperty(key, props.getExtracted(key));
+		return dumpDB(prop, writer);
 	}
 
 	/** Dump the whole database to an SQL string 

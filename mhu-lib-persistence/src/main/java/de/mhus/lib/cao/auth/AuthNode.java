@@ -213,7 +213,7 @@ public class AuthNode extends CaoNode {
 	}
 
 	@Override
-	public String getExtracted(String key) throws MException {
+	public String getExtracted(String key) {
 		if (!((AuthCore)core).hasReadAccess(instance, key)) throw new AccessDeniedException();
 		return instance.getExtracted(((AuthCore)core).mapReadName(instance, key));
 	}
@@ -240,7 +240,7 @@ public class AuthNode extends CaoNode {
 	}
 
 	@Override
-	public String getExtracted(String key, String def) throws MException {
+	public String getExtracted(String key, String def) {
 		if (!((AuthCore)core).hasReadAccess(instance, key)) return def;
 		return instance.getExtracted(((AuthCore)core).mapReadName(instance, key), def);
 	}

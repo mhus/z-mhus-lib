@@ -16,19 +16,13 @@ public class CfgFile extends CfgValue<File>{
 	protected File loadValue() {
 		int p = getPath().indexOf('@');
 		if (p < 0) {
-			String str = null;
-			try {
-				str = MApi.getCfg(getOwner()).getExtracted(getPath(), null);
-			} catch (MException e) {}
+			String str = MApi.getCfg(getOwner()).getExtracted(getPath(), null);
 			if (str == null) return getDefault();
 			return new File(str);
 		}
 		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
-		String str = null;
-		try {
-			str = node.getExtracted(getPath().substring(p+1), null);
-		} catch (MException e) {}
+		String str = node.getExtracted(getPath().substring(p+1), null);
 		if (str == null) return getDefault();
 		return new File(str);
 	}

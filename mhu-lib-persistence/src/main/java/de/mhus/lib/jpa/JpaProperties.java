@@ -24,11 +24,7 @@ public class JpaProperties extends Properties {
 		IConfig cproperties = config.getNode("properties");
 		if (cproperties != null) {
 			for (IConfig prop : cproperties.getNodes("property")) {
-				try {
-					setProperty(prop.getExtracted("name"), prop.getExtracted("value"));
-				} catch (MException e) {
-					throw new MRuntimeException(e);
-				}
+				setProperty(prop.getExtracted("name"), prop.getExtracted("value"));
 			}
 		}
 

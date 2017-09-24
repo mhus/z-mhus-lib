@@ -70,28 +70,24 @@ public abstract class DbProvider extends MObject {
 	 * @return x The query string or null.
 	 */
 	public String[] getQuery(String name) {
-		try {
-			IConfig query = config.getNode("queries");
-			if (query == null) return new String[0];
-			
-			String queryLanguage = null;
-			String queryString = query.getString(name,null);
-			String[] out = new String[] { queryLanguage, queryString };
+		IConfig query = config.getNode("queries");
+		if (query == null) return new String[0];
+		
+		String queryLanguage = null;
+		String queryString = query.getString(name,null);
+		String[] out = new String[] { queryLanguage, queryString };
 
-			if (queryString == null) {
-				for (IConfig q : query.getNodes("query") ) {
-					if (q.getString("name", "").equals(name)) {
-						queryLanguage = q.getExtracted("language");
-						queryString = q.getExtracted("string");
-						out = new String[] { queryLanguage, queryString };
-						break;
-					}
+		if (queryString == null) {
+			for (IConfig q : query.getNodes("query") ) {
+				if (q.getString("name", "").equals(name)) {
+					queryLanguage = q.getExtracted("language");
+					queryString = q.getExtracted("string");
+					out = new String[] { queryLanguage, queryString };
+					break;
 				}
 			}
-			return out;
-		} catch (MException e) {
-			throw new MRuntimeException(e);
 		}
+		return out;
 	}
 
 	/**
@@ -108,11 +104,7 @@ public abstract class DbProvider extends MObject {
 	 * @return x
 	 */
 	public String getName() {
-		try {
-			return config.getExtracted("name");
-		} catch (MException e) {
-			throw new MRuntimeException(e);
-		}
+		return config.getExtracted("name");
 	}
 
 	/**
