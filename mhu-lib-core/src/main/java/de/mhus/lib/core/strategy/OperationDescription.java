@@ -2,6 +2,7 @@ package de.mhus.lib.core.strategy;
 
 import java.util.HashMap;
 
+import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.Log;
@@ -10,7 +11,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinitions;
 
-public class OperationDescription implements MNlsProvider, Nls {
+public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
 	private static Log log = Log.getLog(OperationDescription.class);
 	
@@ -24,19 +25,29 @@ public class OperationDescription implements MNlsProvider, Nls {
 
 	private MNls nls;
 	private MNlsProvider nlsProvider;
+
+	private String version;
 	
 	public OperationDescription() {}
 	
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String version, String title) {
+		this(clazz, nlsProvider, version, title, null);
+	}
+	
 	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title) {
-		this(clazz, nlsProvider, title, null);
+		this(clazz, nlsProvider, Versioned.DEFAULT_VERSION, title, null);
+	}
+	
+	public OperationDescription(Operation owner, String version, String title, DefRoot form) {
+		this(owner.getClass(), owner, version, title, form);
 	}
 	
 	public OperationDescription(Operation owner, String title, DefRoot form) {
-		this(owner.getClass(), owner, title, form);
+		this(owner.getClass(), owner, Versioned.DEFAULT_VERSION, title, form);
 	}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title, DefRoot form) {
-		this(clazz.getPackage().getName(), clazz.getSimpleName(), nlsProvider, title);
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String version, String title, DefRoot form) {
+		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title);
 		if (form != null)
 			setForm(form);
 	}
@@ -52,7 +63,7 @@ public class OperationDescription implements MNlsProvider, Nls {
 //			String formStr = MXml.toString(de, false);
 			this.form = form;
 		} catch (Exception e) {
-			log.w("invalid form",group,id,e);
+			log.w("invalid form",group,id,version,e);
 		}
 	}
 	
@@ -60,11 +71,11 @@ public class OperationDescription implements MNlsProvider, Nls {
 		return parameterDef;
 	}
 
-	public OperationDescription(OperationGroupDescription group, String id, MNlsProvider nlsProvider, String title ) {
-		this(group.getGroup(),id,nlsProvider, title);
+	public OperationDescription(OperationGroupDescription group, String id, String version, MNlsProvider nlsProvider, String title ) {
+		this(group.getGroup(),id, version, nlsProvider, title);
 	}
 	
-	public OperationDescription(String group, String id, MNlsProvider nlsProvider, String title) {
+	public OperationDescription(String group, String id, String version, MNlsProvider nlsProvider, String title) {
 		this.id = id;
 		this.group = group;
 		this.nlsProvider = nlsProvider;
@@ -90,6 +101,12 @@ public class OperationDescription implements MNlsProvider, Nls {
 	public String getPath() {
 		return group + '.' + id;
 	}
+	
+	@Override
+	public String getVersion() {
+		return version;
+	}
+	
 	public HashMap<String, Object> getParameters() {
 		return parameters;
 	}
