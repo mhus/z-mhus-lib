@@ -42,7 +42,7 @@ import java.awt.TextArea;
  * @author Roedy Green, Canadian Mind Products
  * @version 1.7, 2006-03-04
  */
-public class VersionCheck {
+public class JreVersionCheck {
 
 	// ------------------------------ FIELDS ------------------------------
 
@@ -219,7 +219,7 @@ public class VersionCheck {
 	/**
 	 * VersionCheck contains only static methods.
 	 */
-	private VersionCheck() {
+	private JreVersionCheck() {
 
 	}
 } // end class VersionCheck

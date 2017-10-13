@@ -10,6 +10,7 @@ import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinitions;
+import de.mhus.lib.core.util.Version;
 
 public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
@@ -26,27 +27,31 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	private MNls nls;
 	private MNlsProvider nlsProvider;
 
-	private String version;
+	private Version version;
 	
 	public OperationDescription() {}
 	
 	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String version, String title) {
+		this(clazz, nlsProvider, new Version(version), title, null);
+	}
+	
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title) {
 		this(clazz, nlsProvider, version, title, null);
 	}
 	
 	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title) {
-		this(clazz, nlsProvider, Versioned.DEFAULT_VERSION, title, null);
+		this(clazz, nlsProvider, new Version(null), title, null);
 	}
 	
-	public OperationDescription(Operation owner, String version, String title, DefRoot form) {
+	public OperationDescription(Operation owner, Version version, String title, DefRoot form) {
 		this(owner.getClass(), owner, version, title, form);
 	}
 	
 	public OperationDescription(Operation owner, String title, DefRoot form) {
-		this(owner.getClass(), owner, Versioned.DEFAULT_VERSION, title, form);
+		this(owner.getClass(), owner, new Version(null), title, form);
 	}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String version, String title, DefRoot form) {
+	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
 		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title);
 		if (form != null)
 			setForm(form);
@@ -71,15 +76,16 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 		return parameterDef;
 	}
 
-	public OperationDescription(OperationGroupDescription group, String id, String version, MNlsProvider nlsProvider, String title ) {
+	public OperationDescription(OperationGroupDescription group, String id, Version version, MNlsProvider nlsProvider, String title ) {
 		this(group.getGroup(),id, version, nlsProvider, title);
 	}
 	
-	public OperationDescription(String group, String id, String version, MNlsProvider nlsProvider, String title) {
+	public OperationDescription(String group, String id, Version version, MNlsProvider nlsProvider, String title) {
 		this.id = id;
 		this.group = group;
 		this.nlsProvider = nlsProvider;
 		this.title = title;
+		this.version = version;
 	}
 	
 	public String getId() {
@@ -103,7 +109,11 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	}
 	
 	@Override
-	public String getVersion() {
+	public String getVersionString() {
+		return version.toString();
+	}
+	
+	public Version getVersion() {
 		return version;
 	}
 	

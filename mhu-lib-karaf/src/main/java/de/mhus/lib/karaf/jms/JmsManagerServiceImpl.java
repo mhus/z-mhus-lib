@@ -23,6 +23,7 @@ import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.karaf.MOsgi;
@@ -378,7 +379,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 					if (o != null) return o;
 				} catch (Throwable t) {}
 			}
-			throw new NotFoundException("object for interface not found", ifc);
+			throw new NotFoundRuntimeException("object for interface not found", ifc);
 //		}
 	}
 

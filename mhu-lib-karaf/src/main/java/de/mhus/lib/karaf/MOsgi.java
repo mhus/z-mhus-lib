@@ -14,6 +14,7 @@ import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.base.service.TimerImpl;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 
 public class MOsgi {
 	
@@ -22,7 +23,7 @@ public class MOsgi {
 	private static final Log log = Log.getLog(MOsgi.class);
 	private static Timer localTimer; // fallback timer
 
-	public static <T> T getService(Class<T> ifc) {
+	public static <T> T getService(Class<T> ifc) throws NotFoundException {
 		BundleContext context = FrameworkUtil.getBundle(ifc).getBundleContext();
 		if (context == null)
 			context = FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
@@ -35,7 +36,7 @@ public class MOsgi {
 		return obj;
 	}
 
-	public static <T> T getService(Class<T> ifc, String filter) {
+	public static <T> T getService(Class<T> ifc, String filter) throws NotFoundException {
 		List<T> list = getServices(ifc, filter);
 		if (list.size() == 0) throw new NotFoundException("service not found", ifc);
 		return list.get(0);
@@ -46,7 +47,7 @@ public class MOsgi {
 		if (context == null)
 			context = FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
 		if (context == null)
-			throw new NotFoundException("service context not found", ifc);
+			throw new NotFoundRuntimeException("service context not found", ifc);
 		LinkedList<T> out = new LinkedList<>();
 		try {
 			for (ServiceReference<T> ref : context.getServiceReferences(ifc, filter)) {
@@ -64,7 +65,7 @@ public class MOsgi {
 		if (context == null)
 			context = FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
 		if (context == null)
-			throw new NotFoundException("service context not found", ifc);
+			throw new NotFoundRuntimeException("service context not found", ifc);
 		LinkedList<Service<T>> out = new LinkedList<>();
 		try {
 			for (ServiceReference<T> ref : context.getServiceReferences(ifc, filter)) {

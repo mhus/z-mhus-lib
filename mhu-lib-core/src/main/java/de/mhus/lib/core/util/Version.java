@@ -3,30 +3,33 @@ package de.mhus.lib.core.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
 
 public class Version implements Comparable<Version> {
 	
 	private String original;
 	private long[] versions;
+	private VersionRange range;
 	
 	public Version(String in) {
+		if (in == null) in = Versioned.DEFAULT_VERSION;
+		
 		this.original = in;
 		// parse in
-		if (in != null) {
-			// crop
-			for (int i = 0; i < in.length(); i++) {
-				char c = in.charAt(i);
-				if (!(c == '.' || (c >= '0' && c <= '9'))) {
-					in = in.substring(0, i);
-					break;
-				}
+		// crop
+		for (int i = 0; i < in.length(); i++) {
+			char c = in.charAt(i);
+			if (!(c == '.' || (c >= '0' && c <= '9'))) {
+				in = in.substring(0, i);
+				break;
 			}
-			String[] parts = in.split("\\.");
-			versions = new long[parts.length];
-			for (int i = 0; i < parts.length; i++)
-				versions[i] = MCast.tolong(parts[i], 0);
 		}
+		String[] parts = in.split("\\.");
+		versions = new long[parts.length];
+		for (int i = 0; i < parts.length; i++)
+			versions[i] = MCast.tolong(parts[i], 0);
 	}
 	
 	public int size() {
@@ -40,7 +43,7 @@ public class Version implements Comparable<Version> {
 	
 	@Override
 	public String toString() {
-		return original;
+		return MString.join(versions, '.');
 	}
 
 	@Override
@@ -69,6 +72,16 @@ public class Version implements Comparable<Version> {
 		if (size() > len) return 1;
 		if (o.size() > len) return -1;
 		return 0;
+	}
+
+	public VersionRange toRange() {
+		if (range == null)
+			range = new VersionRange(toString());
+		return range;
+	}
+	
+	public String getOriginal() {
+		return original;
 	}
 	
 }

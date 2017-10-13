@@ -678,6 +678,22 @@ public class MString {
 		return sb.toString();
 	}
 
+	public static String join(long[] src, char glue) {
+		if (src == null)
+			return null;
+		if (src.length == 0)
+			return "";
+		if (src.length == 1)
+			return String.valueOf(src[0]);
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < src.length; i++) {
+			if (i != 0)
+				sb.append(glue);
+			sb.append(src[i]);
+		}
+		return sb.toString();
+	}
+
 	public static String join(List<?> src, String glue) {
 		return join(src.iterator(), glue);
 	}
@@ -1671,5 +1687,6 @@ public class MString {
 		}
 		return out.toString();
 	}
+
 	
 }

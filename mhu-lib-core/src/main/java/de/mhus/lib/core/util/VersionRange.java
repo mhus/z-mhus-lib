@@ -19,6 +19,13 @@ public class VersionRange {
 
 	public VersionRange(String string) {
 		string = string.trim();
+		if (string.indexOf(',') > 0) {
+			if (!string.startsWith("[") && !string.startsWith("("))
+				string = "[" + string;
+			if (!string.endsWith("]") && !string.endsWith(")"))
+				string = string + ")";
+		}
+		
 		Matcher m = RANGE.matcher(string);
 		if (m.matches()) {
 			start = m.group(1).charAt(0);
@@ -48,6 +55,7 @@ public class VersionRange {
 		return end == ']';
 	}
 
+	@Override
 	public String toString() {
 		if (high == low)
 			return high.toString();

@@ -13,6 +13,7 @@ import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 
 public class TableRow implements Serializable {
 
@@ -89,14 +90,14 @@ public class TableRow implements Serializable {
 	
 	public Object get(int index) {
 		if (index < 0 || index >= data.size())
-			throw new NotFoundException("column index not found",index);
+			throw new NotFoundRuntimeException("column index not found",index);
 		return data.get(index);
 	}
 	
 	public Object get(String name) {
 		int index = table.getColumnIndex(name);
 		if (index == -1)
-			throw new NotFoundException("column not found",name);
+			throw new NotFoundRuntimeException("column not found",name);
 		return get(index);
 	}
 

@@ -10,6 +10,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.jms.ClientJsonService;
 import de.mhus.lib.jms.JmsChannel;
@@ -116,7 +117,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	@Override
 	public <I> I getObject(Class<? extends I> ifc) {
 		if (channel == null) reset();
-		if (channel == null) throw new NotFoundException("channel is null",name);
+		if (channel == null) throw new NotFoundRuntimeException("channel is null",name);
 		if (channel instanceof JmsChannelService)
 			return ((JmsChannelService)channel).getObject();
 		throw new NotSupportedException("channel is not a service",name);
@@ -125,7 +126,7 @@ public class JmsDataChannelImpl extends MLog implements JmsDataChannel {
 	@Override
 	public Class<?> getInterface() {
 		if (channel == null) reset();
-		if (channel == null) throw new NotFoundException("channel is null",name);
+		if (channel == null) throw new NotFoundRuntimeException("channel is null",name);
 		if (channel instanceof JmsChannelService)
 			return ((JmsChannelService)channel).getInterface();
 		throw new NotSupportedException("channel is not a service",name);

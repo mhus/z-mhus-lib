@@ -7,6 +7,7 @@ import org.osgi.framework.ServiceReference;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 import de.mhus.lib.jms.JmsConnection;
 
 public class JmsUtil {
@@ -41,14 +42,14 @@ public class JmsUtil {
 	
 	public static <I> I getObjectForInterface(Class<? extends I> ifc) {
 		JmsManagerService service = getService();
-		if (service == null) throw new NotFoundException("service not found");
+		if (service == null) throw new NotFoundRuntimeException("service not found");
 		return service.getObjectForInterface(ifc);
 	}
 	
 	public static <I> I getObjectForInterface(String channel, Class<? extends I> ifc) {
 		
 		JmsDataChannel c = getChannel(channel);
-		if (c == null) throw new NotFoundException("channel not found",channel);
+		if (c == null) throw new NotFoundRuntimeException("channel not found",channel);
 		
 		return c.getObject(ifc);
 	}
