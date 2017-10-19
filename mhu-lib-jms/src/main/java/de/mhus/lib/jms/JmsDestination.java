@@ -81,4 +81,9 @@ public class JmsDestination extends JmsObject {
 		return jmsDestination != null;
 	}
 
+	@Override
+	public JmsDestination getJmsDestination() {
+		return this;
+	}
+
 }

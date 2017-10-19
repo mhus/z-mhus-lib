@@ -31,10 +31,20 @@ public abstract class JmsChannel extends JmsObject {
 		return UUID.randomUUID().toString();
 	}
 
+	/**
+	 * Use getJmsDestination instead!
+	 * @return
+	 */
+	@Deprecated
 	public JmsDestination getDestination() {
 		return dest;
 	}
 
+	@Override
+	public JmsDestination getJmsDestination() {
+		return dest;
+	}
+	
 	@Override
 	public Session getSession() {
 		return dest.getSession();

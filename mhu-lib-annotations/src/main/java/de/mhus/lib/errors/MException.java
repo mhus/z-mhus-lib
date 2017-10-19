@@ -27,7 +27,7 @@ public class MException extends Exception {
 	private UUID errorId = UUID.randomUUID();
 	
 	public MException(Object ... in) {
-		super(argToString(in),argToCause(in));
+		super(argToString(4, in),argToCause(4, in));
 	}
 	
 	@Override
@@ -35,12 +35,15 @@ public class MException extends Exception {
 		return errorId.toString() + " " + super.toString();
 	}
 	
-	public static String argToString(Object ... in) {
-		StringBuffer sb = new StringBuffer();
+	public static String argToString(int level, Object ... in) {
+		StringBuilder sb = new StringBuilder();
 		for (Object o : in) {
 			if (o instanceof Object[]) {
 				sb.append("[");
-				sb.append(argToString(o));
+				if (level < 0)
+					sb.append(o);
+				else
+					sb.append(argToString(level-1,o));
 				sb.append("]");
 			} else
 				sb.append("[").append(o).append("]");
@@ -48,14 +51,16 @@ public class MException extends Exception {
 		return sb.toString();
 	}
 	
-	public static Throwable argToCause(Object ... in) {
+	public static Throwable argToCause(int level, Object ... in) {
+		if (level < 0)
+			return null;
 		Throwable cause = null;
 		for (Object o : in) {
 			if ((o instanceof Throwable) && cause == null) {
 				cause = (Throwable)o;
 			} else
 			if (o instanceof Object[]) {
-				cause = argToCause(o);
+				cause = argToCause(level-1,o);
 				if (cause != null) return cause;
 			}
 		}

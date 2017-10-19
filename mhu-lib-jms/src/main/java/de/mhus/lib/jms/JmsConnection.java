@@ -124,5 +124,10 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 			return channelRegistry.keySet().toArray(new JmsChannel[0]);
 		}
 	}
+
+	@Override
+	public JmsDestination getJmsDestination() {
+		return null;
+	}
 	
 }

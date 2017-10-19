@@ -9,7 +9,9 @@ public interface JmsDataChannel {
 	JmsChannel getChannel();
 	String getName();
 	String getConnectionName();
+	@Deprecated
 	Class<?> getInterface();
+	@Deprecated
 	<I> I getObject(Class<? extends I> ifc);
 	String getInformation();
 	

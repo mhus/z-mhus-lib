@@ -3,6 +3,8 @@ package de.mhus.lib.core.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.mhus.lib.basics.Versioned;
+
 /*
  * From aQute.libg.version.VersionRange
  */
@@ -77,6 +79,10 @@ public class VersionRange {
 		return high;
 	}
 
+	public boolean includes(Versioned v) {
+		return includes(new Version(v.getVersionString()));
+	}
+	
 	public boolean includes(Version v) {
 		if ( !isRange() ) {
 			return low.compareTo(v) <=0;

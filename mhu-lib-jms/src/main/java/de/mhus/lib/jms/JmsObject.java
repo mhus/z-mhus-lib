@@ -37,43 +37,45 @@ public abstract class JmsObject extends MLog {
 	public abstract Session getSession();
 
 	public abstract boolean isConnected();
-	
+
+	public abstract JmsDestination getJmsDestination();
+
 	public void reopen() {
 		closed = false;
 		reset();
 	}
 
 	public BytesMessage createBytesMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createBytesMessage();
 	}
 	public MapMessage createMapMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createMapMessage();
 	}
 	public Message createMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createMessage();
 	}
 	public ObjectMessage createObjectMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createObjectMessage();
 	}
 	public ObjectMessage createObjectMessage(Serializable arg0)
 			throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createObjectMessage(arg0);
 	}
 	public StreamMessage createStreamMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createStreamMessage();
 	}
 	public TextMessage createTextMessage() throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createTextMessage();
 	}
 	public TextMessage createTextMessage(String arg0) throws JMSException {
-		if (getSession() == null) throw new JMSException("not connected");
+		if (getSession() == null) throw new JMSException("not connected " + getJmsDestination());
 		return getSession().createTextMessage(arg0);
 	}
 	

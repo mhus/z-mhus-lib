@@ -8,7 +8,7 @@ public class MRuntimeException extends RuntimeException {
 	private UUID errorId = UUID.randomUUID();
 	
 	public MRuntimeException(Object ... in) {
-		super(MException.argToString(in),MException.argToCause(in));
+		super(MException.argToString(4,in),MException.argToCause(4,in));
 	}
 	
 	@Override
