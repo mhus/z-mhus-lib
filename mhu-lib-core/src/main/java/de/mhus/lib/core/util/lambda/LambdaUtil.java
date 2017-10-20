@@ -31,6 +31,12 @@ import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
 
+/**
+ * Utility to help with lambda expressions. The main goal is to find the name of referenced method.
+ * 
+ * @author mikehummel
+ *
+ */
 public class LambdaUtil {
 
 	public static boolean debugOut = false;
@@ -127,11 +133,15 @@ public class LambdaUtil {
 		return getName(lambda);
 	}
 	
+	/*
+	 * Get and analyze the lambda byte code.
+	 */
 	private static String getName(Object lambda) throws NotFoundException {
 		try {
 			byte[] bc = getByteCodeOf(lambda.getClass());
 			if (debugOut)
 				System.out.println(de.mhus.lib.core.MString.toHexDump(bc, 20));
+			// split the byte code
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < bc.length; i++) {
 				if (bc[i] < ' ' || bc[i] > 128)
@@ -140,16 +150,18 @@ public class LambdaUtil {
 					sb.append((char)bc[i]);
 			}
 			String[] parts = sb.toString().split("\\|");
+			// search for a valid candidate
 			boolean hiddenFound = false;
 			boolean ignoreFound = false;
 			for (String p : parts) {
 				p = p.trim();
-				if (p.indexOf("$Hidden;") > 0) {
+				if (p.indexOf("$Hidden;") > 0) { // wait for the first 'Hidden'
 					hiddenFound = true;
 					continue;
 				}
 				if (hiddenFound) {
 					if (!ignoreFound && (
+						// ignore primitives for the first time
 						p.equals("intValue") || p.equals("longValue") || p.equals("doubleValue") ||
 						p.equals("booleanValue") || p.equals("floatValue") || p.equals("shortValue") ||
 						p.equals("byteValue") || p.equals("charValue")
@@ -159,14 +171,14 @@ public class LambdaUtil {
 						continue;
 					}
 					
-					
+					// check for unwanted characters
 					if (p.length() > 1 && p.indexOf('/') < 0 && 
 							p.indexOf('$') < 0 && 
 							p.indexOf('<') < 0 && 
 							p.indexOf('(') < 0 &&
 							p.indexOf('[') < 0
 							)
-						return p;
+						return p; // not ... found it!
 				}
 			}
 		} catch (IOException e) {
@@ -176,7 +188,9 @@ public class LambdaUtil {
 	}
 	
 	private static final Instrumentation instrumentation = ByteBuddyAgent.install();
-
+	/*
+	 * Use byte buddy to get the lambda byte code
+	 */
 	static byte[] getByteCodeOf(Class<?> c) throws IOException {
 	    ClassFileLocator locator = ClassFileLocator.AgentBased.of(instrumentation, c);
 	    TypeDescription.ForLoadedType desc = new TypeDescription.ForLoadedType(c);
