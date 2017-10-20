@@ -53,9 +53,9 @@
 		            *
 	            </Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
-<!-- 
-				<Embed-Dependency>cglib</Embed-Dependency>
- -->	            
+
+				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
+
 	          </instructions>
 	        </configuration>
 	      </plugin>
@@ -122,11 +122,13 @@
     	<version>1.7.5</version>
     	<scope>compile</scope>
     </dependency>
+<!-- 
 	<dependency>
 		<groupId>cglib</groupId>
 		<artifactId>cglib</artifactId>
 		<version>3.2.2</version>
 	</dependency>
+ -->
 	<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
 	<dependency>
 	    <groupId>org.bouncycastle</groupId>
@@ -138,6 +140,18 @@
 		<groupId>org.apache.httpcomponents</groupId>
 		<artifactId>httpclient</artifactId>
 		<version>4.5.3</version>
+	</dependency>
+
+	<dependency>
+	  <groupId>net.bytebuddy</groupId>
+	  <artifactId>byte-buddy</artifactId>
+	  <version>1.7.6</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
+	<dependency>
+	    <groupId>net.bytebuddy</groupId>
+	    <artifactId>byte-buddy-agent</artifactId>
+	    <version>1.7.6</version>
 	</dependency>
 
 

@@ -9,6 +9,12 @@ public class PojoExample {
 	private String myString;
 	private int myInt;
 	private double myDouble;
+	private boolean myBoolean;
+	private char myChar;
+	private float myFloat;
+	private short myShort;
+	private byte myByte;
+	private byte[] myByteArray;
 	@Embedded
 	private PojoEmbedded myEmbedded = new PojoEmbedded();
 	@Hidden
@@ -60,6 +66,42 @@ public class PojoExample {
 	
 	public String getMyReadOnly() {
 		return myReadOnly;
+	}
+	public boolean isMyBoolean() {
+		return myBoolean;
+	}
+	public void setMyBoolean(boolean myBoolean) {
+		this.myBoolean = myBoolean;
+	}
+	public char getMyChar() {
+		return myChar;
+	}
+	public void setMyChar(char myChar) {
+		this.myChar = myChar;
+	}
+	public float getMyFloat() {
+		return myFloat;
+	}
+	public void setMyFloat(float myFloat) {
+		this.myFloat = myFloat;
+	}
+	public short getMyShort() {
+		return myShort;
+	}
+	public void setMyShort(short myShort) {
+		this.myShort = myShort;
+	}
+	public byte getMyByte() {
+		return myByte;
+	}
+	public void setMyByte(byte myByte) {
+		this.myByte = myByte;
+	}
+	public byte[] getMyByteArray() {
+		return myByteArray;
+	}
+	public void setMyByteArray(byte[] myByteArray) {
+		this.myByteArray = myByteArray;
 	}
 	
 	

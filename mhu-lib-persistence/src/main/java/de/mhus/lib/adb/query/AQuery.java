@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
-import de.mhus.lib.core.util.lambda.Recorder;
-import de.mhus.lib.core.util.lambda.RecordingObject;
+import de.mhus.lib.core.util.lambda.LambdaUtil;
+import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 
 /**
  * <p>AQuery class.</p>
@@ -21,7 +21,7 @@ public class AQuery<T> extends APrint {
 	private LinkedList<AOperation> operations;
 	private DbManager manager;
 	private Class<? extends T> type;
-	private Recorder<T> recorder;
+//	private Recorder<T> recorder;
 	
 	/**
 	 * <p>Constructor for AQuery.</p>
@@ -701,26 +701,17 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public String toAttributeName(Function<T, ?> getter) {
-		initRecorder();
-		getter.apply(recorder.getObject());
-        String fieldName = recorder.getCurrentMethodName();
-        fieldName = fieldName.toLowerCase();
-        if (fieldName.startsWith("is")) fieldName = fieldName.substring(2);
-        else
-        if (fieldName.startsWith("get")) fieldName = fieldName.substring(3);
-        else
-        if (fieldName.startsWith("set")) {
-        	MLogUtil.log().w("Using setter to get attribute name is not clever",fieldName,Thread.currentThread().getStackTrace());
-        	fieldName = fieldName.substring(3);
-        }
-        	
-        return fieldName;
+        try {
+			return LambdaUtil.getMethodName(getter);
+		} catch (NotFoundException e) {
+			throw new NotFoundRuntimeException(e);
+		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private synchronized void initRecorder() {
-		if (recorder == null)
-			recorder = (Recorder<T>) RecordingObject.create(type);
-	}
+//	@SuppressWarnings("unchecked")
+//	private synchronized void initRecorder() {
+//		if (recorder == null)
+//			recorder = (Recorder<T>) RecordingObject.create(type);
+//	}
 
 }

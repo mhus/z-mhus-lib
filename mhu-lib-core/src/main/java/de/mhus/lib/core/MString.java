@@ -1688,5 +1688,28 @@ public class MString {
 		return out.toString();
 	}
 
+	public static String toHexDump(byte[] bc, int lineSize) {
+		StringBuilder out = new StringBuilder();
+		int off = 0;
+		while(off < bc.length) {
+			for (int i = 0; i < lineSize; i++) {
+				if (off+i < bc.length)
+					out.append(MCast.toHex2String(bc[off + i]).toUpperCase() );
+				else
+					out.append("  ");
+				if (i % 4 == 3)
+					out.append(" ");
+			}
+			out.append(" ");
+			for (int i = 0; i < lineSize; i++) {
+				if (off+i < bc.length)
+					out.append(MCast.toReadableChar((char)bc[off + i]) );
+			}
+			out.append('\n');
+			off = off + lineSize;
+		}
+		return out.toString();
+	}
+
 	
 }

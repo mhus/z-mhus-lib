@@ -904,4 +904,13 @@ public final class MCast {
 		}
 		return def;
 	}
+
+	public static String toReadableChar(char b) {
+		if (b == 13) return "<BR>";
+		if (b == 10) return "<CR>";
+		if (b == '\t') return "<TAB>";
+		if (b < ' ' ) return "<" + MCast.toHex2String(b).toUpperCase() + ">";
+		return new String(new char[] {b});
+	}
+	
 }
