@@ -28,6 +28,7 @@ public class LambdaTest extends TestCase {
 			System.out.println(name);
 			assertEquals("log", name);
 		}
+/*		
 		{
 			String name = LambdaUtil.getMethodName(PojoExample::getMyDouble);
 			System.out.println(name);
@@ -83,12 +84,13 @@ public class LambdaTest extends TestCase {
 			System.out.println(name);
 			assertEquals("doClean", name);
 		}
+		*/
 		{
 			String name = LambdaUtil.getMethodName(MProperties::size);
 			System.out.println(name);
 			assertEquals("size", name);
 		}
-		
+/*		
 		{
 			String name = LambdaUtil.getMethodName(PojoExample::setMyChar);
 			System.out.println(name);
@@ -131,6 +133,6 @@ public class LambdaTest extends TestCase {
 			System.out.println(name);
 			assertEquals("getMyByteArray", name);
 		}
-
+*/
 	}
 }

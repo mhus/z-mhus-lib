@@ -50,6 +50,8 @@
 		            net.sf.cglib.*;version=3.2.2;resolution:=optional,
 		            org.bouncycastle.*;version=1.56;resolution:=optional,
 		            org.apache.http.*;version=1.56;resolution:=optional,
+		            net.bytebuddy.jar.asm.tree;resolution:=optional,
+		            org.newsclub.net.unix.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>

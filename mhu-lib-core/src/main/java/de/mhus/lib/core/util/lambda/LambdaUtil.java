@@ -41,91 +41,91 @@ public class LambdaUtil {
 
 	public static boolean debugOut = false;
 	
-	public static String getMethodName(DoubleUnaryOperator lambda) throws NotFoundException {
+	public static String getMethodNameUnaryOperator(DoubleUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(LongUnaryOperator lambda) throws NotFoundException {
+	public static String getMethodNameUnaryOperator(LongUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(IntUnaryOperator lambda) throws NotFoundException {
+	public static String getMethodNameUnaryOperator(IntUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(ToLongFunction<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNameToLongFunction(ToLongFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(ToDoubleFunction<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNameToDoubleFunction(ToDoubleFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(ToIntFunction<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNameToIntFunction(ToIntFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T, U> String getMethodName(BiPredicate<T, U> lambda) throws NotFoundException {
+	public static <T, U> String getMethodNameBiPredicate(BiPredicate<T, U> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 
-	public static String getMethodName(LongPredicate lambda) throws NotFoundException {
+	public static String getMethodNameLongPredicate(LongPredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(DoublePredicate lambda) throws NotFoundException {
+	public static String getMethodNameDoublePredicate(DoublePredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(IntPredicate lambda) throws NotFoundException {
+	public static String getMethodNameIntPredicate(IntPredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodName(DoubleFunction<R> lambda) throws NotFoundException {
+	public static <R> String getMethodNameDoubleFunction(DoubleFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodName(LongFunction<R> lambda) throws NotFoundException {
+	public static <R> String getMethodNameLongFunction(LongFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodName(IntFunction<R> lambda) throws NotFoundException {
+	public static <R> String getMethodNameIntFunction(IntFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(LongSupplier lambda) throws NotFoundException {
+	public static String getMethodNameLongSupplier(LongSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(IntSupplier lambda) throws NotFoundException {
+	public static String getMethodIntName(IntSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodName(BooleanSupplier lambda) throws NotFoundException {
+	public static String getMethodNameBooleanSupplier(BooleanSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(Predicate<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNamePredicate(Predicate<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(BinaryOperator<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNameOperator(BinaryOperator<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T,U,R> String getMethodName(BiFunction<T,U,R> lambda) throws NotFoundException {
+	public static <T,U,R> String getMethodNameBiFunction(BiFunction<T,U,R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T,R> String getMethodName(BiConsumer<T,R> lambda) throws NotFoundException {
+	public static <T,R> String getMethodNameBiConsumer(BiConsumer<T,R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(Consumer<T> lambda) throws NotFoundException {
+	public static <T> String getMethodNameConsumer(Consumer<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 
-	public static String getMethodName(Supplier<?> lambda) throws NotFoundException {
+	public static String getMethodNameSupplier(Supplier<?> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
