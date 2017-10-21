@@ -12,6 +12,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -420,6 +421,7 @@ public class AdbTest extends TestCase {
 		}
 
 		{
+			LambdaUtil.debugOut = true;
 			AQuery<Person2> q1 = Db.query(Person2.class).eq(Person2::getName, "Max");
 			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
 			assertEquals(1, res.size());

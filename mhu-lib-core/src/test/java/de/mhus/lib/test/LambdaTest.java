@@ -14,79 +14,79 @@ public class LambdaTest extends TestCase {
 	public void testGetMethodName() throws NotFoundException {
 		LambdaUtil.debugOut = true;
 		{
-			String name = LambdaUtil.getMethodName(Object::getClass);
+			String name = LambdaUtil.getFunctionName(Object::getClass);
 			System.out.println(name);
 			assertEquals("getClass", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoDataSource::getNext);
+			String name = LambdaUtil.getFunctionName(PojoDataSource::getNext);
 			System.out.println(name);
 			assertEquals("getNext", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoDataSource::log);
+			String name = LambdaUtil.getFunctionName(PojoDataSource::log);
 			System.out.println(name);
 			assertEquals("log", name);
 		}
-/*		
+
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::getMyDouble);
+			String name = LambdaUtil.getFunctionName(PojoExample::getMyDouble);
 			System.out.println(name);
 			assertEquals("getMyDouble", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::getMyInt);
+			String name = LambdaUtil.getFunctionName(PojoExample::getMyInt);
 			System.out.println(name);
 			assertEquals("getMyInt", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::getMyString);
+			String name = LambdaUtil.getFunctionName(PojoExample::getMyString);
 			System.out.println(name);
 			assertEquals("getMyString", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::toString);
+			String name = LambdaUtil.getFunctionName(PojoExample::toString);
 			System.out.println(name);
 			assertEquals("toString", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(System.out::println);
+			String name = LambdaUtil.getConsumerName(System.out::println);
 			System.out.println(name);
 			assertEquals("println", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::setMyString);
+			String name = LambdaUtil.getBiConsumerName(PojoExample::setMyString);
 			System.out.println(name);
 			assertEquals("setMyString", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::setMyDouble);
+			String name = LambdaUtil.getBiConsumerName(PojoExample::setMyDouble);
 			System.out.println(name);
 			assertEquals("setMyDouble", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::setMyInt);
+			String name = LambdaUtil.getBiConsumerName(PojoExample::setMyInt);
 			System.out.println(name);
 			assertEquals("setMyInt", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::setMyBoolean);
+			String name = LambdaUtil.getBiConsumerName(PojoExample::setMyBoolean);
 			System.out.println(name);
 			assertEquals("setMyBoolean", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::isMyBoolean);
+			String name = LambdaUtil.getFunctionName(PojoExample::isMyBoolean);
 			System.out.println(name);
 			assertEquals("isMyBoolean", name);
 		}
 		{
-			String name = LambdaUtil.getMethodName(PojoExample::doClean);
+			String name = LambdaUtil.getConsumerName(PojoExample::doClean);
 			System.out.println(name);
 			assertEquals("doClean", name);
 		}
-		*/
+		
 		{
-			String name = LambdaUtil.getMethodName(MProperties::size);
+			String name = LambdaUtil.getFunctionName(MProperties::size);
 			System.out.println(name);
 			assertEquals("size", name);
 		}

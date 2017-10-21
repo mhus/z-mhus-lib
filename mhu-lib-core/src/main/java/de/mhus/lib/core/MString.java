@@ -1689,6 +1689,7 @@ public class MString {
 	}
 
 	public static String toHexDump(byte[] bc, int lineSize) {
+		if (bc == null) return "";
 		StringBuilder out = new StringBuilder();
 		int off = 0;
 		while(off < bc.length) {

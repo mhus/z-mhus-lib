@@ -702,7 +702,12 @@ public class AQuery<T> extends APrint {
 	 */
 	public String toAttributeName(Function<T, ?> getter) {
         try {
-			return LambdaUtil.getMethodName(getter);
+			String name = LambdaUtil.getFunctionName(getter);
+			name = name.toLowerCase();
+			if (name.startsWith("get")) name = name.substring(3);
+			else
+			if (name.startsWith("is")) name = name.substring(2);
+			return name;
 		} catch (NotFoundException e) {
 			throw new NotFoundRuntimeException(e);
 		}

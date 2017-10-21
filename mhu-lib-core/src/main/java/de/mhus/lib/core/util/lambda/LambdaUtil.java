@@ -26,6 +26,7 @@ import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 
+import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.NotFoundException;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.type.TypeDescription;
@@ -41,106 +42,107 @@ public class LambdaUtil {
 
 	public static boolean debugOut = false;
 	
-	public static String getMethodNameUnaryOperator(DoubleUnaryOperator lambda) throws NotFoundException {
+	public static String getDoubleUnaryOperatorName(DoubleUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameUnaryOperator(LongUnaryOperator lambda) throws NotFoundException {
+	public static String getLongUnaryOperatorName(LongUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameUnaryOperator(IntUnaryOperator lambda) throws NotFoundException {
+	public static String getIntUnaryOperatorName(IntUnaryOperator lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNameToLongFunction(ToLongFunction<T> lambda) throws NotFoundException {
+	public static <T> String getToLongFunctionName(ToLongFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNameToDoubleFunction(ToDoubleFunction<T> lambda) throws NotFoundException {
+	public static <T> String getToDoubleFunctionName(ToDoubleFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNameToIntFunction(ToIntFunction<T> lambda) throws NotFoundException {
+	public static <T> String getToIntFunctionName(ToIntFunction<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T, U> String getMethodNameBiPredicate(BiPredicate<T, U> lambda) throws NotFoundException {
+	public static <T, U> String getBiPredicateName(BiPredicate<T, U> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 
-	public static String getMethodNameLongPredicate(LongPredicate lambda) throws NotFoundException {
+	public static String getLongPredicateName(LongPredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameDoublePredicate(DoublePredicate lambda) throws NotFoundException {
+	public static String getDoublePredicateName(DoublePredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameIntPredicate(IntPredicate lambda) throws NotFoundException {
+	public static String getIntPredicateName(IntPredicate lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodNameDoubleFunction(DoubleFunction<R> lambda) throws NotFoundException {
+	public static <R> String getDoubleFunctionName(DoubleFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodNameLongFunction(LongFunction<R> lambda) throws NotFoundException {
+	public static <R> String getLongFunctionName(LongFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <R> String getMethodNameIntFunction(IntFunction<R> lambda) throws NotFoundException {
+	public static <R> String getIntFunctionName(IntFunction<R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameLongSupplier(LongSupplier lambda) throws NotFoundException {
+	public static String getLongSupplierName(LongSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodIntName(IntSupplier lambda) throws NotFoundException {
+	public static String getIntSupplierName(IntSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static String getMethodNameBooleanSupplier(BooleanSupplier lambda) throws NotFoundException {
+	public static String getBooleanSupplierName(BooleanSupplier lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNamePredicate(Predicate<T> lambda) throws NotFoundException {
+	public static <T> String getPredicateName(Predicate<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNameOperator(BinaryOperator<T> lambda) throws NotFoundException {
+	public static <T> String getBinaryOperatorName(BinaryOperator<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T,U,R> String getMethodNameBiFunction(BiFunction<T,U,R> lambda) throws NotFoundException {
+	public static <T,U,R> String getBiFunctionName(BiFunction<T,U,R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T,R> String getMethodNameBiConsumer(BiConsumer<T,R> lambda) throws NotFoundException {
+	public static <T,R> String getBiConsumerName(BiConsumer<T,R> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodNameConsumer(Consumer<T> lambda) throws NotFoundException {
+	public static <T> String getConsumerName(Consumer<T> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 
-	public static String getMethodNameSupplier(Supplier<?> lambda) throws NotFoundException {
+	public static String getSupplierName(Supplier<?> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
 	
-	public static <T> String getMethodName(Function<T,?> lambda) throws NotFoundException {
+	public static <T> String getFunctionName(Function<T,?> lambda) throws NotFoundException {
 		return getName(lambda);
 	}
-	
+		
 	/*
 	 * Get and analyze the lambda byte code.
 	 */
 	private static String getName(Object lambda) throws NotFoundException {
+		byte[] bc = null;
 		try {
-			byte[] bc = getByteCodeOf(lambda.getClass());
+			bc = getByteCodeOf(lambda.getClass());
 			if (debugOut)
-				System.out.println(de.mhus.lib.core.MString.toHexDump(bc, 20));
+				System.out.println(MString.toHexDump(bc, 20));
 			// split the byte code
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < bc.length; i++) {
@@ -182,9 +184,9 @@ public class LambdaUtil {
 				}
 			}
 		} catch (IOException e) {
-			throw new NotFoundException("method in lambda not found", lambda, e);
+			throw new NotFoundException("method in lambda not found", lambda, MString.toHexDump(bc, 20), e);
 		}
-		throw new NotFoundException("method in lambda not found", lambda);
+		throw new NotFoundException("method in lambda not found", MString.toHexDump(bc, 20), lambda);
 	}
 	
 	private static final Instrumentation instrumentation = ByteBuddyAgent.install();
