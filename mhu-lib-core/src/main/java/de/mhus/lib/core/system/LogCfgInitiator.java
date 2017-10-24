@@ -11,6 +11,7 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.PropertiesConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LevelMapper;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
@@ -115,6 +116,16 @@ public class LogCfgInitiator implements CfgInitiator {
 				}
 			}
 		} catch (Throwable t) {MApi.dirtyLog(t);}
+		
+		try {
+			String key = MConstants.PROP_LOG_LEVEL;
+			String value = system.getString(key);
+			if (MString.isEmpty(value)) value = System.getProperty(MConstants.PROP_PREFIX + key);
+			if (MString.isSet(value)) {
+				logFactory.setDefaultLevel(Log.LEVEL.valueOf(value.toUpperCase()));
+			}
+		} catch (Throwable t) {MApi.dirtyLog(t);}
+
 		
 		internal.setLogFactory(logFactory);
 

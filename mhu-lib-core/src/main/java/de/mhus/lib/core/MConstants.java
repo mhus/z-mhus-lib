@@ -40,6 +40,8 @@ public class MConstants {
 	public static final String PROP_TIMER_CONFIG_FILE = "timer.config.file";
 
 	public static final String PROP_LOG_MAX_MESSAGE_SIZE = "log.max.message.size";
+
+	public static final String PROP_LOG_LEVEL = "log.level";
 	
 
 }

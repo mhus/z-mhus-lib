@@ -24,8 +24,8 @@ public class MutableParameterMapper extends AbstractParameterMapper implements d
 		if (o == null || mapping.size() == 0) return null;
 		Class<?> c = o.getClass();
 		if (c.isPrimitive()) return null;
-		String name = o.getClass().getCanonicalName();
-		if (name.startsWith("java.lang")) return null;
+		String name = c.getCanonicalName();
+		if (name == null || name.startsWith("java.lang")) return null;
 		
 		synchronized (this) {
 			ParameterEntryMapper mapper = cache.get(name);

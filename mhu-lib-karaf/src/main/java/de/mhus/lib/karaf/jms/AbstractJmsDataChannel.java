@@ -19,11 +19,9 @@ public abstract class AbstractJmsDataChannel extends MLog implements JmsDataChan
 	private String connectionName;
 	private JmsChannel channel;
 	private String destination;
-	private boolean destinationTopic;
-	private boolean initialized = false;
 
 	public void doActivate(ComponentContext ctx) {
-		
+		log().d("Start JmsDataChannel",getDestination());
 		setChannel(createChannel());
 		setConnectionName(getJmsConnectionName());
 		reset();
@@ -32,6 +30,7 @@ public abstract class AbstractJmsDataChannel extends MLog implements JmsDataChan
 	
 	
 	public void doDeactivate(ComponentContext ctx) {
+		log().d("Stop JmsDataChannel",destination);
 		if (getChannel() != null) getChannel().close();
 		setChannel(null);
 	}
@@ -87,7 +86,6 @@ public abstract class AbstractJmsDataChannel extends MLog implements JmsDataChan
 
 	public void setChannel(JmsChannel channel) {
 		this.channel = channel;
-		initialized=true;
 	}
 
 	@Override
@@ -127,7 +125,6 @@ public abstract class AbstractJmsDataChannel extends MLog implements JmsDataChan
 			if (channel.getJmsDestination() != null) {
 				channel.getJmsDestination().setConnection(con);
 				if (con != null) {
-					initialized = true;
 					channel.checkConnection();
 				}
 			}

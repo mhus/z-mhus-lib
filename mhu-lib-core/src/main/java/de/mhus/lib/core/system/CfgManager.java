@@ -15,6 +15,7 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.io.FileWatch;
+import de.mhus.lib.core.logging.Log;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class CfgManager {
