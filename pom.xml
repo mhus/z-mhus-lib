@@ -21,7 +21,7 @@
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib</artifactId>
-    <version>3.3.1-SNAPSHOT</version>
+    <version>3.3.2-SNAPSHOT</version>
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with usefull tools to rapide develop a application</description>
@@ -37,6 +37,7 @@
   <scm>
     <url>https://mhu-lib.googlecode.com/svn/trunk/mhu-lib</url>
     <connection>scm:git:https://github.com/mhus/mhus-lib/</connection>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
