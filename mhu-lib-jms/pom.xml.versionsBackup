@@ -18,12 +18,12 @@
     -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mhu-lib-core</artifactId>
+  <artifactId>mhu-lib-jms</artifactId>
   <packaging>bundle</packaging>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhu-lib</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.1-SNAPSHOT</version>
   </parent>
   
    <build>
@@ -32,32 +32,16 @@
 		  <plugin>
 	        <groupId>org.apache.felix</groupId>
 	        <artifactId>maven-bundle-plugin</artifactId>
-	        <version>${bundle.plugin.version}</version>
+            <version>${bundle.plugin.version}</version>
 	        <extensions>true</extensions>
 	        <configuration>
 	          <instructions>
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            	de.mhus.lib.core*;version=${project.version},
-	            	de.mhus.lib.form*;version=${project.version},
-	            	de.mhus.lib.logging*;version=${project.version}
+	            	de.mhus.lib.jms*;version=${project.version}
 	            	</Export-Package>
-	            <Import-Package>
-		            org.apache.log4j*;version=1.2.14;resolution:=optional,
-		            org.slf4j*;version=1.7.5;resolution:=optional,
-		            de.mhus.lib.mutable;version=${project.version};resolution:=optional,
-		            net.sf.cglib.*;version=3.2.2;resolution:=optional,
-		            org.bouncycastle.*;version=1.56;resolution:=optional,
-		            org.apache.http.*;version=1.56;resolution:=optional,
-		            net.bytebuddy.jar.asm.tree;resolution:=optional,
-		            org.newsclub.net.unix.*;resolution:=optional,
-		            *
-	            </Import-Package>
-	            <DynamicImport-Package>*</DynamicImport-Package>
-
-				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
-
+	            <Import-Package>*</Import-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
@@ -110,65 +94,24 @@
   		<artifactId>mhu-lib-annotations</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>mhu-lib-core</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
   	
-    <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.14</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>slf4j-api</artifactId>
-    	<version>1.7.5</version>
-    	<scope>compile</scope>
-    </dependency>
-<!-- 
-	<dependency>
-		<groupId>cglib</groupId>
-		<artifactId>cglib</artifactId>
-		<version>3.2.2</version>
-	</dependency>
- -->
-	<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-	<dependency>
-	    <groupId>org.bouncycastle</groupId>
-	    <artifactId>bcprov-jdk15on</artifactId>
-	    <version>1.56</version>
-	</dependency>
-
-	<dependency>
-		<groupId>org.apache.httpcomponents</groupId>
-		<artifactId>httpclient</artifactId>
-		<version>4.5.3</version>
-	</dependency>
-
-	<dependency>
-	  <groupId>net.bytebuddy</groupId>
-	  <artifactId>byte-buddy</artifactId>
-	  <version>1.7.6</version>
-	</dependency>
-	<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
-	<dependency>
-	    <groupId>net.bytebuddy</groupId>
-	    <artifactId>byte-buddy-agent</artifactId>
-	    <version>1.7.6</version>
-	</dependency>
-
-
-<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-<!-- 
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>4.1.9.RELEASE</version>
-    <scope>provided</scope>
-</dependency>
--->
-
-        
+     <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>${activemq.version}</version>
+        	<type>bundle</type>
+        </dependency>
+  	
   </dependencies>
-  
   
 </project>
