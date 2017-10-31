@@ -21,7 +21,7 @@
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib</artifactId>
-    <version>3.3.2-SNAPSHOT</version>
+    <version>3.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with usefull tools to rapide develop a application</description>
@@ -98,6 +98,20 @@
 	      	<failOnError>false</failOnError>
 	      </configuration>
 	    </plugin>		
+	    
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-source-plugin</artifactId>
+		    <version>2.2.1</version>
+		    <executions>
+		        <execution>
+		            <id>attach-sources</id>
+		            <goals>
+		                <goal>jar</goal>
+		            </goals>
+		        </execution>
+		    </executions>
+		</plugin>	    
     </plugins>
   </build>
 
