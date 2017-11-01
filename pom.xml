@@ -134,6 +134,29 @@
 		     <autoReleaseAfterClose>true</autoReleaseAfterClose>
 		  </configuration>
 		</plugin>
+
+	     <plugin>
+	         <groupId>org.apache.maven.plugins</groupId>
+	         <artifactId>maven-enforcer-plugin</artifactId>
+	         <executions>
+	             <execution>
+	                 <id>enforce-maven</id>
+	                 <goals>
+	                     <goal>enforce</goal>
+	                 </goals>
+	                 <configuration>
+	                     <rules>
+	                         <requireMavenVersion>
+	                             <version>[3,4)</version>
+	                         </requireMavenVersion>
+	                         <requireJavaVersion>
+	                             <version>[1.8,1.9)</version>
+	                         </requireJavaVersion>
+	                     </rules>
+	                 </configuration>
+	             </execution>
+	         </executions>
+	     </plugin>
 			
     </plugins>
         
