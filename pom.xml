@@ -50,7 +50,8 @@
     <properties>
         <scr.packages>*</scr.packages>
         <felix.scr.version>1.6.0</felix.scr.version>
-        <karaf.version>4.0.4</karaf.version>
+        <karaf.version>4.0.10</karaf.version>
+        <karaf.tool.version>4.0.10</karaf.tool.version>
         <bndlib.version>1.50.0</bndlib.version>
         <felix.metatype.version>1.0.10</felix.metatype.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -132,8 +133,10 @@
 		     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
 		     <autoReleaseAfterClose>true</autoReleaseAfterClose>
 		  </configuration>
-		</plugin>	    
+		</plugin>
+			
     </plugins>
+        
   </build>
 
     <modules>

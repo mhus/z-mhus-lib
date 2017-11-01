@@ -35,8 +35,11 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.karaf.tooling</groupId>
+                <groupId>de.mhus.ports.karaf.tooling</groupId>
                 <artifactId>karaf-services-maven-plugin</artifactId>
+                <configuration>
+                	<artifactInclude>.*mhu.*</artifactInclude>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -73,9 +76,9 @@
     	<pluginManagement>
 			<plugins>
                 <plugin>
-                    <groupId>org.apache.karaf.tooling</groupId>
+                    <groupId>de.mhus.ports.karaf.tooling</groupId>
                     <artifactId>karaf-services-maven-plugin</artifactId>
-                    <version>${karaf.version}</version>
+                    <version>${karaf.tool.version}</version>
                     <executions>
                         <execution>
                             <id>service-metadata-generate</id>
@@ -83,6 +86,9 @@
                             <goals>
                                 <goal>service-metadata-generate</goal>
                             </goals>
+                            <configuration>
+                            	<artifactInclude>x</artifactInclude>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
