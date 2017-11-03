@@ -5,28 +5,18 @@ import javax.jms.JMSException;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.system.DefaultBase;
+import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.heartbeat.Heartbeat;
 import de.mhus.lib.jms.heartbeat.HeartbeatListener;
 import de.mhus.lib.karaf.jms.JmsDataChannel;
-import de.mhus.lib.karaf.jms.JmsDataChannelImpl;
+import de.mhus.lib.karaf.jms.AbstractJmsDataChannel;
 import de.mhus.lib.karaf.jms.JmsManagerService;
 import de.mhus.lib.karaf.jms.JmsUtil;
 
-public class HeartbeatService extends JmsDataChannelImpl {
+public class HeartbeatService extends AbstractJmsDataChannel {
 
-	private Heartbeat heartbeat;
-
-	public HeartbeatService() {
-		super("HeartbeatService","local", null);
-		try {
-			heartbeat = new Heartbeat();
-			setChannel(heartbeat);
-		} catch (JMSException e) {
-			log().d(e);
-		}
-	}
-	
+/*	
 	public void doActivate() {
 		((DefaultBase)MApi.get().getBaseControl().base()).addObject(HeartbeatListener.class, new HeartbeatListener() {
 			
@@ -85,18 +75,31 @@ public class HeartbeatService extends JmsDataChannelImpl {
 	public void doDeactivate() {
 		getChannel().close();
 	}
+ */
 
 	protected void doTimerTask(String cmd) {
-		if (getChannel().isClosed()) return;
-//		JmsManagerService service = JmsUtil.getService();
-//		if (service == null) return;
+		JmsChannel c = getChannel();
+		if (c == null || c.isClosed()) return;
 		try {
-//			service.doChannelBeat();
-			heartbeat.sendHeartbeat(cmd);
+			((Heartbeat)c).sendHeartbeat(cmd);
 		} catch (Throwable t) {
 			log().t(t);
 		}
 
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setConnectionName(String conName) {
+		this.connectionName = conName;
+	}
+
+
+	@Override
+	public JmsChannel createChannel() throws JMSException {
+		return new Heartbeat();
 	}
 
 }

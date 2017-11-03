@@ -11,12 +11,12 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.errors.MRuntimeException;
 
-public class ClientJsonService<T> extends ClientJsonObject implements JmsChannelService {
+public class ClientJsonProxy<T> extends ClientJsonObject implements JmsObjectProxy {
 
 	protected T proxy;
 	protected ServiceDescriptor desc;
 
-	public ClientJsonService(JmsDestination dest, ServiceDescriptor desc ) {
+	public ClientJsonProxy(JmsDestination dest, ServiceDescriptor desc ) {
 		super(dest);
 		this.desc = desc;
 		createProxy();

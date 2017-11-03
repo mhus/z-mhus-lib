@@ -32,11 +32,6 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 	@Activate
 	public void doActivate(ComponentContext ctx) {
 	}
-	
-	protected void doTimerTask() {
-		if (!enabled) return;
-		sendHeartbeat();
-	}
 
 	@Reference(service=TimerFactory.class)
 	public void setTimerFactory(TimerFactory factory) {
@@ -46,7 +41,8 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 			
 			@Override
 			public void doit() throws Exception {
-				doTimerTask();
+				if (!enabled) return;
+				sendHeartbeat(null);
 			}
 		};
 		timer.schedule(timerTask, 10000, 60000 * 5);
@@ -58,18 +54,11 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 	}
 
 	@Override
-	public void sendHeartbeat() {
-		sendHeartbeat(null);
-	}
-	
-	@Override
 	public void sendHeartbeat(String cmd) {
 		synchronized (services) {
 			JmsManagerService jmsService = JmsUtil.getService();
 			if (jmsService == null) return;
 			
-			jmsService.doChannelBeat();
-
 			List<Service<JmsDataSource>> conList = jmsService.getDataSources();
 			HashSet<String> existList = new HashSet<>();
 			existList.addAll(services.keySet());
@@ -85,7 +74,6 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 						service.setConnectionName(conName);
 						jmsService.addChannel(service);
 						services.put(conName, service);
-						service.doActivate();
 						service.doTimerTask(cmd);
 					} else {
 						if (!service.getChannel().isClosed())
@@ -101,26 +89,6 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 				log().i("remove",conName);
 				HeartbeatService service = services.get(conName);
 				jmsService.removeChannel(service.getName());
-				service.doDeactivate();
-			}
-			
-			// send beat ...
-			
-			JmsManagerService service = JmsUtil.getService();
-			if (service == null) return;
-
-			for (JmsDataChannel c : service.getChannels()) {
-				try {
-					if (c.getChannel() != null) {
-						log().d("heart-beat",c,cmd);
-						c.getChannel().doBeat();
-//						c.getChannel().reset();
-//						c.getChannel().open();
-					} else
-						c.reset();
-				} catch (Throwable t) {
-					log().w(c,cmd,t);
-				}
 			}
 						
 		}

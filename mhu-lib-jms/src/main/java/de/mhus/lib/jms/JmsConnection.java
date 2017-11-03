@@ -24,7 +24,6 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	private Connection connection;
 	private ActiveMQConnectionFactory connectionFactory;
 	private Session session;
-	private WeakHashMap<JmsChannel, JmsChannel> channelRegistry = new WeakHashMap<>();
 
 	private String url;
 
@@ -46,8 +45,6 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	        connection = con;
             connection.setExceptionListener(this);
             session = connection.createSession(NON_TRANSACTED, Session.AUTO_ACKNOWLEDGE);
-            
-            doChannelBeat();
 		}
 	}
 	
@@ -82,30 +79,7 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 		log().w("kill connection",connection,exception);
 		reset();
 	}
-	
-	public void registerChannel(JmsChannel base) {
-		synchronized (channelRegistry) {
-			channelRegistry.put(base, base);
-		}
-	}
-	
-	public void unregisterChannel(JmsChannel base) {
-		synchronized (channelRegistry) {
-			channelRegistry.remove(base);
-		}
-	}
-	
-	public void doChannelBeat() {
-		synchronized (channelRegistry) {
-			for (JmsChannel base : channelRegistry.keySet())
-				try {
-					base.doBeat();
-				} catch (Throwable t) {
-					log().t("beat",base,t);
-				}
-		}
-	}
-
+		
 	public String getUrl() {
 		return url;
 	}
@@ -117,12 +91,6 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	@Override
 	public boolean isConnected() {
 		return connection != null;
-	}
-
-	public JmsChannel[] getChannelList() {
-		synchronized (channelRegistry) {
-			return channelRegistry.keySet().toArray(new JmsChannel[0]);
-		}
 	}
 
 	@Override

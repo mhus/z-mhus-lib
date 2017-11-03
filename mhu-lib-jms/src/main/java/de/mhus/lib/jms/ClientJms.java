@@ -188,7 +188,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			log().t("sendJmsBroadcastAnswer",dest,res);
 			return res.toArray(new Message[res.size()]);
 		} catch (JMSException e) {
-			reset();
+			reopen();
 			throw e;
 		} finally {
 			removeAllowedId(id);
@@ -197,7 +197,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	
 	@Override
 	public synchronized void open() throws JMSException {
-		if (isClosed()) throw new JMSException("client closed");
+		if (isClosed()) throw new JMSException("client closed: " + getName());
 		if (producer == null || getSession() == null) {
 			dest.open();
 			log().d("open",dest);
@@ -215,7 +215,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	}
 	
 	protected synchronized void openAnswerQueue() throws JMSException {
-		if (isClosed()) throw new JMSException("client closed");
+		if (isClosed()) throw new JMSException("client closed: " + getName());
 		if (answerQueue == null || getSession() == null) {
 			open();
 	    	answerQueue = dest.getConnection().getSession().createTemporaryQueue();

@@ -46,7 +46,7 @@ public class HeartbeatSender extends ClientJms {
 					hosts.add( ((TextMessage)m).getText() );
 			}
 			log().d("hosts",hosts);
-		} catch (JMSException e) {
+		} catch (Throwable e) {
 			log().w(e);
 		}
 	}

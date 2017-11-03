@@ -2,11 +2,11 @@ package de.mhus.lib.jms;
 
 import de.mhus.lib.core.IProperties;
 
-public class ServerJsonService<T> extends ServerJsonObject implements JmsChannelService {
+public class ServerJsonProxy<T> extends ServerJsonObject implements JmsObjectProxy {
 
 	private ServiceDescriptor service;
 
-	public ServerJsonService(JmsDestination dest, ServiceDescriptor service) {
+	public ServerJsonProxy(JmsDestination dest, ServiceDescriptor service) {
 		super(dest);
 		this.service = service;
 	}
@@ -15,17 +15,17 @@ public class ServerJsonService<T> extends ServerJsonObject implements JmsChannel
 	public void receivedOneWay(IProperties properties, Object... obj) {
 		String functionName = properties.getString("function", null);
 		if (functionName == null) {
-			log().w("function not set",getDestination());
+			log().w("function not set",getJmsDestination());
 			return;
 		}
 		functionName = functionName.toLowerCase();
 		FunctionDescriptor function = service.getFunction(functionName);
 		if (function == null) {
-			log().w("function not found",functionName,getDestination());
+			log().w("function not found",functionName,getJmsDestination());
 			return;
 		}
 		if (!function.isOneWay()) {
-			log().w("function not one way",functionName,getDestination());
+			log().w("function not one way",functionName,getJmsDestination());
 			return;
 		}
 		function.doExecute(properties, obj);
@@ -35,13 +35,13 @@ public class ServerJsonService<T> extends ServerJsonObject implements JmsChannel
 	public RequestResult<Object> received(IProperties properties, Object... obj) {
 		String functionName = properties.getString("function", null);
 		if (functionName == null) {
-			log().w("function not set",getDestination());
+			log().w("function not set",getJmsDestination());
 			return null;
 		}
 		functionName = functionName.toLowerCase();
 		FunctionDescriptor function = service.getFunction(functionName);
 		if (function == null) {
-			log().w("function not found",functionName,getDestination());
+			log().w("function not found",functionName,getJmsDestination());
 			return null;
 		}
 		return function.doExecute(properties, obj);

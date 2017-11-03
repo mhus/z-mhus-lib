@@ -20,7 +20,7 @@ public class Heartbeat extends HeartbeatReceiver {
 	public synchronized void open() throws JMSException {
 		super.open();
 		if (sender == null) {
-			sender = new HeartbeatSender(getDestination().getConnection());
+			sender = new HeartbeatSender(getJmsDestination().getConnection());
 		}
 		sender.open();
 	}
@@ -29,7 +29,7 @@ public class Heartbeat extends HeartbeatReceiver {
 	public void reset() {
 		super.reset();
 		if (sender != null) {
-			sender.getDestination().setConnection(getDestination().getConnection());
+			sender.getJmsDestination().setConnection(getJmsDestination().getConnection());
 			sender.reset();
 		}
 	}
@@ -41,14 +41,24 @@ public class Heartbeat extends HeartbeatReceiver {
 	}
 
 	@Override
-	public void reopen() {
+	public void reopen() throws JMSException {
 		super.reopen();
 		if (sender != null) sender.reopen();
 	}
 
 	public void sendHeartbeat(String cmd) {
-		if (sender != null)
+		if (sender != null) {
+			if (sender.isClosed() || !sender.isConnected()) {
+				sender = null;
+				closed = false;
+				try {
+					open();
+				} catch (JMSException e) {
+					log().d(getName(),e);
+				}
+			}
 			sender.sendHeartbeat(cmd);
+		}
 	}
 
 }

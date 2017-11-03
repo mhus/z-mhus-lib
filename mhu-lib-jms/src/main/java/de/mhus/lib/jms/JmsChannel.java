@@ -31,15 +31,6 @@ public abstract class JmsChannel extends JmsObject {
 		return UUID.randomUUID().toString();
 	}
 
-	/**
-	 * Use getJmsDestination instead!
-	 * @return
-	 */
-	@Deprecated
-	public JmsDestination getDestination() {
-		return dest;
-	}
-
 	@Override
 	public JmsDestination getJmsDestination() {
 		return dest;
@@ -52,9 +43,6 @@ public abstract class JmsChannel extends JmsObject {
 	
 	@Override
 	public void close() {
-		try {
-			dest.getConnection().unregisterChannel(this);
-		} catch (Throwable t) {log().t(t);}
 		super.close();
 	}
 

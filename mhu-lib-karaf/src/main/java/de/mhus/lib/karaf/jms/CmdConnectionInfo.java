@@ -32,9 +32,10 @@ public class CmdConnectionInfo implements Action {
 		}
 		
 		ConsoleTable table = new ConsoleTable();
-		table.setHeaderValues("Queue","Type");
-		for (JmsChannel base : con.getChannelList()) {
-			table.addRowValues(base.toString(),base.getClass().getSimpleName());
+		table.setHeaderValues("Name","Queue","Type");
+		for (JmsDataChannel c : service.getChannels()) {
+			if (c.getChannel() != null && c.getChannel().getJmsDestination() != null && c.getChannel().getJmsDestination().getConnection() == con)
+			table.addRowValues(c.getName(),c.getChannel().toString(),c.getChannel().getClass().getSimpleName());
 		}
 		table.print(System.out);
 		

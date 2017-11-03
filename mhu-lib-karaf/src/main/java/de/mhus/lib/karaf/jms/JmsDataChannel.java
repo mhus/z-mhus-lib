@@ -4,15 +4,24 @@ import de.mhus.lib.jms.JmsChannel;
 
 public interface JmsDataChannel {
 
-	void reset();
-	void reset(JmsManagerService service);
 	JmsChannel getChannel();
 	String getName();
 	String getConnectionName();
-	@Deprecated
-	Class<?> getInterface();
-	@Deprecated
-	<I> I getObject(Class<? extends I> ifc);
-	String getInformation();
+	
+	/**
+	 * Call to reconnect the channel.
+	 */
+	void reset();
+	
+	/**
+	 * Called if connection is available
+	 */
+	void onConnect();
+	
+	/**
+	 * Called if connection disappears
+	 */
+	void onDisconnect();
+	void doBeat();
 	
 }

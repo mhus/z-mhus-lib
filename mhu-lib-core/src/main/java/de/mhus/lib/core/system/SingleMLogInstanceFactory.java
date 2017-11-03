@@ -3,6 +3,7 @@ package de.mhus.lib.core.system;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogFactory;
@@ -25,7 +26,7 @@ public class SingleMLogInstanceFactory extends MJmx implements MLogFactory {
 		if (owner instanceof Class)
 			name = ((Class)owner).getCanonicalName();
 		else
-			name = owner.getClass().getCanonicalName();
+			name = MSystem.getClassName(owner);
 		synchronized (this) {
 			Log log = cache.get(name);
 			if (log == null)

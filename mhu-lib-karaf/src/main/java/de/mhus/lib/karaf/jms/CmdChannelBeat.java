@@ -5,7 +5,7 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-@Command(scope = "jms", name = "channel-remove", description = "Remove channel")
+@Command(scope = "jms", name = "channel-beat", description = "Reconnect channel")
 @Service
 public class CmdChannelBeat implements Action {
 
@@ -23,16 +23,6 @@ public class CmdChannelBeat implements Action {
 
 		if (name == null || name.equals("*")) {
 			service.doChannelBeat();
-//			for (JmsDataChannel c : service.getChannels()) {
-//				try {
-//					System.out.println(c);
-//					if (c.getChannel() == null)
-//						c.reset();
-//					c.getChannel().doBeat();
-//				} catch (Throwable t) {
-//					t.printStackTrace();
-//				}
-//			}
 		} else {
 			if (service.getChannel(name).getChannel() == null)
 				service.getChannel(name).reset();

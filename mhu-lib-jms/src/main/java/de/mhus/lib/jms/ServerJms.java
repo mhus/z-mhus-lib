@@ -48,7 +48,6 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 			lastActivity = System.currentTimeMillis();
 			dest.open();
 			if (dest.getConnection() == null || dest.getConnection().getSession() == null) throw new JMSException("connection offline");
-			dest.getConnection().registerChannel(this);
 			log().i("consume",dest);
             consumer = dest
             		.getConnection()
@@ -164,7 +163,7 @@ do not block jms driven threads !!! This will cause a deadlock
 							}
 						}
 					}
-					, getDestination().getName()).start();
+					, getJmsDestination().getName()).start();
 		} else
 			processMessage(message);
 			
@@ -314,6 +313,23 @@ do not block jms driven threads !!! This will cause a deadlock
 
 	@Override
 	public boolean isConnected() {
+		if (consumer != null) {
+			try {
+				Message msg = consumer.receiveNoWait();
+				if (msg != null)
+					onMessage(msg);
+			} catch (JMSException e) {
+				// ok: javax.jms.IllegalStateException: Cannot synchronously receive a message when a MessageListener is set
+				if (!e.toString().equals("javax.jms.IllegalStateException: Cannot synchronously receive a message when a MessageListener is set")) {
+					try {
+						consumer.close();
+						consumer = null;
+					} catch (JMSException e1) {
+						log().d(getName(),e1);
+					}
+				}
+			}
+		}
 		return !(consumer == null || getSession() == null);
 	}
 

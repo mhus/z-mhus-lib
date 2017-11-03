@@ -32,7 +32,7 @@ public class ClientJson extends ClientJms {
 		}
 		
 		open();
-		BytesMessage msg = getDestination().getConnection().createBytesMessage();
+		BytesMessage msg = getJmsDestination().getConnection().createBytesMessage();
 		MJms.setProperties(prop, msg);
 		msg.writeBytes(w.toByteArray());
 		sendJmsOneWay(msg);
@@ -50,7 +50,7 @@ public class ClientJson extends ClientJms {
 		}
 		
 		open();
-		BytesMessage msg = getDestination().getConnection().createBytesMessage();
+		BytesMessage msg = getJmsDestination().getConnection().createBytesMessage();
 		
 		MJms.setProperties(prop, msg);
 		msg.writeBytes(w.toByteArray());
@@ -82,7 +82,7 @@ public class ClientJson extends ClientJms {
 		}
 		
 		open();
-		BytesMessage msg = getDestination().getConnection().createBytesMessage();
+		BytesMessage msg = getJmsDestination().getConnection().createBytesMessage();
 		
 		MJms.setProperties(prop, msg);
 		msg.writeBytes(w.toByteArray());

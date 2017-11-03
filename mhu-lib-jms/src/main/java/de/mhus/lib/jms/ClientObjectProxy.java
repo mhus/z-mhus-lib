@@ -24,7 +24,7 @@ import de.mhus.lib.core.MJson;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class ClientService<T> extends ClientJms implements JmsChannelService {
+public class ClientObjectProxy<T> extends ClientJms implements JmsObjectProxy {
 	
 	public static final String PROP_FUNCTION_NAME = "de.mhus.lib.jms.function";
 
@@ -42,7 +42,7 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 	private T proxy;
 	private ClassLoader classLoader = getClass().getClassLoader();
 
-	public ClientService(JmsDestination dest, ServiceDescriptor desc ) {
+	public ClientObjectProxy(JmsDestination dest, ServiceDescriptor desc ) {
 		super(dest);
 		this.desc = desc;
 		createProxy();
@@ -218,7 +218,7 @@ public class ClientService<T> extends ClientJms implements JmsChannelService {
 		}
 		
 		open();
-		BytesMessage msg = getDestination().getConnection().createBytesMessage();
+		BytesMessage msg = getJmsDestination().getConnection().createBytesMessage();
 		MJms.setProperties(prop, msg);
 		msg.writeBytes(w.toByteArray());
 		sendJmsOneWay(msg);

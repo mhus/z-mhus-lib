@@ -15,7 +15,7 @@ import de.mhus.lib.core.MLog;
 
 public abstract class JmsObject extends MLog {
 
-	private boolean closed = false;
+	protected boolean closed = false;
 
 	public abstract void open() throws JMSException;
 	public abstract void reset();
@@ -40,9 +40,11 @@ public abstract class JmsObject extends MLog {
 
 	public abstract JmsDestination getJmsDestination();
 
-	public void reopen() {
+	public void reopen() throws JMSException {
 		closed = false;
 		reset();
+		closed = false;
+		open();
 	}
 
 	public BytesMessage createBytesMessage() throws JMSException {

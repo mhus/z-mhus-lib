@@ -66,7 +66,7 @@ public abstract class ServerJson extends ServerJms {
 					throw new IOException(e);
 				}
 
-				BytesMessage answer = getDestination().getConnection().createBytesMessage();
+				BytesMessage answer = getJmsDestination().getConnection().createBytesMessage();
 				MJms.setProperties(j.getProperties(), answer);
 				answer.writeBytes(w.toByteArray());
 				

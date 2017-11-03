@@ -10,11 +10,11 @@ import javax.jms.TextMessage;
 
 import de.mhus.lib.core.IProperties;
 
-public class ServerService<T> extends ServerJms implements JmsChannelService {
+public class ServerObjectProxy<T> extends ServerJms implements JmsObjectProxy {
 
 	private ServiceDescriptor service;
 
-	public ServerService(JmsDestination dest, ServiceDescriptor service) {
+	public ServerObjectProxy(JmsDestination dest, ServiceDescriptor service) {
 		super(dest);
 		this.service = service;
 	}
@@ -22,25 +22,25 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 	@Override
 	public void receivedOneWay(Message msg) throws JMSException {
 		
-		String functionName = msg.getStringProperty(ClientService.PROP_FUNCTION_NAME);
+		String functionName = msg.getStringProperty(ClientObjectProxy.PROP_FUNCTION_NAME);
 		if (functionName == null) {
-			log().w("function not set",getDestination());
+			log().w("function not set",getJmsDestination());
 			return;
 		}
 		functionName = functionName.toLowerCase();
 		FunctionDescriptor function = service.getFunction(functionName);
 		if (function == null) {
-			log().w("function not found",functionName,getDestination());
+			log().w("function not found",functionName,getJmsDestination());
 			return;
 		}
 		if (!function.isOneWay()) {
-			log().w("function not one way",functionName,getDestination());
+			log().w("function not one way",functionName,getJmsDestination());
 			return;
 		}
 		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
-		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {
+		if (msg.propertyExists(ClientObjectProxy.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientObjectProxy.PROP_DIRECT_MSG)) {
 			obj = new Object[] { msg };
 		} else
 		if (msg instanceof ObjectMessage) {
@@ -64,22 +64,22 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 	@Override
 	public Message received(Message msg) throws JMSException {
 		
-		String functionName = msg.getStringProperty(ClientService.PROP_FUNCTION_NAME);
+		String functionName = msg.getStringProperty(ClientObjectProxy.PROP_FUNCTION_NAME);
 		if (functionName == null) {
-			log().w("function not set",getDestination());
+			log().w("function not set",getJmsDestination());
 			return null;
 		}
 		functionName = functionName.toLowerCase();
 		FunctionDescriptor function = service.getFunction(functionName);
 		if (function == null) {
-			log().w("function not found",functionName,getDestination());
+			log().w("function not found",functionName,getJmsDestination());
 			return null;
 		}
 		
 		IProperties properties = MJms.getProperties(msg);
 		
 		Object[] obj = null;
-		if (msg.propertyExists(ClientService.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientService.PROP_DIRECT_MSG)) {
+		if (msg.propertyExists(ClientObjectProxy.PROP_DIRECT_MSG) && msg.getBooleanProperty(ClientObjectProxy.PROP_DIRECT_MSG)) {
 			obj = new Object[] { msg };
 		} else
 		if (msg instanceof ObjectMessage) {
@@ -105,7 +105,7 @@ public class ServerService<T> extends ServerJms implements JmsChannelService {
 			} else
 			if (res.getResult() instanceof Message) {
 				out = (Message) res.getResult();
-				out.setBooleanProperty(ClientService.PROP_DIRECT_MSG, true);
+				out.setBooleanProperty(ClientObjectProxy.PROP_DIRECT_MSG, true);
 			} else {
 				out = getSession().createObjectMessage((Serializable) res.getResult());
 			}

@@ -1,6 +1,7 @@
 package de.mhus.lib.karaf.jms;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
@@ -19,9 +20,11 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.cfg.CfgInt;
+import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotFoundRuntimeException;
 import de.mhus.lib.jms.JmsChannel;
@@ -45,115 +48,88 @@ import de.mhus.lib.karaf.MOsgi.Service;
 @Component(name="JmsManagerService",immediate=true)
 public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
-//	private static CfgInt startupDelay = new CfgInt(JmsManagerService.class, "startupDelay", 10000);
+	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
+	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
 	
-//	private HashMap<String, JmsConnection> connections = new HashMap<>();
-//	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
-	
-//	private HashMap<String, JmsDataChannel> channels = new HashMap<>();
-//	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
-	
-//	private BundleContext context;
-//	private TimerIfc timer;
-
 	private WeakHashMap<String, JmsDataChannel> channels = new WeakHashMap<>();
+	private HashSet<String> connectionNames = new HashSet<>();
+	
+	private BundleContext context;
+	private TimerIfc timer;
+	private MTimerTask timerTask;
+	protected boolean enabled = true;
 	
 	@Activate
 	public void doActivate(ComponentContext ctx) {
-//		context = ctx.getBundleContext();
-//		if (startupDelay.value() <= 0)
-//			initializeTracker();
+		
+		log().i("activate");
+		context = ctx.getBundleContext();
+		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
+		connectionTracker.open();
+
+		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
+		channelTracker.open();
+		
 	}
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-//		if (channelTracker != null) channelTracker.close();
-//		if (connectionTracker != null) connectionTracker.close();
-//		for (String name : listConnections())
-//			removeConnection(name);
-//		if (timer != null) timer.cancel();
+		if (channelTracker != null) channelTracker.close();
+		if (connectionTracker != null) connectionTracker.close();
+		for ( String name : new LinkedList<String>(channels.keySet()))
+			removeChannel(name);
 	}
-	
-//	@Reference(service=TimerFactory.class)
-//	public void setTimerFactory(TimerFactory factory) {
-//		
-//		if (startupDelay.value() <= 0 || connectionTracker != null) return;
-//		
-//		timer = factory.getTimer();
-//		timer.schedule(new TimerTask() {
-//
-//			@Override
-//			public void run() {
-//				initializeTracker();
-//			}
-//			
-//		}, startupDelay.value());
-//	}
-	
-//	protected void initializeTracker() {
-//		log().i("initialize tracker");
-//		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
-//		connectionTracker.open();
-//		
-//		channelTracker = new ServiceTracker<>(context, JmsDataChannel.class, new MyChannelTrackerCustomizer() );
-//		channelTracker.open();
-//	}
 
-//	@Reference(service=JmsDataSource.class,dynamic=true,multiple=true,unbind="removeJmsDataSource")
-//	public void addJmsDataSource(JmsDataSource dataSource) {
-//		
-//		try {
-//			addConnection(dataSource.getName(), dataSource.createConnection());
-//		} catch (JMSException e) {
-//			log().e(dataSource.getName(), e);
-//		}
-//
-//	}
-//
-//	public void removeJmsDataSource(JmsDataSource dataSource) {
-//		removeConnection(dataSource.getName());
-//	}
-//	
-//	@Reference(service=JmsDataChannel.class,dynamic=true,multiple=true,unbind="removeJmsDataChannel")
-//	public void addJmsDataChannel(JmsDataChannel dataChannel) {
-//		addChannel(dataChannel);
-//	}
-//
-//	public void removeJmsDataChannel(JmsDataChannel dataChannel) {
-//		removeChannel(dataChannel.getName());
-//	}
-	
-	
-//	@Override
-//	public void addConnection(String name, JmsConnection con) {
-//		log().d("add connection",name);
-//		synchronized (this) {
-//			connections.put(name, con);
-//		}
-//	}
-//
-//	@Override
-//	public void addConnection(String name, String url, String user,
-//			String password) throws JMSException {
-//		addConnection(name, new JmsConnection(url, user, password));
-//	}
+	@Reference(service=TimerFactory.class)
+	public void setTimerFactory(TimerFactory factory) {
+		log().i("create timer");
+		timer = factory.getTimer();
+		timerTask = new MTimerTask() {
+			
+			@Override
+			public void doit() throws Exception {
+				if (!enabled ) return;
+				// check connections and channels
+				doBeat();
+				// reconnect
+				doChannelBeat();
+			}
+		};
+		timer.schedule(timerTask, 60000, 60000);
+	}
 
-//	@Override
-//	public String[] listConnections() {
-//		LinkedList<String> out = new LinkedList<>();
-//		for (MOsgi.Service<JmsDataSource> ref : MOsgi.getServiceRefs(JmsDataSource.class, null)) {
-//			String name = getServiceName(ref);
-//			if (name != null)
-//				out.add(name);
-//		}
-//		return out.toArray(new String[out.size()]);
-//	}
+	@Override
+	public void doBeat() {
+		// check connections
+		for ( JmsDataSource con : MOsgi.getServices(JmsDataSource.class, null)) {
+			String name = con.getName();
+			if (name == null) continue;
+			if (!connectionNames.contains(name)) {
+				try {
+					addConnection(name, con.getConnection());
+				} catch (Throwable e) {
+					log().d(name,e);
+				}
+			}
+		}
+		
+		// check the channels
+		for (JmsDataChannel c : MOsgi.getServices(JmsDataChannel.class, null)) {
+			String name = c.getName();
+			if (name == null) continue;
+			if (!channels.containsKey(name)) {
+				try {
+					addChannel(c);
+				} catch (Throwable e) {
+					log().d(name,e);
+				}
+			}
+		}
+		
+	}
 
 	@Override
 	public List<JmsConnection> getConnections() {
-//		synchronized (this) {
-//			return connections.keySet().toArray(new String[0]);
-//		}
 		LinkedList<JmsConnection> out = new LinkedList<>();
 		for (JmsDataSource obj : MOsgi.getServices(JmsDataSource.class, null))
 			try {
@@ -166,9 +142,6 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public List<MOsgi.Service<JmsDataSource>> getDataSources() {
-//		synchronized (this) {
-//			return connections.keySet().toArray(new String[0]);
-//		}
 		LinkedList<MOsgi.Service<JmsDataSource>> out = new LinkedList<>();
 		for (MOsgi.Service<JmsDataSource> obj : MOsgi.getServiceRefs(JmsDataSource.class, null))
 			out.add(obj);
@@ -177,9 +150,6 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 	@Override
 	public JmsConnection getConnection(String name) {
-//		synchronized (this) {
-//			return connections.get(name);
-//		}
 		if (name == null) return null;
 		try {
 			JmsDataSource src = MOsgi.getService(JmsDataSource.class,"(osgi.jndi.service.name=jms_" + name + ")");
@@ -199,43 +169,20 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 			return null;
 		}
 	}
-
-//	@Override
-//	public void removeConnection(String name) {
-//		log().d("remove connection",name);
-//		synchronized (this) {
-//			JmsConnection old = connections.remove(name);
-//			if (old != null)
-//				old.close();
-//		}
-//	}
 	
-//	public void addChannel(String name, String connectionName, JmsChannel channel) {
-//		addChannel(new JmsDataChannelImpl(name, connectionName, channel));
-//	}
-
-//	@Override
-//	public void addChannel(JmsDataChannel channel) {
-//		log().d("add channel",channel.getName());
-//		synchronized (channels) {
-//			channels.put(channel.getName(), channel);
-//		}
-//		channel.reset(this);
-//	}
-
 	@Override
 	public void resetChannels() {
-//		synchronized (channels) {
-		List<JmsDataChannel> channels = getChannels();
-		for (JmsDataChannel channel : channels)
-			try {
-				channel.reset(this);
-			} catch (Throwable t) {
-				log().t(channel.getName(),t);
-			}
-//		}
+		synchronized (channels) {
+			List<JmsDataChannel> channels = getChannels();
+			for (JmsDataChannel channel : channels)
+				try {
+					channel.reset();
+				} catch (Throwable t) {
+					log().t(channel.getName(),t);
+				}
+		}
 	}
-/*
+
 	private class MyConnectionTrackerCustomizer implements ServiceTrackerCustomizer<JmsDataSource, JmsDataSource> {
 
 		@Override
@@ -309,26 +256,9 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 		}
 		
 	}
-*/
-//	@Override
-//	public String[] listChannels() {
-//		LinkedList<String> out = new LinkedList<>();
-//		for (MOsgi.Service<JmsDataChannel> ref : MOsgi.getServiceRefs(JmsDataChannel.class, null)) {
-//			String name = ref.getName();
-//			if (name == null && ref.getService() != null) {
-//				name = ref.getService().getName();
-//			}
-//			if (name != null)
-//				out.add(name);
-//		}
-//		return out.toArray(new String[out.size()]);
-//	}
 
 	@Override
 	public JmsDataChannel getChannel(String name) {
-//		synchronized (channels) {
-//			return channels.get(name);
-//		}
 		try {
 			return MOsgi.getService(JmsDataChannel.class,"(osgi.jndi.service.name=jmschannel_" + name + ")");
 		} catch (NotFoundException nfe) {
@@ -336,69 +266,55 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 				if (name.equals(c.getName()))
 					return c;
 			return channels.get(name);
-//			return null;
 		}
+	}
+
+	public void removeConnection(String name) {
+		if (name == null) return;
+		log().d("remove connection",name);
+		connectionNames.remove(name);
+		for ( JmsDataChannel c : new LinkedList<JmsDataChannel>(channels.values()))
+			if (name.equals(c.getConnectionName()))
+				try {
+					c.onDisconnect();
+				} catch (Throwable t) {
+					log().w(name,c,t);
+				}
+	}
+
+	public void addConnection(String name, JmsConnection connection) {
+		if (name == null) return;
+		log().d("add connection",name);
+		connectionNames.add(name);
+		for ( JmsDataChannel c : new LinkedList<JmsDataChannel>(channels.values()))
+			if (name.equals(c.getConnectionName()))
+				try {
+					c.onConnect();
+				} catch (Throwable t) {
+					log().w(name,c,t);
+				}
 	}
 
 	@Override
 	public List<JmsDataChannel> getChannels() {
-//		synchronized (channels) {
-//			return channels.get(name);
-//		}
 		LinkedList<JmsDataChannel> out = new LinkedList<>();
-		for (JmsDataChannel obj : MOsgi.getServices(JmsDataChannel.class, null))
-			out.add(obj);
 		out.addAll(channels.values());
+//		for (JmsDataChannel obj : MOsgi.getServices(JmsDataChannel.class, null))
+//			out.add(obj);
+//		out.addAll(channels.values());
 		return out;
 	}
 	
-//	@Override
-//	public void removeChannel(String name) {
-//		log().d("remove channel",name);
-//		synchronized (channels) {
-//			channels.remove(name);
-//		}
-//	}
-
-	@Override
-	public <I> I getObjectForInterface(Class<? extends I> ifc) {
-//		synchronized (channels) {
-			
-			{
-				JmsDataChannel channel = getChannel(ifc.getCanonicalName());
-				if (channel != null)
-					try {
-						I o = channel.getObject(ifc);
-						if (o != null) return o;
-					} catch (Throwable t) {}
-			}
-			
-			for (JmsDataChannel channel : getChannels()) {
-				try {
-					I o = channel.getObject(ifc);
-					if (o != null) return o;
-				} catch (Throwable t) {}
-			}
-			throw new NotFoundRuntimeException("object for interface not found", ifc);
-//		}
-	}
-
 	@Override
 	public void doChannelBeat() {
-		synchronized (this) {
-			for (JmsConnection con : getConnections())
-				try {
-					con.doChannelBeat();
-				} catch (Throwable t) {
-					log().t(con,t);
-				}
+		synchronized (channels) {
 			
-			for (JmsDataChannel c : getChannels()) {
-				if (c.getChannel() != null && !c.getChannel().isClosed() && !c.getChannel().isConnected()) {
-					log().d("beat reset",c);
-					c.reset();
+			for ( JmsDataChannel c : new LinkedList<JmsDataChannel>(channels.values()))
+				try {
+					c.doBeat();
+				} catch (Throwable t) {
+					log().d(c,t);
 				}
-			}
 		}
 	}
 
@@ -412,12 +328,30 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
 	@Override
 	public void addChannel(JmsDataChannel channel) {
+		log().d("add channel",channel.getName());
 		channels.put(channel.getName(), channel);
+		channel.onConnect();
 	}
 
 	@Override
 	public void removeChannel(String name) {
-		channels.remove(name);
+		log().d("remove channel",name);
+		JmsDataChannel c = channels.remove(name);
+		if (c != null)
+			c.onDisconnect();
+	}
+
+	@Override
+	public void resetConnection(String name) {
+		if (name == null) return;
+		log().d("reset connection",name);
+		for ( JmsDataChannel c : new LinkedList<JmsDataChannel>(channels.values()))
+			if (name.equals(c.getConnectionName()))
+				try {
+					c.onDisconnect();
+				} catch (Throwable t) {
+					log().w(name,c,t);
+				}
 	}
 	
 }

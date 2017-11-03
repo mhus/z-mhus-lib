@@ -13,9 +13,9 @@ import javax.jms.TextMessage;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.jms.ClientService;
+import de.mhus.lib.jms.ClientObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
-import de.mhus.lib.jms.ServerService;
+import de.mhus.lib.jms.ServerObjectProxy;
 import de.mhus.lib.jms.WebServiceDescriptor;
 import junit.framework.TestCase;
 
@@ -29,11 +29,11 @@ public class JmsServiceTest extends TestCase {
 		JmsConnection con2 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
 
 		WebServiceDescriptor desc1 = new WebServiceDescriptor(TestJmsService.class);
-		ClientService<TestJmsService> client = new ClientService<>(con1.createQueue("test"), desc1);
+		ClientObjectProxy<TestJmsService> client = new ClientObjectProxy<>(con1.createQueue("test"), desc1);
 
 		TestJmsServiceImp impl = new TestJmsServiceImp();
 		WebServiceDescriptor desc2 = new WebServiceDescriptor(impl);
-		ServerService<TestJmsService> server = new ServerService<>(con2.createQueue("test"), desc2);
+		ServerObjectProxy<TestJmsService> server = new ServerObjectProxy<>(con2.createQueue("test"), desc2);
 		
 		client.open();
 		server.open();
@@ -130,15 +130,15 @@ public class JmsServiceTest extends TestCase {
 			JmsConnection con3 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
 
 			WebServiceDescriptor desc1 = new WebServiceDescriptor(TestJmsService.class);
-			ClientService<TestJmsService> client = new ClientService<>(con1.createTopic("test"), desc1);
+			ClientObjectProxy<TestJmsService> client = new ClientObjectProxy<>(con1.createTopic("test"), desc1);
 
 			TestJmsServiceImp impl2 = new TestJmsServiceImp();
 			WebServiceDescriptor desc2 = new WebServiceDescriptor(impl2);
-			ServerService<TestJmsService> server2 = new ServerService<>(con2.createTopic("test"), desc2);
+			ServerObjectProxy<TestJmsService> server2 = new ServerObjectProxy<>(con2.createTopic("test"), desc2);
 
 			TestJmsServiceImp impl3 = new TestJmsServiceImp();
 			WebServiceDescriptor desc3 = new WebServiceDescriptor(impl3);
-			ServerService<TestJmsService> server3 = new ServerService<>(con3.createTopic("test"), desc3);
+			ServerObjectProxy<TestJmsService> server3 = new ServerObjectProxy<>(con3.createTopic("test"), desc3);
 			
 			client.open();
 			server2.open();

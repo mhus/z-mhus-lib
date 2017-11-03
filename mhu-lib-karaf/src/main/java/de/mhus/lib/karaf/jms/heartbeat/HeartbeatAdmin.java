@@ -3,8 +3,6 @@ package de.mhus.lib.karaf.jms.heartbeat;
 import java.util.List;
 
 public interface HeartbeatAdmin {
-
-	void sendHeartbeat();
 	
 	void sendHeartbeat(String cmd);
 	

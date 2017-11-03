@@ -3,17 +3,18 @@ package de.mhus.lib.karaf.jms;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.jms.JmsConnection;
 
-@Command(scope = "jms", name = "connection-beat", description = "Beat all channels")
+@Command(scope = "jms", name = "connection-beat", description = "Beat the connection, load connections and channels")
 @Service
 public class CmdConnectionBeat implements Action {
 
-	@Argument(index=0, name="name", required=true, description="ID of the connection or * for all", multiValued=false)
-    String name;
-
+	@Option(name="-c",aliases="--channels",description="Beat also all channels",required=false)
+	boolean channels = false;
+	
 	@Override
 	public Object execute() throws Exception {
 
@@ -22,21 +23,10 @@ public class CmdConnectionBeat implements Action {
 			System.out.println("Service not found");
 			return null;
 		}
-		
-		if (name.equals("*")) {
-			for (JmsConnection con : service.getConnections()) {
-				System.out.println(con);
-				con.doChannelBeat();
-			}
-		} else {
-			JmsConnection con = service.getConnection(name);
-			if (con == null) {
-				System.out.println("Connection not found");
-				return null;
-			}
-			
-			con.doChannelBeat();
-		}
+
+		service.doBeat();
+		if (channels)
+			service.doChannelBeat();
 		System.out.println("OK");
 
 		return null;

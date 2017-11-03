@@ -18,12 +18,19 @@ public interface JmsManagerService {
 	JmsDataChannel getChannel(String name);
 	void addChannel(JmsDataChannel channel);
 	void removeChannel(String name);
-	<I> I getObjectForInterface(Class<? extends I> ifc);
 	void resetChannels();
 	void doChannelBeat();
 	List<JmsDataChannel> getChannels();
 	List<JmsConnection> getConnections();
 	List<Service<JmsDataSource>> getDataSources();
 	String getServiceName(de.mhus.lib.karaf.MOsgi.Service<JmsDataSource> ref);
+	void doBeat();
+	
+	/**
+	 * Called if the connection is offline to inform all the channels to disconnect from the connection.
+	 * 
+	 * @param connectionName
+	 */
+	void resetConnection(String connectionName);
 
 }

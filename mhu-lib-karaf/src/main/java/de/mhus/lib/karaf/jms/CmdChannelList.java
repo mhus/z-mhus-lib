@@ -31,14 +31,14 @@ public class CmdChannelList implements Action {
 //			JmsDataChannel chd = service.getChannel(name);
 			JmsChannel ch = chd.getChannel();
 			JmsConnection con = null;
-			if (ch !=null && ch.getDestination() != null)
-				con  = ch.getDestination().getConnection();
-			String i = chd.getInformation();
+			if (ch !=null && ch.getJmsDestination() != null)
+				con  = ch.getJmsDestination().getConnection();
+			String i = chd.toString();
 			table.addRowValues(
 					chd.getName(), 
 					(con == null ? "(" : "" ) + chd.getConnectionName() + (con == null ? ")" : "" ),
-					ch == null ? "" : ch.getDestination() ,
-					ch == null ? "" : (ch instanceof ChannelWrapper ? ((ChannelWrapper)ch).getType() : ch.getClass().getCanonicalName()),
+					ch == null ? "" : ch.getJmsDestination() ,
+					ch == null ? "" : ch.getClass().getCanonicalName(),
 					i,
 					ch == null ? ""  : ch.isConnected(),
 					ch == null ? "" : ch.isClosed(),

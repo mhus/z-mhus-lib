@@ -45,7 +45,10 @@ public class KarafBase extends DefaultBase {
 					if (context != null) {
 						ServiceReference<? extends T> ref = context.getServiceReference(ifc);
 						if (ref != null) {
-							T obj = context.getService(ref);
+							T obj = null;
+							try {
+								obj = context.getService(ref);
+							} catch (Throwable t) {}
 							if (obj != null) {
 								MLogUtil.log().d("KarafBase","loaded from OSGi",ifc);
 								cached = new Container();

@@ -1,6 +1,6 @@
 package de.mhus.lib.jms;
 
-public interface JmsChannelService {
+public interface JmsObjectProxy {
 
 	Class<?> getInterface();
 	public <I> I getObject();

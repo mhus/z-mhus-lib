@@ -28,6 +28,11 @@ public class JmsUtil {
 //		return obj;
 	}
 	
+	/**
+	 * Return the connection or null.
+	 * @param name Name of the requested connection
+	 * @return
+	 */
 	public static JmsConnection getConnection(String name) {
 		JmsManagerService service = getService();
 		if (service == null) return null;
@@ -39,13 +44,14 @@ public class JmsUtil {
 		if (service == null) return null;
 		return service.getChannel(name);
 	}
-	
+/*	
 	public static <I> I getObjectForInterface(Class<? extends I> ifc) {
 		JmsManagerService service = getService();
 		if (service == null) throw new NotFoundRuntimeException("service not found");
 		return service.getObjectForInterface(ifc);
 	}
-	
+*/	
+/*	
 	public static <I> I getObjectForInterface(String channel, Class<? extends I> ifc) {
 		
 		JmsDataChannel c = getChannel(channel);
@@ -53,6 +59,7 @@ public class JmsUtil {
 		
 		return c.getObject(ifc);
 	}
+*/	
 /*	
 	public static long getDestinationStatistic(JmsDestination dest) {
 		JmsConnection con = dest.getConnection();
