@@ -5,10 +5,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Observer;
 import java.util.TimerTask;
+import java.util.WeakHashMap;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 
 import aQute.bnd.annotation.component.Activate;
@@ -16,21 +18,30 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.schedule.CronJob;
+import de.mhus.lib.core.schedule.IntervalJob;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
+import de.mhus.lib.karaf.MServiceTracker;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
-public class TimerFactoryImpl implements TimerFactory {
+public class TimerFactoryImpl extends MLog implements TimerFactory {
 	
 	private SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
+	private MServiceTracker<ScheduledService> tracker;
+	private WeakHashMap<ScheduledService,TimerTask> services = new WeakHashMap<>();
 	static TimerFactoryImpl instance;
+	
+	
 		
 	public TimerFactoryImpl() {
 	}
@@ -39,6 +50,7 @@ public class TimerFactoryImpl implements TimerFactory {
 	void doDeactivate(ComponentContext ctx) {
 		
 		MLogUtil.log().i("cancel common timer");
+		tracker.stop();
 		myTimer.cancel();
 		myTimer = null;
 		instance = null;
@@ -66,9 +78,53 @@ public class TimerFactoryImpl implements TimerFactory {
 			public void run() {
 				doTick();
 			}
-		}, 60000, 60000);
+		}, 900000, 900000); // 15 min
+		
+		BundleContext context = ctx.getBundleContext();
+		tracker = new MServiceTracker<ScheduledService>(context,ScheduledService.class) {
+			
+			@Override
+			protected void removeService(ServiceReference<ScheduledService> reference, ScheduledService service) {
+				removeSchedulerService(service);
+			}
+			
+			@Override
+			protected void addService(ServiceReference<ScheduledService> reference, ScheduledService service) {
+				addSchedulerService(reference, service);
+			}
+		}.start();
+		
 	}
 
+
+	protected void addSchedulerService(ServiceReference<ScheduledService> reference, ScheduledService service) {
+		Object cron = reference.getProperty("cron");
+		SchedulerJob timerTask = null;
+		if (cron != null) {
+			timerTask = new CronJob(String.valueOf(cron), service);
+		}
+		long interval = MCast.tolong(reference.getProperty("interval"), -1);
+		if (interval > 0) {
+			timerTask = new IntervalJob(interval, service);
+		}
+		
+		if (timerTask != null) {
+			services.put(service,timerTask);
+			myTimer.schedule(timerTask);
+		} else {
+			log().i("interval not configured for SchedulerService",service,reference);
+		}
+		
+	}
+
+	protected void removeSchedulerService(ScheduledService service) {
+		TimerTask timerTask = services.get(service);
+		if (timerTask != null) {
+			
+		} else {
+			log().i("timer task not found for SchedulerService", service);
+		}
+	}
 
 	protected void doTick() {
 		doCheckTimers();
