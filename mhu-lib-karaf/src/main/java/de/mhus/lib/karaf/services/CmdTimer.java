@@ -238,7 +238,7 @@ public class CmdTimer extends MLog implements Action {
 			}
 		}
 		if (cmd.equals("check")) {
-			TimerFactoryImpl.doCheckTimers();
+			TimerFactoryImpl.instance.doCheckTimers();
 		}
 		if (cmd.equals("debug")) {
 			TimerFactoryImpl.doDebugInfo();

@@ -29,9 +29,26 @@ import de.mhus.lib.core.util.TimerTaskSelfControl;
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
 public class TimerFactoryImpl implements TimerFactory {
 	
-//	private Log log = Log.getLog(TimerFactoryImpl.class); // this will cause a cycle!
-	private static SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
-	static {
+	private SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
+	static TimerFactoryImpl instance;
+		
+	public TimerFactoryImpl() {
+	}
+	
+	@Deactivate
+	void doDeactivate(ComponentContext ctx) {
+		
+		MLogUtil.log().i("cancel common timer");
+		myTimer.cancel();
+		myTimer = null;
+		instance = null;
+	}
+
+	@Activate
+	void doActivate(ComponentContext ctx) {
+		
+		instance = this;
+		
 		MLogUtil.log().i("start common timer");
 		myTimer.start();
 		
@@ -42,42 +59,20 @@ public class TimerFactoryImpl implements TimerFactory {
 		} catch (Throwable t) {
 			System.out.println("Can't initialize timer base: " + t);
 		}
-
-	}
-//	private TreeMap<Long, MTimerTask> queue = new TreeMap<>();
 		
-	public static TimerIfc getTimerIfc() {
-		return new TimerWrap();
-	}
-	
-	public TimerFactoryImpl() {
-	}
-	
-	@Deactivate
-	void doDeactivate(ComponentContext ctx) {
-//		MLogUtil.log().i("cancel common timer");
-//		myTimer.cancel();
-//		myTimer = null;
+		myTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				doTick();
+			}
+		}, 60000, 60000);
 	}
 
-	@Activate
-	void doActivate(ComponentContext ctx) {
+
+	protected void doTick() {
 		doCheckTimers();
-
-		
-//		myTimer.schedule(new TimerTask() {
-//			
-//			@Override
-//			public void run() {
-//				doTick();
-//			}
-//		}, 1000, 1000); // tick every second
 	}
-
-
-//	protected void doTick() {
-//		
-//	}
 
 	public static SchedulerTimer getScheduler(TimerFactory factory) {
 		TimerIfc timer = factory.getTimer();
@@ -87,7 +82,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		return null;
 	}
 
-	private static class TimerWrap implements TimerIfc {
+	private class TimerWrap implements TimerIfc {
 		
 		LinkedList<Wrap> tasks = new LinkedList<>();
 		
@@ -291,7 +286,7 @@ public class TimerFactoryImpl implements TimerFactory {
 		return new TimerWrap();
 	}
 
-	public static void doCheckTimers() {
+	public void doCheckTimers() {
 		int cnt = 0;
 		for (SchedulerJob job : myTimer.getScheduledJobs()) {
 			if (job instanceof SchedulerJobWrap) {
@@ -318,7 +313,7 @@ public class TimerFactoryImpl implements TimerFactory {
 	}
 
 	public static void doDebugInfo() {
-		for (SchedulerJob job : myTimer.getScheduledJobs()) {
+		for (SchedulerJob job : instance.myTimer.getScheduledJobs()) {
 			Object task = job.getTask();
 			String info = " ";
 			if (task instanceof de.mhus.lib.core.schedule.ObserverTimerTaskAdapter) {

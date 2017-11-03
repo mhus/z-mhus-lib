@@ -50,7 +50,8 @@ public class HeartbeatAdminImpl extends MLog implements HeartbeatAdmin {
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
-		timerTask.cancel();
+		if (timer != null)
+			timer.cancel();
 	}
 
 	@Override

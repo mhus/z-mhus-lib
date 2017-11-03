@@ -66,5 +66,5 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 				fill((HashConfig) c,p);
 		}
 	}
-
+	
 }

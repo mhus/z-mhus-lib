@@ -33,4 +33,8 @@ public class FmNls extends DefAttribute {
 		if (description != null) root.setString("description", description);
 	}
 
+	@Override
+	public String toString() {
+		return  getName() + "->[" + title + "," + description + "]";
+	}
 }

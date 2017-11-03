@@ -80,7 +80,7 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 		getBaseControl().getCurrentBase().addObject(MLogFactory.class, mlogFactory);
 		
 		getCfgManager(); // init
-		TimerFactoryImpl.doCheckTimers();
+//		TimerFactoryImpl.indoCheckTimers();
 		
 		try {
 			housekeeper = new KarafHousekeeper();

@@ -18,4 +18,17 @@ public class DefAttribute implements IDefAttribute {
 		parent.setString(name, MCast.objectToString(value) );
 	}
 
+	public String getName() {
+		return name;
+	}
+	
+	public Object getValue() {
+		return value;
+	}
+	
+	@Override
+	public String toString() {
+		return name + "=" + value;
+	}
+	
 }

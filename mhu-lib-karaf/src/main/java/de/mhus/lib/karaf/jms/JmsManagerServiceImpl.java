@@ -74,6 +74,8 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
+		if (timer != null)
+			timer.cancel();
 		if (channelTracker != null) channelTracker.close();
 		if (connectionTracker != null) connectionTracker.close();
 		for ( String name : new LinkedList<String>(channels.keySet()))

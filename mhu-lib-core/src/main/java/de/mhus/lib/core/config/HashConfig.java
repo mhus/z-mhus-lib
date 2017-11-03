@@ -10,6 +10,7 @@ import java.util.Set;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
@@ -227,6 +228,11 @@ public class HashConfig extends IConfig {
 	@Override
 	public void clear() {
 		properties.clear();
+	}
+
+	@Override
+	public String toString() {
+		return MSystem.toString(this,name,properties,children);
 	}
 
 }
