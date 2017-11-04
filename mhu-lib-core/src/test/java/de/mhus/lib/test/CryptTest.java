@@ -1,15 +1,20 @@
 package de.mhus.lib.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 
 import de.mhus.lib.core.MBigMath;
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.crypt.AsnUtil;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.AsyncKey;
-import de.mhus.lib.core.crypt.AsyncUtil;
+import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.CipherBlockArithmetic;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
+import de.mhus.lib.core.crypt.CipherInputStream;
+import de.mhus.lib.core.crypt.CipherOutputStream;
 import junit.framework.TestCase;
 
 public class CryptTest extends TestCase {
@@ -52,55 +57,55 @@ public class CryptTest extends TestCase {
 			"-----END RSA PRIVATE KEY-----";
 	
 	public void testPrivateKeyLoad() throws IOException {
-		AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		System.out.println(pair256);
-		AsyncKey pair2048 = AsnUtil.loadPrivateRsaKey(key2048);
+		AsyncKey pair2048 = MCrypt.loadPrivateRsaKey(key2048);
 		System.out.println(pair2048);
 		
 	}
 	
 	public void testEnDeCode() throws IOException {
 		{
-			AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello World!".getBytes();
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair256, org);
-			byte[] copy = AsyncUtil.decodeBytes(pair256, enc);
+			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
+			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy));
 			assertEquals(new String(org), new String(copy));
 		}
 		{
-			AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello UTF8 äöüß".getBytes(MString.CHARSET_UTF_8);
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair256, org);
-			byte[] copy = AsyncUtil.decodeBytes(pair256, enc);
+			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
+			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy,MString.CHARSET_UTF_8));
 			assertEquals(new String(org), new String(copy));
 		}
 		{
-			AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello ISO 8859-1 äöüß".getBytes(MString.CHARSET_ISO_8859_1);
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair256, org);
-			byte[] copy = AsyncUtil.decodeBytes(pair256, enc);
+			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
+			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy,MString.CHARSET_ISO_8859_1));
 			assertEquals(new String(org), new String(copy));
 		}
 		{
-			AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello UTF16 äöüß".getBytes(MString.CHARSET_UTF_16);
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair256, org);
-			byte[] copy = AsyncUtil.decodeBytes(pair256, enc);
+			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
+			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy,MString.CHARSET_UTF_16));
 			assertEquals(new String(org), new String(copy));
 		}
 	}
 	
 	public void testEnDeCodeBinary() throws IOException {
-		AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		byte[] org = new byte[256];
 		for (int i=0; i < org.length; i++)
 			org[i] = (byte)(i-128);
-		BigInteger[] enc = AsyncUtil.encodeBytes(pair256, org);
-		byte[] copy = AsyncUtil.decodeBytes(pair256, enc);
+		BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
+		byte[] copy = MCrypt.decodeBytes(pair256, enc);
 		//System.out.println(new String(copy));
 		
 		for (int i=0; i < org.length; i++)
@@ -109,15 +114,15 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testNegativeValue() throws Exception {
-		AsyncKey pair256 = AsnUtil.loadPrivateRsaKey(key256);
+		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		try {
-			AsyncUtil.encode(pair256, new BigInteger("-1"));
+			MCrypt.encode(pair256, new BigInteger("-1"));
 			throw new Exception("Negative encode Test Failed");
 		} catch (IOException e) {
 			
 		}
 		try {
-			AsyncUtil.decode(pair256, new BigInteger("-1"));
+			MCrypt.decode(pair256, new BigInteger("-1"));
 			throw new Exception("Negative decode Test Failed");
 		} catch (IOException e) {
 			
@@ -127,28 +132,28 @@ public class CryptTest extends TestCase {
 	public void testBase62Encode() throws IOException {
 		{
 			System.out.println("--- 256 bit key");
-			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello World!".getBytes();
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			BigInteger[] enc = MCrypt.encodeBytes(pair, org);
 			String b62 = MBigMath.toBase62(enc);
 			b62 = MString.wrap(b62,100);
 			System.out.println(b62);
 			BigInteger[] b62enc = MBigMath.fromBase62Array(b62);
-			byte[] copy = AsyncUtil.decodeBytes(pair, b62enc);
+			byte[] copy = MCrypt.decodeBytes(pair, b62enc);
 			System.out.println(new String(copy));
 			System.out.println("62 Size: " + b62.length());
 			assertEquals(new String(org), new String(copy));
 		}
 		{
 			System.out.println("--- 2048 bit key");
-			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key2048);
+			AsyncKey pair = MCrypt.loadPrivateRsaKey(key2048);
 			byte[] org = "Hello World!".getBytes();
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			BigInteger[] enc = MCrypt.encodeBytes(pair, org);
 			String b62 = MBigMath.toBase62(enc);
 			b62 = MString.wrap(b62,100);
 			System.out.println(b62);
 			BigInteger[] b62enc = MBigMath.fromBase62Array(b62);
-			byte[] copy = AsyncUtil.decodeBytes(pair, b62enc);
+			byte[] copy = MCrypt.decodeBytes(pair, b62enc);
 			System.out.println(new String(copy));
 			System.out.println("62 Size: " + b62.length());
 			assertEquals(new String(org), new String(copy));
@@ -190,28 +195,28 @@ public class CryptTest extends TestCase {
 	public void testBase91Encode() throws IOException {
 		{
 			System.out.println("--- 256 bit key");
-			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key256);
+			AsyncKey pair = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello World!".getBytes();
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			BigInteger[] enc = MCrypt.encodeBytes(pair, org);
 			String b = MBigMath.toBase91(enc);
 			b = MString.wrap(b,100);
 			System.out.println(b);
 			BigInteger[] benc = MBigMath.fromBase91Array(b);
-			byte[] copy = AsyncUtil.decodeBytes(pair, benc);
+			byte[] copy = MCrypt.decodeBytes(pair, benc);
 			System.out.println(new String(copy));
 			System.out.println("91 Size: " + b.length());
 			assertEquals(new String(org), new String(copy));
 		}
 		{
 			System.out.println("--- 2048 bit key");
-			AsyncKey pair = AsnUtil.loadPrivateRsaKey(key2048);
+			AsyncKey pair = MCrypt.loadPrivateRsaKey(key2048);
 			byte[] org = "Hello World!".getBytes();
-			BigInteger[] enc = AsyncUtil.encodeBytes(pair, org);
+			BigInteger[] enc = MCrypt.encodeBytes(pair, org);
 			String b = MBigMath.toBase91(enc);
 			b = MString.wrap(b,100);
 			System.out.println(b);
 			BigInteger[] benc = MBigMath.fromBase91Array(b);
-			byte[] copy = AsyncUtil.decodeBytes(pair, benc);
+			byte[] copy = MCrypt.decodeBytes(pair, benc);
 			System.out.println(new String(copy));
 			System.out.println("91 Size: " + b.length());
 			assertEquals(new String(org), new String(copy));
@@ -310,7 +315,7 @@ public class CryptTest extends TestCase {
 			byte x = enc.encode(a);
 			byte in = dec.decode(x);
 //			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
-//TODO			assertEquals(a, in);
+			assertEquals(a, in);
 		}
 		enc.reset();
 		dec.reset();
@@ -319,8 +324,41 @@ public class CryptTest extends TestCase {
 			byte x = enc.encode(a);
 			byte in = dec.decode(x);
 //			System.out.println(b + ": " + a + " -> " + x + " -> " + in);
-//TODO			assertEquals(a, in);
+			assertEquals(a, in);
 		}
 	}
 
+	public void testUtil() throws IOException {
+		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
+		String org = "Fischers Fritze fischt frische Fische";
+		String enc = MCrypt.encode(pair256, org);
+		String copy = MCrypt.decode(pair256, enc);
+		System.out.println(org);
+		System.out.println(enc);
+		System.out.println(copy);
+		assertEquals(org, copy);
+	}
+	
+	public void testCipherStream() {
+		byte[] buf = "Fischers Fritze fischt frische Fische".getBytes();
+		ByteArrayInputStream is = new ByteArrayInputStream(buf);
+		CipherInputStream cis = new CipherInputStream(is);
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		CipherOutputStream cos = new CipherOutputStream(os);
+		
+		CipherBlockRotate cipher = MCrypt.createRandomCipherBlockRotate(20);
+		
+		cis.setCipher(cipher);
+		cos.setCipher(cipher);
+		
+		MFile.copyFile(cis, cos);
+		
+		byte[] copy = os.toByteArray();
+		
+		assertEquals(new String(buf), new String(copy));
+		
+	}
+	
+	
 }

@@ -16,7 +16,7 @@ public class CipherInputStream extends InputStream {
 	public int read() throws IOException {
 		int out = is.read();
 		if (out < 0 || cipher == null) return out;
-		return cipher.decode((byte)(out-128))+128;
+		return cipher.decode((byte)out);
 	}
 
 	public CipherBlock getCipher() {

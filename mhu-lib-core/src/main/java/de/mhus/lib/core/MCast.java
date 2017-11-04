@@ -918,5 +918,15 @@ public final class MCast {
 		if (b < ' ' ) return "<" + MCast.toHex2String(b).toUpperCase() + ">";
 		return new String(new char[] {b});
 	}
+
+	public static String toBitsString(byte b) {
+		StringBuilder out = new StringBuilder();
+		int i = MMath.unsignetByteToInt(b);
+		for (int j = 0; j < 8; j++) {
+			out.insert( 0, i % 2 == 0 ? '0' : '1' );
+			i = i / 2;
+		}
+		return out.toString();
+	}
 	
 }

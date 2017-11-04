@@ -32,14 +32,14 @@ public class CipherBlockRotate implements CipherBlock {
 
 	@Override
 	public byte encode(byte in) {
-		in = MMath.rotl(in, (block[pos] + 128) % 8);
+		in = MMath.rotl(in, block[pos]);
 		next();
 		return in;
 	}
 
 	@Override
 	public byte decode(byte in) {
-		in = MMath.rotr(in, (block[pos] + 128) % 8);
+		in = MMath.rotr(in, block[pos]);
 		next();
 		return in;
 	}

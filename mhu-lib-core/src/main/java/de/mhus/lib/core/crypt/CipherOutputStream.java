@@ -17,7 +17,7 @@ public class CipherOutputStream extends OutputStream {
 		if (cipher == null) 
 			os.write(b);
 		else
-			os.write(cipher.encode((byte)(b-128))+128);
+			os.write(cipher.encode((byte)b));
 	}
 
 	public CipherBlock getCipher() {
