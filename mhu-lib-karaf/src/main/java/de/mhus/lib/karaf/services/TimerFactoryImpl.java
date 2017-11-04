@@ -20,6 +20,7 @@ import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
@@ -28,6 +29,7 @@ import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.schedule.CronJob;
 import de.mhus.lib.core.schedule.IntervalJob;
+import de.mhus.lib.core.schedule.IntervalWithStartTimeJob;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
@@ -97,23 +99,37 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		
 	}
 
-
 	protected void addSchedulerService(ServiceReference<ScheduledService> reference, ScheduledService service) {
-		Object cron = reference.getProperty("cron");
-		SchedulerJob timerTask = null;
-		if (cron != null) {
-			timerTask = new CronJob(String.valueOf(cron), service);
+		// get interval configuration
+		Object interval = service.getInterval();
+		if (interval == null)
+			interval = reference.getProperty("interval");
+		if (interval == null) {
+			log().i("interval configuration not found for SchedulerService",service,reference);
+			return;
 		}
-		long interval = MTimeInterval.toTime(MCast.toString(reference.getProperty("interval"), null), -1);
-		if (interval > 0) {
-			timerTask = new IntervalJob(interval, service);
+		// parse configuration and create job
+		String i = String.valueOf(interval);
+		SchedulerJob timerTask = null;
+		if (i.indexOf(' ') > 0 ) {
+			timerTask = new CronJob(String.valueOf(i), service);
+		} else
+		if (i.indexOf(',') > 0) {
+			long s = MTimeInterval.toTime(MString.beforeIndex(i,','), -1);
+			long l = MTimeInterval.toTime(MString.afterIndex(i,','), -1);
+			if (s > 0 && l > 0)
+				timerTask = new IntervalWithStartTimeJob(s,l, service);
+		} else {
+			long l = MTimeInterval.toTime(i, -1);
+			if (l > 0)
+				timerTask = new IntervalJob(l, service);
 		}
 		
 		if (timerTask != null) {
 			services.put(service,timerTask);
 			myTimer.schedule(timerTask);
 		} else {
-			log().i("interval not configured for SchedulerService",service,reference);
+			log().i("interval configuration syntax error for SchedulerService",service,reference);
 		}
 		
 	}
