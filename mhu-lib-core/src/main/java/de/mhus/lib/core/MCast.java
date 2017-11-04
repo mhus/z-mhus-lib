@@ -687,6 +687,12 @@ public final class MCast {
 		return sw.toString();
 	}
 	
+	/**
+	 * Returns a string in every case even if input is null it returns an empty string.
+	 * 
+	 * @param in
+	 * @return
+	 */
 	public static String toString(Object in) {
 		if (in == null) return "";
 		return OBJECT_TO_STRING.cast(in, "");

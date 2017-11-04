@@ -21,6 +21,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
@@ -103,7 +104,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		if (cron != null) {
 			timerTask = new CronJob(String.valueOf(cron), service);
 		}
-		long interval = MCast.tolong(reference.getProperty("interval"), -1);
+		long interval = MTimeInterval.toTime(MCast.toString(reference.getProperty("interval"), null), -1);
 		if (interval > 0) {
 			timerTask = new IntervalJob(interval, service);
 		}
