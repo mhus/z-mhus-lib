@@ -18,7 +18,7 @@ public class MJmx extends JmxObject {
 			try {
 				setJmxName(name);
 				MApi.lookup(MRemoteManager.class).register(this,weak);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log().t(e);
 			}
 		}
