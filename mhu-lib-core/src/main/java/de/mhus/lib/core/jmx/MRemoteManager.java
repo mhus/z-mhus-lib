@@ -12,6 +12,7 @@ import javax.management.ObjectName;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -22,6 +23,7 @@ import de.mhus.lib.errors.MException;
 
 public class MRemoteManager extends MObject implements IBase {
 	
+	private static CfgBoolean jmxEnabled = new CfgBoolean(MRemoteManager.class, "enabled", false);
 	private MBeanServer mbs;
 	private HashMap<ObjectName,Object> registry = new HashMap<ObjectName, Object>();
 
@@ -38,6 +40,7 @@ public class MRemoteManager extends MObject implements IBase {
 	}
 	
 	public void register(JmxObject object,boolean weak) throws Exception {
+		if (!jmxEnabled.value()) return; // disabled
 		open();
 		if (object instanceof JmxPackage) {
 		  ((JmxPackage)object).open(this);
