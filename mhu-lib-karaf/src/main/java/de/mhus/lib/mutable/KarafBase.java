@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceException;
 import org.osgi.framework.ServiceReference;
 
 import de.mhus.lib.core.MApi;
@@ -45,6 +46,10 @@ public class KarafBase extends DefaultBase {
 					if (context != null) {
 						ServiceReference<? extends T> ref = context.getServiceReference(ifc);
 						if (ref != null) {
+							if (ref.getBundle().getState() != Bundle.ACTIVE) {
+								MLogUtil.log().d("KarafBase","found in bundle but not jet active",ifc,bundle.getSymbolicName());
+								return null;
+							}
 							T obj = null;
 							try {
 								obj = context.getService(ref);
