@@ -360,5 +360,13 @@ public class CryptTest extends TestCase {
 		
 	}
 	
+	public void testObfuscate() {
+		byte[] org = new byte[256];
+		for (int i = 0; i < 256; i++)
+			org[i] = (byte)i;
+		byte[] copy = MCrypt.unobfuscate( MCrypt.obfuscate(org));
+		for (int i = 0; i < 256; i++)
+			assertEquals(org[i],copy[i]);
+	}
 	
 }

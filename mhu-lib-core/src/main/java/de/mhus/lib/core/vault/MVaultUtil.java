@@ -11,7 +11,7 @@ import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.logging.MLogUtil;
 
-public class MVaultTool {
+public class MVaultUtil {
 
 	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(".mhu-vault") );
 	private static CfgString defaultPassphrase = new CfgString(MVault.class, "passphrase", "changeit" );

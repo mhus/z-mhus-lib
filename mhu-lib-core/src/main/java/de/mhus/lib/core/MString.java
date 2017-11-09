@@ -20,10 +20,13 @@
 package de.mhus.lib.core;
 
 import java.awt.Color;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
+
+import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * @author hummel
@@ -1710,6 +1713,34 @@ public class MString {
 			off = off + lineSize;
 		}
 		return out.toString();
+	}
+
+	/**
+	 * Return a utf-8 encoded byte array from data ignoring the VM default data set.
+	 * @param data
+	 * @return utf-8 encoded byte array
+	 */
+	public static byte[] toBytes(String data) {
+		if (data == null) return null;
+		try {
+			return data.getBytes(CHARSET_UTF_8);
+		} catch (UnsupportedEncodingException e) {
+			throw new MRuntimeException(e); // this should never happen!!!
+		}
+	}
+	
+	/**
+	 * Return a utf-8 decoded string from the data ignoring the VM default char set.
+	 * @param data
+	 * @return utf-8 decoded string
+	 */
+	public static String toString(byte[] data) {
+		if (data == null) return null;
+		try {
+			return new String(data,CHARSET_UTF_8);
+		} catch (UnsupportedEncodingException e) {
+			throw new MRuntimeException(e); // this should never happen!!!
+		}
 	}
 
 	

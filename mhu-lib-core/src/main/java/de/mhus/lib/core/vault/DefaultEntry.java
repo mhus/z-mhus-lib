@@ -6,6 +6,7 @@ import java.util.UUID;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class DefaultEntry implements VaultEntry {
@@ -13,14 +14,14 @@ public class DefaultEntry implements VaultEntry {
 	protected UUID id = UUID.randomUUID();
 	protected String type;
 	protected String description;
-	protected String value;
+	protected SecureString value;
 	
 	public DefaultEntry() {}
 	
 	public DefaultEntry(String type, String description, String value) {
 		this.type = type;
 		this.description = description;
-		this.value = value;
+		this.value = new SecureString(value);
 	}
 	
 	@Override
@@ -35,7 +36,7 @@ public class DefaultEntry implements VaultEntry {
 
 	@Override
 	public String getValue() {
-		return value;
+		return value.value();
 	}
 
 	@SuppressWarnings("unchecked")

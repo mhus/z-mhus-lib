@@ -12,10 +12,11 @@ import java.util.UUID;
 
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.util.SecureString;
 
 public class FileVaultSource extends MutableVaultSource {
 
-	private String passphrase;
+	private SecureString passphrase;
 	private File file;
 
 	public FileVaultSource(File file, String passphrase, String name) throws IOException {
@@ -23,7 +24,7 @@ public class FileVaultSource extends MutableVaultSource {
 		this.name = name;
 	}
 	public FileVaultSource(File file, String passphrase) throws IOException {
-		this.passphrase = passphrase;
+		this.passphrase = new SecureString(passphrase);
 		this.file = file;
 		if (file.exists())
 			doLoad();
@@ -32,7 +33,7 @@ public class FileVaultSource extends MutableVaultSource {
 	@Override
 	public void doLoad() throws IOException {
 		FileInputStream parent = new FileInputStream(file);
-		InputStream is = MCrypt.createCipherInputStream(parent, passphrase);
+		InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
 		ObjectInputStream ois = new ObjectInputStream(is);
 		int size = ois.readInt();
 		entries.clear();
@@ -46,7 +47,7 @@ public class FileVaultSource extends MutableVaultSource {
 	@Override
 	public void doSave() throws IOException {
 		FileOutputStream parent = new FileOutputStream(file);
-		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase);
+		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());
 		ObjectOutputStream oos = new ObjectOutputStream(os);
 		oos.writeInt(entries.size());
 		for (VaultEntry entry : entries.values()) {
@@ -65,7 +66,7 @@ public class FileVaultSource extends MutableVaultSource {
 			id = UUID.fromString(ois.readUTF());
 			type = ois.readUTF();
 			description = ois.readUTF();
-			value = ois.readUTF();
+			value = new SecureString(ois.readUTF());
 		}
 		
 	}

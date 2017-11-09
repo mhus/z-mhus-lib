@@ -578,6 +578,12 @@ public final class MCast {
 		return out;
 	}
 
+	/**
+	 * Returns a comma separated list of hex values as string. Not
+	 * the corresponding char set decoded string.
+	 * @param in
+	 * @return List of hex values
+	 */
 	public static String toString(byte[] in) {
 
 		StringBuffer sb = new StringBuffer();
