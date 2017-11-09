@@ -84,6 +84,15 @@ public class CryptTest extends TestCase {
 		}
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
+			String org = "test";
+			String enc = MCrypt.encodeWithSalt(pair256, org);
+			System.out.println(enc);
+			String copy = MCrypt.decodeWithSalt(pair256, enc);
+			System.out.println(copy);
+			assertEquals(org, copy);
+		}
+		{
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = "Hello UTF8 äöüß".getBytes(MString.CHARSET_UTF_8);
 			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
 			byte[] copy = MCrypt.decodeBytes(pair256, enc);

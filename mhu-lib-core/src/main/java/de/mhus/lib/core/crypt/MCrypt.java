@@ -109,6 +109,26 @@ public class MCrypt {
 	 * @return encoded and Base91 encoded string
 	 * @throws IOException
 	 */
+	public static String encodeWithSalt(AsyncKey key, String in) throws IOException {
+		byte[] org = MString.toBytes(in);
+		byte[] org2 = new byte[org.length+1];
+		byte salt = MApi.lookup(MRandom.class).getByte();
+		org2[0] = salt;
+		for (int i = 0; i < org.length; i++)
+			org2[i+1] = MMath.addRotate(org[i], salt);
+		BigInteger[] enc = encodeBytes(key, org2);
+		String b = MBigMath.toBase91(enc);
+		return "A" + b;
+	}
+
+	/**
+	 * Encode data using a RSA like algorithm. It's not using the java implementation.
+	 * 
+	 * @param key public key
+	 * @param in clear data
+	 * @return encoded and Base91 encoded string
+	 * @throws IOException
+	 */
 	public static String encode(AsyncKey key, String in) throws IOException {
 		byte[] org = MString.toBytes(in);
 		BigInteger[] enc = encodeBytes(key, org);
@@ -162,7 +182,29 @@ public class MCrypt {
 	    BigInteger decoded = MBigMath.binaryPow(in, key.getPrivateExponent(), key.getModulus());
 	    return decoded;
 	}
-	
+
+	/**
+	 * Decode the data using Base91 byte encoding and the private key from 'key' using a RSA like algorithm. It's not the
+	 * java implementation used.
+	 * 
+	 * @param key private key
+	 * @param in the encoded data presentation
+	 * @return the decoded string
+	 * @throws IOException
+	 */
+	public static String decodeWithSalt(AsyncKey key, String in) throws IOException {
+		BigInteger[] benc = MBigMath.fromBase91Array(in.substring(1));
+		byte[] enc = MCrypt.decodeBytes(key, benc);
+		if (in.charAt(0) == 'A') {
+			byte[] enc2 = new byte[enc.length-1];
+			byte salt = enc[0];
+			for (int i = 0; i < enc2.length; i++)
+				enc2[i] =  MMath.subRotate(enc[i+1], salt);
+			return MString.toString(enc2);
+		} else
+			throw new IOException("Unknown salt algorithm");
+	}
+
 	/**
 	 * Decode the data using Base91 byte encoding and the private key from 'key' using a RSA like algorithm. It's not the
 	 * java implementation used.

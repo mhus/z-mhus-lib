@@ -81,7 +81,7 @@ public class MPassword {
 				if (entry == null) throw new MRuntimeException("key not found",secret);
 				try {
 					AsyncKey key = entry.adaptTo(AsyncKey.class);
-					return "`C:" + entry.getId() + ":" + MCrypt.encode(key, in);
+					return "`C:" + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
 				} catch (Exception e) {
 					throw new MRuntimeException(e);
 				}
@@ -121,7 +121,7 @@ public class MPassword {
 			if (entry == null) throw new MRuntimeException("key not found",keyId);
 			try {
 				AsyncKey key = entry.adaptTo(AsyncKey.class);
-				return MCrypt.decode(key, in);
+				return MCrypt.decodeWithSalt(key, in);
 			} catch (Exception e) {
 				throw new MRuntimeException(e);
 			}
