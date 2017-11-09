@@ -35,6 +35,7 @@ public class FileVaultSource extends MutableVaultSource {
 		FileInputStream parent = new FileInputStream(file);
 		InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
 		ObjectInputStream ois = new ObjectInputStream(is);
+		name = ois.readUTF();
 		int size = ois.readInt();
 		entries.clear();
 		for (int i = 0; i < size; i++) {
@@ -49,6 +50,7 @@ public class FileVaultSource extends MutableVaultSource {
 		FileOutputStream parent = new FileOutputStream(file);
 		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());
 		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeUTF(name);
 		oos.writeInt(entries.size());
 		for (VaultEntry entry : entries.values()) {
 			oos.writeUTF(entry.getId().toString());

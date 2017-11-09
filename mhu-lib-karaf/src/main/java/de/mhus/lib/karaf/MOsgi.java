@@ -156,7 +156,7 @@ public class MOsgi {
 	 * @return
 	 */
 	public static BundleContext getBundleContext() {
-		return FrameworkUtil.getBundle(FrameworkUtil.class).getBundleContext();
+		return FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
 	}
 	
 }

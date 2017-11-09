@@ -18,6 +18,10 @@ public class DefaultEntry implements VaultEntry {
 	
 	public DefaultEntry() {}
 	
+	public DefaultEntry(UUID id, String type, String description, String value) {
+		this(type,description,value);
+		this.id = id;
+	}
 	public DefaultEntry(String type, String description, String value) {
 		this.type = type;
 		this.description = description;

@@ -158,7 +158,7 @@ public class MCrypt {
 	 * @throws IOException
 	 */
 	public static BigInteger decode(AsyncKey key, BigInteger in) throws IOException {
-		if (in.signum() == -1) throw new IOException("Negative values are not allowed");
+		if (in.signum() == -1) throw new IOException("Negative values not allowed");
 	    BigInteger decoded = MBigMath.binaryPow(in, key.getPrivateExponent(), key.getModulus());
 	    return decoded;
 	}

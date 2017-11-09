@@ -67,11 +67,20 @@ public class CryptTest extends TestCase {
 	public void testEnDeCode() throws IOException {
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
-			byte[] org = "Hello World!".getBytes();
+			byte[] org = MString.toBytes("Hello World!");
 			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
 			byte[] copy = MCrypt.decodeBytes(pair256, enc);
-			System.out.println(new String(copy));
-			assertEquals(new String(org), new String(copy));
+			System.out.println(MString.toString(copy));
+			assertEquals(MString.toString(org), MString.toString(copy));
+		}
+		{
+			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
+			String org = "test";
+			String enc = MCrypt.encode(pair256, org);
+			System.out.println(enc);
+			String copy = MCrypt.decode(pair256, enc);
+			System.out.println(copy);
+			assertEquals(org, copy);
 		}
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
@@ -79,7 +88,7 @@ public class CryptTest extends TestCase {
 			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
 			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy,MString.CHARSET_UTF_8));
-			assertEquals(new String(org), new String(copy));
+			assertEquals(MString.toString(org), MString.toString(copy));
 		}
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
@@ -87,7 +96,7 @@ public class CryptTest extends TestCase {
 			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
 			byte[] copy = MCrypt.decodeBytes(pair256, enc);
 			System.out.println(new String(copy,MString.CHARSET_ISO_8859_1));
-			assertEquals(new String(org), new String(copy));
+			assertEquals(MString.toString(org), new String(copy));
 		}
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);

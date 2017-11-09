@@ -12,8 +12,10 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.vault.DefaultEntry;
+import de.mhus.lib.core.vault.FileVaultSource;
 import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.MutableVaultSource;
@@ -26,7 +28,21 @@ public class CmdVault extends MLog implements Action {
 
 	private static final long MAX_FILE_LENGTH = 1024 * 1024; // max 1 MB
 
-	@Argument(index=0, name="cmd", required=true, description="Command:\n sources,list", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Create keys with openssl: openssl genrsa -out private.pem 8192\n"
+			+ "Commands:\n"
+			+ " sources\n"
+			+ " list\n"
+			+ " get <id>\n"
+			+ " addfile <file> [description]\n"
+			+ " addraw <type> <description> <value>\n"
+			+ " remove <id>\n"
+			+ " save\n"
+			+ " load\n"
+			+ " addfilesource <file> <passphrase>\n"
+			+ " removesource <id>\n"
+			+ " encodepasswordrot13 <clear>\n"
+			+ " encodepasswordwithkey <key id> <clear>\n"
+			+ " decodepassword <encoded password>", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -49,16 +65,31 @@ public class CmdVault extends MLog implements Action {
 			out.print(System.out);
 		} else
 		if (cmd.equals("list")) {
-			ConsoleTable out = new ConsoleTable();
-			out.setHeaderValues("Source","Id","Type","Description");
-			for (String sourceName : vault.getSourceNames()) {
-				VaultSource source = vault.getSource(sourceName);
+			if (sourcename.equals(MVault.SOURCE_DEFAULT)) {
+				ConsoleTable out = new ConsoleTable();
+				out.setHeaderValues("Source","Id","Type","Description");
+				for (String sourceName : vault.getSourceNames()) {
+					VaultSource source = vault.getSource(sourceName);
+					for (UUID id : source.getEntryIds()) {
+						VaultEntry entry = source.getEntry(id);
+						out.addRowValues(sourceName,id,entry.getType(),entry.getDescription());
+					}
+				}
+				out.print(System.out);
+			} else {
+				VaultSource source = vault.getSource(sourcename);
+				if (source == null) {
+					System.out.println("Source not found!");
+					return null;
+				}
+				ConsoleTable out = new ConsoleTable();
+				out.setHeaderValues("Source","Id","Type","Description");
 				for (UUID id : source.getEntryIds()) {
 					VaultEntry entry = source.getEntry(id);
-					out.addRowValues(sourceName,id,entry.getType(),entry.getDescription());
+					out.addRowValues(sourcename,id,entry.getType(),entry.getDescription());
 				}
+				out.print(System.out);
 			}
-			out.print(System.out);
 		} else
 		if (cmd.equals("addraw")) {
 			VaultSource source = vault.getSource(sourcename);
@@ -73,7 +104,7 @@ public class CmdVault extends MLog implements Action {
 			String value = parameters[2];
 			DefaultEntry entry = new DefaultEntry(type, description, value);
 			mutable.addEntry(entry);
-			System.out.println("OK");
+			System.out.println("Created " + entry + ". Don't forget to save!");
 		} else
 		if (cmd.equals("addfile")) {
 			VaultSource source = vault.getSource(sourcename);
@@ -144,6 +175,35 @@ public class CmdVault extends MLog implements Action {
 			System.out.println("-------");
 			System.out.println(entry.getValue());
 			System.out.println("-------");
+		} else
+		if (cmd.equals("remove")) {
+			VaultSource source = vault.getSource(sourcename);
+			if (source == null) {
+				System.out.println("Source not found!");
+				return null;
+			}
+			MutableVaultSource mutable = source.adaptTo(MutableVaultSource.class);
+
+			mutable.removeEntry(UUID.fromString(parameters[0]));
+			System.out.println("OK");
+		} else
+		if (cmd.equals("addfilesource")) {
+			FileVaultSource source = new FileVaultSource(new File(parameters[0]), parameters[1]);
+			vault.registerSource(source);
+			System.out.println("Registered " + source);
+		} else
+		if (cmd.equals("removesource")) {
+			vault.unregisterSource(parameters[0]);
+			System.out.println("OK");
+		} else
+		if (cmd.equals("encodepasswordrot13")) {
+			System.out.println( MPassword.encode(MPassword.TYPE_ROT13, parameters[0], null) );
+		}
+		if (cmd.equals("encodepasswordwithkey")) {
+			System.out.println( MPassword.encode(MPassword.TYPE_RSA, parameters[1], parameters[0]) );
+		} else
+		if (cmd.equals("decodepassword")) {
+			System.out.println( MPassword.decode(parameters[0]));
 		}
 		
 		return null;

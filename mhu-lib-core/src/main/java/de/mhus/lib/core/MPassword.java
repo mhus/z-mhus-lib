@@ -72,16 +72,16 @@ public class MPassword {
 		if (isEncoded(in)) return in;
 		switch (method) {
 			case 0: // empty dummy password
-				return ":0";
+				return "`X";
 			case 1:
-				return ":1" + Rot13.encode(in);
+				return "`B:" + Rot13.encode(in);
 			case 2:
 				MVault vault = MVaultUtil.loadDefault();
 				VaultEntry entry = vault.getEntry(UUID.fromString(secret));
 				if (entry == null) throw new MRuntimeException("key not found",secret);
 				try {
 					AsyncKey key = entry.adaptTo(AsyncKey.class);
-					return ":2" + entry.getId() + ":" + MCrypt.encode(key, in);
+					return "`C:" + entry.getId() + ":" + MCrypt.encode(key, in);
 				} catch (Exception e) {
 					throw new MRuntimeException(e);
 				}
@@ -96,7 +96,7 @@ public class MPassword {
 
 	public static boolean isEncoded(String in) {
 		if (in == null) return false;
-		return in.startsWith(":");
+		return in.startsWith("`");
 	}
 
 	/**
@@ -108,10 +108,10 @@ public class MPassword {
 	public static String decode(String in) {
 		if (in == null) return null;
 		if (!isEncoded(in)) return in;
-		if (in.startsWith(":1"))
-			return Rot13.decode(in.substring(2));
-		if (in.startsWith(":2")) {
-			in = in.substring(2);
+		if (in.startsWith("`B:"))
+			return Rot13.decode(in.substring(3));
+		if (in.startsWith("`C:")) {
+			in = in.substring(3);
 			int p = in.indexOf(':');
 			if (p < 0) throw new UsageException("key id not found");
 			String keyId = in.substring(0, p);
@@ -126,9 +126,28 @@ public class MPassword {
 				throw new MRuntimeException(e);
 			}
 		}
-		if (in.startsWith(":0"))
+		if (in.startsWith("`X"))
 			throw new MRuntimeException("try to encode a dummy password");
-		
+		if (in.startsWith("`A")) {
+			StringBuffer out = new StringBuffer();
+			for (int i = 2; i < in.length(); i++) {
+				char c = in.charAt(i);
+				switch (c) {
+				case '0': c = '9'; break;
+				case '1': c = '0'; break;
+				case '2': c = '1'; break;
+				case '3': c = '2'; break;
+				case '4': c = '3'; break;
+				case '5': c = '4'; break;
+				case '6': c = '5'; break;
+				case '7': c = '6'; break;
+				case '8': c = '7'; break;
+				case '9': c = '8'; break;
+				}
+				out.append(c);
+			}
+			return out.toString();
+		}
 		return in;
 	}
 	

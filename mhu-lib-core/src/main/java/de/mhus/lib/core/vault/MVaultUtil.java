@@ -18,6 +18,11 @@ public class MVaultUtil {
 	
 	public static MVault loadDefault() {
 		MVault vault = MApi.lookup(MVault.class);
+		checkDefault(vault);
+		return vault;
+	}
+	
+	public static void checkDefault(MVault vault) {
 		VaultSource def = vault.getSource(MVault.SOURCE_DEFAULT);
 		if (def == null) {
 			try {
@@ -27,9 +32,8 @@ public class MVaultUtil {
 				MLogUtil.log().d(e);
 			}
 		}
-		return vault;
 	}
-	
+
 	public static void main(String[] in) throws IOException {
 		MArgs args = new MArgs(in);
 		

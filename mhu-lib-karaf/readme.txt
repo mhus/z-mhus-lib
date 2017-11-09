@@ -1,4 +1,8 @@
 
+
+# Optional bouncycastle
+install -s mvn:org.bouncycastle/bcprov-jdk15on/1.56
+
 install -s mvn:org.codehaus.jackson/jackson-core-asl/1.9.5
 install -s mvn:org.codehaus.jackson/jackson-mapper-asl/1.9.5
 install -s mvn:javax.portlet/portlet-api/2.0
