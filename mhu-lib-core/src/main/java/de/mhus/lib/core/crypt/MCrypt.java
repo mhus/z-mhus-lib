@@ -165,10 +165,12 @@ public class MCrypt {
 	}
 	
 	public static OutputStream createCipherOutputStream(OutputStream parent, String passphrase) throws IOException {
+		if (passphrase == null || passphrase.length() < 1)
+			throw new IOException("passphrase not set");
 		byte salt = MApi.lookup(MRandom.class).getByte();
-		parent.write(salt);
-		
 		byte[] p = passphrase.getBytes();
+		parent.write(MMath.addRotate(salt,p[0]));
+		
 		for (int i = 0; i < p.length; i++)
 			p[i] = MMath.addRotate(p[i],salt);
 		
@@ -177,11 +179,13 @@ public class MCrypt {
 	}
 	
 	public static InputStream createCipherInputStream(InputStream parent, String passphrase) throws IOException {
+		if (passphrase == null || passphrase.length() < 1)
+			throw new IOException("passphrase not set");
 		int iSalt = parent.read();
 		if (iSalt < 0) throw new EOFException();
-		byte salt = (byte)iSalt;
-
 		byte[] p = passphrase.getBytes();
+		byte salt = MMath.subRotate( (byte)iSalt, p[0] );
+
 		for (int i = 0; i < p.length; i++)
 			p[i] = MMath.addRotate(p[i],salt);
 		
