@@ -120,6 +120,13 @@ public class MMath {
 		int d = data & 0xFF;
 		int x = d << 1;
 		return (byte)((x & 0xFF) + (x / 256));
+	}
+
+	public static byte addRotate(byte b, byte add) {
+		return (byte)((((b & 0xFF) * 256) + ((add & 0xFF) * 256) ) / 256 );
 	}	
 	
+	public static byte subRotate(byte b, byte add) {
+		return (byte)((((b & 0xFF) * 256) - ((add & 0xFF) * 256) ) / 256 );
+	}	
 }

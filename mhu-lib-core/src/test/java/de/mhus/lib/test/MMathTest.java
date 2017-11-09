@@ -6,6 +6,20 @@ import junit.framework.TestCase;
 
 public class MMathTest extends TestCase {
 
+	public void testByteAddRotate() {
+		for (byte d = Byte.MIN_VALUE; d < Byte.MAX_VALUE; d++) {
+			for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
+				byte l = MMath.addRotate(b, d);
+				byte r = MMath.subRotate(l, d);
+				if (b != r) {
+					System.out.println( b + " -> " + l + " -> " + r );
+					System.out.println( MCast.toBitsString(b) + " -> " + MCast.toBitsString(l) + " -> " + MCast.toBitsString(r) );
+				}
+				assertEquals(b, r);
+			}
+		}
+	}
+
 	public void testByteRotate() {
 		for (int d = 1; d < 8; d++) {
 			for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {

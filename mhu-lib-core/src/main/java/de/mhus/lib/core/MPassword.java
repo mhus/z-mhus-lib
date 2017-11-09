@@ -21,10 +21,18 @@ package de.mhus.lib.core;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.UUID;
 
+import de.mhus.lib.core.crypt.AsyncKey;
+import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.vault.MVault;
+import de.mhus.lib.core.vault.MVaultTool;
+import de.mhus.lib.core.vault.VaultEntry;
+import de.mhus.lib.errors.MRuntimeException;
+import de.mhus.lib.errors.UsageException;
 
 /**
  * Decode / Encode passwords. Attention: This do not give security in any way.
@@ -39,6 +47,10 @@ import de.mhus.lib.core.logging.Log;
  */
 
 public class MPassword {
+	
+	public static final int TYPE_DUMMY = 0;
+	public static final int TYPE_ROT13 = 1;
+	public static final int TYPE_RSA   = 2;
 
 	private static Log log = Log.getLog(MPassword.class);
 	
@@ -52,19 +64,34 @@ public class MPassword {
 	 * @return
 	 */
 	public static String encode(String in) {
-		return encode(1,in);
+		return encode(TYPE_ROT13,in, null);
 	}
-	
-	public static String encode(int method, String in) {
+
+	public static String encode(int method, String in, String secret) {
 		if (in == null) return null;
 		if (isEncoded(in)) return in;
 		switch (method) {
+			case 0: // empty dummy password
+				return ":0";
 			case 1:
 				return ":1" + Rot13.encode(in);
 			case 2:
-				// use a local key store ... TODO do it next
+				MVault vault = MVaultTool.loadDefault();
+				VaultEntry entry = vault.getEntry(UUID.fromString(secret));
+				if (entry == null) throw new MRuntimeException("key not found",secret);
+				try {
+					AsyncKey key = entry.adaptTo(AsyncKey.class);
+					return ":2" + entry.getId() + ":" + MCrypt.encode(key, in);
+				} catch (Exception e) {
+					throw new MRuntimeException(e);
+				}
+
 		}
 		return null;
+	}
+
+	public static String encode(int method, String in) {
+		return encode(method, in, null);
 	}
 
 	public static boolean isEncoded(String in) {
@@ -83,8 +110,24 @@ public class MPassword {
 		if (!isEncoded(in)) return in;
 		if (in.startsWith(":1"))
 			return Rot13.decode(in.substring(2));
-//		if (in.startsWith(":2"))
-//			return new String( Base64.decodeBase64( MCast.fromBinaryString(in.substring(2))));
+		if (in.startsWith(":2")) {
+			in = in.substring(2);
+			int p = in.indexOf(':');
+			if (p < 0) throw new UsageException("key id not found");
+			String keyId = in.substring(0, p);
+			in = in.substring(p+1);
+			MVault vault = MVaultTool.loadDefault();
+			VaultEntry entry = vault.getEntry(UUID.fromString(keyId));
+			if (entry == null) throw new MRuntimeException("key not found",keyId);
+			try {
+				AsyncKey key = entry.adaptTo(AsyncKey.class);
+				return MCrypt.decode(key, in);
+			} catch (Exception e) {
+				throw new MRuntimeException(e);
+			}
+		}
+		if (in.startsWith(":0"))
+			throw new MRuntimeException("try to encode a dummy password");
 		
 		return in;
 	}

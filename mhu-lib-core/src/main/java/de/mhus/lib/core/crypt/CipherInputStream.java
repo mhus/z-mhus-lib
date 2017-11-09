@@ -12,6 +12,11 @@ public class CipherInputStream extends InputStream {
 		this.is = is;
 	}
 	
+	public CipherInputStream(InputStream is, CipherBlock cipher) {
+		this.is = is;
+		this.cipher = cipher;
+	}
+	
 	@Override
 	public int read() throws IOException {
 		int out = is.read();

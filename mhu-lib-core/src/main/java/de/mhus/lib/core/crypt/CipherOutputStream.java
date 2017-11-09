@@ -8,6 +8,11 @@ public class CipherOutputStream extends OutputStream {
 	private CipherBlock cipher;
 	private OutputStream os;
 	
+	public CipherOutputStream(OutputStream os, CipherBlock cipher) {
+		this.os = os;
+		this.cipher = cipher;
+	}
+	
 	public CipherOutputStream(OutputStream os) {
 		this.os = os;
 	}

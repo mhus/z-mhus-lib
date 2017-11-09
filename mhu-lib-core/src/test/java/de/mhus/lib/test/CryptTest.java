@@ -11,7 +11,7 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
-import de.mhus.lib.core.crypt.CipherBlockArithmetic;
+import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
 import de.mhus.lib.core.crypt.CipherOutputStream;
@@ -256,8 +256,8 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testCipherBlockArithmetic() {
-		CipherBlockArithmetic enc = new CipherBlockArithmetic(255);
-		CipherBlockArithmetic dec = new CipherBlockArithmetic(255);
+		CipherBlockAdd enc = new CipherBlockAdd(255);
+		CipherBlockAdd dec = new CipherBlockAdd(255);
 		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
 			enc.getBlock()[b-Byte.MIN_VALUE] = b;
 			dec.getBlock()[b-Byte.MIN_VALUE] = b;
