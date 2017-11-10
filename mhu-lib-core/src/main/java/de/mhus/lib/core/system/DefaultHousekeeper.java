@@ -57,7 +57,14 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 				this.cancel();
 				return;
 			}
-			
+			if (r instanceof MTimerTask) {
+				if ( ((MTimerTask)r).isCanceled() ) {
+					this.cancel();
+					return;
+				}
+
+			}
+				
 			r.run();
 		}
 		
