@@ -277,6 +277,8 @@ public class MCrypt {
 	public static OutputStream createCipherOutputStream(OutputStream parent, String passphrase) throws IOException {
 		if (passphrase == null || passphrase.length() < 1)
 			throw new IOException("passphrase not set");
+		if (passphrase.length() < 4)
+			throw new IOException("passphrase smaller then 4");
 		byte[] p = MString.toBytes(passphrase);
 		
 		parent.write('M');
@@ -285,7 +287,7 @@ public class MCrypt {
 		parent.write(2); // version
 		
 		CipherBlockAdd cipher = new CipherBlockAdd(p);
-		return new SaltOutputStream(new CipherOutputStream(parent, cipher), MApi.lookup(MRandom.class), 32, true) ;
+		return new SaltOutputStream(new CipherOutputStream(parent, cipher), MApi.lookup(MRandom.class), p.length-1, true) ;
 	}
 	
 	/**
@@ -299,6 +301,8 @@ public class MCrypt {
 	public static InputStream createCipherInputStream(InputStream parent, String passphrase) throws IOException {
 		if (passphrase == null || passphrase.length() < 1)
 			throw new IOException("passphrase not set");
+		if (passphrase.length() < 4)
+			throw new IOException("passphrase smaller then 4");
 		if (parent.read() != 'M') throw new IOException("not a crypt stream header");
 		if (parent.read() != 'C') throw new IOException("not a crypt stream header");
 		if (parent.read() != 'S') throw new IOException("not a crypt stream header");

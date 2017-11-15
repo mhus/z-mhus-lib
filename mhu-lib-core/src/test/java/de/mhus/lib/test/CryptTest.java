@@ -69,6 +69,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testEnDeCode() throws IOException {
+		System.out.println(">>> testEnDeCode");
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 			byte[] org = MString.toBytes("Hello World! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
@@ -123,6 +124,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testEnDeCodeBinary() throws IOException {
+		System.out.println(">>> testEnDeCodeBinary");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		byte[] org = new byte[256];
 		for (int i=0; i < org.length; i++)
@@ -137,6 +139,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testNegativeValue() throws Exception {
+		System.out.println(">>> testNegativeValue");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		try {
 			MCrypt.encode(pair256, new BigInteger("-1"));
@@ -153,6 +156,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testBase62Encode() throws IOException {
+		System.out.println(">>> testBase62Encode");
 		{
 			System.out.println("--- 256 bit key");
 			AsyncKey pair = MCrypt.loadPrivateRsaKey(key256);
@@ -184,6 +188,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testBase62() {
+		System.out.println(">>> testBase62");
 		{
 			int m = Integer.MAX_VALUE;
 			String b62 = MBigMath.toBase62(BigInteger.valueOf(m));
@@ -216,6 +221,7 @@ public class CryptTest extends TestCase {
 	}
 
 	public void testBase91Encode() throws IOException {
+		System.out.println(">>> testBase91Encode");
 		{
 			System.out.println("--- 256 bit key");
 			AsyncKey pair = MCrypt.loadPrivateRsaKey(key256);
@@ -247,6 +253,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testBase91() {
+		System.out.println(">>> testBase91");
 		{
 			int m = Integer.MAX_VALUE;
 			String b62 = MBigMath.toBase91(BigInteger.valueOf(m));
@@ -279,6 +286,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testCipherBlockArithmetic() {
+		System.out.println(">>> testCipherBlockArithmetic");
 		CipherBlockAdd enc = new CipherBlockAdd(255);
 		CipherBlockAdd dec = new CipherBlockAdd(255);
 		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
@@ -315,7 +323,7 @@ public class CryptTest extends TestCase {
 	}
 
 	public void testCipherBlockRotate() {
-		
+		System.out.println(">>> testCipherBlockRotate");
 		CipherBlockRotate enc = new CipherBlockRotate(255);
 		CipherBlockRotate dec = new CipherBlockRotate(255);
 		for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
@@ -352,6 +360,7 @@ public class CryptTest extends TestCase {
 	}
 
 	public void testUtil() throws IOException {
+		System.out.println(">>> testUtil");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		String org = "Fischers Fritze fischt frische Fische";
 		String enc = MCrypt.encode(pair256, org);
@@ -363,6 +372,7 @@ public class CryptTest extends TestCase {
 	}
 	
 	public void testCipherStream() {
+		System.out.println(">>> testCipherStream");
 		byte[] buf = "Fischers Fritze fischt frische Fische".getBytes();
 		ByteArrayInputStream is = new ByteArrayInputStream(buf);
 		CipherInputStream cis = new CipherInputStream(is);
@@ -384,7 +394,8 @@ public class CryptTest extends TestCase {
 	}
 
 	public void testMCipherStreamSymetry() throws IOException {
-		String pass = "aaaaaaaaa";
+		System.out.println(">>> testMCipherStreamSymetry");
+		String pass = "aaaaaaaaaa";
 		byte[] buf = "------------------------------------------------------------------------------------------------------------------------------------------------------------------".getBytes();
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -404,8 +415,19 @@ public class CryptTest extends TestCase {
 		
 		// analyse
 		int[] occur = new int[256];
-		for (byte p : enc)
+		byte sameLast = 0;
+		int sameCnt = 0;
+		int sameMax = 0;
+		for (byte p : enc) {
+			if (sameLast == p)
+				sameCnt++;
+			else {
+				sameMax = Math.max(sameMax, sameCnt);
+				sameCnt = 0;
+				sameLast = p;
+			}
 			occur[MMath.unsignetByteToInt(p)]++;
+		}
 
 		int aCnt = 0;
 		int aMin = buf.length;
@@ -422,8 +444,73 @@ public class CryptTest extends TestCase {
 		System.out.println("Enc Length: " + enc.length);
 		System.out.println("Spread: " + aCnt);
 		System.out.println("Min, Max, Diff: " + aMin + " - " + aMax + " => " + (aMax-aMin));
+		System.out.println("SameMax: " + sameMax);
 		
 		//System.out.println(new String(buf));
+		//System.out.println(new String(enc));
+		//System.out.println(new String(copy));
+		
+		if (aCnt < 100) System.out.println("WARNING: Spread lower then 100");
+		
+		assertEquals(new String(buf), new String(copy));
+		
+	}
+
+	public void testMCipherStreamReal() throws IOException {
+		System.out.println(">>> testMCipherStreamReal");
+		String pass = "passphrase123";
+		byte[] buf = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.".getBytes();
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		OutputStream cos = MCrypt.createCipherOutputStream(os, pass);
+		
+		// write into output stream and crypt
+		for (byte b : buf)
+			cos.write(b);
+		
+		// get encrypted
+		byte[] enc = os.toByteArray();
+		
+		// read and decrypt
+		ByteArrayInputStream is = new ByteArrayInputStream(enc);
+		InputStream cis = MCrypt.createCipherInputStream(is, pass);
+		byte[] copy = MFile.readBinary(cis);
+		
+		// analyse
+		int[] occur = new int[256];
+		byte sameLast = 0;
+		int sameCnt = 0;
+		int sameMax = 0;
+		for (byte p : enc) {
+			if (sameLast == p)
+				sameCnt++;
+			else {
+				sameMax = Math.max(sameMax, sameCnt);
+				sameCnt = 0;
+				sameLast = p;
+			}
+			occur[MMath.unsignetByteToInt(p)]++;
+		}
+
+		int aCnt = 0;
+		int aMin = buf.length;
+		int aMax = 0;
+		for (int i = 0; i < occur.length; i++) {
+			int c = occur[i];
+			if (c > 0) {
+				aCnt++;
+				aMin = Math.min(aMin, c);
+				aMax = Math.max(aMax, c);
+			}
+		}
+		System.out.println("Org Length: " + buf.length);
+		System.out.println("Enc Length: " + enc.length);
+		System.out.println("Spread: " + aCnt);
+		System.out.println("Min, Max, Diff: " + aMin + " - " + aMax + " => " + (aMax-aMin));
+		System.out.println("SameMax: " + sameMax);
+		
+		//System.out.println(new String(buf));
+		//System.out.println(new String(enc));
 		//System.out.println(new String(copy));
 		
 		if (aCnt < 100) System.out.println("WARNING: Spread lower then 100");
@@ -433,6 +520,7 @@ public class CryptTest extends TestCase {
 	}
 
 	public void testObfuscate() {
+		System.out.println(">>> testObfuscate");
 		byte[] org = new byte[256];
 		for (int i = 0; i < 256; i++)
 			org[i] = (byte)i;

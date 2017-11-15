@@ -34,14 +34,14 @@ public class SaltOutputStream extends OutputStream {
 		if (cnt <= 0) {
 			
 			if (addRandomBlocks) {
-				cnt = MMath.unsignetByteToInt(random.getByte());
+				cnt = MMath.unsignetByteToInt(random.getByte()) % maxBlockSize;
 				next.write(cnt);
 				for (int i = 0; i < cnt; i++)
 					next.write(random.getByte());
 			}
 			
 			salt = random.getByte();
-			cnt = Math.min(MMath.unsignetByteToInt(random.getByte()), maxBlockSize);
+			cnt = MMath.unsignetByteToInt(random.getByte()) % maxBlockSize;
 			next.write(salt);
 			next.write(cnt);
 		}
