@@ -57,7 +57,7 @@ class Asn1Util {
 	    BigInteger exponent2 = ((ASN1Integer) ex.nextElement()).getValue();
 	    BigInteger coefficient = ((ASN1Integer) ex.nextElement()).getValue();
 		
-		return new AsyncKey(modulus, publicExponent, privateExponent, prime1, prime2, exponent1, exponent2, coefficient);
+		return new AsyncKey(modulus, publicExponent, privateExponent, prime1, prime2, exponent1, exponent2, coefficient, MCrypt.getMaxLoad(modulus));
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class Asn1Util {
 	    BigInteger modulus = ((ASN1Integer) ex.nextElement()).getValue();
 	    BigInteger publicExponent = ((ASN1Integer) ex.nextElement()).getValue();
 		
-		return new AsyncKey(modulus, publicExponent, null, null, null, null, null, null);
+		return new AsyncKey(modulus, publicExponent, null, null, null, null, null, null, MCrypt.getMaxLoad(modulus));
 	}
 
 }

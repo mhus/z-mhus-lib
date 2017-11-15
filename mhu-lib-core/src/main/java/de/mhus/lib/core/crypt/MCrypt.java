@@ -145,12 +145,11 @@ public class MCrypt {
 	 * @throws IOException
 	 */
 	public static BigInteger[] encodeBytes(AsyncKey key, byte[] in) throws IOException {
-		BigInteger[] out = new BigInteger[in.length];
-		for (int i = 0; i < in.length; i++) {
-			BigInteger c = new BigInteger(new byte[] {in[i]} ).add(BYTE_SHIFT);
-			out[i] = encode(key, c);
-		}
-	    return out;
+		CipherEncodeAsync encoder = new CipherEncodeAsync(key,MApi.lookup(MRandom.class));
+		for (int i = 0; i < in.length; i++)
+			encoder.write(in[i]);
+		encoder.close();
+	    return encoder.toBigInteger();
 	}
 
 	/**
@@ -246,10 +245,11 @@ public class MCrypt {
 	 * @throws IOException
 	 */
 	public static byte[] decodeBytes(AsyncKey key, BigInteger[] in) throws IOException {
-		byte[] out = new byte[in.length];
+		CipherDecodeAsync decoder = new CipherDecodeAsync(key);
 		for (int i = 0; i < in.length; i++)
-			out[i] = decode(key, in[i]).subtract(BYTE_SHIFT).byteValue();
-	    return out;
+			decoder.write(in[i]);
+		decoder.close();
+	    return decoder.toBytes();
 	}
 	
 	/**
@@ -277,20 +277,15 @@ public class MCrypt {
 	public static OutputStream createCipherOutputStream(OutputStream parent, String passphrase) throws IOException {
 		if (passphrase == null || passphrase.length() < 1)
 			throw new IOException("passphrase not set");
-		byte salt = MApi.lookup(MRandom.class).getByte();
 		byte[] p = MString.toBytes(passphrase);
 		
 		parent.write('M');
 		parent.write('C');
 		parent.write('S');
-		parent.write(1); // version
-		parent.write(MMath.addRotate(salt,p[0]));
-		
-		for (int i = 0; i < p.length; i++)
-			p[i] = MMath.addRotate(p[i],salt);
+		parent.write(2); // version
 		
 		CipherBlockAdd cipher = new CipherBlockAdd(p);
-		return new CipherOutputStream(parent, cipher);
+		return new SaltOutputStream(new CipherOutputStream(parent, cipher), MApi.lookup(MRandom.class), 32, true) ;
 	}
 	
 	/**
@@ -319,6 +314,11 @@ public class MCrypt {
 			
 			CipherBlockAdd cipher = new CipherBlockAdd(p);
 			return new CipherInputStream(parent, cipher);
+		} else 
+		if (version == 2) {
+			byte[] p = MString.toBytes(passphrase);
+			CipherBlockAdd cipher = new CipherBlockAdd(p);
+			return new SaltInputStream(new CipherInputStream(parent, cipher), true);
 		} else
 			throw new IOException("unsupported crypt stream version: " + version);
 	}
@@ -357,6 +357,16 @@ public class MCrypt {
 		for (int i = 1; i < in.length; i++)
 			out[i-1] = MMath.subRotate(in[i], salt);
 		return out;
+	}
+
+	/**
+	 * Returns the maximum amount of bytes that can be encrypted at once.
+	 * 
+	 * @param modulus
+	 * @return
+	 */
+	public static int getMaxLoad(BigInteger modulus) {
+		return modulus.bitLength() / 8;
 	}
 
 }

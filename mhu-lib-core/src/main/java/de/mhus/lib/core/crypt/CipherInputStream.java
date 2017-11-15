@@ -3,6 +3,8 @@ package de.mhus.lib.core.crypt;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.mhus.lib.core.MMath;
+
 public class CipherInputStream extends InputStream {
 
 	private InputStream is;
@@ -21,7 +23,7 @@ public class CipherInputStream extends InputStream {
 	public int read() throws IOException {
 		int out = is.read();
 		if (out < 0 || cipher == null) return out;
-		return cipher.decode((byte)out);
+		return MMath.unsignetByteToInt(cipher.decode((byte)out));
 	}
 
 	public CipherBlock getCipher() {

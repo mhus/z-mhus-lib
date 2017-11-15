@@ -3,10 +3,13 @@ package de.mhus.lib.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.AsyncKey;
@@ -15,6 +18,7 @@ import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
 import de.mhus.lib.core.crypt.CipherOutputStream;
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
 public class CryptTest extends TestCase {
@@ -67,9 +71,10 @@ public class CryptTest extends TestCase {
 	public void testEnDeCode() throws IOException {
 		{
 			AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
-			byte[] org = MString.toBytes("Hello World!");
+			byte[] org = MString.toBytes("Hello World! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
 			BigInteger[] enc = MCrypt.encodeBytes(pair256, org);
 			byte[] copy = MCrypt.decodeBytes(pair256, enc);
+			System.out.println("Enc Elements: " + enc.length);
 			System.out.println(MString.toString(copy));
 			assertEquals(MString.toString(org), MString.toString(copy));
 		}
@@ -377,7 +382,56 @@ public class CryptTest extends TestCase {
 		assertEquals(new String(buf), new String(copy));
 		
 	}
-	
+
+	public void testMCipherStreamSymetry() throws IOException {
+		String pass = "aaaaaaaaa";
+		byte[] buf = "------------------------------------------------------------------------------------------------------------------------------------------------------------------".getBytes();
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		OutputStream cos = MCrypt.createCipherOutputStream(os, pass);
+		
+		// write into output stream and crypt
+		for (byte b : buf)
+			cos.write(b);
+		
+		// get encrypted
+		byte[] enc = os.toByteArray();
+		
+		// read and decrypt
+		ByteArrayInputStream is = new ByteArrayInputStream(enc);
+		InputStream cis = MCrypt.createCipherInputStream(is, pass);
+		byte[] copy = MFile.readBinary(cis);
+		
+		// analyse
+		int[] occur = new int[256];
+		for (byte p : enc)
+			occur[MMath.unsignetByteToInt(p)]++;
+
+		int aCnt = 0;
+		int aMin = buf.length;
+		int aMax = 0;
+		for (int i = 0; i < occur.length; i++) {
+			int c = occur[i];
+			if (c > 0) {
+				aCnt++;
+				aMin = Math.min(aMin, c);
+				aMax = Math.max(aMax, c);
+			}
+		}
+		System.out.println("Org Length: " + buf.length);
+		System.out.println("Enc Length: " + enc.length);
+		System.out.println("Spread: " + aCnt);
+		System.out.println("Min, Max, Diff: " + aMin + " - " + aMax + " => " + (aMax-aMin));
+		
+		//System.out.println(new String(buf));
+		//System.out.println(new String(copy));
+		
+		if (aCnt < 100) System.out.println("WARNING: Spread lower then 100");
+		
+		assertEquals(new String(buf), new String(copy));
+		
+	}
+
 	public void testObfuscate() {
 		byte[] org = new byte[256];
 		for (int i = 0; i < 256; i++)

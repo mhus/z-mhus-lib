@@ -13,11 +13,12 @@ public class AsyncKey {
 	private BigInteger exponent1;
 	private BigInteger exponent2;
 	private BigInteger coefficient;
+	private int maxLoad = -1;
 	
 	public AsyncKey() {}
 	
 	public AsyncKey(BigInteger modulus, BigInteger publicExponent, BigInteger privateExponent, BigInteger prime1,
-			BigInteger prime2, BigInteger exponent1, BigInteger exponent2, BigInteger coefficient) {
+			BigInteger prime2, BigInteger exponent1, BigInteger exponent2, BigInteger coefficient, int maxLoad) {
 		super();
 		this.modulus = modulus;
 		this.publicExponent = publicExponent;
@@ -27,6 +28,7 @@ public class AsyncKey {
 		this.exponent1 = exponent1;
 		this.exponent2 = exponent2;
 		this.coefficient = coefficient;
+		this.maxLoad = maxLoad;
 	}
 	
 	public BigInteger getModulus() {
@@ -77,6 +79,11 @@ public class AsyncKey {
 	protected void setCoefficient(BigInteger coefficient) {
 		this.coefficient = coefficient;
 	}
+	
+	public int getMaxLoad() {
+		return maxLoad;
+	}
+	
 	
 	@Override
 	public String toString() {
