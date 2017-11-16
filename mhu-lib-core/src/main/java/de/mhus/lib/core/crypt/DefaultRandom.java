@@ -2,6 +2,8 @@ package de.mhus.lib.core.crypt;
 
 import java.util.Random;
 
+import de.mhus.lib.core.MString;
+
 public class DefaultRandom implements MRandom {
 
 	private Random rand;
@@ -37,6 +39,11 @@ public class DefaultRandom implements MRandom {
 	public <T> T adaptTo(Class<? extends T> ifc) {
 		if (Random.class.isAssignableFrom(ifc)) return (T)getRandom();
 		return null;
+	}
+
+	@Override
+	public char getChar() {
+		return MString.CHARS_READABLE[ getInt() % MString.CHARS_READABLE.length ];
 	}
 
 }

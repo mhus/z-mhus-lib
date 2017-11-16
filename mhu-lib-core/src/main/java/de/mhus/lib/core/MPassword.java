@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
 import de.mhus.lib.core.logging.Log;
@@ -151,16 +152,18 @@ public class MPassword {
 		return in;
 	}
 	
+	public static boolean validatePasswordMD5(String real, String md5) {
+		if (md5 == null || real == null || md5.length() < 2) return false;
+		char salt = md5.charAt(0);
+		String check = MCrypt.md5(salt + real);
+		return md5.substring(1).equals(check);
+	}
+	
 	public static String encodePasswordMD5(String real) {
-		MessageDigest md;
-		try {
-			md = MessageDigest.getInstance("MD5");
-			md.update(real.getBytes());
-			return MCast.toBinaryString(md.digest());
-		} catch (NoSuchAlgorithmException e) {
-			log.t(e);
-		}
-		return null;
+		char salt = MApi.lookup(MRandom.class).getChar();
+		String ret = MCrypt.md5(salt + real);
+		if (ret == null) return null;
+		return salt + ret;
 	}
 
 	public static String sha1(String ... input) throws NoSuchAlgorithmException {
@@ -226,11 +229,6 @@ public class MPassword {
 		for (int idx = 0; idx < buf.length; ++idx) 
 		      buf[idx] = symbols.charAt(random.nextInt(symbols.length()));
 		    return new String(buf);
-	}
-
-	public static boolean validatePassword(String current, String saved) {
-		// TODO check encoding or null values
-		return encodePasswordMD5(current).equals(saved);
 	}
 
 }

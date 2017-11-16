@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MBigMath;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.logging.Log;
 
 /**
  * This tool is implementing functions to work with encryption and obfuscation to protect data.
@@ -26,8 +30,8 @@ import de.mhus.lib.core.MString;
  */
 public class MCrypt {
 
-	public static final BigInteger BYTE_SHIFT = new BigInteger("128");
-
+	private static Log log = Log.getLog(MCrypt.class);
+	
 	/**
 	 * Load a private key from file.
 	 * 
@@ -275,19 +279,38 @@ public class MCrypt {
 	 * @throws IOException
 	 */
 	public static OutputStream createCipherOutputStream(OutputStream parent, String passphrase) throws IOException {
+		return createCipherOutputStream(parent, passphrase, 3);
+	}
+	
+	public static OutputStream createCipherOutputStream(OutputStream parent, String passphrase, int version) throws IOException {
 		if (passphrase == null || passphrase.length() < 1)
 			throw new IOException("passphrase not set");
 		if (passphrase.length() < 4)
 			throw new IOException("passphrase smaller then 4");
 		byte[] p = MString.toBytes(passphrase);
 		
+		if (version < 2 || version > 3) throw new IOException("Cipher version unknown: " + version);
+		
 		parent.write('M');
 		parent.write('C');
 		parent.write('S');
-		parent.write(2); // version
+		parent.write(version); // version
 		
-		CipherBlockAdd cipher = new CipherBlockAdd(p);
-		return new SaltOutputStream(new CipherOutputStream(parent, cipher), MApi.lookup(MRandom.class), p.length-1, true) ;
+		MRandom random = MApi.lookup(MRandom.class);
+		if (version == 2) {
+			CipherBlockAdd cipher = new CipherBlockAdd(p);
+			return new SaltOutputStream(new CipherOutputStream(parent, cipher), random, p.length-(random.getInt() % (p.length / 2)), true) ;
+		}
+		if (version == 3) {
+			// extend passphrase
+			byte pSalt = random.getByte();
+			String md5 = md5(pSalt + passphrase);
+			p = MString.toBytes(md5+passphrase);
+			parent.write(MMath.unsignetByteToInt(pSalt));
+			CipherBlockAdd cipher = new CipherBlockAdd(p);
+			return new SaltOutputStream(new CipherOutputStream(parent, cipher), random, p.length-(random.getInt() % (p.length / 2)), true) ;
+		}
+		throw new IOException("Cipher version unknown: " + version);	
 	}
 	
 	/**
@@ -321,6 +344,13 @@ public class MCrypt {
 		} else 
 		if (version == 2) {
 			byte[] p = MString.toBytes(passphrase);
+			CipherBlockAdd cipher = new CipherBlockAdd(p);
+			return new SaltInputStream(new CipherInputStream(parent, cipher), true);
+		} else
+		if (version == 3) {
+			byte pSalt = (byte) parent.read();
+			String md5 = md5(pSalt + passphrase);
+			byte[] p = MString.toBytes(md5+passphrase);
 			CipherBlockAdd cipher = new CipherBlockAdd(p);
 			return new SaltInputStream(new CipherInputStream(parent, cipher), true);
 		} else
@@ -371,6 +401,18 @@ public class MCrypt {
 	 */
 	public static int getMaxLoad(BigInteger modulus) {
 		return modulus.bitLength() / 8;
+	}
+
+	public static String md5(String real) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			md.update(real.getBytes());
+			return MCast.toBinaryString(md.digest());
+		} catch (NoSuchAlgorithmException e) {
+			log.t(e);
+		}
+		return null;
 	}
 
 }
