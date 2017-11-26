@@ -8,6 +8,14 @@ import de.mhus.lib.core.lang.MObject;
 public class DefaultVault extends MObject implements MVault {
 	
 	private HashMap<String, VaultSource> sources = new HashMap<>();
+	private MVault parent;
+	
+	public DefaultVault() {
+	}
+	
+	public DefaultVault(MVault parent) {
+		this.parent = parent;
+	}
 	
 	@Override
 	public void registerSource(VaultSource source) {
@@ -27,6 +35,22 @@ public class DefaultVault extends MObject implements MVault {
 
 	@Override
 	public String[] getSourceNames() {
+		if (parent != null) {
+			String[] parentNames = parent.getSourceNames();
+			synchronized (sources) {
+				String[] out = new String[parentNames.length + sources.size()];
+				int cnt = 0;
+				for (String name : sources.keySet()) {
+					out[cnt] = name;
+					cnt++;
+				}
+				for (String name : parentNames) {
+					out[cnt] = name;
+					cnt++;
+				}
+				return out;
+			}
+		}
 		synchronized (sources) {
 			return sources.keySet().toArray(new String[sources.size()]);
 		}
@@ -35,7 +59,11 @@ public class DefaultVault extends MObject implements MVault {
 	@Override
 	public VaultSource getSource(String name) {
 		synchronized (sources) {
-			return sources.get(name);
+			VaultSource ret = sources.get(name);
+			if (ret == null && parent != null)
+				return parent.getSource(name);
+			else
+				return ret;
 		}
 	}
 
@@ -47,6 +75,8 @@ public class DefaultVault extends MObject implements MVault {
 				if (res != null) return res;
 			}
 		}
+		if (parent != null)
+			return parent.getEntry(id);
 		return null;
 	}
 
