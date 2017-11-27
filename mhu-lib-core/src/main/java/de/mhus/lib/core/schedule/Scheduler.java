@@ -77,7 +77,15 @@ public class Scheduler extends MLog implements Named {
 	}
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
-		if (!job.setBusy(this)) return;
+		if (!job.setBusy(this)) {
+			log().d("job is busy, reshedule",job);
+			try {
+				job.doSchedule(this);
+			} catch (Throwable t) {
+				job.doError(t);
+			}
+			return;
+		}
 		new MThread(new MyExecutor(job,forced)).start(); //TODO unsafe, monitor runtime use timeout or long runtime warnings, use maximal number of threads. be sure a job is running once
 	}
 
@@ -112,15 +120,19 @@ public class Scheduler extends MLog implements Named {
 			} catch (Throwable t) {
 				job.doError(t);
 			} finally {
-				synchronized (running) {
-					running.remove(job);
+				try {
+					synchronized (running) {
+						running.remove(job);
+					}
+					job.releaseBusy(Scheduler.this);
+				} catch (Throwable t1) {
+					log().w(job,t1);
 				}
-				job.releaseBusy(Scheduler.this);
 			}
 			try {
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
-				job.doError(t);
+				log().e(job,t);
 			}
 		}
 		
