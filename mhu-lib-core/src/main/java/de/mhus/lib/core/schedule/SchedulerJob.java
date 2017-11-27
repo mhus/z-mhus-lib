@@ -55,9 +55,14 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	public void doTick(boolean forced) {
 		
 		if (!forced) {
-			if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled())
+			if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled()) {
+				log.i("doTick canceled 1",task);
 				cancel();
-			if (isCanceled()) return;
+			}
+			if (isCanceled()) {
+				log.i("doTick canceled 2",task);
+				return;
+			}
 			
 			if (getNextExecutionTime() == CALCULATE_NEXT) {
 				synchronized (this) {
@@ -81,6 +86,8 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			synchronized (this) {
 				doCaclulateNextExecution();
 			}
+		} else {
+			log.i("Execution delayed",task);
 		}
 	}
 

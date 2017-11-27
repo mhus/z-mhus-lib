@@ -26,7 +26,7 @@ import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
-import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.schedule.CronJob;
 import de.mhus.lib.core.schedule.IntervalJob;
 import de.mhus.lib.core.schedule.IntervalWithStartTimeJob;
@@ -39,12 +39,11 @@ import de.mhus.lib.karaf.MServiceTracker;
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
 public class TimerFactoryImpl extends MLog implements TimerFactory {
 	
+	protected static Log log = Log.getLog(TimerFactoryImpl.class);
 	private SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
 	private MServiceTracker<ScheduledService> tracker;
 	private WeakHashMap<ScheduledService,TimerTask> services = new WeakHashMap<>();
 	static TimerFactoryImpl instance;
-	
-	
 		
 	public TimerFactoryImpl() {
 	}
@@ -52,7 +51,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 	@Deactivate
 	void doDeactivate(ComponentContext ctx) {
 		
-		MLogUtil.log().i("cancel common timer");
+		log().i("cancel common timer");
 		tracker.stop();
 		myTimer.cancel();
 		myTimer = null;
@@ -64,7 +63,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		
 		instance = this;
 		
-		MLogUtil.log().i("start common timer");
+		log().i("start common timer");
 		myTimer.start();
 		
 		// set to base
@@ -215,7 +214,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 	}
 	
 	private static class TimerTaskWrap extends MTimerTask implements Wrap {
-
+		
 		private TimerTask task;
 		private Bundle bundle;
 		private long modified = 0;
@@ -248,7 +247,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 				if (!doCheck()) return;
 				task.run();
 			} catch (Throwable t) {
-				MLogUtil.log().i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
+				log.i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
 				if (task instanceof TimerTaskSelfControl) {
 					if ( ((TimerTaskSelfControl)task).isCancelOnError() )
 							cancel();
@@ -259,7 +258,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		
 		public boolean doCheck() {
 			if (bundle.getState() != Bundle.ACTIVE /* || bundle.getLastModified() != modified */ || bundleContext != bundle.getBundleContext()) {
-				MLogUtil.log().i("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+				log.i("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 				cancel();
 				return false;
 			}
@@ -375,14 +374,14 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 				} else {
 					Bundle bundle = FrameworkUtil.getBundle(task.getClass());
 					if (bundle.getState() != Bundle.ACTIVE) {
-						MLogUtil.log().i("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
+						log.i("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
 						job.cancel();
 						cnt++;
 					}
 				}
 			}
 		}
-		MLogUtil.log().i("check common timer","removed",cnt);
+		log.i("check common timer","removed",cnt);
 	}
 
 	public static void doDebugInfo() {
@@ -397,7 +396,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 				task = ((TimerTaskWrap)task).getTask();
 				info+="TimerTaskWrap ";
 			}
-			MLogUtil.log().i("JOB",job.getClass(),job.getName(),info,task == null ? "null" : task.getClass());
+			log.i("JOB",job.getClass(),job.getName(),info,task == null ? "null" : task.getClass());
 		}
 	}
 	

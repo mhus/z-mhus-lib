@@ -111,12 +111,15 @@ public class Scheduler extends MLog implements Named {
 
 		@Override
 		public void run() {
+			log().i("Start Job",job);
 			synchronized (running) {
 				running.add(job);
 			}
 			try {
 				if (job != null && !job.isCanceled())
 					job.doTick(forced);
+				else
+					log().i("Job canceled",job);
 			} catch (Throwable t) {
 				job.doError(t);
 			} finally {
