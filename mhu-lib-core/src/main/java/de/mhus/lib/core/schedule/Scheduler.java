@@ -111,7 +111,7 @@ public class Scheduler extends MLog implements Named {
 
 		@Override
 		public void run() {
-			log().i("Start Job",job);
+			log().i("Job started",job);
 			synchronized (running) {
 				running.add(job);
 			}
