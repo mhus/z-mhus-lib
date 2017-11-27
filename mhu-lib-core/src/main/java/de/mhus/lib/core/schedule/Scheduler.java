@@ -78,11 +78,11 @@ public class Scheduler extends MLog implements Named {
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) {
-			log().d("job is busy, reshedule",job);
+			log().w("job is busy, reshedule",job);
 			try {
 				job.doSchedule(this);
 			} catch (Throwable t) {
-				job.doError(t);
+				log().e(job,t);
 			}
 			return;
 		}
