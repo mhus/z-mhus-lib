@@ -111,7 +111,7 @@ public class Scheduler extends MLog implements Named {
 
 		@Override
 		public void run() {
-			log().i("Job started",job);
+			log().i("Job started",job,job.getName());
 			synchronized (running) {
 				running.add(job);
 			}
@@ -119,7 +119,7 @@ public class Scheduler extends MLog implements Named {
 				if (job != null && !job.isCanceled())
 					job.doTick(forced);
 				else
-					log().i("Job canceled",job);
+					log().i("Job canceled",job,job.getName());
 			} catch (Throwable t) {
 				job.doError(t);
 			} finally {
@@ -129,13 +129,13 @@ public class Scheduler extends MLog implements Named {
 					}
 					job.releaseBusy(Scheduler.this);
 				} catch (Throwable t1) {
-					log().w(job,t1);
+					log().w(job,job.getName(),t1);
 				}
 			}
 			try {
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
-				log().e(job,t);
+				log().e(job,job.getName(),t);
 			}
 		}
 		
