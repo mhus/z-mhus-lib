@@ -6,14 +6,22 @@ import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.ITimerTask;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.errors.MRuntimeException;
 
 public class TimerTaskAdapter extends MTimerTask implements Observer {
 
 	private TimerTask task;
+	
 	public TimerTaskAdapter(TimerTask task) {
+		this(null,task);
+	}
+	
+	public TimerTaskAdapter(String name, TimerTask task) {
 		this.task = task;
+		if (name == null) name = MSystem.getClassName(task);
+		setName(name);
 		if (task != null && task instanceof Named)
 			setName(((Named)task).getName());
 	}

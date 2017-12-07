@@ -50,6 +50,36 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 	}
 
 	@Override
+	public void schedule(String name, TimerTask task, long delay) {
+		schedule(new OnceJob(System.currentTimeMillis() + delay, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
+	public void schedule(String name, TimerTask task, Date time) {
+		schedule(new OnceJob(time, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
+	public void schedule(String name, TimerTask task, long delay, long period) {
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
+	public void schedule(String name, TimerTask task, Date firstTime, long period) {
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
+	public void scheduleAtFixedRate(String name, TimerTask task, long delay, long period) {
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
+	public void scheduleAtFixedRate(String name, TimerTask task, Date firstTime, long period) {
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new TimerTaskAdapter(name, task) ));
+	}
+
+	@Override
 	public void schedule(SchedulerJob job) {
 		super.schedule(job);
 		configureDefault(job);
