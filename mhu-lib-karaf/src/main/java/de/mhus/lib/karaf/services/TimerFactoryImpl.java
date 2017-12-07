@@ -2,6 +2,7 @@ package de.mhus.lib.karaf.services;
 
 
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observer;
 import java.util.TimerTask;
@@ -17,8 +18,10 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
@@ -30,10 +33,15 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.schedule.CronJob;
 import de.mhus.lib.core.schedule.IntervalJob;
 import de.mhus.lib.core.schedule.IntervalWithStartTimeJob;
+import de.mhus.lib.core.schedule.TimerTaskAdapter;
+import de.mhus.lib.core.schedule.TimerTaskIntercepter;
+import de.mhus.lib.core.schedule.OnceJob;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.SchedulerJobProxy;
 import de.mhus.lib.core.schedule.SchedulerTimer;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
+import de.mhus.lib.karaf.MOsgi;
+import de.mhus.lib.karaf.MOsgi.Service;
 import de.mhus.lib.karaf.MServiceTracker;
 
 @Component(provide = TimerFactory.class, immediate=true,name="de.mhus.lib.karaf.services.TimerFactoryImpl")
@@ -41,8 +49,8 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 	
 	protected static Log log = Log.getLog(TimerFactoryImpl.class);
 	private SchedulerTimer myTimer = new SchedulerTimer("de.mhus.lib.karaf.Scheduler");
-	private MServiceTracker<ScheduledService> tracker;
-	private WeakHashMap<ScheduledService,TimerTask> services = new WeakHashMap<>();
+	private MServiceTracker<SchedulerService> tracker;
+	private WeakHashMap<SchedulerService,SchedulerJob> services = new WeakHashMap<>();
 	static TimerFactoryImpl instance;
 		
 	public TimerFactoryImpl() {
@@ -73,77 +81,109 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		} catch (Throwable t) {
 			System.out.println("Can't initialize timer base: " + t);
 		}
-		
-		myTimer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				doTick();
-			}
-		}, 900000, 900000); // 15 min
-		
+				
 		BundleContext context = ctx.getBundleContext();
-		tracker = new MServiceTracker<ScheduledService>(context,ScheduledService.class) {
+		tracker = new MServiceTracker<SchedulerService>(context,SchedulerService.class) {
 			
 			@Override
-			protected void removeService(ServiceReference<ScheduledService> reference, ScheduledService service) {
+			protected void removeService(ServiceReference<SchedulerService> reference, SchedulerService service) {
 				removeSchedulerService(service);
 			}
 			
 			@Override
-			protected void addService(ServiceReference<ScheduledService> reference, ScheduledService service) {
+			protected void addService(ServiceReference<SchedulerService> reference, SchedulerService service) {
 				addSchedulerService(reference, service);
 			}
 		}.start();
 		
 	}
 
-	protected void addSchedulerService(ServiceReference<ScheduledService> reference, ScheduledService service) {
-		// get interval configuration
+	protected void addSchedulerService(ServiceReference<SchedulerService> reference, SchedulerService service) {
+		
+		SchedulerJob job = null;
 		Object interval = service.getInterval();
-		if (interval == null)
-			interval = reference.getProperty("interval");
-		if (interval == null) {
-			log().i("interval configuration not found for SchedulerService",service,reference);
-			return;
+		job = service.getWrappedJob();
+		
+		if (job == null) {
+			// get interval configuration
+			if (interval == null)
+				interval = reference.getProperty("interval");
+			if (interval == null) {
+				log().i("interval configuration not found for SchedulerService",service,reference);
+				return;
+			}
+			// parse configuration and create job
+			String i = String.valueOf(interval);
+			
+			if (i.startsWith("once:")) {
+				i = i.substring(5);
+				long s = 0;
+				if (i.indexOf('-') > 0 || i.indexOf('.') > 0 || i.indexOf('/') > 0 )
+					s = MDate.toDate(i, new Date()).getTime();
+				else
+					s = System.currentTimeMillis() + MTimeInterval.toTime(i, -1);
+				job = new OnceJob(s, service);
+			} else
+			if (i.startsWith("cron:")) {
+				job = new CronJob(i.substring(5), service);
+			} else
+			if (i.startsWith("interval:")) {
+				i = i.substring(9);
+				job = toIntervalJob(service, i);
+			} else
+			if (i.indexOf(' ') > 0 ) {
+				job = new CronJob(i, service);
+			} else {
+				job = toIntervalJob(service, i);
+			}
 		}
-		// parse configuration and create job
-		String i = String.valueOf(interval);
-		SchedulerJob timerTask = null;
-		if (i.indexOf(' ') > 0 ) {
-			timerTask = new CronJob(String.valueOf(i), service);
-		} else
+		
+		if (job != null) {
+			
+			job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
+
+			job.setInfo(reference.getBundle().getSymbolicName() + " [" + reference.getBundle().getBundleId() + "]");
+			TimerTaskIntercepter intercepter = service.getIntercepter();
+			if (intercepter != null)
+				job.setIntercepter(intercepter);
+			services.put(service,job);
+			myTimer.schedule(job);
+		} else {
+			log().i("interval configuration syntax error for SchedulerService",service,reference,interval);
+		}
+		
+	}
+
+	private SchedulerJob toIntervalJob(SchedulerService service, String i) {
 		if (i.indexOf(',') > 0) {
-			long s = MTimeInterval.toTime(MString.beforeIndex(i,','), -1);
+			long s = 0;
+			String sStr = MString.beforeIndex(i,',');
+			if (sStr.indexOf('-') > 0 || sStr.indexOf('.') > 0 || sStr.indexOf('/') > 0 )
+				// it's a date string
+				s = MDate.toDate(sStr, new Date()).getTime();
+			else
+				// it should be a time interval
+				s = System.currentTimeMillis() + MTimeInterval.toTime(sStr, -1);
+			// delay is in every case a time interval
 			long l = MTimeInterval.toTime(MString.afterIndex(i,','), -1);
 			if (s > 0 && l > 0)
-				timerTask = new IntervalWithStartTimeJob(s,l, service);
+				return new IntervalWithStartTimeJob(s,l, service);
 		} else {
 			long l = MTimeInterval.toTime(i, -1);
 			if (l > 0)
-				timerTask = new IntervalJob(l, service);
+				return new IntervalJob(l, service);
 		}
-		
-		if (timerTask != null) {
-			services.put(service,timerTask);
-			myTimer.schedule(timerTask);
-		} else {
-			log().i("interval configuration syntax error for SchedulerService",service,reference);
-		}
-		
+		return null;
 	}
 
-	protected void removeSchedulerService(ScheduledService service) {
-		TimerTask timerTask = services.get(service);
-		if (timerTask != null) {
-			
+	protected void removeSchedulerService(SchedulerService service) {
+		SchedulerJob job = services.get(service);
+		if (job != null) {
+			job.setNextExecutionTime(SchedulerJob.REMOVE_TIME);
+			myTimer.getQueue().removeJob(job);
 		} else {
-			log().i("timer task not found for SchedulerService", service);
+			log().i("timer task not found for ScheduledService", service);
 		}
-	}
-
-	protected void doTick() {
-		doCheckTimers();
 	}
 
 	public static SchedulerTimer getScheduler(TimerFactory factory) {
@@ -155,202 +195,189 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 	}
 
 	private class TimerWrap implements TimerIfc {
-		
-		LinkedList<Wrap> tasks = new LinkedList<>();
-		
-		@Override
-		public void schedule(TimerTask task, long delay) {
-			myTimer.schedule(new TimerTaskWrap(this, task), delay);
+			
+		private void createService(String name, TimerTask task, String interval) {
+			Bundle caller = FrameworkUtil.getBundle(task.getClass());
+			ScheduledServiceWrap service = new ScheduledServiceWrap(name, caller,task, interval);
+ 			Hashtable<String,Object> properties = new Hashtable<>();
+			String n = service.getName();
+			properties.put("job.name", n == null ? "?" : n);
+			properties.put("job.task", task.getClass());
+			properties.put("job.interval", interval);
+			properties.put("job.bundle", caller.getSymbolicName());
+			properties.put("job.timer", MSystem.getObjectId(this));
+			caller.getBundleContext().registerService(SchedulerService.class, service, properties);
 		}
-	
+
+		private void createService(SchedulerJob job) {
+			Bundle caller = FrameworkUtil.getBundle(job.getTask() == null ? job.getClass() : job.getTask().getClass());
+			ScheduledServiceWrap service = new ScheduledServiceWrap(caller,job);
+			Hashtable<String,Object> properties = new Hashtable<>();
+			String n = job.getName();
+			properties.put("job.name", n == null ? "?" : n);
+			properties.put("job.scheduler", job.getClass());
+			properties.put("job.task", job.getTask().getClass());
+			properties.put("job.bundle", caller.getSymbolicName());
+			properties.put("job.timer", MSystem.getObjectId(this));
+			caller.getBundleContext().registerService(SchedulerService.class, service, properties);
+		}
+		
 		public SchedulerTimer getScheduler() {
 			return myTimer;
 		}
 
 		@Override
+		public void schedule(TimerTask task, long delay) {
+			createService(null, task, "interval:" + delay );
+		}
+
+		@Override
 		public void schedule(TimerTask task, Date time) {
-			myTimer.schedule(new TimerTaskWrap(this, task), time);
+			createService(null, task, "once:" + MDate.toIso8601(time));
 		}
 	
 		@Override
 		public void schedule(TimerTask task, long delay, long period) {
-			myTimer.schedule(new TimerTaskWrap(this, task), delay, period);
+			createService(null, task, "interval:" +  delay + "," + period);
 		}
 	
 		@Override
 		public void schedule(TimerTask task, Date firstTime, long period) {
-			myTimer.schedule(new TimerTaskWrap(this, task), firstTime, period);
+			createService(null, task, "interval:" + MDate.toIso8601(firstTime) + "," + period);
 		}
 	
 		@Override
 		public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
-			myTimer.scheduleAtFixedRate(new TimerTaskWrap(this, task), delay, period);
+			schedule(null, task, delay, period);
 		}
 	
 		@Override
 		public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
-			myTimer.scheduleAtFixedRate(new TimerTaskWrap(this, task), firstTime, period);
+			schedule(null, task, firstTime, period);
 		}
 		
 		@Override
+		public void schedule(String name, TimerTask task, long delay) {
+			createService(name, task, "interval:" + delay );
+		}
+		
+		@Override
+		public void schedule(String name, TimerTask task, Date time) {
+			createService(name, task, "once:" + MDate.toIso8601(time));
+		}
+		
+		@Override
+		public void schedule(String name, TimerTask task, long delay, long period) {
+			createService(name, task, "interval:" +  delay + "," + period);
+		}
+		
+		@Override
+		public void schedule(String name, TimerTask task, Date firstTime, long period) {
+			createService(name, task, "interval:" + MDate.toIso8601(firstTime) + "," + period);
+		}
+		
+		@Override
+		public void scheduleAtFixedRate(String name, TimerTask task, long delay, long period) {
+			schedule(name, task, delay, period);
+		}
+		
+		@Override
+		public void scheduleAtFixedRate(String name, TimerTask task, Date firstTime, long period) {
+			schedule(name, task, firstTime, period);
+		}
+
+		@Override
 		public void schedule(SchedulerJob job) {
-			myTimer.schedule(new SchedulerJobWrap(this, job) );
+			createService(job);
 		}
 
 		@Override
 		public void cancel() {
-			synchronized (this) {
-				for (Wrap task : tasks)
-					task.cancelDirect();
-			}
-		}
-
-	}
-
-	private interface Wrap {
-
-		void cancelDirect();
-		
-	}
-	
-	private static class TimerTaskWrap extends MTimerTask implements Wrap {
-		
-		private TimerTask task;
-		private Bundle bundle;
-		private long modified = 0;
-		private TimerWrap timer;
-		private BundleContext bundleContext;
-		
-		public TimerTaskWrap(TimerWrap timer, TimerTask task) {
 			
-			if (task != null && task instanceof Named)
-				setName(((Named)task).getName());
-			else
-				setName(MSystem.getClassName(task));
-			
-			this.task = task;
-			this.bundle = FrameworkUtil.getBundle(task.getClass());
-			this.bundleContext = bundle.getBundleContext();
-			this.modified = bundle.getLastModified();
-			this.timer = timer;
-			synchronized (timer) {
-				timer.tasks.add(this);
-			}
-		}
-		@Override
-		public void doit() {
-			try {
-//				if (DefaultTimerFactory.isCancelled(task)) {
-//					cancel();
-//					return;
-//				}
-				if (!doCheck()) return;
-				task.run();
-			} catch (Throwable t) {
-				log.i("error",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName(), t);
-				if (task instanceof TimerTaskSelfControl) {
-					if ( ((TimerTaskSelfControl)task).isCancelOnError() )
-							cancel();
-				} else
-					cancel();
-			}
-		}
-		
-		public boolean doCheck() {
-			if (bundle.getState() != Bundle.ACTIVE /* || bundle.getLastModified() != modified */ || bundleContext != bundle.getBundleContext()) {
-				log.i("stop timertask 2",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
-				cancel();
-				return false;
-			}
-			return true;
-		}
-		
-		@Override
-		public boolean cancel() {
-			synchronized (timer) {
-				timer.tasks.remove(this);
-			}
-			return super.cancel();
-		}
-		
-		@Override
-		public void cancelDirect() {
-			super.cancel();
-		}
-		
-		@Override
-		public String toString() {
-			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + (task == null ? "null" : task.toString());
-		}
-		public TimerTask getTask() {
-			return task;
-		}
-	}
-	
-	private static class SchedulerJobWrap extends SchedulerJobProxy implements Wrap {
-
-		private Bundle bundle;
-		private long modified = 0;
-		private TimerWrap timer;
-		private BundleContext bundleContext;
-
-		public SchedulerJobWrap(TimerWrap timer, SchedulerJob task) {
-			super(task);
-			this.bundle = FrameworkUtil.getBundle(task.getClass());
-			this.modified = bundle.getLastModified();
-			this.bundleContext = bundle.getBundleContext();
-			this.timer = timer;
-			synchronized (timer) {
-				timer.tasks.add(this);
-			}
-		}
-
-		@Override
-		public void doTick(boolean forced) {
-			
-			if (!doCheck()) return;
-			
-			super.doTick(forced);
-		}
-		
-		boolean doCheck() {
-			if (bundle.getState() != Bundle.ACTIVE /* || bundle.getLastModified() != modified */ || bundleContext != bundle.getBundleContext()) {
-				log.i("stop scheduled task 1",bundle.getBundleId(),bundle.getSymbolicName(),getTask().getClass().getCanonicalName());
-				cancel();
-				return false;
-			}
-			return true;
-		}
-		
-		@Override
-		public void cancelDirect() {
-			cancel();
-		}
-		
-		@Override
-		public void setCanceled(boolean canceled) {
-			super.setCanceled(canceled);
-			if (canceled) {
-				synchronized (timer) {
-					timer.tasks.remove(this);
-					if (timer.getScheduler() != null) {
-						//while (timer.getScheduler().getScheduledJobs().contains(this))
-							timer.getScheduler().getQueue().removeJob(this);
-					}
+			for (Service<SchedulerService> ref : MOsgi.getServiceRefs(SchedulerService.class, "(job.timer=" + MSystem.getObjectId(this) + ")"))
+				try {
+					ref.getReference().getBundle().getBundleContext().ungetService(ref.getReference());
+				} catch (Throwable t) {
+					log().d("unset SchedulerService",MSystem.getObjectId(this),ref,t);
 				}
-			}
+			
+		}
+
+	}
+	
+	public static class ScheduledServiceWrap implements SchedulerService {
+
+		private TimerTask task;
+		private String interval;
+		private String name;
+
+		public ScheduledServiceWrap(Bundle bundle, SchedulerJob job) {
+			task = job;
+		}
+		
+		public ScheduledServiceWrap(String name, Bundle bundle, TimerTask task, String interval) {
+			this.task = task;
+			this.interval = interval;
+			this.name= name;
 		}
 
 		@Override
-		public String toString() {
-			return "[" + bundle.getBundleId() + ":" + bundle.getSymbolicName() + "]" + super.toString();
+		public String getInterval() {
+			return interval;
 		}
 
 		@Override
-		public void setScheduledTime(long scheduledTime) {
-			super.setScheduledTime(scheduledTime);
+		public void run(Object environment) {
+			if (task instanceof ITimerTask)
+				((ITimerTask)task).run(environment);
+			else
+				task.run();
 		}
 
+		@Override
+		public void onError(Throwable t) {
+			if (task instanceof ITimerTask)
+				((ITimerTask)task).onError(t);
+			else
+				t.printStackTrace();
+		}
+
+		@Override
+		public void onFinal(boolean isError) {
+			if (task instanceof ITimerTask)
+				((ITimerTask)task).onFinal(isError);;
+			
+		}
+
+		@Override
+		public boolean isCanceled() {
+			if (task instanceof ITimerTask)
+				return ((ITimerTask)task).isCanceled();
+			return false;
+		}
+
+		@Override
+		public String getName() {
+			if (name != null) return name;
+			if (task instanceof Named)
+				return ((Named)task).getName();
+			return MSystem.getClassName(task.getClass());
+		};
+
+		@Override
+		public SchedulerJob getWrappedJob() {
+			if (task instanceof SchedulerJob)
+				return (SchedulerJob)task;
+			return null;
+		}
+
+		@Override
+		public TimerTaskIntercepter getIntercepter() {
+			if (task instanceof SchedulerJob)
+				return ((SchedulerJob)task).getIntercepter();
+			return null;
+		}
+				
 	}
 
 	@Override
@@ -358,46 +385,28 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		return new TimerWrap();
 	}
 
-	public void doCheckTimers() {
-		int cnt = 0;
-		for (SchedulerJob job : myTimer.getScheduledJobs()) {
-			if (job instanceof SchedulerJobWrap) {
-				if (!((SchedulerJobWrap)job).doCheck()) cnt++;
-			} else {
-				Object task = job.getTask();
-				if (task == null) {} else
-				if (task instanceof de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)
-					task = ((de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)task).getTask();
-				if (task == null) {} else
-				if (task instanceof TimerTaskWrap) {
-					if (!((TimerTaskWrap)task).doCheck()) cnt++;
-				} else {
-					Bundle bundle = FrameworkUtil.getBundle(task.getClass());
-					if (bundle.getState() != Bundle.ACTIVE) {
-						log.i("stop timertask 3",bundle.getBundleId(),bundle.getSymbolicName(),task.getClass().getCanonicalName());
-						job.cancel();
-						cnt++;
-					}
-				}
-			}
-		}
-		log.i("check common timer","removed",cnt);
-	}
-
 	public static void doDebugInfo() {
 		for (SchedulerJob job : instance.myTimer.getScheduledJobs()) {
 			Object task = job.getTask();
 			String info = " ";
-			if (task instanceof de.mhus.lib.core.schedule.ObserverTimerTaskAdapter) {
-				task = ((de.mhus.lib.core.schedule.ObserverTimerTaskAdapter)task).getTask();
+			if (task instanceof de.mhus.lib.core.schedule.TimerTaskAdapter) {
+				task = ((de.mhus.lib.core.schedule.TimerTaskAdapter)task).getTask();
 				info+="ObserverTimerTaskAdapter ";
-			}
-			if (task instanceof TimerTaskWrap) {
-				task = ((TimerTaskWrap)task).getTask();
-				info+="TimerTaskWrap ";
 			}
 			log.i("JOB",job.getClass(),job.getName(),info,task == null ? "null" : task.getClass());
 		}
+	}
+	
+	public void stop() {
+		tracker.stop();
+	}
+	
+	public void start() {
+		tracker.start();
+	}
+	
+	public boolean isRunning() {
+		return tracker.isRunning();
 	}
 	
 }

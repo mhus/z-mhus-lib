@@ -48,6 +48,7 @@ import de.mhus.lib.karaf.MOsgi.Service;
 @Component(name="JmsManagerService",immediate=true)
 public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 
+	static JmsManagerService instance;
 	private ServiceTracker<JmsDataSource, JmsDataSource> connectionTracker;
 	private ServiceTracker<JmsDataChannel, JmsDataChannel> channelTracker;
 	
@@ -63,6 +64,7 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	public void doActivate(ComponentContext ctx) {
 		
 		log().i("activate");
+		instance = this;
 		context = ctx.getBundleContext();
 		connectionTracker = new ServiceTracker<>(context, JmsDataSource.class, new MyConnectionTrackerCustomizer() );
 		connectionTracker.open();
@@ -74,12 +76,16 @@ public class JmsManagerServiceImpl extends MLog implements JmsManagerService {
 	
 	@Deactivate
 	public void doDeactivate(ComponentContext ctx) {
+		
 		if (timer != null)
 			timer.cancel();
 		if (channelTracker != null) channelTracker.close();
 		if (connectionTracker != null) connectionTracker.close();
 		for ( String name : new LinkedList<String>(channels.keySet()))
 			removeChannel(name);
+		
+		instance = null;
+
 	}
 
 	@Reference(service=TimerFactory.class)

@@ -5,13 +5,14 @@ import java.util.Observer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.errors.MRuntimeException;
 
-public class ObserverTimerTaskAdapter extends MTimerTask implements Observer {
+public class TimerTaskAdapter extends MTimerTask implements Observer {
 
 	private TimerTask task;
-	public ObserverTimerTaskAdapter(TimerTask task) {
+	public TimerTaskAdapter(TimerTask task) {
 		this.task = task;
 		if (task != null && task instanceof Named)
 			setName(((Named)task).getName());
@@ -33,7 +34,7 @@ public class ObserverTimerTaskAdapter extends MTimerTask implements Observer {
 
 	@Override
 	public void doit() throws Exception {
-		if (task instanceof MTimerTask && ((MTimerTask)task).isCanceled()) {
+		if (task instanceof ITimerTask && ((ITimerTask)task).isCanceled()) {
 			cancel();
 			return;
 		}

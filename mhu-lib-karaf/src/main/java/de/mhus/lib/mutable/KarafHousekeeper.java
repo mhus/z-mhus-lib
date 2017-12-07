@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.lang.MObject;
@@ -26,7 +27,7 @@ public class KarafHousekeeper extends MObject implements MHousekeeper {
 			timer.schedule(new IntervalJob(sleep, task));
 	}
 
-	private static class WeakObserver implements Observer {
+	private static class WeakObserver implements ITimerTask {
 
 		private WeakReference<MHousekeeperTask> task;
 		private IntervalJob job;
@@ -40,12 +41,12 @@ public class KarafHousekeeper extends MObject implements MHousekeeper {
 		}
 
 		@Override
-		public void update(Observable o, Object arg) {
+		public void run(Object arg) {
 			MHousekeeperTask t = task.get();
 			if (t == null)
 				job.cancel();
 			else
-				t.update(o, arg);
+				t.run(arg);
 		}
 		
 		@Override
@@ -53,8 +54,41 @@ public class KarafHousekeeper extends MObject implements MHousekeeper {
 			MHousekeeperTask t = task.get();
 			if (t == null)
 				return super.toString();
+			return t.toString();
+		}
+
+		@Override
+		public String getName() {
+			MHousekeeperTask t = task.get();
+			if (t == null)
+				return "[removed]";
+			return t.getName();
+		}
+
+		@Override
+		public void onError(Throwable e) {
+			MHousekeeperTask t = task.get();
+			if (t == null)
+				job.cancel();
 			else
-				return t.toString();
+				t.onError(e);
+		}
+
+		@Override
+		public void onFinal(boolean isError) {
+			MHousekeeperTask t = task.get();
+			if (t == null)
+				job.cancel();
+			else
+				t.onFinal(isError);
+		}
+
+		@Override
+		public boolean isCanceled() {
+			MHousekeeperTask t = task.get();
+			if (t == null)
+				return true;
+			return t.isCanceled();
 		}
 		
 	}

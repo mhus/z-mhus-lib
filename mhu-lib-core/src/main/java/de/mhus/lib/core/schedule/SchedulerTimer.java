@@ -21,32 +21,32 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 
 	@Override
 	public void schedule(TimerTask task, long delay) {
-		schedule(new OnceJob(System.currentTimeMillis() + delay, new ObserverTimerTaskAdapter(task) ));
+		schedule(new OnceJob(System.currentTimeMillis() + delay, new TimerTaskAdapter(task) ));
 	}
 
 	@Override
 	public void schedule(TimerTask task, Date time) {
-		schedule(new OnceJob(time, new ObserverTimerTaskAdapter(task) ));
+		schedule(new OnceJob(time, new TimerTaskAdapter(task) ));
 	}
 
 	@Override
 	public void schedule(TimerTask task, long delay, long period) {
-		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new TimerTaskAdapter(task) ));
 	}
 
 	@Override
 	public void schedule(TimerTask task, Date firstTime, long period) {
-		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new TimerTaskAdapter(task) ));
 	}
 
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
-		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new ObserverTimerTaskAdapter(task) ));
+		schedule(new IntervalWithStartTimeJob(System.currentTimeMillis() + delay, period, new TimerTaskAdapter(task) ));
 	}
 
 	@Override
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
-		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new ObserverTimerTaskAdapter(task) ));
+		schedule(new IntervalWithStartTimeJob(firstTime.getTime(), period, new TimerTaskAdapter(task) ));
 	}
 
 	@Override

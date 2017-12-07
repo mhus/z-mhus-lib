@@ -9,14 +9,17 @@ import java.util.Observer;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.schedule.MutableSchedulerJob;
@@ -45,58 +48,115 @@ public class CmdTimer extends MLog implements Action {
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
+	
+	@Option(name="-a", aliases="--all", description="return all informations",required=false)
+	boolean all = false;
+
 
 	@Override
 	public Object execute() throws Exception {
 		TimerFactory factory = MOsgi.getService(TimerFactory.class);
 		SchedulerTimer scheduler = TimerFactoryImpl.getScheduler(factory);
 		
+		if (!TimerFactoryImpl.instance.isRunning()) {
+			System.out.println("ServiceTracker is not running!");
+		}
+		
 		if (cmd.equals("list")) {
+			
+			
 			List<SchedulerJob> scheduled = scheduler.getScheduledJobs();
 			List<SchedulerJob> running = scheduler.getRunningJobs();
 			
 			ConsoleTable table = new ConsoleTable();
-			table.setLineSpacer(true);
-			table.setHeaderValues(
-					"Name",
-					"Task",
-					"Job",
-					"Started",
-					"Stopped", 
-					"Scheduled/Thread",
-					"Timeout",
-					"Canceled",
-					"Done",
-					"Status"
-				);
-			
-			for (SchedulerJob job : running) {
-				table.addRowValues(
-						job.getName(),
-						job.getTask(),
-						job,
-						MDate.toIsoDateTime(job.getLastExecutionStart()),
-						"Running",
-						job.getThread(),
-						job.getTimeoutInMinutes(),
-						job.isCanceled(),
-						job.isDone(),
-						getStatus(job)
+			if (all)
+				table.setLineSpacer(true);
+			if (all)
+				table.setHeaderValues(
+						"Name",
+						"Task",
+						"Job",
+						"Info",
+						"Started",
+						"Stopped", 
+						"Scheduled/Thread",
+						"Left",
+						"Timeout",
+						"Canceled",
+						"Done",
+						"Status",
+						"Interceptor"
 					);
+			else
+				table.setHeaderValues(
+						"Name",
+						"Job",
+						"Info",
+						"Started",
+						"Scheduled/Thread",
+						"Left",
+						"Canceled",
+						"Status"
+					);
+		
+			for (SchedulerJob job : running) {
+				if (all)
+					table.addRowValues(
+							job.getName(),
+							job.getTask(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							"Running",
+							job.getThread(),
+							"-",
+							job.getTimeoutInMinutes(),
+							job.isCanceled(),
+							job.isDone(),
+							getStatus(job),
+							job.getIntercepter()
+						);
+				else
+					table.addRowValues(
+							job.getName(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							job.getThread(),
+							"-",
+							job.isCanceled(),
+							getStatus(job)
+						);
 			}
 			for (SchedulerJob job : scheduled) {
-				table.addRowValues(
-						job.getName(),
-						job.getTask(),
-						job,
-						MDate.toIsoDateTime(job.getLastExecutionStart()),
-						MDate.toIsoDateTime(job.getLastExecutionStop()),
-						MDate.toIsoDateTime(job.getScheduledTime()), 
-						job.getTimeoutInMinutes(),
-						job.isCanceled(),
-						job.isDone(),
-						getStatus(job)
-					);
+				if (all)
+					table.addRowValues(
+							job.getName(),
+							job.getTask(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							MDate.toIsoDateTime(job.getLastExecutionStop()),
+							MDate.toIsoDateTime(job.getScheduledTime()), 
+							MTimeInterval.getIntervalAsStringSec(job.getScheduledTime() - System.currentTimeMillis()),
+							job.getTimeoutInMinutes(),
+							job.isCanceled(),
+							job.isDone(),
+							getStatus(job),
+							job.getIntercepter()
+						);
+				else
+					table.addRowValues(
+							job.getName(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							MDate.toIsoDateTime(job.getScheduledTime()), 
+							MTimeInterval.getIntervalAsStringSec(job.getScheduledTime() - System.currentTimeMillis()),
+							job.isCanceled(),
+							getStatus(job)
+						);
+
 			}
 			
 			table.print(System.out);
@@ -142,10 +202,10 @@ public class CmdTimer extends MLog implements Action {
 			}
 		}
 		if (cmd.equals("dummy")) {
-			scheduler.schedule(new OnceJob(System.currentTimeMillis() + MTimeInterval.MINUTE_IN_MILLISECOUNDS, new Observer() {
+			scheduler.schedule(new OnceJob(System.currentTimeMillis() + MTimeInterval.MINUTE_IN_MILLISECOUNDS, new MTimerTask() {
 				
 				@Override
-				public void update(Observable o, Object arg) {
+				protected void doit() throws Exception {
 					log().i(">>> Start Dummy");
 					MThread.sleep(MTimeInterval.MINUTE_IN_MILLISECOUNDS * 2);
 					log().i("<<< Stop Dummy");
@@ -237,12 +297,23 @@ public class CmdTimer extends MLog implements Action {
 				}
 			}
 		}
-		if (cmd.equals("check")) {
-			TimerFactoryImpl.instance.doCheckTimers();
-		}
 		if (cmd.equals("debug")) {
 			TimerFactoryImpl.doDebugInfo();
 		}
+		if (cmd.equals("recreate")) {
+			TimerFactoryImpl.instance.stop();
+			TimerFactoryImpl.instance.start();
+			System.out.println("OK");
+		}
+		if (cmd.equals("start")) {
+			TimerFactoryImpl.instance.start();
+			System.out.println("OK");
+		}
+		if (cmd.equals("stop")) {
+			TimerFactoryImpl.instance.stop();
+			System.out.println("OK");
+		}
+		
 		return null;
 	}
 

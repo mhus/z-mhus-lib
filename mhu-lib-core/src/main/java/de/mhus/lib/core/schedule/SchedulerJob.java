@@ -3,6 +3,7 @@ package de.mhus.lib.core.schedule;
 import java.util.Observer;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
@@ -26,15 +27,17 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private long nextExecutionTime = CALCULATE_NEXT;
 	protected MyTaskContext context = new MyTaskContext();
 	private boolean done = false;
-	private Observer task;
+	private ITimerTask task;
 	private long lastExecutionStart;
 	private long lastExecutionStop;
 	private long scheduledTime;
 	private long timeoutInMinutes;
 	private Thread thread;
 	private MNls nls;
+	private String info;
+	private TimerTaskIntercepter intercepter;
 	
-	public SchedulerJob(Observer task) {
+	public SchedulerJob(ITimerTask task) {
 		setTask(task);
 		if (task == null)
 			setName("null");
@@ -44,7 +47,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			setName(MSystem.getClassName(task));
 	}
 	
-	public SchedulerJob(String name,  Observer task) {
+	public SchedulerJob(String name,  ITimerTask task) {
 		setTask(task);
 		setName(name);
 	}
@@ -72,15 +75,28 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		}
 		
 		if (forced || isExecutionTimeReached()) {
-			lastExecutionStart = System.currentTimeMillis();
-			thread = Thread.currentThread();
-			try {
-				doExecute(context);
-			} catch (Throwable e) {
-				doError(e);
+			
+			boolean doIt = true;
+			if (intercepter != null)
+				doIt = intercepter.beforeExecution(this, context, forced);
+			
+			if (doIt) {
+				thread = Thread.currentThread();
+				lastExecutionStart = System.currentTimeMillis();
+				try {
+					doExecute(context);
+				} catch (Throwable e) {
+					doError(e);
+					if (intercepter != null)
+						intercepter.onError(this, context, e);
+				}
+				lastExecutionStop = System.currentTimeMillis();
+				
+				if (intercepter != null)
+					intercepter.afterExecution(this, context);
+				
+				thread = null;
 			}
-			thread = null;
-			lastExecutionStop = System.currentTimeMillis();
 			context.clear();
 			setDone(true);
 			synchronized (this) {
@@ -114,7 +130,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	
 	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		try {
-			if (task != null) task.update(null, context);
+			if (task != null) task.run(context);
 		} catch (LinkageError le) {
 			log.d("cancel task because of fatal errors",this, le);
 			cancel();
@@ -195,11 +211,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		return null;
 	}
 
-	public Observer getTask() {
+	public ITimerTask getTask() {
 		return task;
 	}
 
-	protected void setTask(Observer task) {
+	protected void setTask(ITimerTask task) {
 		this.task = task;
 	}
 
@@ -303,6 +319,24 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	@Override
 	public String nls(String text) {
 		return MNls.find(this, text);
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
+	}
+
+	public TimerTaskIntercepter getIntercepter() {
+		return intercepter;
+	}
+
+	public void setIntercepter(TimerTaskIntercepter intercepter) {
+		this.intercepter = intercepter;
+		if (intercepter != null)
+			intercepter.initialize(this);
 	}
 	
 }

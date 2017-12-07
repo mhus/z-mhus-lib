@@ -3,17 +3,18 @@ package de.mhus.lib.core.schedule;
 import java.util.Date;
 import java.util.Observer;
 
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MDate;
 
 public class OnceJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private long time;
 
-	public OnceJob(Date time, Observer task) {
+	public OnceJob(Date time, ITimerTask task) {
 		this(time.getTime(), task);
 	}
 	
-	public OnceJob(long time, Observer task) {
+	public OnceJob(long time, ITimerTask task) {
 		super(task);
 		this.time = time;
 	}

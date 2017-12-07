@@ -24,6 +24,18 @@ public interface TimerIfc {
 
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period);
 
+	public void schedule(String name, TimerTask task, long delay);
+
+	public void schedule(String name, TimerTask task, Date time);
+
+	public void schedule(String name, TimerTask task, long delay, long period);
+
+	public void schedule(String name, TimerTask task, Date firstTime, long period);
+
+	public void scheduleAtFixedRate(String name, TimerTask task, long delay, long period);
+
+	public void scheduleAtFixedRate(String name, TimerTask task, Date firstTime, long period);
+	
 	public void cancel();
 
 }

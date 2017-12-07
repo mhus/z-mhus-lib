@@ -52,7 +52,8 @@ public class KarafBase extends DefaultBase {
 							}
 							T obj = null;
 							try {
-								obj = context.getService(ref);
+								obj = ref.getBundle().getBundleContext().getService(ref);
+//								obj = context.getService(ref);
 							} catch (Throwable t) {}
 							if (obj != null) {
 								MLogUtil.log().d("KarafBase","loaded from OSGi",ifc);

@@ -26,7 +26,7 @@ import java.util.TimerTask;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.logging.MLogUtil;
 
-public abstract class MTimerTask extends TimerTask implements Observer, Named {
+public abstract class MTimerTask extends TimerTask implements ITimerTask {
 
     public static final int UNKNOWN = -1;
     public static final int VIRGIN = 0;
@@ -36,15 +36,22 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 
 	private boolean canceled = false;
 	private String name;
+	protected Object environment;
 	
 	public MTimerTask() {
 		setName(MSystem.getClassName(this));
 	}
-		
+	
 	@Override
 	final public void run() {
+		run(null);
+	}
+	
+	@Override
+	final public void run(Object environment) {
 		boolean error = false;
 		try {
+			this.environment = environment;
 			doit();
 		} catch (Throwable t) {
 			try {
@@ -57,28 +64,27 @@ public abstract class MTimerTask extends TimerTask implements Observer, Named {
 			onFinal(error);
 		} catch (Throwable t) {
 		}
+		this.environment = null;
 	}
 
-	protected void onError(Throwable t) {
+	@Override
+	public void onError(Throwable t) {
 		t.printStackTrace();
 	}
 
-	protected void onFinal(boolean isError) {
+	@Override
+	public void onFinal(boolean isError) {
 	}
 
-	public abstract void doit() throws Exception;
+	protected abstract void doit() throws Exception;
 	
-    @Override
-	public void update(Observable o, Object arg) {
-    	run();
-    }
-
     @Override
     public boolean cancel() {
     	setCanceled(true);
     	return super.cancel();
     }
     
+	@Override
 	public boolean isCanceled() {
 		return canceled;
 	}

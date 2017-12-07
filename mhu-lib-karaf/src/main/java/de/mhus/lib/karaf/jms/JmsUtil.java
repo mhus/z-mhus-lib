@@ -15,7 +15,27 @@ import de.mhus.lib.jms.ServerService;
 public class JmsUtil {
 
 	public static JmsManagerService getService() {
-		return MApi.lookup(JmsManagerService.class);
+		return JmsManagerServiceImpl.instance;
+		// Using lookup will cause a lot off exceptions on startup
+		/*
+| 98 - mhu-lib-karaf - 3.3.2.SNAPSHOT | FrameworkEvent ERROR - mhu-lib-karaf
+org.osgi.framework.ServiceException: Service factory returned null. (Component: JmsManagerService (824))
+	at org.apache.felix.framework.ServiceRegistrationImpl.getFactoryUnchecked(ServiceRegistrationImpl.java:380)
+	at org.apache.felix.framework.ServiceRegistrationImpl.getService(ServiceRegistrationImpl.java:247)
+	at org.apache.felix.framework.ServiceRegistry.getService(ServiceRegistry.java:350)
+	at org.apache.felix.framework.Felix.getService(Felix.java:3721)[org.apache.felix.framework-5.6.4.jar:]
+	at org.apache.felix.framework.BundleContextImpl.getService(BundleContextImpl.java:470)[org.apache.felix.framework-5.6.4.jar:]
+	at de.mhus.lib.mutable.KarafBase.lookup(KarafBase.java:55)
+	at de.mhus.lib.core.lang.Base.lookup(Base.java:19)
+	at de.mhus.lib.core.MApi.lookup(MApi.java:139)
+	at de.mhus.lib.karaf.jms.JmsUtil.getService(JmsUtil.java:18)
+	at de.mhus.lib.karaf.jms.JmsUtil.getConnection(JmsUtil.java:27)
+	at de.mhus.lib.karaf.jms.AbstractJmsDataChannel.onConnect(AbstractJmsDataChannel.java:78)
+	at de.mhus.lib.karaf.jms.JmsManagerServiceImpl.addChannel(JmsManagerServiceImpl.java:335)
+	at de.mhus.lib.karaf.jms.JmsManagerServiceImpl$MyChannelTrackerCustomizer.addingService(JmsManagerServiceImpl.java:238)
+	at de.mhus.lib.karaf.jms.JmsManagerServiceImpl$MyChannelTrackerCustomizer.addingService(JmsManagerServiceImpl.java:1)
+	 */
+		// return MApi.lookup(JmsManagerService.class);
 	}
 	
 	/**

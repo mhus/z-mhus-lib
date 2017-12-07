@@ -9,6 +9,7 @@ import org.apache.karaf.shell.api.console.SessionFactory;
 
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -21,7 +22,7 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 	private String interval;
 	private String command;
 	private TimerIfc timer;
-	private Observer job;
+	private MTimerTask job;
 	private String name;
 	
 	public String getInterval() {
@@ -116,7 +117,7 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 //		if (cmd.equals("restart"))
 	}
 	
-	private class MyJob implements Observer, Named {
+	private class MyJob extends MTimerTask {
 
 		@Override
 		public String getName() {
@@ -124,7 +125,7 @@ public class ScheduleGogo extends MLog implements SimpleServiceIfc {
 		}
 
 		@Override
-		public void update(Observable o, Object arg) {
+		public void doit() {
 			doExecute();
 		}
 		

@@ -2,6 +2,7 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MCast;
 
 /**
@@ -13,7 +14,7 @@ public class IntervalJob extends SchedulerJob implements MutableSchedulerJob {
 
 	private long interval;
 
-	public IntervalJob(long interval, Observer task) {
+	public IntervalJob(long interval, ITimerTask task) {
 		super(task);
 		this.interval = interval;
 	}

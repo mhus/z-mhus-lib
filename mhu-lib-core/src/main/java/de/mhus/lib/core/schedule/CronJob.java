@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Observer;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.base.service.HolidayProviderIfc;
@@ -29,14 +30,14 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 	private boolean restrictive = true; // if not executed in the minute of scheduled time, a new time is scheduled
 
 
-	public CronJob(String name, Definition definition, boolean restrictive, Observer task) {
+	public CronJob(String name, Definition definition, boolean restrictive, ITimerTask task) {
 		super(name, task);
 		setRestrictive(restrictive);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = definition;
 	}
 	
-	public CronJob(String minute, String hour, String dayOfMonth, String month, String dayOfWeek, Observer task) {
+	public CronJob(String minute, String hour, String dayOfMonth, String month, String dayOfWeek, ITimerTask task) {
 		super(task);
 		if (minute == null) minute = "*";
 		if (hour == null) hour = "*";
@@ -46,19 +47,19 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		this.definition = new Definition(minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek);
 	}
 	
-	public CronJob(String definition, Observer task) {
+	public CronJob(String definition, ITimerTask task) {
 		super(task);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = new Definition(definition);
 	}
 
-	public CronJob(String name, String definition, Observer task) {
+	public CronJob(String name, String definition, ITimerTask task) {
 		super(name, task);
 		if (definition == null) throw new NullPointerException("definition is null");
 		this.definition = new Definition(definition);
 	}
 	
-	public CronJob(String name, String definition, boolean restrictive, Observer task) {
+	public CronJob(String name, String definition, boolean restrictive, ITimerTask task) {
 		super(name, task);
 		setRestrictive(restrictive);
 		if (definition == null) throw new NullPointerException("definition is null");

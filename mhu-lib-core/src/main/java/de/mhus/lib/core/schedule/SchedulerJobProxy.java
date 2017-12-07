@@ -3,6 +3,7 @@ package de.mhus.lib.core.schedule;
 import java.util.Observable;
 import java.util.Observer;
 
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;
 import de.mhus.lib.core.strategy.TaskContext;
@@ -19,11 +20,6 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 	@Override
 	public void doTick(boolean forced) {
 		instance.doTick(forced);
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		instance.update(o, arg);
 	}
 
 	@Override
@@ -89,7 +85,7 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
 	}
 
 	@Override
-	public Observer getTask() {
+	public ITimerTask getTask() {
 		return instance.getTask();
 	}
 

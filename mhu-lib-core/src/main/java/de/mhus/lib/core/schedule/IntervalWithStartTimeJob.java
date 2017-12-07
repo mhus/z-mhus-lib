@@ -2,6 +2,7 @@ package de.mhus.lib.core.schedule;
 
 import java.util.Observer;
 
+import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 
@@ -15,7 +16,7 @@ public class IntervalWithStartTimeJob extends SchedulerJob implements MutableSch
 	private long interval;
 	private long start;
 
-	public IntervalWithStartTimeJob(long start, long interval, Observer task) {
+	public IntervalWithStartTimeJob(long start, long interval, ITimerTask task) {
 		super(task);
 		this.start = start;
 		this.interval = interval;
