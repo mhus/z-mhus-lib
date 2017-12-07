@@ -92,12 +92,18 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 			if (MString.compareFsLikePattern(n, key)) {
 				String v = properties.getString(key, null);
 				if (v == null) continue;
-				log().d("confiure by config file",n,key,v);
-				if (v.equals("disabled"))
-					job.doReschedule(this, SchedulerJob.DISABLED_TIME);
-				else {
-					((MutableSchedulerJob)job).doReconfigure(v);
-					job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
+				log().d("configure by config file",n,key,v);
+				String[] vv = v.split("\\|");
+				if (vv.length > 0 && vv[0].length() > 0) {
+					if (vv[0].equals("disabled"))
+						job.doReschedule(this, SchedulerJob.DISABLED_TIME);
+					else {
+						((MutableSchedulerJob)job).doReconfigure(vv[0]);
+						job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
+					}
+				}
+				if (vv.length > 1 && vv[1].length() > 0) {
+					job.setLogTrailConfig(vv[1]);
 				}
 				return;
 			}

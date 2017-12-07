@@ -8,6 +8,7 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.strategy.DefaultTaskContext;
 import de.mhus.lib.core.strategy.NotSuccessful;
 import de.mhus.lib.core.strategy.Operation;
@@ -36,6 +37,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private MNls nls;
 	private String info;
 	private TimerTaskIntercepter intercepter;
+	private String logTrailConfig;
 	
 	public SchedulerJob(ITimerTask task) {
 		setTask(task);
@@ -59,11 +61,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		
 		if (!forced) {
 			if (!isCanceled() && task instanceof MTimerTask && ((MTimerTask)task).isCanceled()) {
-				log.i("doTick canceled 1",task);
+				log.i("doTick canceled 1",getName(),task);
 				cancel();
 			}
 			if (isCanceled()) {
-				log.i("doTick canceled 2",task);
+				log.i("doTick canceled 2",getName(),task);
 				return;
 			}
 			
@@ -76,31 +78,45 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		
 		if (forced || isExecutionTimeReached()) {
 			
-			boolean doIt = true;
-			if (intercepter != null)
-				doIt = intercepter.beforeExecution(this, context, forced);
-			
-			if (doIt) {
-				thread = Thread.currentThread();
-				lastExecutionStart = System.currentTimeMillis();
-				try {
-					doExecute(context);
-				} catch (Throwable e) {
-					doError(e);
-					if (intercepter != null)
-						intercepter.onError(this, context, e);
-				}
-				lastExecutionStop = System.currentTimeMillis();
-				
-				if (intercepter != null)
-					intercepter.afterExecution(this, context);
-				
-				thread = null;
+			boolean logConfigReset = false;
+			if (getLogTrailConfig() != null) {
+				MLogUtil.setTrailConfig(getLogTrailConfig());
+				logConfigReset = true;
 			}
-			context.clear();
-			setDone(true);
-			synchronized (this) {
-				doCaclulateNextExecution();
+			try {
+				boolean doIt = true;
+				if (intercepter != null) {
+					log.d("Intercepter beforeExecution",getName());
+					doIt = intercepter.beforeExecution(this, context, forced);
+				}
+				if (doIt) {
+					thread = Thread.currentThread();
+					lastExecutionStart = System.currentTimeMillis();
+					try {
+						doExecute(context);
+					} catch (Throwable e) {
+						log.d("Error",getName(),e);
+						doError(e);
+						if (intercepter != null)
+							intercepter.onError(this, context, e);
+					}
+					lastExecutionStop = System.currentTimeMillis();
+					
+					if (intercepter != null) {
+						log.d("Intercepter afterExecution",getName());
+						intercepter.afterExecution(this, context);
+					}
+					thread = null;
+				}
+				context.clear();
+				setDone(true);
+				synchronized (this) {
+					doCaclulateNextExecution();
+					log.d("Scheduled to",getName(),getNextExecutionTime());
+				}
+			} finally {
+				if (logConfigReset)
+					MLogUtil.releaseTrailConfig();
 			}
 		} else {
 			log.i("Execution delayed",task);
@@ -114,7 +130,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
-		log.t("execute",getClass(),context.getParameters());
+		log.d("execute",getClass(),context.getParameters());
 		if (!hasAccess()) {
 			log.d("access denied",context,context.getErrorMessage());
 			return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
@@ -337,6 +353,14 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		this.intercepter = intercepter;
 		if (intercepter != null)
 			intercepter.initialize(this);
+	}
+
+	public String getLogTrailConfig() {
+		return logTrailConfig;
+	}
+
+	public void setLogTrailConfig(String logTrailConfig) {
+		this.logTrailConfig = logTrailConfig;
 	}
 	
 }

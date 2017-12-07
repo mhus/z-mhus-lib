@@ -43,6 +43,7 @@ public class CmdTimer extends MLog implements Action {
 			+ " disable/enable/cancel/remove <name>,\n"
 			+ " run <name>,\n"
 			+ " configure <name> <configuration>\n"
+			+ " trail <name> [<trail config>]\n"
 			+ "  name is allways a pattern use * to define placeholders", multiValued=false)
     String cmd;
 
@@ -85,7 +86,8 @@ public class CmdTimer extends MLog implements Action {
 						"Canceled",
 						"Done",
 						"Status",
-						"Interceptor"
+						"Interceptor",
+						"Trail config"
 					);
 			else
 				table.setHeaderValues(
@@ -114,7 +116,8 @@ public class CmdTimer extends MLog implements Action {
 							job.isCanceled(),
 							job.isDone(),
 							getStatus(job),
-							job.getIntercepter()
+							job.getIntercepter(),
+							job.getLogTrailConfig()
 						);
 				else
 					table.addRowValues(
@@ -143,7 +146,8 @@ public class CmdTimer extends MLog implements Action {
 							job.isCanceled(),
 							job.isDone(),
 							getStatus(job),
-							job.getIntercepter()
+							job.getIntercepter(),
+							job.getLogTrailConfig()
 						);
 				else
 					table.addRowValues(
@@ -312,6 +316,17 @@ public class CmdTimer extends MLog implements Action {
 		if (cmd.equals("stop")) {
 			TimerFactoryImpl.instance.stop();
 			System.out.println("OK");
+		}
+		if (cmd.equals("trail")) {
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					System.out.println("Change " + job.getName());
+					if (parameters.length < 2 || MString.isEmpty(parameters[1]))
+						job.setLogTrailConfig(null);
+					else
+						job.setLogTrailConfig(parameters[1]);
+				}
+			}
 		}
 		
 		return null;

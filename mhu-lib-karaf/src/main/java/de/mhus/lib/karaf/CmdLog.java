@@ -49,7 +49,7 @@ public class CmdLog extends MLog implements Action {
 			+ " settrail [<config>] - enable trail logging for this thread,\n"
 			+ " istrail - output the traillog config,\n"
 			+ " releasetrail - unset the current trail log config\n"
-			+ " resettrail - unset all trail log configs\n"
+			+ " resetalltrail - unset all trail log configs\n"
 			+ " general - enable general logging\n"
 			+ " off - log mapping off\n"
 			+ " trace,debug,info,warn,error,fatal <msg>\nconsole [console=ansi] [file=data/log/karaf.log] [color=true]\n"
@@ -150,10 +150,10 @@ public class CmdLog extends MLog implements Action {
 				System.out.println("Wrong Mapper " + mapper);
 			}
 		} break;
-		case "resettrail": {
+		case "resetalltrail": {
 			LevelMapper mapper = api.getLogFactory().getLevelMapper();
 			if (MLogUtil.isTrailLevelMapper()) {
-				MLogUtil.resetTrailConfig();
+				MLogUtil.resetAllTrailConfigs();
 				System.out.println("OK");
 			} else {
 				System.out.println("Wrong Mapper " + mapper);

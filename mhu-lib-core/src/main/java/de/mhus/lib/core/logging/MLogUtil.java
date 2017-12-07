@@ -54,7 +54,7 @@ public class MLogUtil {
 		}
 	}
 
-	public static void resetTrailConfig() {
+	public static void resetAllTrailConfigs() {
 		IApi api = MApi.get();
 		LevelMapper mapper = api.getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper) {

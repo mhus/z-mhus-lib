@@ -2,12 +2,14 @@ package de.mhus.lib.logging.level;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MMath;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
 
 public class ThreadMapperConfig implements LevelMapper {
 
+	private static CfgString DEFAULT_TRAIL_CONFIG = new CfgString(Log.class, "defaultTrailConfig", "T,I,I,W,E,F,G,0");
 	public static final String MAP_LABEL = "MAP";
 	private static long nextId = 0;
 
@@ -21,7 +23,7 @@ public class ThreadMapperConfig implements LevelMapper {
 	private long timeout = 0;
 	private long timetout = 0;
 
-	private String id = MMath.toBasis36WithIdent( (long) (Math.random() * 36 * 36 * 36 * 36), ++nextId, 8 );
+	private String id = null;
 
 	public boolean isTimedOut() {
 		if (timetout <= 0)
@@ -50,25 +52,42 @@ public class ThreadMapperConfig implements LevelMapper {
 
 	public void doConfigure(String config) {
 		if (config == null) return;
+		if (config.length() >= 4)
+			config = config.substring(4);
+		else
+			config = "";
+		if (config.length() == 0 || config.equals("-")) {
+			config = DEFAULT_TRAIL_CONFIG.value();
+		} else
+		if (config.indexOf(',') < 0) {
+			config = DEFAULT_TRAIL_CONFIG.value() + "," + config;
+		}
 		String[] parts = config.toUpperCase().split(",");
+
+		if (parts.length > 0)
+			trace = toLevel(parts[0]);
 		if (parts.length > 1)
-			trace = toLevel(parts[1]);
+			debug = toLevel(parts[1]);
 		if (parts.length > 2)
-			debug = toLevel(parts[2]);
+			info  = toLevel(parts[2]);
 		if (parts.length > 3)
-			info  = toLevel(parts[3]);
+			warn  = toLevel(parts[3]);
 		if (parts.length > 4)
-			warn  = toLevel(parts[4]);
+			error = toLevel(parts[4]);
 		if (parts.length > 5)
-			error = toLevel(parts[5]);
+			fatal = toLevel(parts[5]);
 		if (parts.length > 6)
-			fatal = toLevel(parts[6]);
+			local = parts[6].equals("L");
 		if (parts.length > 7)
-			local = parts[7].equals("L");
+			setTimeout( MCast.tolong(parts[7], 0));
 		if (parts.length > 8)
-			setTimeout( MCast.tolong(parts[8], 0));
-		if (parts.length > 9)
-			id = parts[9];
+			id = parts[8];
+
+		if (id == null)
+			id = MMath.toBasis36WithIdent( (long) (Math.random() * 36 * 36 * 36 * 36), ++nextId, 8 );
+
+		if (id.length() > 10) id = id.substring(0,10);
+		
 	}
 
 	private LEVEL toLevel(String in) {

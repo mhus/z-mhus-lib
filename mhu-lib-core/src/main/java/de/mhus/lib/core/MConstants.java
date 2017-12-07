@@ -35,7 +35,7 @@ public class MConstants {
 
 	public static final String PROP_LOG_CONSOLE_REDIRECT = "log.console.redirect";
 
-	public static final String DEFAULT_MHUS_TIMER_CONFIG_FILE = "mhus_timer.properties";
+	public static final String DEFAULT_MHUS_TIMER_CONFIG_FILE = "mhus-timer.properties";
 
 	public static final String PROP_TIMER_CONFIG_FILE = "timer.config.file";
 
