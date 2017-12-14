@@ -36,6 +36,7 @@ import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.errors.NotSupportedException;
 
 /**
  * This class can compare a configuration with a database table structure
@@ -747,7 +748,8 @@ public class DialectDefault extends Dialect {
 			buffer.append( manager.createSqlSelect(((ASubQuery)p).getSubQuery().getType(), buffer2.toString() , qualification));
 
 			buffer.append(")");
-		}
+		} else
+			throw new NotSupportedException(p.getClass());
 		
 	}
 
