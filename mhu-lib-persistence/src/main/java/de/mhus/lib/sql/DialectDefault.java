@@ -566,11 +566,7 @@ public class DialectDefault extends Dialect {
 	@Override
 	public void createQuery(APrint p, AQuery<?> query) {
 		StringBuffer buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
-		DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
-		createQuery(p, query, buffer, manager);
-	}
-
-	public void createQuery(APrint p, AQuery<?> query, StringBuffer buffer, DbManager manager) {
+		
 		if (p instanceof AQuery) {
 			//		buffer.append('(');
 			{
@@ -670,6 +666,7 @@ public class DialectDefault extends Dialect {
 		if (p instanceof ADbAttribute) {
 			Class<?> c = ((ADbAttribute)p).getClazz();
 			if (c == null) c = query.getType();
+			DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
 			String name = "db." + manager.getMappingName(c) + "." + ((ADbAttribute)p).getAttribute();
 			if (manager.getNameMapping().get(name) == null)
 				log().w("mapping not exist",name);
@@ -730,10 +727,12 @@ public class DialectDefault extends Dialect {
 			buffer.append(')');
 		} else
 		if (p instanceof AOrder) {
+			DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
 			buffer.append("$db.").append(manager.getMappingName(((AOrder)p).getClazz())).append('.').append(((AOrder)p).getAttribute()).append('$');
 			buffer.append(' ').append( ((AOrder)p).isAsc() ? "ASC" : "DESC");
 		} else
 		if (p instanceof ASubQuery) {
+			DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
 			String qualification = manager.toQualification(((ASubQuery)p).getSubQuery()).trim();
 			
 			((ASubQuery)p).getLeft().create(query, this);
