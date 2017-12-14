@@ -11,12 +11,11 @@ public class AEnumFix extends AAttribute {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append(value.ordinal());
+	public void getAttributes(AttributeMap map) {
 	}
 
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public Enum<?> getValue() {
+		return value;
 	}
 
 }

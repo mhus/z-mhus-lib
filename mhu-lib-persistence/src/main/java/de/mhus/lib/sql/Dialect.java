@@ -4,6 +4,29 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 
+import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.query.AAnd;
+import de.mhus.lib.adb.query.AAttribute;
+import de.mhus.lib.adb.query.ACompare;
+import de.mhus.lib.adb.query.AConcat;
+import de.mhus.lib.adb.query.ADbAttribute;
+import de.mhus.lib.adb.query.ADynValue;
+import de.mhus.lib.adb.query.AEnumFix;
+import de.mhus.lib.adb.query.AFix;
+import de.mhus.lib.adb.query.ALimit;
+import de.mhus.lib.adb.query.AList;
+import de.mhus.lib.adb.query.ALiteral;
+import de.mhus.lib.adb.query.ALiteralList;
+import de.mhus.lib.adb.query.ANot;
+import de.mhus.lib.adb.query.ANull;
+import de.mhus.lib.adb.query.AOperation;
+import de.mhus.lib.adb.query.AOr;
+import de.mhus.lib.adb.query.AOrder;
+import de.mhus.lib.adb.query.APart;
+import de.mhus.lib.adb.query.APrint;
+import de.mhus.lib.adb.query.AQuery;
+import de.mhus.lib.adb.query.AQueryCreator;
+import de.mhus.lib.adb.query.ASubQuery;
 import de.mhus.lib.annotations.adb.DbType;
 import de.mhus.lib.cao.CaoMetaDefinition;
 import de.mhus.lib.cao.util.MetadataBundle;
@@ -34,7 +57,7 @@ import de.mhus.lib.sql.parser.SqlCompiler;
  * @author mikehummel
  *
  */
-public abstract class Dialect extends MObject implements ICompiler {
+public abstract class Dialect extends MObject implements ICompiler, AQueryCreator {
 
 	// POSSIBLE TYPES OF COLUMNS
 

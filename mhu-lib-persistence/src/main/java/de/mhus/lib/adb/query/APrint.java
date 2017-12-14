@@ -4,7 +4,9 @@ import de.mhus.lib.core.parser.AttributeMap;
 
 public abstract class APrint {
 
-	public abstract void print(AQuery<?> query, StringBuffer buffer);
+	public void create(AQuery<?> query, AQueryCreator creator) {
+		creator.createQuery(this,query);
+	}
 	public abstract void getAttributes(AttributeMap map);
 
 }

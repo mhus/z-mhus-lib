@@ -11,23 +11,13 @@ public class AList extends AAttribute {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append('(');
-		boolean first = true;
-		for (AAttribute part : operations) {
-			if (first)
-				first = false;
-			else
-				buffer.append(",");
-			part.print(query, buffer);
-		}
-		buffer.append(')');
-	}
-
-	@Override
 	public void getAttributes(AttributeMap map) {
 		for (AAttribute part : operations)
 			part.getAttributes(map);
+	}
+
+	public AAttribute[] getOperations() {
+		return operations;
 	}
 
 }

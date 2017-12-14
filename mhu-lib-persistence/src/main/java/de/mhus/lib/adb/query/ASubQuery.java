@@ -16,25 +16,22 @@ public class ASubQuery extends APart {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		String qualification = subQuery.toQualification(query.getManager()).trim();
-		
-		left.print(query, buffer);
-		buffer.append(" IN (");
-		
-		StringBuffer buffer2 = new StringBuffer().append("DISTINCT ");
-		projection.print(subQuery, buffer2);
-		
-		buffer.append(query.getManager().createSqlSelect(subQuery.getType(), buffer2.toString() , qualification));
-
-		buffer.append(")");
-	}
-
-	@Override
 	public void getAttributes(AttributeMap map) {
 		left.getAttributes(map);
 		projection.getAttributes(map);
 		subQuery.getAttributes(map);
+	}
+
+	public AAttribute getLeft() {
+		return left;
+	}
+
+	public AAttribute getProjection() {
+		return projection;
+	}
+
+	public AQuery<?> getSubQuery() {
+		return subQuery;
 	}
 
 }

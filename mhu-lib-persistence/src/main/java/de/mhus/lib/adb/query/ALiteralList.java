@@ -23,17 +23,13 @@ public class ALiteralList extends APart {
 
 	/** {@inheritDoc} */
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		for (APart part : operations) {
-			part.print(query, buffer);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void getAttributes(AttributeMap map) {
 		for (APart part : operations)
 			part.getAttributes(map);
+	}
+
+	public APart[] getOperations() {
+		return operations;
 	}
 
 }

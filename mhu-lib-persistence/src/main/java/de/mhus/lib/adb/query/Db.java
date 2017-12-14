@@ -358,11 +358,6 @@ public class Db {
 		}
 
 		@Override
-		public void print(AQuery<?> query, StringBuffer buffer) {
-			attr.print(query, buffer);
-		}
-
-		@Override
 		public void getAttributes(AttributeMap map) {
 			AttributeMap map2 = new AttributeMap();
 			attr.getAttributes(map2);

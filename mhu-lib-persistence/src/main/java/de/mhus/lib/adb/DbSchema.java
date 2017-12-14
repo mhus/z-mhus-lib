@@ -42,7 +42,6 @@ import de.mhus.lib.sql.DbResult;
  */
 public abstract class DbSchema extends MObject implements PojoModelFactory {
 
-
 	protected String tablePrefix = "";
 	private LinkedList<Class<? extends Persistable>> objectTypes;
 	protected LockStrategy lockStrategy; // set this object to enable locking
@@ -79,7 +78,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * 
 	 * @param config
 	 */
-	public void doInit(ResourceNode config) {
+	public void doInit(ResourceNode<?> config) {
 
 	}
 
@@ -383,7 +382,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 		}
 	}
 
-	public Field createField(DbManager manager, Table table, boolean pk, boolean readOnly, boolean virtual, PojoAttribute<?> attribute, ResourceNode attr,DbDynamic.Field dynamicField, String[] features) throws MException {
+	public Field createField(DbManager manager, Table table, boolean pk, boolean readOnly, boolean virtual, PojoAttribute<?> attribute, ResourceNode<?> attr,DbDynamic.Field dynamicField, String[] features) throws MException {
 
 		Field field = null;
 		if (virtual)

@@ -37,12 +37,6 @@ public class ADynValue extends AAttribute {
 
 	/** {@inheritDoc} */
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append('$').append(name).append('$');
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void getAttributes(AttributeMap map) {
 		map.put(name, value);
 	}
@@ -68,5 +62,9 @@ public class ADynValue extends AAttribute {
 	@Override
 	public String toString() {
 		return "dyn:[" + value + "]";
+	}
+
+	public String getName() {
+		return name;
 	}
 }

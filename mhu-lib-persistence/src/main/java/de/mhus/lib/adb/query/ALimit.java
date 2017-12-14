@@ -17,12 +17,15 @@ public class ALimit extends AOperation {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append(" LIMIT ").append(offset).append(",").append(limit); //mysql specific !!
+	public void getAttributes(AttributeMap map) {
 	}
 
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public int getLimit() {
+		return limit;
+	}
+
+	public int getOffset() {
+		return offset;
 	}
 
 }

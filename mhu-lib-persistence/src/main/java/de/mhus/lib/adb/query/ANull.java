@@ -26,17 +26,16 @@ public class ANull extends APart {
 
 	/** {@inheritDoc} */
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		attr.print(query, buffer);
-		buffer.append(" is ");
-		if (!is) buffer.append("not ");
-		buffer.append("null");
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void getAttributes(AttributeMap map) {
 		attr.getAttributes(map);
+	}
+
+	public AAttribute getAttr() {
+		return attr;
+	}
+
+	public boolean isIs() {
+		return is;
 	}
 
 }

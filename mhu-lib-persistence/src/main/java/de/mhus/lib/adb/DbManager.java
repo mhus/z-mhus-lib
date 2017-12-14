@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.adb.model.Table;
+import de.mhus.lib.adb.query.ACreateContext;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
@@ -310,4 +311,6 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 
 	public abstract <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException;
 
+	public abstract <T> String toQualification(AQuery<T> qualification);
+	
 }

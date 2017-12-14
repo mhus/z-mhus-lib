@@ -15,13 +15,19 @@ public class AOrder extends AOperation {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append("$db.").append(query.getManager().getMappingName(clazz)).append('.').append(attribute).append('$');
-		buffer.append(' ').append(asc ? "ASC" : "DESC");
+	public void getAttributes(AttributeMap map) {
 	}
 
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public boolean isAsc() {
+		return asc;
 	}
 
 }

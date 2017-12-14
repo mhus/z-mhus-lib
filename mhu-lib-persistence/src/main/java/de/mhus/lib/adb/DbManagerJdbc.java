@@ -27,6 +27,7 @@ import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
 import de.mhus.lib.sql.DbStatement;
+import de.mhus.lib.sql.SqlDialectCreateContext;
 
 /**
  * The implementation hold the table definitions and handle all operations on
@@ -84,23 +85,36 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		initDatabase(cleanup);
 	}
 
+	@Override
 	public <T> T getObjectByQualification(AQuery<T> qualification) throws MException {
 		return getByQualification(qualification).getNextAndClose();
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> DbCollection<T> getByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
 		return (DbCollection<T>) getByQualification(null, (Object)clazz, null, qualification, attributes);
 	}
 
+	@Override
 	public <T> DbCollection<T> getByQualification(T object, String qualification, Map<String,Object> attributes) throws MException {
 		return getByQualification(null, object, null, qualification, attributes);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> DbCollection<T> getByQualification(AQuery<T> qualification) throws MException {
-		return (DbCollection<T>) getByQualification(null, qualification.getType(), null, qualification.toQualification(this), qualification.getAttributes(this));
+		return (DbCollection<T>) getByQualification(null, qualification.getType(), null, toQualification(qualification), qualification.getAttributes());
 	}
+
+	@Override
+	public <T> String toQualification(AQuery<T> qualification) {
+		StringBuffer buffer = new StringBuffer();
+		qualification.setContext(new SqlDialectCreateContext(this, buffer));
+		qualification.create(qualification, getPool().getDialect());
+		return buffer.toString();
+	}
+
 
 	/**
 	 * Get an collection of objects by it's qualification. The qualification is the WHERE part of a
@@ -115,6 +129,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return A collection with the results
 	 * @throws MException
 	 */
+	@Override
 	public <T> DbCollection<T> getByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -124,6 +139,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		return executeQuery(con, object, registryName, s, attributes);
 	}
 	
+	@Override
 	public String createSqlSelect(Class<?> clazz, String columns, String qualification) {
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT ").append(columns).append(" FROM $db.").append(getMappingName(clazz)).append("$ ");
@@ -139,20 +155,24 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	}
 
 
+	@Override
 	public <T> long getCountAll(Class<T> clazz) throws MException {
 		return getCountByQualification(null, (Object)clazz, null, "", null);
 	}
 
+	@Override
 	public <T> long getCountByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException {
 		return getCountByQualification(null, (Object)clazz, null, qualification, attributes);
 	}
 
+	@Override
 	public <T> long getCountByQualification(T object, String qualification, Map<String,Object> attributes) throws MException {
 		return getCountByQualification(null, object, null, qualification, attributes);
 	}
 
+	@Override
 	public <T> long getCountByQualification(AQuery<T> qualification) throws MException {
-		return getCountByQualification(null, qualification.getType(), null, qualification.toQualification(this), qualification.getAttributes(this));
+		return getCountByQualification(null, qualification.getType(), null, toQualification(qualification), qualification.getAttributes());
 	}
 
 	/**
@@ -167,6 +187,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return x
 	 * @throws MException
 	 */
+	@Override
 	public <T> long getCountByQualification(DbConnection con, T object, String registryName, String qualification, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		
@@ -185,22 +206,27 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	}
 
+	@Override
 	public <T> long getMax(Class<T> clazz, String field) throws MException {
 		return getMaxByQualification(null, (Object)clazz, null, field, "", null);
 	}
 
+	@Override
 	public <T> long getMaxByQualification(Class<T> clazz, String field, String qualification, Map<String,Object> attributes) throws MException {
 		return getMaxByQualification(null, (Object)clazz, null, field, qualification, attributes);
 	}
 
+	@Override
 	public <T> long getMaxByQualification(T object, String field, String qualification, Map<String,Object> attributes) throws MException {
 		return getMaxByQualification(null, object, null, field, qualification, attributes);
 	}
 
+	@Override
 	public <T> long getMaxByQualification(String field, AQuery<T> qualification) throws MException {
-		return getMaxByQualification(null, qualification.getType(), null, field, qualification.toQualification(this), qualification.getAttributes(this));
+		return getMaxByQualification(null, qualification.getType(), null, field, toQualification(qualification), qualification.getAttributes());
 	}
 
+	@Override
 	public <T> long getMaxByQualification(DbConnection con, T object, String registryName, String field, String qualification, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		
@@ -219,14 +245,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	}
 
+	@Override
 	public <T,R> List<R> getAttributeByQualification(Class<? extends T> clazz, String attribute, String qualification, Map<String,Object> attributes) throws MException {
 		return getAttributeByQualification(null, clazz, null, attribute, qualification, attributes);
 	}
 
+	@Override
 	public <T,R> List<R> getAttributedByQualification(String attribute, AQuery<? extends T> qualification) throws MException {
-		return getAttributeByQualification(null, (Class<? extends T>)qualification.getType(), null, attribute, qualification.toQualification(this), qualification.getAttributes(this));
+		return getAttributeByQualification(null, (Class<? extends T>)qualification.getType(), null, attribute, toQualification(qualification), qualification.getAttributes());
 	}
 
+	@Override
 	public <T,R> List<R> getAttributeByQualification(DbConnection con, Class<? extends T> clazz, String registryName, String attribute, String qualification, Map<String,Object> attributes) throws MException {
 		
 		getSchema().authorizeReadAttributes(con, this, clazz, registryName, attribute);
@@ -248,6 +277,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	}
 		
+	@Override
 	public <T> DbCollection<T> executeQuery(T clazz, String query, Map<String,Object> attributes) throws MException {
 
 		return executeQuery(null, clazz, null, query, attributes);
@@ -265,6 +295,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return a collection with the results
 	 * @throws MException
 	 */
+	@Override
 	public <T> DbCollection<T> executeQuery(DbConnection con, T clazz, String registryName, String query, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		log().t("query",clazz,registryName,query,attributes);
@@ -302,6 +333,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return x
 	 * @throws MException
 	 */
+	@Override
 	public <T> long executeCountQuery(DbConnection con, String attributeName, String query, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		log().t("count",attributeName,query,attributes);
@@ -343,6 +375,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<T> executeAttributeQuery(DbConnection con, String alias, String query, Map<String,Object> attributes) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		log().t("query",alias,query,attributes);
@@ -378,21 +411,25 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * Returns the persistent schema properties if supported.
 	 * @return The properties or null
 	 */
+	@Override
 	@JmxManaged(descrition="Database Properties of the Schema")
 	public DbProperties getSchemaProperties() {
 		reloadLock.waitWithException(MAX_LOCK);
 		return schemaPersistence;
 	}
 
+	@Override
 	public Object getObject(String registryName, Object ... keys) throws MException {
 		return getObject(null,registryName, keys);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(Class<T> clazz, Object ... keys) throws MException {
 		return (T)getObject(null,getRegistryName(clazz), keys);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException {
 		return (T)getObject(con,getRegistryName(clazz), keys);
@@ -408,6 +445,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return x
 	 * @throws MException
 	 */
+	@Override
 	public Object getObject(DbConnection con, String registryName, Object ... keys) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -456,14 +494,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	//
 
+	@Override
 	public boolean existsObject(String registryName, Object ... keys) throws MException {
 		return existsObject(null,registryName, keys);
 	}
 
+	@Override
 	public <T> boolean existsObject(Class<T> clazz, Object ... keys) throws MException {
 		return existsObject(null,getRegistryName(clazz), keys);
 	}
 
+	@Override
 	public <T> boolean existsObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException {
 		return existsObject(con,getRegistryName(clazz), keys);
 	}
@@ -478,6 +519,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return x
 	 * @throws MException
 	 */
+	@Override
 	public boolean existsObject(DbConnection con, String registryName, Object ... keys) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -523,6 +565,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param res The databse resultset with the data
 	 * @throws MException
 	 */
+	@Override
 	void fillObject(String registryName, Object object, DbConnection con, DbResult res) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -553,6 +596,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@Override
 	public void reloadObject(String registryName, Object object) throws MException {
 		reloadObject(null,registryName, object);
 	}
@@ -564,6 +608,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param object The object to fill
 	 * @throws MException
 	 */
+	@Override
 	public void reloadObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -618,10 +663,12 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@Override
 	public boolean objectChanged(Object object) throws MException {
 		return objectChanged(null,null, object);
 	}
 
+	@Override
 	public boolean objectChanged(String registryName, Object object) throws MException {
 		return objectChanged(null,registryName, object);
 	}
@@ -635,6 +682,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @return x
 	 * @throws MException
 	 */
+	@Override
 	public boolean objectChanged(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -703,6 +751,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param keys The primary keys
 	 * @throws MException
 	 */
+	@Override
 	public void fillObject(DbConnection con, String registryName, Object object, Object ... keys) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -747,14 +796,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	}
 
+	@Override
 	public void createObject(Object object) throws MException {
 		createObject(null,null,object);
 	}
 
+	@Override
 	public void createObject(String registryName, Object object) throws MException {
 		createObject(null, registryName, object);
 	}
 
+	@Override
 	public void createObject(DbConnection con, Object object) throws MException {
 		createObject(con, null, object);
 	}
@@ -767,6 +819,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param object The object to create.
 	 * @throws MException
 	 */
+	@Override
 	public void createObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		DbConnection myCon = null;
@@ -820,14 +873,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	}
 
+	@Override
 	public void saveObject(Object object) throws MException {
 		saveObject(null, null, object);
 	}
 
+	@Override
 	public void saveObject(String registryName, Object object) throws MException {
 		saveObject(null,registryName,object);
 	}
 
+	@Override
 	public void saveObject(DbConnection con, Object object) throws MException {
 		saveObject(con, null, object);
 	}
@@ -840,6 +896,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param object The object to save
 	 * @throws MException
 	 */
+	@Override
 	public void saveObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -888,14 +945,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@Override
 	public void saveObjectForce(Object object, boolean raw) throws MException {
 		saveObjectForce(null, null, object, raw);
 	}
 
+	@Override
 	public void saveObjectForce(String registryName, Object object, boolean raw) throws MException {
 		saveObjectForce(null,registryName,object, raw);
 	}
 
+	@Override
 	public void saveObjectForce(DbConnection con, Object object, boolean raw) throws MException {
 		saveObjectForce(con, null, object, raw);
 	}
@@ -910,6 +970,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param raw If true no events like preSave are called
 	 * @throws MException
 	 */
+	@Override
 	public void saveObjectForce(DbConnection con, String registryName, Object object, boolean raw) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -959,18 +1020,22 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 	
+	@Override
 	public void updateAttributes(Object object, boolean raw, String ... attributeNames) throws MException {
 		updateAttributes(null, null, object, raw, attributeNames);
 	}
 
+	@Override
 	public void updateAttributes(String registryName, Object object, boolean raw, String ... attributeNames) throws MException {
 		updateAttributes(null,registryName,object, raw, attributeNames);
 	}
 
+	@Override
 	public void updateAttributes(DbConnection con, Object object, boolean raw, String ... attributeNames) throws MException {
 		updateAttributes(con, null, object, raw, attributeNames);
 	}
 
+	@Override
 	public void updateAttributes(DbConnection con, String registryName, Object object, boolean raw, String ... attributeNames) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 
@@ -1020,14 +1085,17 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@Override
 	public void deleteObject(Object object) throws MException {
 		deleteObject(null, null, object);
 	}
 
+	@Override
 	public void deleteObject(String registryName, Object object) throws MException {
 		deleteObject(null, registryName, object);
 	}
 
+	@Override
 	public void deleteObject(DbConnection con, Object object) throws MException {
 		deleteObject(con, null, object);
 	}
@@ -1040,6 +1108,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * @param object The object to delete from database
 	 * @throws MException
 	 */
+	@Override
 	public void deleteObject(DbConnection con, String registryName, Object object) throws MException {
 		reloadLock.waitWithException(MAX_LOCK);
 		DbConnection myCon = null;
@@ -1091,10 +1160,12 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 
+	@Override
 	public boolean isConnected() {
 		return nameMapping != null;
 	}
 
+	@Override
 	public void connect() throws Exception {
 		log().i("connect");
 		synchronized (this) {
@@ -1102,6 +1173,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 	
+	@Override
 	public void disconnect() {
 		log().i("disconnect");
 		synchronized (this) {
@@ -1115,6 +1187,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		}
 	}
 	
+	@Override
 	public void reconnect() throws Exception {
 		try {
 			reloadLock.lockWithException(MAX_LOCK);
@@ -1196,42 +1269,50 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		cIndex.put(registryName,c);
 	}
 
+	@Override
 	@JmxManaged(descrition="Used Schema")
 	public DbSchema getSchema() {
 		return schema;
 	}
 
+	@Override
 	public DbPool getPool() {
 		return pool;
 	}
 
+	@Override
 	public MActivator getActivator() {
 		return activator;
 	}
 
+	@Override
 	@JmxManaged(descrition="Current mapping of the table and column names")
 	public Map<String,Object> getNameMapping() {
 		reloadLock.waitWithException(MAX_LOCK);
 		return nameMappingRO;
 	}
 
+	@Override
 	public MetadataBundle getCaoMetadata() {
 		reloadLock.waitWithException(MAX_LOCK);
 		return caoBundle;
 	}
 
+	@Override
 	@JmxManaged(descrition="Returns valide registry names")
 	public String[] getRegistryNames() {
 		reloadLock.waitWithException(MAX_LOCK);
 		return cIndex.keySet().toArray(new String[0]);
 	}
 
+	@Override
 	@JmxManaged(descrition="Returns the table for the registry name")
 	public Table getTable(String registryName) {
 		reloadLock.waitWithException(MAX_LOCK);
 		return cIndex.get(registryName);
 	}
 
+	@Override
 	public Object createSchemaObject(String registryName) throws Exception {
 		reloadLock.waitWithException(MAX_LOCK);
 		Table table = cIndex.get(registryName);
@@ -1239,6 +1320,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		return schema.createObject(table.getClazz(), table.getRegistryName(), null, this, false);
 	}
 
+	@Override
 	public String getRegistryName(Object object) {
 		reloadLock.waitWithException(MAX_LOCK);
 		if (object instanceof Class<?>) {
@@ -1249,17 +1331,20 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		return clazz.getCanonicalName();
 	}
 
+	@Override
 	public String getMappingName(Class<?> clazz) {
 		reloadLock.waitWithException(MAX_LOCK);
 		return clazz.getSimpleName().toLowerCase();
 	}
 
+	@Override
 	public <T extends Persistable> T inject(T object) {
 		reloadLock.waitWithException(MAX_LOCK);
 		schema.injectObject(object, this, getTable(getRegistryName(object)));
 		return object;
 	}
 	
+	@Override
 	public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
 		return getByQualification(clazz, "", null);
 	}

@@ -8,6 +8,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
+import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.query.AAnd;
+import de.mhus.lib.adb.query.AAttribute;
+import de.mhus.lib.adb.query.ACompare;
+import de.mhus.lib.adb.query.AConcat;
+import de.mhus.lib.adb.query.ACreateContext;
+import de.mhus.lib.adb.query.ADbAttribute;
+import de.mhus.lib.adb.query.ADynValue;
+import de.mhus.lib.adb.query.AEnumFix;
+import de.mhus.lib.adb.query.AFix;
+import de.mhus.lib.adb.query.ALimit;
+import de.mhus.lib.adb.query.AList;
+import de.mhus.lib.adb.query.ALiteral;
+import de.mhus.lib.adb.query.ALiteralList;
+import de.mhus.lib.adb.query.ANot;
+import de.mhus.lib.adb.query.ANull;
+import de.mhus.lib.adb.query.AOperation;
+import de.mhus.lib.adb.query.AOr;
+import de.mhus.lib.adb.query.AOrder;
+import de.mhus.lib.adb.query.APart;
+import de.mhus.lib.adb.query.APrint;
+import de.mhus.lib.adb.query.AQuery;
+import de.mhus.lib.adb.query.ASubQuery;
 import de.mhus.lib.cao.CaoMetaDefinition;
 import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MSql;
@@ -537,6 +560,195 @@ public class DialectDefault extends Dialect {
 	@Override
 	public String escape(String text) {
 		return MSql.escape(text);
+	}
+
+	@Override
+	public void createQuery(APrint p, AQuery<?> query) {
+		StringBuffer buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
+		DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
+		createQuery(p, query, buffer, manager);
+	}
+
+	public void createQuery(APrint p, AQuery<?> query, StringBuffer buffer, DbManager manager) {
+		if (p instanceof AQuery) {
+			//		buffer.append('(');
+			{
+				boolean first = true;
+				for (AOperation operation : ((AQuery<?>)p).getOperations() ) {
+					if (operation instanceof APart) {
+						if (first)
+							first = false;
+						else
+							buffer.append(" and ");
+						operation.create(query, this);
+					}
+				}
+			}
+			//		buffer.append(')');
+
+			{
+				boolean first = true;
+				AOperation limit = null;
+				for (AOperation operation : ((AQuery<?>)p).getOperations() ) {
+					if (operation instanceof AOrder) {
+						if (first) {
+							first = false;
+							buffer.append(" ORDER BY ");
+						} else
+							buffer.append(" , ");
+						operation.create(query, this);
+					} else
+						if (operation instanceof ALimit)
+							limit = operation;
+				}
+
+				if (limit != null) {
+					limit.create(query, this);
+				}
+
+			}
+		} else
+		if (p instanceof AAnd) {
+			buffer.append('(');
+			boolean first = true;
+			for (APart part : ((AAnd)p).getOperations()) {
+				if (first)
+					first = false;
+				else
+					buffer.append(" and ");
+				part.create(query, this);
+			}
+			buffer.append(')');
+		} else
+		if (p instanceof ACompare) {
+			((ACompare)p).getLeft().create(query, this);
+			switch (((ACompare)p).getEq()) {
+			case EG:
+				buffer.append(" => ");
+				break;
+			case EL:
+				buffer.append(" <= ");
+				break;
+			case EQ:
+				buffer.append(" = ");
+				break;
+			case GT:
+				buffer.append(" > ");
+				break;
+			case GE:
+				buffer.append(" >= ");
+				break;
+			case LIKE:
+				buffer.append(" like ");
+				break;
+			case LT:
+				buffer.append(" < ");
+				break;
+			case LE:
+				buffer.append(" <= ");
+				break;
+			case NE:
+				buffer.append(" <> ");
+				break;
+			case IN:
+				buffer.append(" in ");
+				break;
+
+			}
+			((ACompare)p).getRight().create(query, this);
+		} else
+		if (p instanceof AConcat) {
+			buffer.append("concat(");
+			boolean first = true;
+			for (AAttribute part : ((AConcat)p).getParts()) {
+				if (first) first = false; else buffer.append(",");
+				part.create(query, this);
+			}
+			buffer.append(")");
+		} else
+		if (p instanceof ADbAttribute) {
+			Class<?> c = ((ADbAttribute)p).getClazz();
+			if (c == null) c = query.getType();
+			String name = "db." + manager.getMappingName(c) + "." + ((ADbAttribute)p).getAttribute();
+			if (manager.getNameMapping().get(name) == null)
+				log().w("mapping not exist",name);
+			buffer.append("$").append(name).append('$');
+		} else
+		if (p instanceof ADynValue) {
+			buffer.append('$').append(((ADynValue)p).getName()).append('$');
+		} else
+		if (p instanceof AEnumFix) {
+			buffer.append(((AEnumFix)p).getValue().ordinal());
+		} else
+		if (p instanceof AFix) {
+			buffer.append(((AFix)p).getValue());
+		} else
+		if (p instanceof ALimit) {
+			buffer.append(" LIMIT ").append(((ALimit)p).getOffset()).append(",").append(((ALimit)p).getLimit()); //mysql specific !!
+		} else
+		if (p instanceof AList) {
+			buffer.append('(');
+			boolean first = true;
+			for (AAttribute part : ((AList)p).getOperations()) {
+				if (first)
+					first = false;
+				else
+					buffer.append(",");
+				part.create(query, this);
+			}
+			buffer.append(')');
+		} else
+		if (p instanceof ALiteral) {
+			buffer.append(((ALiteral)p).getLiteral());
+		} else
+		if (p instanceof ALiteralList) {
+			for (APart part : ((ALiteralList)p).getOperations()) {
+				part.create(query, this);
+			}
+		} else
+		if (p instanceof ANot) {
+			buffer.append("not ");
+			((ANot)p).getOperation().create(query, this);
+		} else
+		if (p instanceof ANull) {
+			((ANull)p).getAttr().create(query, this);
+			buffer.append(" is ");
+			if (!((ANull)p).isIs()) buffer.append("not ");
+			buffer.append("null");
+		} else
+		if (p instanceof AOr) {
+			buffer.append('(');
+			boolean first = true;
+			for (APart part : ((AOr)p).getOperations()) {
+				if (first)
+					first = false;
+				else
+					buffer.append(" or ");
+				part.create(query, this);
+			}
+			buffer.append(')');
+		} else
+		if (p instanceof AOrder) {
+			buffer.append("$db.").append(manager.getMappingName(((AOrder)p).getClazz())).append('.').append(((AOrder)p).getAttribute()).append('$');
+			buffer.append(' ').append( ((AOrder)p).isAsc() ? "ASC" : "DESC");
+		} else
+		if (p instanceof ASubQuery) {
+			String qualification = manager.toQualification(((ASubQuery)p).getSubQuery()).trim();
+			
+			((ASubQuery)p).getLeft().create(query, this);
+			buffer.append(" IN (");
+			
+			StringBuffer buffer2 = new StringBuffer().append("DISTINCT ");
+			
+			AQuery<?> subQuery = ((ASubQuery)p).getSubQuery();
+			subQuery.setContext(new SqlDialectCreateContext(manager, buffer2 ) );
+			((ASubQuery)p).getProjection().create(subQuery, this);
+			
+			buffer.append( manager.createSqlSelect(((ASubQuery)p).getSubQuery().getType(), buffer2.toString() , qualification));
+
+			buffer.append(")");
+		}
+		
 	}
 
 }

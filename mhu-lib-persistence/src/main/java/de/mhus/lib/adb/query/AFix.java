@@ -11,12 +11,11 @@ public class AFix extends AAttribute {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append(value);
+	public void getAttributes(AttributeMap map) {
 	}
 
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public String getValue() {
+		return value;
 	}
 
 }

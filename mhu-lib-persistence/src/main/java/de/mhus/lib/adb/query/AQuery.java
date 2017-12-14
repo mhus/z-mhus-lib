@@ -1,6 +1,7 @@
 package de.mhus.lib.adb.query;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,9 +20,8 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
 public class AQuery<T> extends APrint {
 
 	private LinkedList<AOperation> operations;
-	private DbManager manager;
 	private Class<? extends T> type;
-//	private Recorder<T> recorder;
+	private ACreateContext context;
 	
 	/**
 	 * <p>Constructor for AQuery.</p>
@@ -55,21 +55,8 @@ public class AQuery<T> extends APrint {
 	 *
 	 * @return a {@link java.lang.Class} object.
 	 */
-	public Class<?> getType() {
+	public Class<? extends T> getType() {
 		return type;
-	}
-
-	/**
-	 * <p>toQualification.</p>
-	 *
-	 * @param dbManager a {@link de.mhus.lib.adb.DbManager} object.
-	 * @return a {@link java.lang.String} object.
-	 */
-	public String toQualification(DbManager dbManager) {
-		manager = dbManager;
-		StringBuffer buffer = new StringBuffer();
-		print(this, buffer);
-		return buffer.toString();
 	}
 
 	/**
@@ -78,8 +65,7 @@ public class AQuery<T> extends APrint {
 	 * @param dbManager a {@link de.mhus.lib.adb.DbManager} object.
 	 * @return a {@link java.util.Map} object.
 	 */
-	public Map<String, Object> getAttributes(DbManager dbManager) {
-		manager = dbManager;
+	public Map<String, Object> getAttributes() {
 		AttributeMap map = new AttributeMap();
 		getAttributes(map);
 		return map;
@@ -87,61 +73,9 @@ public class AQuery<T> extends APrint {
 
 	/** {@inheritDoc} */
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		//		buffer.append('(');
-		{
-			boolean first = true;
-			for (AOperation operation : operations) {
-				if (operation instanceof APart) {
-					if (first)
-						first = false;
-					else
-						buffer.append(" and ");
-					operation.print(query, buffer);
-				}
-			}
-		}
-		//		buffer.append(')');
-
-		{
-			boolean first = true;
-			AOperation limit = null;
-			for (AOperation operation : operations) {
-				if (operation instanceof AOrder) {
-					if (first) {
-						first = false;
-						buffer.append(" ORDER BY ");
-					} else
-						buffer.append(" , ");
-					operation.print(query, buffer);
-				} else
-					if (operation instanceof ALimit)
-						limit = operation;
-			}
-
-			if (limit != null) {
-				limit.print(query, buffer);
-			}
-
-		}
-
-
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void getAttributes(AttributeMap map) {
 		for (AOperation operation : operations)
 			operation.getAttributes(map);
-	}
-
-	/**
-	 * <p>Getter for the field <code>manager</code>.</p>
-	 *
-	 * @return a {@link de.mhus.lib.adb.DbManager} object.
-	 */
-	public DbManager getManager() {
-		return manager;
 	}
 
 	/**
@@ -711,6 +645,18 @@ public class AQuery<T> extends APrint {
 		} catch (NotFoundException e) {
 			throw new NotFoundRuntimeException(e);
 		}
+	}
+
+	public ACreateContext getContext() {
+		return context;
+	}
+
+	public void setContext(ACreateContext context) {
+		this.context = context;
+	}
+
+	public List<AOperation> getOperations() {
+		return operations;
 	}
 
 //	@SuppressWarnings("unchecked")

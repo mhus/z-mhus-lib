@@ -11,23 +11,13 @@ public class AOr extends APart {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append('(');
-		boolean first = true;
-		for (APart part : operations) {
-			if (first)
-				first = false;
-			else
-				buffer.append(" or ");
-			part.print(query, buffer);
-		}
-		buffer.append(')');
-	}
-
-	@Override
 	public void getAttributes(AttributeMap map) {
 		for (APart part : operations)
 			part.getAttributes(map);
+	}
+
+	public APart[] getOperations() {
+		return operations;
 	}
 
 }

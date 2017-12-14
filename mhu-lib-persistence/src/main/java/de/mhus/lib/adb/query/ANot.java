@@ -11,15 +11,12 @@ public class ANot extends APart {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append("not ");
-		operation.print(query, buffer);
-		//		buffer.append(')');
-	}
-
-	@Override
 	public void getAttributes(AttributeMap map) {
 		operation.getAttributes(map);
+	}
+
+	public APart getOperation() {
+		return operation;
 	}
 
 }

@@ -11,12 +11,11 @@ public class ALiteral extends APart {
 	}
 
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		buffer.append(literal);
+	public void getAttributes(AttributeMap map) {
 	}
 
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public String getLiteral() {
+		return literal;
 	}
 
 }

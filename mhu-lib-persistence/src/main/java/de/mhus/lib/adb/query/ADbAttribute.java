@@ -28,18 +28,15 @@ public class ADbAttribute extends AAttribute {
 
 	/** {@inheritDoc} */
 	@Override
-	public void print(AQuery<?> query, StringBuffer buffer) {
-		Class<?> c = clazz;
-		if (c == null) c = query.getType();
-		String name = "db." + query.getManager().getMappingName(c) + "." + attribute;
-		if (query.getManager().getNameMapping().get(name) == null)
-			log.w("mapping dos not exist",name);
-		buffer.append("$").append(name).append('$');
+	public void getAttributes(AttributeMap map) {
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void getAttributes(AttributeMap map) {
+	public String getAttribute() {
+		return attribute;
+	}
+
+	public Class<?> getClazz() {
+		return clazz;
 	}
 
 }

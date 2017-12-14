@@ -66,6 +66,10 @@
         <felix.plugin.version>3.0.1</felix.plugin.version>
         <maven.version>2.0.9</maven.version>
 	    <jackson.version>1.9.5</jackson.version>
+	    
+	    <mongo.version>3.6.0</mongo.version>
+		<mongo.morphia.version>1.3.2</mongo.morphia.version>
+	    
       </properties>
 
    <build>

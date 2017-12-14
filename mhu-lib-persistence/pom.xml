@@ -43,11 +43,13 @@
 	            de.mhus.lib.adb.util.*;version=${project.version},
 	            de.mhus.lib.cao.*;version=${project.version},
 	            de.mhus.lib.jpa.*;version=${project.version},
-	            de.mhus.lib.sql.*;version=${project.version}
+	            de.mhus.lib.sql.*;version=${project.version},
+	            de.mhus.lib.mongo.*;version=${project.version}
 	            </Export-Package>
 	            <Import-Package>
 		            javax.persistence.*;resolution:=optional,
 		            org.apache.openjpa.*;resolution:=optional,
+		            com.mongodb.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	          </instructions>
@@ -128,5 +130,22 @@
     	<scope>provided</scope>
     </dependency>
 
+	<dependency>
+             <groupId>org.mongodb</groupId>
+             <artifactId>mongo-java-driver</artifactId>
+             <version>${mongo.version}</version>
+         </dependency>		
+	<dependency>
+             <groupId>org.mongodb.morphia</groupId>
+             <artifactId>morphia</artifactId>
+             <version>${mongo.morphia.version}</version>
+         </dependency>		
+	<dependency>
+	    <groupId>de.bwaldvogel</groupId>
+	    <artifactId>mongo-java-server</artifactId>
+	    <version>1.7.0</version>
+	    <scope>test</scope>
+	</dependency>
+	
   </dependencies>
 </project>
