@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.FindAndModifyOptions;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.mapping.Mapper;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
 import com.mongodb.MongoClient;
 
@@ -40,6 +43,7 @@ import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.sql.DbConnection;
+import de.mhus.lib.sql.SqlDialectCreateContext;
 
 public class MoManager extends MJmx implements MoHandler {
 
@@ -63,6 +67,7 @@ public class MoManager extends MJmx implements MoHandler {
 		classObjs.addAll(list);
 		morhia = new Morphia(mapper, classObjs );
 		datastore = morhia.createDatastore(client, schema.getDatabaseName());
+		datastore.ensureIndexes();
 	}
 	
 	protected Mapper getMapper() {
@@ -83,19 +88,12 @@ public class MoManager extends MJmx implements MoHandler {
 		return datastore.get(clazz, keys[0]);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T> List<T> getByQualification(AQuery<T> qualification) throws MException {
-		Query<? extends T> q = datastore.createQuery(qualification.getType());
-		doQualification(qualification, q);
-		return (List<T>) q.asList();
+	public <T> Query<T> createQuery(Class<T> clazz) {
+		return datastore.createQuery(clazz);
 	}
-
-	private <T> void doQualification(AQuery<T> qualification, Query<? extends T> q) {
-		MoCreateContext context = new MoCreateContext(this,q);
-		qualification.setContext(context);
-		context.createQuery(qualification, qualification, null);
-	}
-
+		
+	// ----
+	
 	@Override
 	public void saveObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException {
 		save(dbComfortableObject);
@@ -122,17 +120,39 @@ public class MoManager extends MJmx implements MoHandler {
 	public void createObject(DbConnection con, Object dbComfortableObject) throws MException {
 		save(dbComfortableObject);
 	}
+
+	// -----
 	
-	private static class MoCreateContext implements ACreateContext {
+	public <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
+		return datastore.createUpdateOperations(clazz);
+	}
 
-		public MoCreateContext(MoManager moManager, Query<?> q) {
-			// TODO Auto-generated constructor stub
-		}
+	public <T> T findAndDelete(Query<T> query) {
+		return datastore.findAndDelete(query);
+	}
 
-		public void createQuery(APrint p, AQuery<?> query, StringBuffer buffer) {
+	public <T> T findAndModify(Query<T> query, UpdateOperations<T> operations, FindAndModifyOptions options) {
+		return datastore.findAndModify(query, operations, options);
+	}
 
-		}
-		
+	public <T> T findAndModify(Query<T> query, UpdateOperations<T> operations) {
+		return datastore.findAndModify(query, operations);
+	}
+
+	public <T> long getCount(T entity) {
+		return datastore.getCount(entity);
+	}
+
+	public <T> long getCount(Class<T> clazz) {
+		return datastore.getCount(clazz);
+	}
+
+	public <T> long getCount(Query<T> query) {
+		return datastore.getCount(query);
+	}
+
+	public <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations) {
+		return datastore.update(query, operations);
 	}
 	
 }
