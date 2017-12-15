@@ -577,7 +577,7 @@ public class DialectDefault extends Dialect {
 							first = false;
 						else
 							buffer.append(" and ");
-						operation.create(query, this);
+						createQuery(operation, query);
 					}
 				}
 			}
@@ -593,14 +593,14 @@ public class DialectDefault extends Dialect {
 							buffer.append(" ORDER BY ");
 						} else
 							buffer.append(" , ");
-						operation.create(query, this);
+						createQuery(operation, query);
 					} else
 						if (operation instanceof ALimit)
 							limit = operation;
 				}
 
 				if (limit != null) {
-					limit.create(query, this);
+					createQuery(limit, query);
 				}
 
 			}
@@ -613,12 +613,12 @@ public class DialectDefault extends Dialect {
 					first = false;
 				else
 					buffer.append(" and ");
-				part.create(query, this);
+				createQuery(part, query);
 			}
 			buffer.append(')');
 		} else
 		if (p instanceof ACompare) {
-			((ACompare)p).getLeft().create(query, this);
+			createQuery( ((ACompare)p).getLeft(), query);
 			switch (((ACompare)p).getEq()) {
 			case EG:
 				buffer.append(" => ");
@@ -652,14 +652,14 @@ public class DialectDefault extends Dialect {
 				break;
 
 			}
-			((ACompare)p).getRight().create(query, this);
+			createQuery( ((ACompare)p).getRight(), query);
 		} else
 		if (p instanceof AConcat) {
 			buffer.append("concat(");
 			boolean first = true;
 			for (AAttribute part : ((AConcat)p).getParts()) {
 				if (first) first = false; else buffer.append(",");
-				part.create(query, this);
+				createQuery(part, query);
 			}
 			buffer.append(")");
 		} else
@@ -692,7 +692,7 @@ public class DialectDefault extends Dialect {
 					first = false;
 				else
 					buffer.append(",");
-				part.create(query, this);
+				createQuery(part, query);
 			}
 			buffer.append(')');
 		} else
@@ -701,15 +701,15 @@ public class DialectDefault extends Dialect {
 		} else
 		if (p instanceof ALiteralList) {
 			for (APart part : ((ALiteralList)p).getOperations()) {
-				part.create(query, this);
+				createQuery(part, query);
 			}
 		} else
 		if (p instanceof ANot) {
 			buffer.append("not ");
-			((ANot)p).getOperation().create(query, this);
+			createQuery( ((ANot)p).getOperation(), query);
 		} else
 		if (p instanceof ANull) {
-			((ANull)p).getAttr().create(query, this);
+			createQuery( ((ANull)p).getAttr(), query );
 			buffer.append(" is ");
 			if (!((ANull)p).isIs()) buffer.append("not ");
 			buffer.append("null");
@@ -722,7 +722,7 @@ public class DialectDefault extends Dialect {
 					first = false;
 				else
 					buffer.append(" or ");
-				part.create(query, this);
+				createQuery(part, query);
 			}
 			buffer.append(')');
 		} else
@@ -735,14 +735,14 @@ public class DialectDefault extends Dialect {
 			DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
 			String qualification = manager.toQualification(((ASubQuery)p).getSubQuery()).trim();
 			
-			((ASubQuery)p).getLeft().create(query, this);
+			createQuery( ((ASubQuery)p).getLeft(), query);
 			buffer.append(" IN (");
 			
 			StringBuffer buffer2 = new StringBuffer().append("DISTINCT ");
 			
 			AQuery<?> subQuery = ((ASubQuery)p).getSubQuery();
 			subQuery.setContext(new SqlDialectCreateContext(manager, buffer2 ) );
-			((ASubQuery)p).getProjection().create(subQuery, this);
+			createQuery( ((ASubQuery)p).getProjection(), subQuery );
 			
 			buffer.append( manager.createSqlSelect(((ASubQuery)p).getSubQuery().getType(), buffer2.toString() , qualification));
 

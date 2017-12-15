@@ -1,5 +1,6 @@
 package de.mhus.lib.test.mongo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -67,7 +68,7 @@ public class Employee implements Persistable {
     @Reference
     private Employee manager;
     @Reference
-    private List<Employee> directReports;
+    private List<Employee> directReports = new LinkedList<Employee>();
     @Property("wage")
     private Double salary;
     

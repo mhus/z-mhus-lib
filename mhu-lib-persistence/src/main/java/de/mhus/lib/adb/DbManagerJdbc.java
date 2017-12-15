@@ -111,7 +111,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	public <T> String toQualification(AQuery<T> qualification) {
 		StringBuffer buffer = new StringBuffer();
 		qualification.setContext(new SqlDialectCreateContext(this, buffer));
-		qualification.create(qualification, getPool().getDialect());
+		getPool().getDialect().createQuery(qualification, qualification);
 		return buffer.toString();
 	}
 
