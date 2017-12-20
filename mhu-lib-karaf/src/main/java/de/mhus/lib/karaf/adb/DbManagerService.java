@@ -18,4 +18,6 @@ public interface DbManagerService {
 
 	void doInitialize() throws Exception;
 
+	void doClose();
+
 }

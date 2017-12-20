@@ -43,7 +43,8 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		manager = doCreateDbManager(clean);
 	}
 	
-	protected void doClose() {
+	@Override
+	public void doClose() {
 		if (manager == null) return;
 		manager.getPool().close();
 		manager = null;

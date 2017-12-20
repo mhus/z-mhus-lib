@@ -11,9 +11,10 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
+import de.mhus.lib.core.jmx.MJmx;
 
 @Component(provide=DbManagerAdmin.class,immediate=true,name="de.mhus.lib.karaf.adb.DbManagerAdmin")
-public class DbManagerAdminImpl implements DbManagerAdmin {
+public class DbManagerAdminImpl extends MJmx implements DbManagerAdmin {
 
 	private LinkedList<DbManagerService> services = new LinkedList<>();
 	
@@ -88,6 +89,11 @@ public class DbManagerAdminImpl implements DbManagerAdmin {
 		if (service == null) return;
 		synchronized (services) {
 			services.remove(service);
+		}
+		try {
+			service.doClose();
+		} catch (Throwable t) {
+			log().e(t);
 		}
 	}
 

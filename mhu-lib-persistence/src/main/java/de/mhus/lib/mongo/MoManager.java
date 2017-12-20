@@ -51,6 +51,7 @@ public class MoManager extends MJmx implements MoHandler {
 	private MoSchema schema;
 	private Morphia morhia;
 	private Datastore datastore;
+	private LinkedList<Class<? extends Persistable>> managedTypes;
 
 	public MoManager(MongoClient client, MoSchema schema) {
 		this.client = client;
@@ -62,9 +63,9 @@ public class MoManager extends MJmx implements MoHandler {
 	protected void initDatabase() {
 		Mapper mapper = getMapper();
 		Set<Class> classObjs = new HashSet<>();
-		LinkedList<Class<? extends Persistable>> list = new LinkedList<>();
-		schema.findObjectTypes(list);
-		classObjs.addAll(list);
+		managedTypes = new LinkedList<>();
+		schema.findObjectTypes(managedTypes);
+		classObjs.addAll(managedTypes);
 		morhia = new Morphia(mapper, classObjs );
 		datastore = morhia.createDatastore(client, schema.getDatabaseName());
 		datastore.ensureIndexes();
@@ -153,6 +154,18 @@ public class MoManager extends MJmx implements MoHandler {
 
 	public <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations) {
 		return datastore.update(query, operations);
+	}
+
+	public void close() {
+		
+	}
+
+	public MoSchema getSchema() {
+		return schema;
+	}
+
+	public List<Class<? extends Persistable>> getManagedTypes() {
+		return managedTypes;
 	}
 	
 }
