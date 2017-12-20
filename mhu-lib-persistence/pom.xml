@@ -50,6 +50,7 @@
 		            javax.persistence.*;resolution:=optional,
 		            org.apache.openjpa.*;resolution:=optional,
 		            com.mongodb.*;resolution:=optional,
+		            org.mongodb.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	          </instructions>

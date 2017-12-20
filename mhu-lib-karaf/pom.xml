@@ -64,6 +64,8 @@
                         	com.vaadin*;resolution:=optional,
                         	org.apache.activemq.*;resolution:=optional,
                         	javax.jms.*;resolution:=optional,
+				            com.mongodb.*;resolution:=optional,
+				            org.mongodb.*;resolution:=optional,
                             *
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
