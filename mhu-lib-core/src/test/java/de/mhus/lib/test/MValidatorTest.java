@@ -47,7 +47,16 @@ public class MValidatorTest extends TestCase {
 		assertEquals(false, MValidator.isPhoneNumber("+49 40 abc") );
 		assertEquals(false, MValidator.isPhoneNumber("+49") );
 		assertEquals(false, MValidator.isPhoneNumber("+49 40 12345 12345 12345 12345") );
-		assertEquals(false, MValidator.isPhoneNumber("+49-40/1234") );
+		assertEquals(true, MValidator.isPhoneNumber("+49-40/1234") );
+		assertEquals(false, MValidator.isPhoneNumber("+49(0)40/1234") );
+		
+		assertEquals(true, MValidator.isPhoneNumber("+49-40/1234", Locale.GERMAN) );
+		assertEquals(true, MValidator.isPhoneNumber("+49-40/1234", Locale.GERMANY) );
+		
+		assertEquals(true, MValidator.isPhoneNumber("(123) 123-1234", Locale.US) );
+		assertEquals(true, MValidator.isPhoneNumber("123-123-1234", Locale.US) );
+		assertEquals(false, MValidator.isPhoneNumber("+49-40/1234", Locale.US) );
+
 	}
 	
 	public void testSqlColumnName() throws SQLException {

@@ -113,14 +113,21 @@ public class MValidator {
 	}
 	
 	public static boolean isPhoneNumber(String phone) {
+		return isPhoneNumber(phone, null);
+	}
+	
+	public static boolean isPhoneNumber(String phone, Locale locale) {
 		if (MString.isEmpty(phone)) return false;
 		//validate phone numbers of format "+123-456 7890"
 		// 49 1234 123456 1234 => 19 Digits (max to 20)
 		if (phone.startsWith("+")) phone = phone.substring(1);
 		if (phone.length() < 4 || phone.length() > 20) return false;
-        if (phone.matches("[0-9 -]+\\d")) return true;
-        
-        return false;
+		if (locale != null) {
+			if ("US".equals(locale.getCountry())) {
+		        return phone.matches("^(\\([0-9]{3}\\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$");
+			}
+		}
+        return phone.matches("^[0-9| |\\-|/]*$");
     }
 
 	public static boolean isNumber(String nr) {
