@@ -41,6 +41,7 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.ASubQuery;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.SqlDialectCreateContext;
@@ -166,6 +167,13 @@ public class MoManager extends MJmx implements MoHandler {
 
 	public List<Class<? extends Persistable>> getManagedTypes() {
 		return managedTypes;
+	}
+
+	public Class<?> getManagedType(String name) throws NotFoundException {
+		name = name.trim().toLowerCase();
+		for (Class<? extends Persistable> type : managedTypes)
+			if (type.getCanonicalName().toLowerCase().endsWith(name)) return type;
+		throw new NotFoundException("Type not found",name);
 	}
 	
 }
