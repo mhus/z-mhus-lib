@@ -1,7 +1,5 @@
 package de.mhus.lib.core.schedule;
 
-import java.util.Observer;
-
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MSystem;

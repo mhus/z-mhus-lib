@@ -22,6 +22,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * @param name
 	 * @return null if the property not exists or the property value.
 	 */
+	@Override
 	public abstract Object getProperty(String name);
 	
 //	@Deprecated
@@ -210,7 +211,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	 * Return true if the property exists.
 	 * 
 	 * @param name
-	 * @return
+	 * @return if exists
 	 */
 	@Override
 	public abstract boolean isProperty(String name);
@@ -234,13 +235,13 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	/**
 	 * Overwrite this function and return true if the property set can be edited.
 	 * 
-	 * @return
+	 * @return if is editable
 	 */
 	@Override
 	public abstract boolean isEditable();
 	
 	/**
-	 * @return 
+	 * @return the keys
 	 * 
 	 */
 	@Override
@@ -393,6 +394,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 		return keys();
 	}
 
+	@Override
 	public String getFormatted(String name, String def, Object ... values ) {
 		String format = getString(name, def);
 		return String.format(format, values);

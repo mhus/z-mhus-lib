@@ -22,7 +22,7 @@ public class DynamicField implements DbDynamic.Field {
 	private String name;
 	private boolean isPrimaryKey;
 	private Class<?> ret;
-	private ResourceNode attributes;
+	private ResourceNode<?> attributes;
 	private boolean persistent = true;
 	private boolean readOnly;
 
@@ -95,12 +95,12 @@ public class DynamicField implements DbDynamic.Field {
 	 *
 	 * @param attributes a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
-	public void setAttributes(ResourceNode attributes) {
+	public void setAttributes(ResourceNode<?> attributes) {
 		this.attributes = attributes;
 	}
 	/** {@inheritDoc} */
 	@Override
-	public ResourceNode getAttributes() {
+	public ResourceNode<?> getAttributes() {
 		return attributes;
 	}
 

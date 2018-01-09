@@ -1,8 +1,5 @@
 package de.mhus.lib.core.schedule;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.strategy.OperationDescription;
 import de.mhus.lib.core.strategy.OperationResult;

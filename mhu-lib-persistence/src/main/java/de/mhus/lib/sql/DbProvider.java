@@ -23,8 +23,6 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * Provide the database connections and other db specific stuff.

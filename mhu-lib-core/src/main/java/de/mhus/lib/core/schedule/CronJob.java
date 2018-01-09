@@ -1,11 +1,10 @@
 package de.mhus.lib.core.schedule;
 
 import java.util.Calendar;
-import java.util.Observer;
 
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.base.service.HolidayProviderIfc;
 

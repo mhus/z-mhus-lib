@@ -8,7 +8,6 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.vault.MVault;
-import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.VaultSource;
 import de.mhus.lib.karaf.MServiceTracker;
 

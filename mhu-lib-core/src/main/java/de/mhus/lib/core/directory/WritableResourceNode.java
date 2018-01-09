@@ -15,7 +15,7 @@ public abstract class WritableResourceNode<W extends WritableResourceNode<W>> ex
 	 * list.
 	 * 
 	 * @param key
-	 * @return
+	 * @return new config node
 	 * @throws MException if editing is not possible
 	 */
 	public abstract WritableResourceNode<W> createConfig(String key) throws MException;

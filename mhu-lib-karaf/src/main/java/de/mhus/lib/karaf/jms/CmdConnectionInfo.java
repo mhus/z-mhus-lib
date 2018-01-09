@@ -6,7 +6,6 @@ import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 
 @Command(scope = "jms", name = "connection-info", description = "Connection Information")

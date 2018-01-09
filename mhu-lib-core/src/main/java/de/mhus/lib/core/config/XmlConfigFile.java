@@ -12,6 +12,7 @@ import de.mhus.lib.errors.MException;
 
 public class XmlConfigFile extends XmlConfig {
 
+	private static final long serialVersionUID = 1L;
 	private File file;
 
 	public XmlConfigFile(File file) throws FileNotFoundException, Exception  {

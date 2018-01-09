@@ -5,8 +5,6 @@ import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
-import de.mhus.lib.annotations.jmx.JmxManaged;
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.karaf.MOsgi;

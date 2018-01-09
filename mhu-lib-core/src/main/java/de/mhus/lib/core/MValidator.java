@@ -24,7 +24,7 @@ public class MValidator {
 	 *
 	 * 
 	 * @param in
-	 * @return
+	 * @return true if it's a first name
 	 */
 	public static boolean isFirstName(String in) {
 		if (in == null) return false;
@@ -42,7 +42,7 @@ public class MValidator {
 	 * - Van Gerben (Space in the name)
 	 *
 	 * @param in
-	 * @return
+	 * @return true if it's a last name
 	 */
 	public static boolean isLastName(String in) {
 		if (in == null) return false;

@@ -22,9 +22,10 @@ import de.mhus.lib.errors.MException;
 
 public class JsonConfig extends IConfig {
 
+	private static final long serialVersionUID = 1L;
 	private ObjectNode node;
 	protected String name;
-	private WritableResourceNode parent;
+	private WritableResourceNode<IConfig> parent;
 	// private int index = -1;
 	
 	public JsonConfig(String json) throws Exception {
@@ -113,6 +114,7 @@ public class JsonConfig extends IConfig {
 		return out;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object getProperty(String name) {
 		JsonNode child = node.get(name);
@@ -158,7 +160,7 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode createConfig(String key) throws MException {
+	public WritableResourceNode<IConfig> createConfig(String key) throws MException {
 		
 		// find array node, to append new config
 		if (node.get(key) != null && !node.get(key).isArray()) {
@@ -275,7 +277,7 @@ public class JsonConfig extends IConfig {
 	}
 
 	@Override
-	public WritableResourceNode getParent() {
+	public WritableResourceNode<IConfig> getParent() {
 		return parent;
 	}
 	

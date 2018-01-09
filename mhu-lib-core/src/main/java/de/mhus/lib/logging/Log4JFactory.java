@@ -1,5 +1,7 @@
 package de.mhus.lib.logging;
 
+import org.apache.commons.logging.LogConfigurationException;
+
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  * 

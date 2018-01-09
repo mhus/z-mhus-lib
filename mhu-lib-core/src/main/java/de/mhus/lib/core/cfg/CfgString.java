@@ -14,7 +14,7 @@ public class CfgString extends CfgValue<String>{
 		int p = getPath().indexOf('@');
 		if (p < 0) 
 			return MApi.getCfg(getOwner()).getString(getPath(), getDefault());
-		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+		ResourceNode<?> node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
 		if (node == null) return getDefault();
 		return node.getString(getPath().substring(p+1), getDefault());
 	}

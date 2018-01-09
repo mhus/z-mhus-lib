@@ -31,7 +31,7 @@ public class MBigMath {
      * @param base
      * @param pow
      * @param mod
-     * @return
+     * @return the pow
      * @throws IOException
      */
 	public static BigInteger binaryPow(BigInteger base, BigInteger pow, BigInteger mod) throws IOException {
@@ -58,7 +58,7 @@ public class MBigMath {
 	 * @param base
 	 * @param pow
 	 * @param mod
-	 * @return
+	 * @return the pow
 	 */
     public static BigInteger dividePow( BigInteger base, BigInteger pow, BigInteger mod) {
     	return dividePow(base, pow, 1).mod(mod);
@@ -94,7 +94,7 @@ public class MBigMath {
      * @param base
      * @param pow
      * @param mod
-     * @return
+     * @return the pow
      */
     public static BigInteger straightPow(BigInteger base, BigInteger pow, BigInteger mod) {
     	BigInteger res = base;
@@ -116,7 +116,7 @@ public class MBigMath {
 	 * Calculate a log10
 	 * @param b
 	 * @param dp
-	 * @return
+	 * @return log 10
 	 */
 	//http://everything2.com/index.pl?node_id=946812       
 	public static BigDecimal log10(BigDecimal b, int dp)
@@ -167,7 +167,7 @@ public class MBigMath {
 	 * 
 	 * @param e
 	 * @param z
-	 * @return
+	 * @return D
 	 */
 	public static BigInteger computeDfromE(BigInteger e, BigInteger z) {
 		BigDecimal E = new BigDecimal(e);
@@ -234,6 +234,8 @@ public class MBigMath {
 	 * Uses Newton Raphson to compute the square root of a BigDecimal.
 	 * 
 	 * @author Luciano Culacciatti 
+	 * @param c 
+	 * @return square root
 	 * @url http://www.codeproject.com/Tips/257031/Implementing-SqrtRoot-in-BigDecimal
 	 */
 	public static BigDecimal bigSqrt(BigDecimal c){

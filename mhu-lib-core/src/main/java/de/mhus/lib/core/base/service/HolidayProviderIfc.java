@@ -23,7 +23,7 @@ public interface HolidayProviderIfc {
 	 * @param locale 
 	 * 
 	 * @param date
-	 * @return
+	 * @return true if the specified date is a working day
 	 */
 	boolean isWorkingDay(Locale locale, Date date);
 	
@@ -32,7 +32,7 @@ public interface HolidayProviderIfc {
 	 * 
 	 * @param locale
 	 * @param year
-	 * @return
+	 * @return true if the specified date is a holiday
 	 */
 	Map<Date, String> getHolidays(Locale locale, int year);
 	

@@ -162,7 +162,7 @@ public class LDAPCache implements Closeable, NamespaceChangeListener, ObjectChan
         LOGGER.debug("  base DN: " + options.getUserBaseDn());
         LOGGER.debug("  filter: " + filter);
 
-        NamingEnumeration namingEnumeration = context.search(options.getUserBaseDn(), filter, controls);
+        NamingEnumeration<?> namingEnumeration = context.search(options.getUserBaseDn(), filter, controls);
         try {
             if (!namingEnumeration.hasMore()) {
                 LOGGER.warn("User " + user + " not found in LDAP.");
@@ -244,7 +244,7 @@ public class LDAPCache implements Closeable, NamespaceChangeListener, ObjectChan
         LOGGER.debug("  base DN: " + options.getRoleBaseDn());
         LOGGER.debug("  filter: " + filter);
 
-        NamingEnumeration namingEnumeration = context.search(options.getRoleBaseDn(), filter, controls);
+        NamingEnumeration<?> namingEnumeration = context.search(options.getRoleBaseDn(), filter, controls);
         try {
             List<String> rolesList = new ArrayList<>();
             while (namingEnumeration.hasMore()) {

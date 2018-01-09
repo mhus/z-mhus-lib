@@ -9,6 +9,7 @@ import de.mhus.lib.errors.MException;
 
 public class DefComponent extends HashConfig implements IDefDefinition {
 
+	private static final long serialVersionUID = 1L;
 	private String tag;
 	private LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
 
@@ -59,7 +60,7 @@ public class DefComponent extends HashConfig implements IDefDefinition {
 	}
 		
 	private void fill(HashConfig config, Properties p) throws MException {
-		for ( ResourceNode c : config.getNodes()) {
+		for ( ResourceNode<?> c : config.getNodes()) {
 			if (c instanceof DefComponent)
 				((DefComponent)c).fillNls(p);
 			else

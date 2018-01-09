@@ -22,6 +22,7 @@ import de.mhus.lib.errors.NotSupportedException;
 /**
  * This interface represent a generic Directory Node. Nodes are
  * sets of definitions. The definitions can be bound together to a inner Nodes.
+ * @param <T> 
  * 
  */
 
@@ -34,7 +35,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	/**
 	 * Return all existing keys. A property key is unique.
 	 *  
-	 * @return
+	 * @return all keys
 	 */
 	public abstract Collection<String> getPropertyKeys();
 
@@ -44,7 +45,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * return the first one. if no configuration exists it returns null.
 	 * 
 	 * @param key
-	 * @return
+	 * @return the node with the name
 	 */
 	public abstract T getNode(String key);
 
@@ -52,8 +53,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * Return all inner configurations ignoring the name. The order
 	 * is like in the configuration file. This never returns null.
 	 * 
-	 * @param key
-	 * @return
+	 * @return all nodes
 	 */
 	public abstract Collection<T> getNodes();
 
@@ -62,20 +62,20 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * is like in the configuration file. This never returns null.
 	 * 
 	 * @param key
-	 * @return
+	 * @return all nodes with the name
 	 */
 	public abstract Collection<T> getNodes(String key);
 
 	/**
 	 * Return all possible, existing inner configuration names.
-	 * @return
+	 * @return keys from nodes
 	 */
 	public abstract Collection<String> getNodeKeys();
 
 	/**
 	 * Return a name of this config element could also be null.
 	 * The name most time is the name of a sub config.
-	 * @return
+	 * @return node of this node
 	 * @throws MException 
 	 */
 	public abstract String getName() throws MException;
@@ -83,8 +83,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	/**
 	 * Return the default content input stream.
 	 * 
-	 * @return
-	 * @throws MException 
+	 * @return input stream
 	 */
 	public InputStream getInputStream() {
 		return getInputStream(null);
@@ -93,8 +92,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	/**
 	 * Return the input stream of a content resource.
 	 * @param rendition Name of a rendition or null for the default content
-	 * @return
-	 * @throws MException 
+	 * @return input stream
 	 */
 	public abstract InputStream getInputStream(String rendition);
 	
@@ -113,7 +111,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * Returns a set of properties to define the rendition.
 	 * 
 	 * @param rendition
-	 * @return
+	 * @return properties
 	 */
 	public abstract IProperties getRenditionProperties(String rendition);
 	
@@ -125,8 +123,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	 * 
 	 * @see StringCompiler
 	 * @param key
-	 * @return
-	 * @throws MException 
+	 * @return extracted values
 	 */
 	public String getExtracted(String key) {
 		return getExtracted(key, null);
@@ -139,7 +136,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	/**
 	 * return the parent config if possible.
 	 * 
-	 * @return
+	 * @return parent node
 	 */
 	public abstract ResourceNode<?> getParent();
 
@@ -190,7 +187,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	private class RootAttributePart implements StringPart {
 		private String name;
 		private String def;
-		private ResourceNode root;
+		private ResourceNode<?> root;
 
 		public RootAttributePart(String part) {
 			name = MString.afterIndex(part,'.');
@@ -220,7 +217,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 
 		private String name;
 		private String def;
-		private ResourceNode config;
+		private ResourceNode<?> config;
 
 		public ConfigAttributePart(String part) {
 			name = part;
@@ -353,6 +350,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		return sb.toString();
 	}
 
+	@SuppressWarnings("deprecation")
 	void dump(StringBuffer sb, int level) throws MException {
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append('<').append(getName());

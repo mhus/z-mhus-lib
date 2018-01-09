@@ -1,26 +1,11 @@
 package de.mhus.lib.karaf.jms;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.component.ComponentContext;
-
-import aQute.bnd.annotation.component.Reference;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MSystem;
-import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.NotFoundRuntimeException;
-import de.mhus.lib.errors.NotSupportedException;
-import de.mhus.lib.jms.ClientJsonProxy;
 import de.mhus.lib.jms.JmsChannel;
-import de.mhus.lib.jms.JmsObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
-import de.mhus.lib.jms.JmsDestination;
-import de.mhus.lib.jms.ServerJsonProxy;
-import de.mhus.lib.jms.WebServiceDescriptor;
 
 public abstract class AbstractJmsDataChannel extends MLog implements JmsDataChannel {
 

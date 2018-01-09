@@ -11,7 +11,7 @@ import de.mhus.lib.sql.DbResult;
 public class FieldVirtual extends Field {
 
 	@SuppressWarnings("unchecked")
-	public FieldVirtual(Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode attr2, String[] features) throws MException {
+	public FieldVirtual(Table table, boolean isPrimary, PojoAttribute<?> attribute, ResourceNode<?> attr2, String[] features) throws MException {
 		this.attribute = (PojoAttribute<Object>) attribute;
 		this.nameOrg = attribute.getName();
 		this.table = table;

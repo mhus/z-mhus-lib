@@ -61,7 +61,7 @@ public abstract class Table extends MObject {
 	private DbPrepared sqlUpdateForce;
 	private DbPrepared sqlDelete;
 	private LinkedList<Feature> features = new LinkedList<Feature>();
-	protected ResourceNode attributes;
+	protected ResourceNode<?> attributes;
 
 	/**
 	 * <p>init.</p>
@@ -700,13 +700,13 @@ public abstract class Table extends MObject {
 	public void createTable(DbConnection con, boolean cleanup) throws Exception {
 
 		HashConfig cstr = new HashConfig();
-		WritableResourceNode ctable = cstr.createConfig("table");
+		WritableResourceNode<?> ctable = cstr.createConfig("table");
 		ctable.setProperty("name", tableNameOrg);
 
 		LinkedList<String> pk = new LinkedList<String>();
 
 		for (Field f : fList) {
-			ResourceNode cfield = ctable.createConfig("field");
+			ResourceNode<?> cfield = ctable.createConfig("field");
 			cfield.setProperty(Dialect.K_NAME, f.createName);
 			cfield.setProperty(Dialect.K_TYPE, f.retDbType);
 			cfield.setProperty(Dialect.K_SIZE, String.valueOf(f.size));
@@ -729,7 +729,7 @@ public abstract class Table extends MObject {
 
 		// create index entries
 		for (Entry<String, LinkedList<Field>> item : iIdx.entrySet()) {
-			ResourceNode cindex = cstr.createConfig("index");
+			ResourceNode<?> cindex = cstr.createConfig("index");
 			String n = item.getKey();
 			if (n.startsWith(DbIndex.UNIQUE)) {
 				cindex.setString(Dialect.I_TYPE, Dialect.I_UNIQUE);
@@ -908,7 +908,7 @@ public abstract class Table extends MObject {
 	 *
 	 * @return a {@link de.mhus.lib.core.directory.ResourceNode} object.
 	 */
-	public ResourceNode getAttributes() {
+	public ResourceNode<?> getAttributes() {
 		return attributes;
 	}
 

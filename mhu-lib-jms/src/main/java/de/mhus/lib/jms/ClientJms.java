@@ -37,7 +37,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	public ClientJms(JmsDestination dest) {
 		super(dest);
 		try {
-			ResourceNode cfg = MJms.getConfig();
+			ResourceNode<?> cfg = MJms.getConfig();
 			timeout = cfg.getLong("answerTimeout", timeout);
 			warnTimeout = cfg.getLong("answerWarnTimeout", warnTimeout);
 			broadcastTimeout = cfg.getLong("broadcastTimeout", broadcastTimeout);

@@ -31,7 +31,7 @@ public abstract class Console extends PrintStream implements IBase {
 	/**
 	 * Factory to return the correct implementation of console.
 	 * 
-	 * @return
+	 * @return a new console object
 	 */
 	public static Console create() {
 		return new SimpleConsole();

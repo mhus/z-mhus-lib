@@ -48,7 +48,6 @@ public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable
 	 * unique id could not be returned.
 	 * 
 	 * @return Unique ID or null
-	 * @throws CaoException
 	 */
 	public abstract String getId();
 
@@ -83,14 +82,14 @@ public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable
 	/**
 	 * Return the main path of the node.
 	 * 
-	 * @return
+	 * @return the main path
 	 */
 	public abstract String getPath();
 
 	/**
 	 * Return all pathes of the node.
 	 * 
-	 * @return
+	 * @return list of pathes
 	 */
 	public abstract Collection<String> getPaths();
 	

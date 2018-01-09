@@ -75,7 +75,7 @@ public class MString {
 	 * Returns true if the string is null or an empty string.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return true if empty
 	 */
 	public static boolean isEmpty(String _in) {
 		return (_in == null || _in.length() == 0);
@@ -87,7 +87,7 @@ public class MString {
 	 * 
 	 * @param _in
 	 * @param _pattern
-	 * @return
+	 * @return parts
 	 */
 	public static String[] split(String _in, String _pattern) {
 
@@ -124,7 +124,7 @@ public class MString {
 	 * 
 	 * @param _in
 	 * @param _pattern
-	 * @return
+	 * @return parts
 	 */
 	public static String[] splitIgnoreEmpty(String _in, String _pattern) {
 		return splitIgnoreEmpty(_in, _pattern, false);
@@ -160,7 +160,7 @@ public class MString {
 	 * @param _src
 	 * @param _pattern
 	 * @param _replacement
-	 * @return
+	 * @return new string
 	 */
 	public static String replaceAll(String _src, String _pattern,
 			String _replacement) {
@@ -194,7 +194,7 @@ public class MString {
 	 * Return, if the char is located in the string (indexOf).
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return true if index was found
 	 */
 
 	public static boolean isIndex(String _s, String _c) {
@@ -210,7 +210,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return part before the index
 	 */
 	public static String beforeIndex(String _s, String _c) {
 		int p = _s.indexOf(_c);
@@ -225,7 +225,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return part after the index
 	 */
 	public static String afterIndex(String _s, String _c) {
 		int p = _s.indexOf(_c);
@@ -239,7 +239,7 @@ public class MString {
 	 * Return, if the char is located in the string (indexOf).
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return true if the index was found
 	 */
 
 	public static boolean isIndex(String _s, char _c) {
@@ -256,7 +256,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return part before the index
 	 */
 	public static String beforeIndex(String _s, char _c) {
 		int p = _s.indexOf(_c);
@@ -271,7 +271,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return bart after the index
 	 */
 	public static String afterIndex(String _s, char _c) {
 		int p = _s.indexOf(_c);
@@ -286,7 +286,7 @@ public class MString {
 	 * 
 	 * @param _s
 	 * @param _c
-	 * @return
+	 * @return true if one of the character was found
 	 */
 	public static boolean isIndex(String _s, char[] _c) {
 
@@ -302,7 +302,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return part before the first found character
 	 */
 	public static String beforeIndex(String _s, char[] _c) {
 
@@ -319,7 +319,7 @@ public class MString {
 	 * empty string.
 	 * @param _s 
 	 * @param _c 
-	 * @return 
+	 * @return part after the first found character
 	 */
 	public static String afterIndex(String _s, char[] _c) {
 
@@ -337,7 +337,7 @@ public class MString {
 	 * @param _s
 	 * @param _c
 	 * @param offset
-	 * @return
+	 * @return position of the first found character
 	 */
 	public static int indexOf(String _s, char[] _c, int offset) {
 
@@ -355,7 +355,7 @@ public class MString {
 	 *
 	 * @param _s
 	 * @param _c
-	 * @return
+	 * @return position of the first found character
 	 */
 	public static int indexOf(String _s, char[] _c) {
 		return indexOf(_s, _c, 0);
@@ -365,7 +365,7 @@ public class MString {
 	 * Encodes for the web. Same like MXml.encode
 	 * 
 	 * @param _in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String encodeWebUnicode(String _in) {
 
@@ -590,7 +590,7 @@ public class MString {
 	 * 
 	 * @param str
 	 * @param pattern
-	 * @return
+	 * @return true if match
 	 */
 	public static boolean compareSQLLikePattern(String str, String pattern) {
 		if (str == null || pattern == null) return false;
@@ -620,7 +620,7 @@ public class MString {
 	 * 
 	 * @param str
 	 * @param pattern
-	 * @return
+	 * @return true if match
 	 */
 	public static boolean compareFsLikePattern(String str, String pattern) {
 		if (str == null || pattern == null) return false;
@@ -1304,11 +1304,8 @@ public class MString {
 	 * the default value will be returned.
 	 * @param value 
 	 * @param nr 
-	 * @param name
 	 * @param def
-	 * @param index
-	 * @param subset
-	 * @return
+	 * @return the part
 	 */
 	public static String getPart(String value, int nr, String def) {
 		return getPart(value, DEFAULT_SEPARATOR, nr, def);
@@ -1338,7 +1335,7 @@ public class MString {
 	 * 
 	 * @param string
 	 * @param c
-	 * @return
+	 * @return string before the last found character
 	 */
 	public static String beforeLastIndex(String string, char c) {
 		if (string == null) return null;
@@ -1353,7 +1350,7 @@ public class MString {
 	 * 
 	 * @param string
 	 * @param c
-	 * @return
+	 * @return part after last found character
 	 */
 	public static String afterLastIndex(String string, char c) {
 		if (string == null) return null;
@@ -1368,7 +1365,7 @@ public class MString {
 	 * 
 	 * @param string
 	 * @param c
-	 * @return
+	 * @return part before last found character
 	 */
 	public static String beforeLastIndex(String string, String c) {
 		if (string == null) return null;
@@ -1383,7 +1380,7 @@ public class MString {
 	 * 
 	 * @param string
 	 * @param c
-	 * @return
+	 * @return part after last found character
 	 */
 	public static String afterLastIndex(String string, String c) {
 		if (string == null) return null;
@@ -1502,7 +1499,7 @@ public class MString {
 	 * @param text
 	 * @param part
 	 * @param replacement
-	 * @return
+	 * @return new String
 	 */
 	public static String replaceSelection(String text, int[] part, String replacement) {
 		if (text == null || part == null || part.length < 2 || replacement == null) return null;
@@ -1528,23 +1525,28 @@ public class MString {
 	}
 	
 	/**
-	 * Repeate the character a given times.
+	 * Repeat the character a given times.
 	 * 
-	 * @param amount number of repeatings
+	 * @param amount number of repeating
 	 * @param fill char to fill
-	 * @return
+	 * @return string n times the character
 	 */
-	public static String getRepeatig(int amount, char fill) {
+	public static String getRepeating(int amount, char fill) {
 		StringBuffer buffer = new StringBuffer();
 		appendRepeating(amount, fill, buffer);
 		return buffer.toString();
 	}
-	
+
+	@Deprecated // legacy
+	public static String getRepeatig(int amount, char fill) {
+		return getRepeating(amount, fill);
+	}
+
 	/**
-	 * Return true if the character is in the list of whitespaces.
+	 * Return true if the character is in the list of whitespace.
 	 * 
 	 * @param c
-	 * @return
+	 * @return true if character is defined as whitespace
 	 */
 	public static boolean isWhitespace(char c) {
 		for (char w : WHITESPACE)
@@ -1621,7 +1623,7 @@ public class MString {
 	 * characters of the other one the method returns false.
 	 * @param in
 	 * @param composed
-	 * @return
+	 * @return true if composed
 	 */
 	public static boolean isComposedOf(String in, String composed) {
 		if (in == null || composed == null) return false;

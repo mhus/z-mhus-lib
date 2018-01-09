@@ -1,14 +1,6 @@
 package de.mhus.lib.karaf.jms;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
-
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotFoundRuntimeException;
-import de.mhus.lib.jms.ClientService;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerService;
 
@@ -41,7 +33,7 @@ org.osgi.framework.ServiceException: Service factory returned null. (Component: 
 	/**
 	 * Return the connection or null.
 	 * @param name Name of the requested connection
-	 * @return
+	 * @return Connection
 	 */
 	public static JmsConnection getConnection(String name) {
 		JmsManagerService service = getService();
@@ -62,6 +54,7 @@ org.osgi.framework.ServiceException: Service factory returned null. (Component: 
 				JmsDataChannel channel = getChannel(ifc.getCanonicalName());
 				if (channel != null)
 					try {
+						@SuppressWarnings("unchecked")
 						I o = ((ServerService<I>)channel.getChannel()).getObject();
 						if (o != null) return o;
 					} catch (Throwable t) {}
@@ -70,6 +63,7 @@ org.osgi.framework.ServiceException: Service factory returned null. (Component: 
 			JmsManagerService service = getService();
 			for (JmsDataChannel channel : service.getChannels()) {
 				try {
+					@SuppressWarnings("unchecked")
 					I o = ((ServerService<I>)channel.getChannel()).getObject();
 					if (o != null) return o;
 				} catch (Throwable t) {}

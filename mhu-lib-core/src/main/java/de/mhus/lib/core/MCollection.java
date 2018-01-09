@@ -30,7 +30,7 @@ public class MCollection {
 	 * 
 	 * @param array
 	 * @param item
-	 * @return
+	 * @return true if contains the item
 	 */
 	public static boolean contains(Object[] array, Object item) {
 		if (array == null) return false;
@@ -305,7 +305,7 @@ public class MCollection {
 	 * Returns a new instance of Map with sorted keys.
 	 * 
 	 * @param in
-	 * @return
+	 * @return a new sorted map
 	 */
 	public static <K,V> Map<K,V> sorted(Map<K,V> in) {
 		return new TreeMap<K,V>(in);
@@ -319,7 +319,7 @@ public class MCollection {
 	 * If the list could not be sorted the original list object will be returned.
 	 * 
 	 * @param in
-	 * @return A ne
+	 * @return A new sorted list
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static <K> List<K> sorted(List<K> in) {
@@ -348,7 +348,8 @@ public class MCollection {
 	 * the source into the new list and returns the created list.
 	 * 
 	 * @param in
-	 * @return A ne
+	 * @param comp 
+	 * @return A new sorted list
 	 */
 	public static <K> List<K> sorted(List<K> in, Comparator<K> comp) {
 		if (in != null && in.size() > 0) {

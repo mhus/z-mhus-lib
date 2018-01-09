@@ -1,10 +1,8 @@
 package de.mhus.lib.karaf.jms;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.WeakHashMap;
 
 import javax.jms.JMSException;
@@ -23,11 +21,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
-import de.mhus.lib.core.cfg.CfgInt;
-import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.NotFoundRuntimeException;
-import de.mhus.lib.jms.JmsChannel;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.karaf.MOsgi;
 import de.mhus.lib.karaf.MOsgi.Service;

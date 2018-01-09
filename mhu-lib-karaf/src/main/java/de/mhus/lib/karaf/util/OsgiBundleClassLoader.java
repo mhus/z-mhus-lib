@@ -1,7 +1,6 @@
 package de.mhus.lib.karaf.util;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.osgi.framework.Bundle;

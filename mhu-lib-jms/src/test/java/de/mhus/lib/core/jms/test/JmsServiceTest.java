@@ -149,6 +149,7 @@ public class JmsServiceTest extends TestCase {
 			{
 				LinkedList<String> in = new LinkedList<>();
 				in.add("a");
+				@SuppressWarnings("unused")
 				List<String> ret = ifc.listSample(in);
 				
 				assertEquals("listSample [a]", impl2.lastAction);

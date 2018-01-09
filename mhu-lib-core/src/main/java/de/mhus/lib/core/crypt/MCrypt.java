@@ -318,7 +318,7 @@ public class MCrypt {
 	 * 
 	 * @param parent
 	 * @param passphrase
-	 * @return
+	 * @return new input stream
 	 * @throws IOException
 	 */
 	public static InputStream createCipherInputStream(InputStream parent, String passphrase) throws IOException {
@@ -397,7 +397,7 @@ public class MCrypt {
 	 * Returns the maximum amount of bytes that can be encrypted at once.
 	 * 
 	 * @param modulus
-	 * @return
+	 * @return maximum byte length
 	 */
 	public static int getMaxLoad(BigInteger modulus) {
 		return modulus.bitLength() / 8;

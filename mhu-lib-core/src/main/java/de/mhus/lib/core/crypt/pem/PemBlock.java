@@ -17,14 +17,14 @@ public interface PemBlock extends IReadProperties {
 
 	/**
 	 * Returns the name of the block
-	 * @return
+	 * @return the name
 	 */
 	String getName();
 	
 	/**
 	 * Returns the Block content without placeholders.
 	 * 
-	 * @return
+	 * @return the text block
 	 */
 	String getBlock();
 

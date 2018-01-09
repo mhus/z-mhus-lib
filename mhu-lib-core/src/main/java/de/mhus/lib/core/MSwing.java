@@ -21,7 +21,7 @@ public class MSwing {
 	 * 
 	 * @param string
 	 * @param def
-	 * @return
+	 * @return the color
 	 */
 	public static Color toColor(String string, Color def) {
 		Color out = null;
@@ -53,7 +53,7 @@ public class MSwing {
 	 * BufferedImage.TYPE_3BYTE_BGR type. Perhaps some informations of the
 	 * origin image will be lost.
 	 * @param _in 
-	 * @return 
+	 * @return  the image
 	 */
 
 	public static BufferedImage toBufferedImage(Image _in) {
@@ -84,7 +84,7 @@ public class MSwing {
 	 * Convert Color information to string. Do not store alpha value.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return color as string
 	 */
 	public static String toString(Color _in) {
 		return "#" + MCast.toHex2String(_in.getRed()) + MCast.toHex2String(_in.getGreen())
@@ -95,7 +95,7 @@ public class MSwing {
 	 * Convert Font information to string.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return the font as string
 	 */
 	public static String toString(Font _in) {
 		return _in.getFamily() + "-"

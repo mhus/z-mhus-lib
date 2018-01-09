@@ -4,7 +4,7 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.MObject;
 
 @DefaultImplementation(ClassLoaderResourceProvider.class)
-public abstract class MResourceProvider<T extends ResourceNode> extends MObject implements IResourceProvider<T> {
+public abstract class MResourceProvider<T extends ResourceNode<?>> extends MObject implements IResourceProvider<T> {
 
 	/**
 	 * Return a requested resource.

@@ -206,7 +206,7 @@ public class HashConfig extends IConfig {
 	}
 
 	@Override
-	public ResourceNode getParent() {
+	public ResourceNode<IConfig> getParent() {
 		return parent;
 	}
 

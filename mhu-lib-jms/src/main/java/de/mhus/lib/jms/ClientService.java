@@ -200,7 +200,6 @@ public class ClientService<T> extends ClientJms {
 		return classLoader ;
 	}
 
-	@SuppressWarnings("unchecked")
 	public T getObject() {
 		return (T)getClientProxy();
 	}

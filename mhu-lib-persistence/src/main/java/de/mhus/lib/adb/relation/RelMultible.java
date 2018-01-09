@@ -11,6 +11,7 @@ import de.mhus.lib.sql.DbConnection;
  *
  * @author mikehummel
  * @version $Id: $Id
+ * @param <T> 
  */
 public class RelMultible <T> implements IRelationObject {
 

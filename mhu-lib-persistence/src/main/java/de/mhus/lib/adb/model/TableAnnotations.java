@@ -50,7 +50,7 @@ public class TableAnnotations extends Table {
 
 				} else {
 					log().t("field",mName);
-					WritableResourceNode attr = MApi.lookup(MConfigFactory.class).toConfig(toAttributes(p,pk));
+					WritableResourceNode<?> attr = MApi.lookup(MConfigFactory.class).toConfig(toAttributes(p,pk));
 					boolean v = (p !=null && p.virtual());
 
 					// check for doubled

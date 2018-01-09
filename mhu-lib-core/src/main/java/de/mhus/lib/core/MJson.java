@@ -105,7 +105,7 @@ public class MJson {
 	 * 
 	 * @param parent
 	 * @param path slash separated path
-	 * @return
+	 * @return requested node
 	 */
 	public static JsonNode getByPath(JsonNode parent, String path) {
 		if (path == null || parent == null) return null;
@@ -124,7 +124,7 @@ public class MJson {
 	 * @param parent
 	 * @param path see getByPath
 	 * @param def
-	 * @return
+	 * @return the value
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getValue(JsonNode parent, String path, T def ) {
@@ -188,6 +188,7 @@ public class MJson {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static Object getValue(JsonNode node, TransformHelper helper) {
 		Object out = null;
 		if (node == null) return null;
@@ -234,7 +235,7 @@ public class MJson {
 	 * @param parent
 	 * @param path
 	 * @param def
-	 * @return
+	 * @return the value
 	 */
 	public static String getText(JsonNode parent, String path, String def ) {
 		JsonNode node = getByPath(parent, path);
@@ -245,7 +246,7 @@ public class MJson {
 		return out;
 	}
 	
-	/**
+	/*
 	 * Transform a object via pojo framework to a json structure.
 	 * 
 	 * @param from
@@ -283,10 +284,7 @@ public class MJson {
 	/**
 	 * Transform a json structure into an object
 	 * @param from
-	 * @param to
-	 * @return 
-	 * @throws IOException
-	 * @throws IllegalAccessException 
+	 * @return the object
 	 */
 	public static Object jsonToPojo(JsonNode from) {
 		return jsonToPojo(from, null, null);

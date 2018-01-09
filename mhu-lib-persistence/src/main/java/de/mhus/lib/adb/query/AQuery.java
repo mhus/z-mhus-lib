@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.NotFoundException;
@@ -16,6 +15,7 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
  *
  * @author mikehummel
  * @version $Id: $Id
+ * @param <T> 
  */
 public class AQuery<T> extends APrint {
 
@@ -62,7 +62,6 @@ public class AQuery<T> extends APrint {
 	/**
 	 * <p>getAttributes.</p>
 	 *
-	 * @param dbManager a {@link de.mhus.lib.adb.DbManager} object.
 	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<String, Object> getAttributes() {

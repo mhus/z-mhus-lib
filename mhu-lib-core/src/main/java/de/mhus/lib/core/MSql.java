@@ -34,7 +34,7 @@ public class MSql {
 	 * 
 	 * @param string
 	 * @param notNull Set to true will return a single space instead of the string NULL
-	 * @return
+	 * @return encoded string
 	 */
 	public static String encode(String string, boolean notNull) {
 		if (string == null)
@@ -47,7 +47,7 @@ public class MSql {
 	/**
 	 * Escape all single quots to double single quots.
 	 * @param in
-	 * @return
+	 * @return escaped string
 	 */
 	public static String escape(String in) {
 		if (in == null)
@@ -60,7 +60,7 @@ public class MSql {
 	/**
 	 * Remove all double single quots.
 	 * @param in 
-	 * @return 
+	 * @return  unescaped string
 	 */
 	public static String unescape(String in) {
 		if (in == null)
@@ -74,7 +74,7 @@ public class MSql {
 	 * Escape single quots and truncates the string is needed.
 	 * @param in
 	 * @param truncateSize
-	 * @return
+	 * @return escaped string
 	 */
 	public static String escape(String in, int truncateSize) {
 		if (in == null)
@@ -133,7 +133,7 @@ public class MSql {
 	 * 
 	 * @param in The string to validate
 	 * @param con Optional the sql connection to validate keywords. null is possible.
-	 * @return
+	 * @return normalized string
 	 */
 	public static String toSqlLabel(String in, Connection con) {
 		boolean error = false;

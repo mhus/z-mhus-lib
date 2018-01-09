@@ -26,6 +26,7 @@ import de.mhus.lib.errors.MException;
  */
 public class XmlConfig extends IConfig {
 
+	private static final long serialVersionUID = 1L;
 	// private static Logger log = Logger.getLogger(XmlConfig.class);
 	protected Element element;
 	protected boolean changed = false;
@@ -264,7 +265,7 @@ public class XmlConfig extends IConfig {
 	@Override
 	public void clear() {
 		for (String key : keys())
-			element.removeAttribute(name);
+			element.removeAttribute(key);
 	}
 
 }

@@ -12,10 +12,10 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.console.ANSIConsole;
 import de.mhus.lib.core.console.Console;
@@ -209,6 +209,7 @@ public class CmdLog extends MLog implements Action {
 			} else {
 				PrintStream sConsole = session.getConsole();
 				if (sConsole == null || session.getTerminal() == null) return null;
+				@SuppressWarnings("resource")
 				final Console os = (Console) (pe.getString("console","ansi").equals("ansi") ?
 						new ANSIConsole(System.in, sConsole) :
 						new de.mhus.lib.core.console.SimpleConsole(System.in, sConsole));

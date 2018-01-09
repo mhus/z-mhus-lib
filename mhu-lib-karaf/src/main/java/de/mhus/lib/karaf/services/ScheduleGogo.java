@@ -1,13 +1,10 @@
 package de.mhus.lib.karaf.services;
 
 import java.io.ByteArrayInputStream;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.apache.karaf.shell.api.console.Session;
 import org.apache.karaf.shell.api.console.SessionFactory;
 
-import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.base.service.TimerFactory;

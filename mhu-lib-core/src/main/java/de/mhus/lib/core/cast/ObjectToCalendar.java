@@ -261,8 +261,8 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	/**
 	 * Return the value of the month 0 = Januar
-	 * @param in name or number of the month 1 or 'jan' or 'january' is 0
-	 * @return
+	 * @param in name or number of the month 1 or 'jan' or 'jnuary' is 0
+	 * @return string as integer 0=jan, 11=dec
 	 */
 	public static int toMonth(String in) {
 		try {

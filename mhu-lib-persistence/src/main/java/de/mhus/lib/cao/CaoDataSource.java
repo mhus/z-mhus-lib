@@ -10,7 +10,7 @@ public interface CaoDataSource {
 	
 	/**
 	 * Returns a new CaoCore object if the action is not allowed it will throw an AccessDeniedException
-	 * @return
+	 * @return the core object
 	 * @throws Exception
 	 */
 	CaoCore getCore() throws Exception;

@@ -3,8 +3,6 @@ package de.mhus.lib.core;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.UUID;
-import java.util.WeakHashMap;
 
 import de.mhus.lib.core.cfg.UpdaterCfg;
 import de.mhus.lib.core.config.HashConfig;
@@ -12,12 +10,12 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.TrailLevelMapper;
+import de.mhus.lib.core.system.ApiInitialize;
 import de.mhus.lib.core.system.DefaultMApi;
 import de.mhus.lib.core.system.DummyClass;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiFactory;
 import de.mhus.lib.errors.TimeoutRuntimeException;
-import de.mhus.lib.core.system.ApiInitialize;
 
 public class MApi {
 
@@ -118,7 +116,7 @@ public class MApi {
 	 * Returns the config or an empty config as default.
 	 * 
 	 * @param owner
-	 * @return
+	 * @return the config
 	 */
 	public static IConfig getCfg(Object owner) {
 		if (emptyConfig == null) emptyConfig = new HashConfig();

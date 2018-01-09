@@ -46,7 +46,7 @@ public class FieldPersistent extends Field {
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
 	@SuppressWarnings("unchecked")
-	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, boolean readOnly, PojoAttribute<?> attribute, ResourceNode attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
+	public FieldPersistent(DbManager manager, Table table, boolean isPrimary, boolean readOnly, PojoAttribute<?> attribute, ResourceNode<?> attr2,DbDynamic.Field dynamicField, String[] features) throws MException {
 		this.manager = manager;
 		this.table = table;
 		this.manager = table.manager;

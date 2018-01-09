@@ -6,8 +6,8 @@ import java.util.TreeMap;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
@@ -15,7 +15,6 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.io.FileWatch;
-import de.mhus.lib.core.logging.Log;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class CfgManager {

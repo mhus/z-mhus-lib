@@ -84,7 +84,7 @@ public class Lock {
 	  /**
 	   * Unlock if the current thread is also the owner.
 	   * 
-	   * @return
+	   * @return true if lock wass successful
 	   */
 	  public boolean unlock(){
 		  synchronized (this) {

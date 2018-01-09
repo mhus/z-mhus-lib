@@ -157,7 +157,7 @@ public class LDAPOptions {
 
     protected void setupSsl(Hashtable<String, Object> env) throws NamingException {
         BundleContext bundleContext = FrameworkUtil.getBundle(LDAPOptions.class).getBundleContext();
-        ServiceReference ref = null;
+        ServiceReference<?> ref = null;
         try {
             LOGGER.debug("Setting up SSL");
             env.put(Context.SECURITY_PROTOCOL, "ssl");

@@ -31,7 +31,7 @@ public class DbType {
 	 * 
 	 * @param index index of the option
 	 * @param def default value
-	 * @return
+	 * @return option
 	 */
 	public String getOption(int index, String def) {
 		if (options == null || index < 0 || index >= options.length)

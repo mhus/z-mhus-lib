@@ -11,7 +11,7 @@ public class MMath {
 	 * packed system if you want to use case insensitive strings.
 	 * @param value The value to convert
 	 * @param digits number of minimum digits (expect the minus character if the value is negative)
-	 * @return
+	 * @return encoded string
 	 */
 	public static String toBasis36(long value, int digits) {
 		StringBuffer sb = new StringBuffer();
@@ -42,7 +42,7 @@ public class MMath {
 	 * @param value The value to convert
 	 * @param ident additional ident at the right side, has 4 digits
 	 * @param digits number of minimum digits (expect the minus character if the value is negative)
-	 * @return
+	 * @return encoded string
 	 */
 	public static String toBasis36WithIdent(long value, long ident, int digits) {
 		StringBuffer sb = new StringBuffer();

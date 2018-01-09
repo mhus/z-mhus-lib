@@ -2,8 +2,6 @@ package de.mhus.lib.karaf.jms;
 
 import java.util.List;
 
-import javax.jms.JMSException;
-
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.karaf.MOsgi.Service;
 

@@ -283,7 +283,7 @@ public class MTimeInterval {
 	 * 
 	 * @param interval
 	 * @param def
-	 * @return
+	 * @return milliseconds
 	 */
 	public static long toMilliseconds(String interval, int def) {
 		if (interval == null) return def;

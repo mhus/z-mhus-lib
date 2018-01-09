@@ -10,15 +10,12 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 import org.osgi.framework.FrameworkUtil;
 
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.cfg.CfgValue;
-import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.karaf.util.OsgiBundleClassLoader;
 import de.mhus.lib.mutable.KarafBase;
-import de.mhus.lib.mutable.KarafBaseControl;
 import de.mhus.lib.mutable.KarafMApiImpl;
 
 @Command(scope = "mhus", name = "base", description = "Base Manipulation")

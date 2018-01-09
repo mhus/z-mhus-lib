@@ -1,7 +1,5 @@
 package de.mhus.lib.jms;
 
-import java.util.WeakHashMap;
-
 import javax.jms.Connection;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;

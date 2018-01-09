@@ -7,6 +7,10 @@ import de.mhus.lib.errors.MException;
 
 public class CaoPrincipal extends CaoPolicy {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "name";
 	public static final String PRINCIPAL_TYPE = "principal_type";
 	public static enum PRINCIPAL_TYPES {USER,GROUP,ROLE,OTHER};

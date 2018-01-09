@@ -278,10 +278,10 @@ public class MProperties extends AbstractProperties implements Externalizable {
             inByteBuf = new byte[8192];
         }
 
-        public LineReader(Reader reader) {
-            this.reader = reader;
-            inCharBuf = new char[8192];
-        }
+//        public LineReader(Reader reader) {
+//            this.reader = reader;
+//            inCharBuf = new char[8192];
+//        }
 
         byte[] inByteBuf;
         char[] inCharBuf;

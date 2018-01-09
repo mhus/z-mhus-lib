@@ -143,6 +143,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public boolean setDbHandler(DbObjectHandler manager) {
 		if (this.manager != null) return false;
 		this.manager = manager;

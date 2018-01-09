@@ -18,6 +18,7 @@ public class SaltOutputStream extends OutputStream {
 	 * 
 	 * @param next
 	 * @param random
+	 * @param maxBlockSize 
 	 * @param addRandomBlocks 
 	 */
 	public SaltOutputStream(OutputStream next, MRandom random, int maxBlockSize, boolean addRandomBlocks) {

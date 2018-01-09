@@ -28,10 +28,12 @@ public class PemKey extends PemBlockModel implements PemPriv,PemPub{
 		super(name);
 	}
 
+	@Override
 	public String getMethod() throws MException {
 		return getString(PemBlock.METHOD);
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("-----START ").append(getName()).append("-----\n");

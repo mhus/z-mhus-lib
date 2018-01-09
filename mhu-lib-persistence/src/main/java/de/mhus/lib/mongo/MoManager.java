@@ -3,48 +3,30 @@ package de.mhus.lib.mongo;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.FindAndModifyOptions;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.mapping.CustomMapper;
+import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
-import de.mhus.lib.adb.query.AAnd;
-import de.mhus.lib.adb.query.AAttribute;
-import de.mhus.lib.adb.query.ACompare;
-import de.mhus.lib.adb.query.AConcat;
-import de.mhus.lib.adb.query.ACreateContext;
-import de.mhus.lib.adb.query.ADbAttribute;
-import de.mhus.lib.adb.query.ADynValue;
-import de.mhus.lib.adb.query.AEnumFix;
-import de.mhus.lib.adb.query.AFix;
-import de.mhus.lib.adb.query.ALimit;
-import de.mhus.lib.adb.query.AList;
-import de.mhus.lib.adb.query.ALiteral;
-import de.mhus.lib.adb.query.ALiteralList;
-import de.mhus.lib.adb.query.ANot;
-import de.mhus.lib.adb.query.ANull;
-import de.mhus.lib.adb.query.AOperation;
-import de.mhus.lib.adb.query.AOr;
-import de.mhus.lib.adb.query.AOrder;
-import de.mhus.lib.adb.query.APart;
-import de.mhus.lib.adb.query.APrint;
-import de.mhus.lib.adb.query.AQuery;
-import de.mhus.lib.adb.query.ASubQuery;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.sql.DbConnection;
-import de.mhus.lib.sql.SqlDialectCreateContext;
 
 public class MoManager extends MJmx implements MoHandler {
 
@@ -73,7 +55,20 @@ public class MoManager extends MJmx implements MoHandler {
 	}
 	
 	protected Mapper getMapper() {
-        Mapper mapper = new Mapper();  
+        Mapper mapper = new Mapper();
+//        // ignore not tagged values
+//        mapper.getOptions().setDefaultMapper(new CustomMapper() {
+//			
+//			@Override
+//			public void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects,
+//		            Mapper mapper) {
+//			}
+//			
+//			@Override
+//			public void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity, EntityCache cache,
+//		            Mapper mapper) {
+//			}
+//		});
         schema.initMapper(mapper);
         return mapper;
     }
@@ -120,6 +115,7 @@ public class MoManager extends MJmx implements MoHandler {
 
 	@Override
 	public void createObject(DbConnection con, Object dbComfortableObject) throws MException {
+		// TODO remove ID
 		save(dbComfortableObject);
 	}
 
@@ -152,13 +148,13 @@ public class MoManager extends MJmx implements MoHandler {
 	public <T> long getCount(Query<T> query) {
 		return datastore.getCount(query);
 	}
-
+	
 	public <T> UpdateResults update(Query<T> query, UpdateOperations<T> operations) {
 		return datastore.update(query, operations);
 	}
 
 	public void close() {
-		
+
 	}
 
 	public MoSchema getSchema() {
@@ -174,6 +170,16 @@ public class MoManager extends MJmx implements MoHandler {
 		for (Class<? extends Persistable> type : managedTypes)
 			if (type.getCanonicalName().toLowerCase().endsWith(name)) return type;
 		throw new NotFoundException("Type not found",name);
+	}
+
+	public Object getId(Object object) {
+		return datastore.getKey(object).getId();
+	}
+
+	public <T> T inject(T instance) {
+		if (instance instanceof DbComfortableObject)
+			((DbComfortableObject)instance).doInit(this, null, false);
+		return instance;
 	}
 	
 }

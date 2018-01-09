@@ -7,8 +7,8 @@ import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgValue;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.system.IApi;
@@ -37,7 +37,7 @@ public class CmdConfig extends MLog implements Action {
 			System.out.println("Karaf MApi not set");
 			return null;
 		}
-		KarafMApiImpl api = (KarafMApiImpl)s;
+		//KarafMApiImpl api = (KarafMApiImpl)s;
 		
 		switch (cmd) {
 		case "list": {

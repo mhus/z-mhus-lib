@@ -3,8 +3,8 @@ package de.mhus.lib.core.cfg;
 import java.io.File;
 import java.io.IOException;
 
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.PropertiesConfigFile;
@@ -25,6 +25,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		setFile(file);
 	}
 	
+	@Override
 	public void doStart(final String name) {
 		this.name = name;
 		load();
@@ -57,6 +58,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		}
 	}
 
+	@Override
 	public void doStop() {
 		if (fileWatch != null) {
 			fileWatch.doStop();
@@ -76,6 +78,10 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
 	public void setFile(File file) {
 		this.file = file;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 }

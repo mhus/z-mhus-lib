@@ -31,6 +31,7 @@ public class CaoUtil {
 		
 		CaoAction action = res.getConnection().getAction(CaoAction.DELETE);
 		CaoConfiguration config = action.createConfiguration(res, null);
+		@SuppressWarnings("unused")
 		OperationResult result = action.doExecute(config, null);
 		
 	}

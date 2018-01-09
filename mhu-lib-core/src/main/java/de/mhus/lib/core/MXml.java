@@ -182,7 +182,7 @@ public class MXml {
 	 * Returns an iterator of all elements in the given root element on the first level only.
 	 * 
 	 * @param root
-	 * @return
+	 * @return iterator of the requested elements
 	 */
 	public static ElementIterator getLocalElementIterator(Element root) {
 		return new ElementIterator(getLocalElements(root));
@@ -304,7 +304,7 @@ public class MXml {
 	 * 
 	 * @param xml
 	 * @param charset
-	 * @return
+	 * @return the document of the xml model
 	 * @throws ParserConfigurationException
 	 * @throws UnsupportedEncodingException
 	 * @throws SAXException
@@ -322,7 +322,7 @@ public class MXml {
 	 * Create a XML Document from a string.
 	 * 
 	 * @param xml
-	 * @return
+	 * @return the xml model
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
@@ -336,7 +336,7 @@ public class MXml {
 	 * Create a XML Document from a stream resource.
 	 * 
 	 * @param is
-	 * @return
+	 * @return the xml model
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
@@ -406,7 +406,7 @@ public class MXml {
 	/**
 	 * Create and return a empty xml document.
 	 * 
-	 * @return
+	 * @return xml model
 	 * @throws Exception
 	 */
 	public static Document createDocument() throws Exception {
@@ -419,7 +419,7 @@ public class MXml {
 	 * Encode the default problematic characters in a string to store it in a xml value.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String encode(String _in) {
 
@@ -449,7 +449,7 @@ public class MXml {
 	 * Encodes the amp and all characters greater then 255 to unicode representation with amp and hash signs.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String unicodeEncode(String _in) {
 
@@ -470,7 +470,7 @@ public class MXml {
 	/**
 	 * Decodes a string with encoded characters to a java string.
 	 * @param _in 
-	 * @return 
+	 * @return decoded string
 	 * 
 	 */
 	public static String decode(String _in) {
@@ -547,7 +547,7 @@ public class MXml {
 	 *  Use this function for debugging (debugger).
 	 *  
 	 * @param element
-	 * @return
+	 * @return a dump representation
 	 */
 	public static String dump(Node element) {
 		if (element == null) return "null";
@@ -681,7 +681,7 @@ public class MXml {
 	 * Returns the inner XML Structure as string with all tag definitions.
 	 * 
 	 * @param node
-	 * @return
+	 * @return inner structure as string
 	 */
 	public static String innerXml(org.w3c.dom.Node node) {
 		return innerXml(node, true);

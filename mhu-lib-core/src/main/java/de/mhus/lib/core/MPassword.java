@@ -28,7 +28,6 @@ import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.VaultEntry;
@@ -53,16 +52,14 @@ public class MPassword {
 	public static final int TYPE_ROT13 = 1;
 	public static final int TYPE_RSA   = 2;
 
-	private static Log log = Log.getLog(MPassword.class);
-	
 //	private static Log log = Log.getLog(MPassword.class);
-	
+		
 	/**
 	 * Encode a password string be aware of special characters like umlaute. This
 	 * can cause problems.
 	 * 
 	 * @param in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String encode(String in) {
 		return encode(TYPE_ROT13,in, null);
@@ -104,7 +101,7 @@ public class MPassword {
 	 * Decode a encoded password.
 	 * 
 	 * @param in
-	 * @return
+	 * @return decoded string
 	 */
 	public static String decode(String in) {
 		if (in == null) return null;

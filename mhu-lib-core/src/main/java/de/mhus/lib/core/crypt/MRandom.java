@@ -8,25 +8,25 @@ public interface MRandom {
 
 	/**
 	 * Return a random byte from -127 to 128
-	 * @return
+	 * @return a random yte
 	 */
 	byte getByte();
 	
 	/**
 	 * Return a random integer from 0 to INTEGER MAX.
-	 * @return
+	 * @return a random integer
 	 */
 	int getInt();
 	
 	/**
 	 * Return a random double from 0 to 1
-	 * @return
+	 * @return random double
 	 */
 	double getDouble();
 	
 	/**
 	 * Return a random long from 0 to LONG MAX.
-	 * @return
+	 * @return random long
 	 */
 	long getLong();
 
@@ -42,7 +42,7 @@ public interface MRandom {
 
 	/**
 	 * Return a random readable character
-	 * @return
+	 * @return random character
 	 */
 	char getChar();
 	

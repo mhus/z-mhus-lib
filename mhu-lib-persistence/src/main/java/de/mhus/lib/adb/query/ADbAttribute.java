@@ -1,6 +1,5 @@
 package de.mhus.lib.adb.query;
 
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -13,7 +12,7 @@ public class ADbAttribute extends AAttribute {
 
 	private String attribute;
 	private Class<?> clazz;
-	private static Log log = Log.getLog(ADbAttribute.class);
+//	private static Log log = Log.getLog(ADbAttribute.class);
 
 	/**
 	 * <p>Constructor for ADbAttribute.</p>

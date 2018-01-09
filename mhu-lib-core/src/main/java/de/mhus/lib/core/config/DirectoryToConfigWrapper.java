@@ -16,9 +16,9 @@ import de.mhus.lib.errors.MException;
 public class DirectoryToConfigWrapper extends IConfig {
 
 	private static final long serialVersionUID = 1L;
-	private WritableResourceNode node;
+	private WritableResourceNode<IConfig> node;
 
-	public DirectoryToConfigWrapper(WritableResourceNode node) {
+	public DirectoryToConfigWrapper(WritableResourceNode<IConfig> node) {
 		this.node = node;
 	}
 	
@@ -143,7 +143,7 @@ public class DirectoryToConfigWrapper extends IConfig {
 	}
 
 	@Override
-	public ResourceNode getParent() {
+	public ResourceNode<?> getParent() {
 		return node.getParent();
 	}
 

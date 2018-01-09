@@ -10,6 +10,7 @@ import de.mhus.lib.errors.MException;
 
 public class JsonConfigFile extends JsonConfig {
 
+	private static final long serialVersionUID = 1L;
 	private File file;
 
 	public JsonConfigFile(File file) throws Exception {

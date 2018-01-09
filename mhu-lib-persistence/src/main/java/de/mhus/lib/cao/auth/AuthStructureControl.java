@@ -26,6 +26,7 @@ public class AuthStructureControl implements CaoAspectFactory<StructureControl> 
 
 	private class Aspect implements StructureControl {
 
+		@SuppressWarnings("unused")
 		private CaoNode node;
 		private StructureControl instance;
 		private CaoNode orgNode;

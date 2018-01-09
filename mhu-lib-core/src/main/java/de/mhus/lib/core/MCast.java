@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -112,7 +111,7 @@ public final class MCast {
 	 * two digits after comma.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return nice string
 	 */
 	public static String toCurrencyString(double _in) {
 
@@ -183,7 +182,7 @@ public final class MCast {
 	 * Parse a time date string.
 	 * 
 	 * @param in
-	 * @return
+	 * @return the calendar
 	 */
 	public static Calendar toCalendar(String in) {
 		return OBJECT_TO_CALENDAR.cast(in, null);
@@ -194,7 +193,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return the calendar
 	 */
 	public static Calendar toCalendar(String in, Calendar def) {
 		return OBJECT_TO_CALENDAR.cast(in, def);
@@ -235,8 +234,7 @@ public final class MCast {
 	 * byte a two letter hex value in the string.
 	 * 
 	 * @param in
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 * @return as binary
 	 */
 	public static String toBinaryString(byte[] in ) {
 		char[] hex = new char[2 * in.length];
@@ -253,9 +251,8 @@ public final class MCast {
 	/**
 	 * Convert a string with hex values in a byte array.
 	 * 
-	 * @see toBinaryString
 	 * @param in
-	 * @return
+	 * @return the array
 	 */
 	public static byte[] fromBinaryString(String in) {
 		byte[] out = new byte[ in.length() / 2 ];
@@ -269,7 +266,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param offset
-	 * @return
+	 * @return a byte
 	 */
 	public static byte byteFromHex( String in, int offset ) {
 		int i = Integer.parseInt(in.substring(offset, offset+2), 16);
@@ -281,8 +278,7 @@ public final class MCast {
 	 * Convert a byte to a two letter hex value.
 	 * 
 	 * @param in
-	 * @return
-	 * @throws UnsupportedEncodingException
+	 * @return hex string
 	 */
 	public static String toHex2String( byte in ) {
 		char[] hex = new char[2];
@@ -298,12 +294,12 @@ public final class MCast {
 	 * Convert String to boolean. If the conversion was not possible it returns
 	 * "_default".
 	 * 
-	 * Valide true values: yes, true, ja, 1, t
+	 * Valid true values: yes, true, ja, 1, t
 	 * 
-	 * valide false values: no, falsae, nein, 0, f
+	 * valid false values: no, false, nein, 0, f
 	 * @param _in
 	 * @param _default
-	 * @return
+	 * @return a boolean
 	 */
 	public static boolean toboolean(Object _in, boolean _default) {
 		return OBJECT_TO_BOOLEAN.toBoolean(_in,_default,null);
@@ -315,7 +311,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return a float
 	 */
 	public static float tofloat(Object in, float def) {
 		return OBJECT_TO_FLOAT.toFloat(in, def, null);
@@ -327,7 +323,7 @@ public final class MCast {
 	 * thousands separator and a dot as decimal separator.
 	 * @param in 
 	 * @param def 
-	 * @return 
+	 * @return a double
 	 */
 	public static double todouble(Object in, double def) {
 		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
@@ -344,7 +340,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return a double
 	 */
 	public static double todoubleEuropean(String in, double def) {
 		if (in == null) return def;
@@ -363,7 +359,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return a double
 	 */
 	public static double todoubleUS(String in, double def) {
 		if (in == null) return def;
@@ -378,7 +374,7 @@ public final class MCast {
 	 * @param in
 	 * @param def
 	 * @param locale Locale or null for default locale
-	 * @return
+	 * @return a double
 	 */
 	public static double todouble(String in, double def, Locale locale) {
 		if (in == null) return def;
@@ -397,7 +393,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return an integer
 	 */
 	public static int toint(Object in, int def) {
 		return OBJECT_TO_INTEGER.toInt(in, def, null);
@@ -409,7 +405,7 @@ public final class MCast {
 	 * 
 	 * @param in
 	 * @param def
-	 * @return
+	 * @return a long
 	 */
 	public static long tolong(Object in, long def) {
 		return OBJECT_TO_LONG.toLong(in, def, null);
@@ -428,7 +424,7 @@ public final class MCast {
 	 * a dot.
 	 * 
 	 * @param in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(double in) {
 		return DOUBLE_TO_STRING.toString(in);
@@ -439,7 +435,7 @@ public final class MCast {
 	 * a dot.
 	 * 
 	 * @param in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(float in) {
 		return FLOAT_TO_STRING.toString(in);
@@ -449,7 +445,7 @@ public final class MCast {
 	 * Convert a boolean to string. Values are "true", "false".
 	 * 
 	 * @param _in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(boolean _in) {
 		if (_in)
@@ -462,7 +458,7 @@ public final class MCast {
 	 * Converts integer to String.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(int _in) {
 		return Integer.toString(_in);
@@ -473,8 +469,7 @@ public final class MCast {
 	 * 
 	 * @param _in
 	 * @param _digits 
-	 * @param _numbers
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(int _in, int _digits) {
 		StringBuffer out = new StringBuffer().append(Integer.toString(_in));
@@ -488,8 +483,7 @@ public final class MCast {
 	 * 
 	 * @param _in
 	 * @param _digits 
-	 * @param _numbers
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(long _in, int _digits) {
 		StringBuffer out = new StringBuffer().append(Long.toString(_in));
@@ -502,7 +496,7 @@ public final class MCast {
 	 * Convert long to string.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(long _in) {
 		return String.valueOf(_in);
@@ -513,7 +507,7 @@ public final class MCast {
 	 * Convert integer to two letter hex code. Ignores negative values.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return corresponding string as hex
 	 */
 	public static String toHex2String(int _in) {
 		String out = Integer.toHexString(_in).toUpperCase();
@@ -532,7 +526,7 @@ public final class MCast {
 	 * Convert integer to four letter hex code. Ignores negative values.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return corresponding string as hex
 	 */
 	public static String toHex4String(int _in) {
 		return toHex2String(_in / 256) + toHex2String(_in % 256);
@@ -542,7 +536,7 @@ public final class MCast {
 	 * Put all list elements in a string list. Use the toString method.
 	 * 
 	 * @param _v
-	 * @return
+	 * @return corresponding string array
 	 */
 	public static String[] toStringArray(List<?> _v) {
 
@@ -642,7 +636,7 @@ public final class MCast {
 	 * Return an indexed map of the values. The first value has the index "0" and so on.
 	 * 
 	 * @param values
-	 * @return
+	 * @return corresponding map
 	 */
 	public static Map<String,Object> toIndexedMap(Object ... values) {
 		HashMap<String,Object> out = new HashMap<String, Object>();
@@ -697,7 +691,7 @@ public final class MCast {
 	 * Returns a string in every case even if input is null it returns an empty string.
 	 * 
 	 * @param in
-	 * @return
+	 * @return corresponding string
 	 */
 	public static String toString(Object in) {
 		if (in == null) return "";
@@ -756,7 +750,7 @@ public final class MCast {
 	 * Return 0 in 7 flavors or null
 	 * 
 	 * @param type
-	 * @return
+	 * @return the default value for the class
 	 */
 	public static Object getDefaultPrimitive(Class<?> type) {
 		if (type == int.class)

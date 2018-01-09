@@ -1,8 +1,5 @@
 package de.mhus.lib.core.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;

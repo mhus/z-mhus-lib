@@ -17,7 +17,7 @@ import de.mhus.lib.errors.MException;
  */
 public class ConfigBuilder extends MLog {
 	
-	public void cloneConfig(ResourceNode<?> src, WritableResourceNode tar) {
+	public void cloneConfig(ResourceNode<?> src, WritableResourceNode<?> tar) {
 		
 		preProcess(src,tar);
 		
@@ -37,7 +37,7 @@ public class ConfigBuilder extends MLog {
 			for (ResourceNode<?> srcSub : src.getNodes(key)) {
 				if (accept(srcSub)) {
 					try {
-						WritableResourceNode tarSub = tar.createConfig(key);
+						WritableResourceNode<?> tarSub = tar.createConfig(key);
 						cloneConfig(srcSub,tarSub);
 					} catch (MException e) {
 						// TODO Auto-generated catch block
@@ -57,7 +57,7 @@ public class ConfigBuilder extends MLog {
 	 * @param src
 	 * @return
 	 */
-	boolean accept(ResourceNode src) {
+	boolean accept(ResourceNode<?> src) {
 		return true;
 	}
 
@@ -66,7 +66,7 @@ public class ConfigBuilder extends MLog {
 	 * @param src
 	 * @param tar
 	 */
-	void preProcess(ResourceNode src, WritableResourceNode tar) {
+	void preProcess(ResourceNode<?> src, WritableResourceNode<?> tar) {
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class ConfigBuilder extends MLog {
 	 * @param src
 	 * @param tar
 	 */
-	void postProcess(ResourceNode src, WritableResourceNode tar) {
+	void postProcess(ResourceNode<?> src, WritableResourceNode<?> tar) {
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ConfigBuilder extends MLog {
 	 * @param property
 	 * @return
 	 */
-	String mapProperty(ResourceNode src, String key, String value) {
+	String mapProperty(ResourceNode<?> src, String key, String value) {
 		return value;
 	}
 
@@ -94,7 +94,7 @@ public class ConfigBuilder extends MLog {
 	 * @param key
 	 * @return
 	 */
-	boolean accept(ResourceNode src, String key) {
+	boolean accept(ResourceNode<?> src, String key) {
 		return true;
 	}
 		

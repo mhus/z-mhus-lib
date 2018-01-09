@@ -14,12 +14,11 @@ import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
+import de.mhus.lib.core.system.ApiInitialize;
 import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiInternal;
 import de.mhus.lib.core.system.SingleMLogInstanceFactory;
-import de.mhus.lib.core.system.ApiInitialize;
-import de.mhus.lib.karaf.services.TimerFactoryImpl;
 import de.mhus.lib.logging.JavaLoggerFactory;
 
 /**

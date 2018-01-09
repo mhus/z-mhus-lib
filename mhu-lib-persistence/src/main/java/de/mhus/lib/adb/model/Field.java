@@ -29,7 +29,7 @@ public abstract class Field extends MObject {
 	protected String retDbType;
 	protected String methodName;
 	protected boolean autoId;
-	protected ResourceNode attr;
+	protected ResourceNode<?> attr;
 	protected DbDynamic.Field dynamicField;
 	protected PojoAttribute<Object> attribute;
 	private LinkedList<AttributeFeature> features = new LinkedList<>();
@@ -150,7 +150,7 @@ public abstract class Field extends MObject {
 		return val;
 	}
 
-	public ResourceNode getAttributes() {
+	public ResourceNode<?> getAttributes() {
 		return attr;
 	}
 	public int getSize() {

@@ -42,7 +42,7 @@ public abstract class CaoAction extends MObject {
 	 * 
 	 * @param node
 	 * @param configuration
-	 * @return
+	 * @return configuration object
 	 * @throws CaoException
 	 */
 	public CaoConfiguration createConfiguration(CaoNode node,IProperties configuration) throws CaoException {

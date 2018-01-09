@@ -45,11 +45,13 @@ public class LDAPLoginModule extends AbstractKarafLoginModule {
 
     private static Logger logger = LoggerFactory.getLogger(LDAPLoginModule.class);
 
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
+    @Override
+	public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
         super.initialize(subject, callbackHandler, options);
     }
 
-    public boolean login() throws LoginException {
+    @Override
+	public boolean login() throws LoginException {
         ClassLoader tccl = Thread.currentThread().getContextClassLoader();
         try {
             return doLogin();
@@ -155,11 +157,13 @@ public class LDAPLoginModule extends AbstractKarafLoginModule {
         return true;
     }
 
-    public boolean abort() throws LoginException {
+    @Override
+	public boolean abort() throws LoginException {
         return true;
     }
 
-    public boolean logout() throws LoginException {
+    @Override
+	public boolean logout() throws LoginException {
         subject.getPrincipals().removeAll(principals);
         principals.clear();
         return true;

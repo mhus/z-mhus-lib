@@ -18,15 +18,11 @@
 
 package de.mhus.lib.sql;
 
-import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MHousekeeper;
-import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 
 /**

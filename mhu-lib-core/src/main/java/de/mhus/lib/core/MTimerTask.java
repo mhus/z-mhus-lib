@@ -19,11 +19,8 @@
 package de.mhus.lib.core;
 
 import java.lang.reflect.Field;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.TimerTask;
 
-import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.logging.MLogUtil;
 
 public abstract class MTimerTask extends TimerTask implements ITimerTask {

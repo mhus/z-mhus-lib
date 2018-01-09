@@ -16,6 +16,7 @@ import de.mhus.lib.sql.DbConnection;
  *
  * @author mikehummel
  * @version $Id: $Id
+ * @param <T> 
  */
 public class RelList<T> implements List<T> {
 

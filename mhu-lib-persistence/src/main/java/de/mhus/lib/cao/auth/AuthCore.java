@@ -6,7 +6,6 @@ import de.mhus.lib.cao.CaoAction;
 import de.mhus.lib.cao.CaoActionList;
 import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoAspectFactory;
-import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.action.CaoConfiguration;
@@ -79,7 +78,7 @@ public class AuthCore extends CaoCore {
 		return out;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
 	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
 		CaoAspectFactory<T> mine = super.getAspectFactory(ifc);
 		if (mine != null) return mine;
@@ -198,6 +197,7 @@ public class AuthCore extends CaoCore {
 		return instance.isShared();
 	}
 	
+	@Override
 	public void closeShared() {
 		instance.closeShared();
 	}

@@ -111,23 +111,28 @@ public class PemBlockModel extends MProperties implements PemBlock {
 		this.name = name.toUpperCase();
 	}
 	
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String getBlock() {
 		return block;
 	}
+	@SuppressWarnings("unchecked")
 	public <T extends PemBlockModel> T setBlock(String block) {
 		this.block = block;
 		return (T) this;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends PemBlockModel> T set(String key, Object value) {
 		put(key, value);
 		return (T) this;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("-----START ").append(getName()).append("-----\n");
@@ -154,6 +159,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 		return c.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T extends PemBlockModel> T  setBlock(byte[] bytes) {
 //		setBlock(Base64.encode(bytes));
 		setBlock(Base64.getEncoder().encodeToString(bytes));

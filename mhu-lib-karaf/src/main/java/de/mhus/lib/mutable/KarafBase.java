@@ -7,10 +7,8 @@ import java.util.Map.Entry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceException;
 import org.osgi.framework.ServiceReference;
 
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.system.DefaultBase;

@@ -1,7 +1,5 @@
 package de.mhus.lib.core.strategy;
 
-import java.util.HashMap;
-
 import de.mhus.lib.core.util.MUri;
 
 public class ProfessionalError extends OperationResult {

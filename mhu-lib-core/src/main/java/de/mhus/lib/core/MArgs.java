@@ -135,7 +135,7 @@ public class MArgs {
 	 * Returns true if the argument list contains the key.
 	 * 
 	 * @param name
-	 * @return
+	 * @return if is included
 	 */
 	public boolean contains(String name) {
 		return values.get(name) != null;
@@ -156,7 +156,7 @@ public class MArgs {
 	 * Returns the amount of attributes for this key.
 	 * 
 	 * @param name
-	 * @return
+	 * @return the size
 	 */
 	public int getSize(String name) {
 		if (!contains(name))
@@ -171,7 +171,7 @@ public class MArgs {
 	 * @param name
 	 * @param def
 	 * @param index
-	 * @return
+	 * @return the value
 	 */
 	public String getValue(String name, String def, int index) {
 		String ret = getValue(name, index);
@@ -184,7 +184,7 @@ public class MArgs {
 	 * 
 	 * @param name
 	 * @param index
-	 * @return
+	 * @return the value
 	 */
 	public String getValue(String name, int index) {
 		String[] ret = getValues(name);
@@ -200,7 +200,7 @@ public class MArgs {
 	 * array.
 	 * 
 	 * @param name
-	 * @return
+	 * @return the value
 	 */
 	public String[] getValues(String name) {
 		if (!contains(name))
@@ -211,7 +211,7 @@ public class MArgs {
 	/**
 	 * Return a iterable set of existing keys.
 	 * 
-	 * @return
+	 * @return the keys
 	 */
 	public Set<String> getKeys() {
 		return values.keySet();

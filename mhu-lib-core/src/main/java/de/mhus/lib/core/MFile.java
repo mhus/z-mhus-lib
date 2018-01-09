@@ -47,12 +47,9 @@ import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.core.cfg.CfgProperties;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.io.FileChecker;
 import de.mhus.lib.core.io.PdfFileChecker;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.errors.MException;
 
 /**
  * 
@@ -61,7 +58,7 @@ import de.mhus.lib.errors.MException;
 public class MFile {
 	
 	private static final String DEFAULT_MIME = "text/plain";
-	private static ResourceNode mimeConfigCache;
+//	private static ResourceNode<?> mimeConfigCache;
 	private static Properties mhuMimeConfigCache;
 	private static Log log = Log.getLog(MFile.class);
 	
@@ -75,7 +72,7 @@ public class MFile {
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot.
 	 * @param _file 
-	 * @return 
+	 * @return the file suffix
 	 */
 	public static String getFileSuffix(File _file) {
 		if (_file == null) return null;
@@ -85,7 +82,7 @@ public class MFile {
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot or an empty string.
 	 * @param name 
-	 * @return 
+	 * @return the file suffix
 	 */
 	public static String getFileSuffix(String name) {
 		if (name == null) return null;
@@ -101,7 +98,7 @@ public class MFile {
 	 * Returns the name of the file in a path name. Using the OS specific
 	 * separator.
 	 * @param path 
-	 * @return 
+	 * @return the file name
 	 */
 	public static String getFileName(String path) {
 		if (path == null) return null;
@@ -115,7 +112,7 @@ public class MFile {
 
 	/**
 	 * return the internal working directory.
-	 * @return 
+	 * @return current directory
 	 */
 	public static File getWorkingDirectory() {
 
@@ -126,7 +123,7 @@ public class MFile {
 	/**
 	 * Open and read a file. It returns the content of the file as string.
 	 * @param _f 
-	 * @return 
+	 * @return file content
 	 */
 	public static String readFile(File _f) {
 		return readFile(_f, MString.CHARSET_UTF_8);
@@ -136,7 +133,7 @@ public class MFile {
 	 * Open and read a file. It returns the content of the file as string.
 	 * @param _f 
 	 * @param encoding 
-	 * @return 
+	 * @return file content
 	 */
 	public static String readFile(File _f, String encoding) {
 		if (_f == null) return null;
@@ -157,7 +154,7 @@ public class MFile {
 	/**
 	 * Open and read a file. It returns the content of the file as string.
 	 * @param _is 
-	 * @return 
+	 * @return file content
 	 */
 	public static String readFile(Reader _is) {
 		if (_is == null) return null;
@@ -187,7 +184,7 @@ public class MFile {
 	 * Open and read a stream. It returns the content of the file as string.
 	 * Be aware of special characters.
 	 * @param _is 
-	 * @return 
+	 * @return file content
 	 */
 	public static String readFile(InputStream _is) {
 		return readFile(_is, MString.CHARSET_UTF_8);
@@ -210,7 +207,7 @@ public class MFile {
 	/**
 	 * Open and read a file. It returns the content of the file as byte array.
 	 * @param in 
-	 * @return 
+	 * @return file content
 	 * @throws IOException 
 	 */
 	public static byte[] readBinaryFile(File in) throws IOException {
@@ -223,7 +220,7 @@ public class MFile {
 	/**
 	 * Open and read a stream. It returns the content of the file as byte array.
 	 * @param is 
-	 * @return 
+	 * @return file content
 	 * @throws IOException 
 	 */
 	public static byte[] readBinary(InputStream is) throws IOException {
@@ -234,7 +231,7 @@ public class MFile {
 	 * Open and read a stream. It returns the content of the file as byte array.
 	 * @param is 
 	 * @param close 
-	 * @return 
+	 * @return file content
 	 * @throws IOException 
 	 */
 	public static byte[] readBinary(InputStream is, boolean close)
@@ -284,7 +281,7 @@ public class MFile {
 	 * Open and write a file. Be aware of special characters.
 	 * @param _f 
 	 * @param _content 
-	 * @return 
+	 * @return true if successful
 	 */
 	public static boolean writeFile(File _f, String _content) {
 		if (_f == null) return false;
@@ -309,7 +306,7 @@ public class MFile {
 	 * 
 	 * @param _f
 	 * @param _content
-	 * @return
+	 * @return true if successful
 	 */
 	public static boolean writeFile(File _f, byte[] _content) {
 		if (_f == null) return false;
@@ -347,7 +344,7 @@ public class MFile {
 	 * 
 	 * @param _src
 	 * @param _dest
-	 * @return
+	 * @return true if successful
 	 */
 	public static boolean copyFile(File _src, File _dest) {
 		if (_src == null || _dest == null) return false;
@@ -428,7 +425,7 @@ public class MFile {
 	 * Normalize the filename, removes all special characters.
 	 * 
 	 * @param _name
-	 * @return
+	 * @return useful file name
 	 */
 	public static String toFileName(String _name) {
 		if (_name == null) return null;
@@ -550,7 +547,7 @@ public class MFile {
 	 * Return a name free from problematic characters like slash, they will be changed to underscore
 	 * 
 	 * @param name
-	 * @return
+	 * @return useful file name
 	 */
 	public static String normalize(String name) {
 		if (name == null) return null;
@@ -567,6 +564,12 @@ public class MFile {
 		return name;
 	}
 
+	/**
+	 *  Return a name free from problematic characters like back slash, they will be changed to underscore.
+	 *  The slash as separator between folders is allowed.
+	 * @param name 
+	 * @return useful path
+	 */
 	public static String normalizePath(String name) {
 		if (name == null) return null;
 		
@@ -585,7 +588,7 @@ public class MFile {
 	 * Returns the name without path and extension.
 	 * 
 	 * @param key
-	 * @return
+	 * @return file name
 	 */
 	public static String getFileNameOnly(String key) {
 		if (key == null) return null;
@@ -599,9 +602,7 @@ public class MFile {
 	 * Replace the Extension of the file
 	 * @param name 
 	 * @param newExtension 
-	 * @param canonicalName
-	 * @param string
-	 * @return 
+	 * @return the new file name
 	 */
 	public static String replaceExtension(String name, String newExtension) {
 		if (name == null || newExtension == null) return name;
@@ -613,7 +614,7 @@ public class MFile {
 	/**
 	 * Searching for the mime type in config and as last option have a static list of extensions.
 	 * @param extension full file name or only extension
-	 * @return 
+	 * @return the mime type
 	 */
 	public static String getMimeType(String extension) {
 		if (extension == null) return null;
@@ -677,7 +678,7 @@ public class MFile {
 	 * 
 	 * @param file
 	 * @param removeLastEmpty If you have written line by line the last ENTER will produce an empty line, set true to remove this line.
-	 * @return
+	 * @return the file content as list of lines
 	 * @throws IOException
 	 */
 	public static List<String> readLines(File file, boolean removeLastEmpty) throws IOException {

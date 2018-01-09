@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.adb.model.Table;
-import de.mhus.lib.adb.query.ACreateContext;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
@@ -171,8 +170,10 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param object The object to fill
 	 * @throws MException
 	 */
+	@Override
 	public abstract void reloadObject(DbConnection con, String registryName, Object object) throws MException;
 
+	@Override
 	public abstract boolean objectChanged(Object object) throws MException;
 
 	public abstract boolean objectChanged(String registryName, Object object) throws MException;
@@ -204,6 +205,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 
 	public abstract void createObject(String registryName, Object object) throws MException;
 
+	@Override
 	public abstract void createObject(DbConnection con, Object object) throws MException;
 
 	/**
@@ -230,6 +232,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param object The object to save
 	 * @throws MException
 	 */
+	@Override
 	public abstract void saveObject(DbConnection con, String registryName, Object object) throws MException;
 
 	public abstract void saveObjectForce(Object object, boolean raw) throws MException;
@@ -272,6 +275,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	 * @param object The object to delete from database
 	 * @throws MException
 	 */
+	@Override
 	public abstract void deleteObject(DbConnection con, String registryName, Object object) throws MException;
 	
 	public abstract boolean isConnected();

@@ -5,7 +5,6 @@ import java.io.File;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
-import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 @Command(scope = "jms", name = "channel-remove", description = "Remove channel")

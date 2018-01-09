@@ -2,17 +2,9 @@ package de.mhus.lib.karaf.jms.heartbeat;
 
 import javax.jms.JMSException;
 
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.system.DefaultBase;
 import de.mhus.lib.jms.JmsChannel;
-import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.heartbeat.Heartbeat;
-import de.mhus.lib.jms.heartbeat.HeartbeatListener;
-import de.mhus.lib.karaf.jms.JmsDataChannel;
 import de.mhus.lib.karaf.jms.AbstractJmsDataChannel;
-import de.mhus.lib.karaf.jms.JmsManagerService;
-import de.mhus.lib.karaf.jms.JmsUtil;
 
 public class HeartbeatService extends AbstractJmsDataChannel {
 

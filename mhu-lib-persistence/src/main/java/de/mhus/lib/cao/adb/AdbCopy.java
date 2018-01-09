@@ -43,8 +43,8 @@ public class AdbCopy extends CaoAction {
 
 		try {
 
-			AdbNode to = (AdbNode) configuration.getProperties().getProperty(CopyConfiguration.NEW_PARENT);
-			final boolean recursive = configuration.getProperties().getBoolean(CopyConfiguration.RECURSIVE, false);
+//			AdbNode to = (AdbNode) configuration.getProperties().getProperty(CopyConfiguration.NEW_PARENT);
+//			final boolean recursive = configuration.getProperties().getBoolean(CopyConfiguration.RECURSIVE, false);
 	
 			CaoNode createdNode = null;
 			monitor.setSteps(configuration.getList().size());

@@ -12,7 +12,7 @@ public class CfgNode extends CfgValue<IConfig>{
 
 	@Override
 	protected IConfig loadValue() {
-		ResourceNode node = MApi.getCfg(getOwner()).getNodeByPath(getPath());
+		ResourceNode<?> node = MApi.getCfg(getOwner()).getNodeByPath(getPath());
 		if (node == null) return getDefault();
 		return (IConfig) node;
 	}

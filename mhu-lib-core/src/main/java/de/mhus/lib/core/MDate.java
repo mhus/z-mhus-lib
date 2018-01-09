@@ -84,7 +84,7 @@ public class MDate extends Date {
 	/**
 	 * yyyy-MM-ddTHH:mm:ss
 	 * @param date
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toIso8601(Date date) {
 		synchronized (iso8601DateFormat) {
@@ -105,7 +105,7 @@ public class MDate extends Date {
 	}
 	
 	public static String toDateTimeString(Date date, Locale locale) {
-	    DateFormat df = getLocaleDateFormater(locale);
+	    DateFormat df = getLocaleDateFormatter(locale);
 	    synchronized (timeFormat) {
 			timeFormat.setTimeZone(TimeZone.getDefault());
 	    	return df.format(date) + " " + timeFormat.format(date);
@@ -113,7 +113,7 @@ public class MDate extends Date {
 	}
 	
 	public static String toDateTimeString(Date date, Locale locale, TimeZone tz) {
-	    DateFormat df = getLocaleDateFormater(locale);
+	    DateFormat df = getLocaleDateFormatter(locale);
 	    synchronized (timeFormat) {
 			timeFormat.setTimeZone(tz);
 	    	return df.format(date) + " " + timeFormat.format(date);
@@ -125,7 +125,7 @@ public class MDate extends Date {
 	}
 	
 	public static String toDateTimeSecondsString(Date date, Locale locale) {
-	    DateFormat df = getLocaleDateFormater(locale);
+	    DateFormat df = getLocaleDateFormatter(locale);
 	    synchronized (timeSecFormat) {
 			timeSecFormat.setTimeZone(TimeZone.getDefault());
 	    	return df.format(date) + " " + timeSecFormat.format(date);
@@ -133,7 +133,7 @@ public class MDate extends Date {
 	}
 
 	public static String toDateTimeSecondsString(Date date, Locale locale, TimeZone tz) {
-	    DateFormat df = getLocaleDateFormater(locale);
+	    DateFormat df = getLocaleDateFormatter(locale);
 	    synchronized (timeSecFormat) {
 			timeSecFormat.setTimeZone(tz);
 	    	return df.format(date) + " " + timeSecFormat.format(date);
@@ -145,16 +145,16 @@ public class MDate extends Date {
 	}
 	
 	public static String toDateString(Date date, Locale locale) {
-	    DateFormat df = getLocaleDateFormater(locale);
+	    DateFormat df = getLocaleDateFormatter(locale);
 	    return df.format(date);
 	}
 
 	/**
 	 * Returns a locale specific date formatter.
 	 * @param locale the locale or null for default locale
-	 * @return
+	 * @return date formatter
 	 */
-	public static DateFormat getLocaleDateFormater(Locale locale) {
+	public static DateFormat getLocaleDateFormatter(Locale locale) {
 	    
 		if (locale == null) locale = Locale.getDefault();
 		if (locale == null || Locale.GERMANY.equals(locale))
@@ -167,7 +167,7 @@ public class MDate extends Date {
 	/**
 	 * yyyyMMddHHmmss
 	 * @param date
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toFileFormat(Date date) {
 		synchronized (fileDateFormat) {
@@ -180,7 +180,7 @@ public class MDate extends Date {
 	 * Returns the date in iso format: yyyy-mm-dd
 	 * 
 	 * @param _in
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toIsoDate(Date _in) {
 		Calendar c = Calendar.getInstance();
@@ -192,7 +192,7 @@ public class MDate extends Date {
 	 * Returns the date in iso time format: yyyy-mm-dd HH:mm:ss.SSS
 	 * 
 	 * @param _in
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toIsoDateTime(Date _in) {
 		Calendar c = Calendar.getInstance();
@@ -213,10 +213,9 @@ public class MDate extends Date {
 
 	/**
 	 * Calendar to iso date: yyyy-mm-dd
-	 * @param timeStamp 
 	 * 
-	 * @param _in
-	 * @return
+	 * @param timeStamp 
+	 * @return the formatted date as string
 	 */
 	public static String toIsoDateTime(long timeStamp) {
 		
@@ -230,7 +229,7 @@ public class MDate extends Date {
 	 * Calendar to iso date: yyyy-mm-dd
 	 * 
 	 * @param _in
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toIsoDate(Calendar _in) {
 		return _in.get(Calendar.YEAR) + "-"
@@ -241,7 +240,7 @@ public class MDate extends Date {
 	/**
 	 * yyyy-MM-ddTHH:mm:ss
 	 * @param date
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toIso8601(Calendar date) {
 		synchronized (iso8601DateFormat) {
@@ -260,7 +259,7 @@ public class MDate extends Date {
 	/**
 	 * yyyyMMddHHmmss
 	 * @param date
-	 * @return
+	 * @return the formatted date as string
 	 */
 	public static String toFileFormat(Calendar date) {
 		return fileDateFormat.format(date);

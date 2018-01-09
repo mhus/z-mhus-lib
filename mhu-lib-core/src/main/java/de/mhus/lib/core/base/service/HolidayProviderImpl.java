@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 
 public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
@@ -18,11 +18,13 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	
 	@Override
 	public boolean isHoliday(Locale locale, Date date) {
+		@SuppressWarnings("deprecation")
 		Map<Date, String> map = getHolidays(locale, date.getYear() + 1900);
 		if (map == null) return false;
 		return map.containsKey(MDate.toDateOnly(date));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isWorkingDay(Locale locale, Date date) {
 		return date.getDay() != 0 && !isHoliday(locale, date);

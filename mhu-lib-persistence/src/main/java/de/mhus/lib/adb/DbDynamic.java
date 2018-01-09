@@ -46,7 +46,7 @@ public interface DbDynamic {
 
 		Class<?> getReturnType();
 
-		ResourceNode getAttributes();
+		ResourceNode<?> getAttributes();
 
 		String[] getIndexes() throws MException;
 

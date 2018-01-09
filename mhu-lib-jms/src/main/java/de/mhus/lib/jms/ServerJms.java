@@ -10,8 +10,8 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQSession;
 
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgLong;

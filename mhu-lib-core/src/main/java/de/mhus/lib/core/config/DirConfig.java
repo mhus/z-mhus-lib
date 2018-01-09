@@ -11,6 +11,7 @@ import de.mhus.lib.errors.MException;
 
 public class DirConfig extends PropertiesConfig {
 
+	private static final long serialVersionUID = 1L;
 	private File dir;
 
 	public DirConfig(File dir) {

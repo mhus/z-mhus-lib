@@ -17,7 +17,7 @@ public class JmxConsole extends VirtualConsole {
 		width = 80;
 		height = 40;
 		echo = true;
-		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this, null);
+		ResourceNode<?> config = MApi.lookup(CfgManager.class).getCfg(this, null);
 		if (config != null) {
 			width = config.getInt("width",width);
 			height = config.getInt("height", height);

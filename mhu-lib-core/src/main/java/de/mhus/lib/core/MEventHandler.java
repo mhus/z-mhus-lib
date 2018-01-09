@@ -51,6 +51,7 @@ public class MEventHandler<L> extends MLog implements MRegistry<L> {
 	 * 
 	 * @param listener Listener for the events.
 	 */
+	@Override
 	public void register(L listener) {
 		if (weakHandler) {
 			registerWeak(listener);
@@ -67,6 +68,7 @@ public class MEventHandler<L> extends MLog implements MRegistry<L> {
 	 * 
 	 * @param listener Listener for the events.
 	 */
+	@Override
 	public void unregister(L listener) {
 		synchronized (listeners) {
 			listeners.remove(listener);
@@ -79,6 +81,7 @@ public class MEventHandler<L> extends MLog implements MRegistry<L> {
 	 * 
 	 * @param listener Listener for the events.
 	 */
+	@Override
 	public void registerWeak(L listener) {
 		synchronized (listeners) {
 			weak.put(listener, "");
@@ -147,7 +150,7 @@ public class MEventHandler<L> extends MLog implements MRegistry<L> {
 	/**
 	 * Amount of registered listeners.
 	 * 
-	 * @return
+	 * @return the size
 	 */
 	public int size() {
 		return listeners.size() + weak.size();
@@ -166,6 +169,7 @@ public class MEventHandler<L> extends MLog implements MRegistry<L> {
 		fire(null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void fire( Object event, Object ... values) {
 		for (Object obj : getListenersArray()) {
 			try {

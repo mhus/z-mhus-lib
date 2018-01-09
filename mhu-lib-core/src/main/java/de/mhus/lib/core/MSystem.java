@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TimerTask;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -24,7 +23,7 @@ public class MSystem {
 	/**
 	 * Returns the name of the current system. COMPUTERNAME or HOSTNAME.
 	 * 
-	 * @return
+	 * @return the hosts name
 	 */
 	public static String getHostname() 
 	{
@@ -43,7 +42,7 @@ public class MSystem {
 	/**
 	 * Returns the process id of the current application.
 	 * 
-	 * @return
+	 * @return the current process id
 	 */
 	public static String getPid() 
 	{
@@ -104,7 +103,7 @@ public class MSystem {
 	 * 7. throw an error
 	 * @param owner
 	 * @param propertyFile
-	 * @return
+	 * @return the reference to the resource
 	 * @throws IOException
 	 */
 	@SuppressWarnings("deprecation")
@@ -191,7 +190,7 @@ public class MSystem {
 	
 	/**
 	 * Return the name of the main class or null if not found.
-	 * @return
+	 * @return the main class name
 	 */
 	public static String getMainClassName()
 	{
@@ -206,7 +205,7 @@ public class MSystem {
 	/**
 	 * Return the system temp directory.
 	 * 
-	 * @return
+	 * @return path to the tmp directory
 	 */
 	public static String getTmpDirectory() {
 		return System.getProperty("java.io.tmpdir");
@@ -345,7 +344,7 @@ public class MSystem {
 	 * === 1
 	 * @param s1
 	 * @param s2
-	 * @return
+	 * @return see Comparator
 	 */
 	public static <T extends Comparable<T>> int compareTo(T s1, T s2) {
 		if (s1 == null && s2 == null) return 0;

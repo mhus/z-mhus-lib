@@ -1,7 +1,5 @@
 package de.mhus.lib.karaf.services;
 
-import java.util.Observer;
-
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.schedule.TimerTaskIntercepter;
@@ -22,7 +20,7 @@ public interface SchedulerService extends ITimerTask {
 	 * Overwrite interval defined in the component parameters. Return null if you don't need to
 	 * define a customized interval.
 	 * 
-	 * @return
+	 * @return Interval
 	 */
 	String getInterval();
 
@@ -30,7 +28,7 @@ public interface SchedulerService extends ITimerTask {
 
 	/**
 	 * Return a intercepter to handle this
-	 * @return
+	 * @return intercepter
 	 */
 	TimerTaskIntercepter getIntercepter();
 	

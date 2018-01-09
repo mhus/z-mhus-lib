@@ -16,6 +16,7 @@ public class UpdaterCfg {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void doUpdate(String owner) {
 		LinkedList<CfgValue> list = null;
 		synchronized (registry) {
@@ -26,6 +27,7 @@ public class UpdaterCfg {
 			item.update();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public List<CfgValue> getList() {
 		synchronized (registry) {
 			return new LinkedList<CfgValue>(registry.keySet());

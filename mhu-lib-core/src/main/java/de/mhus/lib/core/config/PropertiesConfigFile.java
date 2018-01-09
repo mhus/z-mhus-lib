@@ -10,6 +10,7 @@ import de.mhus.lib.errors.MException;
 
 public class PropertiesConfigFile extends PropertiesConfig {
 
+	private static final long serialVersionUID = 1L;
 	private File file;
 
 	public PropertiesConfigFile(File file) throws IOException {

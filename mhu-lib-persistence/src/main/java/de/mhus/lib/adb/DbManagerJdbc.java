@@ -317,7 +317,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		try {
 			DbStatement sth = con.createStatement(query);
 			DbResult res = sth.executeQuery(map);
-			return new DbCollection<T>(this,con,myCon != null,registryName,clazz,res);
+			return new DbCollectionImpl<T>(this,con,myCon != null,registryName,clazz,res);
 		} catch (Throwable t) {
 			throw new MException(con,query,attributes,t);
 		}
