@@ -51,6 +51,7 @@
 		            org.apache.openjpa.*;resolution:=optional,
 		            com.mongodb.*;resolution:=optional,
 		            org.mongodb.*;resolution:=optional,
+		            org.bson.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	          </instructions>
