@@ -1,28 +1,39 @@
 package de.mhus.lib.mongo;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.FindAndModifyOptions;
 import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.mapping.CustomMapper;
-import org.mongodb.morphia.mapping.MappedField;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.NotSaved;
+import org.mongodb.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.Serialized;
 import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.jmx.MJmx;
+import de.mhus.lib.core.pojo.AttributesStrategy;
+import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.pojo.PojoFilter;
+import de.mhus.lib.core.pojo.PojoModel;
+import de.mhus.lib.core.pojo.PojoModelImpl;
+import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotSupportedException;
@@ -35,6 +46,7 @@ public class MoManager extends MJmx implements MoHandler {
 	private Morphia morhia;
 	private Datastore datastore;
 	private LinkedList<Class<? extends Persistable>> managedTypes;
+	private HashMap<String, PojoModel> modelCache = new HashMap<>();
 
 	public MoManager(MongoClient client, MoSchema schema) {
 		this.client = client;
@@ -82,7 +94,8 @@ public class MoManager extends MJmx implements MoHandler {
 	}
 	
 	public <T> T getObject(Class<T> clazz, Object ... keys) throws MException {
-		return datastore.get(clazz, keys[0]);
+		if (keys == null || keys.length != 1 || keys[0] == null) return null;
+		return datastore.get(clazz, new ObjectId(String.valueOf(keys[0])));
 	}
 	
 	public <T> Query<T> createQuery(Class<T> clazz) {
@@ -115,12 +128,41 @@ public class MoManager extends MJmx implements MoHandler {
 
 	@Override
 	public void createObject(DbConnection con, Object dbComfortableObject) throws MException {
-		// TODO remove ID
+		PojoModel model = getModelFor(dbComfortableObject.getClass());
+		for ( PojoAttribute<?> f : model)
+			if (f.getAnnotation(Id.class) != null) {
+				try {
+					f.set(dbComfortableObject, null);
+				} catch (IOException e) {
+					throw new MException(f,e);
+				}
+				break;
+			}
+		
 		save(dbComfortableObject);
 	}
 
 	// -----
 	
+	public synchronized PojoModel getModelFor(Class<?> clazz) throws NotFoundException {
+		// find managed object
+		Class<? extends Persistable> type = null;
+		for (Class<? extends Persistable> t : managedTypes) {
+			if (clazz.isAssignableFrom(t)) {
+				type = t;
+				break;
+			}
+		}
+		if (type == null) throw new NotFoundException("Managed type not found",clazz);
+		
+		PojoModel model = modelCache.get(type.getName());
+		if (model == null) {
+			model = new PojoParser().parse(type, new AttributesStrategy()).filter(new MongoFilter()).getModel();
+			modelCache.put(type.getName(), model);
+		}
+		return model;
+	}
+
 	public <T> UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
 		return datastore.createUpdateOperations(clazz);
 	}
@@ -173,6 +215,7 @@ public class MoManager extends MJmx implements MoHandler {
 	}
 
 	public Object getId(Object object) {
+		if (object == null) return "";
 		return datastore.getKey(object).getId();
 	}
 
@@ -182,4 +225,38 @@ public class MoManager extends MJmx implements MoHandler {
 		return instance;
 	}
 	
+	private static class MongoFilter implements PojoFilter {
+
+		@Override
+		public void filter(PojoModelImpl model) {
+			for (String name : model.getAttributeNames()) {
+				PojoAttribute<?> attr = model.getAttribute(name);
+				if (
+						
+						attr.getAnnotation(NotSaved.class) != null 
+						||
+						( !attr.getType().isPrimitive() || attr.getType() == String.class || attr.getType() == Date.class  )
+						&&
+						attr.getAnnotation(Property.class) == null 
+						&& 
+						attr.getAnnotation(Id.class) == null
+						&&
+						attr.getAnnotation(Serialized.class) == null
+						&&
+						attr.getAnnotation(Reference.class) == null
+						&&
+						attr.getAnnotation(Embedded.class) == null
+						
+						) {
+					model.removeAttribute(name);
+				}
+			}
+			
+			for (String name : model.getActionNames()) {
+				model.removeAction(name);
+			}
+			
+		}
+		
+	}
 }
