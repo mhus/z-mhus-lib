@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
@@ -18,11 +19,15 @@ import org.mongodb.morphia.annotations.NotSaved;
 import org.mongodb.morphia.annotations.Property;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Serialized;
+import org.mongodb.morphia.mapping.CustomMapper;
+import org.mongodb.morphia.mapping.MappedField;
 import org.mongodb.morphia.mapping.Mapper;
+import org.mongodb.morphia.mapping.cache.EntityCache;
 import org.mongodb.morphia.query.Query;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import de.mhus.lib.adb.DbComfortableObject;
@@ -56,7 +61,7 @@ public class MoManager extends MJmx implements MoHandler {
 
 	@SuppressWarnings("rawtypes")
 	protected void initDatabase() {
-		Mapper mapper = getMapper();
+		Mapper mapper = createMapper();
 		Set<Class> classObjs = new HashSet<>();
 		managedTypes = new LinkedList<>();
 		schema.findObjectTypes(managedTypes);
@@ -66,25 +71,42 @@ public class MoManager extends MJmx implements MoHandler {
 		datastore.ensureIndexes();
 	}
 	
-	protected Mapper getMapper() {
+	protected Mapper createMapper() {
         Mapper mapper = new Mapper();
-//        // ignore not tagged values
-//        mapper.getOptions().setDefaultMapper(new CustomMapper() {
-//			
-//			@Override
-//			public void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects,
-//		            Mapper mapper) {
-//			}
-//			
-//			@Override
-//			public void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity, EntityCache cache,
-//		            Mapper mapper) {
-//			}
-//		});
+
+        mapper.getOptions().setValueMapper(createValueMapper(mapper));
+        mapper.getOptions().setReferenceMapper(createReferenceMapper(mapper));
+        mapper.getOptions().setEmbeddedMapper(createEmbeddedMapper(mapper));
+        mapper.getOptions().setDefaultMapper(createCustomMapper(mapper));
+        
         schema.initMapper(mapper);
         return mapper;
     }
 	
+	private CustomMapper createEmbeddedMapper(Mapper mapper) {
+        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getEmbeddedMapper());
+        return m;
+	}
+
+	private CustomMapper createReferenceMapper(Mapper mapper) {
+        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getReferenceMapper());
+        return m;
+	}
+
+	protected CustomMapper createValueMapper(Mapper mapper) {
+        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getValueMapper());
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
+        return m;
+	}
+
+	protected CustomMapper createCustomMapper(Mapper mapper) {
+        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getDefaultMapper());
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
+        return m;
+	}
+
 	public void save(Object obj) {
 		datastore.save(obj);
 	}
@@ -259,4 +281,38 @@ public class MoManager extends MJmx implements MoHandler {
 		}
 		
 	}
+	
+	public static class MoCustomMapper implements CustomMapper {
+
+		private HashSet<String> ignoreName = new HashSet<>();
+		private CustomMapper defaultMapper;
+
+		public MoCustomMapper(CustomMapper defaultMapper) {
+			this.defaultMapper = defaultMapper;
+		}
+
+		@Override
+		public void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity,
+		        EntityCache cache, Mapper mapper) {
+			
+			if (ignoreName.contains(mf.getFullName())) return;
+
+			defaultMapper.fromDBObject(datastore, dbObject, mf, entity, cache, mapper);
+		}
+
+		@Override
+		public void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects,
+		        Mapper mapper) {
+			
+			if (ignoreName.contains(mf.getFullName())) return;
+			
+			defaultMapper.toDBObject(entity, mf, dbObject, involvedObjects, mapper);
+		}
+
+		public HashSet<String> getIgnoreName() {
+			return ignoreName;
+		}
+		
+	}
+	
 }
