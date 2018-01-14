@@ -19,15 +19,18 @@
 
 package de.mhus.lib.core.util;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
 
 /**
@@ -39,8 +42,14 @@ import de.mhus.lib.core.MString;
  * 
  * @author jesus
  */
-public class MUri {
+public abstract class MUri {
 
+	public static final String SCHEME_HTTP = "http";
+	public static final String SCHEME_HTTPS = "https";
+	public static final String SCHEME_FTP = "ftp";
+	public static final String SCHEME_FILE = "file";
+	public static final String SCHEME_SFPT = "sftp";
+	
 	public static class Query extends TreeMap<String,String> {
 		private static final long serialVersionUID = -1;
 		
@@ -63,6 +72,10 @@ public class MUri {
 		public String toString() {
 			return implode(this);
 		}
+	}
+	
+	public MUri() {
+		
 	}
 	
 	/**
@@ -390,6 +403,70 @@ public class MUri {
 				url = url.substring(0, pos+1+name.length()) + value + url.substring(pos2);
 			}
 		}
+	}
+	
+	public static MUri toUri(String path) {
+		return new MutableUri(path);
+	}
+	
+	public static MUri toUri(File file) {
+		return new MutableUri(SCHEME_FILE + ":" + file.getAbsolutePath() );
+	}
+
+	public abstract String getScheme();
+
+	public abstract String getLocation();
+	
+	public abstract String getUsername();
+	
+	public abstract String getPassword();
+
+	public abstract String[] getParams();
+
+	public abstract Map<String, String> getQuery();
+
+	public abstract String getFragment();
+
+	public abstract String getPath();
+	
+	public abstract String[] getPathParts();
+	
+	public String toString() {
+		StringBuffer out = new StringBuffer();
+		if (getScheme() != null) {
+			out.append(getScheme()).append(':');
+		}
+		if (getUsername() != null) {
+			out.append("//").append(getUsername());
+			if (getPassword() != null)
+				out.append(':').append(getPassword());
+			out.append("@");
+		} else
+		if (SCHEME_HTTP.equals(getScheme()) || SCHEME_HTTPS.equals(getScheme()))
+			out.append("//");
+		if (getLocation() != null)
+			out.append(getLocation());
+		if (getPathParts() != null)
+			out.append('/').append(getPath());
+		if (getParams() != null)
+			for (String p : getParams())
+				out.append(';').append(encode(p));
+		if (getQuery() != null) {
+			out.append('?');
+			boolean first = true;
+			for (Entry<String, String> entry : getQuery().entrySet()) {
+				if (first)
+					first = false;
+				else
+					out.append('&');
+				out.append(encode(entry.getKey())).append('=').append(encode(entry.getValue()));
+			}
+		}
+		if (getFragment() != null)
+			out.append('#').append(getFragment());
+		
+		return out.toString();
+		
 	}
 	
 }
