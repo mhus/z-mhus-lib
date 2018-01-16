@@ -35,8 +35,11 @@ public class JdbcProvider extends DbProvider {
 					if (driver.indexOf("hsqldb") > 0)
 						dialect = new DialectHsqldb();
 					else
-						if (driver.indexOf("mysql") > 0)
-							dialect = new DialectMysql();
+					if (driver.indexOf("mysql") > 0)
+						dialect = new DialectMysql();
+					else
+					if (driver.indexOf("postgresql") > 0)
+						dialect = new DialectPostgresql();
 				}
 			}
 			if (dialect == null) {

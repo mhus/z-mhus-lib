@@ -48,19 +48,27 @@ public class AdbTest extends TestCase {
 		return new TestSuite( AdbTest.class );
 	}
 
-	public DbPoolBundle createPool(String name) {
+	public DbPoolBundle createPool(String name, boolean cleanup) throws Exception {
 		NodeConfig cdb = new NodeConfig();
 		NodeConfig cconfig = new NodeConfig();
 
-		//    	ccon.setProperty("driver", "com.mysql.jdbc.Driver");
-		//    	ccon.setProperty("url", "jdbc:mysql://localhost:3306/test");
-		//    	ccon.setProperty("user", "test");
-		//    	ccon.setProperty("pass", "test");
+		// mysql
+		//    	cdb.setProperty("driver", "com.mysql.jdbc.Driver");
+		//    	cdb.setProperty("url", "jdbc:mysql://localhost:3306/test");
+		//    	cdb.setProperty("user", "test");
+		//    	cdb.setProperty("pass", "test");
 
-		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
-		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
-		cdb.setProperty("user", "sa");
-		cdb.setProperty("pass", "");
+		// postgresql
+		cdb.setProperty("driver", "org.postgresql.Driver");
+		cdb.setProperty("url", "jdbc:postgresql://10.10.11.58:32768/test");
+		cdb.setProperty("user", "postgres");
+		cdb.setProperty("pass", "nein");
+
+		// hsqldb
+//		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
+//		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
+//		cdb.setProperty("user", "sa");
+//		cdb.setProperty("pass", "");
 
 
 		//    	NodeConfig cqueries = new NodeConfig();
@@ -76,13 +84,26 @@ public class AdbTest extends TestCase {
 
 		DbPoolBundle pool = new DbPoolBundle(cconfig,null);
 
+		if (cleanup) {
+			DbConnection con = pool.getPool("test").getConnection();
+			con.createStatement("DROP TABLE book_").execute(null);
+			con.createStatement("DROP TABLE bookstoreschema_").execute(null);
+			con.createStatement("DROP TABLE finances_").execute(null);
+			con.createStatement("DROP TABLE person2_").execute(null);
+			con.createStatement("DROP TABLE person_").execute(null);
+			con.createStatement("DROP TABLE regal_").execute(null);
+			con.createStatement("DROP TABLE store_").execute(null);
+			con.commit();
+			
+			con.close();
+		}
 		return pool;
 	}
 
 
 	public void testModel() throws Throwable {
 
-		DbPool pool = createPool("testModel").getPool("test");
+		DbPool pool = createPool("testModel", true).getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
@@ -360,11 +381,13 @@ public class AdbTest extends TestCase {
 		
 		timer.stop();
 		System.out.println("Time: " + timer.getCurrentTimeAsString());
+		
+		pool.close();
 	}
 	
 	public void testDbQuery() throws Exception {
 		
-		DbPool pool = createPool("testModel2").getPool("test");
+		DbPool pool = createPool("testModel2", true).getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
@@ -458,10 +481,12 @@ public class AdbTest extends TestCase {
 			assertEquals(1, res.size());
 		}
 				
+		pool.close();
+
 	}
 
 	public void testReconnect() throws Exception {
-		DbPool pool = createPool("testReconnect").getPool("test");
+		DbPool pool = createPool("testReconnect", true).getPool("test");
 
 //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
@@ -473,6 +498,8 @@ public class AdbTest extends TestCase {
 		manager1.reconnect();
 		manager2.reconnect();
 		
-	}
+		pool.close();
 
+	}
+	
 }

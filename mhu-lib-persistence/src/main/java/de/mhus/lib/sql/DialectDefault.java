@@ -3,6 +3,7 @@ package de.mhus.lib.sql;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class DialectDefault extends Dialect {
 			log().t("table",tnOrg);
 			String tn = normalizeTableName(tnOrg);
 
-			ResultSet tRes = meta.getTables(null, null, tn, new String[] {"TABLE"});
+			ResultSet tRes = findTable(meta, tn);
 
 			if (caoBundle !=null) caoBundle.getBundle().remove(tName);
 
@@ -114,7 +115,7 @@ public class DialectDefault extends Dialect {
 						String fName = normalizeColumnName(fNameOrg);
 
 						if (cfield.getString(K_CATEGORIES, "").indexOf(C_VIRTUAL) < 0) {
-							ResultSet fRes = meta.getColumns(null, null, tn, fName);
+							ResultSet fRes = findColumn(meta,tn,fName);
 							log().t("field",tName,fNameOrg);
 							if (fRes.next()) {
 								String fName2 = fRes.getString("COLUMN_NAME");
@@ -128,9 +129,7 @@ public class DialectDefault extends Dialect {
 
 								String fType1 = getDbType(cfield);
 
-								if (fType.indexOf("CHAR") >=0) fType = fType + "(" + fSize + ")"; // add size to type
-
-								if (!fType1.equals(fType)) {
+								if (!equalTypes(fType1,fType, fSize)) {
 									alterColumn(sth,tn,cfield);
 								} else {
 									boolean xdef = cfield.getProperty("default") != null;
@@ -216,7 +215,7 @@ public class DialectDefault extends Dialect {
 			}
 
 			// look for the primary key
-			tRes = meta.getPrimaryKeys(null, null, tn);
+			tRes = findPrimaryKeys(meta,tn);
 			String keys2 = null;
 			while (tRes.next()) {
 				if (keys2 == null )
@@ -241,6 +240,26 @@ public class DialectDefault extends Dialect {
 		}
 		sth.close();
 	}
+
+	protected boolean equalTypes(String should, String is, int fSize) {
+		is = is.toUpperCase();
+		if (is.indexOf("CHAR") >=0) {
+			is = is + "(" + fSize + ")"; // add size to type
+		}
+		return should.equals(is);
+	}
+
+	protected ResultSet findPrimaryKeys(DatabaseMetaData meta, String tn) throws SQLException {
+		return  meta.getPrimaryKeys(null, null, tn);
+	}
+
+	protected ResultSet findColumn(DatabaseMetaData meta, String tn, String fName) throws SQLException {
+		return meta.getColumns(null, null, tn, fName);
+	}
+
+	protected ResultSet findTable(DatabaseMetaData meta, String name) throws SQLException {
+		 return meta.getTables(null, null, name, new String[] {"TABLE"});
+    }
 
 	protected void createTable(Statement sth, String tn, IConfig ctable) {
 		StringBuffer sql = new StringBuffer();
@@ -394,7 +413,7 @@ public class DialectDefault extends Dialect {
 
 			String columns2 = null;
 			{
-				ResultSet res = meta.getIndexInfo(null, null, table, unique, false);
+				ResultSet res = findIndex(meta, table, unique);
 				while (res.next()) {
 
 					String iName2 = res.getString("INDEX_NAME");
@@ -409,7 +428,7 @@ public class DialectDefault extends Dialect {
 			}
 			boolean doubleExists = false;
 			{
-				ResultSet res = meta.getIndexInfo(null, null, table, !unique, false);
+				ResultSet res = findIndex(meta, table, !unique);
 				while (res.next()) {
 
 					String iName2 = res.getString("INDEX_NAME");
@@ -440,6 +459,10 @@ public class DialectDefault extends Dialect {
 
 		}
 		sth.close();
+	}
+
+	protected ResultSet findIndex(DatabaseMetaData meta, String table, boolean unique) throws SQLException {
+		return meta.getIndexInfo(null, null, table, unique, false);
 	}
 
 	protected boolean equalsIndexName(String table, String iName, String iName2) {
