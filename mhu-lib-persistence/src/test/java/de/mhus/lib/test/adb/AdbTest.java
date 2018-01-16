@@ -1,7 +1,13 @@
 package de.mhus.lib.test.adb;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
+
+import org.hsqldb.jdbc.JDBCDriver;
 
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;
@@ -10,6 +16,7 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
@@ -29,7 +36,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class AdbTest extends TestCase {
-
+		
 	public AdbTest(String name) {
 		super(name);
 		try {
@@ -48,62 +55,142 @@ public class AdbTest extends TestCase {
 		return new TestSuite( AdbTest.class );
 	}
 
-	public DbPoolBundle createPool(String name, boolean cleanup) throws Exception {
+	public DbPoolBundle createPool(String name) throws Exception {
+		
+		name = name.toLowerCase().trim();
+		
+		String jdbcDriver = "";
+		String jdbcAdminUrl = "";
+		String jdbcAdminUser = "";
+		String jdbcAdminPass = "";
+		
+		String jdbcUrl = "";
+		String jdbcUser = "";
+		String jdbcPass = "";
+
+		String databaseName  = "";
+
+		jdbcDriver    = System.getProperty("jdbcDriver", "");
+		jdbcAdminUrl  = System.getProperty("jdbcAdminUrl", "");
+		jdbcAdminUser = System.getProperty("jdbcAdminUser", "");
+		jdbcAdminPass = System.getProperty("jdbcAdminPass", "");
+		
+		jdbcUrl  = System.getProperty("jdbcUrl", "");
+		jdbcUser = System.getProperty("jdbcUser", "");
+		jdbcPass = System.getProperty("jdbcPass", "");
+		
+		// postgresql
+//		jdbcDriver = "org.postgresql.Driver";
+//		jdbcAdminUrl = "jdbc:postgresql://10.10.11.58:32768/";
+//		jdbcAdminUser = "postgres";
+//		jdbcAdminPass = "nein";
+
+		// mysql
+//		jdbcDriver = "com.mysql.jdbc.Driver";
+//		jdbcAdminUrl = "jdbc:mysql://10.10.11.58:32769/";
+//		jdbcAdminUser = "root";
+//		jdbcAdminPass = "nein";
+		
+		// hsqldb - fallback
+		if (MString.isEmpty(jdbcDriver)) {
+			jdbcDriver = "org.hsqldb.jdbcDriver";
+			jdbcUrl = "jdbc:hsqldb:mem:" + name;
+			jdbcUser = "sa";
+			jdbcPass = "";
+		}
+		
+		// prepare databases
+		if (MString.isSet(jdbcAdminUrl)) {
+			System.out.println(">>> Recreate Database");
+			if (MString.isEmpty(jdbcUser)) jdbcUser = "usr_mhus" + name;
+			if (MString.isEmpty(jdbcPass)) jdbcPass = "x" + (int)(Math.random() * 10000d);
+			if (MString.isEmpty(databaseName)) databaseName = "mhus" + name;
+			if (MString.isEmpty(jdbcUrl)) jdbcUrl = jdbcAdminUrl + databaseName;
+			
+			Class.forName(jdbcDriver);
+			Connection con = DriverManager.getConnection(jdbcAdminUrl, jdbcAdminUser, jdbcAdminPass);
+			
+			if (jdbcDriver.contains("mysql")) {
+				
+				try {
+					con.prepareStatement("DROP DATABASE " + databaseName).execute();
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				try {
+					con.prepareStatement("DROP USER " + jdbcUser).execute();
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				
+				con.prepareStatement("CREATE DATABASE " + databaseName).execute();
+				con.prepareStatement("CREATE USER " + jdbcUser).execute();
+	
+				con.prepareStatement("GRANT ALL PRIVILEGES ON "+databaseName+".* TO "+jdbcUser+";").execute();
+	
+				con.prepareStatement("SET PASSWORD FOR '"+jdbcUser+"'=PASSWORD('"+jdbcPass+"')").execute();
+
+			} else
+			if (jdbcDriver.contains("postgresql")) {
+				
+				try {
+					con.prepareStatement("DROP DATABASE " + databaseName).execute();
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				try {
+					con.prepareStatement("DROP USER " + jdbcUser).execute();
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				
+				con.prepareStatement("CREATE DATABASE " + databaseName).execute();
+				con.prepareStatement("CREATE USER " + jdbcUser).execute();
+	
+				con.prepareStatement("GRANT ALL PRIVILEGES ON DATABASE "+databaseName+" TO "+jdbcUser+";").execute();
+	
+				con.prepareStatement("ALTER USER "+jdbcUser+" PASSWORD '"+jdbcPass+"'").execute();
+				
+			}
+		
+			con.close();
+			System.out.println("<<<");
+		}
+		
 		NodeConfig cdb = new NodeConfig();
 		NodeConfig cconfig = new NodeConfig();
 
-		// mysql
-		//    	cdb.setProperty("driver", "com.mysql.jdbc.Driver");
-		//    	cdb.setProperty("url", "jdbc:mysql://localhost:3306/test");
-		//    	cdb.setProperty("user", "test");
-		//    	cdb.setProperty("pass", "test");
-
-		// postgresql
-		cdb.setProperty("driver", "org.postgresql.Driver");
-		cdb.setProperty("url", "jdbc:postgresql://10.10.11.58:32768/test");
-		cdb.setProperty("user", "postgres");
-		cdb.setProperty("pass", "nein");
-
-		// hsqldb
-//		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
-//		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
-//		cdb.setProperty("user", "sa");
-//		cdb.setProperty("pass", "");
-
-
-		//    	NodeConfig cqueries = new NodeConfig();
-		//    	cqueries.setProperty("create", "create table test (a_text varchar(100))");
-		//    	cqueries.setProperty("select", "select * from test");
-		//    	cqueries.setProperty("cleanup", "delete from test");
-		//    	cqueries.setProperty("insert", "insert into test (a_text) values ($text,text$)");
-		//    	cqueries.setProperty("dropblub", "drop table if exists blub");
-		//
-		//    	cdb.setConfig("queries", cqueries);
+		cdb.setProperty("driver", jdbcDriver);
+		cdb.setProperty("url", jdbcUrl);
+		cdb.setProperty("user", jdbcUser);
+		cdb.setProperty("pass", jdbcPass);
 
 		cconfig.setConfig("test", cdb);
 
 		DbPoolBundle pool = new DbPoolBundle(cconfig,null);
 
-		if (cleanup) {
-			DbConnection con = pool.getPool("test").getConnection();
-			con.createStatement("DROP TABLE book_").execute(null);
-			con.createStatement("DROP TABLE bookstoreschema_").execute(null);
-			con.createStatement("DROP TABLE finances_").execute(null);
-			con.createStatement("DROP TABLE person2_").execute(null);
-			con.createStatement("DROP TABLE person_").execute(null);
-			con.createStatement("DROP TABLE regal_").execute(null);
-			con.createStatement("DROP TABLE store_").execute(null);
-			con.commit();
-			
-			con.close();
-		}
+//			System.out.println(">>> Cleanup Database");
+//			DbConnection con = pool.getPool("test").getConnection();
+//			con.createStatement("DROP TABLE book_").execute(null);
+//			con.createStatement("DROP TABLE bookstoreschema_").execute(null);
+//			con.createStatement("DROP TABLE finances_").execute(null);
+//			con.createStatement("DROP TABLE person2_").execute(null);
+//			con.createStatement("DROP TABLE person_").execute(null);
+//			con.createStatement("DROP TABLE regal_").execute(null);
+//			con.createStatement("DROP TABLE store_").execute(null);
+//			con.commit();
+//			
+//			con.close();
+//			
+//			System.out.println("<<<");
+		
 		return pool;
 	}
 
 
 	public void testModel() throws Throwable {
 
-		DbPool pool = createPool("testModel", true).getPool("test");
+		DbPool pool = createPool("testModel").getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
@@ -387,7 +474,7 @@ public class AdbTest extends TestCase {
 	
 	public void testDbQuery() throws Exception {
 		
-		DbPool pool = createPool("testModel2", true).getPool("test");
+		DbPool pool = createPool("testModel2").getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
@@ -486,7 +573,7 @@ public class AdbTest extends TestCase {
 	}
 
 	public void testReconnect() throws Exception {
-		DbPool pool = createPool("testReconnect", true).getPool("test");
+		DbPool pool = createPool("testReconnect").getPool("test");
 
 //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
