@@ -36,6 +36,14 @@ public class AdbUtil {
 		throw new IOException("Type not found in service: " + typeName);
 	}
 	
+	public static String getTableName(DbManagerService service, Class<?> type) throws IOException {
+		for (Class<? extends Persistable> item : service.getManager().getSchema().getObjectTypes())
+			if (item.getName().equals(type.getName())) {
+				return item.getCanonicalName(); 
+			}
+		throw new IOException("Type not found in service: " + type);
+	}
+	
 	public static DbManagerAdmin getAdmin() {
 		BundleContext context = FrameworkUtil.getBundle(AdbUtil.class).getBundleContext();
 		ServiceReference<DbManagerAdmin> adminRef = context.getServiceReference(DbManagerAdmin.class);

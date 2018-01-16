@@ -38,7 +38,7 @@ public class MOsgi {
 
 	public static <T> T getService(Class<T> ifc, String filter) throws NotFoundException {
 		List<T> list = getServices(ifc, filter);
-		if (list.size() == 0) throw new NotFoundException("service not found", ifc);
+		if (list.size() == 0) throw new NotFoundException("service not found", ifc, filter);
 		return list.get(0);
 	}
 
