@@ -1,19 +1,13 @@
 package de.mhus.lib.vaadin.desktop;
 
 import java.util.List;
-import java.util.Locale;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.util.MNls;
-import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.core.util.Pair;
 
 public class IFrameHelpContext extends MLog implements HelpContext {

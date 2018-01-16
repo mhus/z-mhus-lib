@@ -1,9 +1,7 @@
 package de.mhus.lib.vaadin;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -30,7 +28,6 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
-import de.mhus.lib.core.util.MNlsFactory;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.form.VaadinPojoForm;
 

@@ -4,10 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
-
-import org.hsqldb.jdbc.JDBCDriver;
 
 import de.mhus.lib.adb.DbCollection;
 import de.mhus.lib.adb.DbManager;

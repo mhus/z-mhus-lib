@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.PreSave;
 import org.mongodb.morphia.annotations.Property;
 
 import de.mhus.lib.adb.DbComfortableObject;

@@ -3,15 +3,9 @@ package de.mhus.lib.adb;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import de.mhus.lib.adb.model.Field;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.Table;
-import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.sql.DbConnection;
-import de.mhus.lib.sql.DbResult;
 
 /**
  * Represents a collection of results.

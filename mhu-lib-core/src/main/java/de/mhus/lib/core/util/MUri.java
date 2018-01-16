@@ -30,7 +30,6 @@ import java.util.TreeMap;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
 
 /**

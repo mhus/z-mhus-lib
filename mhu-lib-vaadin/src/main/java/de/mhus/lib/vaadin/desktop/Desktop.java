@@ -22,7 +22,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
-import de.mhus.lib.vaadin.ui.HelpManager;
 
 public class Desktop extends CssLayout implements MNlsProvider {
 
