@@ -60,6 +60,21 @@ public class MProperties extends AbstractProperties implements Externalizable {
 				this.properties.put(String.valueOf( e.getKey() ), e.getValue());
 	}
 	
+	public MProperties(IReadProperties in) {
+		this.properties = new Properties();
+		for (Map.Entry<?, ?> e : in.entrySet())
+			if (e.getKey() != null && e.getValue() != null)
+				this.properties.put(String.valueOf( e.getKey() ), e.getValue());
+	}
+	
+	// need this constructor to avoid ambiguous references for IProperties 
+	public MProperties(IProperties in) {
+		this.properties = new Properties();
+		for (Map.Entry<?, ?> e : in.entrySet())
+			if (e.getKey() != null && e.getValue() != null)
+				this.properties.put(String.valueOf( e.getKey() ), e.getValue());
+	}
+	
 	public MProperties(Properties properties) {
 		this.properties = properties;
 	}
