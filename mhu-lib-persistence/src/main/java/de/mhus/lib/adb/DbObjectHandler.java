@@ -17,47 +17,47 @@ public interface DbObjectHandler {
 	 *
 	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
 	 * @param registryName a {@link java.lang.String} object.
-	 * @param dbComfortableObject a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
-	void saveObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException;
+	void saveObject(DbConnection con, String registryName, Object obj) throws MException;
 
 	/**
 	 * <p>objectChanged.</p>
 	 *
-	 * @param dbComfortableObject a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
 	 * @return a boolean.
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
-	boolean objectChanged(Object dbComfortableObject) throws MException;
+	boolean objectChanged(Object obj) throws MException;
 
 	/**
 	 * <p>reloadObject.</p>
 	 *
 	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
 	 * @param registryName a {@link java.lang.String} object.
-	 * @param dbComfortableObject a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
-	void reloadObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException;
+	void reloadObject(DbConnection con, String registryName, Object obj) throws MException;
 
 	/**
 	 * <p>deleteObject.</p>
 	 *
 	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
 	 * @param registryName a {@link java.lang.String} object.
-	 * @param dbComfortableObject a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
-	void deleteObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException;
+	void deleteObject(DbConnection con, String registryName, Object obj) throws MException;
 
 	/**
 	 * <p>createObject.</p>
 	 *
 	 * @param con a {@link de.mhus.lib.sql.DbConnection} object.
-	 * @param dbComfortableObject a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
 	 * @throws de.mhus.lib.errors.MException if any.
 	 */
-	void createObject(DbConnection con, Object dbComfortableObject) throws MException;
+	void createObject(DbConnection con, Object obj) throws MException;
 
 }

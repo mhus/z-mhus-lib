@@ -32,6 +32,7 @@ import com.mongodb.MongoClient;
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.pojo.AttributesStrategy;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -109,10 +110,14 @@ public class MoManager extends MJmx implements MoHandler {
 
 	public void save(Object obj) {
 		datastore.save(obj);
+		if (obj instanceof DbComfortableObject)
+			((DbComfortableObject)obj).doInit(this, null, true);
 	}
 	
 	public void delete(Object obj) {
 		datastore.delete(obj);
+		if (obj instanceof DbComfortableObject)
+			((DbComfortableObject)obj).doInit(null, null, false);
 	}
 	
 	public <T> T getObject(Class<T> clazz, Object ... keys) throws MException {
@@ -132,36 +137,56 @@ public class MoManager extends MJmx implements MoHandler {
 	}
 
 	@Override
-	public boolean objectChanged(Object dbComfortableObject) throws MException {
-		// TODO
-		return true;
+	public boolean objectChanged(Object obj) throws MException {
+		Object id = datastore.getKey(obj).getId();
+		Object clone = datastore.get(obj.getClass(), id);
+		try {
+			PojoModel model = getModelFor(obj.getClass());
+			for ( PojoAttribute<?> f : model) {
+				Object v1 = f.get(obj);
+				Object v2 = f.get(clone);
+				if (!MSystem.equals(v1, v2)) return true;
+			}
+		} catch (IOException e) {
+			throw new MException(e);
+		}
+		return false;
 	}
 
 	@Override
-	public void reloadObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException {
-		//TODO
-		throw new NotSupportedException();
+	public void reloadObject(DbConnection con, String registryName, Object obj) throws MException {
+		Object id = datastore.getKey(obj).getId();
+		Object clone = datastore.get(obj.getClass(), id);
+		try {
+			PojoModel model = getModelFor(obj.getClass());
+			for ( PojoAttribute<Object> f : model) {
+				Object v = f.get(clone);
+				f.set(obj, v);
+			}
+		} catch (IOException e) {
+			throw new MException(e);
+		}
 	}
 
 	@Override
-	public void deleteObject(DbConnection con, String registryName, Object dbComfortableObject) throws MException {
-		delete(dbComfortableObject);
+	public void deleteObject(DbConnection con, String registryName, Object obj) throws MException {
+		delete(obj);
 	}
 
 	@Override
-	public void createObject(DbConnection con, Object dbComfortableObject) throws MException {
-		PojoModel model = getModelFor(dbComfortableObject.getClass());
+	public void createObject(DbConnection con, Object obj) throws MException {
+		PojoModel model = getModelFor(obj.getClass());
 		for ( PojoAttribute<?> f : model)
 			if (f.getAnnotation(Id.class) != null) {
 				try {
-					f.set(dbComfortableObject, null);
+					f.set(obj, null);
 				} catch (IOException e) {
 					throw new MException(f,e);
 				}
 				break;
 			}
 		
-		save(dbComfortableObject);
+		save(obj);
 	}
 
 	// -----
@@ -257,7 +282,17 @@ public class MoManager extends MJmx implements MoHandler {
 						
 						attr.getAnnotation(NotSaved.class) != null 
 						||
-						( !attr.getType().isPrimitive() || attr.getType() == String.class || attr.getType() == Date.class  )
+						attr.getName().equals("persistent") && attr.getManagedClass() == DbComfortableObject.class
+						||
+						!attr.getType().isPrimitive() 
+						&& 
+						attr.getType() != String.class 
+						&& 
+						attr.getType() != Date.class
+						&&
+						!Map.class.isAssignableFrom(attr.getType())
+						&&
+						!List.class.isAssignableFrom(attr.getType())
 						&&
 						attr.getAnnotation(Property.class) == null 
 						&& 
@@ -282,7 +317,7 @@ public class MoManager extends MJmx implements MoHandler {
 		
 	}
 	
-	public static class MoCustomMapper implements CustomMapper {
+	public class MoCustomMapper implements CustomMapper {
 
 		private HashSet<String> ignoreName = new HashSet<>();
 		private CustomMapper defaultMapper;
@@ -294,6 +329,10 @@ public class MoManager extends MJmx implements MoHandler {
 		@Override
 		public void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity,
 		        EntityCache cache, Mapper mapper) {
+
+			// inject momanager
+			if (entity instanceof DbComfortableObject)
+				((DbComfortableObject)entity).doInit(MoManager.this, null, true);
 			
 			if (ignoreName.contains(mf.getFullName())) return;
 
