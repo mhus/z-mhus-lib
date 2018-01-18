@@ -40,7 +40,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 			put(item.getKey(),item.getValue());
 	}
 
-	public PemBlockModel encode(String block) throws ParseException {
+	public PemBlockModel parse(String block) throws ParseException {
 		// parse
 		
 		// find start

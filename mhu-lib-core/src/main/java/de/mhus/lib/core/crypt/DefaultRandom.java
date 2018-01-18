@@ -1,12 +1,15 @@
 package de.mhus.lib.core.crypt;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public class DefaultRandom implements MRandom {
 
 	private Random rand;
+	private SecureRandom secureRandom;
 
 	@Override
 	public byte getByte() {
@@ -44,6 +47,16 @@ public class DefaultRandom implements MRandom {
 	@Override
 	public char getChar() {
 		return MString.CHARS_READABLE[ getInt() % MString.CHARS_READABLE.length ];
+	}
+
+	@Override
+	public SecureRandom getSecureRandom() {
+		try {
+			secureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN");
+		} catch (Exception e) {
+			MLogUtil.log().e(e);
+		}
+		return secureRandom;
 	}
 
 }

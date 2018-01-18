@@ -1,5 +1,7 @@
 package de.mhus.lib.core.crypt;
 
+import java.security.SecureRandom;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -45,5 +47,7 @@ public interface MRandom {
 	 * @return random character
 	 */
 	char getChar();
+
+	SecureRandom getSecureRandom();
 	
 }

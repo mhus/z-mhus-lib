@@ -13,7 +13,7 @@ public class PemBlockList extends LinkedList<PemBlock> {
 	public PemBlockList(String string) {
 		while(true) {
 			try {
-				PemBlockModel next = new PemBlockModel().encode(string);
+				PemBlockModel next = new PemBlockModel().parse(string);
 				add(next);
 				string = next.getRest();
 			} catch (ParseException e) {
