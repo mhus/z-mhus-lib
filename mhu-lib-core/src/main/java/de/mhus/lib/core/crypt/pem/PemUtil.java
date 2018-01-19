@@ -13,7 +13,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class PemUtil {
 
-	public static PemPriv signPrivFromString(String str) throws ParseException, NotSupportedException, IOException {
+	public static PemPriv signPrivFromString(String str) throws Exception, NotSupportedException, IOException {
 		
 		if (MValidator.isUUID(str)) {
 			MVault vault = MVaultUtil.loadDefault();

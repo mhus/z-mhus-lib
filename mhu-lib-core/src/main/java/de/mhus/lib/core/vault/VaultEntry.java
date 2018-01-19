@@ -3,6 +3,7 @@ package de.mhus.lib.core.vault;
 import java.io.IOException;
 import java.util.UUID;
 
+import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.errors.NotSupportedException;
 
 public interface VaultEntry {
@@ -40,6 +41,7 @@ public interface VaultEntry {
 	 * @return The requested interface or class.
 	 * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
 	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	<T> T adaptTo(Class<? extends T> ifc) throws NotSupportedException, IOException;
+	<T> T adaptTo(Class<? extends T> ifc) throws NotSupportedException, ParseException;
 }

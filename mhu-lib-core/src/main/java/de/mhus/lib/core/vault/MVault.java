@@ -7,8 +7,13 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 @DefaultImplementation(DefaultVault.class)
 public interface MVault {
 
-	static final String TYPE_RSA_PRIVATE_KEY = "rsa.private.key";
-	static final String TYPE_RSA_PUBLIC_KEY = "rsa.public.key";
+	static final String TYPE_RSA_PRIVATE_KEY = "rsa.cipher.private.key";
+	static final String TYPE_RSA_PUBLIC_KEY = "rsa.cipher.public.key";
+	static final String TYPE_DSA_PRIVATE_KEY = "dsa.sign.private.key";
+	static final String TYPE_DSA_PUBLIC_KEY = "dsa.sign.public.key";
+	static final String TYPE_ECC_PRIVATE_KEY = "ecc.sign.private.key";
+	static final String TYPE_ECC_PUBLIC_KEY = "ecc.sign.public.key";
+	
 	static final String TYPE_TEXT = "text";
 	static final String SOURCE_DEFAULT = "default";
 	

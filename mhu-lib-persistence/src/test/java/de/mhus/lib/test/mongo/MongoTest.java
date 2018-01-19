@@ -1,8 +1,10 @@
 package de.mhus.lib.test.mongo;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.mongo.MoManager;
+import de.mhus.lib.mongo.MoUtil;
 import junit.framework.TestCase;
 
 public class MongoTest extends TestCase {
@@ -82,6 +85,17 @@ public class MongoTest extends TestCase {
 
     	manager.save(elmer);
     	
+    }
+    
+    @Test
+    public void testUUIDConverter() {
+    	ObjectId oid = new ObjectId("5a58a8352c3439f468cd8fcf");
+    	System.out.println(oid);
+    	UUID uuid = MoUtil.toUUID(oid);
+    	System.out.println(uuid);
+    	ObjectId oid2 = MoUtil.toObjectId(uuid);
+    	System.out.println(oid2);
+    	assertEquals(oid.toHexString(), oid2.toHexString());
     }
     
     
