@@ -68,10 +68,14 @@ public class CmdVault extends MLog implements Action {
 				ConsoleTable out = new ConsoleTable();
 				out.setHeaderValues("Source","Id","Type","Description");
 				for (String sourceName : vault.getSourceNames()) {
-					VaultSource source = vault.getSource(sourceName);
-					for (UUID id : source.getEntryIds()) {
-						VaultEntry entry = source.getEntry(id);
-						out.addRowValues(sourceName,id,entry.getType(),entry.getDescription());
+					try {
+						VaultSource source = vault.getSource(sourceName);
+						for (UUID id : source.getEntryIds()) {
+							VaultEntry entry = source.getEntry(id);
+							out.addRowValues(sourceName,id,entry.getType(),entry.getDescription());
+						}
+					} catch (Throwable t) {
+						log().d(sourceName,t);
 					}
 				}
 				out.print(System.out);
