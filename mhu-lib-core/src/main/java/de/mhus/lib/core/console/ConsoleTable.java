@@ -17,20 +17,29 @@ public class ConsoleTable {
 	public static final String SEPARATOR_LINE = "---";
     
 	public List<String> header = new ArrayList<String>();
-    public List<List<String>> content = new ArrayList<List<String>>();
+    public List<List<String[]>> content = new ArrayList<>();
     private int maxColSize = -1;
     private boolean lineSpacer = false;
+    private boolean multiLine = true;
     
-    public List<String> addRow() {
-        List<String> row = new ArrayList<String>();
+    public Row addRow() {
+        return new Row(addIntRow());
+    }
+    
+    private List<String[]> addIntRow() {
+        List<String[]> row = new ArrayList<>();
         content.add(row);
         return row;
     }
     
     public void addRowValues(Object ... values) {
-    	List<String> row = addRow();
-    	for (Object v : values)
-    		row.add(String.valueOf(v));
+    	List<String[]> row = addIntRow();
+    	for (Object v : values) {
+    		if (v == null)
+    			row.add(new String[] {""});
+    		else
+    			row.add(String.valueOf(v).split("\n"));
+    	}
     }
     
     public List<String> getHeader() {
@@ -51,17 +60,19 @@ public class ConsoleTable {
     
     public void print(PrintStream out)  {
         int[] sizes = new int[header.size()];
-        updateSizes(sizes, header);
-        for (List<String> row : content) {
+        updateHeaderSizes(sizes, header);
+        for (List<String[]> row : content) {
             updateSizes(sizes, row);
         }
-        String headerLine = getRow(sizes, header, " | ");
+        String headerLine = getHeaderRow(sizes, header, " | ");
         out.println(headerLine);
         out.println(underline(headerLine.length()));
         boolean first = true;
-        for (List<String> row : content) {
+        for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
-            out.println(getRow(sizes, row, " | "));
+        	int rowHeight = getRowHeight(row);
+        	for (int l = 0; l < rowHeight; l++)
+        		out.println(getRow(sizes, row, " | ", l));
             first = false;
         }
     }
@@ -69,24 +80,62 @@ public class ConsoleTable {
     public void print(PrintWriter out)  {
         int[] sizes = new int[header.size()];
         updateSizes(sizes);
-        String headerLine = getRow(sizes, header, " | ");
+        String headerLine = getHeaderRow(sizes, header, " | ");
         out.println(headerLine);
         out.println(underline(headerLine.length()));
         boolean first = true;
-        for (List<String> row : content) {
+        for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
-            out.println(getRow(sizes, row, " | "));
+        	int rowHeight = getRowHeight(row);
+        	for (int l = 0; l < rowHeight; l++)
+        		out.println(getRow(sizes, row, " | ", l));
             first = false;
         }
     }
     
-    private String underline(int length) {
+    private int getRowHeight(List<String[]> row) {
+    	if (!multiLine) return 1;
+    	int height = 1;
+    	for (String[] cell : row)
+    		height = Math.max(height, cell.length);
+		return height;
+	}
+
+	private String underline(int length) {
         char[] exmarks = new char[length];
         Arrays.fill(exmarks, '-');
         return new String(exmarks);
     }
 
-    private String getRow(int[] sizes, List<String> row, String separator) {
+    private String getRow(int[] sizes, List<String[]> row, String separator, int cellLine) {
+    	
+    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
+    		int s = 0;
+    		for (int i : sizes) {
+    			if (s != 0) s+=separator.length();
+    			s+=i;
+    		}
+    		return MString.rep('-', s );
+    	}
+    	
+        StringBuilder line = new StringBuilder();
+        int c = 0;
+        for (String[] cells : row) {
+        	String cell = getCellLine(cells,cellLine);
+            if (maxColSize > 0 && cell.length() > maxColSize) {
+				cell = MString.truncateNice(cell, maxColSize);
+            }
+            cell = cell.replaceAll("\n", "");
+            line.append(String.format("%-" + sizes[c] + "s", cell));
+            if (c + 1 < row.size()) {
+                line.append(separator);
+            }
+            c++;
+        }
+        return line.toString();
+    }
+
+    private String getHeaderRow(int[] sizes, List<String> row, String separator) {
     	
     	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
     		int s = 0;
@@ -104,7 +153,7 @@ public class ConsoleTable {
                 cell = "";
             }
             if (maxColSize > 0 && cell.length() > maxColSize) {
-                cell = cell.substring(0, maxColSize -1);
+				cell = MString.truncateNice(cell, maxColSize);
             }
             cell = cell.replaceAll("\n", "");
             line.append(String.format("%-" + sizes[c] + "s", cell));
@@ -116,14 +165,39 @@ public class ConsoleTable {
         return line.toString();
     }
 
-    private void updateSizes(int[] sizes) {
-        updateSizes(sizes, header);
-        for (List<String> row : content) {
+    private String getCellLine(String[] cells, int line) {
+    	if (!multiLine) {
+    		if (line == 0) {
+    			return MString.join(cells, ' ');
+    		} else
+    			return "";
+    	}
+    	if (cells == null || line < 0 || line >= cells.length) return "";
+		return cells[line];
+	}
+
+	private void updateSizes(int[] sizes) {
+        updateHeaderSizes(sizes, header);
+        for (List<String[]> row : content) {
             updateSizes(sizes, row);
         }
     }
     
-    private void updateSizes(int[] sizes, List<String> row) {
+    private void updateSizes(int[] sizes, List<String[]> row) {
+        int c = 0;
+        for (String[] cells : row) {
+        	for (String cellContent : cells) {
+	            int cellSize = cellContent != null ? cellContent.length() : 0;
+	            cellSize = maxColSize > 0 ? Math.min(cellSize, maxColSize) : cellSize;
+	            if (cellSize > sizes[c]) {
+	                sizes[c] = cellSize;
+	            }
+        	}
+        	c++;
+        }
+    }
+
+    private void updateHeaderSizes(int[] sizes, List<String> row) {
         int c = 0;
         for (String cellContent : row) {
             int cellSize = cellContent != null ? cellContent.length() : 0;
@@ -134,7 +208,7 @@ public class ConsoleTable {
             c++;
         }
     }
-
+    
 	public int getMaxColSize() {
 		return maxColSize;
 	}
@@ -170,9 +244,9 @@ public class ConsoleTable {
 		
 		out.setHeaderValues(h);
 		while (res.next()) {
-			List<String> r = out.addRow();
+			List<String[]> r = out.addIntRow();
 			for (int i = 0; i < resMeta.getColumnCount(); i++)
-				r.add(String.valueOf(res.getObject(i+1)));
+				r.add(String.valueOf(res.getObject(i+1)).split("\n") );
 		}
 		return out;
 	}
@@ -183,9 +257,11 @@ public class ConsoleTable {
         int[] sizes = new int[header.size()];
         updateSizes(sizes);
         if (showHeader)
-        	out[0] = getRow(sizes, header, " | ");
-        for (List<String> row : content) {
-            out[i] = getRow(sizes, row, " | ");
+        	out[0] = getHeaderRow(sizes, header, " | ");
+        for (List<String[]> row : content) {
+        	int rowHeight = getRowHeight(row);
+        	for (int l = 0; l < rowHeight; l++)
+        		out[i] = getRow(sizes, row, " | ", l);
             i++;
         }
 		return out;
@@ -195,15 +271,49 @@ public class ConsoleTable {
 		int i = showHeader ? 1 : 0;
 		String[][] out = new String[content.size() + i][];
         if (showHeader)
-        	out[0] = getRowArray(header);
-        for (List<String> row : content) {
-            out[i] = getRowArray(row);
+        	out[0] = getHeaderRowArray(header);
+        for (List<String[]> row : content) {
+        	int rowHeight = getRowHeight(row);
+        	for (int l = 0; l < rowHeight; l++)
+        		out[i] = getRowArray(row, l);
             i++;
         }
 		return out;
 	}
 
-	private String[] getRowArray(List<String> row) {
+	private String[] getRowArray(List<String[]> row, int line) {
+		String[] out = new String[row.size()];
+		for (int i = 0; i < row.size(); i++)
+			out[i] = getCellLine(row.get(i), line);
+		return out;
+	}
+	
+	private String[] getHeaderRowArray(List<String> row) {
 		return row.toArray(new String[row.size()]);
 	}
+	
+	public boolean isMultiLine() {
+		return multiLine;
+	}
+
+	public void setMultiLine(boolean multiLine) {
+		this.multiLine = multiLine;
+	}
+
+	public static class Row {
+
+		private List<String[]> row;
+
+		public Row(List<String[]> row) {
+			this.row = row;
+		}
+
+		public void add(String v) {
+    		if (v == null)
+    			row.add(new String[] {""});
+    		else
+    			row.add(String.valueOf(v).split("\n"));
+		}
+	}
+
 }
