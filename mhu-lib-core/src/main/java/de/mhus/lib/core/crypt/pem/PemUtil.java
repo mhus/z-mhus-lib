@@ -24,7 +24,8 @@ public class PemUtil {
 
 		if (isPemBlock(str)) {
 			PemBlockModel block = new PemBlockModel().parse(str);
-			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+//			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+			return new PemKey(block);
 		}
 
 		String name = MString.beforeIndex(str, ':');
@@ -43,7 +44,8 @@ public class PemUtil {
 
 		if (isPemBlock(str)) {
 			PemBlockModel block = new PemBlockModel().parse(str);
-			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+//			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+			return new PemKey(block);
 		}
 
 		String name = MString.beforeIndex(str, ':');
@@ -62,7 +64,8 @@ public class PemUtil {
 
 		if (isPemBlock(str)) {
 			PemBlockModel block = new PemBlockModel().parse(str);
-			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+//			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+			return new PemKey(block);
 		}
 
 		String name = MString.beforeIndex(str, ':').toUpperCase().trim();
@@ -90,7 +93,8 @@ public class PemUtil {
 
 		if (isPemBlock(str)) {
 			PemBlockModel block = new PemBlockModel().parse(str);
-			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+//			return new PemKey(PemBlock.BLOCK_CIPHER).set(PemBlock.METHOD, block.getString(PemBlock.METHOD,"")).setBlock(block.getEncodedBlock());
+			return new PemKey(block);
 		}
 		
 		String name = MString.beforeIndex(str, ':');

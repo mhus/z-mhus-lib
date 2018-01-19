@@ -6,6 +6,14 @@ public class PemKey extends PemBlockModel implements PemPriv,PemPub{
 
 	private boolean secret;
 
+	public PemKey(PemKey clone, boolean secret ) {
+		super(clone.getName(), clone.getBlock());
+		for (java.util.Map.Entry<String, Object> entry : clone) {
+			put(entry.getKey(),entry.getValue());
+		}
+		this.secret = secret;
+	}
+	
 	public PemKey(String name, byte[] block, boolean secret) {
 		super(name, block);
 		this.secret = secret;

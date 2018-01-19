@@ -34,6 +34,7 @@ import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
+import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.pojo.AttributesStrategy;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoFilter;
@@ -86,25 +87,41 @@ public class MoManager extends MJmx implements MoHandler {
 	
 	private CustomMapper createEmbeddedMapper(Mapper mapper) {
         MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getEmbeddedMapper());
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
+        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
         return m;
 	}
 
 	private CustomMapper createReferenceMapper(Mapper mapper) {
         MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getReferenceMapper());
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
+        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
         return m;
 	}
 
 	protected CustomMapper createValueMapper(Mapper mapper) {
         MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getValueMapper());
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
+        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
         return m;
 	}
 
 	protected CustomMapper createCustomMapper(Mapper mapper) {
         MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getDefaultMapper());
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
+        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
+        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
         return m;
 	}
 
@@ -282,7 +299,9 @@ public class MoManager extends MJmx implements MoHandler {
 						
 						attr.getAnnotation(NotSaved.class) != null 
 						||
-						attr.getName().equals("persistent") && attr.getManagedClass() == DbComfortableObject.class
+						attr.getManagedClass() == DbComfortableObject.class
+						||
+						attr.getManagedClass() == MObject.class
 						||
 						!attr.getType().isPrimitive() 
 						&& 
