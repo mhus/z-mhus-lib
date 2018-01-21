@@ -18,6 +18,8 @@ public interface PemBlock extends IReadProperties {
 	String PUB_ID = "PubKeyIdent";
 	String DESCRIPTION = "Description";
 	String CREATED = "Created";
+	String ENCRYPTED = "Encrypted";
+	String ENC_BLOWFISH = "blowfish";
 
 	/**
 	 * Returns the name of the block
