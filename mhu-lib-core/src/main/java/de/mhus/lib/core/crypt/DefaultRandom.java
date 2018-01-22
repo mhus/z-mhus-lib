@@ -52,7 +52,8 @@ public class DefaultRandom implements MRandom {
 	@Override
 	public SecureRandom getSecureRandom() {
 		try {
-			secureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN");
+//			secureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN");
+			secureRandom = SecureRandom.getInstanceStrong();
 		} catch (Exception e) {
 			MLogUtil.log().e(e);
 		}
