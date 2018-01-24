@@ -8,8 +8,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
 
 public class ConsoleTable {
@@ -21,6 +26,12 @@ public class ConsoleTable {
     private int maxColSize = -1;
     private boolean lineSpacer = false;
     private boolean multiLine = true;
+
+	private String colSeparator = " | ";
+
+	private boolean acceptHorizontalLine = false;
+
+	private boolean cellSpacer = true;
     
     public Row addRow() {
         return new Row(addIntRow());
@@ -35,14 +46,50 @@ public class ConsoleTable {
     public void addRowValues(Object ... values) {
     	List<String[]> row = addIntRow();
     	for (Object v : values) {
-    		if (v == null)
-    			row.add(new String[] {""});
-    		else
-    			row.add(String.valueOf(v).split("\n"));
+			row.add(splitInLines(v));
     	}
     }
     
-    public List<String> getHeader() {
+    protected String[] splitInLines(Object v) {
+    	if (v == null) return new String[] {""};
+    	if (multiLine) {
+	    	if (v instanceof Map) {
+	    		Map<Object,Object> m = (Map)v;
+	    		LinkedList<String> out = new LinkedList<>();
+	    		for (Map.Entry<Object,Object> entry : m.entrySet())
+	    			out.add(entry.getKey() + "=" + entry.getValue());
+	    		return out.toArray(new String[out.size()]);
+	    	}
+	    	if (v instanceof Collection) {
+	    		LinkedList<String> out = new LinkedList<>();
+	    		for (Object entry : ((Collection)v))
+	    			out.add(String.valueOf(entry));
+	    		return out.toArray(new String[out.size()]);
+	    	}
+	    	if (v instanceof Throwable) {
+	    		LinkedList<String> out = new LinkedList<>();
+	    		Throwable t = (Throwable)v;
+	    		if (maxColSize > 0)
+	    			out.addAll(MString.splitCollection(t.toString(), maxColSize));
+	    		else
+	    			out.add(t.toString());
+	    		for ( StackTraceElement st : t.getStackTrace())
+	    			out.add("  at " + st );
+	    		return out.toArray(new String[out.size()]);
+	    	}
+	    	if (v.getClass().isArray()) {
+	    		if (maxColSize > 0)
+	    			return MString.split(Arrays.deepToString((Object[]) v), maxColSize);
+	    	}
+	    	if (v instanceof Date) {
+	    		return new String[] { MDate.toIso8601((Date)v) };
+	    	}
+	    	return String.valueOf(v).split("\n");
+    	}
+    	return new String[] {String.valueOf(v)};
+	}
+
+	public List<String> getHeader() {
     	return header;
     }
     
@@ -64,15 +111,16 @@ public class ConsoleTable {
         for (List<String[]> row : content) {
             updateSizes(sizes, row);
         }
-        String headerLine = getHeaderRow(sizes, header, " | ");
+        String headerLine = getHeaderRow(sizes, header, colSeparator);
         out.println(headerLine);
-        out.println(underline(headerLine.length()));
+    	if (cellSpacer)
+    		out.println(underline(headerLine.length()));
         boolean first = true;
         for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out.println(getRow(sizes, row, " | ", l));
+        		out.println(getRow(sizes, row, colSeparator, l));
             first = false;
         }
     }
@@ -80,15 +128,16 @@ public class ConsoleTable {
     public void print(PrintWriter out)  {
         int[] sizes = new int[header.size()];
         updateSizes(sizes);
-        String headerLine = getHeaderRow(sizes, header, " | ");
+        String headerLine = getHeaderRow(sizes, header, colSeparator);
         out.println(headerLine);
-        out.println(underline(headerLine.length()));
+        if (cellSpacer)
+        	out.println(underline(headerLine.length()));
         boolean first = true;
         for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out.println(getRow(sizes, row, " | ", l));
+        		out.println(getRow(sizes, row, colSeparator, l));
             first = false;
         }
     }
@@ -109,15 +158,16 @@ public class ConsoleTable {
 
     private String getRow(int[] sizes, List<String[]> row, String separator, int cellLine) {
     	
-    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
-    		int s = 0;
-    		for (int i : sizes) {
-    			if (s != 0) s+=separator.length();
-    			s+=i;
-    		}
-    		return MString.rep('-', s );
-    	}
-    	
+    	if (acceptHorizontalLine) {
+	    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
+	    		int s = 0;
+	    		for (int i : sizes) {
+	    			if (s != 0) s+=separator.length();
+	    			s+=i;
+	    		}
+	    		return MString.rep('-', s );
+	    	}
+    	}	
         StringBuilder line = new StringBuilder();
         int c = 0;
         for (String[] cells : row) {
@@ -126,7 +176,11 @@ public class ConsoleTable {
 				cell = MString.truncateNice(cell, maxColSize);
             }
             cell = cell.replaceAll("\n", "");
-            line.append(String.format("%-" + sizes[c] + "s", cell));
+            if (cellSpacer)
+            	line.append(String.format("%-" + sizes[c] + "s", cell));
+            else
+            	line.append(cell);
+            
             if (c + 1 < row.size()) {
                 line.append(separator);
             }
@@ -137,13 +191,15 @@ public class ConsoleTable {
 
     private String getHeaderRow(int[] sizes, List<String> row, String separator) {
     	
-    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
-    		int s = 0;
-    		for (int i : sizes) {
-    			if (s != 0) s+=separator.length();
-    			s+=i;
-    		}
-    		return MString.rep('-', s );
+    	if (acceptHorizontalLine) {
+	    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
+	    		int s = 0;
+	    		for (int i : sizes) {
+	    			if (s != 0) s+=separator.length();
+	    			s+=i;
+	    		}
+	    		return MString.rep('-', s );
+	    	}
     	}
     	
         StringBuilder line = new StringBuilder();
@@ -156,7 +212,11 @@ public class ConsoleTable {
 				cell = MString.truncateNice(cell, maxColSize);
             }
             cell = cell.replaceAll("\n", "");
-            line.append(String.format("%-" + sizes[c] + "s", cell));
+            if (cellSpacer)
+            	line.append(String.format("%-" + sizes[c] + "s", cell));
+            else
+            	line.append(cell);
+            	
             if (c + 1 < row.size()) {
                 line.append(separator);
             }
@@ -257,11 +317,11 @@ public class ConsoleTable {
         int[] sizes = new int[header.size()];
         updateSizes(sizes);
         if (showHeader)
-        	out[0] = getHeaderRow(sizes, header, " | ");
+        	out[0] = getHeaderRow(sizes, header, colSeparator);
         for (List<String[]> row : content) {
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out[i] = getRow(sizes, row, " | ", l);
+        		out[i] = getRow(sizes, row, colSeparator, l);
             i++;
         }
 		return out;
@@ -300,7 +360,31 @@ public class ConsoleTable {
 		this.multiLine = multiLine;
 	}
 
-	public static class Row {
+	public String getColSeparator() {
+		return colSeparator;
+	}
+
+	public void setColSeparator(String colSeparator) {
+		this.colSeparator = colSeparator;
+	}
+
+	public boolean isAcceptHorizontalLine() {
+		return acceptHorizontalLine;
+	}
+
+	public void setAcceptHorizontalLine(boolean acceptHorizontalLine) {
+		this.acceptHorizontalLine = acceptHorizontalLine;
+	}
+
+	public boolean isCellSpacer() {
+		return cellSpacer;
+	}
+
+	public void setCellSpacer(boolean cellSpacer) {
+		this.cellSpacer = cellSpacer;
+	}
+
+	public class Row {
 
 		private List<String[]> row;
 
@@ -308,11 +392,8 @@ public class ConsoleTable {
 			this.row = row;
 		}
 
-		public void add(String v) {
-    		if (v == null)
-    			row.add(new String[] {""});
-    		else
-    			row.add(String.valueOf(v).split("\n"));
+		public void add(Object v) {
+    			row.add(splitInLines(v));
 		}
 	}
 

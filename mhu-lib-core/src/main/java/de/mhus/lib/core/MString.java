@@ -21,11 +21,14 @@ package de.mhus.lib.core;
 
 import java.awt.Color;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MRuntimeException;
 
 /**
@@ -1751,5 +1754,42 @@ public class MString {
 		}
 	}
 
+	/**
+	 * Split string into parts after length is reached.
+	 * 
+	 * @param in
+	 * @param length
+	 * @return
+	 */
+	public static String[] split(String in, int length) {
+		if (in == null) return new String[0];
+		LinkedList<String> out = new LinkedList<>();
+		while (in.length() > length) {
+			out.add(in.substring(0,length));
+			in = in.substring(length);
+		}
+		if (in.length() > 0)
+			out.add(in);
+		return out.toArray(new String[out.size()]);
+	}
 	
+	/**
+	 * Split string into parts after length is reached.
+	 * 
+	 * @param in
+	 * @param length
+	 * @return
+	 */
+	public static Collection<String> splitCollection(String in, int length) {
+		if (in == null) return new EmptyList<>();
+		LinkedList<String> out = new LinkedList<>();
+		while (in.length() > length) {
+			out.add(in.substring(0,length));
+			in = in.substring(length);
+		}
+		if (in.length() > 0)
+			out.add(in);
+		return out;
+	}
+
 }
