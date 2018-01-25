@@ -1,3 +1,0 @@
-<config>
-  <de.mhus.lib.sql.DbConnection trace="true" />
-</config>
