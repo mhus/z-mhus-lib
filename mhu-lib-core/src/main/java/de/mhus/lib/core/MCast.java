@@ -206,6 +206,7 @@ package de.mhus.lib.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -1111,6 +1112,26 @@ public final class MCast {
 			i = i / 2;
 		}
 		return out.toString();
+	}
+
+	public static Object unserializeFromString(String value, ClassLoader cl) throws IOException, ClassNotFoundException {
+		if (value == null) return null;
+		byte[] bytes = fromBinaryString(value);
+		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		@SuppressWarnings("resource")
+		MObjectInputStream ois = new MObjectInputStream(bais, cl);
+		return ois.readObject();
+	}
+	
+	public static String serializeToString(Object value) throws IOException {
+		if (value == null) return null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(value);
+		oos.flush();
+		oos.close();
+		byte[] bytes = baos.toByteArray();
+		return toBinaryString(bytes);
 	}
 	
 }
