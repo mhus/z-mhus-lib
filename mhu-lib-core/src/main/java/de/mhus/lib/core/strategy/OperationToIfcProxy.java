@@ -3,6 +3,7 @@ package de.mhus.lib.core.strategy;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
@@ -25,6 +26,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 	
 	protected abstract Version getInterfaceVersion();
 	
+	protected abstract void initOperationDescription(HashMap<String, String> parameters);
+
 	@Override
 	protected OperationResult doExecute2(TaskContext context) throws Exception {
 		
@@ -83,7 +86,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		}
 		
 		OperationDescription out = new OperationDescription(this,getInterfaceVersion(), clazz.getCanonicalName(), form );
-
+		out.setParameters(new HashMap<>());
+		initOperationDescription(out.getParameters());
 		return out;
 	}
 

@@ -217,13 +217,15 @@ import de.mhus.lib.core.util.Version;
 
 public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
+	public static final String TAGS = "tags";
+
 	private static Log log = Log.getLog(OperationDescription.class);
 	
 	private String id;
 	private String title;
 	private String group;
 	private DefRoot form;
-	private HashMap<String, Object> parameters;
+	private HashMap<String, String> parameters;
 
 	private ParameterDefinitions parameterDef;
 
@@ -320,10 +322,10 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 		return version;
 	}
 	
-	public HashMap<String, Object> getParameters() {
+	public HashMap<String, String> getParameters() {
 		return parameters;
 	}
-	public void setParameters(HashMap<String, Object> parameters) {
+	public void setParameters(HashMap<String, String> parameters) {
 		this.parameters = parameters;
 	}
 	
