@@ -203,6 +203,7 @@
  */
 package de.mhus.lib.adb.model;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1067,23 +1068,35 @@ public abstract class Table extends MObject {
 	 */
 	protected String getDbRetType(Class<?> ret) {
 		String rt = DbType.TYPE.BLOB.name();
-		if (ret == int.class) rt = DbType.TYPE.INT.name();
+		if (ret == int.class) 
+			rt = DbType.TYPE.INT.name();
 		else
-			if (ret == long.class) rt = DbType.TYPE.LONG.name();
-			else
-				if (ret == boolean.class) rt = DbType.TYPE.BOOL.name();
-				else
-					if (ret == double.class) rt = DbType.TYPE.DOUBLE.name();
-					else
-						if (ret == float.class) rt = DbType.TYPE.FLOAT.name();
-						else
-							if (ret == String.class) rt = DbType.TYPE.STRING.name();
-							else
-								if (ret == Date.class || ret == Calendar.class || ret == java.sql.Date.class) rt = DbType.TYPE.DATETIME.name();
-								else
-									if (ret == UUID.class) rt = DbType.TYPE.UUID.name();
-									else
-										if (ret.isEnum()) rt = DbType.TYPE.INT.name();
+		if (ret == BigDecimal.class) 
+			rt = DbType.TYPE.BIGDECIMAL.name();
+		else
+		if (ret == long.class) 
+			rt = DbType.TYPE.LONG.name();
+		else
+		if (ret == boolean.class) 
+			rt = DbType.TYPE.BOOL.name();
+		else
+		if (ret == double.class) 
+			rt = DbType.TYPE.DOUBLE.name();
+		else
+		if (ret == float.class) 
+			rt = DbType.TYPE.FLOAT.name();
+		else
+		if (ret == String.class) 
+			rt = DbType.TYPE.STRING.name();
+		else
+		if (ret == Date.class || ret == Calendar.class || ret == java.sql.Date.class) 
+			rt = DbType.TYPE.DATETIME.name();
+		else
+		if (ret == UUID.class) 
+			rt = DbType.TYPE.UUID.name();
+		else
+		if (ret.isEnum()) 
+			rt = DbType.TYPE.INT.name();
 
 		return rt;
 	}

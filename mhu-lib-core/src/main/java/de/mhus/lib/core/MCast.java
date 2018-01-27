@@ -210,6 +210,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -222,6 +223,7 @@ import java.util.TimeZone;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.cast.DoubleToString;
 import de.mhus.lib.core.cast.FloatToString;
+import de.mhus.lib.core.cast.ObjectToBigDecimal;
 import de.mhus.lib.core.cast.ObjectToBoolean;
 import de.mhus.lib.core.cast.ObjectToByte;
 import de.mhus.lib.core.cast.ObjectToCalendar;
@@ -273,6 +275,7 @@ public final class MCast {
 	private final static DoubleToString DOUBLE_TO_STRING = new DoubleToString();
 	private final static FloatToString FLOAT_TO_STRING = new FloatToString();
 	private final static ObjectToString OBJECT_TO_STRING = new ObjectToString();
+	private final static ObjectToBigDecimal OBJECT_TO_BIGDECIMAL = new ObjectToBigDecimal();
 	
 	static {
 		addCaster(OBJECT_TO_BOOLEAN, true);
@@ -288,6 +291,7 @@ public final class MCast {
 		addCaster(OBJECT_TO_CALENDAR, true);
 		addCaster(DOUBLE_TO_STRING, true);
 		addCaster(FLOAT_TO_STRING, true);
+		addCaster(OBJECT_TO_BIGDECIMAL, true);
 		addCaster(new ObjectToUUID(), true);
 	}
 	/**
@@ -514,6 +518,10 @@ public final class MCast {
 		return OBJECT_TO_DOUBLE.toDouble(in, def, null);
 	}
 
+	public static BigDecimal toBigDecimal(Object in, BigDecimal def) {
+		return OBJECT_TO_BIGDECIMAL.cast(in, def, null);
+	}
+	
 	/**
 	 * 
 	 * Convert a string to double. If the string is malformed it returns
@@ -952,8 +960,31 @@ public final class MCast {
 			return (Byte)(byte)0;
 		if (type == boolean.class)
 			return (Boolean)false;
+		if (type == char.class)
+			return ' ';
 		return null;
 	}
+	
+	public static Object getDefaultPrimitive(String type) {
+		if ("int".equals(type))
+			return (Integer)0;
+		if ("long".equals(type))
+			return (Long)0L;
+		if ("short".equals(type))
+			return (Short)(short)0;
+		if ("double".equals(type))
+			return (Double)0d;
+		if ("float".equals(type))
+			return (Float)0f;
+		if ("byte".equals(type))
+			return (Byte)(byte)0;
+		if ("boolean".equals(type))
+			return (Boolean)false;
+		if ("char".equals(type))
+			return ' ';
+		return null;
+	}
+	
 
 	public static byte[] toBinary(Object value) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

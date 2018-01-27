@@ -365,62 +365,65 @@ public class FieldPersistent extends Field {
 		if (retDbType.equals(DbType.TYPE.INT.name()))
 			set(obj, res.getInt(name) );
 		else
-			if (retDbType.equals(DbType.TYPE.LONG.name()))
-				set(obj, res.getLong(name) );
-			else
-				if (retDbType.equals(DbType.TYPE.BOOL.name()))
-					set(obj, res.getBoolean(name) );
+		if (retDbType.equals(DbType.TYPE.LONG.name()))
+			set(obj, res.getLong(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.BOOL.name()))
+			set(obj, res.getBoolean(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.DATETIME.name())) {
+			try {
+				if (attribute.getType() == Date.class)
+					set(obj, res.getTimestamp(name) );
 				else
-					if (retDbType.equals(DbType.TYPE.DATETIME.name())) {
-						try {
-							if (attribute.getType() == Date.class)
-								set(obj, res.getTimestamp(name) );
-							else
-							if (attribute.getType() == java.sql.Date.class) {
-								Timestamp time = res.getTimestamp(name);
-								set(obj, time == null ? null : new java.sql.Date( time.getTime() ) );
-							} else
-								set(obj, new MDate( res.getTimestamp(name) ).toCalendar() );
-						} catch (java.sql.SQLException sqle) {
-							// Caused by: java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
-							set(obj, null );
-						}
-					} else
-						if (retDbType.equals(DbType.TYPE.DOUBLE.name()))
-							set(obj, res.getDouble(name) );
-						else
-							if (retDbType.equals(DbType.TYPE.FLOAT.name()))
-								set(obj, res.getFloat(name) );
-							else
-								if (retDbType.equals(DbType.TYPE.STRING.name()))
-									set(obj, res.getString(name) );
-								else
-									if (retDbType.equals(DbType.TYPE.UUID.name())) {
-										String o = res.getString(name);
-										if (o == null)
-											set(obj, (UUID)null );
-										else
-											try {
-												set(obj, UUID.fromString(o) );
-											} catch (Throwable t) {
-												log().d("uuid",name,o,t);
-												set(obj, (UUID)null );
-											}
-									} else
-										if (retDbType.equals(DbType.TYPE.BLOB.name())) {
-											InputStream st = res.getBinaryStream(name);
-											if (st != null) {
-												@SuppressWarnings("resource")
-												MObjectInputStream ois = new MObjectInputStream(st);
-												ois.setActivator(manager.getActivator());
+				if (attribute.getType() == java.sql.Date.class) {
+					Timestamp time = res.getTimestamp(name);
+					set(obj, time == null ? null : new java.sql.Date( time.getTime() ) );
+				} else
+					set(obj, new MDate( res.getTimestamp(name) ).toCalendar() );
+			} catch (java.sql.SQLException sqle) {
+				// Caused by: java.sql.SQLException: Value '0000-00-00 00:00:00' can not be represented as java.sql.Timestamp
+				set(obj, null );
+			}
+		} else
+		if (retDbType.equals(DbType.TYPE.DOUBLE.name()))
+			set(obj, res.getDouble(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.BIGDECIMAL.name()))
+			set(obj, res.getBigDecimal(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.FLOAT.name()))
+			set(obj, res.getFloat(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.STRING.name()))
+			set(obj, res.getString(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.UUID.name())) {
+			String o = res.getString(name);
+			if (o == null)
+				set(obj, (UUID)null );
+			else
+				try {
+					set(obj, UUID.fromString(o) );
+				} catch (Throwable t) {
+					log().d("uuid",name,o,t);
+					set(obj, (UUID)null );
+				}
+		} else
+		if (retDbType.equals(DbType.TYPE.BLOB.name())) {
+			InputStream st = res.getBinaryStream(name);
+			if (st != null) {
+				@SuppressWarnings("resource")
+				MObjectInputStream ois = new MObjectInputStream(st);
+				ois.setActivator(manager.getActivator());
 //												ois.setClassLoader(manager.getActivator());
 
-												Object o = ois.readObject();
-												set(obj, o );
-											} else
-												set(obj,null);
-										} else
-											log().d("can't set to target ",name,retDbType );
+				Object o = ois.readObject();
+				set(obj, o );
+			} else
+				set(obj,null);
+		} else
+			log().d("can't set to target ",name,retDbType );
 	}
 
 	/** {@inheritDoc} */
@@ -430,51 +433,54 @@ public class FieldPersistent extends Field {
 		if (retDbType.equals(DbType.TYPE.INT.name()))
 			return different(obj, res.getInt(name) );
 		else
-			if (retDbType.equals(DbType.TYPE.LONG.name()))
-				return different(obj, res.getLong(name) );
+		if (retDbType.equals(DbType.TYPE.LONG.name()))
+			return different(obj, res.getLong(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.BOOL.name()))
+			return different(obj, res.getBoolean(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.DATETIME.name())) {
+			if (attribute.getType() == Date.class)
+				return different(obj, res.getTimestamp(name) );
 			else
-				if (retDbType.equals(DbType.TYPE.BOOL.name()))
-					return different(obj, res.getBoolean(name) );
-				else
-					if (retDbType.equals(DbType.TYPE.DATETIME.name())) {
-						if (attribute.getType() == Date.class)
-							return different(obj, res.getTimestamp(name) );
-						else
-							return different(obj, new MDate( res.getTimestamp(name) ).toCalendar() );
-					} else
-						if (retDbType.equals(DbType.TYPE.DOUBLE.name()))
-							return different(obj, res.getDouble(name) );
-						else
-							if (retDbType.equals(DbType.TYPE.FLOAT.name()))
-								return different(obj, res.getFloat(name) );
-							else
-								if (retDbType.equals(DbType.TYPE.STRING.name()))
-									return different(obj, res.getString(name) );
-								else
-									if (retDbType.equals(DbType.TYPE.UUID.name())) {
-										String o = res.getString(name);
-										if (o == null)
-											return different(obj, (UUID)null );
-										else
-											try {
-												return different(obj, UUID.fromString(o) );
-											} catch (Throwable t) {
-												log().d("uuid",name,o,t);
-												return different(obj, (UUID)null );
-											}
-									} else
-										if (retDbType.equals(DbType.TYPE.BLOB.name())) {
-											InputStream st = res.getBinaryStream(name);
-											if (st != null) {
-												@SuppressWarnings("resource")
-												MObjectInputStream ois = new MObjectInputStream(st);
-												ois.setClassLoader(manager.getActivator());
-												Object o = ois.readObject();
-												return different(obj, o );
-											} else
-												return different(obj,null);
-										} else
-											log().d("can't test",name,retDbType );
+				return different(obj, new MDate( res.getTimestamp(name) ).toCalendar() );
+		} else
+		if (retDbType.equals(DbType.TYPE.DOUBLE.name()))
+			return different(obj, res.getDouble(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.FLOAT.name()))
+			return different(obj, res.getFloat(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.STRING.name()))
+			return different(obj, res.getString(name) );
+		else
+		if (retDbType.equals(DbType.TYPE.UUID.name())) {
+			String o = res.getString(name);
+			if (o == null)
+				return different(obj, (UUID)null );
+			else
+				try {
+					return different(obj, UUID.fromString(o) );
+				} catch (Throwable t) {
+					log().d("uuid",name,o,t);
+					return different(obj, (UUID)null );
+				}
+		} else
+		if (retDbType.equals(DbType.TYPE.BLOB.name())) {
+			InputStream st = res.getBinaryStream(name);
+			if (st != null) {
+				@SuppressWarnings("resource")
+				MObjectInputStream ois = new MObjectInputStream(st);
+				ois.setClassLoader(manager.getActivator());
+				Object o = ois.readObject();
+				return different(obj, o );
+			} else
+				return different(obj,null);
+		} else
+		if (retDbType.equals(DbType.TYPE.BIGDECIMAL.name())) {
+			return different(obj, res.getBigDecimal(name) );
+		} else
+			log().d("can't test",name,retDbType );
 		return false;
 	}
 

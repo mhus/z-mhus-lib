@@ -446,6 +446,7 @@ public class DialectDefault extends Dialect {
 
 	protected boolean equalTypes(String should, String is, int fSize) {
 		is = is.toUpperCase();
+		if (is.equals("INTEGER") && should.equals("INT")) return true;
 		if (is.indexOf("CHAR") >=0) {
 			is = is + "(" + fSize + ")"; // add size to type
 		}
@@ -489,7 +490,7 @@ public class DialectDefault extends Dialect {
 
 	protected void alterTableAddPrimaryKey(Statement sth, String tn, String keys) {
 		String sql = "ALTER TABLE "+tn+" ADD PRIMARY KEY("+keys+")";
-		log().t("new primary key",sql);
+		log().d("new primary key",sql);
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
@@ -500,7 +501,7 @@ public class DialectDefault extends Dialect {
 	protected void alterTableChangePrimaryKey(Statement sth, String tn,
 			String keys) {
 		String sql = "ALTER TABLE "+tn+" DROP PRIMARY KEY, ADD PRIMARY KEY("+keys+")";
-		log().t("new primary key",sql);
+		log().d("new primary key",sql);
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
@@ -510,7 +511,7 @@ public class DialectDefault extends Dialect {
 
 	protected void alterTableDropPrimaryKey(Statement sth, String tn) {
 		String sql = "ALTER TABLE "+tn+" DROP PRIMARY KEY";
-		log().t("drop primary key",sql);
+		log().d("drop primary key",sql);
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
@@ -521,7 +522,7 @@ public class DialectDefault extends Dialect {
 	protected void alterColumnAdd(Statement sth, String tn, IConfig cfield) {
 		//		String sql = "ALTER TABLE " + tn + " ADD COLUMN (" + getFieldConfig(cfield) + ")";
 		String sql = "ALTER TABLE " + tn + " ADD COLUMN " + getFieldConfig(cfield);
-		log().t("alter table",sql);
+		log().d("alter table",sql);
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
@@ -534,7 +535,7 @@ public class DialectDefault extends Dialect {
 		String sql = null;
 		try {
 			sql = "ALTER TABLE " + tn + " ALTER COLUMN " + fName + " SET DEFAULT " + getDbDef(cfield.getString("default",null));
-			log().t("alter table",sql);
+			log().d("alter table",sql);
 			sth.execute(sql);
 		} catch (Exception e) {
 			log().i(sql,e);
@@ -543,7 +544,7 @@ public class DialectDefault extends Dialect {
 
 	protected void alterColumnDropDefault(Statement sth, String tn, String fName) {
 		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + fName + " DROP DEFAULT";
-		log().t("alter table",sql);
+		log().d("alter table",sql);
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
@@ -553,7 +554,7 @@ public class DialectDefault extends Dialect {
 
 	protected void alterColumn(Statement sth,String tn, IConfig cfield) {
 		String sql = "ALTER TABLE " + tn + " MODIFY COLUMN " + getFieldConfig(cfield);
-		log().t("alter table",sql);
+		log().d("alter table",sql);
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
@@ -564,7 +565,7 @@ public class DialectDefault extends Dialect {
 
 	protected void alterColumnDrop(Statement sth,String tn, String fName) {
 		String sql = "ALTER TABLE " + tn + " DROP COLUMN " + fName;
-		log().t("alter table",sql);
+		log().d("alter table",sql);
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {

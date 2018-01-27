@@ -204,6 +204,7 @@
 package de.mhus.lib.sql;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -324,7 +325,7 @@ public abstract class DbResult {
 	 * @throws java.lang.Exception if any.
 	 */
 	public abstract Time getTime(String columnLabel) throws Exception;
-
+	
 	/**
 	 * <p>getTimestamp.</p>
 	 *
@@ -351,4 +352,12 @@ public abstract class DbResult {
 	 */
 	public abstract Object getObject(String columnLabel) throws Exception;
 
+	/**
+	 * <p>get BigDecimal value
+	 * @param columnLabel 
+	 * @return The value
+	 * @throws Exception 
+	 */
+	public abstract BigDecimal getBigDecimal(String columnLabel) throws Exception;
+	
 }

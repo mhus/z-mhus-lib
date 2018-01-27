@@ -203,7 +203,9 @@
  */
 package de.mhus.lib.test.adb;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
@@ -787,6 +789,99 @@ public class AdbTest extends TestCase {
 		
 		pool.close();
 
+	}
+	
+	public void testDataTypes() throws Exception {
+		DbPool pool = createPool("testDataTypes").getPool("test");
+		
+		BookStoreSchema schema = new BookStoreSchema();
+		DbManager manager = new DbManagerJdbc(pool, schema);
+		
+		Store store = manager.inject(new Store());
+		
+		store.setIntValue(Integer.MAX_VALUE);
+		store.setByteValue(Byte.MAX_VALUE);
+		store.setShortValue(Short.MAX_VALUE);
+		store.setCharValue(' ');
+		store.setBigDecimalValue(BigDecimal.TEN);
+		store.setDoubleValue(Double.MAX_VALUE);
+		store.setFloatValue(Float.MAX_VALUE);
+		store.getBlobValue().put("a", "b");
+		store.setSqlDate(new Date(1000));
+		
+		store.save();
+		UUID id = store.getId();
+		
+		store = null;
+		
+		store = manager.getObject(Store.class, id);
+		assertEquals(Integer.MAX_VALUE, store.getIntValue());
+		assertEquals(Byte.MAX_VALUE, store.getByteValue());
+		assertEquals(Short.MAX_VALUE, store.getShortValue());
+		assertEquals(' ', store.getCharValue());
+		assertEquals(BigDecimal.TEN, store.getBigDecimalValue());
+		assertEquals(Double.MAX_VALUE, store.getDoubleValue());
+		assertEquals(Float.MAX_VALUE, store.getFloatValue());
+		assertEquals("b", store.getBlobValue().get("a"));
+		assertEquals(1000, store.getSqlDate().getTime());
+		
+	}
+	
+	public void testDataTypesAlter() throws Exception {
+		DbPool pool = createPool("testDataTypesAlter").getPool("test");
+		
+		BookStoreSchema schema1 = new BookStoreSchema();
+		DbManager manager1 = new DbManagerJdbc(pool, schema1);
+		
+		Store store1 = manager1.inject(new Store());
+		store1.setIntValue(Integer.MAX_VALUE);
+		store1.setByteValue(Byte.MAX_VALUE);
+		store1.setShortValue(Short.MAX_VALUE);
+		store1.setCharValue(' ');
+		store1.setBigDecimalValue(BigDecimal.TEN);
+		store1.setDoubleValue(Double.MAX_VALUE);
+		store1.setFloatValue(Float.MAX_VALUE);
+		store1.getBlobValue().put("a", "b");
+		store1.setSqlDate(new Date(1000));
+		
+		store1.save();
+		UUID id = store1.getId();
+
+		// alter to String
+		
+		BookStoreSchema schema2 = new BookStoreSchema();
+		schema2.switchStore = true;
+		DbManager manager2 = new DbManagerJdbc(pool, schema2);
+		de.mhus.lib.test.adb.model2.Store store2 = manager2.getObject(de.mhus.lib.test.adb.model2.Store.class, id);
+		
+		assertEquals(String.valueOf(Integer.MAX_VALUE), store2.getIntValue());
+//		assertEquals(String.valueOf(Byte.MAX_VALUE), store2.getByteValue());
+//		assertEquals(String.valueOf(Short.MAX_VALUE), store2.getShortValue());
+//		assertEquals(" ", store2.getCharValue());
+		assertEquals(BigDecimal.TEN.toString(), store2.getBigDecimalValue());
+		assertEquals(String.valueOf(Double.MAX_VALUE), store2.getDoubleValue());
+		assertEquals(String.valueOf(Float.MAX_VALUE), store2.getFloatValue());
+		assertEquals("b", store2.getBlobValue().get("a"));
+		assertEquals("1970-01-01 01:00:01.000000", store2.getSqlDate());
+	
+		// and back again
+		
+		BookStoreSchema schema3 = new BookStoreSchema();
+		DbManager manager3 = new DbManagerJdbc(pool, schema3);
+
+		Store store3 = manager3.getObject(Store.class, id);
+		
+		assertEquals(Integer.MAX_VALUE, store3.getIntValue());
+		assertEquals(Byte.MAX_VALUE, store3.getByteValue());
+		assertEquals(Short.MAX_VALUE, store3.getShortValue());
+		assertEquals(' ', store3.getCharValue());
+		assertEquals(BigDecimal.TEN, store3.getBigDecimalValue());
+		assertEquals(Double.MAX_VALUE, store3.getDoubleValue());
+		assertEquals(Float.MAX_VALUE, store3.getFloatValue());
+		assertEquals("b", store3.getBlobValue().get("a"));
+		assertEquals(1000, store3.getSqlDate().getTime());
+		
+		
 	}
 	
 }

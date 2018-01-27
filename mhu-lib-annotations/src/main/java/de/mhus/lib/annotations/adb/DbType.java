@@ -205,7 +205,7 @@ package de.mhus.lib.annotations.adb;
 
 public class DbType {
 
-	public static enum TYPE {INT,LONG,BOOL,DOUBLE,FLOAT,STRING,DATETIME,UUID,BLOB, UNKNOWN}
+	public static enum TYPE {INT,LONG,BOOL,DOUBLE,FLOAT,STRING,DATETIME,UUID,BLOB, UNKNOWN, BIGDECIMAL}
 
 	private TYPE type;
 	private int size;

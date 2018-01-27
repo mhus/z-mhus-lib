@@ -293,7 +293,7 @@ public class DialectHsqldb extends DialectDefault {
 	@Override
 	protected void alterColumn(Statement sth,String tn, IConfig cfield) {
 		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + getFieldConfigWithoutExtras(cfield);
-		log().t("alter table",sql);
+		log().d("alter table",sql);
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {

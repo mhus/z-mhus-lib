@@ -204,6 +204,7 @@
 package de.mhus.lib.sql;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -312,6 +313,11 @@ public class MutableResult extends DbResult {
 	@Override
 	public Object getObject(String columnLabel) throws Exception {
 		return current.get(columnLabel);
+	}
+
+	@Override
+	public BigDecimal getBigDecimal(String columnLabel) throws Exception {
+		return MCast.toBigDecimal(current.get(columnLabel), BigDecimal.ZERO);
 	}
 
 }

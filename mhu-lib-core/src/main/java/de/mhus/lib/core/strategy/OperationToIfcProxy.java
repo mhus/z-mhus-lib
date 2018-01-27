@@ -41,6 +41,16 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		for (Method m : clazz.getMethods()) {
 //			if (m.isAccessible()) {
 				if (m.getName().equals(methodName)) {
+					// check parameters
+					Parameter[] mp = m.getParameters();
+					for (int i = 0; i < mp.length; i++) {
+						String mpType = mp[i].getType().getCanonicalName();
+						String reqType = p.getString(PARAMETERTYPE + i);
+						if (!mpType.equals(reqType)) continue;
+					}
+					// check for more parameters
+					if (p.containsKey(PARAMETERTYPE + mp.length)) continue;
+					// found the right method with correct parameter types
 					method = m;
 					break;
 				}
@@ -52,7 +62,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		int pcount = method.getParameterCount();
 		Object[] params = new Object[pcount];
 		for (int i = 0; i < pcount; i++) {
-			params[i] = toObject(p.get(PARAMETER + i), p.get(TYPE + i), cl);
+			params[i] = toObject(p.get(PARAMETER + i), p.getString(TYPE + i), cl);
 		}
 		
 		Object obj = getInterfaceObject();
@@ -61,11 +71,13 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		return new Successful(this, "", ret);
 	}
 
-	private Object toObject(Object value, Object type, ClassLoader cl) throws ClassNotFoundException, IOException {
+	private Object toObject(Object value, String type, ClassLoader cl) throws ClassNotFoundException, IOException {
+		if (value == null) MCast.getDefaultPrimitive(type);
 		if (type != null && type.equals(SERIALISED)) {
-			return MCast.unserializeFromString((String)value, cl);
+			return MCast.unserializeFromString(String.valueOf(value), cl);
 		}
-		return value;
+		Class<?> t = cl.loadClass(type);
+		return MCast.toType(value, t, null);
 	}
 
 	@Override

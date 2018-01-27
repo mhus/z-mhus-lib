@@ -218,6 +218,8 @@ import de.mhus.lib.sql.DbConnection;
 
 public class BookStoreSchema extends DbSchema {
 
+	public boolean switchStore = false;
+	
 	@Override
 	public void doFillNameMapping(HashMap<String, Object> nameMapping) {
 		super.doFillNameMapping(nameMapping);
@@ -273,9 +275,13 @@ public class BookStoreSchema extends DbSchema {
 		list.add(Book.class);
 		list.add(Person.class);
 		list.add(Person2.class);
-		list.add(Store.class);
 		list.add(Finances.class);
 		list.add(Regal.class);
+		
+		if (switchStore)
+			list.add(de.mhus.lib.test.adb.model2.Store.class);
+		else
+			list.add(Store.class);
 	}
 
 	public void authorizeReadAttributes(DbConnection con, DbManager dbManagerJdbc, Class<?> clazz,
