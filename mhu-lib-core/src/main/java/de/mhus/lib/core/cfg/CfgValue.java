@@ -211,10 +211,13 @@ public abstract class CfgValue<T> {
 	private String path;
 	private T def;
 	private T value;
-	private Object owner;
+	private String owner;
 	
 	public CfgValue(Object owner, String path, T def) {
-		this.owner = owner;
+		if (owner instanceof Class)
+			this.owner = ((Class<?>)owner).getCanonicalName();
+		else
+			this.owner = String.valueOf(owner);
 		this.path = path;
 		this.def = def;
 		MApi.getCfgUpdater().register(this);
@@ -229,15 +232,15 @@ public abstract class CfgValue<T> {
 		return path;
 	}
 	
-	public Object getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 	
-	public Class<?> getOwnerClass() {
-		if (owner == null) return null;
-		if (owner instanceof Class<?>) return (Class<?>)owner;
-		return owner.getClass();
-	}
+//	public Class<?> getOwnerClass() {
+//		if (owner == null) return null;
+//		if (owner instanceof Class<?>) return (Class<?>)owner;
+//		return owner.getClass();
+//	}
 	
 	public T getDefault() {
 		return def;
@@ -263,8 +266,12 @@ public abstract class CfgValue<T> {
 		
 	}
 
+	public boolean isOwner(Class<?> name) {
+		return owner.equals(name.getCanonicalName());
+	}
+	
 	public boolean isOwner(String name) {
-		return MApi.get().getCfgManager().isOwner(owner, name);
+		return owner.equals(name);
 	}
 
 	public void setValue(String v) {

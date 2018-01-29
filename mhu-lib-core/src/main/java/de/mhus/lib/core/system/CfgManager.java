@@ -326,7 +326,7 @@ public class CfgManager {
 
 		return def;
 	}
-
+/*
 	public boolean isOwner(Object owner, String n) {
 
 		Class<?> c = null;
@@ -355,7 +355,7 @@ public class CfgManager {
 		
 		return false;
 	}
-
+*/
 	public void reConfigure() {
 		provider.reConfigure();
 	}

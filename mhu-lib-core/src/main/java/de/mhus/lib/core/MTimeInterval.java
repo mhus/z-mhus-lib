@@ -608,6 +608,13 @@ public class MTimeInterval {
 	}
 
 	public static String getIntervalAsString(long msec) {
+		
+		boolean negative = false;
+		if (msec < 0) {
+			negative = true;
+			msec = -msec;
+		}
+		
 		long sec = msec / 1000;
 		long min = sec / 60;
 		long hours = min / 60;
@@ -615,7 +622,8 @@ public class MTimeInterval {
 		long years = days / 365;
 		
 		return 
-				(years > 0 ? MCast.toString(years) + "y " : "")
+				(negative ? "-" : "") 
+				+ (years > 0 ? MCast.toString(years) + "y " : "")
 				+ MCast.toString( (int) (days % 365), 2) + ' '
 				+ MCast.toString((int) (hours % 24), 2) + ':'
 				+ MCast.toString((int) (min % 60), 2) + ':'
