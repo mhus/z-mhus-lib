@@ -231,6 +231,17 @@ public class UpdaterCfg {
 	}
 
 	@SuppressWarnings("rawtypes")
+	public void doUpdate(String owner, String path) {
+		LinkedList<CfgValue> list = null;
+		synchronized (registry) {
+			list = new LinkedList<CfgValue>(registry.keySet());
+		}
+		for (CfgValue<?> item : list)
+		if ( (owner == null || item.isOwner(owner)) && path.equals(item.getPath()) ) // is not working at all, owner could be a super class
+			item.update();
+	}
+	
+	@SuppressWarnings("rawtypes")
 	public List<CfgValue> getList() {
 		synchronized (registry) {
 			return new LinkedList<CfgValue>(registry.keySet());
