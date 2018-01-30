@@ -395,6 +395,13 @@ public class MCollection {
 		return out;
 	}
 
+	public static <T> Set<T> toSet(T[] array) {
+		TreeSet<T> out = new TreeSet<>();
+		for (T item : array)
+			out.add(item);
+		return out;
+	}
+	
 	public static <T> TreeSet<T> toTreeSet(T[] items) {
 		TreeSet<T> ret = new TreeSet<T>();
 		for (T item : items)

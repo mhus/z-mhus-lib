@@ -214,5 +214,7 @@ public interface AuthorizationSource {
 	 * @param role
 	 * @return
 	 */
-	Boolean hasResourceAccess(Account account, String acl);
+	Boolean hasResourceAccess(Account account, String aclName);
+
+	String getResourceAccessAcl(Account account, String aclName);
 }

@@ -328,6 +328,13 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	public void setParameters(HashMap<String, String> parameters) {
 		this.parameters = parameters;
 	}
+	public OperationDescription putParameter(String key, String value) {
+		if (this.parameters == null)
+			this.parameters = new HashMap<>();
+		this.parameters.put(key, value);
+		return this;
+	}
+	
 	
 	@Override
 	public boolean equals(Object o) {
