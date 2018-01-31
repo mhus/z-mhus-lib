@@ -223,6 +223,7 @@ public interface PemBlock extends IReadProperties {
 	String CREATED = "Created";
 	String ENCRYPTED = "Encrypted";
 	String ENC_BLOWFISH = "blowfish";
+	String BLOCK_HASH = "HASH";
 
 	/**
 	 * Returns the name of the block
