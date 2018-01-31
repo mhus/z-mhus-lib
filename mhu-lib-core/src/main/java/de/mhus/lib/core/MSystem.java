@@ -212,8 +212,10 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -583,4 +585,71 @@ public class MSystem {
 		return getDeclaredField(clazz.getSuperclass(), name);
 	}
 	
+	/**
+	 * Load the class for the given type declaration. Also primitive and array declarations
+	 * are allowed.
+	 * 
+	 * @param type The type as primitive int, long ... String, Date the class name or as Array with pending [].
+	 * @param cl The class loader or null to use the thread context class loader.
+	 * @return The class instance.
+	 * @throws ClassNotFoundException
+	 */
+	public static Class<?> loadClass(String type, ClassLoader cl) throws ClassNotFoundException {
+		if (cl == null) cl = Thread.currentThread().getContextClassLoader();
+		if ("int".equals(type))
+			return int.class;
+		if ("long".equals(type))
+			return long.class;
+		if ("short".equals(type))
+			return short.class;
+		if ("double".equals(type))
+			return double.class;
+		if ("float".equals(type))
+			return float.class;
+		if ("byte".equals(type))
+			return byte.class;
+		if ("boolean".equals(type))
+			return boolean.class;
+		if ("char".equals(type))
+			return char.class;
+		if ("String".equals(type))
+			return String.class;
+		if ("Date".equals(type))
+			return Date.class;
+
+		if ("int[]".equals(type))
+			return int[].class;
+		if ("long[]".equals(type))
+			return long[].class;
+		if ("short[]".equals(type))
+			return short[].class;
+		if ("double[]".equals(type))
+			return double[].class;
+		if ("float[]".equals(type))
+			return float[].class;
+		if ("byte[]".equals(type))
+			return byte[].class;
+		if ("boolean[]".equals(type))
+			return boolean[].class;
+		if ("char[]".equals(type))
+			return char[].class;
+		if ("String[]".equals(type))
+			return String[].class;
+		if ("Date[]".equals(type))
+			return Date[].class;
+		
+		boolean array = false;
+		if (type.endsWith("[]")) {
+			array = true;
+			type = type.substring(0,  type.length()-2);
+		}
+		
+		Class<?> clazz = cl.loadClass(type);
+		if (array) {
+			clazz = Array.newInstance(clazz, 0).getClass();
+		}
+		return clazz;
+		
+	}
+
 }

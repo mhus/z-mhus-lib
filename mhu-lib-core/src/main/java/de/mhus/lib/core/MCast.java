@@ -210,11 +210,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -903,6 +907,53 @@ public final class MCast {
 		// if it's the same type -> return itself
 		if (type.isInstance(in)) return in;
 		
+		if (type.isArray()) {
+			// create new array from in...
+			if (in.getClass().isArray()) {
+				Class<?> arrayType = type.getComponentType();
+				int length = Array.getLength(in);
+				Object out = Array.newInstance(arrayType, length);
+				// System.arraycopy(in, 0, out, 0, length);
+				for (int i = 0; i < length; i++) {
+					Object value = Array.get(in, i);
+					value = toType(value, arrayType, null);
+					Array.set(out, i, value);
+				}
+				return out;
+			}
+			
+			if (in instanceof String) {
+				String[] parts = ((String)in).split(";");
+				Class<?> arrayType = type.getComponentType();
+				int length = parts.length;
+				Object out = Array.newInstance(arrayType, length);
+				// System.arraycopy(in, 0, out, 0, length);
+				for (int i = 0; i < length; i++) {
+					Object value = parts[i];
+					value = toType(value, arrayType, null);
+					Array.set(out, i, value);
+				}
+				return out;
+			}
+			
+			if (in instanceof Collection<?>) {
+				Collection<?> c = (Collection<?>)in;
+				Class<?> arrayType = type.getComponentType();
+				int length = c.size();
+				Object out = Array.newInstance(arrayType, length);
+				// System.arraycopy(in, 0, out, 0, length);
+				Iterator<?> iter = c.iterator();
+				for (int i = 0; i < length; i++) {
+					Object value = iter.next();
+					value = toType(value, arrayType, null);
+					Array.set(out, i, value);
+				}
+				return out;
+			}
+
+			return def;
+		}
+		
 		// is there a exact caster for the from-to pair ?
 		Caster<?, ?> caster = casters.get(in.getClass(), type);
 		if (caster == null) {
@@ -946,6 +997,28 @@ public final class MCast {
 	 * @return the default value for the class
 	 */
 	public static Object getDefaultPrimitive(Class<?> type) {
+		if (type == null) return null;
+		if (type.isArray()) {
+			type = type.getComponentType();
+//			if (type == int.class)
+//				return new int[0];
+//			if (type == long.class)
+//				return new long[0];
+//			if (type == short.class)
+//				return new short[0];
+//			if (type == double.class)
+//				return new double[0];
+//			if (type == float.class)
+//				return new float[0];
+//			if (type == byte.class)
+//				return new byte[0];
+//			if (type == boolean.class)
+//				return new boolean[0];
+//			if (type == char.class)
+//				return new char[0];
+			return Array.newInstance(type, 0);
+		}
+		
 		if (type == int.class)
 			return (Integer)0;
 		if (type == long.class)
@@ -966,6 +1039,28 @@ public final class MCast {
 	}
 	
 	public static Object getDefaultPrimitive(String type) {
+		
+		if (type.endsWith("[]")) {
+			type = type.substring(0, type.length()-2);
+			if ("int".equals(type))
+				return new int[0];
+			if ("long".equals(type))
+				return new long[0];
+			if ("short".equals(type))
+				return new short[0];
+			if ("double".equals(type))
+				return new double[0];
+			if ("float".equals(type))
+				return new float[0];
+			if ("byte".equals(type))
+				return new byte[0];
+			if ("boolean".equals(type))
+				return new boolean[0];
+			if ("char".equals(type))
+				return new char[0];
+			return null;
+		}
+		
 		if ("int".equals(type))
 			return (Integer)0;
 		if ("long".equals(type))
@@ -985,7 +1080,6 @@ public final class MCast {
 		return null;
 	}
 	
-
 	public static byte[] toBinary(Object value) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
