@@ -234,4 +234,13 @@ public class PemBlockList extends LinkedList<PemBlock> {
 		}
 		return b.toString();
 	}
+	
+	public PemBlock find(String name) {
+		for (PemBlock block : this) {
+			if (name.equals(block.getName()))
+				return block;
+		}
+		return null;
+	}
+	
 }
