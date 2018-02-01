@@ -600,4 +600,13 @@ public class ConsoleTable {
 		}
 	}
 
+	public int size() {
+		return content.size();
+	}
+
+	public void removeFirstRow() {
+		if (content.size() == 0) return;
+		content.remove(0);
+	}
+
 }
