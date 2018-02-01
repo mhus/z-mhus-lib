@@ -203,6 +203,9 @@
  */
 package de.mhus.lib.test;
 
+import java.math.BigDecimal;
+
+import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MMath;
 import junit.framework.TestCase;
@@ -277,4 +280,13 @@ public class MMathTest extends TestCase {
 		}
 	}
 
+	public void testBigMath() {
+		BigDecimal a = BigDecimal.valueOf(10);
+		BigDecimal b = BigDecimal.valueOf(20);
+		
+		assertEquals(a, MBigMath.min(a, b));
+		assertEquals(b, MBigMath.max(a, b));
+		
+	}
+	
 }

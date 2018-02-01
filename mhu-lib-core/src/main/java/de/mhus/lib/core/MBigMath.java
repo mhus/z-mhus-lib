@@ -226,8 +226,13 @@ public class MBigMath {
     public final static BigInteger TWO = BigInteger.valueOf(2);
     public final static BigInteger SIXTY_TWO = BigInteger.valueOf(62);
     public final static BigInteger NINE_ONE = BigInteger.valueOf(91);
-	private static final BigDecimal SQRT_DIG = new BigDecimal(150);
+	public final static BigDecimal BD_MINUS_ONE = BigDecimal.valueOf(-1);
+	public final static BigDecimal BD_TWO = BigDecimal.valueOf(2);
+    
+    private static final BigDecimal SQRT_DIG = new BigDecimal(150);
 	private static final BigDecimal SQRT_PRE = new BigDecimal(10).pow(SQRT_DIG.intValue());
+	
+	
 
     /**
      * Calculate a pow with modulo using the binary algorithm.
@@ -667,4 +672,16 @@ public class MBigMath {
 		return out.toArray(new BigInteger[out.size()]);
 	}
 
+	public static BigDecimal min(BigDecimal a, BigDecimal b) {
+		if (a == null) return b;
+		if (b == null) return a;
+		return a.compareTo(b) > 0 ? b : a;
+	}
+	
+	public static BigDecimal max(BigDecimal a, BigDecimal b) {
+		if (a == null) return b;
+		if (b == null) return a;
+		return a.compareTo(b) > 0 ? a : b;
+	}
+	
 }
