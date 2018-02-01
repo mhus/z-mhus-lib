@@ -228,6 +228,8 @@ public class MBigMath {
     public final static BigInteger NINE_ONE = BigInteger.valueOf(91);
 	public final static BigDecimal BD_MINUS_ONE = BigDecimal.valueOf(-1);
 	public final static BigDecimal BD_TWO = BigDecimal.valueOf(2);
+	public final static BigDecimal BD_TEN = BigDecimal.valueOf(10);
+	public final static BigDecimal BD_ONE_HUNDRED = BigDecimal.valueOf(100);
     
     private static final BigDecimal SQRT_DIG = new BigDecimal(150);
 	private static final BigDecimal SQRT_PRE = new BigDecimal(10).pow(SQRT_DIG.intValue());
