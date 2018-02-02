@@ -281,7 +281,7 @@ public class Scheduler extends MLog implements Named {
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) {
-			log().w("job is busy, reshedule",job);
+			log().w("job is busy, reshedule",job,job.getName());
 			try {
 				job.doSchedule(this);
 			} catch (Throwable t) {
@@ -330,9 +330,12 @@ public class Scheduler extends MLog implements Named {
 					synchronized (running) {
 						running.remove(job);
 					}
-					job.releaseBusy(Scheduler.this);
+					if (!job.releaseBusy(Scheduler.this)) {
+						log().w("Job release not possible, do hard release",job.getName());
+						job.releaseBusy(null);
+					}
 				} catch (Throwable t1) {
-					log().w(job,job.getName(),t1);
+					log().w(job,job.getName(),t1); // should not happen
 				}
 			}
 			try {

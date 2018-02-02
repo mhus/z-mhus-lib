@@ -244,6 +244,7 @@ public class CmdTimer extends MLog implements Action {
 			+ " run <name>,\n"
 			+ " configure <name> <configuration>\n"
 			+ " trail <name> [<trail config>]\n"
+			+ " release <name> - hard release the busy lock"
 			+ "  name is allways a pattern use * to define placeholders", multiValued=false)
     String cmd;
 
@@ -287,7 +288,8 @@ public class CmdTimer extends MLog implements Action {
 						"Done",
 						"Status",
 						"Interceptor",
-						"Trail config"
+						"Trail config",
+						"Busy"
 					);
 			else
 				table.setHeaderValues(
@@ -317,7 +319,8 @@ public class CmdTimer extends MLog implements Action {
 							job.isDone(),
 							getStatus(job),
 							job.getIntercepter(),
-							job.getLogTrailConfig()
+							job.getLogTrailConfig(),
+							job.isBusy()
 						);
 				else
 					table.addRowValues(
@@ -347,7 +350,8 @@ public class CmdTimer extends MLog implements Action {
 							job.isDone(),
 							getStatus(job),
 							job.getIntercepter(),
-							job.getLogTrailConfig()
+							job.getLogTrailConfig(),
+							job.isBusy()
 						);
 				else
 					table.addRowValues(
@@ -478,6 +482,14 @@ public class CmdTimer extends MLog implements Action {
 			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
 				if (job != null) {
 					job.cancel();
+					System.out.println("OK " + job.getName());
+				}
+			}
+		}
+		if (cmd.equals("release")) {
+			for (SchedulerJob job : getScheduledJob(scheduler, parameters[0]) ) {
+				if (job != null) {
+					job.releaseBusy(null);
 					System.out.println("OK " + job.getName());
 				}
 			}

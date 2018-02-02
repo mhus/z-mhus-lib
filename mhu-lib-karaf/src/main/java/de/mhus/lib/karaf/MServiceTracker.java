@@ -258,7 +258,7 @@ public abstract class MServiceTracker<T> {
 	public MServiceTracker<T> start() {
 		if (tracker != null) return this;
 		tracker = new ServiceTracker<>(context, clazz, customizer);
-		tracker.open();
+		tracker.open(true);
 		return this;
 	}
 	

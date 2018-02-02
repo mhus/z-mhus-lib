@@ -375,6 +375,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	public boolean releaseBusy(Object owner) {
 		synchronized (this) {
 			if (this.owner == null) return true;
+			if (owner == null) {
+				this.owner = null;
+				return true;
+			}
 			if (this.owner != owner) return false;
 			this.owner = null;
 		}
