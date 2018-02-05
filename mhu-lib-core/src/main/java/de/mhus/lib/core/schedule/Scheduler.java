@@ -341,7 +341,7 @@ public class Scheduler extends MLog implements Named {
 			try {
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
-				log().e(job,job.getName(),t);
+				log().f("Can't reschedule",job,job.getName(),t);
 			}
 		}
 		
