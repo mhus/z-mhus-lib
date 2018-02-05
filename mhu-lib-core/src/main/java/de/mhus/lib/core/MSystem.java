@@ -790,5 +790,10 @@ public class MSystem {
 	    
 	    return new String[] {stdOut.toString(), stdErr.toString()};
 	}
+
+	public static boolean isWindows() {
+		final String os = System.getProperty("os.name");
+		return os.contains("Windows");
+	}
 	
 }

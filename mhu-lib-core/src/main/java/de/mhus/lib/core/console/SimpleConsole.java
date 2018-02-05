@@ -217,6 +217,8 @@ public class SimpleConsole extends Console {
 	private COLOR background;
 	private boolean blink;
 	private boolean bold;
+	protected int width = DEFAULT_WIDTH;
+	protected int height = DEFAULT_HEIGHT;
 	
 	public SimpleConsole() {
 		super();
@@ -247,12 +249,12 @@ public class SimpleConsole extends Console {
 
 	@Override
 	public int getWidth() {
-		return DEFAULT_WIDTH;
+		return width;
 	}
 
 	@Override
 	public int getHeight() {
-		return DEFAULT_HEIGHT;
+		return height;
 	}
 
 	@Override

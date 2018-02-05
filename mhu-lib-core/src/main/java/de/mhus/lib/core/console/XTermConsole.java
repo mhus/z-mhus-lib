@@ -19,7 +19,8 @@ public class XTermConsole extends ANSIConsole {
 	@Override
 	public void resetTerminal() {
 		try {
-			MSystem.execute("clear");
+//			MSystem.execute("/bin/sh","-c","clear < /dev/tty");
+			Runtime.getRuntime().exec("clear");
 		} catch (IOException e) {
 		}
 	}

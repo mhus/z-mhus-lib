@@ -208,6 +208,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.lang.IBase;
 
 @DefaultImplementation(SimpleConsole.class)
@@ -237,6 +238,9 @@ public abstract class Console extends PrintStream implements IBase {
 	 * @return a new console object
 	 */
 	public static Console create() {
+		if (MSystem.isWindows()) {
+			return new CmdConsole();
+		}
 		String term = System.getenv("TERM");
 		if (term != null) {
 			term = term.toLowerCase();

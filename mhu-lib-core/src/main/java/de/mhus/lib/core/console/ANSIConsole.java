@@ -398,6 +398,7 @@ public class ANSIConsole extends Console {
 	@Override
 	public void resetTerminal() {
 		// \033c
+//		print("\033[H\033[2J");  
 		print( (char)27 + "c");
 	}
 
