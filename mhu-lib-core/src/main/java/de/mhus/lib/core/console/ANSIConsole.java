@@ -203,26 +203,45 @@
  */
 package de.mhus.lib.core.console;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.io.TextReader;
 
 // http://ascii-table.com/ansi-escape-sequences.php
 
 public class ANSIConsole extends Console {
 
-	private TextReader reader;
-	private COLOR foreground;
-	private COLOR background;
-	private boolean blink;
-	private boolean bold;
+	protected TextReader reader;
+	protected COLOR foreground;
+	protected COLOR background;
+	protected boolean blink;
+	protected boolean bold;
+	protected boolean supportColor = true;
+	protected int width = DEFAULT_WIDTH;
+	protected int height = DEFAULT_HEIGHT;
+	
+	public ANSIConsole(boolean supportColor) {
+		this();
+		this.supportColor = supportColor;
+	}
 	
 	public ANSIConsole() {
 		super();
 		reader = new TextReader(System.in);
+		loadSettings();
+	}
+
+	protected void loadSettings() {
 	}
 
 	public ANSIConsole(InputStream in, PrintStream out, boolean flush, String charset)
@@ -249,12 +268,12 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public int getWidth() {
-		return DEFAULT_WIDTH;
+		return width;
 	}
 
 	@Override
 	public int getHeight() {
-		return DEFAULT_HEIGHT;
+		return height;
 	}
 
 	@Override
@@ -280,7 +299,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportColor() {
-		return false;
+		return supportColor;
 	}
 
 	@Override
@@ -288,11 +307,12 @@ public class ANSIConsole extends Console {
 		this.foreground = foreground;
 		this.background = background;
 		
-		if (foreground != COLOR.UNKNOWN)
-			print( (char)27 + "[3" + colorToSequence(foreground) + "m");
-		if (background != COLOR.UNKNOWN)
-			print( (char)27 + "[4" + colorToSequence(background) + "m");
-		
+		if (supportColor) {
+			if (foreground != COLOR.UNKNOWN)
+				print( (char)27 + "[3" + colorToSequence(foreground) + "m");
+			if (background != COLOR.UNKNOWN)
+				print( (char)27 + "[4" + colorToSequence(background) + "m");
+		}		
 	}
 
 	@Override
@@ -307,7 +327,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportBlink() {
-		return false;
+		return supportColor;
 	}
 
 	@Override
@@ -317,7 +337,8 @@ public class ANSIConsole extends Console {
 	}
 
 	private void updateAttributes() {
-		print( (char)27 + "[0" + (blink ? ";5" : "") + (bold ? ";1" : "") + "m" );
+		if (supportColor)
+			print( (char)27 + "[0" + (blink ? ";5" : "") + (bold ? ";1" : "") + "m" );
 	}
 
 	@Override
@@ -327,7 +348,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportBold() {
-		return true;
+		return supportColor;
 	}
 
 	@Override
@@ -373,5 +394,12 @@ public class ANSIConsole extends Console {
 		background = COLOR.UNKNOWN;
 		print( (char)27 + "[0m");
 	}
+	
+	@Override
+	public void resetTerminal() {
+		// \033c
+		print( (char)27 + "c");
+	}
+
 
 }

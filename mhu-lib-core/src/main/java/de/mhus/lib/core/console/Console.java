@@ -237,6 +237,15 @@ public abstract class Console extends PrintStream implements IBase {
 	 * @return a new console object
 	 */
 	public static Console create() {
+		String term = System.getenv("TERM");
+		if (term != null) {
+			term = term.toLowerCase();
+			if (term.indexOf("xterm") >= 0) {
+				return new XTermConsole(term.indexOf("color") > 0);
+			}
+			if (term.indexOf("ansi") >= 0)
+				return new ANSIConsole(true);
+		}
 		return new SimpleConsole();
 	}
 
@@ -309,6 +318,9 @@ public abstract class Console extends PrintStream implements IBase {
 		for (int i = 0; i < getWidth(); i++)
 			print(c);
 		println();
+	}
+
+	public void resetTerminal() {
 	}
 	
 }

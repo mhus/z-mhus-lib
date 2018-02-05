@@ -209,14 +209,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.Thread.State;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import de.mhus.lib.core.logging.Log;
@@ -651,5 +656,135 @@ public class MSystem {
 		return clazz;
 		
 	}
+	
+	public static List<TopThreadInfo> threadTop(long sleep) throws InterruptedException {
+		sleep = Math.max(sleep, 200);
+		
+		ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
+		LinkedList<TopThreadInfo> threads = new LinkedList<>();
+		for (Entry<Thread, StackTraceElement[]> thread : Thread.getAllStackTraces().entrySet()) {
+			threads.add(new TopThreadInfo(tmxb, thread));
+		}
+		
+		threads.forEach(t -> t.start());
+		Thread.sleep(sleep);
+		threads.forEach(t -> t.stop());
+		
+		long sumCpu = 0;
+		long sumUser = 0;
+		for (TopThreadInfo t : threads) {
+			sumCpu+=t.getCpuTime();
+			sumUser+=t.getUserTime();
+		}		
+		for (TopThreadInfo t : threads)
+			t.setSumTime(sumUser, sumCpu);
+		
+		return threads;
+	}
+	
+	public static class TopThreadInfo {
 
+		private Thread thread;
+		private StackTraceElement[] stacktrace;
+		private long startTime;
+		private ThreadMXBean tmxb;
+		private long startUser;
+		private long startCpu;
+		private long stopTime;
+		private long stopUser;
+		private long stopCpu;
+		private long diffTime;
+		private long diffUser;
+		private long diffCpu;
+		private double perCpu;
+		private double perUser;
+
+		private TopThreadInfo(ThreadMXBean tmxb, Entry<Thread, StackTraceElement[]> thread) {
+			this.tmxb = tmxb;
+			this.thread = thread.getKey();
+			this.stacktrace = thread.getValue();
+		}
+
+		private void start() {
+			startTime = System.currentTimeMillis();
+			startUser = tmxb.getThreadUserTime(thread.getId());
+			startCpu = tmxb.getThreadCpuTime(thread.getId());
+		}
+		
+		private void stop() {
+			stopTime = System.currentTimeMillis();
+			stopUser = tmxb.getThreadUserTime(thread.getId());
+			stopCpu = tmxb.getThreadCpuTime(thread.getId());
+			
+			diffTime = stopTime - startTime;
+			diffUser = stopUser - startUser;
+			diffCpu = stopCpu - startCpu;
+		}
+		
+		private void setSumTime(long userTime, long cpuTime) {
+			if (cpuTime > 0)
+				this.perCpu = (double)(diffCpu * 100) / (double)cpuTime;
+			if (userTime > 0)
+				this.perUser = (double)(diffUser * 100) / (double)userTime;
+		}
+		
+		public long getCpuTime() {
+			return diffCpu;
+		}
+		
+		public long getUserTime() {
+			return diffUser;
+		}
+		
+		public long getInterval() {
+			return diffTime;
+		}
+		
+		public double getCpuPercentage() {
+			return perCpu;
+		}
+		
+		public double getUserPercentage() {
+			return perUser;
+		}
+		
+		public Thread getThread() {
+			return thread;
+		}
+		
+		public StackTraceElement[] getStacktrace() {
+			return stacktrace;
+		}
+		
+		
+	}
+
+	/**
+	 * Executes a command and returns an array of 0 = strOut, 1 = stdErr
+	 * 
+	 * @param command
+	 * @return 0 = strOut, 1 = stdErr
+	 * @throws IOException
+	 */
+	public static String[] execute(String ... command) throws IOException {
+
+		ProcessBuilder pb = new ProcessBuilder(command);
+		Process proc = pb.start();
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	    BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+	    // read the output from the command
+	    StringBuilder stdOut = new StringBuilder();
+	    String s = null;
+	    while ((s = stdInput.readLine()) != null)
+	    	stdOut.append(s);
+
+	    // read any errors from the attempted command
+	    StringBuilder stdErr = new StringBuilder();
+	    while ((s = stdError.readLine()) != null)
+	    	stdErr.append(s);
+	    
+	    return new String[] {stdOut.toString(), stdErr.toString()};
+	}
+	
 }
