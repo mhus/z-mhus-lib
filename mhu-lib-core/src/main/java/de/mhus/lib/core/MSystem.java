@@ -719,6 +719,7 @@ public class MSystem {
 			diffTime = stopTime - startTime;
 			diffUser = stopUser - startUser;
 			diffCpu = stopCpu - startCpu;
+			
 		}
 		
 		private void setSumTime(long userTime, long cpuTime) {
@@ -756,6 +757,9 @@ public class MSystem {
 			return stacktrace;
 		}
 		
+		public long getCpuTotal() {
+			return stopCpu;
+		}
 		
 	}
 
