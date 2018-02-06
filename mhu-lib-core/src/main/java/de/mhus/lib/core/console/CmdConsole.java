@@ -33,12 +33,15 @@ Code page: 437
 		try {
 			String[] res = MSystem.execute("cmd.exe", "/c", "mode con");
 			String[] parts = res[0].split("\n");
+			int cnt = 0;
 			for (String p : parts) {
-				if (p.startsWith("Lines:"))
-					height = MCast.toint(p.substring(7),DEFAULT_HEIGHT);
+				p = p.trim();
+				if (cnt == 2)
+					height = MCast.toint(MString.afterIndex(p, ' ').trim(),DEFAULT_HEIGHT);
 				else
-				if (p.startsWith("Columns:"))
-					width = MCast.toint(p.substring(9), DEFAULT_WIDTH);
+				if (cnt == 3)
+					width = MCast.toint(MString.afterIndex(p, ' ').trim(), DEFAULT_WIDTH);
+				cnt++;
 			}
 		} catch (IOException e) {
 		}
