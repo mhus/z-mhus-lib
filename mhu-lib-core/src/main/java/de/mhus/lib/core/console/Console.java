@@ -216,9 +216,12 @@ public abstract class Console extends PrintStream implements IBase {
 
 	public enum COLOR {UNKNOWN,WHITE,BLACK,RED,GREEN,BLUE,YELLOW,MAGENTA,CYAN};
 	
-	public static final int DEFAULT_WIDTH = 40;
-	public static final int DEFAULT_HEIGHT = 25;
+	public static int DEFAULT_WIDTH = 40;
+	public static int DEFAULT_HEIGHT = 25;
 	
+	public enum CONSOLE_TYPE {SIMPLE,ANSI,ANSI_COLOR,XTERM,XTERM_COLOR,CMD};
+	private static CONSOLE_TYPE consoleType = null;
+	private static Console console = null;
 	
 	public Console() {
 		this(System.out);
@@ -238,6 +241,50 @@ public abstract class Console extends PrintStream implements IBase {
 	 * @return a new console object
 	 */
 	public static Console create() {
+		if (getConsoleType() == null) {
+			String term = System.getenv("TERM");
+			if (term != null) {
+				term = term.toLowerCase();
+				if (term.indexOf("xterm") >= 0) {
+					if (term.indexOf("color") > 0)
+						setConsoleType(CONSOLE_TYPE.XTERM_COLOR);
+					else
+						setConsoleType(CONSOLE_TYPE.XTERM);
+				} else {
+					setConsoleType(CONSOLE_TYPE.ANSI_COLOR);
+				}
+			} 
+			if (getConsoleType() == null)
+				setConsoleType(CONSOLE_TYPE.SIMPLE);
+		}
+		
+		if (console == null) {
+			console = create(getConsoleType());
+		}
+		return console;
+	}
+	
+	public static Console create(CONSOLE_TYPE consoleType) {
+		
+		if (consoleType != null) {
+			switch (consoleType) {
+			case ANSI:
+				return new ANSIConsole(false);
+			case CMD:
+				return new CmdConsole();
+			case SIMPLE:
+				return new SimpleConsole();
+			case XTERM:
+				return new XTermConsole(false);
+			case ANSI_COLOR:
+				return new ANSIConsole(true);
+			case XTERM_COLOR:
+				return new XTermConsole(true);
+			default:
+				return new SimpleConsole();
+			}
+		}
+		
 		if (MSystem.isWindows()) {
 			return new CmdConsole();
 		}
@@ -325,6 +372,23 @@ public abstract class Console extends PrintStream implements IBase {
 	}
 
 	public void resetTerminal() {
+	}
+
+	public static CONSOLE_TYPE getConsoleType() {
+		return consoleType;
+	}
+
+	public static void setConsoleType(CONSOLE_TYPE consoleType) {
+		Console.consoleType = consoleType;
+	}
+	
+	public static void resetConsole() {
+		consoleType = null;
+		console = null;
+	}
+
+	public static Console get() {
+		return console;
 	}
 	
 }
