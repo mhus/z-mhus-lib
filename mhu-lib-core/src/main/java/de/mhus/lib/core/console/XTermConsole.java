@@ -39,7 +39,17 @@ cchars: discard = ^O; dsusp = ^Y; eof = ^D; eol = <undef>;
 	eol2 = <undef>; erase = ^?; intr = ^C; kill = ^U; lnext = ^V;
 	min = 1; quit = ^\; reprint = ^R; start = ^Q; status = ^T;
 	stop = ^S; susp = ^Z; time = 0; werase = ^W;
+	
+	
+speed 9600 baud; rows 60; columns 238; line = 0;
+intr = ^C; quit = ^\; erase = ^?; kill = ^U; eof = ^D; eol = M-^?; eol2 = M-^?; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R; werase = ^W; lnext = ^V; flush = ^O; min = 1; time = 0;
+-parenb -parodd -cmspar cs8 -hupcl -cstopb cread -clocal -crtscts
+-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr icrnl ixon -ixoff -iuclc ixany imaxbel -iutf8
+opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
+	
 	 */
+	@Override
 	public void loadSettings() {
 		
 		try {
@@ -48,11 +58,18 @@ cchars: discard = ^O; dsusp = ^Y; eof = ^D; eol = <undef>;
 			if (parts.length > 0) {
 				String[] parts2 = parts[0].split(";");
 				for (String p : parts2) {
+					p = p.trim();
 					if (p.endsWith(" rows"))
-						height = MCast.toint(MString.beforeIndex(p.trim(), ' '), DEFAULT_HEIGHT);
+						height = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_HEIGHT);
 					else
 					if (p.endsWith(" columns"))
-						width = MCast.toint(MString.beforeIndex(p.trim(), ' '), DEFAULT_WIDTH);
+						width = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_WIDTH);
+					else
+					if (p.startsWith("rows "))
+						height = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_HEIGHT);
+					else
+					if (p.startsWith("columns "))
+						width = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_WIDTH);
 				}
 			}
 		} catch (IOException e) {
