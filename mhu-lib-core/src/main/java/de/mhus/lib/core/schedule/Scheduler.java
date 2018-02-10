@@ -281,11 +281,21 @@ public class Scheduler extends MLog implements Named {
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) {
-			log().w("job is busy, reshedule",job,job.getName());
+			log().w("job is busy, reshedule",job.getName(),job);
+			boolean isRunning = false;
+			synchronized (running) {
+				isRunning = running.contains(job);
+			}
 			try {
-				job.doSchedule(this);
+				if (!isRunning) {
+					log().w("release job lock", job.getName(), job);
+					job.releaseBusy(null);
+				} else {
+					job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
+					job.doSchedule(this);
+				}
 			} catch (Throwable t) {
-				log().e(job,t);
+				log().e("busy error",job.getName(),job,t);
 			}
 			return;
 		}
@@ -319,31 +329,43 @@ public class Scheduler extends MLog implements Named {
 				running.add(job);
 			}
 			try {
-				if (job != null && !job.isCanceled())
+				if (job != null && !job.isCanceled()) {
+					log().i(">>> Tick",job.getName());
 					job.doTick(forced);
-				else
+					log().i("<<< Tick",job.getName());
+				} else
 					log().i("Job canceled",job,job.getName());
 			} catch (Throwable t) {
-				job.doError(t);
-			} finally {
 				try {
-					synchronized (running) {
-						running.remove(job);
+					job.doError(t);
+				} catch (Throwable t2) {
+					try {
+						log().w("Error t2",job,job.getName(),t2); // should not happen
+					} catch (Throwable t3) {
+						t3.printStackTrace();
 					}
-					if (!job.releaseBusy(Scheduler.this)) {
-						log().w("Job release not possible, do hard release",job.getName());
-						job.releaseBusy(null);
-					}
-				} catch (Throwable t1) {
-					log().w(job,job.getName(),t1); // should not happen
 				}
+			} 
+			
+			try {
+				synchronized (running) {
+					running.remove(job);
+				}
+				if (!job.releaseBusy(Scheduler.this)) {
+					log().w("Job release not possible, do hard release",job.getName());
+					job.releaseBusy(null);
+				}
+			} catch (Throwable t1) {
+				log().f("Error t1",job,job.getName(),t1); // should not happen
 			}
 			try {
+//	?			job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
 				log().f("Can't reschedule",job,job.getName(),t);
 			}
 		}
+	
 		
 	}
 
