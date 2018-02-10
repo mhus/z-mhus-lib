@@ -274,4 +274,11 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	@Override
+	public boolean contains(SchedulerJob job) {
+		synchronized (this) {
+			return list.contains(job);
+		}
+	}
+
 }

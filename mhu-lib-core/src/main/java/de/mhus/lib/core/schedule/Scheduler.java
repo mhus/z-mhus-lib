@@ -204,6 +204,7 @@
 package de.mhus.lib.core.schedule;
 
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -220,7 +221,10 @@ public class Scheduler extends MLog implements Named {
 	SchedulerQueue queue = new QueueList();
 	private String name = Scheduler.class.getCanonicalName();
 	private LinkedList<SchedulerJob> running = new LinkedList<>();
+	private HashSet<SchedulerJob> jobs = new HashSet<>();
 	private long nextTimeoutCheck;
+	private long lastQueueCheck = System.currentTimeMillis();
+	private long queueCheckTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 	
 	public Scheduler() {}
 	
@@ -246,17 +250,24 @@ public class Scheduler extends MLog implements Named {
 	}
 	
 	protected void doTick() {
+		// check queue
+		if (MTimeInterval.isTimeOut(lastQueueCheck, queueCheckTimeout))
+			doQueueCheck();
+		
+		// execute overdue jobs
 		List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
 		if (pack != null) {
 			for (SchedulerJob job : pack) {
 				try {
 					doExecuteJob(job, false);
 				} catch (Throwable t) {
+					log().t("Job error",job.getName(),job,t);
 					job.doError(t);
 				}
 			}
 		}
 		
+		// notify timeout of jobs
 		long time = System.currentTimeMillis();
 		if (nextTimeoutCheck < time) {
 			synchronized (running) {
@@ -265,8 +276,10 @@ public class Scheduler extends MLog implements Named {
 						long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 						if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
 							try {
-								if (job.isBusy())
+								if (job.isBusy()) {
+									log().d("job timeout",job.getName());
 									job.doTimeoutReached();
+								}
 							} catch (Throwable t) {
 								job.doError(t);
 							}
@@ -308,8 +321,33 @@ public class Scheduler extends MLog implements Named {
 		timer = null;
 	}
 	
-	public void schedule(SchedulerJob scheduler) {
-		scheduler.doSchedule(this);
+	public void schedule(SchedulerJob job) {
+		synchronized(job) {
+			jobs.add(job);
+		}
+		job.doSchedule(this);
+	}
+	
+	public void doQueueCheck() {
+		log().d("doQueueCheck");
+		synchronized (running) {
+			synchronized (jobs) {
+				jobs.removeIf(j -> {
+					return j.isCanceled();
+				});
+				jobs.forEach(j -> {
+					if (!queue.contains(j) && !running.contains(j)) {
+						try {
+							log().w("reschedule lost job",j.getName());
+							j.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
+							j.doSchedule(this);
+						} catch (Throwable t) {
+							log().w("reschedule failed",j,t);
+						}
+					}
+				});
+			}
+		}
 	}
 	
 	private class MyExecutor implements Runnable {
@@ -324,23 +362,23 @@ public class Scheduler extends MLog implements Named {
 
 		@Override
 		public void run() {
-			log().d("Job started",job,job.getName());
+			log().d("Job started",job.getName());
 			synchronized (running) {
 				running.add(job);
 			}
 			try {
 				if (job != null && !job.isCanceled()) {
-					log().i(">>> Tick",job.getName());
+					log().d(">>> Tick",job.getName());
 					job.doTick(forced);
-					log().i("<<< Tick",job.getName());
+					log().d("<<< Tick",job.getName());
 				} else
-					log().i("Job canceled",job,job.getName());
+					log().i("Job canceled",job.getName());
 			} catch (Throwable t) {
 				try {
 					job.doError(t);
 				} catch (Throwable t2) {
 					try {
-						log().w("Error t2",job,job.getName(),t2); // should not happen
+						log().w("Error t2",job.getName(),t2); // should not happen
 					} catch (Throwable t3) {
 						t3.printStackTrace();
 					}
@@ -356,13 +394,22 @@ public class Scheduler extends MLog implements Named {
 					job.releaseBusy(null);
 				}
 			} catch (Throwable t1) {
-				log().f("Error t1",job,job.getName(),t1); // should not happen
+				log().f("Error t1",job.getName(),t1); // should not happen
 			}
 			try {
 //	?			job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
 				job.doSchedule(Scheduler.this);
 			} catch (Throwable t) {
-				log().f("Can't reschedule",job,job.getName(),t);
+				log().f("Can't reschedule",job.getName(),t);
+			}
+			try {
+				if (job.isCanceled()) {
+					synchronized (jobs) {
+						jobs.remove(job);
+					}
+				}
+			} catch (Throwable t3) {
+				log().f("Error t3",job.getName(),t3); // should not happen
 			}
 		}
 	
@@ -373,6 +420,12 @@ public class Scheduler extends MLog implements Named {
 	public List<SchedulerJob> getRunningJobs() {
 		synchronized (running) {
 			return new LinkedList<>(running);
+		}
+	}
+	
+	public List<SchedulerJob> getJobs() {
+		synchronized (jobs) {
+			return new LinkedList<>(jobs);
 		}
 	}
 	

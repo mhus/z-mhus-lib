@@ -222,6 +222,8 @@ public interface SchedulerQueue {
 	int size();
 	
 	List<SchedulerJob> getJobs();
+
+	boolean contains(SchedulerJob j);
 	
 	
 }
