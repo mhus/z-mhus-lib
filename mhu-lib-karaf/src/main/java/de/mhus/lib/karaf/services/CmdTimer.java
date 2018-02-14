@@ -264,6 +264,77 @@ public class CmdTimer extends MLog implements Action {
 			System.out.println("ServiceTracker is not running!");
 		}
 		
+		if (cmd.equals("jobs")) {
+			List<SchedulerJob> scheduled = scheduler.getJobs();
+			ConsoleTable table = new ConsoleTable();
+			if (all)
+				table.setLineSpacer(true);
+			if (all)
+				table.setHeaderValues(
+						"Name",
+						"Task",
+						"Job",
+						"Info",
+						"Started",
+						"Stopped", 
+						"Scheduled/Thread",
+						"Left",
+						"Timeout",
+						"Canceled",
+						"Done",
+						"Status",
+						"Interceptor",
+						"Trail config",
+						"Busy"
+					);
+			else
+				table.setHeaderValues(
+						"Name",
+						"Job",
+						"Info",
+						"Started",
+						"Scheduled/Thread",
+						"Left",
+						"Canceled",
+						"Status"
+					);
+		
+			for (SchedulerJob job : scheduled) {
+				if (all)
+					table.addRowValues(
+							job.getName(),
+							job.getTask(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							MDate.toIsoDateTime(job.getLastExecutionStop()),
+							MDate.toIsoDateTime(job.getScheduledTime()), 
+							MTimeInterval.getIntervalAsStringSec(job.getScheduledTime() - System.currentTimeMillis()),
+							job.getTimeoutInMinutes(),
+							job.isCanceled(),
+							job.isDone(),
+							getStatus(job),
+							job.getIntercepter(),
+							job.getLogTrailConfig(),
+							job.isBusy()
+						);
+				else
+					table.addRowValues(
+							job.getName(),
+							job,
+							job.getInfo(),
+							MDate.toIsoDateTime(job.getLastExecutionStart()),
+							MDate.toIsoDateTime(job.getScheduledTime()), 
+							MTimeInterval.getIntervalAsStringSec(job.getScheduledTime() - System.currentTimeMillis()),
+							job.isCanceled(),
+							getStatus(job)
+						);
+
+			}
+			
+			table.print(System.out);
+			
+		} else
 		if (cmd.equals("list")) {
 			
 			
