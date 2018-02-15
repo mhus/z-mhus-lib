@@ -250,60 +250,61 @@ public class Scheduler extends MLog implements Named {
 	}
 	
 	protected void doTick() {
-		// check queue
-		if (MTimeInterval.isTimeOut(lastQueueCheck, queueCheckTimeout))
-			doQueueCheck();
-		
-		// execute overdue jobs
-		List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
-		if (pack != null) {
-			for (SchedulerJob job : pack) {
-				try {
-					doExecuteJob(job, false);
-				} catch (Throwable t) {
-					log().t("Job error",job.getName(),job,t);
-					job.doError(t);
+		synchronized (running) {
+			// check queue
+			if (MTimeInterval.isTimeOut(lastQueueCheck, queueCheckTimeout))
+				doQueueCheck();
+			
+			// execute overdue jobs
+			List<SchedulerJob> pack = queue.removeJobs(System.currentTimeMillis());
+			if (pack != null) {
+				for (SchedulerJob job : pack) {
+					try {
+						doExecuteJob(job, false);
+					} catch (Throwable t) {
+						log().t("Job error",job.getName(),job,t);
+						job.doError(t);
+					}
 				}
 			}
-		}
+		} // END LOCK
 		
 		// notify timeout of jobs
 		long time = System.currentTimeMillis();
 		if (nextTimeoutCheck < time) {
-			synchronized (running) {
-				try {
-					for (SchedulerJob job : running) {
-						long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
-						if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
-							try {
-								if (job.isBusy()) {
-									log().d("job timeout",job.getName());
-									job.doTimeoutReached();
-								}
-							} catch (Throwable t) {
-								job.doError(t);
+			try {
+				for (SchedulerJob job : running) {
+					long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+					if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
+						try {
+							if (job.isBusy()) {
+								log().d("job timeout",job.getName());
+								job.doTimeoutReached();
 							}
+						} catch (Throwable t) {
+							job.doError(t);
 						}
 					}
-				} catch (ConcurrentModificationException cme) {}
-				nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
-					
-			}
+				}
+			} catch (ConcurrentModificationException cme) {}
+			nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 		}
+		
 	}
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) {
-			log().w("job is busy, reshedule",job.getName(),job);
+			log().w("job is busy, reshedule",job.getName());
 			boolean isRunning = false;
 			synchronized (running) {
 				isRunning = running.contains(job);
 			}
 			try {
 				if (!isRunning) {
-					log().w("release job lock", job.getName(), job);
+					log().w("release job lock", job.getName());
 					job.releaseBusy(null);
 				} else {
+					log().w("found a running job in the scheduler queue", job.getName());
 					job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
 					job.doSchedule(this);
 				}
@@ -330,6 +331,7 @@ public class Scheduler extends MLog implements Named {
 	
 	public void doQueueCheck() {
 		log().d("doQueueCheck");
+		lastQueueCheck = System.currentTimeMillis();
 		synchronized (running) {
 			synchronized (jobs) {
 				jobs.removeIf(j -> {
@@ -385,22 +387,22 @@ public class Scheduler extends MLog implements Named {
 				}
 			} 
 			
-			try {
-				synchronized (running) {
+			synchronized (running) {
+				try {
+					if (!job.releaseBusy(Scheduler.this)) {
+						log().w("Job release not possible, do hard release",job.getName());
+						job.releaseBusy(null);
+					}
 					running.remove(job);
+				} catch (Throwable t1) {
+					log().f("Error t1",job.getName(),t1); // should not happen
 				}
-				if (!job.releaseBusy(Scheduler.this)) {
-					log().w("Job release not possible, do hard release",job.getName());
-					job.releaseBusy(null);
+				try {
+	//	?			job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
+					job.doSchedule(Scheduler.this);
+				} catch (Throwable t) {
+					log().f("Can't reschedule",job.getName(),t);
 				}
-			} catch (Throwable t1) {
-				log().f("Error t1",job.getName(),t1); // should not happen
-			}
-			try {
-//	?			job.setNextExecutionTime(SchedulerJob.CALCULATE_NEXT);
-				job.doSchedule(Scheduler.this);
-			} catch (Throwable t) {
-				log().f("Can't reschedule",job.getName(),t);
 			}
 			try {
 				if (job.isCanceled()) {

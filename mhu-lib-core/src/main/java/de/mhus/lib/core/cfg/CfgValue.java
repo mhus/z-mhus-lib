@@ -283,4 +283,17 @@ public abstract class CfgValue<T> {
 		onPostUpdate(value);
 	}
 	
+	@Override
+	public String toString() {
+		return String.valueOf(value());
+	}
+	
+	@Override
+	public boolean equals(Object in) {
+		if (in != null && in instanceof CfgValue<?>) {
+			return MSystem.equals(value(), ((CfgValue<?>)in).value());
+		}
+		return MSystem.equals(value(), in);
+	}
+	
 }
