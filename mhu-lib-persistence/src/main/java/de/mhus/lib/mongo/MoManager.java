@@ -297,6 +297,7 @@ public class MoManager extends MJmx implements MoHandler {
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
         m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
+        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
         return m;
 	}
 
@@ -307,6 +308,7 @@ public class MoManager extends MJmx implements MoHandler {
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
         m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
+        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
         return m;
 	}
 
@@ -317,6 +319,7 @@ public class MoManager extends MJmx implements MoHandler {
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
         m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
         m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
+        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
         return m;
 	}
 

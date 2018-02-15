@@ -1,6 +1,7 @@
 package de.mhus.lib.core.strategy;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.util.Version;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.form.definition.FmText;
 
@@ -66,9 +68,17 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		}
 		
 		Object obj = getInterfaceObject();
-		Object ret = method.invoke(obj, params);
-		
-		return new Successful(this, "", ret);
+		try {
+			Object ret = method.invoke(obj, params);
+			
+			return new Successful(this, "", ret);
+		} catch (InvocationTargetException e) {
+			Throwable t = e;
+			if (e.getCause() != null) t = e.getCause();
+			if (t instanceof Exception) throw (Exception)t;
+			if (t instanceof RuntimeException) throw (RuntimeException)t;
+			throw new MException(e.toString());
+		}
 	}
 
 	private Object toObject(Object value, String type, ClassLoader cl) throws ClassNotFoundException, IOException {
