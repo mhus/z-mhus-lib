@@ -250,7 +250,7 @@ public class Scheduler extends MLog implements Named {
 	}
 	
 	protected void doTick() {
-		synchronized (running) {
+		synchronized (jobs) {
 			// check queue
 			if (MTimeInterval.isTimeOut(lastQueueCheck, queueCheckTimeout))
 				doQueueCheck();
