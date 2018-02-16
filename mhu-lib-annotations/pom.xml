@@ -230,7 +230,7 @@
     <parent>
         <artifactId>mhu-lib</artifactId>
         <groupId>de.mhus.lib</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>mhu-lib-annotations</artifactId>
