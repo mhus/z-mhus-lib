@@ -795,5 +795,10 @@ public class MSystem {
 		final String os = System.getProperty("os.name");
 		return os.contains("Windows");
 	}
+
+	public static File getUserHome() {
+		String currentUsersHomeDir = System.getProperty("user.home");
+		return new File(currentUsersHomeDir);
+	}
 	
 }
