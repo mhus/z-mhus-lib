@@ -219,22 +219,26 @@ import java.util.Map;
 
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.lang.Value;
 
 public class ConsoleTable {
     
 	public static final String SEPARATOR_LINE = "---";
     
-	public List<String> header = new ArrayList<String>();
+	public List<Column> header = new ArrayList<>();
     public List<List<String[]>> content = new ArrayList<>();
     private int maxColSize = -1;
     private boolean lineSpacer = false;
     private boolean multiLine = true;
+    private int maxTableWidth = 0;
 
 	private String colSeparator = " | ";
 
 	private boolean acceptHorizontalLine = false;
 
 	private boolean cellSpacer = true;
+
+	private int tableWidth;
     
     public Row addRow() {
         return new Row(addIntRow());
@@ -292,15 +296,15 @@ public class ConsoleTable {
     	return new String[] {String.valueOf(v)};
 	}
 
-	public List<String> getHeader() {
+	public List<Column> getHeader() {
     	return header;
     }
     
     public void setHeaderValues(String ... values) {
-    	List<String> row = getHeader();
+    	List<Column> row = getHeader();
     	row.clear();
     	for (String v : values)
-    		row.add(v);
+    		row.add(new Column(v));
     }
     
     public void print(Console console)  {
@@ -309,38 +313,34 @@ public class ConsoleTable {
     }
     
     public void print(PrintStream out)  {
-        int[] sizes = new int[header.size()];
-        updateHeaderSizes(sizes, header);
-        for (List<String[]> row : content) {
-            updateSizes(sizes, row);
-        }
-        String headerLine = getHeaderRow(sizes, header, colSeparator);
+        updateHeaderSizes();
+
+        String headerLine = getHeaderRow();
         out.println(headerLine);
     	if (cellSpacer)
-    		out.println(underline(headerLine.length()));
+    		out.println(underline());
         boolean first = true;
         for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out.println(getRow(sizes, row, colSeparator, l));
+        		out.println(getRow(row, l));
             first = false;
         }
     }
 
     public void print(PrintWriter out)  {
-        int[] sizes = new int[header.size()];
-        updateSizes(sizes);
-        String headerLine = getHeaderRow(sizes, header, colSeparator);
+        updateHeaderSizes();
+        String headerLine = getHeaderRow();
         out.println(headerLine);
         if (cellSpacer)
-        	out.println(underline(headerLine.length()));
+        	out.println(underline());
         boolean first = true;
         for (List<String[]> row : content) {
         	if (!first && lineSpacer) out.println();
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out.println(getRow(sizes, row, colSeparator, l));
+        		out.println(getRow(row, l));
             first = false;
         }
     }
@@ -353,77 +353,59 @@ public class ConsoleTable {
 		return height;
 	}
 
-	private String underline(int length) {
-        char[] exmarks = new char[length];
-        Arrays.fill(exmarks, '-');
-        return new String(exmarks);
+	private String underline() {
+		return MString.rep('-', tableWidth );
     }
 
-    private String getRow(int[] sizes, List<String[]> row, String separator, int cellLine) {
+    private String getRow(List<String[]> row, int cellLine) {
     	
     	if (acceptHorizontalLine) {
 	    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
-	    		int s = 0;
-	    		for (int i : sizes) {
-	    			if (s != 0) s+=separator.length();
-	    			s+=i;
-	    		}
-	    		return MString.rep('-', s );
+	    		return underline();
 	    	}
-    	}	
+    	}
         StringBuilder line = new StringBuilder();
         int c = 0;
         for (String[] cells : row) {
+        	if (c > header.size()) continue;
+        	Column h = header.get(c);
+        	if (h.width == 0) continue;
+        	
         	String cell = getCellLine(cells,cellLine);
-            if (maxColSize > 0 && cell.length() > maxColSize) {
-				cell = MString.truncateNice(cell, maxColSize);
+        	cell = cell.replaceAll("\n", "");
+            if (cell.length() > h.width) {
+				cell = MString.truncateNice(cell, h.width);
             }
-            cell = cell.replaceAll("\n", "");
             if (cellSpacer)
-            	line.append(String.format("%-" + sizes[c] + "s", cell));
+            	line.append(String.format("%-" + h.width + "s", cell));
             else
             	line.append(cell);
             
             if (c + 1 < row.size()) {
-                line.append(separator);
+                line.append(colSeparator);
             }
             c++;
         }
         return line.toString();
     }
 
-    private String getHeaderRow(int[] sizes, List<String> row, String separator) {
-    	
-    	if (acceptHorizontalLine) {
-	    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
-	    		int s = 0;
-	    		for (int i : sizes) {
-	    			if (s != 0) s+=separator.length();
-	    			s+=i;
-	    		}
-	    		return MString.rep('-', s );
-	    	}
-    	}
+    private String getHeaderRow() {
     	
         StringBuilder line = new StringBuilder();
-        int c = 0;
-        for (String cell : row) {
-            if (cell == null) {
-                cell = "";
-            }
-            if (maxColSize > 0 && cell.length() > maxColSize) {
-				cell = MString.truncateNice(cell, maxColSize);
+        for (Column h : header) {
+        	String cell = h.title;
+            if (cell.length() > h.width) {
+				cell = MString.truncateNice(cell, h.width);
             }
             cell = cell.replaceAll("\n", "");
             if (cellSpacer)
-            	line.append(String.format("%-" + sizes[c] + "s", cell));
+            	line.append(String.format("%-" + h.width + "s", cell));
             else
             	line.append(cell);
             	
-            if (c + 1 < row.size()) {
-                line.append(separator);
+            if (!h.last) {
+                line.append(colSeparator);
             }
-            c++;
         }
         return line.toString();
     }
@@ -438,38 +420,91 @@ public class ConsoleTable {
     	if (cells == null || line < 0 || line >= cells.length) return "";
 		return cells[line];
 	}
-
-	private void updateSizes(int[] sizes) {
-        updateHeaderSizes(sizes, header);
-        for (List<String[]> row : content) {
-            updateSizes(sizes, row);
-        }
-    }
     
-    private void updateSizes(int[] sizes, List<String[]> row) {
-        int c = 0;
-        for (String[] cells : row) {
-        	for (String cellContent : cells) {
-	            int cellSize = cellContent != null ? cellContent.length() : 0;
-	            cellSize = maxColSize > 0 ? Math.min(cellSize, maxColSize) : cellSize;
-	            if (cellSize > sizes[c]) {
-	                sizes[c] = cellSize;
-	            }
+    private void updateHeaderSizes() {
+    	tableWidth = 0;
+    	if (header.size() == 0) return;
+    	
+    	// check headers
+		header.forEach(h -> {
+			if (h.title == null) h.title = "";
+			h.last = false;
+		});
+		header.get(header.size()-1).last = true;
+		
+		// initial header width
+        for (Column col : header) {
+            col.contentWidth = col.title.length();
+        }
+        
+        // iterate rows
+        for (List<String[]> row : content) {
+	        int c = 0;
+	        for (String[] cells : row) {
+	        	if (c >= header.size()) continue;
+	        	Column h = header.get(c);
+	        	for (String cellContent : cells) {
+		            int cellSize = cellContent != null ? cellContent.length() : 0;
+		            h.contentWidth = Math.max(h.contentWidth, cellSize);
+	        	}
+	        	c++;
+	        }
+        }
+        
+        // recalculate using guidelines
+        Value<Integer> weight = new Value<>(0);
+        Value<Integer> weightWidth = new Value<>(0);
+        header.forEach(h -> {
+        	// find width
+        	int width = h.contentWidth;
+        	if (h.minWidth > 0) width = Math.max(width, h.minWidth);
+        	
+        	if (h.maxWidth > 0) width = Math.min(width, h.maxWidth);
+        	else
+        	if (maxColSize > 0) width = Math.min(width, maxColSize);
+        	
+        	if (maxTableWidth > 0 && h.weight > 0) {
+        		weight.value+=h.weight;
+        		weightWidth.value+=width;
         	}
-        	c++;
-        }
-    }
+    		tableWidth+=width;
+    		if (!h.last && colSeparator != null) tableWidth+=colSeparator.length();
+        	
+        	h.width = width;
+        });
 
-    private void updateHeaderSizes(int[] sizes, List<String> row) {
-        int c = 0;
-        for (String cellContent : row) {
-            int cellSize = cellContent != null ? cellContent.length() : 0;
-            cellSize = maxColSize > 0 ? Math.min(cellSize, maxColSize) : cellSize;
-            if (cellSize > sizes[c]) {
-                sizes[c] = cellSize;
-            }
-            c++;
+        if (weight.value > 0) {
+        	final int delta = maxTableWidth - (tableWidth - weightWidth.value);
+        	if (delta > 0) {
+	            header.forEach(h -> {
+	            	if (h.weight > 0) {
+		            	// find width
+		            	int width = h.contentWidth;
+		            	tableWidth-=width;
+		            	width = delta * h.weight / weight.value;
+		            	tableWidth+=width;
+		            	h.width = width;
+	            	}
+	            });
+        	}
         }
+        
+        if (maxTableWidth > 0 && tableWidth > maxTableWidth) {
+        	for (int i = header.size()-1 ; i >= 0; i--) {
+        		Column h = header.get(i);
+        		int width = h.contentWidth;
+        		tableWidth-=width;
+        		h.width = 0;
+        		h.last = true;
+        		if (tableWidth < maxTableWidth) {
+        			width = maxTableWidth - tableWidth;
+        			h.width = width;
+	            	tableWidth+=width;
+	            	break;
+        		}
+        	}
+        }
+        
     }
     
 	public int getMaxColSize() {
@@ -516,15 +551,15 @@ public class ConsoleTable {
 
 	public String[] toStringArray(boolean showHeader) {
 		int i = showHeader ? 1 : 0;
+		updateHeaderSizes();
 		String[] out = new String[content.size() + i];
-        int[] sizes = new int[header.size()];
-        updateSizes(sizes);
+
         if (showHeader)
-        	out[0] = getHeaderRow(sizes, header, colSeparator);
+        	out[0] = getHeaderRow();
         for (List<String[]> row : content) {
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
-        		out[i] = getRow(sizes, row, colSeparator, l);
+        		out[i] = getRow(row, l);
             i++;
         }
 		return out;
@@ -534,7 +569,7 @@ public class ConsoleTable {
 		int i = showHeader ? 1 : 0;
 		String[][] out = new String[content.size() + i][];
         if (showHeader)
-        	out[0] = getHeaderRowArray(header);
+        	out[0] = getHeaderRowArray();
         for (List<String[]> row : content) {
         	int rowHeight = getRowHeight(row);
         	for (int l = 0; l < rowHeight; l++)
@@ -551,8 +586,11 @@ public class ConsoleTable {
 		return out;
 	}
 	
-	private String[] getHeaderRowArray(List<String> row) {
-		return row.toArray(new String[row.size()]);
+	private String[] getHeaderRowArray() {
+		String[] out = new String[header.size()];
+		for (int i = 0; i < out.length; i++)
+			out[i] = header.get(i).title;
+		return out;
 	}
 	
 	public boolean isMultiLine() {
@@ -600,6 +638,21 @@ public class ConsoleTable {
 		}
 	}
 
+	public class Column {
+		private boolean last = false;
+		private int width = 0;
+		
+		public Column(String title) {
+			this.title = title;
+		}
+		
+		public String title;
+		public int minWidth = 0;
+		public int maxWidth = 0;
+		public int contentWidth = 0;
+		public int weight = 0;
+	}
+	
 	public int size() {
 		return content.size();
 	}
@@ -607,6 +660,18 @@ public class ConsoleTable {
 	public void removeFirstRow() {
 		if (content.size() == 0) return;
 		content.remove(0);
+	}
+
+	public int getMaxTableWidth() {
+		return maxTableWidth;
+	}
+
+	public void setMaxTableWidth(int maxTableWidth) {
+		this.maxTableWidth = maxTableWidth;
+	}
+
+	public void addHeader(String name) {
+		header.add(new Column(name));
 	}
 
 }
