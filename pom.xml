@@ -210,7 +210,7 @@
 
     <groupId>de.mhus.lib</groupId>
     <artifactId>mhu-lib</artifactId>
-    <version>3.3.2-SNAPSHOT</version>
+    <version>3.3.2</version>
     <packaging>pom</packaging>
   <name>mhu-lib</name>
   <description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>

@@ -211,7 +211,7 @@
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhu-lib</artifactId>
-        <version>3.3.2-SNAPSHOT</version>
+        <version>3.3.2</version>
   </parent>
   
    <build>
