@@ -376,9 +376,10 @@ public class ConsoleTable {
             if (cell.length() > h.width) {
 				cell = MString.truncateNice(cell, h.width);
             }
-            if (cellSpacer)
-            	line.append(String.format("%-" + h.width + "s", cell));
-            else
+            if (cellSpacer) {
+            	if (h.width > 0)
+            		line.append(String.format("%-" + h.width + "s", cell));
+            } else
             	line.append(cell);
             
             if (c + 1 < row.size()) {
@@ -398,9 +399,10 @@ public class ConsoleTable {
 				cell = MString.truncateNice(cell, h.width);
             }
             cell = cell.replaceAll("\n", "");
-            if (cellSpacer)
-            	line.append(String.format("%-" + h.width + "s", cell));
-            else
+            if (cellSpacer) {
+            	if (h.width > 0)
+            		line.append(String.format("%-" + h.width + "s", cell));
+            } else
             	line.append(cell);
             	
             if (!h.last) {
