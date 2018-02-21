@@ -44,6 +44,12 @@ public class SchedulerTest extends TestCase {
 			assertEquals(MDate.toDate("2018-02-26 0:00:00", null), next);
 		}
 		{
+			Definition def = new CronJob.Definition("* * * * Mo-fr");
+			Date start = MDate.toDate("2018-02-24 10:10:10", null);
+			Date next = new Date( def.calculateNext(start.getTime()) );
+			assertEquals(MDate.toDate("2018-02-26 0:00:00", null), next);
+		}
+		{
 			Definition def = new CronJob.Definition("* * * * * w");
 			Date start = MDate.toDate("2018-01-01 10:10:10", null);
 			Date next = new Date( def.calculateNext(start.getTime()) );

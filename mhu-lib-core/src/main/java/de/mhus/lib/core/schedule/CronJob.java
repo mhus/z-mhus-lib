@@ -341,8 +341,17 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 			if (parts.length > 3)
 				allowedMonthes = MCast.toIntIntervalValues(parts[3], 0, 11);
 
-			if (parts.length > 4)
+			if (parts.length > 4) {
+				parts[4] = parts[4].toLowerCase();
+				parts[4] = parts[4].replace("so", "1");
+				parts[4] = parts[4].replace("mo", "2");
+				parts[4] = parts[4].replace("tu", "3");
+				parts[4] = parts[4].replace("we", "4");
+				parts[4] = parts[4].replace("th", "5");
+				parts[4] = parts[4].replace("fr", "6");
+				parts[4] = parts[4].replace("sa", "7");
 				allowedDaysWeek = MCast.toIntIntervalValues(parts[4], 1, 7);
+			}
 			
 			if (parts.length > 5) {
 				if (parts[5].indexOf("disabled") >= 0)
