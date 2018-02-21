@@ -1203,6 +1203,20 @@ public final class MCast {
 			return out;
 		}
 		
+		p1 = def.indexOf('-');
+		if (p1 > 0) {
+			int start = toint(def.substring(0, p1), defStart);
+			int stop = toint(def.substring(p1+1),defStop);
+			int len = stop - start;
+			int[] out = new int[len];
+			for (int i = 0; i < len; i++) {
+				out[i] = start;
+				start++;
+			}
+			return out;
+		}
+
+		
 		try {
 			return new int[] { Integer.valueOf(def) };
 		} catch (NumberFormatException e) {

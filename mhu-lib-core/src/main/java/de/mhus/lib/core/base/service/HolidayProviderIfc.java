@@ -237,6 +237,6 @@ public interface HolidayProviderIfc {
 	 * @param year
 	 * @return true if the specified date is a holiday
 	 */
-	Map<Date, String> getHolidays(Locale locale, int year);
+	Map<String, String> getHolidays(Locale locale, int year);
 	
 }

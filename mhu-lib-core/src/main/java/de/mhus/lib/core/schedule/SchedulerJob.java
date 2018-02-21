@@ -244,6 +244,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		setTask(task);
 		if (task == null)
 			setName("null");
+		else
 		if (task instanceof Named)
 			setName(((Named)task).getName());
 		else

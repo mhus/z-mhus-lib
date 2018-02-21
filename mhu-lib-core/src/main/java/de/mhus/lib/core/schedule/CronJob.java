@@ -358,52 +358,68 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 			if (disabled) return DISABLED_TIME;
 			
 			Calendar next = Calendar.getInstance();
+			if (start > 0)
+				next.setTimeInMillis(start);
 			
 			// obligatory next minute
 			next.set(Calendar.MILLISECOND, 0);
 			next.set(Calendar.SECOND, 0);
 			next.add(Calendar.MINUTE, 1);
 			
-			if (allowedMinutes != null) {
-				int[] d = findNextAllowed( allowedMinutes, next.get(Calendar.MINUTE) );
-				next.set(Calendar.MINUTE, d[1]);
-				if (d[2] == 1)
-					next.add(Calendar.HOUR_OF_DAY, 1);
-			}
-			
-			if (allowedHours != null) {
-				int[] d = findNextAllowed( allowedHours, next.get(Calendar.HOUR_OF_DAY) );
-				next.set(Calendar.HOUR_OF_DAY, d[1]);
-				if (d[2] == 1)
-					next.add(Calendar.DATE, 1);
-			}
-			if (allowedDaysMonth != null) {
-				int[] d = findNextAllowed( allowedDaysMonth, next.get(Calendar.DAY_OF_MONTH) );
-				next.set(Calendar.DAY_OF_MONTH, d[1]);
-				if (d[2] == 1)
-					next.add(Calendar.MONTH, 1);
-			}
-			if (allowedMonthes != null) {
-				int[] d = findNextAllowed( allowedMonthes, next.get(Calendar.MONTH) );
-				next.set(Calendar.MONTH, d[1]);
-				if (d[2] == 1)
-					next.add(Calendar.YEAR, 1);
-			}
-			if (allowedDaysWeek != null) {
-				int[] d = findNextAllowed( allowedDaysWeek, next.get(Calendar.DAY_OF_WEEK) );
-				next.set(Calendar.DAY_OF_WEEK, d[1]);
-				if (d[2] == 1)
-					next.add(Calendar.WEEK_OF_YEAR, 1);
-			}
-			
-			if (onlyWorkingDays) {
-				HolidayProviderIfc holidayProvider = MApi.lookup(HolidayProviderIfc.class);
-				if (holidayProvider != null) {
-					while (!holidayProvider.isWorkingDay(null, next.getTime()))
-						next.add(Calendar.DAY_OF_MONTH, 1);
+			boolean retry = true;
+			int retryCnt = 0;
+			while (retry && retryCnt < 10) {
+				retry = false;
+				retryCnt++;
+				
+				if (allowedMinutes != null) {
+					int[] d = findNextAllowed( allowedMinutes, next.get(Calendar.MINUTE) );
+					next.set(Calendar.MINUTE, d[1]);
+					if (d[2] == 1)
+						next.add(Calendar.HOUR_OF_DAY, 1);
+				}
+				if (allowedHours != null) {
+					int[] d = findNextAllowed( allowedHours, next.get(Calendar.HOUR_OF_DAY) );
+					next.set(Calendar.HOUR_OF_DAY, d[1]);
+					if (d[2] == 1)
+						next.add(Calendar.DATE, 1);
+				}
+				if (allowedDaysMonth != null) {
+					int[] d = findNextAllowed( allowedDaysMonth, next.get(Calendar.DAY_OF_MONTH) );
+					next.set(Calendar.DAY_OF_MONTH, d[1]);
+					if (d[2] == 1)
+						next.add(Calendar.MONTH, 1);
+				}
+				if (allowedMonthes != null) {
+					int[] d = findNextAllowed( allowedMonthes, next.get(Calendar.MONTH) );
+					next.set(Calendar.MONTH, d[1]);
+					if (d[2] == 1)
+						next.add(Calendar.YEAR, 1);
+				}
+				if (allowedDaysWeek != null) {
+					int[] d = findNextAllowed( allowedDaysWeek, next.get(Calendar.DAY_OF_WEEK) );
+					if (next.get(Calendar.DAY_OF_WEEK) != d[1]) {
+						next.set(Calendar.DAY_OF_WEEK, d[1]);
+						next.set(Calendar.HOUR, 0);
+						next.set(Calendar.MINUTE, 0);
+						retry = true;
+					}
+					if (d[2] == 1)
+						next.add(Calendar.WEEK_OF_YEAR, 1);
+				}
+				
+				if (onlyWorkingDays) {
+					HolidayProviderIfc holidayProvider = MApi.lookup(HolidayProviderIfc.class);
+					if (holidayProvider != null) {
+						while (!holidayProvider.isWorkingDay(null, next.getTime())) {
+							next.add(Calendar.DAY_OF_MONTH, 1);
+							next.set(Calendar.HOUR, 0);
+							next.set(Calendar.MINUTE, 0);
+							retry = true;
+						}
+					}
 				}
 			}
-			
 			return next.getTimeInMillis();
 		}
 

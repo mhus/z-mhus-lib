@@ -217,14 +217,14 @@ import de.mhus.lib.core.MString;
 
 public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	
-	private HashMap<String, Map<Date, String>> days = new HashMap<>();
+	private HashMap<String, Map<String, String>> days = new HashMap<>();
 	
 	@Override
 	public boolean isHoliday(Locale locale, Date date) {
 		@SuppressWarnings("deprecation")
-		Map<Date, String> map = getHolidays(locale, date.getYear() + 1900);
+		Map<String, String> map = getHolidays(locale, date.getYear() + 1900);
 		if (map == null) return false;
-		return map.containsKey(MDate.toDateOnly(date));
+		return map.containsKey(date.getDate() + "." + (date.getMonth()+1));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -234,9 +234,9 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	}
 
 	@Override
-	public synchronized Map<Date, String> getHolidays(Locale locale, int year) {
+	public synchronized Map<String, String> getHolidays(Locale locale, int year) {
 		if (locale == null) locale = Locale.getDefault();
-		Map<Date, String> map = days.get(locale + "_" + year);
+		Map<String, String> map = days.get(locale + "_" + year);
 		if (map == null) {
 			// load map file
 			File f = null;
@@ -260,7 +260,7 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 							Date d = MDate.toDate(date, null);
 							if (d != null) {
 								d = MDate.toDateOnly(d);
-								map.put(d, msg);
+								map.put(d.getDate() + "." + (d.getMonth()+1), msg);
 							}
 						}
 					}
@@ -271,10 +271,19 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 			} else {
 				log().d("Definition file not found",locale,year);
 				map = new HashMap<>();
+				fillDefaultHolydays(locale, map);
 				days.put(locale + "_" + year,map);
 			}
 		}
 		return map;
+	}
+
+	protected void fillDefaultHolydays(Locale locale, Map<String, String> map) {
+		map.put("1.1", "New Year");
+		map.put("1.5","1. May");
+		map.put("25.12","X-Mas");
+		map.put("26.12","X-Mas");
+		// TODO provide a extensive list
 	}
 
 }
