@@ -271,5 +271,13 @@ public abstract class MServiceTracker<T> {
 	public boolean isRunning() {
 		return tracker != null;
 	}
+
+	public BundleContext getBundleContext() {
+		return context;
+	}
+
+	public void setBundleContext(BundleContext context) {
+		this.context = context;
+	}
 	
 }
