@@ -216,6 +216,7 @@ import java.util.UUID;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
+import de.mhus.lib.errors.MException;
 
 public class FileVaultSource extends MutableVaultSource {
 
@@ -243,7 +244,11 @@ public class FileVaultSource extends MutableVaultSource {
 		entries.clear();
 		for (int i = 0; i < size; i++) {
 			VaultEntry entry = new FileEntry(ois);
-			addEntry(entry);
+			try {
+				addEntry(entry);
+			} catch (MException e) {
+				log().d(entry,e);
+			}
 		}
 		parent.close();
 	}

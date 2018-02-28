@@ -209,6 +209,7 @@ import java.util.UUID;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class MutableVaultSource extends MLog implements VaultSource {
@@ -242,13 +243,13 @@ public abstract class MutableVaultSource extends MLog implements VaultSource {
 		return name;
 	}
 
-	public void addEntry(VaultEntry entry) {
+	public void addEntry(VaultEntry entry) throws MException {
 		synchronized (entries) {
 			entries.put(entry.getId(), entry);
 		}
 	}
 	
-	public void removeEntry(UUID id) {
+	public void removeEntry(UUID id) throws MException {
 		synchronized (entries) {
 			entries.remove(id);
 		}
