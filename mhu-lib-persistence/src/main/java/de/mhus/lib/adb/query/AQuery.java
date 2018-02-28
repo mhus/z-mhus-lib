@@ -209,6 +209,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.mhus.lib.core.parser.AttributeMap;
+import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotFoundRuntimeException;
@@ -313,7 +314,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> eq(Function<T,?> getter, Object value) {
-		operations.add(Db.eq(toAttributeName(getter), value));
+		operations.add(Db.eq(MPojo.toAttributeName(getter), value));
 		return this;
 	}
 	
@@ -350,7 +351,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> ne(Function<T,?> getter, Object value) {
-		operations.add(Db.ne(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.ne(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -387,7 +388,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> lt(Function<T,?> getter, Object value) {
-		operations.add(Db.lt(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.lt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -424,7 +425,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> le(Function<T,?> getter, Object value) {
-		operations.add(Db.le(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.le(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -461,7 +462,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> gt(Function<T,?> getter, Object value) {
-		operations.add(Db.gt(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.gt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -498,7 +499,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> ge(Function<T,?> getter, Object value) {
-		operations.add(Db.ge(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.ge(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -523,7 +524,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> el(Function<T,?> getter, Object value) {
-		operations.add(Db.el(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.el(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -548,7 +549,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> eg(Function<T,?> getter, Object value) {
-		operations.add(Db.eg(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.eg(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -585,7 +586,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> like(Function<T,?> getter, Object value) {
-		operations.add(Db.like(Db.attr(toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.like(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -641,7 +642,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> asc(Function<T,?> getter) {
-		return asc(toAttributeName(getter));
+		return asc(MPojo.toAttributeName(getter));
 	}
 
 	
@@ -664,7 +665,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> desc(Function<T,?> getter) {
-		return desc(toAttributeName(getter));
+		return desc(MPojo.toAttributeName(getter));
 	}
 	
 	/**
@@ -720,7 +721,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> in(Function<T,?> left, AAttribute ... right) {
-		operations.add(Db.in( Db.attr(toAttributeName(left)) , new AList(right) ));
+		operations.add(Db.in( Db.attr(MPojo.toAttributeName(left)) , new AList(right) ));
 		return this;
 	}
 	
@@ -780,7 +781,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> isNull(Function<T,?> getter) {
-		operations.add(Db.isNull(Db.attr(toAttributeName(getter))));
+		operations.add(Db.isNull(Db.attr(MPojo.toAttributeName(getter))));
 		return this;
 	}
 	
@@ -803,7 +804,7 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> isNotNull(Function<T,?> getter) {
-		operations.add(Db.isNotNull(Db.attr(toAttributeName(getter))));
+		operations.add(Db.isNotNull(Db.attr(MPojo.toAttributeName(getter))));
 		return this;
 	}
 	
@@ -827,26 +828,6 @@ public class AQuery<T> extends APrint {
 	public AQuery<T> isNotNull(String attr) {
 		operations.add(Db.isNotNull(Db.attr(attr)));
 		return this;
-	}
-
-	/**
-	 * <p>toAttributeName.</p>
-	 *
-	 * @param getter a {@link java.util.function.Function} object.
-	 * @return a {@link java.lang.String} object.
-	 * @since 3.3.0
-	 */
-	public String toAttributeName(Function<T, ?> getter) {
-        try {
-			String name = LambdaUtil.getFunctionName(getter);
-			name = name.toLowerCase();
-			if (name.startsWith("get")) name = name.substring(3);
-			else
-			if (name.startsWith("is")) name = name.substring(2);
-			return name;
-		} catch (NotFoundException e) {
-			throw new NotFoundRuntimeException(e);
-		}
 	}
 
 	public ACreateContext getContext() {

@@ -203,15 +203,24 @@
  */
 package de.mhus.lib.form.definition;
 
+import java.util.function.Function;
+
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
+import de.mhus.lib.core.pojo.MPojo;
 
 public class FmDate extends FmElement {
+
+	private static final long serialVersionUID = 1L;
 
 	public enum FORMATS {DATE,DATETIME,DATETIMESECONDS,TIME,TIMESECONDS};
 	
 	public static final String FORMAT = "format";
 
+	public <T> FmDate(Function<T,?> getter, FORMATS format, String title, String description, IDefAttribute ... definitions) {
+		this(MPojo.toAttributeName(getter), format, title, description, definitions);
+	}
+	
 	public FmDate(String name, FORMATS format, String title, String description, IDefAttribute ... definitions) {
 		this(name, new DefAttribute(FORMAT, format.name()), new FmNls(title, description));
 		addDefinition(definitions);

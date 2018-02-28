@@ -203,10 +203,16 @@
  */
 package de.mhus.lib.form.definition;
 
+import java.util.function.Function;
+
 import de.mhus.lib.core.definition.IDefAttribute;
+import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.MException;
 
 public class FmNumber extends FmElement {
+
+	private static final long serialVersionUID = 1L;
+
 	public enum TYPES {INTEGER,LONG,FLOAT,DOUBLE}
 	public enum FORMAT {PERCENTAGE,CURRENCY}
 
@@ -217,8 +223,14 @@ public class FmNumber extends FmElement {
 	public static final String FORMAT = "format";
 	public static final String NUMBER_TYPE = "number";
 
-	public FmNumber(String name, TYPES type, String title, String description) {
+	public <T> FmNumber(Function<T,?> getter, TYPES type, String title, String description, IDefAttribute ... definitions) {
+		this(MPojo.toAttributeName(getter), type, new FmNls(title, description));
+		addDefinition(definitions);
+	}
+	
+	public FmNumber(String name, TYPES type, String title, String description, IDefAttribute ... definitions) {
 		this(name, type, new FmNls(title, description));
+		addDefinition(definitions);
 	}
 
 	public FmNumber(String name, TYPES type, IDefAttribute ... definitions) {

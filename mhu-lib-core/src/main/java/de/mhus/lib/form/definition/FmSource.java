@@ -210,6 +210,7 @@ import de.mhus.lib.errors.MException;
 
 public class FmSource extends HashConfig implements IDefAttribute {
 
+	private static final long serialVersionUID = 1L;
 	private String tag;
 
 	public FmSource(String tag, String name) {

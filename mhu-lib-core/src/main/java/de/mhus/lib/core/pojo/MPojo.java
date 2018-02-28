@@ -211,6 +211,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
@@ -229,6 +230,9 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
+import de.mhus.lib.core.util.lambda.LambdaUtil;
+import de.mhus.lib.errors.NotFoundException;
+import de.mhus.lib.errors.NotFoundRuntimeException;
 
 public class MPojo {
 
@@ -769,6 +773,26 @@ public class MPojo {
 			} catch (Throwable t) {
 				log.d(MSystem.getClassName(to), name, t);
 			}
+		}
+	}
+
+	/**
+	 * <p>toAttributeName.</p>
+	 *
+	 * @param getter a {@link java.util.function.Function} object.
+	 * @return a {@link java.lang.String} object.
+	 * @since 3.3.0
+	 */
+	public static String toAttributeName(Function<?, ?> getter) {
+        try {
+			String name = LambdaUtil.getFunctionName(getter);
+			name = name.toLowerCase();
+			if (name.startsWith("get")) name = name.substring(3);
+			else
+			if (name.startsWith("is")) name = name.substring(2);
+			return name;
+		} catch (NotFoundException e) {
+			throw new NotFoundRuntimeException(e);
 		}
 	}
 

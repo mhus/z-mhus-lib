@@ -208,6 +208,8 @@ import de.mhus.lib.core.definition.IDefDefinition;
 
 public class FmSplit extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
+
 	public FmSplit(IDefDefinition ... definitions) {
 		super("split", definitions);
 	}

@@ -203,15 +203,25 @@
  */
 package de.mhus.lib.form.definition;
 
+import java.util.function.Function;
+
 import de.mhus.lib.core.definition.IDefAttribute;
+import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.MException;
 
 public class FmCheckbox extends FmElement {
 
+	private static final long serialVersionUID = 1L;
 	public static final String TYPE_CHECKBOX = "checkbox";
 
-	public FmCheckbox(String name, String title, String description) {
+	public <T> FmCheckbox(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
+		this(MPojo.toAttributeName(getter), new FmNls(title, description));
+		addDefinition(definitions);
+	}
+	
+	public FmCheckbox(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
+		addDefinition(definitions);
 	}
 
 	public FmCheckbox(String name, IDefAttribute ... definitions) {

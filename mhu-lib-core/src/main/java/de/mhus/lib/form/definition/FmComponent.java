@@ -208,6 +208,8 @@ import de.mhus.lib.core.definition.IDefDefinition;
 
 public class FmComponent extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
+
 	public FmComponent(IDefDefinition ... definitions) {
 		super("component", definitions);
 	}

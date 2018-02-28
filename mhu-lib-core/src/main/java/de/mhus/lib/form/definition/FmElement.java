@@ -208,6 +208,7 @@ import de.mhus.lib.core.definition.IDefAttribute;
 
 public class FmElement extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "title";
 	public static final String DESCRIPTION = "description";
 	public static final String TYPE = "type";

@@ -208,6 +208,8 @@ import de.mhus.lib.core.definition.IDefDefinition;
 
 public class FmOverlay extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
+
 	public FmOverlay(IDefDefinition[] definitions) {
 		super("overlay", definitions);
 	}
