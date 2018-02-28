@@ -203,34 +203,44 @@
  */
 package de.mhus.lib.adb;
 
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.query.AQuery;
+import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.jmx.MJmx;
+import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
+import de.mhus.lib.xdb.XdbService;
+import de.mhus.lib.xdb.XdbType;
 
 /**
  * The implementation hold the table definitions and handle all operations on
  * the objects. It's the central point of access.
  */
 @JmxManaged(descrition="ADB manager information interface")
-public abstract class DbManager extends MJmx implements DbObjectHandler {
+public abstract class DbManager extends MJmx implements DbObjectHandler, XdbService {
 
+	@Override
 	public abstract <T> T getObjectByQualification(AQuery<T> qualification) throws MException;
 
 	public abstract <T> DbCollection<T> getByQualification(Class<T> clazz, String qualification, Map<String,Object> attributes) throws MException;
 
 	public abstract <T> DbCollection<T> getByQualification(T object, String qualification, Map<String,Object> attributes) throws MException;
 
+	@Override
 	public abstract <T> DbCollection<T> getByQualification(AQuery<T> qualification) throws MException;
 
 	/**
@@ -325,6 +335,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 
 	public abstract Object getObject(String registryName, Object ... keys) throws MException;
 
+	@Override
 	public abstract <T> T getObject(Class<T> clazz, Object ... keys) throws MException;
 
 	public abstract <T> T getObject(DbConnection con, Class<T> clazz, Object ... keys) throws MException;
@@ -481,13 +492,15 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 	@Override
 	public abstract void deleteObject(DbConnection con, String registryName, Object object) throws MException;
 	
+	@Override
 	public abstract boolean isConnected();
 
-	public abstract void connect() throws Exception;
+	@Override
+	public abstract void connect() throws MException;
 
 	public abstract void disconnect();
 
-	public abstract void reconnect() throws Exception;
+	public abstract void reconnect() throws MException;
 
 
 	@JmxManaged(descrition="Used Schema")
@@ -514,10 +527,211 @@ public abstract class DbManager extends MJmx implements DbObjectHandler {
 
 	public abstract String getMappingName(Class<?> clazz);
 
+	@Override
 	public abstract <T extends Persistable> T inject(T object);
 
 	public abstract <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException;
 
 	public abstract <T> String toQualification(AQuery<T> qualification);
+	
+	
+	@Override
+	public <T> XdbType<T> getType(Class<?> type) throws NotFoundException {
+		String tableName;
+		try {
+			tableName = AdbUtil.getTableName(this,type);
+		} catch (IOException e) {
+			throw new NotFoundException("Table not found",type,e);
+		}
+		Table table = this.getTable(tableName);
+		if (table == null) throw new NotFoundException("Table not found",type);
+		return new Type<T>(this,table);
+	}
+	
+	@Override
+	public <T> XdbType<T> getType(String name) throws NotFoundException {
+		String tableName;
+		try {
+			tableName = AdbUtil.getTableName(this,name);
+		} catch (IOException e) {
+			throw new NotFoundException("Table not found",name,e);
+		}
+		Table table = this.getTable(tableName);
+		if (table == null) throw new NotFoundException("Table not found",name);
+		return new Type<T>(this,table);
+	}
+	
+	@Override
+	public List<String> getTypeNames() {
+		LinkedList<String> out = new LinkedList<>();
+		for (Class<? extends Persistable> o : getSchema().getObjectTypes())
+			out.add(o.getSimpleName());
+		return out;
+	}
+	
+	@Override
+	public void updateSchema(boolean cleanup) throws MException {
+		reconnect();
+	}
+
+	@Override
+	public String getSchemaName() {
+		return getSchema().getSchemaName();
+	}
+	
+	@Override
+	public PojoModelFactory getPojoModelFactory() {
+		return getSchema();
+	}
+		
+	private static class Type<T> implements XdbType<T> {
+
+		private Table table;
+		private DbManager service;
+
+		public Type(DbManager service, Table table) {
+			this.service = service;
+			this.table = table;
+			
+			
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public DbCollection<T> getByQualification(String search, Map<String,Object> parameterValues) throws MException {
+			return (DbCollection<T>) service.getByQualification(table.getClazz(),search, parameterValues);
+		}
+
+		@Override
+		public DbCollection<T> getByQualification(AQuery<T> query) throws MException {
+			return (DbCollection<T>) service.getByQualification(query);
+		}
+
+		@Override
+		public List<String> getAttributeNames() {
+			LinkedList<String> out = new LinkedList<>();
+			for (Field f : table.getFields())
+				out.add(f.getName());
+			return out;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <F> F prepareManualValue(String name, Object value) {
+			return (F) AdbUtil.createAttribute(table.getField(name).getType(), value);
+		}
+
+		@Override
+		public void set(Object object, String name, Object v) throws MException {
+			try {
+				table.getField(name).set(object, v);
+			} catch (Throwable t) {
+				throw new MException(name,t);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public <F> F get(Object object, String name) throws MException {
+			try {
+				return (F) table.getField(name).get(object);
+			} catch (Throwable t) {
+				throw new MException(name,t);
+			}
+		}
+
+		@Override
+		public void createObject(Object object) throws MException {
+			service.createObject(object);
+		}
+
+		@Override
+		public String getIdAsString(Object object) throws Exception {
+			StringBuffer out = new StringBuffer();
+			for (Field f : table.getPrimaryKeys()) {
+				if (out.length() > 0) out.append(",");
+				out.append(f.get(object));
+			}
+
+			return out.toString();
+		}
+
+		@Override
+		public long count(String search, Map<String,Object> parameterValues) throws MException {
+			return service.getCountByQualification(table.getClazz(), search, parameterValues);
+		}
+
+		@Override
+		public T newInstance() throws Exception {
+			@SuppressWarnings("unchecked")
+			T out = (T) table.getClazz().newInstance();
+			service.inject((Persistable) out);
+			return out;
+		}
+
+		@Override
+		public void deleteObject(Object object) throws MException {
+			service.deleteObject(object);
+		}
+
+		@Override
+		public Class<?> getAttributeType(String name) {
+			return table.getField(name).getType();
+		}
+
+		@Override
+		public boolean isPrimaryKey(String name) {
+			for (Field f : table.getPrimaryKeys())
+				if (f.getName().equals(name)) return true;
+			return false;
+		}
+
+		@Override
+		public boolean isPersistent(String name) {
+			return table.getField(name).isPersistent();
+		}
+
+		@Override
+		public String getTechnicalName(String name) {
+			return table.getField(name).getMappedName();
+		}
+
+		@Override
+		public void saveObjectForce(Object object, boolean raw) throws MException {
+			service.saveObjectForce(object, raw);
+		}
+
+		@Override
+		public void saveObject(Object object) throws MException {
+			service.saveObject(object);
+		}
+
+		@Override
+		public Object getId(Object object) throws MException {
+			List<Field> pk = table.getPrimaryKeys();
+			try {
+				if (pk.size() < 1) return null;
+				if (pk.size() == 1) return pk.get(0).get(object);
+				
+				Object[] out = new Object[pk.size()];
+				int cnt = 0;
+				for (Field f : pk) {
+					out[cnt] = f.get(object);
+					cnt++;
+				}
+	
+				return out;
+			} catch (Throwable t) {
+				throw new MException(pk,t);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public T getObject(String... keys) throws MException {
+			return (T) service.getObject(table.getClazz(), keys);
+		}
+		
+	}
 	
 }

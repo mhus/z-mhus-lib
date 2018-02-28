@@ -201,111 +201,117 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package de.mhus.lib.test.adb;
+package de.mhus.lib.adb.util;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
-import de.mhus.lib.adb.DbManagerJdbc;
-import de.mhus.lib.adb.DbSchema;
-import de.mhus.lib.adb.DbTransaction;
-import de.mhus.lib.adb.transaction.TransactionNestedException;
-import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.config.NodeConfig;
-import de.mhus.lib.core.util.ObjectContainer;
-import de.mhus.lib.sql.DbPool;
-import de.mhus.lib.sql.DbPoolBundle;
-import de.mhus.lib.test.adb.model.TransactionDummy;
-import de.mhus.lib.test.adb.model.TransactionSchema;
-import junit.framework.TestCase;
+import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.errors.MException;
 
-public class TransactionTest extends TestCase {
+public class AdbUtil {
 
-	public DbPoolBundle createPool(String name) {
-		NodeConfig cdb = new NodeConfig();
-		NodeConfig cconfig = new NodeConfig();
-		cdb.setProperty("driver", "org.hsqldb.jdbcDriver");
-		cdb.setProperty("url", "jdbc:hsqldb:mem:" + name);
-		cdb.setProperty("user", "sa");
-		cdb.setProperty("pass", "");
-		cconfig.setConfig("test", cdb);
-		DbPoolBundle pool = new DbPoolBundle(cconfig,null);
-		return pool;
-	}
-	
-	public DbManager createManager() throws Exception {
-		DbPool pool = createPool("transactionModel").getPool("test");
-		DbSchema schema = new TransactionSchema();
-		DbManager manager = new DbManagerJdbc("",pool, schema);
-		return manager;
-	}
-
-	public void testLock() throws Exception {
-		
-		DbManager manager = createManager();
-		final TransactionDummy obj1 = manager.inject(new TransactionDummy());
-		final TransactionDummy obj2 = manager.inject(new TransactionDummy());
-		final TransactionDummy obj3 = manager.inject(new TransactionDummy());
-		
-		obj1.save();
-		obj2.save();
-		obj3.save();
-		
-		DbTransaction.lock(obj1,obj2); // simple lock
-		DbTransaction.release();
-		
-		DbTransaction.release(); // one more should be ok - robust code
-		
-		DbTransaction.lock(obj1,obj2);
-		try {
-			DbTransaction.lock(obj3); // nested not locked should fail, can't lock two times - philosophers deadlock
-			DbTransaction.release();
-			fail("Nested Transaction Not Allowed");
-		} catch (TransactionNestedException e) {
-			System.out.println(e);
-		}
-		DbTransaction.release();
-
-		DbTransaction.lock(obj1,obj2);
-		DbTransaction.lock(obj1); // nested is ok as long as it is already locked - no philosophers problem
-		DbTransaction.release();
-		DbTransaction.release();
-
-		// concurrent locking ...
-		DbTransaction.lock(obj1,obj2);
-
-		final ObjectContainer<Boolean> done = new ObjectContainer<>(false);
-		final ObjectContainer<String> fail = new ObjectContainer<>();
-		
-		new MThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// concurrent
-				try {
-					DbTransaction.lock(2000, obj1,obj2);
-					fail.setObject("Concurrent Lock Possible");
-					return;
-				} catch (Throwable t) {
-					System.out.println(t);
-				} finally {
-					DbTransaction.release();
-				}
-				
-				// not concurrent
-				DbTransaction.lock(2000, obj3);
-				DbTransaction.release();
-				
-				done.setObject(true);
+	public static Class<? extends Persistable> getType(DbManager manager, String typeName) throws IOException {
+		for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+			if (item.getSimpleName().equals(typeName)) {
+				return item; 
 			}
-		}).start();
-		
-		while (done.getObject() == false && fail.getObject() == null)
-			MThread.sleep(200);
-
-		if (fail.getObject() != null)
-			fail(fail.getObject());
-		
-		DbTransaction.release();
-		
+		throw new IOException("Type not found in service: " + typeName);
 	}
 	
+	public static String getTableName(DbManager manager, String typeName) throws IOException {
+		typeName = typeName.toLowerCase();
+		for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+			if (item.getSimpleName().toLowerCase().equals(typeName) || item.getCanonicalName().toLowerCase().equals(typeName)) {
+				return item.getCanonicalName(); 
+			}
+		throw new IOException("Type not found in service: " + typeName);
+	}
+	
+	public static String getTableName(DbManager manager, Class<?> type) throws IOException {
+		for (Class<? extends Persistable> item : manager.getSchema().getObjectTypes())
+			if (/*item.getName().equals(type.getName()) ||*/ item.getCanonicalName().equals(type.getCanonicalName())) {
+				return item.getCanonicalName(); 
+			}
+		throw new IOException("Type not found in service: " + type);
+	}
+				
+	public static Object createAttribute(Class<?> type, Object value) {
+
+		//TODO use escape -ing
+		if (value == null || value.equals("[null]")) return null;
+		if (value.equals("[uuid]")) return UUID.randomUUID();
+		
+		if (value instanceof String) {
+			String str = (String)value;
+			if (str.startsWith("[") && str.endsWith("]")) {
+				String[] parts = str.substring(1, str.length()-1).split(",");
+				for (int i = 0; i < parts.length; i++)
+					parts[i] = MUri.decode(parts[i]);
+				value = parts;
+			} else {
+				value = MUri.decode(str);
+			}
+		}
+		
+		if (type == value.getClass()) return value;
+		
+		if (type == int.class || type == Integer.class)
+			return MCast.toint(value, 0);
+		
+		if (type == long.class || type == Long.class)
+			return MCast.tolong(value, 0);
+		
+		if (type == float.class || type == Float.class)
+			return MCast.tofloat(value, 0);
+
+		if (type == double.class || type == Double.class)
+			return MCast.todouble(value, 0);
+
+		if (type == boolean.class || type == Boolean.class)
+			return MCast.toboolean(value, false);
+		
+		if (type == Date.class )
+			return MCast.toDate(String.valueOf(value), null);
+		
+		if (type == java.sql.Date.class ) {
+			Date data = MCast.toDate(String.valueOf(value), null);
+			if (data == null) return null;
+			return new java.sql.Date( data.getTime() );
+		}
+		
+		if (type == UUID.class )
+			return UUID.fromString(String.valueOf(value));
+		
+		if (type.isEnum())
+			return String.valueOf(value);
+		
+		return null;
+	}
+
+	public static List<Object> getObjects(DbManager manager, Class<?> type, String id) throws MException {
+		LinkedList<Object> out = new LinkedList<>();
+		if (MString.isEmptyTrim(id)) return out;
+		
+		if (id.startsWith("(") && id.endsWith(")")) {
+			String aql = id.substring(1, id.length()-1);
+			for (Object o : manager.getByQualification(type, aql, null))
+				out.add(o);
+		} else {
+			// TODO separate PKs, currently only one PK is supported
+			Object obj = manager.getObject(type, id);
+			if (obj != null)
+				out.add(obj);
+		}
+		
+		return out;
+	}
+
 }

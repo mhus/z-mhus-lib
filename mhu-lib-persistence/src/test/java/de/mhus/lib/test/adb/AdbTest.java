@@ -400,7 +400,7 @@ public class AdbTest extends TestCase {
 		timer.start();
 
 //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
-		DbManager manager = new DbManagerJdbc(pool, schema);
+		DbManager manager = new DbManagerJdbc("",pool, schema);
 //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.INFO);
 
 		// create persons
@@ -683,7 +683,7 @@ public class AdbTest extends TestCase {
 		MStopWatch timer = new MStopWatch();
 		timer.start();
 
-		DbManager manager = new DbManagerJdbc(pool, schema);
+		DbManager manager = new DbManagerJdbc("",pool, schema);
 		
 		Store store1 = manager.inject(new Store());
 		store1.save();
@@ -779,10 +779,10 @@ public class AdbTest extends TestCase {
 
 //		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		BookStoreSchema schema1 = new BookStoreSchema();
-		DbManager manager1 = new DbManagerJdbc(pool, schema1);
+		DbManager manager1 = new DbManagerJdbc("",pool, schema1);
 
 		BookStoreSchema schema2 = new BookStoreSchema();
-		DbManager manager2 = new DbManagerJdbc(pool, schema2);
+		DbManager manager2 = new DbManagerJdbc("",pool, schema2);
 
 		manager1.reconnect();
 		manager2.reconnect();
@@ -795,7 +795,7 @@ public class AdbTest extends TestCase {
 		DbPool pool = createPool("testDataTypes").getPool("test");
 		
 		BookStoreSchema schema = new BookStoreSchema();
-		DbManager manager = new DbManagerJdbc(pool, schema);
+		DbManager manager = new DbManagerJdbc("",pool, schema);
 		
 		Store store = manager.inject(new Store());
 		
@@ -831,7 +831,7 @@ public class AdbTest extends TestCase {
 		DbPool pool = createPool("testDataTypesAlter").getPool("test");
 		
 		BookStoreSchema schema1 = new BookStoreSchema();
-		DbManager manager1 = new DbManagerJdbc(pool, schema1);
+		DbManager manager1 = new DbManagerJdbc("",pool, schema1);
 		
 		Store store1 = manager1.inject(new Store());
 		store1.setIntValue(Integer.MAX_VALUE);
@@ -851,7 +851,7 @@ public class AdbTest extends TestCase {
 		
 		BookStoreSchema schema2 = new BookStoreSchema();
 		schema2.switchStore = true;
-		DbManager manager2 = new DbManagerJdbc(pool, schema2);
+		DbManager manager2 = new DbManagerJdbc("",pool, schema2);
 		de.mhus.lib.test.adb.model2.Store store2 = manager2.getObject(de.mhus.lib.test.adb.model2.Store.class, id);
 		
 		assertEquals(String.valueOf(Integer.MAX_VALUE), store2.getIntValue());
@@ -868,7 +868,7 @@ public class AdbTest extends TestCase {
 		// and back again
 		
 		BookStoreSchema schema3 = new BookStoreSchema();
-		DbManager manager3 = new DbManagerJdbc(pool, schema3);
+		DbManager manager3 = new DbManagerJdbc("",pool, schema3);
 
 		Store store3 = manager3.getObject(Store.class, id);
 		

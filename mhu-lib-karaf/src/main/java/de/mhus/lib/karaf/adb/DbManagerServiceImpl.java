@@ -235,7 +235,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 	 * Call this function in the doActivate() after you set the context and dataSourceName attribute.
 	 * @throws Exception 
 	 */
-	protected void doOpen(boolean clean) throws Exception {
+	protected void doOpen(boolean clean) throws MException {
 		if (manager != null) return;
 		doInitialize();
 		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
@@ -253,11 +253,11 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		manager = null;
 	}
 	
-	protected DbManager doCreateDbManager(boolean clean) throws Exception {
+	protected DbManager doCreateDbManager(boolean clean) throws MException {
 		
 		DbPool pool = doCreateDataPool();
 		DbSchema schema = doCreateSchema();
-		return new DbManagerJdbc(pool, schema, clean); //TODO configurable
+		return new DbManagerJdbc(dataSourceName, pool, schema, clean); //TODO configurable
 	}
 
 	protected abstract DbSchema doCreateSchema();
@@ -291,7 +291,7 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 	}
 	
 	@Override
-	public void updateManager(boolean clean) throws Exception {
+	public void updateManager(boolean clean) throws MException {
 		doClose();
 //		if (!isConnected()) {
 			if (getDataSource() == null) return;

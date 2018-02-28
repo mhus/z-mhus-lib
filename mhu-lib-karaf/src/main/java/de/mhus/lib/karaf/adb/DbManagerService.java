@@ -204,10 +204,11 @@
 package de.mhus.lib.karaf.adb;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.errors.MException;
 
 public interface DbManagerService {
 
-	void updateManager(boolean clean) throws Exception;
+	void updateManager(boolean clean) throws MException;
 
 	DbManager getManager();
 	
@@ -219,7 +220,7 @@ public interface DbManagerService {
 
 	String getServiceName();
 
-	void doInitialize() throws Exception;
+	void doInitialize() throws MException;
 
 	void doClose();
 

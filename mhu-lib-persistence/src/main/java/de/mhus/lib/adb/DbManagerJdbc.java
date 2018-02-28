@@ -223,6 +223,7 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.concurrent.ThreadLock;
+import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
@@ -257,20 +258,23 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	private MetadataBundle caoBundle;
 	private MActivator activator;
 	private Lock reloadLock = new ThreadLock("reload");
+	private String dataSourceName;
 
-	public DbManagerJdbc(DbPool pool, DbSchema schema) throws Exception {
-		this(pool, schema, false);
+	public DbManagerJdbc(String dataSourceName, DbPool pool, DbSchema schema) throws Exception {
+		this(dataSourceName, pool, schema, false);
 	}
 
 	/**
 	 * Create a new manager instance, a db connection and a database schema is needed.
+	 * @param dataSourceName 
 	 * 
 	 * @param pool
 	 * @param schema
 	 * @param cleanup
-	 * @throws Exception
+	 * @throws MException 
 	 */
-	public DbManagerJdbc(DbPool pool, DbSchema schema, boolean cleanup) throws Exception {
+	public DbManagerJdbc(String dataSourceName, DbPool pool, DbSchema schema, boolean cleanup) throws MException {
+		this.dataSourceName = dataSourceName;
 		this.pool   = pool;
 		this.schema = schema;
 		this.activator = pool.getProvider().getActivator();
@@ -1369,7 +1373,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	}
 
 	@Override
-	public void connect() throws Exception {
+	public void connect() throws MException {
 		log().i("connect");
 		synchronized (this) {
 			initDatabase(false);
@@ -1391,7 +1395,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	}
 	
 	@Override
-	public void reconnect() throws Exception {
+	public void reconnect() throws MException {
 		try {
 			reloadLock.lockWithException(MAX_LOCK);
 			disconnect();
@@ -1406,60 +1410,66 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	 * 
 	 * @throws Exception
 	 */
-	protected void initDatabase(boolean cleanup) throws Exception {
+	protected void initDatabase(boolean cleanup) throws MException {
 
 		if (nameMapping != null) return;
 
-		schema.resetObjectTypes();
-		pool.cleanup(true);
-		Class<? extends Persistable>[] types = schema.getObjectTypes();
-		DbConnection con = pool.getConnection();
-		if (con == null) return;
-		
-		cIndex.clear();
-		nameMapping = new HashMap<String, Object>();
-		nameMappingRO = Collections.unmodifiableMap(nameMapping);
-		caoBundle = new MetadataBundle(NoneDriver.getInstance());
-
-		// schema info
-		if (schema.hasPersistentInfo()) {
-			addClass(schema.getSchemaName(),getRegistryName(schema.getClass()),Property.class,con, cleanup);
-			schemaPersistence = new DbProperties(this, getRegistryName(schema.getClass()));
-		}
-
-		// classes
-		for (Class<? extends Persistable> clazz : types) {
-			addClass(null,getRegistryName(clazz),clazz,con, cleanup);
-		}
-		con.commit();
-
-		// fill name mapping
-		for (Table c : cIndex.values()) {
-			c.fillNameMapping(nameMapping);
-		}
-
-		schema.doFillNameMapping(nameMapping);
-
-		// validate and migrate database version
-		if (schemaPersistence != null) {
-			String dbVersion = schemaPersistence.get(DATABASE_VERSION);
-			if (dbVersion == null) {
-				// init persistence
-				schemaPersistence.set(DATABASE_VERSION,"0");
-				schemaPersistence.set(DATABASE_CREATED,new MDate().toString());
-				schemaPersistence.set(DATABASE_MANAGER_VERSION,MANAGER_VERSION);
-				schema.doInitProperties(this);
-
-				dbVersion = schemaPersistence.get(DATABASE_VERSION);
+			try {
+			schema.resetObjectTypes();
+			pool.cleanup(true);
+			Class<? extends Persistable>[] types = schema.getObjectTypes();
+			DbConnection con = pool.getConnection();
+			if (con == null) return;
+			
+			cIndex.clear();
+			nameMapping = new HashMap<String, Object>();
+			nameMappingRO = Collections.unmodifiableMap(nameMapping);
+			caoBundle = new MetadataBundle(NoneDriver.getInstance());
+	
+			// schema info
+			if (schema.hasPersistentInfo()) {
+				addClass(schema.getSchemaName(),getRegistryName(schema.getClass()),Property.class,con, cleanup);
+				schemaPersistence = new DbProperties(this, getRegistryName(schema.getClass()));
 			}
-
-			// migrate to current version
-			long dbVersionLong = MCast.tolong(dbVersion, 0);
-			schema.doMigrate(this, dbVersionLong);
-
+	
+			// classes
+			for (Class<? extends Persistable> clazz : types) {
+				addClass(null,getRegistryName(clazz),clazz,con, cleanup);
+			}
+			con.commit();
+	
+			// fill name mapping
+			for (Table c : cIndex.values()) {
+				c.fillNameMapping(nameMapping);
+			}
+	
+			schema.doFillNameMapping(nameMapping);
+	
+			// validate and migrate database version
+			if (schemaPersistence != null) {
+				String dbVersion = schemaPersistence.get(DATABASE_VERSION);
+				if (dbVersion == null) {
+					// init persistence
+					schemaPersistence.set(DATABASE_VERSION,"0");
+					schemaPersistence.set(DATABASE_CREATED,new MDate().toString());
+					schemaPersistence.set(DATABASE_MANAGER_VERSION,MANAGER_VERSION);
+					schema.doInitProperties(this);
+	
+					dbVersion = schemaPersistence.get(DATABASE_VERSION);
+				}
+	
+				// migrate to current version
+				long dbVersionLong = MCast.tolong(dbVersion, 0);
+				schema.doMigrate(this, dbVersionLong);
+	
+			}
+	
+			con.close();
+		} catch (MException t) {
+			throw t;
+		} catch (Throwable t) {
+			throw new MException(t);
 		}
-
-		con.close();
 	}
 
 	protected void addClass(String tableName, String registryName, Class<? extends Persistable> clazz, DbConnection con, boolean cleanup) throws Exception {
@@ -1550,6 +1560,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	@Override
 	public <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException {
 		return getByQualification(clazz, "", null);
+	}
+
+	@Override
+	public String getDataSourceName() {
+		return dataSourceName;
 	}
 
 }
