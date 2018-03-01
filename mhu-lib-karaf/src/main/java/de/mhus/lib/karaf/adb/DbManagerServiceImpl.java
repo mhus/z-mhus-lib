@@ -248,7 +248,8 @@ public abstract class DbManagerServiceImpl extends MLog implements DbManagerServ
 		doPostOpen();
 	}
 	
-	protected abstract void doPostOpen() throws MException;
+	protected void doPostOpen() throws MException {
+	}
 	
 	@Override
 	public void doClose() {

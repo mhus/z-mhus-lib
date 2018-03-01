@@ -583,6 +583,16 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 	public PojoModelFactory getPojoModelFactory() {
 		return getSchema();
 	}
+	
+	@Override
+	public void delete(Persistable object) throws MException {
+		deleteObject(object);
+	}
+
+	@Override
+	public void save(Persistable object) throws MException {
+		saveObject(object);
+	}
 		
 	private static class Type<T> implements XdbType<T> {
 

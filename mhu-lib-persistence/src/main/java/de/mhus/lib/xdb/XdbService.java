@@ -248,4 +248,7 @@ public interface XdbService {
 
 	String getDataSourceName();
 
+	void delete(Persistable object) throws MException;
+	void save(Persistable object) throws MException;
+
 }
