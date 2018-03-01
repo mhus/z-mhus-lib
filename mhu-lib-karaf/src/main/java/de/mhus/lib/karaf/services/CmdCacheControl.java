@@ -233,7 +233,7 @@ public class CmdCacheControl extends MJmx implements Action {
 					table.addRowValues(c.getName(), c.getSize(),c.isEnabled(), "ok");
 				} catch (Throwable t) {
 					log().d(c,t);
-					table.addRowValues(c.getName(), "","", t.getMessage());
+					table.addRowValues(c.getName(), "?","?", t.toString());
 				}
 			table.print(System.out);
 		} else
