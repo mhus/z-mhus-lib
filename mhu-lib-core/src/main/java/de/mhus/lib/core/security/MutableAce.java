@@ -1,5 +1,7 @@
 package de.mhus.lib.core.security;
 
+import de.mhus.lib.basics.Ace;
+
 public class MutableAce extends Ace {
 
 	public MutableAce() {}
