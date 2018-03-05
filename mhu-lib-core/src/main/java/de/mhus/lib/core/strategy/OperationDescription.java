@@ -256,6 +256,12 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 		this(owner.getClass(), owner, new Version(null), title, form);
 	}
 	
+	public OperationDescription(Operation owner, String group, String id, String title, DefRoot form) {
+		this(group, id, new Version(null), owner, title);
+		if (form != null)
+			setForm(form);
+	}
+	
 	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
 		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title);
 		if (form != null)
