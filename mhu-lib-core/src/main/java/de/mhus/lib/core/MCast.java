@@ -1273,10 +1273,16 @@ public final class MCast {
 		return toBinaryString(bytes);
 	}
 
-	enum UNIT {Z,E,P,T,G,M,K,X}
+	private enum UNIT {Z,E,P,T,G,M,K,X}
+	private static final int UNIT_MAX = UNIT.values().length-1;
 
 	public static String toUnit(long p) {
-    	int unitId = UNIT.values().length-1;
+		boolean negative = false;
+		if (p < 0) {
+			negative = true;
+			p = -p;
+		}
+    	int unitId = UNIT_MAX;
     	while ( p > 100000 && unitId > 0) {
     		p = p / 1000;
     		unitId--;
@@ -1284,13 +1290,18 @@ public final class MCast {
     	if (unitId > 0 && p > 1000) {
     		unitId--;
     		double d = p / 1000d;
-    		return   "" + d + (unitId == 0 ? "" : UNIT.values()[unitId] );
+    		return   (negative ? "-" : "") + d + (unitId == UNIT_MAX ? "" : UNIT.values()[unitId] );
     	}
-		return   "" + p + (unitId == 0 ? "" : UNIT.values()[unitId]);
+		return   (negative ? "-" : "") + p + (unitId == UNIT_MAX ? "" : UNIT.values()[unitId]);
 	}
 
 	public static String toByteUnit(long p) {
-    	int unitId = UNIT.values().length-1;
+		boolean negative = false;
+		if (p < 0) {
+			negative = true;
+			p = -p;
+		}
+    	int unitId = UNIT_MAX;
     	while ( p > 100000 && unitId > 0) {
     		p = p / 1024;
     		unitId--;
@@ -1298,9 +1309,9 @@ public final class MCast {
     	if (unitId > 0 && p > 1000) {
     		unitId--;
     		double d = p / 1000d;
-    		return   "" + d + UNIT.values()[unitId];
+    		return   (negative ? "-" : "") + d + (unitId == UNIT_MAX ? "" : UNIT.values()[unitId] );
     	}
-		return   "" + p + UNIT.values()[unitId];
+		return   (negative ? "-" : "") + p + (unitId == UNIT_MAX ? "" : UNIT.values()[unitId]);
 	}
 
 }
