@@ -1272,5 +1272,35 @@ public final class MCast {
 		byte[] bytes = baos.toByteArray();
 		return toBinaryString(bytes);
 	}
-	
+
+	enum UNIT {Z,E,P,T,G,M,K,X}
+
+	public static String toUnit(long p) {
+    	int unitId = UNIT.values().length-1;
+    	while ( p > 100000 && unitId > 0) {
+    		p = p / 1000;
+    		unitId--;
+    	}
+    	if (unitId > 0 && p > 1000) {
+    		unitId--;
+    		double d = p / 1000d;
+    		return   "" + d + (unitId == 0 ? "" : UNIT.values()[unitId] );
+    	}
+		return   "" + p + (unitId == 0 ? "" : UNIT.values()[unitId]);
+	}
+
+	public static String toByteUnit(long p) {
+    	int unitId = UNIT.values().length-1;
+    	while ( p > 100000 && unitId > 0) {
+    		p = p / 1024;
+    		unitId--;
+    	}
+    	if (unitId > 0 && p > 1000) {
+    		unitId--;
+    		double d = p / 1000d;
+    		return   "" + d + UNIT.values()[unitId];
+    	}
+		return   "" + p + UNIT.values()[unitId];
+	}
+
 }
