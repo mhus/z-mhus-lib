@@ -209,7 +209,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.Thread.State;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -801,4 +800,43 @@ public class MSystem {
 		return new File(currentUsersHomeDir);
 	}
 	
+	/**
+	 * Like System.setProperty(). Sets the property with to a value.
+	 * But this one accepts also null values and will clear the property
+	 * in this case.
+	 * 
+	 * @param key
+	 * @param value
+	 * @return Previous value
+	 */
+    public static String setProperty(String key, String value) {
+    	if (value == null)
+    		return System.clearProperty(key);
+    	else
+    		return System.setProperty(key,value);
+    }
+
+    /**
+     * For completeness. The same functionality like
+     * System.getProperty()
+     * 
+     * @param key
+     * @return Current value or null
+     */
+    public static String getProperty(String key) {
+    	return System.getProperty(key);
+    }
+    
+    /**
+     * For completeness. The same functionality like
+     * System.getProperty()
+     * 
+     * @param key
+     * @param def 
+     * @return Current value or def
+     */
+    public static String getProperty(String key, String def) {
+    	return System.getProperty(key, def);
+    }
+
 }
