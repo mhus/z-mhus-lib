@@ -232,7 +232,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	private HashSet<String> allowedIds = new HashSet<>();
 	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 5;
 	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
-	private long broadcastTimeout = 100;
+	private long broadcastTimeout = 5000; // 5 sec. to wait for answers by default
 
 	private JmsInterceptor interceptorOut;
 	private JmsInterceptor interceptorIn;

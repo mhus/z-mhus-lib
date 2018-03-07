@@ -215,6 +215,7 @@ import javax.jms.TextMessage;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.jms.ClientObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
@@ -343,6 +344,7 @@ public class JmsServiceTest extends TestCase {
 			WebServiceDescriptor desc3 = new WebServiceDescriptor(impl3);
 			ServerObjectProxy<TestJmsService> server3 = new ServerObjectProxy<>(con3.createTopic("test"), desc3);
 			
+			client.setBroadcastTimeout(5000); // 5 sec to wait for answers
 			client.open();
 			server2.open();
 			server3.open();
@@ -352,14 +354,30 @@ public class JmsServiceTest extends TestCase {
 			{
 				LinkedList<String> in = new LinkedList<>();
 				in.add("a");
-				@SuppressWarnings("unused")
 				List<String> ret = ifc.listSample(in);
-				
 				assertEquals("listSample [a]", impl2.lastAction);
 				assertEquals("listSample [a]", impl3.lastAction);
-//				assertEquals("[x, x]", ret.toString());
+				assertEquals("[x, x]", ret.toString());
 			}
 		
+			{
+				// test one way
+				impl2.lastAction = null;
+				impl3.lastAction = null;
+				ifc.oneWayWithoutReturn();
+				MThread.getWithTimeout(new ValueProvider<String>() {
+						@Override
+						public String getValue() throws Exception {
+							if (impl2.lastAction == null) return null;
+							if (impl3.lastAction == null) return null;
+							return "ready";
+						}
+					}, 5000, false);
+				assertEquals("oneWayWithoutReturn", impl2.lastAction);
+				assertEquals("oneWayWithoutReturn", impl3.lastAction);
+			}
+			
+			
 			// This case is not supported yet. The case "broadcast and raw messages" is extremely rare
 			
 //			{
