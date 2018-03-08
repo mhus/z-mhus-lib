@@ -215,6 +215,8 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedList;
@@ -472,8 +474,15 @@ public class MSystem {
 		return a.equals(b);
 	}
 	
+	/**
+	 * Start a script and return the result as struct.
+	 * @param dir
+	 * @param script
+	 * @param timeout
+	 * @return 
+	 */
 	public static ScriptResult startScript(File dir, String script, long timeout) {
-		log.i("script",dir,script);
+		log.d("script",dir,script);
 		ProcessBuilder pb = new ProcessBuilder(new File(dir, script).getAbsolutePath() );
 		 @SuppressWarnings("unused")
 		Map<String, String> env = pb.environment();
@@ -505,21 +514,47 @@ public class MSystem {
 		
 	}
 
+	/**
+	 * Get the identification of the application
+	 * host:pid
+	 * 
+	 * @return host:pid
+	 */
 	public static String getAppIdent() {
 		return getHostname() + ":" + getPid();
 	}
 	
+	/**
+	 * Returns the id of the object like the original
+	 * toString() will do
+	 * 
+	 * @param o
+	 * @return
+	 */
 	public static String getObjectId(Object o) {
 		if (o == null) return "null";
 		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
 	}
 
+	/**
+	 * Returns the canonical name of the main class.
+	 * 
+	 * @param obj Object or class
+	 * @return The name
+	 */
 	public static String getClassName(Object obj) {
 		Class<? extends Object> clazz = getMainClass(obj);
 		if (clazz == null) return "null";
 		return clazz.getCanonicalName();
 	}
 
+	/**
+	 * Returns the class of the object or class or if the
+	 * class is anonymous the surrounding main class.
+	 * 
+	 * @param obj object or class
+	 * @return The main class
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Class<?> getMainClass(Object obj) {
 		if (obj == null) return null;
@@ -530,6 +565,28 @@ public class MSystem {
 			clazz = clazz.getEnclosingClass();
 		if (clazz == null) return null;
 		return clazz;
+	}
+
+	/**
+	 * Return the declared template class for the index. This is only possible if
+	 * the class itself extends a templated class and declares the templates
+	 * with classes.
+	 * 
+	 * @param clazz The class to check
+	 * @param index Template index, starts at 0
+	 * @return The canonical name of the defined template
+	 */
+	// https://stackoverflow.com/questions/3437897/how-to-get-a-class-instance-of-generics-type-t#3437930
+	public static String getTemplateCanonicalName(Class<?> clazz, int index) {
+		Type mySuperclass = clazz.getGenericSuperclass();
+		if (mySuperclass instanceof ParameterizedType) {
+			Type[] templates = ((ParameterizedType)mySuperclass).getActualTypeArguments();
+			if (index >= templates.length) return null;
+			Type tType = templates[index];
+			String templName = tType.getTypeName();
+			return templName;
+		}
+		return null;
 	}
 
 	/**
@@ -575,11 +632,22 @@ public class MSystem {
 		return freeMemoryAsString() + " / " + maxMemoryAsString();
 	}
 	
+	/**
+	 * Return the amount of free not allocated memory
+	 * @return memory in bytes
+	 */
 	public static long freeMemory() {
 		Runtime r = Runtime.getRuntime();
 		return r.maxMemory() - r.totalMemory() + r.freeMemory();
 	}
 
+	/**
+	 * Get the field in this or any superclass.
+	 * 
+	 * @param clazz
+	 * @param name
+	 * @return The field or null if not found
+	 */
 	public static Field getDeclaredField(Class<?> clazz, String name) {
 		if (clazz == null || name == null) return null;
 		try {
@@ -656,6 +724,13 @@ public class MSystem {
 		
 	}
 	
+	/**
+	 * Watch for a defined time of milliseconds all threads and returns
+	 * the used cpu time.
+	 * @param sleep
+	 * @return List of found values
+	 * @throws InterruptedException
+	 */
 	public static List<TopThreadInfo> threadTop(long sleep) throws InterruptedException {
 		sleep = Math.max(sleep, 200);
 		

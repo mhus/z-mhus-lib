@@ -446,6 +446,10 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 		public String toString() {
 			return definition;
 		}
+
+		public boolean isDisabled() {
+			return disabled;
+		}
 		
 	}
 	
