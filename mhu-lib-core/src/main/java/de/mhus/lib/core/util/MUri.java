@@ -614,6 +614,7 @@ public abstract class MUri {
 	
 	public abstract String[] getPathParts();
 	
+	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer();
 		if (getScheme() != null) {
@@ -624,11 +625,11 @@ public abstract class MUri {
 			if (getPassword() != null)
 				out.append(':').append(getPassword());
 			out.append("@");
+			if (getLocation() != null)
+				out.append(getLocation());
 		} else
-		if (SCHEME_HTTP.equals(getScheme()) || SCHEME_HTTPS.equals(getScheme()))
-			out.append("//");
 		if (getLocation() != null)
-			out.append(getLocation());
+			out.append("//").append(getLocation());
 		if (getPathParts() != null)
 			out.append('/').append(getPath());
 		if (getParams() != null)
