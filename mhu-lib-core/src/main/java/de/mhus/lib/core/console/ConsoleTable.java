@@ -224,6 +224,8 @@ import de.mhus.lib.core.lang.Value;
 public class ConsoleTable {
     
 	public static final String SEPARATOR_LINE = "---";
+
+	private static final int MIN_TABLE_WIDTH = 80;
     
 	public List<Column> header = new ArrayList<>();
     public List<List<String[]>> content = new ArrayList<>();
@@ -239,6 +241,8 @@ public class ConsoleTable {
 	private boolean cellSpacer = true;
 
 	private int tableWidth;
+
+	private int definedTableWidth = 0;
     
     public Row addRow() {
         return new Row(addIntRow());
@@ -674,6 +678,16 @@ public class ConsoleTable {
 
 	public void addHeader(String name) {
 		header.add(new Column(name));
+	}
+
+	public void fitToConsole() {
+		int w = Console.get().getWidth();
+		setTableWidth(Math.max(w, MIN_TABLE_WIDTH));
+	}
+
+	public void setTableWidth(int width) {
+		definedTableWidth  = width;
+		maxTableWidth = width;
 	}
 
 }

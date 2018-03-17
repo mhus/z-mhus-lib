@@ -287,6 +287,7 @@ public abstract class DbProvider extends MObject {
 	 * @return x
 	 */
 	public String getName() {
+		if (config == null) return "?";
 		return config.getExtracted("name");
 	}
 

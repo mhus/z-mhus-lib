@@ -388,7 +388,12 @@ public abstract class Console extends PrintStream implements IBase {
 	}
 
 	public static Console get() {
+		if (console == null) create();
 		return console;
+	}
+	
+	public boolean isInitialized() {
+		return console != null;
 	}
 	
 }
