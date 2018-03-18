@@ -203,6 +203,7 @@
  */
 package de.mhus.lib.karaf;
 
+import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -228,14 +229,23 @@ public class DataSourceUtil {
 	}
 
 	public DataSource getDataSource(String name) {
-        ServiceReference<?>[] dataSources = getDataSources();
-        for (ServiceReference<?> ref : dataSources) {
-            String jndiName = getServiceJndiName(ref);
-            if (name.equals(jndiName)) {
-                DataSource ds = (DataSource)getContext().getService(ref);
-                return ds;
-            }
-        }
+		try {
+			Collection<ServiceReference<DataSource>> refs = getContext().getServiceReferences(DataSource.class, "(" + SERVICE_JNDI_NAME_KEY + "=" + name + ")");
+			if (refs.size() > 0) {
+				return getContext().getService(refs.iterator().next());
+			}
+		} catch (InvalidSyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		
+//        ServiceReference<?>[] dataSources = getDataSources();
+//        for (ServiceReference<?> ref : dataSources) {
+//            String jndiName = getServiceJndiName(ref);
+//            if (name.equals(jndiName)) {
+//                DataSource ds = (DataSource)getContext().getService(ref);
+//                return ds;
+//            }
+//        }
 
         // throw new RuntimeException("No DataSource with name " + name + " found");
         return null;

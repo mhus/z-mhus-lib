@@ -262,6 +262,19 @@ public class DialectDefault extends Dialect {
 	 *     [field name='field name' prefix='prefix_' type='field type' default='def value' notnull=yes/no /]
 	 *   [/table]
 	 * [/config]
+	 * 
+	 * table:
+	 *   name
+	 *   primary_key
+	 * 
+	 * field:
+	 *   name
+	 *   type=INT,LONG,BOOL,DOUBLE,FLOAT,STRING,DATETIME,UUID,BLOB, UNKNOWN, BIGDECIMAL
+	 *   size
+	 *   default
+	 *   notnull
+	 * 
+	 * 
 	 * @param data
 	 * @param db
 	 * @param caoBundle
