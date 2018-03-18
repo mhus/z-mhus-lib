@@ -368,7 +368,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 				compiledCache.put(key, cached);
 			}
 			try {
-				return cached.execute(level == 0 ?null : new ConfigMap(level));
+				return cached.execute(new ConfigMap(level,this));
 			} catch (MException e) {
 				throw new MRuntimeException(key,e);
 			}
@@ -379,9 +379,9 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		
 		@Override
 		protected StringPart createDefaultAttributePart(String part) {
-			if (part.startsWith("root."))				
+			if (part.startsWith(">root:"))				
 				return new RootAttributePart(part);
-			if (part.startsWith(">>>"))
+			if (part.startsWith(">js:"))
 				return new DefaultScriptPart(part);
 			return new ConfigAttributePart(part);
 		}
@@ -393,7 +393,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		private ResourceNode<?> root;
 
 		public RootAttributePart(String part) {
-			name = MString.afterIndex(part,'.');
+			name = MString.afterIndex(part,':');
 			root = ResourceNode.this;
 			while (root.getParent() != null && root.getParent() != root) root = root.getParent();
 			int pos = name.indexOf(',');
@@ -430,11 +430,16 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 				name = name.substring(0,pos);
 			}
 			config = ResourceNode.this;
-			while (name.startsWith("../")) {
-				config = config.getParent();
-				name = name.substring(3);
-				if (config == null ) break;
-			}
+			if (name.startsWith("/")) {
+				while (config.getParent() != null)
+					config = config.getParent();
+				name = name.substring(1);
+			} else
+				while (name.startsWith("../")) {
+					config = config.getParent();
+					name = name.substring(3);
+					if (config == null ) break;
+				}
 		}
 
 		@Override
@@ -460,14 +465,20 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	private static class ConfigMap implements Map<String,Object> {
 
 		private int level;
+		private ResourceNode<?> config;
 
 		private ConfigMap(int level) {
 			this.level = level;
 		}
 		
+		private ConfigMap(int level, ResourceNode<?> config) {
+			this.level = level;
+			this.config = config;
+		}
+		
 		@Override
 		public int size() {
-			return 0;
+			return config == null ? 0 : config.size();
 		}
 
 		public int getLevel() {
@@ -476,22 +487,22 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 
 		@Override
 		public boolean isEmpty() {
-			return false;
+			return config == null ? true : config.isEmpty();
 		}
 
 		@Override
 		public boolean containsKey(Object key) {
-			return false;
+			return config == null ? false : config.containsKey(key);
 		}
 
 		@Override
 		public boolean containsValue(Object value) {
-			return false;
+			return config == null ? false : config.containsValue(value);
 		}
 
 		@Override
 		public Object get(Object key) {
-			return null;
+			return config == null ? null : config.get(key);
 		}
 
 		@Override
@@ -514,7 +525,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 
 		@Override
 		public Set<String> keySet() {
-			return null;
+			return config == null ? null : config.keySet();
 		}
 
 		@Override

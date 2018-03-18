@@ -219,7 +219,7 @@ public class DefaultScriptPart extends MObject implements StringPart {
 	ScriptEngineManager manager = new ScriptEngineManager();
 
 	public DefaultScriptPart(String part) {
-		if (part.startsWith(">>>")) part = part.substring(3);
+		if (part.startsWith(">js:")) part = part.substring(4);
 		this.part = part;
 	}
 
