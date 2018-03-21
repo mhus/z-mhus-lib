@@ -214,6 +214,8 @@ import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.lang.ValueProvider;
+import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class Scheduler extends MLog implements Named {
 
@@ -437,6 +439,25 @@ public class Scheduler extends MLog implements Named {
 	
 	public SchedulerQueue getQueue() {
 		return queue;
+	}
+	
+	public void clear() {
+		try {
+			MThread.getWithTimeout(new ValueProvider<String>() {
+	
+				@Override
+				public String getValue() throws Exception {
+					synchronized (running) {
+						if (running.isEmpty()) return "";
+						return null;
+					}
+				}
+			}, 10000, false);
+		} catch (TimeoutRuntimeException e) {
+			log().i("Can't stop running jobs");
+		}
+		jobs.clear();
+		queue.clear();
 	}
 
 }

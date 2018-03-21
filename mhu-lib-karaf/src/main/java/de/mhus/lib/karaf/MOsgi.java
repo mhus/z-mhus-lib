@@ -207,6 +207,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
@@ -360,6 +361,20 @@ public class MOsgi {
 	 */
 	public static BundleContext getBundleContext() {
 		return FrameworkUtil.getBundle(MOsgi.class).getBundleContext();
+	}
+
+	public enum BUNDLE_STATE {UNINSTALLED,INSTALLED,RESOLVED,STARTING,STOPPING,ACTIVE,UNKNOWN}
+	public static BUNDLE_STATE getState(Bundle bundle) {
+		int state = bundle.getState();
+		switch (state) {
+		case Bundle.UNINSTALLED: return BUNDLE_STATE.UNINSTALLED;
+		case Bundle.INSTALLED: return BUNDLE_STATE.INSTALLED;
+		case Bundle.RESOLVED: return BUNDLE_STATE.RESOLVED;
+		case Bundle.STARTING: return BUNDLE_STATE.STARTING;
+		case Bundle.STOPPING: return BUNDLE_STATE.STOPPING;
+		case Bundle.ACTIVE: return BUNDLE_STATE.ACTIVE;
+		default: return BUNDLE_STATE.UNKNOWN;
+		}
 	}
 	
 }

@@ -428,6 +428,16 @@ public class MThread extends MObject implements Runnable {
 		new MThread(task).start();
 	}
 
+	/**
+	 * Try every 200ms to get the value. If the provider throws an error or return null
+	 * the try will be repeated. If the time out is reached a TimeoutRuntimeException
+	 * will be thrown.
+	 * 
+	 * @param provider
+	 * @param timeout
+	 * @param nullAllowed
+	 * @return The requested value
+	 */
 	public static <T> T getWithTimeout( ValueProvider<T> provider, long timeout, boolean nullAllowed) {
 		long start = System.currentTimeMillis();
 		while (true) {

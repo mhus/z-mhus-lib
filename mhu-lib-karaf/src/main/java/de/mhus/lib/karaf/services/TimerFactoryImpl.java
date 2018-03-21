@@ -225,6 +225,7 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
@@ -283,11 +284,13 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 			
 			@Override
 			protected void removeService(ServiceReference<SchedulerService> reference, SchedulerService service) {
+				log().d("remove service",reference.getBundle().getSymbolicName(),reference.getBundle().getBundleId(),MOsgi.getState(reference.getBundle()),service.getClass().getCanonicalName());
 				removeSchedulerService(service);
 			}
 			
 			@Override
 			protected void addService(ServiceReference<SchedulerService> reference, SchedulerService service) {
+				log().d("add service",reference.getBundle().getSymbolicName(),reference.getBundle().getBundleId(),MOsgi.getState(reference.getBundle()),service.getClass().getCanonicalName());
 				addSchedulerService(reference, service);
 			}
 		}.start();
@@ -595,6 +598,8 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 	
 	public void stop() {
 		tracker.stop();
+		MThread.sleep(1000);
+		myTimer.clear();
 	}
 	
 	public void start() {

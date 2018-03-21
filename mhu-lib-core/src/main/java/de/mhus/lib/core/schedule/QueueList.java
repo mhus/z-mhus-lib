@@ -281,4 +281,11 @@ public class QueueList implements SchedulerQueue {
 		}
 	}
 
+	@Override
+	public void clear() {
+		synchronized (this) {
+			list.clear();
+		}
+	}
+
 }
