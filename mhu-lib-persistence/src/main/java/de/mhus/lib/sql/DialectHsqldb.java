@@ -232,7 +232,7 @@ public class DialectHsqldb extends DialectDefault {
 	@Override
 	protected String getFieldConfig(IConfig f) {
 		String type = getDbType(f);
-		String ret = f.getString("name",null).toUpperCase() + " " + type;
+		String ret = normalizeColumnName(f.getString("name",null)) + " " + type;
 
 		String def = f.getExtracted("default");
 		if (def != null) {
@@ -256,7 +256,7 @@ public class DialectHsqldb extends DialectDefault {
 	protected String getFieldConfigWithoutExtras(IConfig f) {
 		try {
 			String type = getDbType(f);
-			String ret = f.getString("name").toUpperCase() + " " + type;
+			String ret = normalizeColumnName(f.getString("name")) + " " + type;
 
 			//		String def = f.getExtracted("default");
 			//		if (def != null) {
@@ -286,7 +286,7 @@ public class DialectHsqldb extends DialectDefault {
 	/** {@inheritDoc} */
 	@Override
 	public String normalizeColumnName(String columnName) {
-		return columnName.toUpperCase();
+		return columnName.toUpperCase() + "_";
 	}
 
 	/** {@inheritDoc} */
@@ -339,7 +339,9 @@ public class DialectHsqldb extends DialectDefault {
 
 		iName = table + iName;
 
-		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
+		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + 
+					 " INDEX " + iName + (btree ? " USING BTREE" : "") +
+					 " ON "+table+ "("+columns+")";
 		log().t(sql);
 		try {
 			sth.execute(sql.toString());
@@ -364,7 +366,7 @@ public class DialectHsqldb extends DialectDefault {
 	/** {@inheritDoc} */
 	@Override
 	public String normalizeIndexName(String tableName) throws Exception {
-		return tableName.toUpperCase();
+		return tableName.toUpperCase() + "_";
 	}
 
 	/** {@inheritDoc} */

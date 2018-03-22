@@ -388,13 +388,30 @@ public class MSystem {
 			return stack[returns].getClassName();
 		return "?";
 	}
-
+	
 	public static String findSource() {
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 		for (StackTraceElement step : stack) {
 			String n = step.getClassName();
 			if (!n.startsWith("java.lang") && !n.startsWith("de.mhus.lib.core"))
 				return n;
+		}
+		return "?";
+	}
+	
+	public static String findSourceMethod(int returns) {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		if (stack.length > returns)
+			return stack[returns].getMethodName();
+		return "?";
+	}
+
+	public static String findSourceMethod() {
+		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+		for (StackTraceElement step : stack) {
+			String n = step.getClassName();
+			if (!n.startsWith("java.lang") && !n.startsWith("de.mhus.lib.core"))
+				return step.getMethodName();
 		}
 		return "?";
 	}

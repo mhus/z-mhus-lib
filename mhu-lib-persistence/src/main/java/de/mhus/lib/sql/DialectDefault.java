@@ -695,7 +695,9 @@ public class DialectDefault extends Dialect {
 		} catch (Exception e) {
 			log().i(sql,e);
 		}
-		sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
+		sql = "CREATE " + (unique ? "UNIQUE" : "" ) + 
+			  " INDEX " + iName + (btree ? " USING BTREE" : "") +
+			  " ON "+table+ "("+columns+")";
 		log().t(sql);
 		try {
 			sth.execute(sql.toString());
@@ -706,7 +708,9 @@ public class DialectDefault extends Dialect {
 
 	protected void createIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
-		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
+		String sql = "CREATE " + (unique ? "UNIQUE" : "" ) + 
+					 " INDEX " + iName + (btree ? " USING BTREE" : "") +
+					 " ON "+table+ "("+columns+")";
 		log().t(sql);
 		try {
 			sth.execute(sql.toString());

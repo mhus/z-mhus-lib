@@ -262,8 +262,10 @@ public class JdbcProvider extends DbProvider {
 		String pass = config.getExtracted("pass");
 
 		if (!MString.isEmpty(driver)) {
-			//			activator.getClazz(driver);
-			Class.forName(driver);
+			if (activator != null)
+				activator.getClazz(driver);
+			else
+				Class.forName(driver);
 		}
 
 		log().t(driver,url,user);

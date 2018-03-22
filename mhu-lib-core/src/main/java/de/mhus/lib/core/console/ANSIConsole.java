@@ -283,8 +283,11 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public void setCursor(int x, int y) {
-		print( (char)27 + "[" + y + ";" + x + "H" );
-
+		print( ansiSetCursor(x, y));
+	}
+	
+	public static String ansiSetCursor(int x, int y) {
+		return (char)27 + "[" + y + ";" + x + "H" ;
 	}
 
 	@Override
@@ -308,11 +311,19 @@ public class ANSIConsole extends Console {
 		this.background = background;
 		
 		if (supportColor) {
-			if (foreground != COLOR.UNKNOWN)
-				print( (char)27 + "[3" + colorToSequence(foreground) + "m");
-			if (background != COLOR.UNKNOWN)
-				print( (char)27 + "[4" + colorToSequence(background) + "m");
+			if (foreground != null && foreground != COLOR.UNKNOWN)
+				print( ansiForeground(foreground));
+			if (background != null && background != COLOR.UNKNOWN)
+				print( ansiBackground(background));
 		}		
+	}
+	
+	public static String ansiForeground(COLOR color) {
+		return (char)27 + "[3" + ansiColorValue(color) + "m";
+	}
+	
+	public static String ansiBackground(COLOR color) {
+		return (char)27 + "[4" + ansiColorValue(color) + "m";
 	}
 
 	@Override
@@ -338,9 +349,14 @@ public class ANSIConsole extends Console {
 
 	private void updateAttributes() {
 		if (supportColor)
-			print( (char)27 + "[0" + (blink ? ";5" : "") + (bold ? ";1" : "") + "m" );
+			print( ansiAttributes(blink, bold) );
 	}
 
+	public static String ansiAttributes(boolean blink, boolean bold) {
+		return (char)27 + "[0" + (blink ? ";5" : "") + (bold ? ";1" : "") + "m";
+	}
+	
+	
 	@Override
 	public boolean isBlink() {
 		return blink;
@@ -363,7 +379,7 @@ public class ANSIConsole extends Console {
 	}
 	
 	
-	public String colorToSequence(COLOR col) {
+	public static String ansiColorValue(COLOR col) {
 		switch (col) {
 		case BLACK:
 			return "0";
@@ -392,15 +408,27 @@ public class ANSIConsole extends Console {
 		blink = false;
 		foreground = COLOR.UNKNOWN;
 		background = COLOR.UNKNOWN;
-		print( (char)27 + "[0m");
+		print( ansiCleanup() );
 	}
 	
+	public static String ansiCleanup() {
+		return  (char)27 + "[0m";
+	}
+
 	@Override
 	public void resetTerminal() {
 		// \033c
 //		print("\033[H\033[2J");  
-		print( (char)27 + "c");
+		print( ansiReset());
 	}
 
+	public static String ansiReset() {
+		return (char)27 + "c";
+	}
+
+	@Override
+	public boolean isAnsi() {
+		return true;
+	}
 
 }

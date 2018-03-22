@@ -242,7 +242,7 @@ public class AdbTest extends TestCase {
 	public AdbTest(String name) {
 		super(name);
 		try {
-			MApi.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
+			MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

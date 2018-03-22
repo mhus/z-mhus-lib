@@ -395,5 +395,9 @@ public abstract class Console extends PrintStream implements IBase {
 	public boolean isInitialized() {
 		return console != null;
 	}
+
+	public boolean isAnsi() {
+		return false;
+	}
 	
 }
