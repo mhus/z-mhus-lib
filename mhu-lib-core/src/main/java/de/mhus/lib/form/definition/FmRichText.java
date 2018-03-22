@@ -212,11 +212,6 @@ public class FmRichText extends FmElement {
 
 	private static final long serialVersionUID = 1L;
 
-	public <T> FmRichText(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-		addDefinition(definitions);
-	}
-
 	public FmRichText(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
 		addDefinition(definitions);

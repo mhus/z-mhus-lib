@@ -217,10 +217,6 @@ public class FmDate extends FmElement {
 	
 	public static final String FORMAT = "format";
 
-	public <T> FmDate(Function<T,?> getter, FORMATS format, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), format, title, description, definitions);
-	}
-	
 	public FmDate(String name, FORMATS format, String title, String description, IDefAttribute ... definitions) {
 		this(name, new DefAttribute(FORMAT, format.name()), new FmNls(title, description));
 		addDefinition(definitions);

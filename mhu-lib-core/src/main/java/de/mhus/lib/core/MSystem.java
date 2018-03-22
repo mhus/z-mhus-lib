@@ -224,6 +224,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.function.Function;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -930,5 +931,24 @@ public class MSystem {
     public static String getProperty(String key, String def) {
     	return System.getProperty(key, def);
     }
+
+    /**
+     * Return a unique class name for the class with
+     * package, main class name and sub class name.
+     * 
+     * @param clazz The class to analyze
+     * @return The name of the class
+     */
+	public static String getCanonicalClassName(Class<?> clazz) {
+		
+		if (clazz.isLocalClass())
+			return clazz.getCanonicalName();
+		
+		if (clazz.isAnonymousClass())
+			return clazz.getName();
+		
+		return clazz.getCanonicalName();
+
+	}
 
 }

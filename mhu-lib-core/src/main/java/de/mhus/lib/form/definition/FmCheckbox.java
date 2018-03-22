@@ -214,11 +214,6 @@ public class FmCheckbox extends FmElement {
 	private static final long serialVersionUID = 1L;
 	public static final String TYPE_CHECKBOX = "checkbox";
 
-	public <T> FmCheckbox(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-		addDefinition(definitions);
-	}
-	
 	public FmCheckbox(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
 		addDefinition(definitions);

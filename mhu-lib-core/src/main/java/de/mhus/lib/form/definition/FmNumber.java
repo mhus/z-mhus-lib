@@ -223,11 +223,6 @@ public class FmNumber extends FmElement {
 	public static final String FORMAT = "format";
 	public static final String NUMBER_TYPE = "number";
 
-	public <T> FmNumber(Function<T,?> getter, TYPES type, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), type, new FmNls(title, description));
-		addDefinition(definitions);
-	}
-	
 	public FmNumber(String name, TYPES type, String title, String description, IDefAttribute ... definitions) {
 		this(name, type, new FmNls(title, description));
 		addDefinition(definitions);

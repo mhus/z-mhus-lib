@@ -313,8 +313,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> eq(Function<T,?> getter, Object value) {
-		operations.add(Db.eq(MPojo.toAttributeName(getter), value));
+		operations.add(Db.eq(MPojo.toAttributeNameWithCache(getter), value));
 		return this;
 	}
 	
@@ -350,8 +351,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> ne(Function<T,?> getter, Object value) {
-		operations.add(Db.ne(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.ne(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -387,8 +389,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> lt(Function<T,?> getter, Object value) {
-		operations.add(Db.lt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.lt(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -424,8 +427,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> le(Function<T,?> getter, Object value) {
-		operations.add(Db.le(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.le(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -461,8 +465,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> gt(Function<T,?> getter, Object value) {
-		operations.add(Db.gt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.gt(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -498,8 +503,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> ge(Function<T,?> getter, Object value) {
-		operations.add(Db.ge(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.ge(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -523,8 +529,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> el(Function<T,?> getter, Object value) {
-		operations.add(Db.el(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.el(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -548,8 +555,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> eg(Function<T,?> getter, Object value) {
-		operations.add(Db.eg(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.eg(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -585,8 +593,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> like(Function<T,?> getter, Object value) {
-		operations.add(Db.like(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		operations.add(Db.like(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -641,8 +650,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> asc(Function<T,?> getter) {
-		return asc(MPojo.toAttributeName(getter));
+		return asc(MPojo.toAttributeNameWithCache(getter));
 	}
 
 	
@@ -664,8 +674,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> desc(Function<T,?> getter) {
-		return desc(MPojo.toAttributeName(getter));
+		return desc(MPojo.toAttributeNameWithCache(getter));
 	}
 	
 	/**
@@ -720,8 +731,9 @@ public class AQuery<T> extends APrint {
 	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
+	@Deprecated
 	public AQuery<T> in(Function<T,?> left, AAttribute ... right) {
-		operations.add(Db.in( Db.attr(MPojo.toAttributeName(left)) , new AList(right) ));
+		operations.add(Db.in( Db.attr(MPojo.toAttributeNameWithCache(left)) , new AList(right) ));
 		return this;
 	}
 	
@@ -780,8 +792,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> isNull(Function<T,?> getter) {
-		operations.add(Db.isNull(Db.attr(MPojo.toAttributeName(getter))));
+		operations.add(Db.isNull(Db.attr(MPojo.toAttributeNameWithCache(getter))));
 		return this;
 	}
 	
@@ -803,8 +816,9 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
+	@Deprecated
 	public AQuery<T> isNotNull(Function<T,?> getter) {
-		operations.add(Db.isNotNull(Db.attr(MPojo.toAttributeName(getter))));
+		operations.add(Db.isNotNull(Db.attr(MPojo.toAttributeNameWithCache(getter))));
 		return this;
 	}
 	

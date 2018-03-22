@@ -213,11 +213,6 @@ public class FmCombobox extends FmElement {
 	private static final long serialVersionUID = 1L;
 	public static final String TYPE_COMBOBOX = "combobox";
 
-	public <T> FmCombobox(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-		addDefinition(definitions);
-	}
-	
 	public FmCombobox(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
 		addDefinition(definitions);

@@ -230,6 +230,7 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
+import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotFoundRuntimeException;
@@ -239,6 +240,7 @@ public class MPojo {
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
 	private static PojoModelFactory defaultModelFactory;
+	private static SoftHashMap<String, String> cacheAttributeName = new SoftHashMap<>();
 
 	public static synchronized PojoModelFactory getDefaultModelFactory() {
 		if (defaultModelFactory == null)
@@ -796,7 +798,7 @@ public class MPojo {
 	 * @return a {@link java.lang.String} object.
 	 * @since 3.3.0
 	 */
-	public static String toAttributeName(Function<?, ?> getter) {
+	public static <T> String toAttributeName(Function<T, ?> getter) {
         try {
 			String name = LambdaUtil.getFunctionName(getter);
 			name = name.toLowerCase();
@@ -807,6 +809,16 @@ public class MPojo {
 		} catch (NotFoundException e) {
 			throw new NotFoundRuntimeException(e);
 		}
+	}
+
+	public static synchronized <T> String toAttributeNameWithCache(Function<T, ?> getter) {
+		String id = MSystem.getCanonicalClassName(getter.getClass());
+		String name = cacheAttributeName.get(id);
+		if (name == null) {
+			name = toAttributeName(getter);
+			cacheAttributeName.put(id,name);
+		}
+		return name;
 	}
 
 }

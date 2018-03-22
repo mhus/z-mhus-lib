@@ -212,10 +212,6 @@ public class FmLabel extends FmElement {
 
 	private static final long serialVersionUID = 1L;
 
-	public <T> FmLabel(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-	}
-
 	public FmLabel(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
 		addDefinition(definitions);

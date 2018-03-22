@@ -212,10 +212,6 @@ public class FmLink extends FmElement {
 	
 	private static final long serialVersionUID = 1L;
 
-	public <T> FmLink(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-	}
-
 	public FmLink(String name, String label, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FmNls(title, description));
 		setString("label", label);
