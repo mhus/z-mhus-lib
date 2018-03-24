@@ -32,4 +32,38 @@ public class M {
 		}
 		return out.toString();
 	}
+
+	/**
+	 * Truncate the string by length characters.
+	 * 
+	 * @param in String to truncate
+	 * @param length Max length
+	 * @return Same or truncated string
+	 */
+	public static String trunc(String in, int length) {
+		return MString.truncate(in, length);
+	}
+	
+	/**
+	 * Cast to default type
+	 * @param in
+	 * @param def
+	 * @return Integer
+	 */
+	public static int c(Object in, int def) {
+		return MCast.toint(in, def);
+	}
+	
+	public static long c(Object in, long def) {
+		return MCast.tolong(in, def);
+	}
+
+	public static double c(Object in, double def) {
+		return MCast.todouble(in, def);
+	}
+
+	public static boolean c(Object in, boolean def) {
+		return MCast.toboolean(in, def);
+	}
+	
 }

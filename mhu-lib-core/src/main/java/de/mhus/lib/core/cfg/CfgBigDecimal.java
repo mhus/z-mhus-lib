@@ -206,7 +206,6 @@ package de.mhus.lib.core.cfg;
 import java.math.BigDecimal;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.directory.ResourceNode;
 
 public class CfgBigDecimal extends CfgValue<BigDecimal>{

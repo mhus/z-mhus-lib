@@ -207,8 +207,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import de.mhus.lib.core.MSystem;
-
 /**
  * The file will be deleted if the reference of the object is lost and the gc remove the object
  * from the vm.

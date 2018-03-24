@@ -203,11 +203,8 @@
  */
 package de.mhus.lib.form.definition;
 
-import java.util.function.Function;
-
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
-import de.mhus.lib.core.pojo.MPojo;
 
 public class FmDate extends FmElement {
 

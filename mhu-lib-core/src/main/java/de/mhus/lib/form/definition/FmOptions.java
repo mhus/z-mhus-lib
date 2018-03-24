@@ -203,10 +203,7 @@
  */
 package de.mhus.lib.form.definition;
 
-import java.util.function.Function;
-
 import de.mhus.lib.core.definition.IDefAttribute;
-import de.mhus.lib.core.pojo.MPojo;
 
 public class FmOptions extends FmElement {
 

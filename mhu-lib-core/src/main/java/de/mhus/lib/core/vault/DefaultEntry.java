@@ -203,7 +203,6 @@
  */
 package de.mhus.lib.core.vault;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import de.mhus.lib.core.MSystem;

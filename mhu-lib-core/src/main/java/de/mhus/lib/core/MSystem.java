@@ -210,8 +210,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -224,13 +226,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.function.Function;
 
 import de.mhus.lib.core.logging.Log;
 
 public class MSystem {	
 	
 	private static Log log = Log.getLog(MSystem.class);
+	private static ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
 	
 	/**
 	 * Returns the name of the current system. COMPUTERNAME or HOSTNAME.
@@ -752,7 +754,6 @@ public class MSystem {
 	public static List<TopThreadInfo> threadTop(long sleep) throws InterruptedException {
 		sleep = Math.max(sleep, 200);
 		
-		ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
 		LinkedList<TopThreadInfo> threads = new LinkedList<>();
 		for (Entry<Thread, StackTraceElement[]> thread : Thread.getAllStackTraces().entrySet()) {
 			threads.add(new TopThreadInfo(tmxb, thread));
@@ -962,6 +963,17 @@ public class MSystem {
 			}
     	}
     	return error;
+	}
+
+	public static boolean isLockedByThread(Object value) {
+		if (value == null) return false;
+		int objectHash = value.hashCode();
+		for (long threadId : tmxb.getAllThreadIds()) {
+			ThreadInfo info = tmxb.getThreadInfo(threadId);
+			for (LockInfo locks : info.getLockedSynchronizers())
+				if (locks.getIdentityHashCode() == objectHash) return true;
+		}
+		return false;
 	}
 
 }

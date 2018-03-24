@@ -244,7 +244,17 @@ public class ConsoleTable {
 
 	private int definedTableWidth = 0;
     
-    public Row addRow() {
+    public ConsoleTable() {
+    }
+    
+    public ConsoleTable(boolean full) {
+		if (full)
+			setMaxColSize(0);
+		else
+			fitToConsole();
+	}
+
+	public Row addRow() {
         return new Row(addIntRow());
     }
     
@@ -509,6 +519,21 @@ public class ConsoleTable {
 	            	break;
         		}
         	}
+        } else
+        if (definedTableWidth > 0 && tableWidth < definedTableWidth) {
+        	int delta = definedTableWidth - tableWidth;
+        	int d = delta / header.size();
+        	for (int i = 0; i < header.size(); i++) {
+        		Column h = header.get(i);
+        		h.width = h.width + d;
+        		tableWidth+=d;
+        	}
+            if (tableWidth < definedTableWidth) {
+            	delta = definedTableWidth - tableWidth;
+        		Column h = header.get(header.size()-1);
+            	h.width = h.width + delta;
+        		tableWidth+=delta;
+            }
         }
         
     }

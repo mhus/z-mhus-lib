@@ -203,18 +203,11 @@
  */
 package de.mhus.lib.core.console;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
-import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.io.TextReader;
 
 // http://ascii-table.com/ansi-escape-sequences.php
