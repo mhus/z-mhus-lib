@@ -439,7 +439,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 	}
 
 	@Override
-	public StringBuilder getRequestURL() {
+	public StringBuffer getRequestURL() {
 		return parent.getRequestURL();
 	}
 

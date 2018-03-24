@@ -951,4 +951,17 @@ public class MSystem {
 
 	}
 
+	public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
+		Throwable error = null;
+    	for (Object o : msg) {
+			error = MSystem.serialize(sb,o, error);
+			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
+				sb.setLength(maxMsgSize);
+				sb.append("...");
+				break;
+			}
+    	}
+    	return error;
+	}
+
 }
