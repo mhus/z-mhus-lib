@@ -270,7 +270,7 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 	}
 
 	@Override
-	public void prepareMessage(Log log, StringBuffer msg) {
+	public void prepareMessage(Log log, StringBuilder msg) {
 		ThreadMapperConfig config = map.get();
 		if (config == null) {
     		msg.append('(').append(Thread.currentThread().getId()).append(')');

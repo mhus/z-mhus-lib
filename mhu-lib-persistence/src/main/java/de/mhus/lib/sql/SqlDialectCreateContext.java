@@ -208,15 +208,15 @@ import de.mhus.lib.adb.query.ACreateContext;
 
 public class SqlDialectCreateContext implements ACreateContext {
 
-	private StringBuffer buffer;
+	private StringBuilder buffer;
 	private DbManager manager;
 
-	public SqlDialectCreateContext(DbManager manager, StringBuffer buffer) {
+	public SqlDialectCreateContext(DbManager manager, StringBuilder buffer) {
 		this.manager = manager;
 		this.buffer = buffer;
 	}
 
-	public StringBuffer getBuffer() {
+	public StringBuilder getBuffer() {
 		return buffer;
 	}
 

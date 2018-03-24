@@ -404,12 +404,12 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) throws MException {
+		public void execute(StringBuilder out, Map<String, Object> attributes) throws MException {
 			out.append(root.getString(name,def));
 		}		
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(name).append("(").append(def).append(")");
 		}
@@ -443,7 +443,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) throws MException {
+		public void execute(StringBuilder out, Map<String, Object> attributes) throws MException {
 			int level = 0;
 			if (attributes != null && attributes instanceof ConfigMap) {
 				level = ((ConfigMap)attributes).getLevel();
@@ -455,7 +455,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		}
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(name).append("(").append(def).append(")");
 		}
@@ -559,13 +559,13 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 	}
 	
 	public String dump() throws MException {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		dump(sb,0);
 		return sb.toString();
 	}
 
 	@SuppressWarnings("deprecation")
-	void dump(StringBuffer sb, int level) throws MException {
+	void dump(StringBuilder sb, int level) throws MException {
 		sb.append(MString.getRepeatig(level, ' '));
 		sb.append('<').append(getName());
 		for (String key : keys())

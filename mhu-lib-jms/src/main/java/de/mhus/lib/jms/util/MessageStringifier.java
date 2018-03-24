@@ -222,7 +222,7 @@ public class MessageStringifier {
 	@Override
 	public String toString() {
 		if (msg == null) return "null";
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		try {
 			sb.append("=== JMS Message === ").append(msg.getClass().getSimpleName()).append(" ===\n");
 			sb.append("Message ID    : ").append(msg.getJMSMessageID()).append('\n');

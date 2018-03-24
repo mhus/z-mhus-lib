@@ -312,7 +312,7 @@ public class MPassword {
 		if (in.startsWith("`X"))
 			throw new MRuntimeException("try to encode a dummy password");
 		if (in.startsWith("`A")) {
-			StringBuffer out = new StringBuffer();
+			StringBuilder out = new StringBuilder();
 			for (int i = 2; i < in.length(); i++) {
 				char c = in.charAt(i);
 				switch (c) {
@@ -353,7 +353,7 @@ public class MPassword {
         for (String in : input)
         	mDigest.update(in.getBytes());
         byte[] result = mDigest.digest();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < result.length; i++) {
             sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
         }

@@ -264,7 +264,7 @@ public class MXml {
 		
 		NodeList raw = root.getChildNodes();
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < raw.getLength(); i++) {
 			if (raw.item(i).getNodeType() == Node.ELEMENT_NODE && inner)
 				sb.append(getValue((Element) raw.item(i), inner));
@@ -291,7 +291,7 @@ public class MXml {
 
 		NodeList raw = root.getChildNodes();
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < raw.getLength(); i++) {
 			if (raw.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				sb.append(listener.valueOf( (Element)raw.item(i), getValue((Element) raw.item(i), listener ) ) );
@@ -470,7 +470,7 @@ public class MXml {
 	public static String getPathAsString(Node in) {
 		if (in == null)
 			return "";
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		do {
 			if (in instanceof Document) {
 				// out.insert( 0, in.getBaseURI() );
@@ -610,7 +610,7 @@ public class MXml {
 
 		if (_in == null) return null;
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			if (c > 126 || c < 32) {
@@ -638,7 +638,7 @@ public class MXml {
 	 */
 	public static String unicodeEncode(String _in) {
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			if (c > 255) {
@@ -662,9 +662,9 @@ public class MXml {
 
 		if (_in == null) return null;
 		
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		int mode = 0;
-		StringBuffer joker = null;
+		StringBuilder joker = null;
 		int jLen = 0;
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
@@ -672,7 +672,7 @@ public class MXml {
 				if (c == '&') {
 					mode = 1;
 					jLen = 0;
-					joker = new StringBuffer();
+					joker = new StringBuilder();
 				} else {
 					out.append(c);
 				}
@@ -1011,7 +1011,7 @@ public class MXml {
 		}
 
 		if (doIt) {
-			StringBuffer out = new StringBuffer();
+			StringBuilder out = new StringBuilder();
 			for (int i = 0; i < key.length(); i++) {
 				char c = key.charAt(i);
 				if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_' || c == '.' || c == '-')) {

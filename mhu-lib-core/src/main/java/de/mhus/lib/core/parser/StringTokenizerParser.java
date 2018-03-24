@@ -221,7 +221,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 	protected String lineSeparator = "\n";
 	protected char enclosure;
 	protected char encapsulated;
-	protected StringBuffer buffer;
+	protected StringBuilder buffer;
 	private int line = 0;
 	private char current;
 	private String original;
@@ -252,7 +252,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 		
 		enclosure = 0;
 		encapsulated = 0;
-		buffer = new StringBuffer();
+		buffer = new StringBuilder();
 		for (int i = 0; i < condition.length(); i++) {
 			current = condition.charAt(i);
 			

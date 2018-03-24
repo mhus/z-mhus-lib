@@ -252,10 +252,10 @@ public class JpaProperties extends Properties {
 	public void configureTypes() {
 		setProperty("openjpa.RuntimeUnenhancedClasses", "supported");
 
-		StringBuffer types = null;
+		StringBuilder types = null;
 		for (Class<?> type : schema.getObjectTypes()) {
 			if (types == null) {
-				types = new StringBuffer();
+				types = new StringBuilder();
 			} else {
 				types.append(";");
 			}

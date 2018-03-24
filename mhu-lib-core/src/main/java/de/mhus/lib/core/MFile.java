@@ -343,7 +343,7 @@ public class MFile {
 	public static String readFile(Reader _is) {
 		if (_is == null) return null;
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		char[] buffer = new char[1024];
 		try {
 			while (true) {

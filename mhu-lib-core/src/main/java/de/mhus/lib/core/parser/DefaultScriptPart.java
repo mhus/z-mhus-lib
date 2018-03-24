@@ -224,7 +224,7 @@ public class DefaultScriptPart extends MObject implements StringPart {
 	}
 
 	@Override
-	public void execute(StringBuffer out, Map<String, Object> attributes) {
+	public void execute(StringBuilder out, Map<String, Object> attributes) {
         ScriptEngine engine = manager.getEngineByName ("js");
         try {
         	if (attributes != null) {
@@ -242,7 +242,7 @@ public class DefaultScriptPart extends MObject implements StringPart {
 	}
 
 	@Override
-	public void dump(int level, StringBuffer out) {
+	public void dump(int level, StringBuilder out) {
 		
 	}
 

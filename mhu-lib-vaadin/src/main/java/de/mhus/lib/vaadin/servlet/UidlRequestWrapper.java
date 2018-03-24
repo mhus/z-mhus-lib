@@ -434,7 +434,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 	}
 
 	@Override
-	public StringBuffer getRequestURL() {
+	public StringBuilder getRequestURL() {
 		return request.getRequestURL();
 	}
 

@@ -365,7 +365,7 @@ public class AdbNode extends PropertiesNode {
 	@Override
 	public String getPath() {
 		CaoNode n = this;
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		while (true) {
 			out.insert(0, n.getName());
 			out.insert(0, '/');

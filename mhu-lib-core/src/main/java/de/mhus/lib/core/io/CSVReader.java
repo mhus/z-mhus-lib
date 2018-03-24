@@ -498,7 +498,7 @@ public class CSVReader {
 	 *             Some problem reading the file, possibly malformed data.
 	 */
 	public String get() throws EOFException, IOException {
-		StringBuffer field = new StringBuffer(allowMultiLineFields ? 512 : 64);
+		StringBuilder field = new StringBuilder(allowMultiLineFields ? 512 : 64);
 		/* we implement the parser as a finite state automaton with five states. */
 
 		int state = SEEKING_START; /*

@@ -300,7 +300,7 @@ public class Log {
 
     	if (parameterMapper != null) msg = parameterMapper.map(this, msg);
     	
-    	StringBuffer sb = new StringBuffer();
+    	StringBuilder sb = new StringBuilder();
     	prepare(sb);
     	Throwable error = null;
 //    	int cnt=0;
@@ -343,7 +343,7 @@ public class Log {
 //     */
 //    public void tt(Object ... msg) {
 //    	if (!isTraceEnabled()) return;
-//    	StringBuffer sb = new StringBuffer();
+//    	StringBuilder sb = new StringBuilder();
 //    	prepare(sb);
 //    	Throwable error = null;
 ////    	int cnt=0;
@@ -394,7 +394,7 @@ public class Log {
     	log(LEVEL.FATAL, msg);
     }
 
-    protected void prepare(StringBuffer sb) {
+    protected void prepare(StringBuilder sb) {
     	if (levelMapper != null) {
     		levelMapper.prepareMessage(this,sb);
     	} else {

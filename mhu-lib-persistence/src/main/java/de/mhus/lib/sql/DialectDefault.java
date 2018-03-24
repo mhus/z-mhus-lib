@@ -479,7 +479,7 @@ public class DialectDefault extends Dialect {
     }
 
 	protected void createTable(Statement sth, String tn, IConfig ctable) {
-		StringBuffer sql = new StringBuffer();
+		StringBuilder sql = new StringBuilder();
 		sql.append("create table " + tn + " ( ");
 		boolean first = true;
 		for (IConfig f:ctable.getNodes("field")) {
@@ -497,7 +497,7 @@ public class DialectDefault extends Dialect {
 		}
 	}
 
-	protected void createTableLastCheck(IConfig ctable, String tn, StringBuffer sql) {
+	protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {
 
 	}
 
@@ -808,7 +808,7 @@ public class DialectDefault extends Dialect {
 
 	@Override
 	public void createQuery(APrint p, AQuery<?> query) {
-		StringBuffer buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
+		StringBuilder buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
 		
 		if (p instanceof AQuery) {
 			//		buffer.append('(');
@@ -981,7 +981,7 @@ public class DialectDefault extends Dialect {
 			createQuery( ((ASubQuery)p).getLeft(), query);
 			buffer.append(" IN (");
 			
-			StringBuffer buffer2 = new StringBuffer().append("DISTINCT ");
+			StringBuilder buffer2 = new StringBuilder().append("DISTINCT ");
 			
 			AQuery<?> subQuery = ((ASubQuery)p).getSubQuery();
 			subQuery.setContext(new SqlDialectCreateContext(manager, buffer2 ) );

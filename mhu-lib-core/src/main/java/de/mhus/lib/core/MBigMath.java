@@ -348,7 +348,7 @@ public class MBigMath {
 		else if(b.compareTo(BigDecimal.ONE) < 0)
 			return (log10((BigDecimal.ONE).divide(b,mc),dp)).negate();
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		//number of digits on the left of the decimal point
 		int leftDigits = b.precision() - b.scale();
 
@@ -453,7 +453,7 @@ public class MBigMath {
 	}	
 
 	public static String toBase62(BigInteger in) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		boolean negative = false;
 		if (in.signum() == 0) return "0";
 		if (in.signum() == -1) {
@@ -508,7 +508,7 @@ public class MBigMath {
 	}
 
 	public static String toBase62(BigInteger[] in) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < in.length; i++) {
 			if (i != 0) out.append(':');
 			out.append(toBase62(in[i]));
@@ -533,7 +533,7 @@ public class MBigMath {
 	//
 	
 	public static String toBase91(BigInteger in) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		boolean negative = false;
 		if (in.signum() == 0) return "0";
 		if (in.signum() == -1) {
@@ -652,7 +652,7 @@ public class MBigMath {
 	}
 
 	public static String toBase91(BigInteger[] in) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < in.length; i++) {
 			if (i != 0) out.append(':');
 			out.append(toBase91(in[i]));

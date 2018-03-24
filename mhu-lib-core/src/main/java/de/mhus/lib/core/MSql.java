@@ -299,7 +299,7 @@ public class MSql {
 	 * @return sql String literal enclosed in '
 	 */
 	public static String quoteSQL(String sql) {
-		StringBuffer sb = new StringBuffer(sql.length() + 5);
+		StringBuilder sb = new StringBuilder(sql.length() + 5);
 		sb.append('\'');
 		for (int i = 0; i < sql.length(); i++) {
 			char c = sql.charAt(i);
@@ -335,7 +335,7 @@ public class MSql {
 		
 		if (!error) return in;
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < in.length(); i++) {
 			char c = in.charAt(i);
 			if (i == 0 && c >= '0' && c <= '9' ) {

@@ -308,7 +308,7 @@ public class MOsgi {
 	}
 
 	public static String filterAdd(String ... parts) {
-		StringBuffer out = new StringBuffer().append("(&");
+		StringBuilder out = new StringBuilder().append("(&");
 		for (String part : parts)
 			out.append(part);
 		out.append(")");

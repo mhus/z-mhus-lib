@@ -256,7 +256,7 @@ public class DialectMysql extends DialectDefault {
 	}
 
 	@Override
-	protected void createTableLastCheck(IConfig ctable, String tn, StringBuffer sql) {
+	protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {
 		sql.append(" ENGINE=InnoDb");
 	}
 

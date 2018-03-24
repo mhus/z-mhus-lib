@@ -541,7 +541,7 @@ public abstract class Table extends MObject {
 
 		// create query and collect values
 		
-		StringBuffer sql = new StringBuffer().append("UPDATE ").append(tableName).append(" SET ");
+		StringBuilder sql = new StringBuilder().append("UPDATE ").append(tableName).append(" SET ");
 		int nr = 0;
 		for (String aname : attributeNames) {
 			Field f = fIndex.get(aname);
@@ -941,7 +941,7 @@ public abstract class Table extends MObject {
 			}
 			cindex.setString(Dialect.I_NAME, "idx_" + n);
 			cindex.setString(Dialect.I_TABLE, tableNameOrg);
-			StringBuffer fields = new StringBuffer();
+			StringBuilder fields = new StringBuilder();
 			for (Field field : item.getValue()) {
 				if (fields.length() > 0) fields.append(",");
 				fields.append(field.createName);
@@ -1032,7 +1032,7 @@ public abstract class Table extends MObject {
 
 		if (pa == null && pk == null) return "";
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 
 		if (pa != null) out.append("size=").append(pa.size());
 

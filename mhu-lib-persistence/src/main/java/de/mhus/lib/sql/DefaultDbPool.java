@@ -365,7 +365,7 @@ public class DefaultDbPool extends DbPool {
 	@Override
 	@JmxManaged(descrition="Return the usage of the connections")
 	public String dumpUsage(boolean used) {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		synchronized (pool) {
 			for (ConnectionTrace trace : getStackTraces().values()) {
 				out.append(trace.toString()).append("\n");

@@ -214,7 +214,7 @@ public class StreamToLogAdapter extends PrintStream {
 	protected static Log log = Log.getLog("Console");
 
 	protected LEVEL level;
-	protected StringBuffer line = new StringBuffer();
+	protected StringBuilder line = new StringBuilder();
 	protected PrintStream forward;
 
 	public StreamToLogAdapter(LEVEL level, PrintStream forward) {

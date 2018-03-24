@@ -243,7 +243,7 @@ public class Stringifier {
 		if (in == null) return "null";
 		if (level >= this.level) return in.toString();
 		
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		out.append('{');
 		try {
 			

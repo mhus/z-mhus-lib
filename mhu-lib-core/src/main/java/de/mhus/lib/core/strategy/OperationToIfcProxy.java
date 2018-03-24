@@ -300,7 +300,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		DefRoot form = new DefRoot();
 		for (Method m : clazz.getMethods()) {
 //			if (m.isAccessible()) {
-				StringBuffer desc = new StringBuffer();
+				StringBuilder desc = new StringBuilder();
 				desc.append( m.getReturnType().getCanonicalName() );
 				for (Parameter p : m.getParameters()) {
 					desc.append(",");

@@ -312,7 +312,7 @@ public class MySqlDatabaseExport {
 
 	public static boolean dumpDB(Connection dbConn, Properties props, PrintWriter writer) {
 		try {
-			//StringBuffer result = new StringBuffer();
+			//StringBuilder result = new StringBuilder();
 			String catalog = props.getProperty("catalog");
 			String schema = props.getProperty("schemaPattern");
 			String tables = props.getProperty("tableName");
@@ -389,7 +389,7 @@ public class MySqlDatabaseExport {
 							// KEY_SEQ short => sequence number within primary key
 							// PK_NAME String => primary key name (may be null)
 							String primaryKeyName = null;
-							StringBuffer primaryKeyColumns = new StringBuffer();
+							StringBuilder primaryKeyColumns = new StringBuilder();
 							while (primaryKeys.next()) {
 								String thisKeyName = primaryKeys.getString("PK_NAME");
 								if ((thisKeyName != null && primaryKeyName == null)
@@ -405,7 +405,7 @@ public class MySqlDatabaseExport {
 										writer.print("("+primaryKeyColumns.toString()+")");
 									}
 									// Start again with the new name
-									primaryKeyColumns = new StringBuffer();
+									primaryKeyColumns = new StringBuilder();
 									primaryKeyName = thisKeyName;
 								}
 								// Now append the column

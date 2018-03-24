@@ -209,7 +209,7 @@ public class DefaultMonitor implements Monitor {
 
 	private long steps;
 	private long step;
-	private StringBuffer lineBuffer = new StringBuffer();
+	private StringBuilder lineBuffer = new StringBuilder();
 	private Log log = null;
 
 	public DefaultMonitor(Class<?> owner) {
@@ -243,7 +243,7 @@ public class DefaultMonitor implements Monitor {
 	public void println() {
 		synchronized (lineBuffer) {
 			log().i("STDOUT", lineBuffer);
-			lineBuffer = new StringBuffer();
+			lineBuffer = new StringBuilder();
 		}
 	}
 

@@ -268,12 +268,12 @@ public class StringCompiler implements Parser {
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) {
+		public void execute(StringBuilder out, Map<String, Object> attributes) {
 			out.append(content);
 		}
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(" ").append(content).append("\n");
 		}
@@ -290,12 +290,12 @@ public class StringCompiler implements Parser {
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) {
+		public void execute(StringBuilder out, Map<String, Object> attributes) {
 			out.append(System.getenv(name));
 		}
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(" ").append(name);
 		}
@@ -311,12 +311,12 @@ public class StringCompiler implements Parser {
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) {
+		public void execute(StringBuilder out, Map<String, Object> attributes) {
 			out.append(System.getProperty(name));
 		}
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(" ").append(name).append("\n");
 		}
@@ -332,12 +332,12 @@ public class StringCompiler implements Parser {
 		}
 
 		@Override
-		public void execute(StringBuffer out, Map<String, Object> attributes) {
+		public void execute(StringBuilder out, Map<String, Object> attributes) {
 			if (attributes != null) out.append(attributes.get(name));
 		}
 		
 		@Override
-		public void dump(int level, StringBuffer out) {
+		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
 			out.append(getClass().getCanonicalName()).append(" ").append(name).append("\n");
 		}

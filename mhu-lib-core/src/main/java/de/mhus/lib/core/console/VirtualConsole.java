@@ -394,7 +394,7 @@ public class VirtualConsole extends Console {
 
 	public String getMonoDisplayAsString() {
 		
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		
 		out.append("+");
 		for (int x = 0; x < width; x++)

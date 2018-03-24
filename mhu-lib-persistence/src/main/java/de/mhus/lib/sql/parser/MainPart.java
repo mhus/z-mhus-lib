@@ -232,7 +232,7 @@ public class MainPart extends StringParsingPart {
 	}
 
 	@Override
-	public void execute(StringBuffer out, Map<String, Object> attributes) {
+	public void execute(StringBuilder out, Map<String, Object> attributes) {
 		try {
 			for (ParsingPart p : parts) {
 				p.execute(out, attributes);
@@ -358,7 +358,7 @@ public class MainPart extends StringParsingPart {
 	}
 
 	@Override
-	public void dump(int level, StringBuffer out) {
+	public void dump(int level, StringBuilder out) {
 		MString.appendRepeating(level, ' ', out);
 		out.append(getClass().getCanonicalName()).append(" (").append("\n");
 		for (ParsingPart p : parts) {

@@ -216,7 +216,7 @@ public class ConstantPart implements ParsingPart {
 	}
 	
 	@Override
-	public void execute(StringBuffer out, Map<String, Object> attributes) {
+	public void execute(StringBuilder out, Map<String, Object> attributes) {
 		out.append(content);
 	}
 
@@ -225,7 +225,7 @@ public class ConstantPart implements ParsingPart {
 	}
 
 	@Override
-	public void dump(int level, StringBuffer out) {
+	public void dump(int level, StringBuilder out) {
 		MString.appendRepeating(level, ' ', out);
 		out.append(getClass().getCanonicalName()).append(content);
 	}

@@ -278,7 +278,7 @@ public abstract class MUri {
 			// TODO log it
 		}
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		int mode = 0;
 		int buffer = 0;
@@ -344,7 +344,7 @@ public abstract class MUri {
 	
 	public static String encodeNoUTF8(String _in) {
 	
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < _in.length(); i++) {
 
@@ -366,12 +366,12 @@ public abstract class MUri {
 	}
 
 	public static String encode(char c) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		encodeNoUTF8(sb, c);
 		return sb.toString();
 	}
 	
-	public static void encodeNoUTF8(StringBuffer sb, char c) {
+	public static void encodeNoUTF8(StringBuilder sb, char c) {
 		
 		if (c == ' ' ) {
 			sb.append('+');
@@ -406,7 +406,7 @@ public abstract class MUri {
 		
 		if (in==null) return "";
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		for ( String i : in ) {
 			if (!first)
@@ -428,7 +428,7 @@ public abstract class MUri {
 		
 		if (in==null) return "";
 		
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean first = true;
 		boolean key = true;
 		for ( String i : in ) {
@@ -506,7 +506,7 @@ public abstract class MUri {
 		if (_in == null)
 			return "";
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		boolean first = true;
 
@@ -539,7 +539,7 @@ public abstract class MUri {
 		if (_in == null)
 			return "";
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		boolean first = true;
 
@@ -616,7 +616,7 @@ public abstract class MUri {
 	
 	@Override
 	public String toString() {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		if (getScheme() != null) {
 			out.append(getScheme()).append(':');
 		}

@@ -235,12 +235,12 @@ public class CompiledString {
 	 * @throws MException 
 	 */
 	public String execute(Map<String, Object> attributes) throws MException {
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		execute(out,attributes);
 		return out.toString();
 	}
 	
-	public void execute(StringBuffer sb, Map<String, Object> attributes) throws MException {
+	public void execute(StringBuilder sb, Map<String, Object> attributes) throws MException {
 		for (StringPart part : compiled) {
 			part.execute(sb,attributes);
 		}		
@@ -251,7 +251,7 @@ public class CompiledString {
 	 * 
 	 * @param sb
 	 */
-	public void dump(StringBuffer sb) {
+	public void dump(StringBuilder sb) {
 		for (StringPart part : compiled) {
 			part.dump(0,sb);
 		}		

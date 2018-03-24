@@ -215,17 +215,17 @@ import de.mhus.lib.core.MString;
  */
 public abstract class ConstantParsingPart extends StringParsingPart {
 
-	protected StringBuffer buffer;
+	protected StringBuilder buffer;
 	protected String content;
 
 	@Override
-	public void execute(StringBuffer out, Map<String, Object> attributes) {
+	public void execute(StringBuilder out, Map<String, Object> attributes) {
 		out.append(content);
 	}
 
 	@Override
 	public void doPreParse() {
-		buffer = new StringBuffer();
+		buffer = new StringBuilder();
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public abstract class ConstantParsingPart extends StringParsingPart {
 	}
 	
 	@Override
-	public void dump(int level, StringBuffer out) {
+	public void dump(int level, StringBuilder out) {
 		MString.appendRepeating(level, ' ', out);
 		out.append(getClass().getCanonicalName()).append(" ").append(content).append("\n");
 	}

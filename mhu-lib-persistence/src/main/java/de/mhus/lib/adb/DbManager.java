@@ -657,7 +657,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 
 		@Override
 		public String getIdAsString(Object object) throws Exception {
-			StringBuffer out = new StringBuffer();
+			StringBuilder out = new StringBuilder();
 			for (Field f : table.getPrimaryKeys()) {
 				if (out.length() > 0) out.append(",");
 				out.append(f.get(object));

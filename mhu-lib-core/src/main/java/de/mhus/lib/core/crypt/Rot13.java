@@ -211,7 +211,7 @@ public class Rot13 {
 
 	public static String decode(String in) {
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 
 		for (int i = 0; i < in.length(); i++) {
 			int chr = in.charAt(i);

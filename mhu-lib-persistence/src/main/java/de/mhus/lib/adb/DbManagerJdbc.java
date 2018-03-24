@@ -316,7 +316,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	@Override
 	public <T> String toQualification(AQuery<T> qualification) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		qualification.setContext(new SqlDialectCreateContext(this, buffer));
 		getPool().getDialect().createQuery(qualification, qualification);
 		return buffer.toString();
@@ -348,7 +348,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	
 	@Override
 	public String createSqlSelect(Class<?> clazz, String columns, String qualification) {
-		StringBuffer sql = new StringBuffer();
+		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT ").append(columns).append(" FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().substring(0, Math.min(qualification.length(), 6)).toLowerCase();
@@ -399,7 +399,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		reloadLock.waitWithException(MAX_LOCK);
 		
 		Class<?> clazz = schema.findClassForObject(object,this);
-		StringBuffer sql = new StringBuffer();
+		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT count(*) AS count FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();
@@ -438,7 +438,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		reloadLock.waitWithException(MAX_LOCK);
 		
 		Class<?> clazz = schema.findClassForObject(object,this);
-		StringBuffer sql = new StringBuffer();
+		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT max($db.").append(getMappingName(clazz)).append(".").append(field).append("$) AS max FROM $db.").append(getMappingName(clazz)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();
@@ -470,7 +470,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 		reloadLock.waitWithException(MAX_LOCK);
 		
 		Class<? extends Persistable> clazz2 = schema.findClassForObject(clazz,this);
-		StringBuffer sql = new StringBuffer();
+		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT $db.").append(getMappingName(clazz2)).append(".").append(attribute).append("$ AS value FROM $db.").append(getMappingName(clazz2)).append("$ ");
 		if (MString.isSet(qualification)) {
 			String low = qualification.trim().toLowerCase();

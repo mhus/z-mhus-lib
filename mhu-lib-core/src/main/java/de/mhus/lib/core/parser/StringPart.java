@@ -209,7 +209,7 @@ import de.mhus.lib.errors.MException;
 
 public interface StringPart {
 
-	public void execute(StringBuffer out, Map<String, Object> attributes) throws MException;
+	public void execute(StringBuilder out, Map<String, Object> attributes) throws MException;
 
-	public void dump(int level, StringBuffer out);
+	public void dump(int level, StringBuilder out);
 }

@@ -296,7 +296,7 @@ public class TransactionLock extends Transaction {
 		
 		String regName = m.getRegistryName(o);
 		Table table = m.getTable(regName);
-		StringBuffer key = new StringBuffer().append(regName);
+		StringBuilder key = new StringBuilder().append(regName);
 		for (Field pKey : table.getPrimaryKeys()) {
 			String value = "";
 			try {

@@ -269,7 +269,7 @@ public class MTimeInterval {
 			return;
 		}
 		
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		for (int i = 0; i < _interval.length(); i++) {
 

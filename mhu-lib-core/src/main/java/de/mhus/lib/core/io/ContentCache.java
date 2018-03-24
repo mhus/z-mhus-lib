@@ -297,7 +297,7 @@ public class ContentCache extends MObject {
 
 	private File getDir(String id) {
 		if (id.length() < 3) return root;
-		StringBuffer x = new StringBuffer();
+		StringBuilder x = new StringBuilder();
 		for (int i = 0; i < id.length()-3; i++) {
 			if (i % 3 == 0 && i != 0)
 				x.append("/");

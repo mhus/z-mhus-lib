@@ -246,7 +246,7 @@ public class DialectPostgresql extends DialectDefault {
 	}
 
 	@Override
-	protected void createTableLastCheck(IConfig ctable, String tn, StringBuffer sql) {
+	protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {
 	}
 
 	@Override
@@ -311,7 +311,7 @@ public class DialectPostgresql extends DialectDefault {
 	
 	@Override
 	public void createQuery(APrint p, AQuery<?> query) {
-		StringBuffer buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
+		StringBuilder buffer = ((SqlDialectCreateContext)query.getContext()).getBuffer();
 
 		if (p instanceof ALimit) {
 			if (((ALimit)p).getLimit() >= 0)

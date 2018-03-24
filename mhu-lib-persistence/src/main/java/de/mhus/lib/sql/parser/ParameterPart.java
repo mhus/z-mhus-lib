@@ -223,7 +223,7 @@ import de.mhus.lib.sql.DbStatement;
 public class ParameterPart extends StringParsingPart {
 
 
-	private StringBuffer buffer;
+	private StringBuilder buffer;
 	public String[] attribute;
 
 	private ICompiler compiler;
@@ -233,7 +233,7 @@ public class ParameterPart extends StringParsingPart {
 	}
 
 	@Override
-	public void execute(StringBuffer out, Map<String, Object> attributes) {
+	public void execute(StringBuilder out, Map<String, Object> attributes) {
 
 		Object value = attributes.get(attribute[0]);
 		if (value == null) {
@@ -320,7 +320,7 @@ public class ParameterPart extends StringParsingPart {
 
 	@Override
 	public void doPreParse() {
-		buffer = new StringBuffer();
+		buffer = new StringBuilder();
 	}
 
 	@Override
@@ -345,7 +345,7 @@ public class ParameterPart extends StringParsingPart {
 	}
 
 	@Override
-	public void dump(int level, StringBuffer out) {
+	public void dump(int level, StringBuilder out) {
 		MString.appendRepeating(level, ' ', out);
 		out.append(getClass().getCanonicalName()).append(attribute).append("\n");
 	}

@@ -441,7 +441,7 @@ public class MSystem {
 	}
 	
 	public static String toString(Object sender, Object ... attributes) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append('[');
 		if (sender != null)
 			sb.append(sender instanceof String ? sender : sender.getClass().getSimpleName()  ).append(':');
@@ -454,7 +454,7 @@ public class MSystem {
 		return sb.toString();
 	}
 	
-	public static Throwable serialize(StringBuffer sb, Object o, Throwable error) {
+	public static Throwable serialize(StringBuilder sb, Object o, Throwable error) {
     	try {
 	    	if (o == null) {
 				sb.append("[null]");

@@ -251,7 +251,7 @@ public class HtmlParser {
 	public boolean parse() {
 
 		int type = TEXT;
-		StringBuffer text = new StringBuffer();
+		StringBuilder text = new StringBuilder();
 		char[] one = new char[1];
 
 		try {
@@ -272,7 +272,7 @@ public class HtmlParser {
 						if (text.length() > 0 && !listener
 								.foundText(MXml.decode(text.toString())))
 							return false;
-						text = new StringBuffer();
+						text = new StringBuilder();
 					} else {
 						text.append(c);
 					}
@@ -313,7 +313,7 @@ public class HtmlParser {
 							System.err.println("Tag without name");
 							return true;
 						}
-						text = new StringBuffer();
+						text = new StringBuilder();
 					} else {
 						text.append(c);
 					}
@@ -336,7 +336,7 @@ public class HtmlParser {
 		return true;
 	}
 
-	protected void trim(StringBuffer text) {
+	protected void trim(StringBuilder text) {
 		if (!trim) return;
 		while (text.length() > 0 && MString.isWhitespace(text.charAt(0)) )
 			text.deleteCharAt(0);

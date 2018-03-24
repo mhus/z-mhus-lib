@@ -219,7 +219,7 @@ public class GeneralMapper implements LevelMapper {
 	}
 
 	@Override
-	public void prepareMessage(Log log, StringBuffer msg) {
+	public void prepareMessage(Log log, StringBuilder msg) {
 		msg.append('(').append(Thread.currentThread().getId()).append(')');
 	}
 

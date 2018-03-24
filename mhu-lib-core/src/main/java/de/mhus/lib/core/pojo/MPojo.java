@@ -668,7 +668,7 @@ public class MPojo {
 	public static String toFunctionName(String in, boolean firstUpper,String def) {
 		if (MString.isEmpty(in)) return def;
 		boolean first = firstUpper;
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < in.length(); i++) {
 			char c = in.charAt(i);
 			if (c >= 'a' && c <= 'z' || c >='A' && c <='Z' || c == '_') {

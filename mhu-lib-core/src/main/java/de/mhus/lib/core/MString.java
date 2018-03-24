@@ -351,7 +351,7 @@ public class MString {
 	 */
 	public static String replaceAll(String _src, String _pattern,
 			String _replacement) {
-		StringBuffer sb = new StringBuffer(_src);
+		StringBuilder sb = new StringBuilder(_src);
 		replaceAll(sb, _pattern, _replacement);
 		return sb.toString();
 	}
@@ -363,7 +363,7 @@ public class MString {
 	 * @param _pattern
 	 * @param _replacement
 	 */
-	public static void replaceAll(StringBuffer _src, String _pattern,
+	public static void replaceAll(StringBuilder _src, String _pattern,
 			String _replacement) {
 
 		int offset = 0;
@@ -556,7 +556,7 @@ public class MString {
 	 */
 	public static String encodeWebUnicode(String _in) {
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			if (c > 255) {
@@ -592,7 +592,7 @@ public class MString {
 		if (!isUnicode(_in, '\\', encodeCr))
 			return _in;
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			if ( (c < 32 || c > 127) && (encodeCr || (c != '\n' && c != '\r') ) ) {
@@ -612,7 +612,7 @@ public class MString {
 		if (_in == null)
 			return "";
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
@@ -635,7 +635,7 @@ public class MString {
 		if (_in == null)
 			return "";
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			switch (mode) {
@@ -691,7 +691,7 @@ public class MString {
 		if (_in == null)
 			return "";
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _in.length(); i++) {
 			char c = _in.charAt(i);
 			switch (mode) {
@@ -720,7 +720,7 @@ public class MString {
 		if (_fields == null || _fields.length == 0)
 			return "";
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < _fields.length; i++) {
 			if (i != 0)
 				out.append(',');
@@ -742,7 +742,7 @@ public class MString {
 	/*
 	 * public static String[] decodeCSVLine( String _fields ) {
 	 * 
-	 * StringBuffer field = new StringBuffer(); Vector out = new Vector();
+	 * StringBuilder field = new StringBuilder(); Vector out = new Vector();
 	 * 
 	 * csvParseSep( _fields, 0 );
 	 * 
@@ -865,7 +865,7 @@ public class MString {
 			return "";
 		if (src.length == 1)
 			return src[0];
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < src.length; i++) {
 			if (i != 0)
 				sb.append(glue);
@@ -881,7 +881,7 @@ public class MString {
 			return "";
 		if (src.length == 1)
 			return String.valueOf(src[0]);
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < src.length; i++) {
 			if (i != 0)
 				sb.append(glue);
@@ -897,7 +897,7 @@ public class MString {
 	public static String join(Iterator<?> src, String glue) {
 		if (src == null)
 			return null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		while (src.hasNext()) {
 			if (i != 0)
@@ -943,8 +943,8 @@ public class MString {
 			return s;
 		}
 		int len = s.length();
-		// have to use StringBuffer for JDK 1.1
-		StringBuffer b = new StringBuffer(len - 1);
+		// have to use StringBuilder for JDK 1.1
+		StringBuilder b = new StringBuilder(len - 1);
 		boolean suppressSpaces = false;
 		for (int i = 0; i < len; i++) {
 			char c = s.charAt(i);
@@ -1110,7 +1110,7 @@ public class MString {
 	public static long parseDirtyLong(String numStr) {
 		numStr = numStr.trim();
 		// strip commas, spaces, decimals + etc
-		StringBuffer b = new StringBuffer(numStr.length());
+		StringBuilder b = new StringBuilder(numStr.length());
 		boolean negative = false;
 		for (int i = 0; i < numStr.length(); i++) {
 			char c = numStr.charAt(i);
@@ -1147,7 +1147,7 @@ public class MString {
 	public static long parseLongPennies(String numStr) {
 		numStr = numStr.trim();
 		// strip commas, spaces, + etc
-		StringBuffer b = new StringBuffer(numStr.length());
+		StringBuilder b = new StringBuilder(numStr.length());
 		boolean negative = false;
 		int decpl = -1;
 		for (int i = 0; i < numStr.length(); i++) {
@@ -1310,8 +1310,8 @@ public class MString {
 			return s;
 		}
 		int len = s.length();
-		// have to use StringBuffer for JDK 1.1
-		StringBuffer b = new StringBuffer(len - 1);
+		// have to use StringBuilder for JDK 1.1
+		StringBuilder b = new StringBuilder(len - 1);
 		for (int i = 0; i < len; i++) {
 			char c = s.charAt(i);
 			if (c != ' ') {
@@ -1707,7 +1707,7 @@ public class MString {
 	 * @param fill char to fill
 	 * @param buffer target
 	 */
-	public static void appendRepeating(int amount, char fill, StringBuffer buffer) {
+	public static void appendRepeating(int amount, char fill, StringBuilder buffer) {
 		for (int i = 0; i < amount; i++) buffer.append(fill);
 	}
 	
@@ -1719,7 +1719,7 @@ public class MString {
 	 * @return string n times the character
 	 */
 	public static String getRepeating(int amount, char fill) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		appendRepeating(amount, fill, buffer);
 		return buffer.toString();
 	}
@@ -1786,7 +1786,7 @@ public class MString {
 	 */
 	public static String findInitials(String title, boolean upperOnly, boolean digits, int maxSize) {
 		if (isEmptyTrim(title)) return "?";
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		// find first letters
 		boolean isSpace = true;
 		for (int i = 0; i < title.length(); i++) {
@@ -1869,7 +1869,7 @@ public class MString {
 
 	public static String wrap(String in, int length) {
 		if (in == null || length < 1 || in.length() < length) return in;
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		while (true) {
 			
 			if (out.length() != 0)

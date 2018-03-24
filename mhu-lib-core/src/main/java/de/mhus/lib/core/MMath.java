@@ -217,7 +217,7 @@ public class MMath {
 	 * @return encoded string
 	 */
 	public static String toBasis36(long value, int digits) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		
 		boolean minus = value < 0;
 		if (minus) value = -value;
@@ -248,7 +248,7 @@ public class MMath {
 	 * @return encoded string
 	 */
 	public static String toBasis36WithIdent(long value, long ident, int digits) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		
 		if (ident < 0) ident = -ident;
 		while (ident > 0) {

@@ -429,7 +429,7 @@ public class CmdLog extends MLog implements Action {
 							os.println("Log Listen");
 							os.flush();
 							TailInputStream tail = new TailInputStream(file);
-							StringBuffer buf = new StringBuffer();
+							StringBuilder buf = new StringBuilder();
 							boolean niceMode = false;
 							Field runningField = finalSession.getClass().getDeclaredField("running");
 							if (!runningField.isAccessible()) runningField.setAccessible(true);

@@ -311,7 +311,7 @@ public final class MCast {
 		// round
 		_in = Math.round(_in * 100d) / 100d;
 		// out
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		out.append(_in);
 
 		// change "." to ","
@@ -669,7 +669,7 @@ public final class MCast {
 	 * @return corresponding string
 	 */
 	public static String toString(int _in, int _digits) {
-		StringBuffer out = new StringBuffer().append(Integer.toString(_in));
+		StringBuilder out = new StringBuilder().append(Integer.toString(_in));
 		while (out.length() < _digits)
 			out.insert(0, '0');
 		return out.toString();
@@ -683,7 +683,7 @@ public final class MCast {
 	 * @return corresponding string
 	 */
 	public static String toString(long _in, int _digits) {
-		StringBuffer out = new StringBuffer().append(Long.toString(_in));
+		StringBuilder out = new StringBuilder().append(Long.toString(_in));
 		while (out.length() < _digits)
 			out.insert(0, '0');
 		return out.toString();
@@ -777,7 +777,7 @@ public final class MCast {
 	 */
 	public static String toString(byte[] in) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < in.length; i++) {
 			if (i != 0)
 				sb.append(',');
@@ -815,7 +815,7 @@ public final class MCast {
 	}
 
 	public static String toString(String firstLine, StackTraceElement[] trace) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (firstLine != null)
 			sb.append(firstLine).append('\n');
 		if (trace == null)
