@@ -224,7 +224,11 @@ public class CmdConfig extends MLog implements Action {
     @Reference
     private Session session;
 
-	@Argument(index=0, name="cmd", required=true, description="Command:\n list, set <owner> <path> <value>", multiValued=false)
+	@Argument(index=0, name="cmd", required=true, description="Command:\n"
+			+ " list\n"
+			+ " set <owner> <path> <value>\n"
+			+ " restart"
+			+ "", multiValued=false)
     String cmd;
 
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
@@ -243,6 +247,9 @@ public class CmdConfig extends MLog implements Action {
 		//KarafMApiImpl api = (KarafMApiImpl)s;
 		
 		switch (cmd) {
+		case "restart": {
+			MApi.get().getCfgManager().reConfigure();
+		} break;
 		case "list": {
 			ConsoleTable out = new ConsoleTable();
 			out.setHeaderValues("Owner", "Path", "Value", "Default");

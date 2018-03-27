@@ -374,6 +374,8 @@ public class CfgManager {
 			try {
 				IConfig system = MApi.get().getCfgManager().getCfg("system");
 				if (system != null) {
+					MApi.setDirtyTrace(system.getBoolean("log.trace", false));
+
 					MActivator activator = MApi.get().createActivator();
 					for (IConfig node : system.getNodes()) {
 						if ("initiator".equals(node.getName())) {
@@ -399,7 +401,7 @@ public class CfgManager {
 					try {
 						CfgInitiator i = (CfgInitiator)initiator[0];
 						IConfig c = (IConfig)initiator[1];
-						MApi.dirtyLog("run initiator",initiator.getClass());
+						MApi.dirtyLog("run initiator",initiator[0].getClass());
 						i.doInitialize(internal, MApi.get().getCfgManager(), c );
 					} catch (Throwable t) {
 						MApi.dirtyLog("Can't initiate",initiator.getClass()," Error: ",t);

@@ -254,7 +254,13 @@ public abstract class MActivator extends ClassLoader  {
 		
 		Class<?> clazz = null;
 		if (obj instanceof String) {
-			clazz = loadClass((String)obj);
+			String s = (String)obj;
+			int p = s.indexOf(":");
+			if (p >=0) {
+				s = s.substring(p+1);
+				if (s.length() == 0) s = (String)obj; // reset
+			}
+			clazz = loadClass(s);
 		} else
 		if (obj instanceof Class) {
 			clazz = (Class<?>)obj;

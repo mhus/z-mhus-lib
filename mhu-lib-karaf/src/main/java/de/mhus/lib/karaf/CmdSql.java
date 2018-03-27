@@ -234,12 +234,14 @@ import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
+import de.mhus.lib.karaf.util.OsgiBundleClassLoader;
 import de.mhus.lib.logging.level.GeneralMapper;
 import de.mhus.lib.logging.level.ThreadBasedMapper;
 import de.mhus.lib.logging.level.ThreadMapperConfig;
 import de.mhus.lib.mutable.KarafMApiImpl;
 import de.mhus.lib.sql.analytics.SqlAnalytics;
 import de.mhus.lib.sql.analytics.SqlAnalyzer;
+import de.mhus.lib.sql.analytics.SqlReporter;
 import de.mhus.lib.sql.analytics.SqlRuntimeAnalyzer;
 import de.mhus.lib.sql.analytics.SqlRuntimeAnalyzer.Container;
 import de.mhus.lib.sql.analytics.SqlRuntimeWarning;
@@ -279,6 +281,14 @@ public class CmdSql extends MLog implements Action {
 			else
 			if (parameters[0].equals("warning"))
 				analyzer = new SqlRuntimeWarning();
+			else
+			if (parameters[0].equals("reporter"))
+				analyzer = new SqlReporter();
+			else {
+				OsgiBundleClassLoader loader = new OsgiBundleClassLoader();
+				analyzer = (SqlAnalyzer) loader.loadClass(parameters[0]).newInstance();
+			}
+			
 			SqlAnalytics.setAnalyzer(analyzer);
 			System.out.println(analyzer);
 		} break;
