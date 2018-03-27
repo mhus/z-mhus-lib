@@ -212,6 +212,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -713,6 +714,20 @@ public class ConsoleTable {
 	public void setTableWidth(int width) {
 		definedTableWidth  = width;
 		maxTableWidth = width;
+	}
+
+	public void sort(final int col, final Comparator<String> comparator) {
+		content.sort(new Comparator<List<String[]>>() {
+
+			@Override
+			public int compare(List<String[]> o1, List<String[]> o2) {
+				String[] a1 = o1.get(col);
+				String[] a2 = o2.get(col);
+				String l1 = MString.join(a1, '\n');
+				String l2 = MString.join(a2, '\n');
+				return comparator.compare(l1, l2);
+			}
+		});
 	}
 
 }
