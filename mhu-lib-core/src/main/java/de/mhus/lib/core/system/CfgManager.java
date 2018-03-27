@@ -229,11 +229,11 @@ public class CfgManager {
 	private IConfig config;
 	private FileWatch fileWatch;
 	private String configFile;
-	private TreeMap<String,CfgInitiator> initiators = new TreeMap<>(); // execute in an ordered way
+	private TreeMap<String,Object[]> initiators = new TreeMap<>(); // execute in an ordered way
 	{
 		// default
-		initiators.put("001_system", new SystemCfgInitiator());
-		initiators.put("002_logger", new LogCfgInitiator());
+		initiators.put("001_system", new Object[] {new SystemCfgInitiator(), null});
+		initiators.put("002_logger", new Object[] {new LogCfgInitiator(), null});
 	}
 
 	
@@ -243,11 +243,11 @@ public class CfgManager {
 		provider.doInitialize();
 	}
 	
-	public void registerCfgInitiator(String name, CfgInitiator initiator) {
+	public void registerCfgInitiator(String name, CfgInitiator initiator, IConfig config) {
 		if (initiator == null)
 			initiators.remove(name);
 		else
-			initiators.put(name, initiator);
+			initiators.put(name, new Object[] {initiator, config });
 	}
 	
 	public void registerCfgProvider(String name, CfgProvider provider) {
@@ -389,16 +389,18 @@ public class CfgManager {
 							if (clazzName != null && !initiators.containsKey(name)) {
 								MApi.dirtyLog("add initiator",name);
 								CfgInitiator initiator = activator.createObject(CfgInitiator.class, clazzName);
-								initiators.put(name, initiator);
+								initiators.put(name, new Object[] {initiator, node });
 							}
 						}
 					}
 				}
 				
-				for (CfgInitiator initiator : initiators.values())
+				for (Object[] initiator : initiators.values())
 					try {
+						CfgInitiator i = (CfgInitiator)initiator[0];
+						IConfig c = (IConfig)initiator[1];
 						MApi.dirtyLog("run initiator",initiator.getClass());
-						initiator.doInitialize(internal, MApi.get().getCfgManager() );
+						i.doInitialize(internal, MApi.get().getCfgManager(), c );
 					} catch (Throwable t) {
 						MApi.dirtyLog("Can't initiate",initiator.getClass()," Error: ",t);
 					}

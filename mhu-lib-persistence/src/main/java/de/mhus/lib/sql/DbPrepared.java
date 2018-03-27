@@ -218,8 +218,10 @@ public class DbPrepared {
 
 	private DbPool pool;
 	private CompiledString query;
+	private String original;
 
 	DbPrepared(DbPool pool, String queryString, String language) throws MException {
+		this.original = queryString;
 		this.pool = pool;
 		query = pool.getDialect().getQueryParser(language).compileString(queryString);
 		//		query = new SimpleQueryParser().compileString(queryString);
@@ -252,4 +254,9 @@ public class DbPrepared {
 		return query;
 	}
 
+	@Override
+	public String toString() {
+		return original;
+	}
+	
 }

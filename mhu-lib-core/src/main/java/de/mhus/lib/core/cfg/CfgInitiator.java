@@ -203,11 +203,12 @@
  */
 package de.mhus.lib.core.cfg;
 
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.IApiInternal;
 
 public interface CfgInitiator {
 
-	void doInitialize(IApiInternal internal, CfgManager manager);
+	void doInitialize(IApiInternal internal, CfgManager manager, IConfig config);
 	
 }

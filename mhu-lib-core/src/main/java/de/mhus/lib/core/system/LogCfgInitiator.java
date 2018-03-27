@@ -232,7 +232,7 @@ public class LogCfgInitiator implements CfgInitiator {
 	}
 	
 	@Override
-	public void doInitialize(IApiInternal internal, CfgManager manager) {
+	public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
 
 		IConfig system = manager.getCfg("system");
 		

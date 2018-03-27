@@ -217,6 +217,7 @@ import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.sql.analytics.SqlAnalytics;
 
 /**
  * This represents a qyery statement. Use it to execute queries.
@@ -225,10 +226,6 @@ import de.mhus.lib.errors.MException;
  *
  */
 public class JdbcStatement extends DbStatement {
-
-
-	private static CfgBoolean traceRuntime = new CfgBoolean(DbConnection.class, "traceRuntime", false);
-	private static CfgLong traceMaxRuntime = new CfgLong(DbConnection.class, "traceMaxRuntime", MTimeInterval.MINUTE_IN_MILLISECOUNDS);
 	
 	private JdbcConnection dbCon;
 	private Statement sth;
@@ -238,13 +235,16 @@ public class JdbcStatement extends DbStatement {
 	private PreparedStatement preparedSth;
 
 	private String xquery;
+	private String original;
 
 	JdbcStatement(JdbcConnection dbCon, DbPrepared prepared) {
+		this.original = prepared.toString();
 		this.dbCon = dbCon;
 		this.query = prepared.getQuery();
 	}
 
 	JdbcStatement(JdbcConnection dbCon, String query,String language) throws MException {
+		this.original = query;
 		this.dbCon = dbCon;
 		this.query = dbCon.createQueryCompiler(language).compileString(query);
 	}
@@ -310,7 +310,7 @@ public class JdbcStatement extends DbStatement {
 			preparedSth = prepareStatement(attributes, sth, query);
 			long start = System.currentTimeMillis();
 			boolean result = preparedSth == null ? sth.execute(query) : preparedSth.execute();
-			trace(query,start);
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
 			return result;
 		} catch (Exception e) {
 			log().e(query);
@@ -343,7 +343,7 @@ public class JdbcStatement extends DbStatement {
 		preparedSth = prepareStatement(attributes, sth, query);
 		long start = System.currentTimeMillis();
 		ResultSet result = preparedSth == null ? sth.executeQuery(query) : preparedSth.executeQuery();
-		trace(query,start);
+		SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
 		return new JdbcResult(this, result );
 	}
 
@@ -362,17 +362,8 @@ public class JdbcStatement extends DbStatement {
 		preparedSth = prepareStatement(attributes, sth, query);
 		long start = System.currentTimeMillis();
 		int result = preparedSth == null ? sth.executeUpdate(query) : preparedSth.executeUpdate();
-		trace(query,start);
+		SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
 		return result;
-	}
-
-	protected void trace(String query, long start) {
-		if (!traceRuntime.value()) return;
-		long stop = System.currentTimeMillis();
-		if (stop - start > traceMaxRuntime.value()) {
-			log().f(getConnection().getInstanceId(),"Query Runtime Warning",stop-start,query);
-			MLogUtil.logStackTrace(log(), ""+getConnection().getInstanceId(), Thread.currentThread().getStackTrace());
-		}
 	}
 
 	/**
@@ -397,6 +388,11 @@ public class JdbcStatement extends DbStatement {
 			log().i(e);
 		}
 		sth = null;
+	}
+
+	@Override
+	public String toString() {
+		return original;
 	}
 
 }
