@@ -215,5 +215,9 @@ public interface PojoModel extends Iterable<PojoAttribute> {
 	PojoAction getAction(String name);
 	
 	String[] getActionNames();
+
+	boolean hasAction(String name);
+
+	boolean hasAttribute(String name);
 	
 }

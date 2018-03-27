@@ -251,6 +251,7 @@ public class PojoModelImpl implements PojoModel {
 		attributes.remove(name);
 	}
 
+	@Override
 	public boolean hasAttribute(String name) {
 		return attributes.containsKey(name);
 	}
@@ -259,6 +260,7 @@ public class PojoModelImpl implements PojoModel {
 		actions.remove(name);
 	}
 
+	@Override
 	public boolean hasAction(String name) {
 		return actions.containsKey(name);
 	}
