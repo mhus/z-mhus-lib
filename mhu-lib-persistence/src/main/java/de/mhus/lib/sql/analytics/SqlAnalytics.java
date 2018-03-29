@@ -11,16 +11,6 @@ public class SqlAnalytics {
 	private static Log log = Log.getLog(SqlAnalytics.class);
 	private static SqlAnalyzer analyzer = null;
 	
-	public static void trace(long connectionId, String original, String query, long start) {
-		try {
-			long delta = System.currentTimeMillis() - start;
-			if (analyzer != null)
-				analyzer.doAnalyze(connectionId,original,query,delta);
-		} catch (Throwable t) {
-			log.e(t);
-		}
-	}
-
 	public static void setAnalyzer(SqlAnalyzer analyzer_) {
 		try {
 			if (analyzer != null) analyzer.stop();
@@ -34,6 +24,16 @@ public class SqlAnalytics {
 
 	public static SqlAnalyzer getAnalyzer() {
 		return analyzer;
+	}
+
+	public static void trace(long connectionId, String original, String query, long start, Throwable t) {
+		try {
+			long delta = System.currentTimeMillis() - start;
+			if (analyzer != null)
+				analyzer.doAnalyze(connectionId,original,query,delta, t);
+		} catch (Throwable t2) {
+			log.e(t2);
+		}
 	}
 
 }

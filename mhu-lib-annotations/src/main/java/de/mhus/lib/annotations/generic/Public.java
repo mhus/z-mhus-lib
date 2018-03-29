@@ -211,6 +211,6 @@ public @interface Public {
 	String[] hints() default {};
 	String description() default "";
 	boolean readable() default true;
-	boolean writeable() default true;
+	boolean writable() default true;
 	String name() default "";
 }

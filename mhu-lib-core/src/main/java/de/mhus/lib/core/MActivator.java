@@ -338,6 +338,7 @@ public abstract class MActivator extends ClassLoader  {
 			return factory.create(orgClazz, null, null);
 		}
 
+		if (clazz.isInterface()) return null;
 		Object obj = clazz.newInstance();
 		if (injector != null) injector.doInject(obj);
 		

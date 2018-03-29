@@ -234,7 +234,7 @@ public abstract class UiVaadin extends UiComponent {
 		setValue(ds.getObject(this, DataSource.VALUE, getConfig().get("value") ));
 		setCaption(getCaption(ds));
 		if (componentError != null) componentError.setVisible(false);
-		editorEditable = ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
+		editorEditable = getConfig().getBoolean("editable", true) && ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
 		if (componentEditor != null && !editorEditable) componentEditor.setEnabled(false);
 		getForm().getControl().reverted(this);
 	}

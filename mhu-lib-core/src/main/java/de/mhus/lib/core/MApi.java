@@ -239,7 +239,7 @@ public class MApi {
 				IApi obj = null;
 				String path = "de.mhus.lib.mutable.MApiFactory";
 				if (System.getProperty("mhu.lib.api.factory") != null) path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
-				dirtyLog("--- MApiFactory", path);
+				dirtyLog("MApiFactory", path);
 				IApiFactory factory = (IApiFactory)Class.forName(path).newInstance();
 				if (factory != null) {
 					obj = factory.createApi();
@@ -268,7 +268,7 @@ public class MApi {
 	}
 
 	public static boolean isTrace(String name) {
-		dirtyLog("--- Ask for trace", name);
+		dirtyLog("Ask for trace", name);
 //		String value = System.getProperty(name+".trace");
 //		if (value != null) return "true".equals(value);
 		return get().isTrace(name);
@@ -361,7 +361,7 @@ public class MApi {
 	
 	public static void dirtyLog(Object ... string) {
 		if (string == null || !isDirtyTrace()) return;
-		out .println(Arrays.toString(string));
+		out .println("--- " + Arrays.toString(string));
 		for (Object s : string)
 			if (s instanceof Throwable)
 				((Throwable)s).printStackTrace(out);

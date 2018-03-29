@@ -13,7 +13,8 @@ public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator
 	private long traceMaxRuntime = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 
 	@Override
-	public void doAnalyze(long connectionId, String original, String query, long delta) {
+	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {
+		if (t != null) return;
 		if (delta > traceMaxRuntime) {
 			log().f(connectionId,"Query Runtime Warning",delta,query);
 			MLogUtil.logStackTrace(log(), ""+connectionId, Thread.currentThread().getStackTrace());

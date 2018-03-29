@@ -12,8 +12,9 @@ public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 	protected HashMap<String, Container> list = new HashMap<>();
 
 	@Override
-	public void doAnalyze(long connectionId, String original, String query, long delta) {
-		super.doAnalyze(connectionId, original, query, delta);
+	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {
+		super.doAnalyze(connectionId, original, query, delta, t);
+		if (t != null) return;
 		
 		synchronized (this) {
 			Container container = list.get(original);

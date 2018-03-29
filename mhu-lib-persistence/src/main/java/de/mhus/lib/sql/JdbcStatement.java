@@ -306,13 +306,14 @@ public class JdbcStatement extends DbStatement {
 		validateSth();
 		String query = this.query.execute(attributes);
 		log().t(query);
+		long start = System.currentTimeMillis();
 		try {
 			preparedSth = prepareStatement(attributes, sth, query);
-			long start = System.currentTimeMillis();
 			boolean result = preparedSth == null ? sth.execute(query) : preparedSth.execute();
-			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, null);
 			return result;
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, e);
 			log().e(query);
 			throw e;
 		}
@@ -342,9 +343,15 @@ public class JdbcStatement extends DbStatement {
 		log().t(query);
 		preparedSth = prepareStatement(attributes, sth, query);
 		long start = System.currentTimeMillis();
-		ResultSet result = preparedSth == null ? sth.executeQuery(query) : preparedSth.executeQuery();
-		SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
-		return new JdbcResult(this, result );
+		try {
+			ResultSet result = preparedSth == null ? sth.executeQuery(query) : preparedSth.executeQuery();
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, null);
+			return new JdbcResult(this, result );
+		} catch (Throwable t) {
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, t);
+			log().e(query);
+			throw t;
+		}
 	}
 
 	/**
@@ -361,9 +368,15 @@ public class JdbcStatement extends DbStatement {
 		log().t(query);
 		preparedSth = prepareStatement(attributes, sth, query);
 		long start = System.currentTimeMillis();
-		int result = preparedSth == null ? sth.executeUpdate(query) : preparedSth.executeUpdate();
-		SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start);
-		return result;
+		try {
+			int result = preparedSth == null ? sth.executeUpdate(query) : preparedSth.executeUpdate();
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, null);
+			return result;
+		} catch (Throwable t) {
+			SqlAnalytics.trace(getConnection().getInstanceId(), original, query, start, t);
+			log().e(query);
+			throw t;
+		}
 	}
 
 	/**
