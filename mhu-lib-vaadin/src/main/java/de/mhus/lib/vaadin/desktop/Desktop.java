@@ -426,7 +426,16 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			}
 		}
 
-		Locale locale = UI.getCurrent().getPage().getWebBrowser().getLocale();
+		Locale locale = null;
+		try {
+			locale =UI.getCurrent()
+					.getPage()
+					.getWebBrowser()
+					.getLocale();
+		} catch (Throwable t) {
+			log.i(t);
+			locale = Locale.getDefault();
+		}
 
 		for (final GuiSpaceService space : componentList ) {
 			

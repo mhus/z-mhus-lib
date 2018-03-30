@@ -203,15 +203,13 @@
  */
 package de.mhus.lib.vaadin.desktop;
 
-import javax.security.auth.Subject;
-
 import de.mhus.lib.core.security.AccessControl;
 
 public interface GuiApi {
 
 	boolean hasAccess(String role);
-		
-	Subject getCurrentUser();
+
+	String getCurrentUserName();
 	
 	String getHost();
 
