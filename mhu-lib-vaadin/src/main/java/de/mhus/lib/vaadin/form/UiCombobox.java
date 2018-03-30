@@ -232,9 +232,9 @@ public class UiCombobox extends UiVaadin {
 
 	@Override
 	protected Object getValue() throws MException {
-		Item ret = (Item)((ComboBox)getComponentEditor()).getValue();
+		String ret = (String)((ComboBox)getComponentEditor()).getValue();
 		if (ret == null) return null;
-		return ret.getKey();
+		return ret;
 	}
 
 	@Override
@@ -243,8 +243,10 @@ public class UiCombobox extends UiVaadin {
 		cb.removeAllItems();
 		Item[] items = (Item[]) getForm().getDataSource().getObject(this, DataSource.ITEMS, null);
 		if (items != null)
-			for (Item item : items)
-				cb.addItem(item);
+			for (Item item : items) {
+				cb.addItem(item.getKey());
+				cb.setItemCaption(item.getKey(), item.getCaption());
+			}
 	}
 
 	public static class Adapter implements ComponentAdapter {

@@ -222,6 +222,7 @@ import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.core.system.IApi;
 import de.mhus.lib.core.system.IApiInternal;
 import de.mhus.lib.core.system.SingleMLogInstanceFactory;
+import de.mhus.lib.karaf.util.OsgiBundleClassLoader;
 import de.mhus.lib.logging.JavaLoggerFactory;
 
 /**
@@ -257,6 +258,7 @@ public class KarafMApiImpl implements IApi, ApiInitialize, IApiInternal {
 
 	@Override
 	public MActivator createActivator() {
+//		return new DefaultActivator(new OsgiBundleClassLoader());
 		return new DefaultActivator();
 	}
 

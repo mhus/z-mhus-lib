@@ -229,6 +229,7 @@ public class Item {
 		this.provider = provider;
 	}
 	
+	@Override
 	public String toString() {
 		return MNls.find(provider, caption);
 	}
@@ -239,6 +240,10 @@ public class Item {
 	
 	public String getParent() {
 		return parent;
+	}
+	
+	public String getCaption() {
+		return caption;
 	}
 	
 	public boolean equals(Object in) {

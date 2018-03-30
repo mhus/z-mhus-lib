@@ -210,6 +210,7 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 
 import de.mhus.lib.annotations.base.IgnoreBind;
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.lang.MObject;
@@ -221,6 +222,7 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 	private String embedGlue;
 	private boolean toLower;
 	private Class<? extends Annotation> annotationMarker[];
+	private boolean allowPublic = true;
 
 	public AttributesStrategy() {
 		this(true,true, ".", null);
@@ -269,10 +271,19 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 							isEmbedded(field)
 						)
 					) {
+					Public desc = field.getAnnotation(Public.class);
+					if (!allowPublic ) desc = null;
 					String name = field.getName();
+					boolean readable = true;
+					boolean writable = true;
+					if (desc != null) {
+						if (desc.name().length() > 0) name = desc.name();
+						readable= desc.readable();
+						writable = desc.writable();
+					}
 					String s = (toLower ? name.toLowerCase() : name);
 					name = prefix + s;
-					Attribute<Object> attr = new Attribute<Object>(name, parent, field);
+					Attribute<Object> attr = new Attribute<Object>(name, parent, field, readable, writable);
 					if (isEmbedded(field)) {
 						parse(name + embedGlue, attr, parser, attr.getType(), model );
 					} else {
@@ -308,22 +319,36 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 		return out;
 	}
 
+	public boolean isAllowPublic() {
+		return allowPublic;
+	}
+
+	public AttributesStrategy setAllowPublic(boolean allowPublic) {
+		this.allowPublic = allowPublic;
+		return this;
+	}
+
 
 	class Attribute<T> implements PojoAttribute<T> {
 
 		private Field field;
 		private String name;
 		private Attribute<Object> parent;
+		private boolean readable;
+		private boolean writable;
 
-		public Attribute(String name, Attribute<Object> parent, Field field) {
+		public Attribute(String name, Attribute<Object> parent, Field field, boolean readable, boolean writable) {
 			this.name = name;
 			this.field = field;
 			this.parent = parent;
+			this.readable = readable;
+			this.writable = writable;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public T get(Object pojo) throws IOException {
+			if (!readable) throw new IOException("field is write only: " + name);
 			try {
 				pojo = PojoParser.checkParent(parent,pojo);
 				if (!field.isAccessible())
@@ -337,6 +362,7 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void set(Object pojo, T value) throws IOException {
+			if (!writable) throw new IOException("field is read only: " + name);
 			try {
 				pojo = PojoParser.checkParent(parent,pojo);
 				if (!field.isAccessible())

@@ -231,4 +231,14 @@ public class DefaultStrategy implements PojoStrategy {
 		attributeStrategy.parse(parser, clazz, model);
 	}
 
+	public boolean isAllowPublic() {
+		return functionsStrategy.isAllowPublic();
+	}
+
+	public DefaultStrategy setAllowPublic(boolean allowPublic) {
+		functionsStrategy.setAllowPublic(allowPublic);
+		attributeStrategy.setAllowPublic(allowPublic);
+		return this;
+	}
+
 }

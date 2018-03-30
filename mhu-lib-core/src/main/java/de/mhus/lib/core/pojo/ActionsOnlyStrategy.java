@@ -209,19 +209,21 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.Set;
 
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.lang.MObject;
 
-public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
+public class ActionsOnlyStrategy extends MObject implements PojoStrategy {
 
 	private boolean toLower = true;
 	private Class<? extends Annotation>[] annotationMarker;
-	
-	public FunctionsOnlyStrategy() {
+	private boolean allowPublic = true;
+
+	public ActionsOnlyStrategy() {
 		this(true);
 	}
 		
 	@SafeVarargs
-	public FunctionsOnlyStrategy(boolean toLower, Class<? extends Annotation> ... annotationMarker) {
+	public ActionsOnlyStrategy(boolean toLower, Class<? extends Annotation> ... annotationMarker) {
 		this.toLower = toLower;
 		this.annotationMarker = annotationMarker;
 	}
@@ -241,8 +243,12 @@ public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
 			if (Modifier.isStatic(m.getModifiers()))
 					continue;
 
+			Public desc = m.getAnnotation(Public.class);
+			if (!allowPublic ) desc = null;
+
 			try {
 				String mName = m.getName();
+				if (desc != null && desc.name().length() > 0) mName = desc.name();
 				String s = (toLower ? mName.toLowerCase() : mName);
 				String name = prefix + s;
 
@@ -294,4 +300,13 @@ public class FunctionsOnlyStrategy extends MObject implements PojoStrategy {
 		parse(parser, clazz, model);
 	}
 	
+	public boolean isAllowPublic() {
+		return allowPublic;
+	}
+
+	public ActionsOnlyStrategy setAllowPublic(boolean allowPublic) {
+		this.allowPublic = allowPublic;
+		return this;
+	}
+
 }

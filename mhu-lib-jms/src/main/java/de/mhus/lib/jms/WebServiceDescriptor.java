@@ -212,7 +212,7 @@ import javax.jws.WebService;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.pojo.FunctionsOnlyStrategy;
+import de.mhus.lib.core.pojo.ActionsOnlyStrategy;
 import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
@@ -225,7 +225,7 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 	public WebServiceDescriptor(Object service) {
 		super(findIfc(service));
 		this.service = service;
-		model = new PojoParser().parse(service, new FunctionsOnlyStrategy(true, WebMethod.class) ).getModel();
+		model = new PojoParser().parse(service, new ActionsOnlyStrategy(true, WebMethod.class) ).getModel();
 		
 		for (String name : model.getActionNames()) {
 			PojoAction act = model.getAction(name);

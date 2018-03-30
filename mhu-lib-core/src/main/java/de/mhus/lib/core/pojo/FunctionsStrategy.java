@@ -208,6 +208,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.lang.MObject;
 
@@ -218,7 +219,8 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 	private String embedGlue;
 	private boolean actionsOnly;
 	private Class<? extends Annotation>[] annotationMarker;
-	
+	private boolean allowPublic = true;
+
 	@SuppressWarnings("unchecked")
 	public FunctionsStrategy() {
 		this(true,true, ".", false);
@@ -255,10 +257,16 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 
 			try {
 				String mName = m.getName();
+				Public desc = m.getAnnotation(Public.class);
+				if (!allowPublic ) desc = null;
 				String s = (toLower ? mName.toLowerCase() : mName);
 				if (s.startsWith("get") || s.startsWith("set")) s = s.substring(3);
 				else
 				if (s.startsWith("is")) s = s.substring(2);
+				if (desc != null && desc.name().length() > 0) {
+					s = desc.name();
+					s = (toLower ? s.toLowerCase() : s);
+				}
 				String name = prefix + s;
 				Method getter = null;
 				Method setter = null;
@@ -314,6 +322,10 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 						)
 					) {
 					
+					if (desc != null) {
+						if (!desc.writable()) setter = null;
+						if (!desc.readable()) getter = null;
+					}
 					@SuppressWarnings({ "rawtypes" })
 					FunctionAttribute attr = new FunctionAttribute(clazz, getter, setter, name, parent);
 					if (isEmbedded(getter,setter)) {
@@ -372,5 +384,14 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 		Class<?> clazz = pojo.getClass();
 		parse(parser, clazz, model);
 	}
-	
+
+	public boolean isAllowPublic() {
+		return allowPublic;
+	}
+
+	public FunctionsStrategy setAllowPublic(boolean allowPublic) {
+		this.allowPublic = allowPublic;
+		return this;
+	}
+
 }
