@@ -66,8 +66,8 @@ import java.util.Hashtable;
  * character encodings.
  * <p>
  * <p>
- * The {@link #loadFromXML(InputStream)} and
- * {@link #storeToXML(OutputStream, String, String)} methods load and store
+ * The #loadFromXML(InputStream) and
+ * #storeToXML(OutputStream, String, String) methods load and store
  * properties in a simple XML format. By default the UTF-8 character encoding is
  * used, however a specific encoding may be specified if required. An XML
  * properties document has the following DOCTYPE declaration:
@@ -96,10 +96,6 @@ import java.util.Hashtable;
  *    &lt;!ATTLIST entry key CDATA #REQUIRED&gt;
  * </pre>
  * 
- * @see <a href="../../../tooldocs/solaris/native2ascii.html">native2ascii tool
- *      for Solaris< /a>
- * @see <a href="../../../tooldocs/windows/native2ascii.html">native2ascii tool
- *      for Windows< /a>
  * 
  * @author Arthur van Hoff
  * @author Michael McCloskey
@@ -635,8 +631,6 @@ public class PropertiesRaw extends Hashtable<Object, Object> {
 	 * 
 	 * @param out
 	 *            an output stream.
-	 * @param comments
-	 *            a description of the property list.
 	 * @exception IOException
 	 *                if writing this property list to the specified output
 	 *                stream throws an <tt>IOException</tt>.

@@ -57,6 +57,7 @@ public class AdbRename extends CaoAction {
 		if (!canExecute(configuration)) return new NotSuccessful(getName(), "can't execute", -1);
 
 		try {
+			@SuppressWarnings("unused")
 			String name = configuration.getProperties().getString(RenameConfiguration.NAME);
 			AdbNode n = (AdbNode)configuration.getList().get(0);
 

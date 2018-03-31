@@ -22,15 +22,19 @@ import de.mhus.lib.core.directory.ResourceNode;
 
 public class FileResourceRoot extends FileResource {
 
+	private static final long serialVersionUID = 1L;
+
 	public FileResourceRoot(File documentRoot) {
 		super(null, null, documentRoot);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public ResourceNode getResource(String target) {
 		
 		return getResource(this,target);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private ResourceNode getResource(FileResource parent,
 			String target) {
 		if (parent == null || target == null) return null;

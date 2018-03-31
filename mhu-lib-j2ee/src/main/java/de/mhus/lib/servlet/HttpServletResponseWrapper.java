@@ -57,6 +57,7 @@ public class HttpServletResponseWrapper implements ResponseWrapper {
 		return instance.getContentType();
 	}
 
+	@SuppressWarnings("deprecation")
 	public String encodeUrl(String url) {
 		return instance.encodeUrl(url);
 	}
@@ -66,6 +67,7 @@ public class HttpServletResponseWrapper implements ResponseWrapper {
 		return instance.getOutputStream();
 	}
 
+	@SuppressWarnings("deprecation")
 	public String encodeRedirectUrl(String url) {
 		return instance.encodeRedirectUrl(url);
 	}
@@ -165,6 +167,7 @@ public class HttpServletResponseWrapper implements ResponseWrapper {
 		return instance.isCommitted();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setStatus(int sc, String sm) {
 		instance.setStatus(sc, sm);

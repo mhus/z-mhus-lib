@@ -30,10 +30,12 @@ public class SimplePrincipal implements Principal {
 		return name;
 	}
 
+	@Override
 	public String toString() {
 		return name;
 	}
 	
+	@Override
 	public boolean equals(Object in) {
 		if (in != null && in instanceof Principal)
 			return ((Principal)in).getName().equals(name);

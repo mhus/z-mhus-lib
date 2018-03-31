@@ -67,10 +67,12 @@ public class AdbCopy extends CaoAction {
 				monitor.log().d("===",item);
 				if (item instanceof AdbNode) {
 					monitor.incrementStep();
+					@SuppressWarnings("unused")
 					AdbNode n = (AdbNode)item;
 					
 					// TODO copy
 					
+					@SuppressWarnings("null")
 					Changes change = createdNode.adaptTo(Changes.class);
 					if (change != null) change.deleted();
 				}

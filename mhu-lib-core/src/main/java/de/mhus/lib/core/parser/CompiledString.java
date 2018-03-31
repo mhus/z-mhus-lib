@@ -43,7 +43,7 @@ public class CompiledString {
 	 * Return the new, compiled string.
 	 * 
 	 * @param attributes
-	 * @return
+	 * @return the resulting string
 	 * @throws MException 
 	 */
 	public String execute(Map<String, Object> attributes) throws MException {

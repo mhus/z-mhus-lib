@@ -34,6 +34,7 @@ import de.mhus.lib.errors.NotSupportedException;
  */
 public class ActionProperties extends AbstractProperties {
 
+	private static final long serialVersionUID = 1L;
 	ActionRequest request = null;
 	
 	/**

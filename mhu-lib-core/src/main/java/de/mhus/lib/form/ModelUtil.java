@@ -57,7 +57,7 @@ public class ModelUtil {
 		}
 	}
 
-	public static Document toXml(ResourceNode model) {
+	public static Document toXml(ResourceNode<?> model) {
 		
 		try {
 			Document doc = MXml.createDocument();

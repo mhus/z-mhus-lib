@@ -83,24 +83,24 @@ public class SimpleObjectTransformer extends TransformStrategy {
 					
 				} else
 				if (aType == Boolean.class || aType == boolean.class)
-					attr.set(to, json.getValueAsBoolean(false));
+					attr.set(to, json.asBoolean(false));
 				else
 				if (aType == Integer.class || aType == int.class)
-					attr.set(to, json.getValueAsInt(0));
+					attr.set(to, json.asInt(0));
 				else
 				if (aType == String.class)
-					attr.set(to, json.getValueAsText());
+					attr.set(to, json.asText());
 				else
 				if (aType == UUID.class)
 					try {
-						attr.set(to, UUID.fromString(json.getValueAsText()));
+						attr.set(to, UUID.fromString(json.asText()));
 					} catch (IllegalArgumentException e) {
 						attr.set(to, null);
 					}
 				else
 				if (aType.isEnum()) {
 					Object[] cons=aType.getEnumConstants();
-					int ord = json.getValueAsInt(0);
+					int ord = json.asInt(0);
 					Object c = cons.length > 0 ? cons[0] : null;
 					if (ord >=0 && ord < cons.length) c = cons[ord];
 					attr.set(to, c );
@@ -108,7 +108,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 				else
 				if (aType == Date.class) {
 					try {
-						attr.set(to, new Date(json.getValueAsLong(0)) );
+						attr.set(to, new Date(json.asLong(0)) );
 					} catch (IllegalArgumentException e) {
 						attr.set(to, null);
 					}
@@ -135,7 +135,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 					try {
 						LinkedList<String> l = new LinkedList<String>();
 						for (JsonNode i : json) {
-							l.add(i.getValueAsText());
+							l.add(i.asText());
 						}
 						attr.set(to, l.toArray(new String[l.size()]));
 					} catch (IllegalArgumentException e) {
@@ -293,7 +293,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 		if (node == null) return null;
 		try {
 			if (node.isTextual())
-				out = node.getValueAsText();
+				out = node.asText();
 			else if (node.isNull())
 				out = null;
 			else if (node.isBigDecimal())

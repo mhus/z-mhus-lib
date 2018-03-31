@@ -20,6 +20,7 @@ import de.mhus.lib.form.PojoProvider;
 
 public class VaadinPojoForm<T> extends VaadinForm implements PojoProvider {
 
+	private static final long serialVersionUID = 1L;
 	private T pojo;
 
 	public VaadinPojoForm(T pojo) throws Exception {
@@ -27,6 +28,7 @@ public class VaadinPojoForm<T> extends VaadinForm implements PojoProvider {
 		setForm(new PojoForm(this) );
 	}
 	
+	@Override
 	public T getPojo() {
 		return pojo;
 	}

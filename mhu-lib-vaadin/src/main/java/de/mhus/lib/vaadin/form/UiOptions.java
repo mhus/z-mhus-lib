@@ -56,6 +56,7 @@ public class UiOptions extends UiVaadin {
 		((TwinColSelect)getComponentEditor()).setValue(value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Object getValue() throws MException {
 		Set<String> ret = (Set<String>)((TwinColSelect)getComponentEditor()).getValue();

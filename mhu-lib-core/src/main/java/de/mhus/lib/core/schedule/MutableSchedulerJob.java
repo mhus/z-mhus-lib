@@ -23,7 +23,7 @@ public interface MutableSchedulerJob {
 	 * Reconfigure the scheduler. Returns true if it was successful.
 	 * 
 	 * @param config
-	 * @return
+	 * @return true if successful
 	 */
 	boolean doReconfigure(String config);
 	void setScheduledTime(long scheduledTime);

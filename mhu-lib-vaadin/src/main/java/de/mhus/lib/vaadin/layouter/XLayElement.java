@@ -23,8 +23,8 @@ import de.mhus.lib.errors.MException;
 
 public interface XLayElement extends Component {
 
-	void setConfig(ResourceNode config) throws MException;
+	void setConfig(ResourceNode<?> config) throws MException;
 
-	void doAppendChild(XLayElement child, ResourceNode cChild) throws MException;
+	void doAppendChild(XLayElement child, ResourceNode<?> cChild) throws MException;
 
 }

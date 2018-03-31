@@ -551,7 +551,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 		@SuppressWarnings("unchecked")
 		@Override
 		public T getObject(String... keys) throws MException {
-			return (T) service.getObject(table.getClazz(), keys);
+			return (T) service.getObject(table.getClazz(), (Object[])keys);
 		}
 		
 	}

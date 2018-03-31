@@ -67,6 +67,7 @@ public class TailInputStream extends InputStream {
 		return size;
 	}
 	
+	@Override
 	public int available() {
 		long size = delta();
 		if (size > Integer.MAX_VALUE) return Integer.MAX_VALUE;

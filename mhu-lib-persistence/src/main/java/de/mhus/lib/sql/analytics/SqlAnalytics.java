@@ -15,11 +15,7 @@
  */
 package de.mhus.lib.sql.analytics;
 
-import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.cfg.CfgBoolean;
-import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
 
 public class SqlAnalytics {
 

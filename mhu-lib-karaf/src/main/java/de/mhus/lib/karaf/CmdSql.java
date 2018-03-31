@@ -15,9 +15,6 @@
  */
 package de.mhus.lib.karaf;
 
-import java.io.File;
-import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -30,27 +27,9 @@ import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.console.ANSIConsole;
-import de.mhus.lib.core.console.Console;
-import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.core.io.TailInputStream;
-import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.system.IApi;
-import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.karaf.util.OsgiBundleClassLoader;
-import de.mhus.lib.logging.level.GeneralMapper;
-import de.mhus.lib.logging.level.ThreadBasedMapper;
-import de.mhus.lib.logging.level.ThreadMapperConfig;
-import de.mhus.lib.mutable.KarafMApiImpl;
 import de.mhus.lib.sql.analytics.SqlAnalytics;
 import de.mhus.lib.sql.analytics.SqlAnalyzer;
 import de.mhus.lib.sql.analytics.SqlReporter;

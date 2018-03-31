@@ -31,9 +31,9 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	
 	private HashMap<String, Map<String, String>> days = new HashMap<>();
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isHoliday(Locale locale, Date date) {
-		@SuppressWarnings("deprecation")
 		Map<String, String> map = getHolidays(locale, date.getYear() + 1900);
 		if (map == null) return false;
 		return map.containsKey(date.getDate() + "." + (date.getMonth()+1));
@@ -45,6 +45,7 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 		return date.getDay() != 0 && !isHoliday(locale, date);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public synchronized Map<String, String> getHolidays(Locale locale, int year) {
 		if (locale == null) locale = Locale.getDefault();

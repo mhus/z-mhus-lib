@@ -120,6 +120,7 @@ public class FdbNode extends PropertiesNode {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public URL getUrl() {
 		File contentFile = ((FdbCore)core).getContentFileFor(file, null);

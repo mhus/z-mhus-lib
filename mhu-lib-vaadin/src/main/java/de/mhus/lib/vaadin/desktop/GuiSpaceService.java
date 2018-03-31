@@ -26,24 +26,25 @@ public interface GuiSpaceService {
 
 	/**
 	 * Return the technical unique name of the space.
-	 * @return
+	 * @return the name
 	 */
 	String getName();
 	/**
 	 * Return the display name for the country.
-	 * @return
+	 * @param locale 
+	 * @return display name
 	 */
 	String getDisplayName(Locale locale);
 	/**
 	 * Create a space UI component.
-	 * @return
+	 * @return the space
 	 */
 	AbstractComponent createSpace();
 	/**
 	 * Return true if the current user have access. Return true if you are unsure.
 	 * The desktop will have a separate access control.
 	 * @param control
-	 * @return
+	 * @return true if has access
 	 */
 	boolean hasAccess(AccessControl control);
 	/**
@@ -57,24 +58,24 @@ public interface GuiSpaceService {
 	void createMenu(AbstractComponent space, MenuItem[] menu);
 	/**
 	 * If the space should not have a preview return true.
-	 * @return
+	 * @return true if spase shoild not be shown
 	 */
 	boolean isHiddenSpace();
 	/**
 	 * If the service needs to create a custom tile preview return
 	 * a preview component. If not return null.
-	 * @return
+	 * @return the title
 	 */
 	AbstractComponent createTile();
 	/**
 	 * Return the width of the preview tile. The with could be between
 	 * 1 and 3. If you are not sure, return 0.
-	 * @return
+	 * @return size in blocks
 	 */
 	int getTileSize();
 	/**
 	 * Return true if this space should not be shown in the spaces menu.
-	 * @return
+	 * @return true if not shown in menu
 	 */
 	boolean isHiddenInMenu();
 	/**
@@ -83,7 +84,7 @@ public interface GuiSpaceService {
 	 * 
 	 * @param locale
 	 * 
-	 * @return
+	 * @return help context or null
 	 */
 	HelpContext createHelpContext(Locale locale);
 }

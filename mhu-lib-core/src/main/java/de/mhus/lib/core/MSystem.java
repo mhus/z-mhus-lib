@@ -311,7 +311,7 @@ public class MSystem {
 	 * @param dir
 	 * @param script
 	 * @param timeout
-	 * @return 
+	 * @return The result of execution
 	 */
 	public static ScriptResult startScript(File dir, String script, long timeout) {
 		log.d("script",dir,script);
@@ -361,7 +361,7 @@ public class MSystem {
 	 * toString() will do
 	 * 
 	 * @param o
-	 * @return
+	 * @return the id
 	 */
 	public static String getObjectId(Object o) {
 		if (o == null) return "null";

@@ -19,9 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.logging.MLogUtil;
-
 public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 
 	protected HashMap<String, Container> list = new HashMap<>();

@@ -194,10 +194,6 @@ public class CSVWriter {
 	 * Write one csv field to the file, followed by a separator unless it is the
 	 * last field on the line. Lead and trailing blanks will be removed.
 	 * @param values 
-	 * 
-	 * @param s
-	 *            The string to write. Any additional quotes or embedded quotes
-	 *            will be provided by put. Null means start a new line.
 	 */
 	public void put(String ... values) {
 		if (pw == null) {

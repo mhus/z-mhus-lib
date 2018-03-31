@@ -30,7 +30,7 @@ public interface XdbType<T> {
 	 * @param query
 	 * @param parameterValues A list of parameter values or null if not needed
 	 * @return a result stream. You need to close the result or iterate it until the end (automatic close)
-	 * @throws Exception
+	 * @throws MException 
 	 */
 	DbCollection<T> getByQualification(String query, Map<String,Object> parameterValues) throws MException;
 
@@ -39,7 +39,7 @@ public interface XdbType<T> {
 	 * 
 	 * @param query Adb.query()....
 	 * @return a result stream. You need to close the result or iterate it until the end (automatic close)
-	 * @throws Exception
+	 * @throws MException 
 	 */
 	DbCollection<T> getByQualification(AQuery<T> query) throws MException;
 
@@ -48,7 +48,7 @@ public interface XdbType<T> {
 	 * 
 	 * @param query Adb.query()....
 	 * @return a the first found object by the query or null if no object was found.
-	 * @throws Exception
+	 * @throws MException
 	 */
 	default T getObjectByQualification(AQuery<T> query) throws MException {
 		DbCollection<T> col = getByQualification(query);
@@ -82,7 +82,7 @@ public interface XdbType<T> {
 	 * @param object
 	 * @param name
 	 * @param value
-	 * @throws Exception
+	 * @throws MException
 	 */
 	void set(Object object, String name, Object value) throws MException;
 	
@@ -91,8 +91,8 @@ public interface XdbType<T> {
 	 * 
 	 * @param object
 	 * @param name
-	 * @return
-	 * @throws Exception
+	 * @return the value
+	 * @throws MException
 	 */
 	<F> F get(Object object, String name) throws MException;
 
@@ -119,7 +119,7 @@ public interface XdbType<T> {
 	 * 
 	 * @param object
 	 * @return The primary key or id. If it's a combined primary key a object array will be returned.
-	 * @throws Exception 
+	 * @throws MException 
 	 */
 	Object getId(Object object) throws MException;
 	
@@ -129,14 +129,14 @@ public interface XdbType<T> {
 	 * @param query
 	 * @param parameterValues 
 	 * @return count the objects by query
-	 * @throws Exception
+	 * @throws MException
 	 */
 	long count(String query, Map<String,Object> parameterValues) throws MException;
 
 	/**
 	 * Create a new instance of the type.
 	 * 
-	 * @return
+	 * @return new object
 	 * @throws Exception
 	 */
 	T newInstance() throws Exception;
@@ -153,7 +153,7 @@ public interface XdbType<T> {
 	 * Returns the type of the attribute.
 	 * 
 	 * @param name
-	 * @return
+	 * @return Type of attribute
 	 */
 	Class<?> getAttributeType(String name);
 
@@ -161,7 +161,7 @@ public interface XdbType<T> {
 	 * Returns true if the attribute is a primary key.
 	 * 
 	 * @param name
-	 * @return
+	 * @return true if primary java type
 	 */
 	boolean isPrimaryKey(String name);
 
@@ -169,7 +169,7 @@ public interface XdbType<T> {
 	 * Returns true if the attribute will be stored in database.
 	 * 
 	 * @param name
-	 * @return
+	 * @return true if is persistent
 	 */
 	boolean isPersistent(String name);
 
@@ -177,7 +177,7 @@ public interface XdbType<T> {
 	 * Returns a technical or mapped name of the attribute (most time the same as the name).
 	 * 
 	 * @param name
-	 * @return
+	 * @return the technical name
 	 */
 	String getTechnicalName(String name);
 
@@ -187,7 +187,7 @@ public interface XdbType<T> {
 	 * 
 	 * @param object
 	 * @param raw Do not fire events.
-	 * @throws Exception
+	 * @throws MException
 	 */
 	void saveObjectForce(Object object, boolean raw) throws MException;
 
@@ -196,16 +196,17 @@ public interface XdbType<T> {
 	 * be created.
 	 * 
 	 * @param object
-	 * @throws Exception
+	 * @throws MException
 	 */
 	void saveObject(Object object) throws MException;
 
 	/**
 	 * Return the requested object by primary key.
+	 * @param keys 
 	 * 
 	 * @param key Primary key
 	 * @return The corresponding object or null
-	 * @throws Exception 
+	 * @throws MException 
 	 */
 	T getObject(String ... keys) throws MException;
 

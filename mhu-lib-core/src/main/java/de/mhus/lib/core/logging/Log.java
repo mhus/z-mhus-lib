@@ -212,10 +212,6 @@ public class Log {
 		return localTrace;
 	}
 
-	/**
-	 * Use the name of the caller
-	 * @return
-	 */
 //	public static Log getLog() {
 //		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 //		// for (StackTraceElement e : stack) System.out.println(e.getClassName());
@@ -253,7 +249,7 @@ public class Log {
 	 * levelMapper to find the return value. Instead of the is...Enabled().
 	 * 
 	 * @param level
-	 * @return
+	 * @return true if level is enabled
 	 */
 	public boolean isLevelEnabled(LEVEL level) {
 		if (engine == null) return false;

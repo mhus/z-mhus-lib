@@ -19,6 +19,8 @@ import java.util.Date;
 
 public class DateTime extends Date {
 
+	private static final long serialVersionUID = 1L;
+
 	public DateTime() {
 		super();
 	}

@@ -50,6 +50,7 @@ public class IFrameHelpContext extends MLog implements HelpContext {
 
 	private class HelpPanel extends VerticalLayout {
 		
+		private static final long serialVersionUID = 1L;
 		private BrowserFrame iframe;
 
 		public HelpPanel() {

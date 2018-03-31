@@ -41,6 +41,7 @@ public abstract class VWorkBar extends HorizontalLayout {
 	private ComboBox menuModify;
 	private ComboBox menuAdd;
 
+	@SuppressWarnings("serial")
 	public VWorkBar() {
 
 		menuDelete = new ComboBox();
@@ -129,6 +130,7 @@ public abstract class VWorkBar extends HorizontalLayout {
 		bDelete.setStyleName(style);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void doMenuSelected() {
 		Pair<String,Object[]> item = (Pair<String,Object[]>) menuDelete.getValue();
 		if (item == null) return;

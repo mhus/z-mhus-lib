@@ -21,6 +21,7 @@ import de.mhus.lib.errors.MException;
 
 public class LayHorizontalSplit extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
 	public LayHorizontalSplit(IDefDefinition... definitions)
 			throws MException {
 		super(LayoutBuilder.HORIZONTAL_SPLIT, definitions);

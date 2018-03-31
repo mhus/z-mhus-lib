@@ -31,7 +31,7 @@ public class SLF4JFactory extends LogFactory {
 
 
 	@Override
-	public void init(ResourceNode config) throws Exception {
+	public void init(ResourceNode<?> config) throws Exception {
 		
 	}
 	private class SLF4JLog extends LogEngine {
@@ -157,7 +157,7 @@ public class SLF4JFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return 
+	     * @return the logger
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

@@ -50,7 +50,7 @@ public class VaadinFormBuilder {
 
 	private void build(UiLayout layout, IConfig model) throws Exception {
 		
-		for (ResourceNode node : model.getNodes()) {
+		for (ResourceNode<?> node : model.getNodes()) {
 			String name = node.getName();
 			if (name.equals("element")) name = node.getString("type");
 			

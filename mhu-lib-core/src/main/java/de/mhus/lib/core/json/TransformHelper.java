@@ -98,7 +98,7 @@ public class TransformHelper {
 	/**
 	 * Return true if the level is ok
 	 * 
-	 * @return
+	 * @return true if level is ok
 	 */
 	public boolean checkLevel() {
 		return level < 10;

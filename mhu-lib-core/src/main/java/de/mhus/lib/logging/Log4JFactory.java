@@ -55,10 +55,10 @@ public final class Log4JFactory extends LogFactory {
     private static final String FQCN = Log4JFactory.class.getName();
 
     @Override
-	public void init(ResourceNode config) throws Exception {
+	public void init(ResourceNode<?> config) throws Exception {
     	if (config == null) return;
     		
-		ResourceNode ccc = config.getNode("configuration");
+		ResourceNode<?> ccc = config.getNode("configuration");
 		String configFile = config.getExtracted("configuration");
 		
 		if (ccc != null && ccc instanceof XmlConfig) {
@@ -88,7 +88,7 @@ public final class Log4JFactory extends LogFactory {
      * Convenience method to derive a name from the specified class and
      * call <code>getInstance(String)</code> with it.
      *
-     * @param clazz Class for which a suitable Log name will be derived
+     * @param name Class for which a suitable Log name will be derived
      *
      * @exception LogConfigurationException if a suitable <code>Log</code>
      *  instance cannot be returned
@@ -275,7 +275,7 @@ public final class Log4JFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return 
+	     * @return the logger
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

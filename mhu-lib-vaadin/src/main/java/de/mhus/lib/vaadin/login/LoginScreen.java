@@ -102,7 +102,9 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
         buttons.addComponent(login = new Button(MNls.find(this,"login.signin=Sign In")));
         login.setDisableOnClick(true);
         login.addClickListener(new Button.ClickListener() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 try {
                     login();

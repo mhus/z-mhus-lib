@@ -1755,7 +1755,7 @@ public class MString {
 	 * 
 	 * @param in
 	 * @param length
-	 * @return
+	 * @return the spit string into an array
 	 */
 	public static String[] split(String in, int length) {
 		if (in == null) return new String[0];
@@ -1774,7 +1774,7 @@ public class MString {
 	 * 
 	 * @param in
 	 * @param length
-	 * @return
+	 * @return the split string into a collection
 	 */
 	public static Collection<String> splitCollection(String in, int length) {
 		if (in == null) return new EmptyList<>();

@@ -26,6 +26,7 @@ import de.mhus.lib.adb.query.Db;
 import de.mhus.lib.cao.CaoCore;
 import de.mhus.lib.cao.CaoDriver;
 import de.mhus.lib.cao.CaoNode;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
 
@@ -67,16 +68,19 @@ public class AdbCore extends CaoCore {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public AdbNodeData[] getChildren(UUID parent) throws MException {
-		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(AdbNodeData::getCollection, collection).eq(AdbNodeData::getParent, parent)).toArrayAndClose(new AdbNodeData[0]);
+		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent)).toArrayAndClose(new AdbNodeData[0]);
 	}
 
+	@SuppressWarnings("unchecked")
 	public AdbNodeData getChild(UUID parent, String name) throws MException {
-		return manager.getObjectByQualification(Db.query(AdbNodeData.class, type).eq(AdbNodeData::getCollection, collection).eq(AdbNodeData::getParent, parent).eq(AdbNodeData::getName, name) );
+		return manager.getObjectByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent).eq(M.n(AdbNodeData::getName), name) );
 	}
 	
+	@SuppressWarnings("unchecked")
 	public AdbNodeData[] getChildren(UUID parent, String name) throws MException {
-		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(AdbNodeData::getCollection, collection).eq(AdbNodeData::getParent, parent).eq(AdbNodeData::getName, name) ).toArrayAndClose(new AdbNodeData[0]);
+		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent).eq(M.n(AdbNodeData::getName), name) ).toArrayAndClose(new AdbNodeData[0]);
 	}
 	
 	@Override

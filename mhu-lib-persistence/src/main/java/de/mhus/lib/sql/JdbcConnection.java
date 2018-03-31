@@ -43,9 +43,6 @@ public class JdbcConnection extends InternalDbConnection {
 
 	private long id;
 
-	private StackTraceElement[] createStackTrace;
-
-
 	/** {@inheritDoc} */
 	@Override
 	public void commit() throws Exception {

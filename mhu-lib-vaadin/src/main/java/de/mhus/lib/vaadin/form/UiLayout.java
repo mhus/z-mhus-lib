@@ -23,6 +23,8 @@ import de.mhus.lib.errors.MException;
 
 public abstract class UiLayout extends UiVaadin implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	public abstract void createRow(final UiVaadin c);
 	public abstract Component getComponent();
 	
@@ -75,6 +77,7 @@ public abstract class UiLayout extends UiVaadin implements Serializable {
 		return ret;
 	}
 	
+	@Override
 	public UiLayout getLayout() {
 		return this;
 	}

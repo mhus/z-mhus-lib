@@ -29,11 +29,11 @@ public abstract class CompareDirEntry {
 	}
 	
 	/**
-	 * Compare with the other entry. If the entries are not differend (not changed)
+	 * Compare with the other entry. If the entries are not differed (not changed)
 	 * return true. Otherwise return false. Usually compare size, MD5 and/or modify date.
 	 * 
 	 * @param other
-	 * @return
+	 * @return true if equals
 	 */
 	public abstract boolean compareWithEntry(CompareDirEntry other);
 	

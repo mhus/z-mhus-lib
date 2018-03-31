@@ -62,7 +62,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return request.getCookies();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getAttributeNames() {
 		return request.getAttributeNames();
@@ -99,7 +99,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return request.getContentType();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getHeaders(String name) {
 		return request.getHeaders(name);
@@ -115,7 +115,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return request.getParameter(name);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getHeaderNames() {
 		return request.getHeaderNames();
@@ -126,7 +126,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return request.getIntHeader(name);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getParameterNames() {
 		return request.getParameterNames();
@@ -149,7 +149,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return out;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Map getParameterMap() {
 		return request.getParameterMap();
@@ -250,7 +250,7 @@ public class UidlRequestWrapper implements HttpServletRequest {
 		return request.getRequestURL();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getLocales() {
 		return request.getLocales();

@@ -39,6 +39,7 @@ public class NullPattern extends ModelPattern {
 		return str == null;
 	}
 
+	@Override
 	protected boolean matches(Map<String,?> map) {
 		Object val = map.get(getParamName());
 		return val == null;

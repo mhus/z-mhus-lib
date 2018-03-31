@@ -212,7 +212,7 @@ public abstract class MUri {
 	/**
 	 * Transform the elements of an array to a string using the rfc1738 sprec.
 	 * @param in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String implodeArray(String ... in) {
 		
@@ -234,7 +234,7 @@ public abstract class MUri {
 	 * Transform the array into a key value list, the even elements are 'keys', followed by the odd 'value'.
 	 * 
 	 * @param in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String implodeKeyValues(String ... in) {
 		
@@ -264,7 +264,7 @@ public abstract class MUri {
 	 * Transforms a encoded array of strings back.
 	 * 
 	 * @param in
-	 * @return
+	 * @return decoded parts
 	 */
 	public static String[] explodeArray(String in) {
 		
@@ -281,7 +281,7 @@ public abstract class MUri {
 	 * Transforms a list encoded map of attributes back.
 	 * 
 	 * @param _in
-	 * @return
+	 * @return decoded parts
 	 */
 	public static Map<String,String> explode(String _in) {
 
@@ -311,7 +311,7 @@ public abstract class MUri {
 	/**
 	 * Encode a list of attributes in a single string
 	 * @param _in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String implode(Map<String,String> _in) {
 
@@ -344,7 +344,7 @@ public abstract class MUri {
 	/**
 	 * Encode a list of attributes in a single string
 	 * @param _in
-	 * @return
+	 * @return encoded string
 	 */
 	public static String implode(IProperties _in) {
 

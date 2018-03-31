@@ -39,6 +39,7 @@ public class ContentCache extends MObject {
 	private File root;
 	private boolean saveWrite = false; // enable thread / process save write
 
+	@SuppressWarnings("rawtypes")
 	public ContentCache(ResourceNode config) throws MException {
 		if (config != null) {
 			String rootString = config.getExtracted("root");

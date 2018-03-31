@@ -24,7 +24,7 @@ import de.mhus.lib.core.jmx.MJmx;
 
 public abstract class Task extends MJmx {
 
-	protected ResourceNode config;
+	protected ResourceNode<?> config;
 	protected TaskConfig base;
 	protected MProperties options;
 

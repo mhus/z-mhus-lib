@@ -84,11 +84,13 @@ public class ConsoleTable {
     	}
     }
     
-    protected String[] splitInLines(Object v) {
+    @SuppressWarnings("rawtypes")
+	protected String[] splitInLines(Object v) {
     	if (v == null) return new String[] {""};
     	if (multiLine) {
 	    	if (v instanceof Map) {
-	    		Map<Object,Object> m = (Map)v;
+	    		@SuppressWarnings({ "unchecked" })
+				Map<Object,Object> m = (Map)v;
 	    		LinkedList<String> out = new LinkedList<>();
 	    		for (Map.Entry<Object,Object> entry : m.entrySet())
 	    			out.add(entry.getKey() + "=" + entry.getValue());

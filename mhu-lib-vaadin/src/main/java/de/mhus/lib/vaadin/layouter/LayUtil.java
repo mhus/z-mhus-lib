@@ -31,7 +31,7 @@ public class LayUtil {
 	private static final Pattern sizePattern = Pattern
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
 	
-	public static void configure(AbstractComponent layout, ResourceNode config) throws MException {
+	public static void configure(AbstractComponent layout, ResourceNode<?> config) throws MException {
 		if (config.getBoolean(LayoutBuilder.FULL_SIZE, false))
 			layout.setSizeFull();
 		else {

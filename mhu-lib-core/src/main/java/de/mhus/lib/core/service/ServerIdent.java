@@ -41,6 +41,7 @@ public class ServerIdent {
 		ident = new CfgString(ServerIdent.class, "ident", def );
 	}
 	
+	@Override
 	public String toString() {
 		return ident.value();
 	}

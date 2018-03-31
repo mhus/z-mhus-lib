@@ -33,6 +33,7 @@ import javax.persistence.TypedQuery;
  *
  * @author mikehummel
  * @version $Id: $Id
+ * @param <T> 
  */
 public class JpaQuery<T> implements TypedQuery<T> {
 

@@ -43,7 +43,7 @@ public interface IApi {
 	 * Return a File inside the current application context.
 	 * 
 	 * @param dir
-	 * @return
+	 * @return file
 	 */
 	File getFile(String dir);
 

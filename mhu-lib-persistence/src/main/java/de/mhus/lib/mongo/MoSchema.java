@@ -25,6 +25,7 @@ import de.mhus.lib.adb.transaction.LockStrategy;
 
 public abstract class MoSchema {
 
+	@SuppressWarnings("unused")
 	private LinkedList<Class<? extends Persistable>> objectTypes;
 	protected LockStrategy lockStrategy; // set this object to enable locking
 	

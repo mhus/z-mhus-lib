@@ -25,6 +25,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 
 
+@SuppressWarnings("deprecation")
 public class MoUtil {
 
 	static ObjectMapper jsonMapper = new ObjectMapper();

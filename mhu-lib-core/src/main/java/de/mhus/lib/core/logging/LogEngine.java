@@ -33,7 +33,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than debug. </p>
-     * @return 
+     * @return true if log level is debug
      */
 	public abstract boolean isDebugEnabled();
 
@@ -44,7 +44,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than error. </p>
-     * @return 
+     * @return true if log level is error
      */
     public abstract boolean isErrorEnabled();
 
@@ -55,7 +55,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than fatal. </p>
-     * @return 
+     * @return true if log level is fatal
      */
     public abstract boolean isFatalEnabled();
 
@@ -66,7 +66,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than info. </p>
-     * @return 
+     * @return true if log level is info
      */
     public abstract boolean isInfoEnabled();
 
@@ -77,7 +77,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than trace. </p>
-     * @return 
+     * @return true if log level is trace
      */
     public abstract boolean isTraceEnabled();
 
@@ -88,7 +88,7 @@ public abstract class LogEngine {
      * <p> Call this method to prevent having to perform expensive operations
      * (for example, <code>String</code> concatenation)
      * when the log level is more than warn. </p>
-     * @return 
+     * @return true if log level is warn
      */
     public abstract boolean isWarnEnabled();
 

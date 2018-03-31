@@ -34,7 +34,7 @@ public class ConsoleFactory extends LogFactory {
 	private boolean traces = true;
 	private boolean printTime = true;
 	@SuppressWarnings("unused")
-	private ResourceNode config;
+	private ResourceNode<?> config;
 
 	public ConsoleFactory() {
 		out = MApi.out;
@@ -58,7 +58,7 @@ public class ConsoleFactory extends LogFactory {
 	}
 	
 	@Override
-	public void init(ResourceNode config) throws Exception {
+	public void init(ResourceNode<?> config) throws Exception {
 		if (config == null) return;
 		
 		this.config = config;

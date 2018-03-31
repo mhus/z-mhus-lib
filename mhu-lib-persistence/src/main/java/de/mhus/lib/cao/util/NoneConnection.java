@@ -29,6 +29,7 @@ public class NoneConnection extends CaoCore {
 
 	/**
 	 * <p>Constructor for NoneConnection.</p>
+	 * @param name 
 	 *
 	 * @param driver a {@link de.mhus.lib.cao.CaoDriver} object.
 	 */

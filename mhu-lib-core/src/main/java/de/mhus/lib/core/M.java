@@ -36,16 +36,11 @@ public class M {
 	 * This is used to create identifiers for MForm or Adb.
 	 * 
 	 * @param getters
-	 * @return
+	 * @return combined name of the getters e.g. address_firstname
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> String n(Function<T,?> ... getters ) {
-		StringBuilder out = new StringBuilder();
-		for (Function<T, ?> getter : getters) {
-			if (out.length() > 0) out.append('_');
-			out.append(MPojo.toAttributeName(getter));
-		}
-		return out.toString();
+		return MPojo.toAttributeName(getters);
 	}
 
 	/**

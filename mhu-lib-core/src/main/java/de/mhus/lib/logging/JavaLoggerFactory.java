@@ -25,7 +25,7 @@ import de.mhus.lib.core.logging.LogFactory;
 public class JavaLoggerFactory extends LogFactory {
 
 	@Override
-	public void init(ResourceNode config) throws Exception {
+	public void init(ResourceNode<?> config) throws Exception {
 		
 	}
 
@@ -161,7 +161,7 @@ public class JavaLoggerFactory extends LogFactory {
 	
 	    /**
 	     * Return the native Logger instance we are using.
-	     * @return 
+	     * @return the logger
 	     */
 	    public Logger getLogger() {
 	        if (logger == null) {

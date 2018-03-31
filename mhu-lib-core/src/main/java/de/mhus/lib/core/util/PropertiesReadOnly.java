@@ -27,7 +27,6 @@ import de.mhus.lib.errors.MException;
 
 public class PropertiesReadOnly implements IReadProperties, ReadOnly {
 
-	private static final long serialVersionUID = 1L;
 	private IProperties parent;
 
 	public PropertiesReadOnly(IProperties parent) {

@@ -246,6 +246,7 @@ public class JdbcResult extends DbResult {
 		return instance.getObject(columnIndex);
 	}
 
+	@Override
 	public Object getObject(String columnLabel) throws SQLException {
 		return instance.getObject(columnLabel);
 	}
@@ -266,6 +267,7 @@ public class JdbcResult extends DbResult {
 		return instance.getBigDecimal(columnIndex);
 	}
 
+	@Override
 	public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
 		return instance.getBigDecimal(columnLabel);
 	}

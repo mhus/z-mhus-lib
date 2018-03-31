@@ -76,7 +76,7 @@ public abstract class MNlsBundle extends MObject {
 	 * Create a NLS for the given path and locale or return null.
 	 * 
 	 * @param locale
-	 * @return
+	 * @return the nls object
 	 */
 	public abstract MNls createNls(String locale);
 

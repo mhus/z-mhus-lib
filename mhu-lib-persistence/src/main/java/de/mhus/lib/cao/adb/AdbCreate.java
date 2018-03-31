@@ -54,11 +54,13 @@ public class AdbCreate extends CaoAction {
 
 
 		try {
+			@SuppressWarnings("unused")
 			AdbNode parent = (AdbNode)configuration.getList().get(0);
 
 			// TODO create
 			AdbNode createdNode = null;
 			
+			@SuppressWarnings("null")
 			Changes change = createdNode.adaptTo(Changes.class);
 			if (change != null) change.created();
 

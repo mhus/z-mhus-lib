@@ -36,7 +36,7 @@ public abstract class JpaSchema extends MObject {
 	 * 
 	 * @param config
 	 */
-	public void doInit(ResourceNode config) {
+	public void doInit(ResourceNode<?> config) {
 
 	}
 

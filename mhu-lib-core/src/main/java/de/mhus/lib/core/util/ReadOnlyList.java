@@ -55,6 +55,7 @@ public class ReadOnlyList<E> implements List<E>, ReadOnly {
 		return instance.contains(o);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<E> iterator() {
 		return (Iterator<E>) instance.iterator();
@@ -146,6 +147,7 @@ public class ReadOnlyList<E> implements List<E>, ReadOnly {
 	public void add(int index, E element) {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Stream<E> stream() {
 		return (Stream<E>) instance.stream();
@@ -156,6 +158,7 @@ public class ReadOnlyList<E> implements List<E>, ReadOnly {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Stream<E> parallelStream() {
 		return (Stream<E>) instance.parallelStream();
@@ -171,21 +174,25 @@ public class ReadOnlyList<E> implements List<E>, ReadOnly {
 		return instance.lastIndexOf(o);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ListIterator<E> listIterator() {
 		return (ListIterator<E>) instance.listIterator();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ListIterator<E> listIterator(int index) {
 		return (ListIterator<E>) instance.listIterator(index);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
 		return (List<E>) instance.subList(fromIndex, toIndex);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Spliterator<E> spliterator() {
 		return (Spliterator<E>) instance.spliterator();

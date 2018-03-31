@@ -15,8 +15,16 @@
  */
 package de.mhus.lib.vaadin.desktop;
 
+import com.vaadin.ui.AbstractComponent;
+
 public interface GuiSubSpace {
 
 	boolean setFilter(String search);
+
+	/**
+	 * Get a space UI component.
+	 * @return the sub space
+	 */
+	AbstractComponent getSpace();
 
 }

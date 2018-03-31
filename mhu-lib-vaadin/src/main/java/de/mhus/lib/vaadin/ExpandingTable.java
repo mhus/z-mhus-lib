@@ -80,6 +80,7 @@ public class ExpandingTable extends Table {
 			
 			private static final long serialVersionUID = 1L;
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void headerClick(HeaderClickEvent event) {
 				
@@ -149,6 +150,7 @@ public class ExpandingTable extends Table {
 		sortEventHandler.fire();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void setSortDisabled(boolean sortDisabled) {
 		if (sortDisabled != super.isSortDisabled()) {

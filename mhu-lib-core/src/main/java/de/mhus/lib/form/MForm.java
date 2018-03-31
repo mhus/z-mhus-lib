@@ -74,6 +74,7 @@ public class MForm extends MObject implements MNlsProvider {
 		this.dataSource = dataSource;
 	}
 
+	@Override
 	public synchronized MNls getNls() {
 		if (nlsBundle == null) {
 //			nlsBundle = base(MNlsBundle.class);

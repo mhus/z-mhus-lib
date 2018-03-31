@@ -209,8 +209,6 @@ import de.mhus.lib.core.MString;
  * 
  * @author Roedy Green, Canadian Mind Products
  * @version 4.9, 2006-03-04
- * @see com.mindprod.holidays.Holiday to compute various holidays
- * @see com.mindprod.holidays.IsHoliday to tell if a given day is a holiday.
  *      <p/>
  */
 public class BigDate implements Cloneable, Serializable, Comparable<Object> {
@@ -1433,9 +1431,6 @@ public class BigDate implements Cloneable, Serializable, Comparable<Object> {
 	 * 
 	 * @return week number 1..53, 0 for null or invalid date.
 	 * 
-	 * @see <a
-	 *      href="http://www.pip.dknet.dk/~pip10160/calendar.faq3.txt">Calendar
-	 *      * FAQ< /a>
 	 */
 	public final int getISOWeekNumber() {
 		if (ordinal < Jan_01_Leap100RuleYear) {

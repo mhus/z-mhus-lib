@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.test.adb.model2;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
 

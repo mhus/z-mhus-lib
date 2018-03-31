@@ -30,6 +30,7 @@ public abstract class ModelComposit extends ModelPart {
 		return components.size();
 	}
 
+	@Override
 	protected abstract boolean matches(Map<String,?> map);
 
 	@Override

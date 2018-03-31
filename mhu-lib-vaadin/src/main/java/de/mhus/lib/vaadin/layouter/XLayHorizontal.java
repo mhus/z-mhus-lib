@@ -29,12 +29,12 @@ public class XLayHorizontal extends HorizontalLayout implements XLayElement {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void setConfig(ResourceNode config) throws MException {
+	public void setConfig(ResourceNode<?> config) throws MException {
 		LayUtil.configure(this, config);
 	}
 
 	@Override
-	public void doAppendChild(XLayElement child, ResourceNode cChild) throws MException {
+	public void doAppendChild(XLayElement child, ResourceNode<?> cChild) throws MException {
 		addComponent(child);
 		float ratio = cChild.getFloat(LayoutBuilder.EXPAND, -1);
 		if (ratio >= 0)

@@ -17,21 +17,25 @@ package de.mhus.lib.form;
 
 public class DummyDataSource extends FormControlAdapter implements DataSource {
 
+	@Override
 	public boolean getBoolean(UiComponent component, String name, boolean def) {
 		System.out.println("getBoolean " + component.getName() + "." + name);
 		return true;
 	}
 
+	@Override
 	public int getInt(UiComponent component, String name, int def) {
 		System.out.println("getInt " + component.getName() + "." + name);
 		return def;
 	}
 	
+	@Override
 	public String getString(UiComponent component, String name, String def) {
 		System.out.println("getString " + component.getName() + "." + name);
 		return def;
 	}
 	
+	@Override
 	public Object getObject(UiComponent component, String name, Object def) {
 		System.out.println("getObject " + component.getName() + "." + name);
 		return def;

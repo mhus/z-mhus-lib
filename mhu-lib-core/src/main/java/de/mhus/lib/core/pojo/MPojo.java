@@ -242,30 +242,30 @@ public class MPojo {
 					
 				} else
 				if (type == Boolean.class || type == boolean.class)
-					attr.set(to, json.getValueAsBoolean(false));
+					attr.set(to, json.asBoolean(false));
 				else
 				if (type == Integer.class || type == int.class)
-					attr.set(to, json.getValueAsInt(0));
+					attr.set(to, json.asInt(0));
 				else
 				if (type == String.class)
-					attr.set(to, json.getValueAsText());
+					attr.set(to, json.asText());
 				else
 				if (type == UUID.class)
 					try {
-						attr.set(to, UUID.fromString(json.getValueAsText()));
+						attr.set(to, UUID.fromString(json.asText()));
 					} catch (IllegalArgumentException e) {
 						attr.set(to, null);
 					}
 				else
 				if (type.isEnum()) {
 					Object[] cons=type.getEnumConstants();
-					int ord = json.getValueAsInt(0);
+					int ord = json.asInt(0);
 					Object c = cons.length > 0 ? cons[0] : null;
 					if (ord >=0 && ord < cons.length) c = cons[ord];
 					attr.set(to, c );
 				}
 				else
-					attr.set(to, json.getValueAsText());
+					attr.set(to, json.asText());
 			} catch (Throwable t) {
 				log.d(MSystem.getClassName(to), name, t);
 			}
@@ -475,7 +475,7 @@ public class MPojo {
 	 * @param in
 	 * @param firstUpper 
 	 * @param def
-	 * @return
+	 * @return The function name
 	 */
 	public static String toFunctionName(String in, boolean firstUpper,String def) {
 		if (MString.isEmpty(in)) return def;
@@ -621,6 +621,16 @@ public class MPojo {
 		} catch (NotFoundException e) {
 			throw new NotFoundRuntimeException(e);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> String toAttributeName(Function<T,?> ... getters ) {
+		StringBuilder out = new StringBuilder();
+		for (Function<T, ?> getter : getters) {
+			if (out.length() > 0) out.append('_');
+			out.append(toAttributeName(getter));
+		}
+		return out.toString();
 	}
 
 	public static synchronized <T> String toAttributeNameWithCache(Function<T, ?> getter) {

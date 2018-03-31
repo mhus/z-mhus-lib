@@ -22,9 +22,10 @@ public interface AuthorizationSource {
 	 * 
 	 * @param api
 	 * @param account
+	 * @param aclName 
 	 * @param mappingName
 	 * @param role
-	 * @return
+	 * @return true if access
 	 */
 	Boolean hasResourceAccess(Account account, String aclName);
 

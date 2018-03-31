@@ -59,6 +59,7 @@ import de.mhus.lib.form.UiWizard;
 
 public class UiLayout50x50 extends UiLayout {
 
+	private static final long serialVersionUID = 1L;
 	private GridLayout layout;
 	private int rows;
 	private UiSlot slot;
@@ -108,6 +109,7 @@ public class UiLayout50x50 extends UiLayout {
 		return new UiRow(layout, col, row, size);
 	}
 
+	@Override
 	public Component getComponent() {
 		return layout;
 	}
@@ -211,6 +213,8 @@ public class UiLayout50x50 extends UiLayout {
 					b.setIcon(FontAwesome.COG);
 					b.addClickListener(new Button.ClickListener() {
 						
+						private static final long serialVersionUID = 1L;
+
 						@Override
 						public void buttonClick(ClickEvent event) {
 							wizard.showWizard(c);
@@ -234,6 +238,8 @@ public class UiLayout50x50 extends UiLayout {
 					Button b = new Button("W");
 					b.addClickListener(new Button.ClickListener() {
 						
+						private static final long serialVersionUID = 1L;
+
 						@Override
 						public void buttonClick(ClickEvent event) {
 							wizard.showWizard(c);

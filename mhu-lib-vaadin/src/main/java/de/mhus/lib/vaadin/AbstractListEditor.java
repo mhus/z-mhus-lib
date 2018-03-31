@@ -253,9 +253,9 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 	
 	protected abstract E createTarget();
 	
-	protected VaadinPojoForm createForm() {
+	protected VaadinPojoForm<E> createForm() {
 		try {
-			VaadinPojoForm form = new VaadinPojoForm(createTarget());
+			VaadinPojoForm<E> form = new VaadinPojoForm<>(createTarget());
 			form.setPojo(createTarget());
 			return form;
 		} catch (Throwable t) {
@@ -347,7 +347,6 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			// save
 			try {
 				if (!canUpdate(editMode)) return;
-				@SuppressWarnings("unchecked")
 				E entity = (E) model.getPojo();
 				if (MY_NEW_MARKER.equals(editMode)) {
 					String error = doValidateNew(entity);

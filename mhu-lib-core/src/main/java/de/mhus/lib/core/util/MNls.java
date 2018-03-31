@@ -30,6 +30,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class MNls extends AbstractProperties {
 	
+	private static final long serialVersionUID = 1L;
 	protected Properties properties = null;
 	protected String prefix = "";
 

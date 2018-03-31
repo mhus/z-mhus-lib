@@ -25,7 +25,7 @@ public interface HelpContext {
 	/**
 	 *  Returns the help UI Component. Should be the same for every request for every HelpContext object.
 	 *  
-	 * @return
+	 * @return the visible component
 	 */
 	Component getComponent();
 	

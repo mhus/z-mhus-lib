@@ -22,9 +22,6 @@ import java.util.function.Function;
 
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.core.pojo.MPojo;
-import de.mhus.lib.core.util.lambda.LambdaUtil;
-import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.NotFoundRuntimeException;
 
 /**
  * <p>AQuery class.</p>

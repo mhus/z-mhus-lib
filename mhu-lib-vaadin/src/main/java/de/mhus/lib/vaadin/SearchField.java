@@ -34,6 +34,7 @@ public class SearchField extends HorizontalLayout {
 	private ComboBox filter;
 	private Listener listener;
 	private Button bSearch;
+	@SuppressWarnings("unused")
 	private MNlsProvider nlsProvider;
 //	private LinkedList<String> knownFacetNames = new LinkedList<>();
 

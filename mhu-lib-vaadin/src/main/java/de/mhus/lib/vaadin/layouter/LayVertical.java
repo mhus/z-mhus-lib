@@ -21,6 +21,7 @@ import de.mhus.lib.errors.MException;
 
 public class LayVertical extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
 	public LayVertical(IDefDefinition... definitions)
 			throws MException {
 		super(LayoutBuilder.VERTICAL, definitions);

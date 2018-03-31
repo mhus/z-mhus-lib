@@ -33,6 +33,7 @@ import de.mhus.lib.errors.NotSupportedException;
  */
 public class ResourceProperties extends AbstractProperties {
 
+	private static final long serialVersionUID = 1L;
 	ResourceRequest request = null;
 	
 	/**

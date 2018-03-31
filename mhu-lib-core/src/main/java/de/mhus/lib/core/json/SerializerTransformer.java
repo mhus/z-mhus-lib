@@ -277,7 +277,7 @@ public class SerializerTransformer extends TransformStrategy {
 		if (node == null) return null;
 		try {
 			if (node.isTextual())
-				out = node.getValueAsText();
+				out = node.asText();
 			else if (node.isNull())
 				out = null;
 			else if (node.isBigDecimal())

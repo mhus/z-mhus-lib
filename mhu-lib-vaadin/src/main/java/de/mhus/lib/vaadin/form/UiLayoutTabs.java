@@ -66,6 +66,7 @@ public class UiLayoutTabs extends UiLayout {
 		super.doRevert();
 	}
 
+	@Override
 	public Component getComponent() {
 		return layout;
 	}

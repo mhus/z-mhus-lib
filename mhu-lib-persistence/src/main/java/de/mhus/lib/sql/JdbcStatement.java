@@ -23,10 +23,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
-import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.cfg.CfgBoolean;
-import de.mhus.lib.core.cfg.CfgLong;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.CompiledString;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.analytics.SqlAnalytics;

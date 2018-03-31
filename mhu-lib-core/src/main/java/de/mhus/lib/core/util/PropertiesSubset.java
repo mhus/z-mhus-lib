@@ -25,6 +25,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class PropertiesSubset extends AbstractProperties {
 
+	private static final long serialVersionUID = 1L;
 	private IProperties parent;
 	private String prefix;
 	private boolean readonly;

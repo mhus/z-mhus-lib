@@ -121,6 +121,7 @@ public class FsNode extends PropertiesNode {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public URL getUrl() {
 		File contentFile = ((FsCore)core).getContentFileFor(file, null);

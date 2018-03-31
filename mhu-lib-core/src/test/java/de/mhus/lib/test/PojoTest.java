@@ -81,7 +81,7 @@ public class PojoTest extends TestCase {
 		
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public void testFunctionUpper() {
 		
 		PojoExample example = new PojoExample();

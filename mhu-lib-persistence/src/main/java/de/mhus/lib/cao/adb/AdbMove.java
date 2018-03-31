@@ -59,7 +59,9 @@ public class AdbMove extends CaoAction {
 
 		try {
 
+			@SuppressWarnings("unused")
 			AdbNode to = (AdbNode) configuration.getProperties().getProperty(CopyConfiguration.NEW_PARENT);
+			@SuppressWarnings("unused")
 			final boolean recursive = configuration.getProperties().getBoolean(CopyConfiguration.RECURSIVE, false);
 	
 			CaoNode createdNode = null;
@@ -68,6 +70,7 @@ public class AdbMove extends CaoAction {
 				monitor.log().d("===",item);
 				if (item instanceof AdbNode) {
 					monitor.incrementStep();
+					@SuppressWarnings("unused")
 					AdbNode n = (AdbNode)item;
 					
 					CaoNode oldParent = null;

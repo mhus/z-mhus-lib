@@ -45,7 +45,7 @@ public class MHttpClientBuilder extends MObject {
 	 * The function will return the http client. If the http client not exists or was closed the
 	 * function builds a new client.
 	 * 
-	 * @return
+	 * @return the client
 	 */
 	public HttpClient getHttpClient() {
 		synchronized (this) {

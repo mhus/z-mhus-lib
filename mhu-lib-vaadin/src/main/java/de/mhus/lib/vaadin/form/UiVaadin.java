@@ -150,6 +150,7 @@ public abstract class UiVaadin extends UiComponent {
 		return null;
 	}
 
+	@Override
 	public void setError(String error) {
 		Component el = getComponentError();
 		if (el == null) return;
@@ -157,6 +158,7 @@ public abstract class UiVaadin extends UiComponent {
 		el.setVisible(true);
 	}
 
+	@Override
 	public void clearError() {
 		Component el = getComponentError();
 		if (el == null) return;
@@ -184,6 +186,7 @@ public abstract class UiVaadin extends UiComponent {
 		getForm().getControl().focus(this);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setListeners() {
 		Component e = getComponentEditor();
 		if (e == null) return;
@@ -192,6 +195,8 @@ public abstract class UiVaadin extends UiComponent {
 			((AbstractField)e).setImmediate(true);
 			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
 				
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void valueChange(ValueChangeEvent event) {
 					fieldValueChangedEvent();
@@ -200,7 +205,8 @@ public abstract class UiVaadin extends UiComponent {
 		}
 		if (e instanceof FocusNotifier) {
 			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
-				
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void focus(FocusEvent event) {
 					focusEvent();

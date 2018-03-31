@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.core.vault;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import de.mhus.lib.core.parser.ParseException;
@@ -39,7 +38,7 @@ public interface VaultEntry {
 	
 	/**
 	 * Return a readable description describe the key and/or the usage.
-	 * @return
+	 * @return description
 	 */
 	String getDescription();
 	
@@ -55,8 +54,7 @@ public interface VaultEntry {
 	 * @param ifc
 	 * @return The requested interface or class.
 	 * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
-	 * @throws IOException 
-	 * @throws Exception 
+	 * @throws ParseException 
 	 */
 	<T> T adaptTo(Class<? extends T> ifc) throws NotSupportedException, ParseException;
 }

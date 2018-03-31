@@ -38,16 +38,16 @@ public abstract class LogFactory implements IBase {
      * call <code>getInstance(String)</code> with it.
      *
      * @param clazz Class for which a suitable Log name will be derived
-     * @return 
+     * @return The current log engine
      *     */
     public LogEngine getInstance(Class<?> clazz) {
     	return getInstance(clazz.getCanonicalName());
     }
 
-    public abstract void init(ResourceNode config) throws Exception;
+    public abstract void init(ResourceNode<?> config) throws Exception;
 
 	public void init() throws Exception {
-		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this, null);
+		ResourceNode<?> config = MApi.lookup(CfgManager.class).getCfg(this, null);
 		init(config);
 	}
 	
@@ -65,7 +65,7 @@ public abstract class LogFactory implements IBase {
      * @param name Logical name of the <code>Log</code> instance to be
      *  returned (the meaning of this name is only known to the underlying
      *  logging implementation that is being wrapped)
-     * @return 
+     * @return  the log engine
      */
     public synchronized LogEngine getInstance(String name) {
 		LogEngine inst = buffer.get(name);
@@ -90,7 +90,7 @@ public abstract class LogFactory implements IBase {
      * @param name Logical name of the <code>Log</code> instance to be
      *  returned (the meaning of this name is only known to the underlying
      *  logging implementation that is being wrapped)
-     * @return 
+     * @return  the log engine
      */
     public abstract LogEngine createInstance(String name);
 

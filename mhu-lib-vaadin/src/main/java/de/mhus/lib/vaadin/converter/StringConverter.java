@@ -21,6 +21,8 @@ import com.vaadin.data.util.converter.Converter;
 
 public class StringConverter implements Converter<String, String> {
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public String convertToModel(String value,
 			Class<? extends String> targetType, Locale locale)

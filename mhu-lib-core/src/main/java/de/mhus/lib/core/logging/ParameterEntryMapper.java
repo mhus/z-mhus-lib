@@ -21,7 +21,7 @@ public interface ParameterEntryMapper {
 	 * Return a new object if you are able to map this object. If not return null.
 	 *
 	 * @param in
-	 * @return
+	 * @return the mapped value
 	 */
 	Object map(Object in);
 	

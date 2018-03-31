@@ -30,6 +30,7 @@ public class UiNumber extends UiVaadin {
 
 	private String type;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void setValue(Object value) throws MException {
 		((SpinnerNumberField)getComponentEditor()).setValue(MCast.toString(value));
@@ -62,6 +63,7 @@ public class UiNumber extends UiVaadin {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected Object getValue() throws MException {
 		return ((SpinnerNumberField)getComponentEditor()).getValue();

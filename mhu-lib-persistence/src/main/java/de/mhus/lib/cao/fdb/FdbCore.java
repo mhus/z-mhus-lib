@@ -42,6 +42,7 @@ public class FdbCore extends CaoCore {
 	private FdbNode root;
 	private WeakHashMap<String, FdbNode> cache = new WeakHashMap<>();
 	private CaoMetadata metadata;
+	@SuppressWarnings("unused")
 	private File rootDir;
 	private File filesDir;
 	private File indexDir;

@@ -42,7 +42,7 @@ public class TaskConfig extends MJmx {
 				
 	}
 	
-	public ResourceNode config() {
+	public ResourceNode<?> config() {
 		return config;
 	}
 

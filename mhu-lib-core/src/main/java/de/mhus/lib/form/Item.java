@@ -58,6 +58,7 @@ public class Item {
 		return caption;
 	}
 	
+	@Override
 	public boolean equals(Object in) {
 		if (in instanceof Item)
 			return MSystem.equals( ((Item)in).getKey(), key );

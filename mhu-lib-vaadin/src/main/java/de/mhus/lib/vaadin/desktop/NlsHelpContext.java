@@ -63,6 +63,7 @@ public class NlsHelpContext extends MLog implements HelpContext {
 
 	private class NlsHelpPanel extends VerticalLayout {
 		
+		private static final long serialVersionUID = 1L;
 		private Label text;
 
 		public NlsHelpPanel() {

@@ -21,6 +21,8 @@ import de.mhus.lib.errors.MException;
 
 public class LayHorizontal extends DefComponent {
 
+	private static final long serialVersionUID = 1L;
+
 	public LayHorizontal(IDefDefinition... definitions)
 			throws MException {
 		super(LayoutBuilder.HORIZONTAL, definitions);

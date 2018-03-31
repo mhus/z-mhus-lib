@@ -47,11 +47,14 @@ public class Desktop extends CssLayout implements MNlsProvider {
 	private MenuItem[] menuSpace = new MenuItem[4];
 	private MenuItem menuLeave;
 	protected MenuItem menuUser;
+	@SuppressWarnings("unused")
 	private MenuItem menuLogout;
 	protected GuiSpaceService currentSpace;
+	@SuppressWarnings("unused")
 	private MenuItem menuOverview;
 	private CssLayout overView;
 	private MenuItem menuHistory;
+	@SuppressWarnings("unused")
 	private MenuItem menuBack;
 	private static Log log = Log.getLog(Desktop.class);
 	private LinkedList<String> history = new LinkedList<>();
@@ -87,6 +90,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 
 		menuHistory = menuBar.addItem(MNls.find(this, "menu.history=History"), null);
 		menuBack = menuHistory.addItem(MNls.find(this, "menu.back=Back"), new MenuBar.Command() {
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
@@ -97,6 +101,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		menuHistory.addSeparator();
 		for (int i = 0; i < 15; i++)
 			menuHistory.addItem("", new MenuBar.Command() {
+
+				private static final long serialVersionUID = 1L;
 
 				@Override
 				public void menuSelected(MenuItem selectedItem) {
@@ -122,6 +128,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		menuUser.setStyleName("right");
 		menuLogout = menuUser.addItem(MNls.find(this, "menu.logout=Logout"), new MenuBar.Command() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				try {
@@ -139,6 +147,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		});
 		menuUser.addSeparator();
 		menuHelp = menuUser.addItem(MNls.find(this, "menu.help=Help"), new MenuBar.Command() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				doShowHelp();
@@ -219,6 +229,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		
 		menuOverview = menuSpaces.addItem(MNls.find(this, "menu.overview=Overview"), new MenuBar.Command() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				showOverview(true);
@@ -257,7 +269,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 				button.setHtmlContentAllowed(false);
 				button.setCaption( space.getDisplayName(locale));
 				button.addClickListener(new NativeButton.ClickListener() {
-					
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void buttonClick(ClickEvent event) {
 						openSpace(space.getName(), null, null); // not directly to support history
@@ -277,6 +290,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			if (!space.isHiddenInMenu()) {
 				MenuItem item = menuSpaces.addItem(space.getDisplayName(locale), new MenuBar.Command() {
 					
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void menuSelected(MenuItem selectedItem) {
 						openSpace(space.getName(), null, null); // not directly to support history
@@ -291,6 +306,8 @@ public class Desktop extends CssLayout implements MNlsProvider {
 		
 		menuLeave = menuSpaces.addItem(MNls.find(this, "menu.leave=Leave Space"), new MenuBar.Command() {
 			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
 				if (currentSpace == null) return;

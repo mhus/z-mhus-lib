@@ -23,12 +23,14 @@ import de.mhus.lib.form.UiInformation;
 
 public class VaadinUiInformation extends Panel implements UiInformation {
 
+	private static final long serialVersionUID = 1L;
 	private Label description;
 
 	public VaadinUiInformation() {
 		initUI();
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected void initUI() {
 		setWidth("100%");
 		setHeight("100px");

@@ -39,7 +39,7 @@ public class MVaadinServlet extends VaadinServlet {
 	private static final long serialVersionUID = 1L;
 	private static Log log = Log.getLog(MVaadinServlet.class);
 	
-	private ResourceNode config;
+	private ResourceNode<?> config;
 
     @Override
     public void init() throws ServletException {
@@ -87,7 +87,7 @@ public class MVaadinServlet extends VaadinServlet {
 	}
 
 
-	public ResourceNode getConfig() {
+	public ResourceNode<?> getConfig() {
 		return config;
 	}
 

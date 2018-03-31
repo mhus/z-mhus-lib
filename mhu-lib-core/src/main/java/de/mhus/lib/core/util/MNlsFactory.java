@@ -32,14 +32,14 @@ import de.mhus.lib.core.directory.ResourceNode;
 public class MNlsFactory extends MNlsBundle {
 
 	@SuppressWarnings("unused")
-	private ResourceNode config;
+	private ResourceNode<?> config;
 	
 	public MNlsFactory() {
 		this(null);
 //		forkBase();
 	}
 	
-	public MNlsFactory(ResourceNode config) {
+	public MNlsFactory(ResourceNode<?> config) {
 		this.config = config;
 	}
 	

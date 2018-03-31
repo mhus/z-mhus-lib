@@ -60,7 +60,6 @@ import de.mhus.lib.core.pojo.PojoModelImpl;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.sql.DbConnection;
 
 public class MoManager extends MJmx implements MoHandler {
@@ -191,6 +190,7 @@ public class MoManager extends MJmx implements MoHandler {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void reloadObject(DbConnection con, String registryName, Object obj) throws MException {
 		Object id = datastore.getKey(obj).getId();

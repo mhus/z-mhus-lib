@@ -54,6 +54,7 @@ public class SingleList<E> implements List<E> {
 		return new Object[] {element};
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] a) {
 		T[] out = a;

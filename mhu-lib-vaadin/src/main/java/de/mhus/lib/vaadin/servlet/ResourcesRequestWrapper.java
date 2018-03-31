@@ -63,7 +63,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 		return parent.getCookies();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getAttributeNames() {
 		return parent.getAttributeNames();
@@ -100,7 +100,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 		return parent.getContentType();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getHeaders(String name) {
 		return parent.getHeaders(name);
@@ -116,7 +116,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 		return parent.getParameter(name);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getHeaderNames() {
 		return parent.getHeaderNames();
@@ -128,7 +128,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Enumeration getParameterNames() {
 		return parent.getParameterNames();
 	}
@@ -148,7 +148,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 		return parent.getPathInfo();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Map getParameterMap() {
 		return parent.getParameterMap();
@@ -255,7 +255,7 @@ public class ResourcesRequestWrapper implements HttpServletRequest {
 		return parent.getRequestURL();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Enumeration getLocales() {
 		return parent.getLocales();

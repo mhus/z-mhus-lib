@@ -75,7 +75,7 @@ public class ConfigTest extends TestCase {
 		HashConfig c = new HashConfig();
 		c.setString("test1", "wow");
 		c.setString("test2", "alf");
-		ResourceNode s = c.createConfig("sub");
+		ResourceNode<?> s = c.createConfig("sub");
 		s.setString("test1", "wow1");
 		s.setString("test2", "alf1");
 		s = c.createConfig("sub");

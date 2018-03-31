@@ -28,6 +28,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MString;
@@ -486,6 +487,7 @@ public class AdbTest extends TestCase {
 		pool.close();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testDbQuery() throws Exception {
 		
 		DbPool pool = createPool("testModel2").getPool("test");
@@ -546,7 +548,7 @@ public class AdbTest extends TestCase {
 
 		{
 			LambdaUtil.debugOut = true;
-			AQuery<Person2> q1 = Db.query(Person2.class).eq(Person2::getName, "Max");
+			AQuery<Person2> q1 = Db.query(Person2.class).eq(M.n(Person2::getName), "Max");
 			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
 			assertEquals(1, res.size());
 			assertEquals("Max",res.get(0).getName());

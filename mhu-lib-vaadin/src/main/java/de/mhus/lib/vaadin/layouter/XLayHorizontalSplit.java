@@ -28,12 +28,12 @@ public class XLayHorizontalSplit extends HorizontalSplitPanel implements XLayEle
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void setConfig(ResourceNode config) throws MException {
+	public void setConfig(ResourceNode<?> config) throws MException {
 		LayUtil.configure(this, config);
 	}
 
 	@Override
-	public void doAppendChild(XLayElement child, ResourceNode cChild) {
+	public void doAppendChild(XLayElement child, ResourceNode<?> cChild) {
 		if (getFirstComponent() == null)
 			setFirstComponent(child);
 		else

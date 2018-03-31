@@ -95,6 +95,8 @@ public class UiLayout100 extends UiLayout {
 				Button b = new Button("W");
 				b.addClickListener(new Button.ClickListener() {
 					
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void buttonClick(ClickEvent event) {
 						wizard.showWizard(c);
@@ -120,6 +122,8 @@ public class UiLayout100 extends UiLayout {
 				Button b = new Button("W");
 				b.addClickListener(new Button.ClickListener() {
 					
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public void buttonClick(ClickEvent event) {
 						wizard.showWizard(c);
@@ -150,6 +154,7 @@ public class UiLayout100 extends UiLayout {
 		return new UiRow(layout, rows-1);
 	}
 
+	@Override
 	public Component getComponent() {
 		return layout;
 	}
