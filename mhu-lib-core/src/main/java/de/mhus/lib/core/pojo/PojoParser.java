@@ -31,10 +31,14 @@ public class PojoParser {
 		return parse(pojo, (PojoStrategy)null);
 	}
 	
+	public PojoParser parse(Object pojo, String embedGlue, boolean allowPublic, Class<? extends Annotation>[] annotationMarker ) {
+		return parse(pojo, new DefaultStrategy(true, embedGlue, annotationMarker).setAllowPublic(allowPublic) );
+	}
+	
 	public PojoParser parse(Object pojo, String embedGlue, Class<? extends Annotation>[] annotationMarker ) {
 		return parse(pojo, new DefaultStrategy(true, embedGlue, annotationMarker) );
 	}
-	
+		
 	public PojoParser parse(Object pojo, PojoStrategy strategy) {
 		if (model == null) model = new PojoModelImpl(pojo.getClass());
 		if (strategy == null) strategy = new DefaultStrategy();

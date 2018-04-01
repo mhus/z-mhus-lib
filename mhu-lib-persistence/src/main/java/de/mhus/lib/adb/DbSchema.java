@@ -76,7 +76,7 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	@Override
 	@SuppressWarnings("unchecked")
 	public PojoModel createPojoModel(Class<?> clazz) {
-		return new PojoParser().parse(clazz, "_", new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(true,false,true,false,true).getModel();
+		return new PojoParser().parse(clazz, "_", false, new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(true,false,true,false,true).getModel();
 	}
 
 	/**
