@@ -21,8 +21,12 @@ import java.io.InputStream;
 
 public interface FileChecker {
 
+	enum SUSPICIOUS {UNKNOWN,NO,MAYBE,YES}
+	
 	boolean isFileType(File in) throws IOException;
 	
 	boolean isFileType(InputStream in) throws IOException;
+	
+	SUSPICIOUS checkForSuspicious(File in) throws IOException;
 	
 }

@@ -71,6 +71,7 @@
 	    <mongo.version>3.6.0</mongo.version>
 		<mongo.morphia.version>1.3.2</mongo.morphia.version>
 	    
+	    <javax.mail.version>1.4.1</javax.mail.version>
       </properties>
 
    <build>
