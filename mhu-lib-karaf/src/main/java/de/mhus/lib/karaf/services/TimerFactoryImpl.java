@@ -412,9 +412,11 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		tracker.stop();
 		MThread.sleep(1000);
 		myTimer.clear();
+		myTimer.stop();
 	}
 	
 	public void start() {
+		myTimer.start();
 		tracker.start();
 	}
 	
