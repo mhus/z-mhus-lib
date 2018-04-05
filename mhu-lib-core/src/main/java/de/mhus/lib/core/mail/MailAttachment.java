@@ -24,6 +24,12 @@ public class MailAttachment {
 		this.deleteAfterSent = deleteAfterSent;
 	}
 
+	public MailAttachment(File file, String name, boolean deleteAfterSent) {
+		this.file = file;
+		this.name = name;
+		this.deleteAfterSent = deleteAfterSent;
+	}
+	
 	public File getFile() {
 		return file;
 	}

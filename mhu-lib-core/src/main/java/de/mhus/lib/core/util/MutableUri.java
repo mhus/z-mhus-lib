@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.util;
 
+import java.io.IOException;
 import java.util.Map;
 
 import de.mhus.lib.core.MPassword;
@@ -22,6 +23,7 @@ import de.mhus.lib.core.MString;
 
 public class MutableUri extends MUri {
 
+	private static final long serialVersionUID = 1L;
 	protected String scheme;
 	protected String location;
 	protected String username;
@@ -58,6 +60,10 @@ public class MutableUri extends MUri {
 	      "#" fragment ::= fragment identifier.
 		 */
 		public MutableUri(String path) {
+			parse(path);
+		}
+		
+		private void parse(String path) {
 			if (MString.isEmpty(path)) return;
 			// parse path
 			int p = path.indexOf(':');
@@ -202,8 +208,14 @@ public class MutableUri extends MUri {
 		return pathParts;
 	}
 
-	public void setPath(String[] path) {
-		this.pathParts = path;
+	public void setPath(String[] pathParts) {
+		this.pathParts = pathParts;
+		StringBuilder path = new StringBuilder();
+		for (String p : pathParts) {
+			if (path.length() > 0) path.append('/');
+			path.append(decode(p));
+		}
+		this.path = path.toString();
 	}
 
 	@Override
@@ -222,6 +234,18 @@ public class MutableUri extends MUri {
 
 	public void setPath(String path) {
 		this.path = path;
+		this.pathParts = path.split("/");
+		for (int i = 0; i < this.pathParts.length; i++)
+			this.pathParts[i] = decode(this.pathParts[i]);
 	}
 	
+	private void writeObject(java.io.ObjectOutputStream out)
+		     throws IOException {
+		out.writeObject(toString());
+	}
+	private void readObject(java.io.ObjectInputStream in)
+	     throws IOException, ClassNotFoundException {
+		 parse((String)in.readObject());
+	}
+		 
 }

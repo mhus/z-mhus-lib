@@ -107,7 +107,14 @@ public class MDate extends Date {
 			return iso8601DateFormat.format(date);
 		}
 	}
-	
+
+	public static String toIso8601(long timestamp) {
+		synchronized (iso8601DateFormat) {
+			iso8601DateFormat.setTimeZone(TimeZone.getDefault());
+			return iso8601DateFormat.format(new Date(timestamp));
+		}
+	}
+
 	public static String toIso8601(Date date, TimeZone tz) {
 		synchronized (iso8601DateFormat) {
 			iso8601DateFormat.setTimeZone(tz);

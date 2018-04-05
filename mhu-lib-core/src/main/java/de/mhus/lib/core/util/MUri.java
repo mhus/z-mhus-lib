@@ -16,6 +16,7 @@
 package de.mhus.lib.core.util;
 
 import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -37,8 +38,9 @@ import de.mhus.lib.core.MString;
  * 
  * @author jesus
  */
-public abstract class MUri {
+public abstract class MUri implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	public static final String SCHEME_HTTP = "http";
 	public static final String SCHEME_HTTPS = "https";
 	public static final String SCHEME_FTP = "ftp";
@@ -429,9 +431,11 @@ public abstract class MUri {
 	@Override
 	public String toString() {
 		StringBuilder out = new StringBuilder();
+		
 		if (getScheme() != null) {
 			out.append(getScheme()).append(':');
 		}
+		
 		if (getUsername() != null) {
 			out.append("//").append(getUsername());
 			if (getPassword() != null)
@@ -442,11 +446,16 @@ public abstract class MUri {
 		} else
 		if (getLocation() != null)
 			out.append("//").append(getLocation());
-		if (getPathParts() != null)
-			out.append('/').append(getPath());
+		
+		if (MString.isSet(getPath()) && getLocation() != null && !getPath().startsWith("/"))
+			out.append('/');
+		if (MString.isSet(getPath()))
+			out.append(getPath());
+			
 		if (getParams() != null)
 			for (String p : getParams())
 				out.append(';').append(encode(p));
+		
 		if (getQuery() != null) {
 			out.append('?');
 			boolean first = true;
@@ -458,6 +467,7 @@ public abstract class MUri {
 				out.append(encode(entry.getKey())).append('=').append(encode(entry.getValue()));
 			}
 		}
+		
 		if (getFragment() != null)
 			out.append('#').append(getFragment());
 		

@@ -21,6 +21,9 @@ import de.mhus.lib.core.MString;
 
 public class Version implements Comparable<Version> {
 	
+	public static final Version V_0_0_0 = new Version("0.0.0");
+	public static final Version V_1_0_0 = new Version("1.0.0");
+	
 	private String original;
 	private long[] versions;
 	private VersionRange range;

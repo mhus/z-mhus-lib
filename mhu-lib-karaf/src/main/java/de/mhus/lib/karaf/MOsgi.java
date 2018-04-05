@@ -29,6 +29,7 @@ import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.base.service.TimerImpl;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.Version;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.NotFoundRuntimeException;
 
@@ -187,6 +188,12 @@ public class MOsgi {
 		case Bundle.ACTIVE: return BUNDLE_STATE.ACTIVE;
 		default: return BUNDLE_STATE.UNKNOWN;
 		}
+	}
+
+	public static Version getBundelVersion(Class<?> owner) {
+		Bundle bundle = FrameworkUtil.getBundle(owner);
+		if (bundle == null) return Version.V_0_0_0;
+		return new Version(bundle.getVersion().toString());
 	}
 	
 }

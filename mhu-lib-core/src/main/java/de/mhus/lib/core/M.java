@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core;
 
+import java.util.Date;
 import java.util.function.Function;
 
 import de.mhus.lib.core.pojo.MPojo;
@@ -75,5 +76,9 @@ public class M {
 	public static boolean c(Object in, boolean def) {
 		return MCast.toboolean(in, def);
 	}
-	
+
+	public static Date c(Object in, Date def) {
+		return MCast.toDate(in, def);
+	}
+
 }

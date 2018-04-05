@@ -69,15 +69,11 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	}
 	
 	public OperationDescription(Operation owner, String group, String id, String title, DefRoot form) {
-		this(group, id, new Version(null), owner, title);
-		if (form != null)
-			setForm(form);
+		this(group, id, new Version(null), owner, title, form);
 	}
 	
 	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
-		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title);
-		if (form != null)
-			setForm(form);
+		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title, form);
 	}
 	
 	public void setForm(DefRoot form) {
@@ -100,15 +96,21 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	}
 
 	public OperationDescription(OperationGroupDescription group, String id, Version version, MNlsProvider nlsProvider, String title ) {
-		this(group.getGroup(),id, version, nlsProvider, title);
+		this(group.getGroup(),id, version, nlsProvider, title, null);
 	}
 	
 	public OperationDescription(String group, String id, Version version, MNlsProvider nlsProvider, String title) {
+		this(group, id, version, nlsProvider, title, null);
+	}
+	
+	public OperationDescription(String group, String id, Version version, MNlsProvider nlsProvider, String title, DefRoot form) {
 		this.id = id;
 		this.group = group;
 		this.nlsProvider = nlsProvider;
 		this.title = title;
 		this.version = version;
+		if (form != null)
+			setForm(form);
 	}
 	
 	public String getId() {

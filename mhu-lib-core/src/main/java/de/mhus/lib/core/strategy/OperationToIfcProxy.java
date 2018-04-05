@@ -122,7 +122,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 //			}
 		}
 		
-		OperationDescription out = new OperationDescription(this,getInterfaceVersion(), clazz.getCanonicalName(), form );
+		OperationDescription out = new OperationDescription(clazz.getPackage().getName(), clazz.getSimpleName() ,getInterfaceVersion(), this, this.getClass().getCanonicalName(), form );
 		out.setParameters(new HashMap<>());
 		initOperationDescription(out.getParameters());
 		return out;
