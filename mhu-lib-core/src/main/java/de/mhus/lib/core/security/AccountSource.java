@@ -19,4 +19,6 @@ public interface AccountSource {
 
 	Account findAccount(String account);
 
+	ModifyAccountApi getModifyApi();
+
 }

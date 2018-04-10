@@ -225,7 +225,6 @@ do not block jms driven threads !!! This will cause a deadlock
 
 	public void processMessage(final Message message) {
 		lastActivity = System.currentTimeMillis();
-		log().d("received",dest,message);
 
 		boolean releaseLog = false;
 		try {
@@ -238,6 +237,7 @@ do not block jms driven threads !!! This will cause a deadlock
 					}
 				} catch (Throwable t) {}
 			}
+			log().d("received",dest,message);
 		
 			try {
 				if (interceptorIn != null) {

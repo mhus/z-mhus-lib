@@ -542,4 +542,27 @@ public class CryptTest extends TestCase {
 			assertEquals(org[i],copy[i]);
 	}
 	
+	public void testEnDeDirect() throws IOException {
+		System.out.println(">>> testEnDeDirect");
+
+		String passphrase = "Lorem ipsum";
+		{
+			byte[] org = MString.toBytes("Hello World!");
+			byte[] enc = MCrypt.encode(passphrase, org);
+			byte[] dec = MCrypt.decode(passphrase, enc);
+			assertEquals(MString.toString(org), MString.toString(dec));
+		}
+		{
+			byte[] org = new byte[256];
+			for (int i=0; i < org.length; i++)
+				org[i] = (byte)(i-128);
+			byte[] enc = MCrypt.encode(passphrase, org);
+			byte[] dec = MCrypt.decode(passphrase, enc);
+			for (int i=0; i < org.length; i++)
+				assertEquals(org[i], dec[i]);
+		}
+		
+	}
+
+	
 }

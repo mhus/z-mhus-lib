@@ -31,7 +31,7 @@ public interface Account extends Rightful {
 
 	boolean validatePassword(String password);
 
-	boolean isSyntetic();
+	boolean isSynthetic();
 
 	String getDisplayName();
 	

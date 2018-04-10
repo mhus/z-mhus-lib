@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
+import de.mhus.lib.core.MValidator;
+
 public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 
 	protected HashMap<String, Container> list = new HashMap<>();
@@ -27,6 +29,20 @@ public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {
 		super.doAnalyze(connectionId, original, query, delta, t);
 		if (t != null) return;
+		
+		// prepare original - replace $UUID$ entries with $uuid$ static content
+		if (original.indexOf('$') >= 0) {
+			StringBuilder s = new StringBuilder();
+			for (String part : original.split("\\$")) {
+				if (s.length() != 0)
+					s.append('$');
+				if (MValidator.isUUID(part))
+					s.append("uuid");
+				else
+					s.append(part);
+			}
+			original = s.toString();
+		}
 		
 		synchronized (this) {
 			Container container = list.get(original);

@@ -30,4 +30,6 @@ public interface AuthorizationSource {
 	Boolean hasResourceAccess(Account account, String aclName);
 
 	String getResourceAccessAcl(Account account, String aclName);
+
+	ModifyAuthorizationApi getModifyApi();
 }

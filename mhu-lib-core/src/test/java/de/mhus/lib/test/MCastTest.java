@@ -234,4 +234,32 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	public void testLongToBytes() {
+		System.out.println(">>> testLongToBytes");
+		{
+			long org = 0;
+			byte[] b = MCast.longToBytes(org);
+			long copy = MCast.bytesToLong(b);
+			assertEquals(org, copy);
+		}
+		{
+			long org = 1;
+			byte[] b = MCast.longToBytes(org);
+			long copy = MCast.bytesToLong(b);
+			assertEquals(org, copy);
+		}
+		{
+			long org = Long.MIN_VALUE;
+			byte[] b = MCast.longToBytes(org);
+			long copy = MCast.bytesToLong(b);
+			assertEquals(org, copy);
+		}
+		{
+			long org = Long.MAX_VALUE;
+			byte[] b = MCast.longToBytes(org);
+			long copy = MCast.bytesToLong(b);
+			assertEquals(org, copy);
+		}
+	}
+
 }
