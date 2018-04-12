@@ -48,12 +48,13 @@ public class MDate extends Date {
 	}
 
 	public MDate(Timestamp timestamp) {
-		this(timestamp.getTime());
+		this(timestamp == null ? 0 : timestamp.getTime());
 	}
 
 	public MDate(String string) {
 		Date date = MCast.toDate(string, null);
-		this.setTime(date.getTime());
+		if (date != null)
+			this.setTime(date.getTime());
 	}
 
 	@Override

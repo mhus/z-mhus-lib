@@ -78,10 +78,12 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	public void reset() {
 		log().i("reset",connection);
 		try {
-			session.close();
+			if (session != null)
+				session.close();
 		} catch (Throwable t) {log().t(t);}
 		try {
-			connection.close();
+			if (connection != null)
+				connection.close();
 		} catch (Throwable t) {log().t(t);}
 		connection = null;
 		session = null;

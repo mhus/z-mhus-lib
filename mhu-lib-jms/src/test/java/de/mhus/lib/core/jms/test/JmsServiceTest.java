@@ -25,6 +25,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import org.junit.Test;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.lang.ValueProvider;
@@ -37,6 +39,7 @@ import junit.framework.TestCase;
 
 public class JmsServiceTest extends TestCase {
 
+	@Test(timeout=120000)
 	public void testCommunication() throws JMSException {
 		
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
@@ -137,6 +140,7 @@ public class JmsServiceTest extends TestCase {
 		
 	}
 	
+	@Test(timeout=120000)
 	public void testBroadcast() throws JMSException {
 			
 			MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
