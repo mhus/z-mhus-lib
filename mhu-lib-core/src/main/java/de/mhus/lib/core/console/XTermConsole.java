@@ -64,11 +64,17 @@ opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
 isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt echoctl echoke
 	
 	 */
+	
+	public String[] getRawSettings() throws IOException {
+		String[] ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty");
+		return ret;
+	}
+	
 	@Override
 	public void loadSettings() {
 		
 		try {
-			String[] ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty");
+			String[] ret = getRawSettings();
 			String[] parts = ret[0].split("\n");
 			if (parts.length > 0) {
 				String[] parts2 = parts[0].split(";");
