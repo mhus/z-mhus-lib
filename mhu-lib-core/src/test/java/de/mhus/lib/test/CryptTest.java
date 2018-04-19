@@ -564,5 +564,10 @@ public class CryptTest extends TestCase {
 		
 	}
 
-	
+	public void testMd5Salt() throws IOException {
+		String real = "Hello World!";
+		String md5 = MCrypt.md5WithSalt(real);
+		assertTrue(MCrypt.validateMd5WithSalt(md5, real));
+	}
+
 }

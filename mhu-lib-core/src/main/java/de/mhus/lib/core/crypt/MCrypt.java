@@ -431,6 +431,53 @@ public class MCrypt {
 		return null;
 	}
 
+	/**
+	 * Create a salt and create a md5 using the salt. The first 4
+	 * characters represent the salt.
+	 * 
+	 * @param real
+	 * @return salt and md5
+	 */
+	public static String md5WithSalt(String real) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			MRandom rand = MApi.lookup(MRandom.class);
+			byte[] salt = new byte[2];
+			salt[0] = rand.getByte();
+			salt[1] = rand.getByte();
+			md.update(salt);
+			md.update(real.getBytes());
+			return MCast.toBinaryString(salt) +  MCast.toBinaryString(md.digest());
+		} catch (NoSuchAlgorithmException e) {
+			log.t(e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Check if the md5 and the real are the same. The md5 must be created with
+	 * md5Salt before.
+	 * @param md5
+	 * @param real
+	 * @return true if the both values are the same and no exception was thrown
+	 */
+	public static boolean validateMd5WithSalt(String md5, String real) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			// take salt from md5
+			byte[] salt = MCast.fromBinaryString(md5.substring(0,4));
+			// calculate md5
+			md.update(salt);
+			md.update(real.getBytes());
+			String realMd5 = MCast.toBinaryString(md.digest());
+			// compare
+			return realMd5.equals(md5.substring(4));
+		} catch (Throwable e) {
+			log.t(e);
+		}
+		return false;
+	}
+	
 	private static final int MAX_SPACE = 10;
 
 	/**

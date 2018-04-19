@@ -148,16 +148,11 @@ public class MPassword {
 	
 	public static boolean validatePasswordMD5(String real, String md5) {
 		if (md5 == null || real == null || md5.length() < 2) return false;
-		char salt = md5.charAt(0);
-		String check = MCrypt.md5(salt + real);
-		return md5.substring(1).equals(check);
+		return MCrypt.validateMd5WithSalt(md5, real);
 	}
 	
 	public static String encodePasswordMD5(String real) {
-		char salt = MApi.lookup(MRandom.class).getChar();
-		String ret = MCrypt.md5(salt + real);
-		if (ret == null) return null;
-		return salt + ret;
+		return MCrypt.md5WithSalt(real);
 	}
 
 	public static String sha1(String ... input) throws NoSuchAlgorithmException {

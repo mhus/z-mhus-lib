@@ -188,7 +188,7 @@ public class JmsServiceTest extends TestCase {
 							if (impl3.lastAction == null) return null;
 							return "ready";
 						}
-					}, 5000, false);
+					}, 15000, false);
 				assertEquals("oneWayWithoutReturn", impl2.lastAction);
 				assertEquals("oneWayWithoutReturn", impl3.lastAction);
 			}
