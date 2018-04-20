@@ -34,8 +34,8 @@ public class Scheduler extends MLog implements Named {
 	private Timer timer;
 	SchedulerQueue queue = new QueueList();
 	private String name = Scheduler.class.getCanonicalName();
-	private LinkedList<SchedulerJob> running = new LinkedList<>();
-	private HashSet<SchedulerJob> jobs = new HashSet<>();
+	protected LinkedList<SchedulerJob> running = new LinkedList<>();
+	protected HashSet<SchedulerJob> jobs = new HashSet<>();
 	private long nextTimeoutCheck;
 	private long lastQueueCheck = System.currentTimeMillis();
 	private long queueCheckTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;

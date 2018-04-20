@@ -135,4 +135,14 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 		stop();
 	}
 
+	public void removeJob(SchedulerJob job) {
+		getQueue().removeJob(job);
+		synchronized (running) {
+			running.remove(job);
+		}
+		synchronized (jobs) {
+			jobs.remove(job);
+		}
+	}
+
 }

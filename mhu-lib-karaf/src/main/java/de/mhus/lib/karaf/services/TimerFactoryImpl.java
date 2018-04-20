@@ -191,7 +191,7 @@ public class TimerFactoryImpl extends MLog implements TimerFactory {
 		SchedulerJob job = services.get(service);
 		if (job != null) {
 			job.setNextExecutionTime(SchedulerJob.REMOVE_TIME);
-			myTimer.getQueue().removeJob(job);
+			myTimer.removeJob(job);
 		} else {
 			log().i("timer task not found for ScheduledService", service);
 		}
