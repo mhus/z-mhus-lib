@@ -788,4 +788,8 @@ public class MSystem {
 		return false;
 	}
 
+	public static Object getJavaVersion() {
+		return System.getProperty("java.version");
+	}
+
 }

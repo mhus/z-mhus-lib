@@ -42,6 +42,7 @@ import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.NotFoundException;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.type.TypeDescription;
@@ -175,7 +176,7 @@ CAFEBABE 00000034 00140100 2564652F 6D687573  <00><00><00>4<00><14><01><00>%de/m
 00040010 01000443 6F646501 00195275 6E74696D  <00><04><00><10><01><00><04>Code<01><00><19>Runtim
 65566973 69626C65 416E6E6F 74617469 6F6E7310  eVisibleAnnotations<10>
 30000200 04000100 06000000 02000200 07000800  0<00><02><00><04><00><01><00><06><00><00><00><02><00><02><00><07><00><08><00>
-01001200 00001100 01000100 0000052A B7000AB1  <01><00><12><00><00><00><11><00><01><00><01><00><00><00><05>*ﾷ<00><CR>ﾱ
+01001200 00001100 01000100 0000052A B7000AB1  <01><00><12><00><00><00><11><00><01><00><01><00><00><00><05>..<00><CR>.
 00000000 0001000B 000C0002 00120000 00110001  <00><00><00><00><00><01><00><0B><00><0C><00><02><00><12><00><00><00><11><00><01>
 00020000 00052BB6 0011B000 00000000 13000000  <00><02><00><00><00><05>+ﾶ<00><11>ﾰ<00><00><00><00><00><13><00><00><00>
 06000100 0D000000 00                          <06><00><01><00><BR><00><00><00><00>
@@ -204,8 +205,8 @@ CAFEBABE 00000034 001C0100 2564652F 6D687573  <00><00><00>4<00><1C><01><00>%de/m
 6174696F 6E731030 00020004 00010006 00000002  ations<10>0<00><02><00><04><00><01><00><06><00><00><00><02>
 00020007 00080001 001A0000 00110001 00010000  <00><02><00><07><00><08><00><01><00><1A><00><00><00><11><00><01><00><01><00><00>
 00052AB7 000AB100 00000000 01000B00 0C000200  <00><05>*ﾷ<00><CR>ﾱ<00><00><00><00><00><01><00><0B><00><0C><00><02><00>
-1A000000 17000200 02000000 0B2BC000 0FB60013  <1A><00><00><00><17><00><02><00><02><00><00><00><0B>+￀<00><0F>ﾶ<00><13>
-B80019B0 00000000 001B0000 00060001 000D0000  ﾸ<00><19>ﾰ<00><00><00><00><00><1B><00><00><00><06><00><01><00><BR><00><00>
+1A000000 17000200 02000000 0B2BC000 0FB60013  <1A><00><00><00><17><00><02><00><02><00><00><00><0B>..<00><0F>ﾶ<00><13>
+B80019B0 00000000 001B0000 00060001 000D0000  .<00><19>ﾰ<00><00><00><00><00><1B><00><00><00><06><00><01><00><BR><00><00>
 0000                                          <00><00>
 
 ---------------------
@@ -231,9 +232,9 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 612F6C61 6E672F53 7472696E 673B0C00 0F00100A  a/lang/String;<0C><00><0F><00><10><CR>
 000E0011 01000443 6F646510 30000200 04000100  <00><0E><00><11><01><00><04>Code<10>0<00><02><00><04><00><01><00>
 06000000 02000200 07000800 01001300 00001100  <06><00><00><00><02><00><02><00><07><00><08><00><01><00><13><00><00><00><11><00>
-01000100 0000052A B7000AB1 00000000 0001000B  <01><00><01><00><00><00><05>*￯ﾾﾷ<00><CR>￯ﾾﾱ<00><00><00><00><00><01><00><0B>
-000C0001 00130000 00140001 00020000 00082BC0  <00><0C><00><01><00><13><00><00><00><14><00><01><00><02><00><00><00><08>+￯﾿ﾀ
-000EB600 12B00000 00000000                    <00><0E>￯ﾾﾶ<00><12>￯ﾾﾰ<00><00><00><00><00><00>
+01000100 0000052A B7000AB1 00000000 0001000B  <01><00><01><00><00><00><05>....<00><CR>...<00><00><00><00><00><01><00><0B>
+000C0001 00130000 00140001 00020000 00082BC0  <00><0C><00><01><00><13><00><00><00><14><00><01><00><02><00><00><00><08>....
+000EB600 12B00000 00000000                    <00><0E>...<00><12>...<00><00><00><00><00><00>
 
 	 */
 	private static String getName(Object lambda) throws NotFoundException {
@@ -259,9 +260,9 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 				return inspect8_121(lambda,bc,code);
 
 		} catch (IOException e) {
-			throw new NotFoundException("method in lambda not found", lambda, MString.toHexDump(bc, 20), e);
+			throw new NotFoundException("method in lambda not found", MSystem.getJavaVersion(), lambda, MString.toHexDump(bc, 20), e);
 		}
-		throw new NotFoundException("method in lambda not found", MString.toHexDump(bc, 20), lambda);
+		throw new NotFoundException("method in lambda not found", MSystem.getJavaVersion(), MString.toHexDump(bc, 20), lambda);
 	}
 	
 	private static String inspect8_121(Object lambda, byte[] bc, String code) throws NotFoundException {
@@ -275,7 +276,7 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 			if (p.startsWith("()") && last != null) return last;
 			if (p.indexOf(';') == -1 && p.indexOf('/') == -1) last = p;
 		}
-		throw new NotFoundException("method in lambda not found", MString.toHexDump(bc, 20), lambda);
+		throw new NotFoundException("method in lambda not found", MSystem.getJavaVersion(), MString.toHexDump(bc, 20), lambda);
 	}
 	
 	private static String inspect8_b132(Object lambda, byte[] bc, String code) throws NotFoundException {
@@ -312,7 +313,7 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 					return p; // not ... found it!
 			}
 		}
-		throw new NotFoundException("method in lambda not found", MString.toHexDump(bc, 20), lambda);
+		throw new NotFoundException("method in lambda not found", MSystem.getJavaVersion(), MString.toHexDump(bc, 20), lambda);
 	}
 
 	private static final Instrumentation instrumentation = ByteBuddyAgent.install();
