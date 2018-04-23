@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.karaf;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -25,6 +26,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.base.service.TimerFactory;
 import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.base.service.TimerImpl;
@@ -194,6 +196,24 @@ public class MOsgi {
 		Bundle bundle = FrameworkUtil.getBundle(owner);
 		if (bundle == null) return Version.V_0_0_0;
 		return new Version(bundle.getVersion().toString());
+	}
+
+	public static File getTmpFolder() {
+		File dir = new File("data/tmp");
+		if (dir.exists()) return dir;
+		return new File(MSystem.getTmpDirectory());
+	}
+
+	/**
+	 * Return the bundle with the given name or throw NotFoundException
+	 * @param name
+	 * @return The Bundle
+	 * @throws NotFoundException 
+	 */
+	public static Bundle getBundle(String name) throws NotFoundException {
+		for (Bundle bundle : FrameworkUtil.getBundle(MOsgi.class).getBundleContext().getBundles())
+			if (bundle.getSymbolicName().equals(name)) return bundle;
+		throw new NotFoundException("Bundle not found",name);
 	}
 	
 }
