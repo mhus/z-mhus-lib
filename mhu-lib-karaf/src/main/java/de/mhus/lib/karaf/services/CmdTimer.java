@@ -66,6 +66,8 @@ public class CmdTimer extends MLog implements Action {
 	@Option(name="-a", aliases="--all", description="return all informations",required=false)
 	boolean all = false;
 
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
 
 	@Override
 	public Object execute() throws Exception {
@@ -78,7 +80,7 @@ public class CmdTimer extends MLog implements Action {
 		
 		if (cmd.equals("jobs")) {
 			List<SchedulerJob> scheduled = scheduler.getJobs();
-			ConsoleTable table = new ConsoleTable();
+			ConsoleTable table = new ConsoleTable(full);
 			if (all)
 				table.setLineSpacer(true);
 			if (all)
@@ -153,7 +155,7 @@ public class CmdTimer extends MLog implements Action {
 			List<SchedulerJob> scheduled = scheduler.getScheduledJobs();
 			List<SchedulerJob> running = scheduler.getRunningJobs();
 			
-			ConsoleTable table = new ConsoleTable();
+			ConsoleTable table = new ConsoleTable(full);
 			if (all)
 				table.setLineSpacer(true);
 			if (all)
@@ -255,7 +257,7 @@ public class CmdTimer extends MLog implements Action {
 		if (cmd.equals("timeout")) {
 			List<SchedulerJob> running = scheduler.getRunningJobs();
 			
-			ConsoleTable table = new ConsoleTable();
+			ConsoleTable table = new ConsoleTable(full);
 			table.setHeaderValues("Task","Job","Started","Stopped", "Description","Name","Scheduled","Timeout");
 			
 			long time = System.currentTimeMillis();

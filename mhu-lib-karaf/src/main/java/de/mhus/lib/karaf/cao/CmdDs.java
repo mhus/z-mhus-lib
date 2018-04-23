@@ -17,6 +17,7 @@ package de.mhus.lib.karaf.cao;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.cao.CaoDataSource;
@@ -27,9 +28,12 @@ import de.mhus.lib.karaf.MOsgi;
 @Service
 public class CmdDs implements Action {
 
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
+
 	@Override
 	public Object execute() throws Exception {
-		ConsoleTable out = new ConsoleTable();
+		ConsoleTable out = new ConsoleTable(full);
 		out.setHeaderValues("Name","Type","Status");
 		for (CaoDataSource ds : MOsgi.getServices(CaoDataSource.class, null)) {
 			out.addRowValues(ds.getName(), ds.getType(), ds);

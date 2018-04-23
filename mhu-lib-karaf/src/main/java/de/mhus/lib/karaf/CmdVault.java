@@ -65,12 +65,15 @@ public class CmdVault extends MLog implements Action {
 	@Option(name="-s", aliases="--source",description="Set vault source name")
 	String sourcename = MVault.SOURCE_DEFAULT;
 	
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
+
 	@Override
 	public Object execute() throws Exception {
 		MVault vault = MVaultUtil.loadDefault();
 		
 		if (cmd.equals("sources")) {
-			ConsoleTable out = new ConsoleTable();
+			ConsoleTable out = new ConsoleTable(full);
 			out.setHeaderValues("Source","Info");
 			for (String sourceName : vault.getSourceNames()) {
 				VaultSource source = vault.getSource(sourceName);
@@ -80,7 +83,7 @@ public class CmdVault extends MLog implements Action {
 		} else
 		if (cmd.equals("list")) {
 			if (sourcename.equals(MVault.SOURCE_DEFAULT)) {
-				ConsoleTable out = new ConsoleTable();
+				ConsoleTable out = new ConsoleTable(full);
 				out.setHeaderValues("Source","Id","Type","Description");
 				for (String sourceName : vault.getSourceNames()) {
 					try {
@@ -100,7 +103,7 @@ public class CmdVault extends MLog implements Action {
 					System.out.println("Source not found!");
 					return null;
 				}
-				ConsoleTable out = new ConsoleTable();
+				ConsoleTable out = new ConsoleTable(full);
 				out.setHeaderValues("Source","Id","Type","Description");
 				for (UUID id : source.getEntryIds()) {
 					VaultEntry entry = source.getEntry(id);

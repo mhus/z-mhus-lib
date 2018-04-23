@@ -19,6 +19,7 @@ import java.util.Date;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.MDate;
@@ -31,6 +32,9 @@ import de.mhus.lib.jms.ServerJms;
 @Service
 public class CmdChannelList implements Action {
 
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
+
 	@Override
 	public Object execute() throws Exception {
 
@@ -40,7 +44,7 @@ public class CmdChannelList implements Action {
 			return null;
 		}
 		
-		ConsoleTable table = new ConsoleTable();
+		ConsoleTable table = new ConsoleTable(full);
 		table.setHeaderValues("Name","Connection","Destination","Type","Information","Connected","Closed", "Last Activity");
 		for (JmsDataChannel chd : service.getChannels()) {
 //			JmsDataChannel chd = service.getChannel(name);

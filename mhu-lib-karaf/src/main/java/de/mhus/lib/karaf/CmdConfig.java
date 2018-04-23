@@ -18,6 +18,7 @@ package de.mhus.lib.karaf;
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Argument;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Reference;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 import org.apache.karaf.shell.api.console.Session;
@@ -46,6 +47,9 @@ public class CmdConfig extends MLog implements Action {
 	@Argument(index=1, name="paramteters", required=false, description="Parameters", multiValued=true)
     String[] parameters;
 
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
+
 	// private Appender appender;
 
 	@Override
@@ -63,7 +67,7 @@ public class CmdConfig extends MLog implements Action {
 			MApi.get().getCfgManager().reConfigure();
 		} break;
 		case "list": {
-			ConsoleTable out = new ConsoleTable();
+			ConsoleTable out = new ConsoleTable(full);
 			out.setHeaderValues("Owner", "Path", "Value", "Default");
 			for (CfgValue<?> value : MApi.getCfgUpdater().getList()) {
 				out.addRowValues(value.getOwner(), value.getPath(), value.value(), value.getDefault() );

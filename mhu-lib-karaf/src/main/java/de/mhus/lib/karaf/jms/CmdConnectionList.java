@@ -17,6 +17,7 @@ package de.mhus.lib.karaf.jms;
 
 import org.apache.karaf.shell.api.action.Action;
 import org.apache.karaf.shell.api.action.Command;
+import org.apache.karaf.shell.api.action.Option;
 import org.apache.karaf.shell.api.action.lifecycle.Service;
 
 import de.mhus.lib.core.console.ConsoleTable;
@@ -26,6 +27,9 @@ import de.mhus.lib.jms.JmsConnection;
 @Service
 public class CmdConnectionList implements Action {
 
+	@Option(name="-f", aliases="--full", description="Full output",required=false)
+	boolean full = false;
+
 	@Override
 	public Object execute() throws Exception {
 		JmsManagerService service = JmsUtil.getService();
@@ -34,7 +38,7 @@ public class CmdConnectionList implements Action {
 			return null;
 		}
 		
-		ConsoleTable table = new ConsoleTable();
+		ConsoleTable table = new ConsoleTable(full);
 		table.setHeaderValues("Id","Name","Url","User","Connected","Closed");
 		for (de.mhus.lib.karaf.MOsgi.Service<JmsDataSource> ref : service.getDataSources()) {
 			try {
