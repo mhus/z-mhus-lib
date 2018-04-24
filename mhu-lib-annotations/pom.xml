@@ -24,7 +24,7 @@
     <parent>
         <artifactId>mhu-lib</artifactId>
         <groupId>de.mhus.lib</groupId>
-        <version>3.3.4-SNAPSHOT</version>
+        <version>3.3.4</version>
     </parent>
 
     <dependencies>
