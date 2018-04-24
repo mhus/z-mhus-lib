@@ -66,6 +66,7 @@
                         	javax.jms.*;resolution:=optional,
 				            com.mongodb.*;resolution:=optional,
 				            org.mongodb.*;resolution:=optional,
+				            org.apache.karaf.*;resolution:=optional,
                             *
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
