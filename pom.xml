@@ -224,7 +224,6 @@
       <module>mhu-lib-standalone</module>
       <module>mhu-lib-jms</module>
       <module>mhu-lib-liferay</module>
-      <module>mhu-lib-karaf</module>
     </modules>
             
          </profile>
@@ -247,7 +246,6 @@
 		      <module>mhu-lib-standalone</module>
 		       -->
 		      <module>mhu-lib-jms</module>
-		      <module>mhu-lib-karaf</module>
 		    </modules>
             
             <build>
