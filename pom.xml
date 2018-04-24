@@ -223,7 +223,9 @@
       <module>mhu-lib-vaadin</module>
       <module>mhu-lib-standalone</module>
       <module>mhu-lib-jms</module>
+      <!-- not changed! need to create a separate project for it
       <module>mhu-lib-liferay</module>
+       -->
     </modules>
             
          </profile>
