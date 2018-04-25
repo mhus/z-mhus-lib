@@ -65,8 +65,45 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 	
 	 */
 	
+//	public String[] getRawSettings() throws IOException {
+//		String[] ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty");
+//		return ret;
+//	}
+	
+//	@Override
+//	public void loadSettings() {
+//		
+//		try {
+//			String[] ret = getRawSettings();
+//			String[] parts = ret[0].split("\n");
+//			if (parts.length > 0) {
+//				String[] parts2 = parts[0].split(";");
+//				for (String p : parts2) {
+//					p = p.trim();
+//					if (p.endsWith(" rows"))
+//						height = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_HEIGHT);
+//					else
+//					if (p.endsWith(" columns"))
+//						width = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_WIDTH);
+//					else
+//					if (p.startsWith("rows "))
+//						height = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_HEIGHT);
+//					else
+//					if (p.startsWith("columns "))
+//						width = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_WIDTH);
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	/*
+/bin/sh -c "echo $COLUMNS $LINES $TERM"
+238 29 xterm-color
+	 */
 	public String[] getRawSettings() throws IOException {
-		String[] ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty");
+		String[] ret = MSystem.execute("/bin/sh","-c","echo $COLUMNS $LINES $TERM");
 		return ret;
 	}
 	
@@ -75,24 +112,9 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		
 		try {
 			String[] ret = getRawSettings();
-			String[] parts = ret[0].split("\n");
-			if (parts.length > 0) {
-				String[] parts2 = parts[0].split(";");
-				for (String p : parts2) {
-					p = p.trim();
-					if (p.endsWith(" rows"))
-						height = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_HEIGHT);
-					else
-					if (p.endsWith(" columns"))
-						width = MCast.toint(MString.beforeIndex(p, ' '), DEFAULT_WIDTH);
-					else
-					if (p.startsWith("rows "))
-						height = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_HEIGHT);
-					else
-					if (p.startsWith("columns "))
-						width = MCast.toint(MString.afterIndex(p, ' '), DEFAULT_WIDTH);
-				}
-			}
+			String[] parts = ret[0].split(" ");
+			width = MCast.toint(parts[0], DEFAULT_WIDTH);
+			height = MCast.toint(parts[1], DEFAULT_HEIGHT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

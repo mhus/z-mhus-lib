@@ -26,7 +26,7 @@ public class CmdConsole extends SimpleConsole {
 	public CmdConsole() {
 		super();
 	}
-
+	
 	@Override
 	public void resetTerminal() {
 		try {
@@ -43,10 +43,15 @@ Keyboard rate: 31
 Keyboard delay: 1
 Code page: 437
  */
+	
+	public String[] getRawSettings() throws IOException {
+		return MSystem.execute("cmd.exe", "/c", "mode con");
+	}
+	
 	public void loadSettings() {
 		
 		try {
-			String[] res = MSystem.execute("cmd.exe", "/c", "mode con");
+			String[] res = getRawSettings();
 			String[] parts = res[0].split("\n");
 			int cnt = 0;
 			for (String p : parts) {
