@@ -110,14 +110,28 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 	@Override
 	public void loadSettings() {
 		
-		try {
-			String[] ret = getRawSettings();
-			String[] parts = ret[0].split(" ");
-			width = MCast.toint(parts[0], DEFAULT_WIDTH);
-			height = MCast.toint(parts[1], DEFAULT_HEIGHT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String[] ret = getRawSettings();
+//			String[] parts = ret[0].split(" ");
+//			width = MCast.toint(parts[0], DEFAULT_WIDTH);
+//			height = MCast.toint(parts[1], DEFAULT_HEIGHT);
+			width = MCast.toint(System.getenv("COLUMNS"), DEFAULT_WIDTH);
+			height = MCast.toint(System.getenv("LINES"), DEFAULT_HEIGHT);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	}
+
+	@Override
+	public int getWidth() {
+		width = MCast.toint(System.getenv("COLUMNS"), DEFAULT_WIDTH);
+		return width;
+	}
+
+	@Override
+	public int getHeight() {
+		height = MCast.toint(System.getenv("LINES"), DEFAULT_HEIGHT);
+		return height;
 	}
 
 }
