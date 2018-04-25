@@ -18,7 +18,6 @@ package de.mhus.lib.core.console;
 import java.io.IOException;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 public class XTermConsole extends ANSIConsole {
