@@ -22,7 +22,7 @@
   <packaging>bundle</packaging>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
-        <artifactId>mhu-lib</artifactId>
+        <artifactId>mhus-lib</artifactId>
         <version>3.3.5-SNAPSHOT</version>
   </parent>
   

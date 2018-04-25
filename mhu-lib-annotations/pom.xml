@@ -22,7 +22,7 @@
     <packaging>bundle</packaging>
     <description>mhu-lib-annotations OSGi bundle project.</description>
     <parent>
-        <artifactId>mhu-lib</artifactId>
+        <artifactId>mhus-lib</artifactId>
         <groupId>de.mhus.lib</groupId>
         <version>3.3.5-SNAPSHOT</version>
     </parent>
