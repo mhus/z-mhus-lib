@@ -35,9 +35,22 @@ public class PdfChecker extends MLog {
 	 * @return 0 = not suspicious, 1 = little suspicious, 2-3 = suspicious, 4-5 = highly suspicious
 	 */
 	
-	public FileChecker.SUSPICIOUS isSuspicious(File pdfFile) {
+	public int getSuspiciousScore(File pdfFile) {
 		String content = MFile.readFile(pdfFile);
 		int score = isSuspicious(content);
+		return score;
+	}
+
+	/**
+	 * A score lesser then 1 is NO, 1 is MAYBE, greater is YES.
+	 * If you want be sure reject everything that is not NO. If you
+	 * are generous reject everything that is YES.
+	 * 
+	 * @param pdfFile
+	 * @return Suspicios
+	 */
+	public FileChecker.SUSPICIOUS isSuspicious(File pdfFile) {
+		int score = getSuspiciousScore(pdfFile);
 		if (score == 0) return FileChecker.SUSPICIOUS.NO;
 		if (score == 1) return FileChecker.SUSPICIOUS.MAYBE;
 		return FileChecker.SUSPICIOUS.YES;

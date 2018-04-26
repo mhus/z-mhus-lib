@@ -30,7 +30,13 @@ public class PdfFileChecker extends AbstractFileChecker {
 		MFile.readBinary(in, b, 0, 5);
 		return b[0] == '%' && b[1] == 'P' && b[2] == 'D' && b[3] == 'F' && b[4] == '-';
 	}
-
+	/**
+	 * If you want be sure reject everything that is not NO. If you
+	 * are generous reject everything that is YES. The value UNKNOWN
+	 * should not happen the value should bes set as default value before you
+	 * check a file.
+	 * 
+	 */
 	@Override
 	public SUSPICIOUS checkForSuspicious(File in) throws IOException {
 		return new PdfChecker().isSuspicious(in);
