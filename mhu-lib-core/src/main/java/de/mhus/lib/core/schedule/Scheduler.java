@@ -292,7 +292,7 @@ public class Scheduler extends MLog implements Named {
 	 *  
 	 * @param interval
 	 * @param task
-	 * @return
+	 * @return The job
 	 */
 	public static SchedulerJob createSchedulerJob(String interval, ITimerTask task) {
 		if (interval.startsWith("once:")) {

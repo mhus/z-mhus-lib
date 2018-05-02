@@ -20,12 +20,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.calendar.Holidays;
 
 public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	
@@ -84,19 +86,27 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 			} else {
 				log().d("Definition file not found",locale,year);
 				map = new HashMap<>();
-				fillDefaultHolydays(locale, map);
+				fillDefaultHolydays(locale, year, map);
 				days.put(locale + "_" + year,map);
 			}
 		}
 		return map;
 	}
 
-	protected void fillDefaultHolydays(Locale locale, Map<String, String> map) {
-		map.put("1.1", "New Year");
-		map.put("1.5","1. May");
-		map.put("25.12","X-Mas");
-		map.put("26.12","X-Mas");
-		// TODO provide a extensive list
+	@SuppressWarnings("deprecation")
+	protected void fillDefaultHolydays(Locale locale, int year, Map<String, String> map) {
+		Holidays holidays = Holidays.getHolidaysForLocale(locale);
+		if (holidays != null) {
+			for (Entry<Date, String> entry : holidays.getHolidays(null, year, null).entrySet()) {
+				map.put(entry.getKey().getDate() + "." + (entry.getKey().getMonth()+1), entry.getValue() );
+			}
+		} else {
+			// default
+			map.put("1.1", "New Year");
+			map.put("1.5","1. May");
+			map.put("25.12","1. Christmans Holiday");
+			map.put("26.12","2. Christmans Holiday");
+		}
 	}
 
 }
