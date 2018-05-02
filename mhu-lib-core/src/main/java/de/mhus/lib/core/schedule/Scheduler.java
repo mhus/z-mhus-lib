@@ -16,6 +16,7 @@
 package de.mhus.lib.core.schedule;
 
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.ITimerTask;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.lang.ValueProvider;
@@ -270,6 +274,70 @@ public class Scheduler extends MLog implements Named {
 		}
 		jobs.clear();
 		queue.clear();
+	}
+
+	/**
+	 * Create a job by definition. Format:
+	 *  once:date
+	 *  once:time
+	 *  cron:cron format
+	 *  interval:interval
+	 *  cron
+	 *  interval
+	 *  
+	 *  e.g.
+	 *  * * * * *
+	 *  12000
+	 *  once:12000
+	 *  
+	 * @param interval
+	 * @param task
+	 * @return
+	 */
+	public static SchedulerJob createSchedulerJob(String interval, ITimerTask task) {
+		if (interval.startsWith("once:")) {
+			interval = interval.substring(5);
+			long s = 0;
+			if (interval.indexOf('-') > 0 || interval.indexOf('.') > 0 || interval.indexOf('/') > 0 )
+				s = MDate.toDate(interval, new Date()).getTime();
+			else
+				s = System.currentTimeMillis() + MTimeInterval.toTime(interval, -1);
+			return new OnceJob(s, task);
+		} else
+		if (interval.startsWith("cron:")) {
+			return new CronJob(interval.substring(5), task);
+		} else
+		if (interval.startsWith("interval:")) {
+			interval = interval.substring(9);
+			return toIntervalJob(interval, task);
+		} else
+		if (interval.indexOf(' ') > 0 ) {
+			return new CronJob(interval, task);
+		} else {
+			return toIntervalJob(interval, task);
+		}		
+	}
+
+	public static SchedulerJob toIntervalJob(String interval, ITimerTask task) {
+		if (interval.indexOf(',') > 0) {
+			long s = 0;
+			String sStr = MString.beforeIndex(interval,',');
+			if (sStr.indexOf('-') > 0 || sStr.indexOf('.') > 0 || sStr.indexOf('/') > 0 )
+				// it's a date string
+				s = MDate.toDate(sStr, new Date()).getTime();
+			else
+				// it should be a time interval
+				s = System.currentTimeMillis() + MTimeInterval.toTime(sStr, -1);
+			// delay is in every case a time interval
+			long l = MTimeInterval.toTime(MString.afterIndex(interval,','), -1);
+			if (s > 0 && l > 0)
+				return new IntervalWithStartTimeJob(s,l, task);
+		} else {
+			long l = MTimeInterval.toTime(interval, -1);
+			if (l > 0)
+				return new IntervalJob(l, task);
+		}
+		return null;
 	}
 
 }

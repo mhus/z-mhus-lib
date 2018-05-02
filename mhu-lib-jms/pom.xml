@@ -41,7 +41,10 @@
 	            <Export-Package>
 	            	de.mhus.lib.jms*;version=${project.version}
 	            	</Export-Package>
-	            <Import-Package>*</Import-Package>
+	            <Import-Package>
+	            org.apache.activemq.*;resolution:=optional,
+	            *
+	            </Import-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
