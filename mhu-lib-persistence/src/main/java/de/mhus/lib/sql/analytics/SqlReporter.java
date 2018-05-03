@@ -17,6 +17,7 @@ package de.mhus.lib.sql.analytics;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.config.IConfig;
 
 public class SqlReporter extends MLog implements SqlAnalyzer {
 
@@ -31,6 +32,11 @@ public class SqlReporter extends MLog implements SqlAnalyzer {
 
 	@Override
 	public void stop() {
+	}
+
+	@Override
+	public void doConfigure(IConfig config) {
+		
 	}
 
 }

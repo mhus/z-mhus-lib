@@ -144,8 +144,8 @@ public class MApi {
 		return configUpdater;
 	}
 	
-	public static File getFile(String path) {
-		return get().getFile(path);
+	public static File getFile(IApi.SCOPE scope, String path) {
+		return get().getFile(scope, path);
 	}
 
 	public static <T> T lookup(Class<T> class1) {

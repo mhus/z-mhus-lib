@@ -23,6 +23,7 @@ import java.util.TimerTask;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.system.IApi;
 
 public class SqlRuntimeWriter extends SqlRuntimeAnalyzer {
 
@@ -31,7 +32,7 @@ public class SqlRuntimeWriter extends SqlRuntimeAnalyzer {
 
 	@Override
 	public void start() {
-		file = MApi.getFile(getClass().getCanonicalName() + "_" + MDate.toFileFormat(new Date()) + ".csv");
+		file = MApi.getFile(IApi.SCOPE.LOG,getClass().getCanonicalName() + "_" + MDate.toFileFormat(new Date()) + ".csv");
 		timer = new Timer(true);
 		timer.schedule(new TimerTask() {
 			

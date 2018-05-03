@@ -53,11 +53,17 @@ public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator
 	public void stop() {
 		
 	}
+	
+	@Override
+	public void doConfigure(IConfig config) {
+		traceMaxRuntime = config.getLong("traceMaxRuntime", traceMaxRuntime);
+	}
+
 
 	@Override
 	public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
 		if (config != null)
-			traceMaxRuntime = config.getLong("traceMaxRuntime", traceMaxRuntime);
+			doConfigure(config);
 		SqlAnalytics.setAnalyzer(this);
 	}
 

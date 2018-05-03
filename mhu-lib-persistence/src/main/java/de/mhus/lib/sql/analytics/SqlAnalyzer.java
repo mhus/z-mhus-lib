@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.sql.analytics;
 
+import de.mhus.lib.core.config.IConfig;
+
 public interface SqlAnalyzer {
 
 	void doAnalyze(long connectionId, String original, String query, long delta, Throwable t);
@@ -22,5 +24,7 @@ public interface SqlAnalyzer {
 	void start();
 	
 	void stop();
+	
+	void doConfigure(IConfig config);
 	
 }

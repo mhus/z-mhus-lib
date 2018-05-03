@@ -107,7 +107,7 @@ public abstract class DbPool extends MJmx {
 		};
 		MHousekeeper housekeeper = MApi.lookup(MHousekeeper.class);
 		if (housekeeper != null) {
-			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000), true);
+			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000));
 		} else {
 			log().i("Housekeeper not found - autoCleanup disabled");
 		}

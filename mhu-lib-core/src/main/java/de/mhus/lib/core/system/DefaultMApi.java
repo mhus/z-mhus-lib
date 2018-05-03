@@ -21,6 +21,8 @@ import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
@@ -96,7 +98,15 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	}
 
 	@Override
-	public File getFile(String dir) {
+	public File getFile(SCOPE scope,String dir) {
+		dir = MFile.normalizePath(dir);
+		if (scope == SCOPE.TMP)
+			return new File(MSystem.getTmpDirectory() + File.pathSeparator + dir);
+		if (scope == SCOPE.LOG) {
+			File log = new File(baseDir,"logs");
+			if (log.exists() && log.isDirectory())
+				return new File(log, dir);
+		}
 		return new File(baseDir, dir);
 	}
 

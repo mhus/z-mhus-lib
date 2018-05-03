@@ -48,7 +48,7 @@ public class MRemoteManager extends MObject implements IBase {
 		housekeeper = new Housekeeper(this);
 		@SuppressWarnings("rawtypes")
 		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this,new HashConfig());
-		MApi.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000), true);
+		MApi.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000));
 	}
 	
 	public void register(JmxObject object) throws Exception {

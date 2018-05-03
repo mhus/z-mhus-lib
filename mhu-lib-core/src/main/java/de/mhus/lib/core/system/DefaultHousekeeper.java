@@ -34,8 +34,8 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 	}
 	
 	@Override
-	public void register(MHousekeeperTask task, long sleep, boolean weak) {
-		timer.schedule(new MyTimerTask(task,weak), sleep, sleep);
+	public void register(MHousekeeperTask task, long sleep) {
+		timer.schedule(new MyTimerTask(task), sleep, sleep);
 	}
 	
 	@Override
@@ -50,12 +50,8 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 		private WeakReference<TimerTask> refWeak;
 		private TimerTask ref;
 
-		public MyTimerTask(TimerTask task, boolean weak) {
-			if (weak)
-				refWeak = new WeakReference<TimerTask>(task);
-			else
-				ref = task;
-				
+		public MyTimerTask(TimerTask task) {
+			refWeak = new WeakReference<TimerTask>(task);
 		}
 
 		@Override

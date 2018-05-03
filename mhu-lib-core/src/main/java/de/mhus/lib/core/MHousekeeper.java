@@ -22,6 +22,6 @@ import de.mhus.lib.core.system.DefaultHousekeeper;
 @DefaultImplementation(DefaultHousekeeper.class)
 public abstract interface MHousekeeper extends IBase {
 		
-	void register(MHousekeeperTask task, long sleep, boolean weak);
+	void register(MHousekeeperTask task, long sleep);
 
 }

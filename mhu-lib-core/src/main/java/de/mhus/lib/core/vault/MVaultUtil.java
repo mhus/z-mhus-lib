@@ -25,10 +25,11 @@ import de.mhus.lib.core.cfg.CfgFile;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.system.IApi.SCOPE;
 
 public class MVaultUtil {
 
-	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(".mhu-vault") );
+	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,".mhu-vault") );
 	private static CfgString defaultPassphrase = new CfgString(MVault.class, "passphrase", "changeit" );
 	
 	public static MVault loadDefault() {

@@ -33,10 +33,8 @@ public class SystemCfgInitiator implements CfgInitiator {
 			String key = MConstants.PROP_BASE_DIR;
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
-			String baseDirName = ".";
 			if (MString.isSet(name)) 
-				baseDirName = name;
-			internal.setBaseDir( new File(baseDirName) );
+				internal.setBaseDir( new File(name) );
 		} catch (Throwable t) {MApi.dirtyLog(t);}
 	}
 

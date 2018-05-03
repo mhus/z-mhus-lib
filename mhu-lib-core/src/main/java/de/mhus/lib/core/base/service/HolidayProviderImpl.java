@@ -28,6 +28,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.calendar.Holidays;
+import de.mhus.lib.core.system.IApi.SCOPE;
 
 public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 	
@@ -55,9 +56,9 @@ public class HolidayProviderImpl extends MLog implements HolidayProviderIfc {
 		if (map == null) {
 			// load map file
 			File f = null;
-			f = MApi.getFile("holidays_" + locale.toString() + "_" + year + ".txt");
+			f = MApi.getFile(SCOPE.ETC,"holidays_" + locale.toString() + "_" + year + ".txt");
 			if (f == null || !f.exists())
-				f = MApi.getFile("holidays_" + year + ".txt");
+				f = MApi.getFile(SCOPE.ETC,"holidays_" + year + ".txt");
 			if (f != null && f.exists()) {
 				try {
 					map = new HashMap<>();

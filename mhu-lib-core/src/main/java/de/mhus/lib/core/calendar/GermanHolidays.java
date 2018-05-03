@@ -37,7 +37,7 @@ public class GermanHolidays extends Holidays {
 		
 		// fix days
 		
-		out.put(new Date(year-1900,0,1), nls.find("silvester=Silvester") );
+		out.put(new Date(year-1900,0,1), nls.find("newYearsDay=New Years Day") );
 		out.put(new Date(year-1900,4,1), nls.find("firstMay=1. May") );
 		
 		out.put(new Date(year-1900,9,3), nls.find("germanUnity=Day of German Unity") );
