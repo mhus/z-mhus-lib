@@ -18,6 +18,7 @@ package de.mhus.lib.core.console;
 import java.io.IOException;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 public class XTermConsole extends ANSIConsole {
@@ -132,12 +133,40 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		if (System.currentTimeMillis() - lastUpdate < 10000) return;
 		lastUpdate = System.currentTimeMillis();
 		try {
-			width = MCast.toint(MSystem.execute("tput","cols")[0], DEFAULT_WIDTH);
+			String w = MSystem.execute("tput","cols")[0];
+			if (w == "80") {
+				for (String part : getRawSettings()[0].split("\\;")) {
+					part = part.toLowerCase().trim();
+					if (part.endsWith(" columns")) {
+						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
+						break;
+					} else
+					if (part.startsWith("columns ")) {
+						width = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_WIDTH);
+						break;
+					}
+				}
+			} else
+				width = MCast.toint(w, DEFAULT_WIDTH);
 		} catch (IOException e) {
 			width = DEFAULT_WIDTH;
 		}
 		try {
-			height = MCast.toint(MSystem.execute("tput","lines")[0], DEFAULT_HEIGHT);
+			String h = MSystem.execute("tput","lines")[0];
+			if ( h == "40") {
+				for (String part : getRawSettings()[0].split("\\;")) {
+					part = part.toLowerCase().trim();
+					if (part.endsWith(" rows")) {
+						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
+						break;
+					} else
+					if (part.startsWith("rows ")) {
+						height = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_HEIGHT);
+						break;
+					}
+				}
+			} else
+				height = MCast.toint(h, DEFAULT_HEIGHT);
 		} catch (IOException e) {
 			height = DEFAULT_HEIGHT;
 		}
