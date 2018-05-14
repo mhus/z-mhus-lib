@@ -133,21 +133,27 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		if (System.currentTimeMillis() - lastUpdate < 10000) return;
 		lastUpdate = System.currentTimeMillis();
 		try {
-			String w = MSystem.execute("tput","cols")[0];
+			String w = MSystem.execute("/bin/sh","-c","echo $COLUMNS")[0];
 			System.out.println("["+w+"]");
-			if (w.equals("80")) {
+			if (w.equals("")) {
 				for (String part : getRawSettings()[0].split("\\;")) {
 					part = part.toLowerCase().trim();
 					System.out.println("Part: [" + part+"]" );
 					if (part.endsWith(" columns")) {
 						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
-						break;
 					} else
 					if (part.startsWith("columns ")) {
 						width = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_WIDTH);
-						break;
+					}
+					else
+					if (part.endsWith(" rows")) {
+						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
+					} else
+					if (part.startsWith("rows ")) {
+						height = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_HEIGHT);
 					}
 				}
+				return;
 			} else
 				width = MCast.toint(w, DEFAULT_WIDTH);
 		} catch (IOException e) {
@@ -156,21 +162,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		try {
 			String h = MSystem.execute("tput","lines")[0];
 			System.out.println("["+h+"]");
-			if ( h.equals("24")) {
-				for (String part : getRawSettings()[0].split("\\;")) {
-					part = part.toLowerCase().trim();
-					System.out.println("Part: [" + part+"]" );
-					if (part.endsWith(" rows")) {
-						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
-						break;
-					} else
-					if (part.startsWith("rows ")) {
-						height = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_HEIGHT);
-						break;
-					}
-				}
-			} else
-				height = MCast.toint(h, DEFAULT_HEIGHT);
+			height = MCast.toint(h, DEFAULT_HEIGHT);
 		} catch (IOException e) {
 			height = DEFAULT_HEIGHT;
 		}
