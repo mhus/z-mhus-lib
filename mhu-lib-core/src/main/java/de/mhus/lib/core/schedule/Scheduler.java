@@ -78,7 +78,7 @@ public class Scheduler extends MLog implements Named {
 			if (pack != null) {
 				for (SchedulerJob job : pack) {
 					try {
-						doExecuteJob(job, false);
+						doExecuteJobInternal(job, false);
 					} catch (Throwable t) {
 						log().t("Job error",job.getName(),job,t);
 						job.doError(t);
@@ -111,6 +111,11 @@ public class Scheduler extends MLog implements Named {
 	}
 
 	public void doExecuteJob(SchedulerJob job, boolean forced) {
+		queue.removeJob(job);
+		doExecuteJobInternal(job, forced);
+	}
+	
+	protected void doExecuteJobInternal(SchedulerJob job, boolean forced) {
 		if (!job.setBusy(this)) {
 			log().w("job is busy, reshedule",job.getName());
 			boolean isRunning = false;
