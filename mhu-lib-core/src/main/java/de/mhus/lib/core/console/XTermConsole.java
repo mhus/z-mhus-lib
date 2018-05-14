@@ -22,6 +22,8 @@ import de.mhus.lib.core.MSystem;
 
 public class XTermConsole extends ANSIConsole {
 
+	private long lastUpdate;
+
 	public XTermConsole() {
 		super();
 	}
@@ -114,8 +116,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 //			String[] parts = ret[0].split(" ");
 //			width = MCast.toint(parts[0], DEFAULT_WIDTH);
 //			height = MCast.toint(parts[1], DEFAULT_HEIGHT);
-			width = MCast.toint(System.getenv("COLUMNS"), DEFAULT_WIDTH);
-			height = MCast.toint(System.getenv("LINES"), DEFAULT_HEIGHT);
+		updateSize();
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
@@ -123,13 +124,28 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 
 	@Override
 	public int getWidth() {
-		width = MCast.toint(System.getenv("COLUMNS"), DEFAULT_WIDTH);
+		updateSize();
 		return width;
+	}
+
+	private void updateSize() {
+		if (System.currentTimeMillis() - lastUpdate < 10000) return;
+		lastUpdate = System.currentTimeMillis();
+		try {
+			width = MCast.toint(MSystem.execute("tput","cols")[0], DEFAULT_WIDTH);
+		} catch (IOException e) {
+			width = DEFAULT_WIDTH;
+		}
+		try {
+			height = MCast.toint(MSystem.execute("tput","lines")[0], DEFAULT_HEIGHT);
+		} catch (IOException e) {
+			height = DEFAULT_HEIGHT;
+		}
 	}
 
 	@Override
 	public int getHeight() {
-		height = MCast.toint(System.getenv("LINES"), DEFAULT_HEIGHT);
+		updateSize();
 		return height;
 	}
 
