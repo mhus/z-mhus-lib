@@ -134,6 +134,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		lastUpdate = System.currentTimeMillis();
 		try {
 			String w = MSystem.execute("tput","cols")[0];
+			System.out.println("["+w+"]");
 			if (w.equals("80")) {
 				for (String part : getRawSettings()[0].split("\\;")) {
 					part = part.toLowerCase().trim();
@@ -153,6 +154,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		}
 		try {
 			String h = MSystem.execute("tput","lines")[0];
+			System.out.println("["+h+"]");
 			if ( h.equals("40")) {
 				for (String part : getRawSettings()[0].split("\\;")) {
 					part = part.toLowerCase().trim();
