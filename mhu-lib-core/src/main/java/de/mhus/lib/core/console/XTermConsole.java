@@ -104,11 +104,21 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 /bin/sh -c "echo $COLUMNS $LINES $TERM"
 238 29 xterm-color
 	 */
-	public String[] getRawSettings() throws IOException {
-		String[] ret = MSystem.execute("/bin/sh","-c","echo $COLUMNS $LINES $TERM");
+	public String getRawSettings() throws IOException {
+		String ret = MSystem.execute("/bin/sh","-c","echo $COLUMNS $LINES $TERM")[0];
 		return ret;
 	}
 	
+	public static String getRawTTYSettings() {
+		try {
+			String ret;
+			ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty")[0];
+			return ret;
+		} catch (IOException e) {
+			return e.toString();
+		}
+	}
+
 	@Override
 	public void loadSettings() {
 		
@@ -136,7 +146,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 			String w = MSystem.execute("/bin/sh","-c","echo $COLUMNS")[0];
 			System.out.println("["+w+"]");
 			if (w.equals("")) {
-				for (String part : getRawSettings()[0].split("\\;")) {
+				for (String part : getRawTTYSettings().split("\\;")) {
 					part = part.toLowerCase().trim();
 					System.out.println("Part: [" + part+"]" );
 					if (part.endsWith(" columns")) {
