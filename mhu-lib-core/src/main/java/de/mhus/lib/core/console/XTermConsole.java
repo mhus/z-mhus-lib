@@ -138,6 +138,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 			if (w.equals("80")) {
 				for (String part : getRawSettings()[0].split("\\;")) {
 					part = part.toLowerCase().trim();
+					System.out.println("Part: [" + part+"]" );
 					if (part.endsWith(" columns")) {
 						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
 						break;
@@ -155,9 +156,10 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		try {
 			String h = MSystem.execute("tput","lines")[0];
 			System.out.println("["+h+"]");
-			if ( h.equals("40")) {
+			if ( h.equals("24")) {
 				for (String part : getRawSettings()[0].split("\\;")) {
 					part = part.toLowerCase().trim();
+					System.out.println("Part: [" + part+"]" );
 					if (part.endsWith(" rows")) {
 						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
 						break;
