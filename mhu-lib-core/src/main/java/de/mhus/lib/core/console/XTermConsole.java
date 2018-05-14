@@ -140,15 +140,13 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 	}
 
 	private void updateSize() {
-		if (System.currentTimeMillis() - lastUpdate < 10000) return;
+		if (System.currentTimeMillis() - lastUpdate < 30000) return;
 		lastUpdate = System.currentTimeMillis();
 		try {
 			String w = MSystem.execute("/bin/sh","-c","echo $COLUMNS")[0];
-			System.out.println("["+w+"]");
 			if (w.equals("")) {
 				for (String part : getRawTTYSettings().split("\\;")) {
 					part = part.toLowerCase().trim();
-					System.out.println("Part: [" + part+"]" );
 					if (part.endsWith(" columns")) {
 						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
 					} else
@@ -171,7 +169,6 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 		}
 		try {
 			String h = MSystem.execute("tput","lines")[0];
-			System.out.println("["+h+"]");
 			height = MCast.toint(h, DEFAULT_HEIGHT);
 		} catch (IOException e) {
 			height = DEFAULT_HEIGHT;
