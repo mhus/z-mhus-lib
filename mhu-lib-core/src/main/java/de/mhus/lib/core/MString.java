@@ -1415,9 +1415,13 @@ public class MString {
 	public static String truncateNice(String in, int length) {
 		if (in == null || in.length() <= length) return in;
 		if (length < 4) return in.substring(0,length);
-		if (in.length() - length > 8)
+		if (length > 8 && in.length() - length > 8)
 			return in.substring(0,length - 8) + "..." + in.substring(in.length() - 5);
-		return in.substring(0,length - 3) + "...";
+		if (length > 3)
+			return in.substring(0,length - 3) + "...";
+		if (length > 0)
+			return in.substring(0, length);
+		return "";
 	}
 	
 	public static String truncateNiceLeft(String in, int length) {
