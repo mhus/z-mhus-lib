@@ -32,8 +32,8 @@ public abstract class Console extends PrintStream implements IBase {
 	public static int DEFAULT_HEIGHT = 25;
 	
 	public enum CONSOLE_TYPE {SIMPLE,ANSI,ANSI_COLOR,XTERM,XTERM_COLOR,CMD};
-	private static CONSOLE_TYPE consoleType = null;
-	private static Console console = null;
+	private static ThreadLocal<CONSOLE_TYPE> consoleTypes = new ThreadLocal<>();
+	private static ThreadLocal<Console> consoles = new ThreadLocal<>();
 	
 	public Console() {
 		this(System.out);
@@ -70,8 +70,10 @@ public abstract class Console extends PrintStream implements IBase {
 				setConsoleType(CONSOLE_TYPE.SIMPLE);
 		}
 		
+		Console console = consoles.get();
 		if (console == null) {
 			console = create(getConsoleType());
+			consoles.set(console);
 		}
 		return console;
 	}
@@ -187,24 +189,26 @@ public abstract class Console extends PrintStream implements IBase {
 	}
 
 	public static CONSOLE_TYPE getConsoleType() {
-		return consoleType;
+		return consoleTypes.get();
 	}
 
 	public static void setConsoleType(CONSOLE_TYPE consoleType) {
-		Console.consoleType = consoleType;
+		consoleTypes.set(consoleType);
 	}
 	
 	public static void resetConsole() {
-		consoleType = null;
-		console = null;
+		consoleTypes.remove();
+		consoles.remove();
 	}
-
+	
 	public static Console get() {
+		Console console = consoles.get();
 		if (console == null) create();
 		return console;
 	}
 	
 	public boolean isInitialized() {
+		Console console = consoles.get();
 		return console != null;
 	}
 
