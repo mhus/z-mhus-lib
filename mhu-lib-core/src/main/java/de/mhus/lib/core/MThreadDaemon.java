@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.core;
 
-import java.util.Vector;
-
 /**
  * @author hummel
  * 
@@ -27,26 +25,21 @@ public class MThreadDaemon extends MThread implements Runnable {
 
 	public MThreadDaemon() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public MThreadDaemon(Runnable _task, String _name) {
 		super(_task, _name);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MThreadDaemon(Runnable _task) {
 		super(_task);
-		// TODO Auto-generated constructor stub
 	}
 
 	public MThreadDaemon(String _name) {
 		super(_name);
-		// TODO Auto-generated constructor stub
 	}
 
-	private static Vector<ThreadContainer> pool = new Vector<ThreadContainer>();
-	private static ThreadGroup group = new ThreadGroup("AThreadDeamon");
+	private static ThreadGroup group = new ThreadGroup("AThreadDaemon");
 
 	@Override
 	public MThreadDaemon start() {
@@ -56,76 +49,30 @@ public class MThreadDaemon extends MThread implements Runnable {
 
 	private static ThreadContainer start(MThreadDaemon _task, String _name) {
 
-		// search free thread
 		ThreadContainer tc = null;
-		synchronized (pool) {
+		tc = new ThreadContainer(group, "AT_" + _name, true);
+		tc.setDaemon(true);
+		tc.start();
 
-			for (int i = 0; i < pool.size(); i++)
-				if (!pool.elementAt(i).isWorking()) {
-					tc = pool.elementAt(i);
-					break;
-				}
+		log.t("###: NEW THREAD",tc.getId());
+		tc.setName(_name);
+		tc.newWork(_task);
 
-			if (tc == null) {
-				tc = new ThreadContainer(group, "AT_" + pool.size());
-				tc.setDaemon(true);
-				tc.start();
-				pool.addElement(tc);
-			}
-
-			log.t("###: NEW THREAD",tc.getId());
-			tc.setName(_name);
-			tc.newWork(_task);
-		}
 		return tc;
 	}
 
 	public static void poolClean(long pendingTime) {
-		synchronized (pool) {
-			ThreadContainer[] list = pool
-					.toArray(new ThreadContainer[pool.size()]);
-			for (int i = 0; i < list.length; i++) {
-				long sleep = list[i].getSleepTime();
-				if (sleep != 0 && sleep <= pendingTime) {
-					pool.remove(list[i]);
-					list[i].stopRunning();
-				}
-			}
-		}
 	}
 
 	public static void poolClean() {
-
-		synchronized (pool) {
-			ThreadContainer[] list = pool
-					.toArray(new ThreadContainer[pool.size()]);
-			for (int i = 0; i < list.length; i++) {
-				if (!list[i].isWorking()) {
-					pool.remove(list[i]);
-					list[i].stopRunning();
-				}
-			}
-		}
 	}
 
 	public static int poolSize() {
-		synchronized (pool) {
-			return pool.size();
-		}
-
+		return 0;
 	}
 
 	public static int poolWorkingSize() {
-		int size = 0;
-		synchronized (pool) {
-			ThreadContainer[] list = pool
-					.toArray(new ThreadContainer[pool.size()]);
-			for (int i = 0; i < list.length; i++) {
-				if (list[i].isWorking())
-					size++;
-			}
-		}
-		return size;
+		return 0;
 	}
 
 }

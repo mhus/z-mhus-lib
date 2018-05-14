@@ -135,10 +135,12 @@ public class MThread extends MObject implements Runnable {
 		private String name;
 		private long sleepStart;
 		private String trailConfig;
+		private boolean once;
 
-		public ThreadContainer(ThreadGroup group, String pName) {
+		public ThreadContainer(ThreadGroup group, String pName, boolean once) {
 			super(group, pName);
 			name = pName;
+			this.once = once;
 			setName(name + " sleeping");
 		}
 
@@ -225,6 +227,9 @@ public class MThread extends MObject implements Runnable {
 					MLogUtil.releaseTrailConfig(); // reset trail log
 					setName(name + " sleeping");
 				
+					if (once)
+						running = false;
+					
 				}
 				if (currentTask != null)
 					currentTask.taskFinish();
