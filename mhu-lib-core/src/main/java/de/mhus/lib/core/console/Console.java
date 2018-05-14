@@ -201,9 +201,12 @@ public abstract class Console extends PrintStream implements IBase {
 		consoles.remove();
 	}
 	
-	public static Console get() {
+	public synchronized static Console get() {
 		Console console = consoles.get();
-		if (console == null) create();
+		if (console == null) {
+			create();
+			console = consoles.get();
+		}
 		return console;
 	}
 	
