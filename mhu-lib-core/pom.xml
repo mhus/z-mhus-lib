@@ -163,6 +163,14 @@
 		<version>${javax.mail.version}</version>
 	</dependency>
 
+	<!-- https://mvnrepository.com/artifact/jline/jline -->
+	<dependency>
+	    <groupId>jline</groupId>
+	    <artifactId>jline</artifactId>
+	    <version>${jline.version}</version>
+	</dependency>
+	
+
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 <!-- 
 <dependency>

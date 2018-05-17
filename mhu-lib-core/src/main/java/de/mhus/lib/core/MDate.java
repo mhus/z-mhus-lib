@@ -339,4 +339,22 @@ public class MDate extends Date {
 		return new Date( date.getTime() / MTimeInterval.DAY_IN_MILLISECOUNDS * MTimeInterval.DAY_IN_MILLISECOUNDS );
 	}
 
+	/**
+	 * Calculate the last day of the defined month.
+	 * 
+	 * @param month 0 - 11 
+	 * @param year YYYY
+	 * @return The last day of the month 1 - 31
+	 */
+	public static int lastDayOfMonth(int month, int year) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.YEAR, year);
+		cal.set(Calendar.DAY_OF_MONTH, 1); 
+		cal.add(Calendar.MONTH, 1);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		int lastDay = cal.get(Calendar.DAY_OF_MONTH);
+		return lastDay;
+	}
+	
 }

@@ -22,6 +22,9 @@ import java.util.LinkedList;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.lang.IBase;
+import de.mhus.lib.core.logging.MLogUtil;
+import jline.Terminal;
+import jline.TerminalFactory;
 
 @DefaultImplementation(SimpleConsole.class)
 public abstract class Console extends PrintStream implements IBase {
@@ -31,7 +34,7 @@ public abstract class Console extends PrintStream implements IBase {
 	public static int DEFAULT_WIDTH = 40;
 	public static int DEFAULT_HEIGHT = 25;
 	
-	public enum CONSOLE_TYPE {SIMPLE,ANSI,ANSI_COLOR,XTERM,XTERM_COLOR,CMD};
+	public enum CONSOLE_TYPE {SIMPLE,ANSI,XTERM,CMD};
 	private static ThreadLocal<CONSOLE_TYPE> consoleTypes = new ThreadLocal<>();
 	private static ThreadLocal<Console> consoles = new ThreadLocal<>();
 	
@@ -54,20 +57,16 @@ public abstract class Console extends PrintStream implements IBase {
 	 */
 	public static Console create() {
 		if (getConsoleType() == null) {
-			String term = System.getenv("TERM");
-			if (term != null) {
-				term = term.toLowerCase();
-				if (term.indexOf("xterm") >= 0) {
-					if (term.indexOf("color") > 0)
-						setConsoleType(CONSOLE_TYPE.XTERM_COLOR);
-					else
-						setConsoleType(CONSOLE_TYPE.XTERM);
+			if (MSystem.isWindows()) {
+				setConsoleType(CONSOLE_TYPE.CMD);
+			} else {
+				Terminal terminal = TerminalFactory.get();
+				if (terminal.isAnsiSupported()) {
+					setConsoleType(CONSOLE_TYPE.ANSI);
 				} else {
-					setConsoleType(CONSOLE_TYPE.ANSI_COLOR);
+					setConsoleType(CONSOLE_TYPE.XTERM);
 				}
-			} 
-			if (getConsoleType() == null)
-				setConsoleType(CONSOLE_TYPE.SIMPLE);
+			}
 		}
 		
 		Console console = consoles.get();
@@ -80,36 +79,36 @@ public abstract class Console extends PrintStream implements IBase {
 	
 	public static Console create(CONSOLE_TYPE consoleType) {
 		
-		if (consoleType != null) {
-			switch (consoleType) {
-			case ANSI:
-				return new ANSIConsole(false);
-			case CMD:
+		try {
+			if (consoleType != null) {
+				switch (consoleType) {
+				case ANSI:
+					return new ANSIConsole();
+				case CMD:
+					return new CmdConsole();
+				case SIMPLE:
+					return new SimpleConsole();
+				case XTERM:
+					return new XTermConsole();
+				default:
+					return new SimpleConsole();
+				}
+			}
+			
+			if (MSystem.isWindows()) {
 				return new CmdConsole();
-			case SIMPLE:
-				return new SimpleConsole();
-			case XTERM:
-				return new XTermConsole(false);
-			case ANSI_COLOR:
-				return new ANSIConsole(true);
-			case XTERM_COLOR:
-				return new XTermConsole(true);
-			default:
-				return new SimpleConsole();
 			}
-		}
-		
-		if (MSystem.isWindows()) {
-			return new CmdConsole();
-		}
-		String term = System.getenv("TERM");
-		if (term != null) {
-			term = term.toLowerCase();
-			if (term.indexOf("xterm") >= 0) {
-				return new XTermConsole(term.indexOf("color") > 0);
+			String term = System.getenv("TERM");
+			if (term != null) {
+				term = term.toLowerCase();
+				if (term.indexOf("xterm") >= 0) {
+					return new XTermConsole();
+				}
+				if (term.indexOf("ansi") >= 0)
+					return new ANSIConsole();
 			}
-			if (term.indexOf("ansi") >= 0)
-				return new ANSIConsole(true);
+		} catch (Exception e) {
+			MLogUtil.log().t(e);
 		}
 		return new SimpleConsole();
 	}

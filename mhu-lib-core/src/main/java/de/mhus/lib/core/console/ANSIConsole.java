@@ -15,34 +15,35 @@
  */
 package de.mhus.lib.core.console;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
-import de.mhus.lib.core.io.TextReader;
+import de.mhus.lib.core.logging.MLogUtil;
+import jline.console.ConsoleReader;
 
 // http://ascii-table.com/ansi-escape-sequences.php
 
 public class ANSIConsole extends Console {
 
-	protected TextReader reader;
 	protected COLOR foreground;
 	protected COLOR background;
 	protected boolean blink;
 	protected boolean bold;
 	protected boolean supportColor = true;
-	protected int width = DEFAULT_WIDTH;
-	protected int height = DEFAULT_HEIGHT;
+//	protected int width = DEFAULT_WIDTH;
+//	protected int height = DEFAULT_HEIGHT;
+	protected ConsoleReader reader;
 	
-	public ANSIConsole(boolean supportColor) {
+	public ANSIConsole(boolean supportColor) throws IOException {
 		this();
 		this.supportColor = supportColor;
 	}
 	
-	public ANSIConsole() {
+	public ANSIConsole() throws IOException {
 		super();
-		reader = new TextReader(System.in);
+        reader = new ConsoleReader();
 		loadSettings();
 	}
 
@@ -50,19 +51,24 @@ public class ANSIConsole extends Console {
 	}
 
 	public ANSIConsole(InputStream in, PrintStream out, boolean flush, String charset)
-			throws UnsupportedEncodingException {
+			throws IOException {
 		super(out, flush, charset);
-		reader = new TextReader(in);
+        reader = new ConsoleReader();
 	}
 
-	public ANSIConsole(InputStream in, PrintStream out) {
+	public ANSIConsole(InputStream in, PrintStream out) throws IOException {
 		super(out);
-		reader = new TextReader(in);
+        reader = new ConsoleReader();
 	}
 
 	@Override
 	public String readLine(LinkedList<String> history) {
-		return reader.readLine();
+		try {
+			return reader.readLine();
+		} catch (IOException e) {
+			MLogUtil.log().t(e);
+		}
+		return null;
 //		return System.console().readLine();
 	}
 
@@ -73,12 +79,12 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public int getWidth() {
-		return width;
+		return reader.getTerminal().getWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		return height;
+		return reader.getTerminal().getHeight();
 	}
 
 	@Override

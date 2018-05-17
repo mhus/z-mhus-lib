@@ -17,20 +17,12 @@ package de.mhus.lib.core.console;
 
 import java.io.IOException;
 
-import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 public class XTermConsole extends ANSIConsole {
 
-	private long lastUpdate;
-
-	public XTermConsole() {
+	public XTermConsole() throws IOException {
 		super();
-	}
-
-	public XTermConsole(boolean supportColor) {
-		super(supportColor);
 	}
 
 	@Override
@@ -127,58 +119,58 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 //			String[] parts = ret[0].split(" ");
 //			width = MCast.toint(parts[0], DEFAULT_WIDTH);
 //			height = MCast.toint(parts[1], DEFAULT_HEIGHT);
-		updateSize();
+//		updateSize();
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
 	}
 
-	@Override
-	public int getWidth() {
-		updateSize();
-		return width;
-	}
+//	@Override
+//	public int getWidth() {
+//		// updateSize();
+//		return reader.getTerminal().getWidth();
+//	}
 
-	private void updateSize() {
-		if (System.currentTimeMillis() - lastUpdate < 30000) return;
-		lastUpdate = System.currentTimeMillis();
-		try {
-			String w = MSystem.execute("/bin/sh","-c","echo $COLUMNS")[0];
-			if (w.equals("")) {
-				for (String part : getRawTTYSettings().split("\\;")) {
-					part = part.toLowerCase().trim();
-					if (part.endsWith(" columns")) {
-						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
-					} else
-					if (part.startsWith("columns ")) {
-						width = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_WIDTH);
-					}
-					else
-					if (part.endsWith(" rows")) {
-						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
-					} else
-					if (part.startsWith("rows ")) {
-						height = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_HEIGHT);
-					}
-				}
-				return;
-			} else
-				width = MCast.toint(w, DEFAULT_WIDTH);
-		} catch (IOException e) {
-			width = DEFAULT_WIDTH;
-		}
-		try {
-			String h = MSystem.execute("tput","lines")[0];
-			height = MCast.toint(h, DEFAULT_HEIGHT);
-		} catch (IOException e) {
-			height = DEFAULT_HEIGHT;
-		}
-	}
+//	private void updateSize() {
+//		if (System.currentTimeMillis() - lastUpdate < 30000) return;
+//		lastUpdate = System.currentTimeMillis();
+//		try {
+//			String w = MSystem.execute("/bin/sh","-c","echo $COLUMNS")[0];
+//			if (w.equals("")) {
+//				for (String part : getRawTTYSettings().split("\\;")) {
+//					part = part.toLowerCase().trim();
+//					if (part.endsWith(" columns")) {
+//						width = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_WIDTH);
+//					} else
+//					if (part.startsWith("columns ")) {
+//						width = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_WIDTH);
+//					}
+//					else
+//					if (part.endsWith(" rows")) {
+//						height = MCast.toint(MString.beforeIndex(part, ' '), DEFAULT_HEIGHT);
+//					} else
+//					if (part.startsWith("rows ")) {
+//						height = MCast.toint(MString.afterIndex(part, ' '), DEFAULT_HEIGHT);
+//					}
+//				}
+//				return;
+//			} else
+//				width = MCast.toint(w, DEFAULT_WIDTH);
+//		} catch (IOException e) {
+//			width = DEFAULT_WIDTH;
+//		}
+//		try {
+//			String h = MSystem.execute("tput","lines")[0];
+//			height = MCast.toint(h, DEFAULT_HEIGHT);
+//		} catch (IOException e) {
+//			height = DEFAULT_HEIGHT;
+//		}
+//	}
 
-	@Override
-	public int getHeight() {
-		updateSize();
-		return height;
-	}
+//	@Override
+//	public int getHeight() {
+////		updateSize();
+//		return reader.getTerminal().getHeight();
+//	}
 
 }
