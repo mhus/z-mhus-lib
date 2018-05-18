@@ -242,4 +242,15 @@ public class ANSIConsole extends Console {
 		return true;
 	}
 
+	public static String[] getRawAnsiSettings() throws IOException {
+		ConsoleReader reader = new ConsoleReader();
+		return new String[] {
+				"Width: " + reader.getTerminal().getWidth(),
+				"Height: " + reader.getTerminal().getHeight(),
+				"Ansi: " + reader.getTerminal().isAnsiSupported(),
+				"Echo: " + reader.getTerminal().isEchoEnabled(),
+				"Supported: " + reader.getTerminal().isSupported()
+		};
+	}
+	
 }
