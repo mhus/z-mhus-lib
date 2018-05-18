@@ -20,11 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.lang.IBase;
-import de.mhus.lib.core.logging.MLogUtil;
-import jline.Terminal;
-import jline.TerminalFactory;
 
 @DefaultImplementation(SimpleConsole.class)
 public abstract class Console extends PrintStream implements IBase {
@@ -33,9 +30,7 @@ public abstract class Console extends PrintStream implements IBase {
 	
 	public static int DEFAULT_WIDTH = 40;
 	public static int DEFAULT_HEIGHT = 25;
-	
-	public enum CONSOLE_TYPE {SIMPLE,ANSI,XTERM,CMD};
-	private static ThreadLocal<CONSOLE_TYPE> consoleTypes = new ThreadLocal<>();
+		
 	private static ThreadLocal<Console> consoles = new ThreadLocal<>();
 	
 	public Console() {
@@ -56,67 +51,16 @@ public abstract class Console extends PrintStream implements IBase {
 	 * @return a new console object
 	 */
 	public static Console create() {
-		if (getConsoleType() == null) {
-			if (MSystem.isWindows()) {
-				setConsoleType(CONSOLE_TYPE.CMD);
-			} else {
-				Terminal terminal = TerminalFactory.get();
-				if (terminal.isAnsiSupported()) {
-					setConsoleType(CONSOLE_TYPE.ANSI);
-				} else {
-					setConsoleType(CONSOLE_TYPE.XTERM);
-				}
-			}
-		}
-		
+				
 		Console console = consoles.get();
 		if (console == null) {
-			console = create(getConsoleType());
+			ConsoleFactory factory = MApi.lookup(ConsoleFactory.class);
+			console = factory.create();
 			consoles.set(console);
 		}
 		return console;
 	}
-	
-	public static Console create(CONSOLE_TYPE consoleType) {
 		
-		try {
-			if (consoleType != null) {
-				switch (consoleType) {
-				case ANSI:
-					return new ANSIConsole();
-				case CMD:
-					return new CmdConsole();
-				case SIMPLE:
-					return new SimpleConsole();
-				case XTERM:
-					return new XTermConsole();
-				default:
-					return new SimpleConsole();
-				}
-			}
-			
-			if (MSystem.isWindows()) {
-				return new CmdConsole();
-			}
-			String term = System.getenv("TERM");
-			if (term != null) {
-				term = term.toLowerCase();
-				if (term.indexOf("xterm") >= 0) {
-					return new XTermConsole();
-				}
-				if (term.indexOf("ansi") >= 0)
-					return new ANSIConsole();
-			}
-		} catch (Exception e) {
-			MLogUtil.log().t(e);
-		}
-		return new SimpleConsole();
-	}
-
-//	public void initializeAsDefault() {
-//		MApi.instance().setBaseDefault(Console.class,this);
-//	}
-	
 	protected LinkedList<String> history = new LinkedList<String>();
 	
 	public String readLine() {
@@ -186,17 +130,8 @@ public abstract class Console extends PrintStream implements IBase {
 
 	public void resetTerminal() {
 	}
-
-	public static CONSOLE_TYPE getConsoleType() {
-		return consoleTypes.get();
-	}
-
-	public static void setConsoleType(CONSOLE_TYPE consoleType) {
-		consoleTypes.set(consoleType);
-	}
 	
 	public static void resetConsole() {
-		consoleTypes.remove();
 		consoles.remove();
 	}
 	
@@ -208,7 +143,11 @@ public abstract class Console extends PrintStream implements IBase {
 		}
 		return console;
 	}
-	
+
+	public synchronized static void set(Console console) {
+		consoles.set(console);
+	}
+
 	public boolean isInitialized() {
 		Console console = consoles.get();
 		return console != null;
@@ -217,5 +156,12 @@ public abstract class Console extends PrintStream implements IBase {
 	public boolean isAnsi() {
 		return false;
 	}
+	
+	public void setWidth(int w) {
+	}
+	
+	public void setHeight(int h) {
+	}
+
 	
 }

@@ -31,15 +31,12 @@ public class ANSIConsole extends Console {
 	protected COLOR background;
 	protected boolean blink;
 	protected boolean bold;
-	protected boolean supportColor = true;
 //	protected int width = DEFAULT_WIDTH;
 //	protected int height = DEFAULT_HEIGHT;
 	protected ConsoleReader reader;
 	
-	public ANSIConsole(boolean supportColor) throws IOException {
-		this();
-		this.supportColor = supportColor;
-	}
+	protected int width = 0;
+	protected int height = 0;
 	
 	public ANSIConsole() throws IOException {
 		super();
@@ -79,11 +76,13 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public int getWidth() {
+		if (width > 0) return width;
 		return reader.getTerminal().getWidth();
 	}
 
 	@Override
 	public int getHeight() {
+		if (height > 0) return height;
 		return reader.getTerminal().getHeight();
 	}
 
@@ -113,7 +112,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportColor() {
-		return supportColor;
+		return reader.getTerminal().isAnsiSupported();
 	}
 
 	@Override
@@ -121,7 +120,7 @@ public class ANSIConsole extends Console {
 		this.foreground = foreground;
 		this.background = background;
 		
-		if (supportColor) {
+		if (isSupportColor()) {
 			if (foreground != null && foreground != COLOR.UNKNOWN)
 				print( ansiForeground(foreground));
 			if (background != null && background != COLOR.UNKNOWN)
@@ -149,7 +148,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportBlink() {
-		return supportColor;
+		return isSupportColor();
 	}
 
 	@Override
@@ -159,7 +158,7 @@ public class ANSIConsole extends Console {
 	}
 
 	private void updateAttributes() {
-		if (supportColor)
+		if (isSupportColor())
 			print( ansiAttributes(blink, bold) );
 	}
 
@@ -175,7 +174,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportBold() {
-		return supportColor;
+		return isSupportColor();
 	}
 
 	@Override
@@ -251,6 +250,16 @@ public class ANSIConsole extends Console {
 				"Echo: " + reader.getTerminal().isEchoEnabled(),
 				"Supported: " + reader.getTerminal().isSupported()
 		};
+	}
+	
+	@Override
+	public void setWidth(int w) {
+		this.width = w;
+	}
+	
+	@Override
+	public void setHeight(int h) {
+		this.height = h;
 	}
 	
 }
