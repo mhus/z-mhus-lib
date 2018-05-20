@@ -29,7 +29,7 @@ public class ServerIdent {
 	private CfgString ident;
 	
 	public ServerIdent() {
-		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(SCOPE.ETC,".ident.txt").getAbsolutePath() );
+		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".txt").getAbsolutePath() );
 		File file = new File(persistence);
 		String def = "";
 		if (file.exists() && file.isFile())
