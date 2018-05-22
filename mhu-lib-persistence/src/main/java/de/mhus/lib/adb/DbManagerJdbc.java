@@ -269,7 +269,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	}
 
 	@Override
-	public <T,R> List<R> getAttributedByQualification(String attribute, AQuery<? extends T> qualification) throws MException {
+	public <T,R> List<R> getAttributeByQualification(String attribute, AQuery<? extends T> qualification) throws MException {
 		return getAttributeByQualification(null, (Class<? extends T>)qualification.getType(), null, attribute, toQualification(qualification), qualification.getAttributes());
 	}
 

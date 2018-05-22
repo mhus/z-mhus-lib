@@ -294,7 +294,7 @@ public class AdbTest extends TestCase {
 		assertNotNull(b.getLendToId());
 
 		// test getFields ...
-		List<String> names = manager.getAttributedByQualification("name", Db.query(Book.class));
+		List<String> names = manager.getAttributeByQualification("name", Db.query(Book.class));
 		System.out.println(names);
 		assertEquals(2, names.size());
 		

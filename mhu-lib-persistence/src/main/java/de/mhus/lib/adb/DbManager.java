@@ -108,7 +108,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 
 	public abstract <T,R> List<R> getAttributeByQualification(Class<? extends T> clazz, String field, String qualification, Map<String,Object> attributes) throws MException;
 
-	public abstract <T,R> List<R> getAttributedByQualification(String field, AQuery<? extends T> qualification) throws MException;
+	public abstract <T,R> List<R> getAttributeByQualification(String field, AQuery<? extends T> qualification) throws MException;
 
 	public abstract <T,R> List<R> getAttributeByQualification(DbConnection con, Class<? extends T> clazz, String registryName, String field, String qualification, Map<String,Object> attributes) throws MException;
 
