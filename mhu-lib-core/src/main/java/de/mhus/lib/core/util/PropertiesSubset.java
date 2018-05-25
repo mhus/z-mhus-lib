@@ -108,5 +108,19 @@ public class PropertiesSubset extends AbstractProperties {
 		for (String key : keys())
 			remove(key);
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder out = new StringBuilder();
+		out.append(prefix).append("=[");
+		boolean first = true;
+		for (String k : parent.keys())
+			if (k.startsWith(prefix)) {
+				if (first) first = false; else out.append(", ");
+				out.append(k.substring(prefix.length())).append('=').append(parent.get(k));
+			}
+		out.append(']');
+		return out.toString();
+	}
 
 }
