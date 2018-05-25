@@ -29,9 +29,11 @@ public class PropertiesSubset extends AbstractProperties {
 	private IProperties parent;
 	private String prefix;
 	private boolean readonly;
+	private int len;
 	
 	public PropertiesSubset(IProperties parent, String prefix) {
 		this(parent,prefix,false);
+		len = prefix.length();
 	}
 	
 	public PropertiesSubset(IProperties parent, String prefix, boolean readonly) {
@@ -90,17 +92,33 @@ public class PropertiesSubset extends AbstractProperties {
 
 	@Override
 	public boolean containsValue(Object value) {
-		throw new NotSupportedException(); //TODO implement
+		for (java.util.Map.Entry<String, Object> entry : parent.entrySet()) {
+			if (entry.getKey().startsWith(prefix))
+				if (value.equals(entry.getValue())) return true;
+		}
+		return false;
 	}
 
 	@Override
 	public Collection<Object> values() {
-		throw new NotSupportedException(); //TODO implement
+		HashSet<Object> out = new HashSet<>();
+		for (java.util.Map.Entry<String, Object> entry : parent.entrySet()) {
+			if (entry.getKey().startsWith(prefix))
+				out.add(entry.getValue());
+		}
+		return out;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		throw new NotSupportedException(); //TODO implement
+	public Set<java.util.Map.Entry<String, Object>> entrySet() {		
+		HashSet<java.util.Map.Entry<String, Object>> out = new HashSet<>();
+		for (java.util.Map.Entry<String, Object> entry : parent.entrySet()) {
+			if (entry.getKey().startsWith(prefix)) {
+				out.add(new MapEntry(entry.getKey().substring(len), entry.getValue()));
+			}
+		}
+		return out;
 	}
 
 	@Override
@@ -117,7 +135,7 @@ public class PropertiesSubset extends AbstractProperties {
 		for (String k : parent.keys())
 			if (k.startsWith(prefix)) {
 				if (first) first = false; else out.append(", ");
-				out.append(k.substring(prefix.length())).append('=').append(parent.get(k));
+				out.append(k.substring(len)).append('=').append(parent.get(k));
 			}
 		out.append(']');
 		return out.toString();
