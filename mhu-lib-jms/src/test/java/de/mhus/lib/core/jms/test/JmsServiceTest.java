@@ -60,7 +60,7 @@ public class JmsServiceTest extends TestCase {
 		TestJmsService ifc = client.getObject();
 
 		// test one way
-		
+		System.out.println(">>> Test One Way");
 		impl.lastAction = null;
 		ifc.oneWayWithoutReturn();
 		while(impl.lastAction == null)
@@ -69,17 +69,20 @@ public class JmsServiceTest extends TestCase {
 		assertEquals("oneWayWithoutReturn", impl.lastAction );
 
 		// test wait
+		System.out.println(">>> Test Wait");
 		impl.lastAction = null;
 		ifc.withoutReturnValue();
 		assertEquals("withoutReturnValue", impl.lastAction );
 		
 		// test parameters
+		System.out.println(">>> Test Parameters");
 		impl.lastAction = null;
 		ifc.withParameters("a", 1, 2);
 		assertEquals("withParameters a12", impl.lastAction );
 		
 		// test parameters and return
 		{
+			System.out.println(">>> Test Parameters and Return");
 			impl.lastAction = null;
 			String ret = ifc.withParametersAndReturn("a", 1, 2);
 			assertEquals("withParametersAndReturn a12", impl.lastAction );
@@ -88,6 +91,7 @@ public class JmsServiceTest extends TestCase {
 		
 		// test map
 		{
+			System.out.println(">>> Test MAP");
 			impl.lastAction = null;
 			HashMap<String, String> in = new HashMap<>();
 			in.put("a", "b");
@@ -98,6 +102,7 @@ public class JmsServiceTest extends TestCase {
 		
 		// test list
 		{
+			System.out.println(">>> Test List");
 			impl.lastAction = null;
 			LinkedList<String> in = new LinkedList<>();
 			in.add("a");
@@ -107,8 +112,8 @@ public class JmsServiceTest extends TestCase {
 		}
 		
 		// test raw message
-
 		{
+			System.out.println(">>> Test Raw");
 			impl.lastAction = null;
 			TextMessage msg = client.createTextMessage("works");
 			ifc.receiveMessage(msg);
@@ -116,6 +121,7 @@ public class JmsServiceTest extends TestCase {
 		}
 		
 		{
+			System.out.println(">>> Test Text");
 			impl.lastAction = null;
 			Message msg = ifc.sendMessage("text");
 			assertEquals("sendMessage text", impl.lastAction);
@@ -124,6 +130,7 @@ public class JmsServiceTest extends TestCase {
 		
 		// test exception
 		{
+			System.out.println(">>> Test Exception");
 			impl.lastAction = null;
 			try {
 				ifc.throwException("ex");
@@ -135,6 +142,7 @@ public class JmsServiceTest extends TestCase {
 			assertEquals("throwException ex", impl.lastAction);
 		}	
 		
+		System.out.println(">>> Close");
 		con1.close();
 		con2.close();
 		
@@ -170,6 +178,7 @@ public class JmsServiceTest extends TestCase {
 			{
 				LinkedList<String> in = new LinkedList<>();
 				in.add("a");
+				System.out.println(">>> Test Broadcast");
 				List<String> ret = ifc.listSample(in);
 				assertEquals("listSample [a]", impl2.lastAction);
 				assertEquals("listSample [a]", impl3.lastAction);

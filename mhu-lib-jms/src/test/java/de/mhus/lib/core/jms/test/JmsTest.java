@@ -45,13 +45,13 @@ public class JmsTest extends TestCase {
 
 			@Override
 			public void receivedOneWay(Message msg) throws JMSException {
-				System.out.println("receivedOneWay: " + msg);
+				System.out.println("--- receivedOneWay: " + msg);
 				requestMessage.setObject(msg);
 			}
 
 			@Override
 			public Message received(Message msg) throws JMSException {
-				System.out.println("received: " + msg);
+				System.out.println("--- received: " + msg);
 				
 				requestMessage.setObject(msg);
 				return getSession().createTextMessage("pong");
@@ -62,12 +62,14 @@ public class JmsTest extends TestCase {
 		client.open();
 		server.open();
 		
+		System.out.println(">>> sendJmsOneWay");
 		client.sendJmsOneWay(con1.createTextMessage("aloa"));
 
 		while(requestMessage.getObject() == null)
 			MThread.sleep(100);
 		assertEquals("aloa", ((TextMessage)requestMessage.getObject()).getText() );
 		
+		System.out.println(">>> sendJms");
 		Message res = client.sendJms(con1.createTextMessage("ping"));
 		assertEquals("ping", ((TextMessage)requestMessage.getObject()).getText() );
 		assertEquals("pong", ((TextMessage)res).getText() );

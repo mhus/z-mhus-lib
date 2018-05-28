@@ -171,6 +171,7 @@ do not block jms driven threads !!! This will cause a deadlock
 						@Override
 						public void run() {
 							try {
+								log().t("processMessage",message);
 								processMessage(message);
 							} finally {
 								decrementUsedThreads();

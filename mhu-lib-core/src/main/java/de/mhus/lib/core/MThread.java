@@ -200,7 +200,7 @@ public class MThread extends MObject implements Runnable {
 				}
 
 				MThread currentTask = task;
-				if (task != null) {
+				if (currentTask != null) {
 
 					// run ....
 					setName(name + '[' + getId() + "] "
@@ -227,14 +227,14 @@ public class MThread extends MObject implements Runnable {
 					MLogUtil.releaseTrailConfig(); // reset trail log
 					setName(name + " sleeping");
 				
+					currentTask.taskFinish();
+					
 					if (once)
 						running = false;
 					
+					task = null; // don't need sync
 				}
-				if (currentTask != null)
-					currentTask.taskFinish();
 				trailConfig = null;
-				task = null; // don't need sync
 
 			}
 		}
