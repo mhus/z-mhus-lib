@@ -274,6 +274,9 @@ do not block jms driven threads !!! This will cause a deadlock
 					log().d("receivedOneWay",dest,message);
 					receivedOneWay(message);
 				}
+			} catch (SendNoAnswerException e) {
+				log().d("Suppress send of an answer",dest);
+				log().t(e);
 			} catch (JMSException t) {
 				reset();
 				log().w(Thread.currentThread().getName(),t);
