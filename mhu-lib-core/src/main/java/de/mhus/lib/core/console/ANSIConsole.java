@@ -37,6 +37,7 @@ public class ANSIConsole extends Console {
 	
 	protected int width = 0;
 	protected int height = 0;
+	protected boolean supportSize;
 	
 	public ANSIConsole() throws IOException {
 		super();
@@ -45,17 +46,30 @@ public class ANSIConsole extends Console {
 	}
 
 	protected void loadSettings() {
+		int w = reader.getTerminal().getWidth();
+		int h = reader.getTerminal().getHeight();
+		if (w == 80 && h == 24) { // default size if size can't be recognized
+			width = DEFAULT_WIDTH;
+			height = DEFAULT_HEIGHT;
+			supportSize = false;
+		} else {
+			width = 0;
+			height = 0;
+			supportSize = true;
+		}
 	}
 
 	public ANSIConsole(InputStream in, PrintStream out, boolean flush, String charset)
 			throws IOException {
 		super(out, flush, charset);
         reader = new ConsoleReader();
+        loadSettings();
 	}
 
 	public ANSIConsole(InputStream in, PrintStream out) throws IOException {
 		super(out);
         reader = new ConsoleReader();
+        loadSettings();
 	}
 
 	@Override
@@ -71,7 +85,7 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportSize() {
-		return false;
+		return supportSize;
 	}
 
 	@Override

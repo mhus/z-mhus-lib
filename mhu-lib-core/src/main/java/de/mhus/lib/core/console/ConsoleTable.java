@@ -521,7 +521,12 @@ public class ConsoleTable {
 	}
 
 	public void fitToConsole() {
-		int w = Console.get().getWidth();
+		Console console = Console.get();
+		if (!console.isSupportSize()) {
+			setMaxColSize(0);
+			return;
+		}
+		int w = console.getWidth();
 		setTableWidth(Math.max(w, MIN_TABLE_WIDTH));
 	}
 

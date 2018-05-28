@@ -28,7 +28,7 @@ public abstract class Console extends PrintStream implements IBase {
 
 	public enum COLOR {UNKNOWN,WHITE,BLACK,RED,GREEN,BLUE,YELLOW,MAGENTA,CYAN};
 	
-	public static int DEFAULT_WIDTH = 40;
+	public static int DEFAULT_WIDTH = 200;
 	public static int DEFAULT_HEIGHT = 25;
 		
 	private static ThreadLocal<Console> consoles = new ThreadLocal<>();
@@ -78,6 +78,11 @@ public abstract class Console extends PrintStream implements IBase {
 		print('\r');
 	}
 
+	/**
+	 * Return true if the console knows about the current size of the
+	 * terminal.
+	 * @return True if support size
+	 */
 	public abstract boolean isSupportSize();
 	
 	public abstract int getWidth();

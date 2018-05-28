@@ -113,7 +113,7 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 
 	@Override
 	public void loadSettings() {
-		
+		super.loadSettings();
 //		try {
 //			String[] ret = getRawSettings();
 //			String[] parts = ret[0].split(" ");
