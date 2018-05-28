@@ -214,6 +214,8 @@ public class ConsoleTable {
             if (c + 1 < row.size()) {
                 line.append(colSeparator);
             }
+            
+            if (h.last) break;
             c++;
         }
         return line.toString();
@@ -318,6 +320,18 @@ public class ConsoleTable {
 	            	}
 	            });
         	}
+        } 
+        else 
+        if (maxTableWidth > 0 && tableWidth > maxTableWidth) {
+    		int max = maxTableWidth / header.size();
+            header.forEach(h -> {
+            	int min = Math.max(10, h.minWidth);
+            	int d = Math.max(max, min);
+            	if (h.width > d) {
+            		tableWidth = tableWidth + d - h.width;
+	            	h.width= d;
+            	}
+            });
         }
         
         if (maxTableWidth > 0 && tableWidth > maxTableWidth) {
