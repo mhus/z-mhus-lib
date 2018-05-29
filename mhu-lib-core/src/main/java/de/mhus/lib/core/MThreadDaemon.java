@@ -47,6 +47,7 @@ public class MThreadDaemon extends MThread implements Runnable {
 		thread.setDaemon(true);
 	}
 	
+	@Override
 	protected ThreadGroup getGroup() {
 		return daemonGroup;
 	}
