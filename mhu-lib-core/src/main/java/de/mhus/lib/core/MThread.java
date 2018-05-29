@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core;
 
+import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.lang.Checker;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
@@ -33,8 +35,10 @@ public class MThread extends MObject implements Runnable {
 	protected static Log log = Log.getLog(MThread.class);
 	
 	protected Runnable task = this;
-	protected String name = "";
-	protected ThreadContainer tc = null;
+	protected String name = null;
+	protected Thread thread = null;
+
+	private int priority = -1;
 
 	public MThread() {
 	}
@@ -61,50 +65,112 @@ public class MThread extends MObject implements Runnable {
 	}
 
 	public MThread start() {
-		tc = MApi.lookup(MThreadManager.class).start(this, name);
+		synchronized (this) {
+			if (thread != null) 
+				throw new IllegalThreadStateException();
+			Container container = new Container();
+			thread = new Thread(getGroup(),container);
+			initThread(thread);
+			thread.start();
+		}
 		return this;
+	}
+	
+	private static ThreadGroup group = new ThreadGroup("MThread");
+
+	protected ThreadGroup getGroup() {
+		return group;
+	}
+
+	protected void initThread(Thread thread) {
+		if (priority != -1)
+			thread.setPriority(priority);
+		
+		if (name == null) {
+			if (task == null)
+				name = "null";
+			else
+			if (task instanceof Named)
+				name = "MThread " + ((Named)task).getName();
+			else
+				name = "MThread " + MSystem.getCanonicalClassName(task.getClass());
+		}
+
+		thread.setName(name);
+	}
+
+	private class Container implements Runnable {
+
+		private long parentThreadId;
+		private String trailConfig;
+
+		public Container() {
+			try {
+				parentThreadId = Thread.currentThread().getId();
+				trailConfig = MLogUtil.getTrailConfig();
+			} catch (Throwable t) {}
+		}
+		
+		@Override
+		public void run() {
+			try {
+				if (trailConfig != null)
+					MLogUtil.setTrailConfig(trailConfig);
+				log().t("###: NEW THREAD",parentThreadId,thread.getId());
+			} catch (Throwable t) {}
+			try {
+				if (task != null)
+					task.run();
+			} catch (Throwable t) {
+				taskError(t);
+			}
+			try {
+				log.t("###: LEAVE THREAD",thread.getId());
+				MLogUtil.releaseTrailConfig();
+			} catch (Throwable t) {}
+		}
+		
 	}
 
 	public void setName(String _name) {
-		if (tc != null)
-			tc.setName(_name);
+		this.name = _name;
+		if (thread != null)
+			thread.setName(_name);
 	}
 
 	public String getName() {
-		if (tc != null)
-			return tc.getName();
-		return "";
+		return name;
 	}
 
 	public void setPriority(int _p) {
-		if (tc != null)
-			tc.setPriority(_p);
+		this.priority = _p;
+		if (thread != null)
+			thread.setPriority(_p);
 	}
 
 	public int getPriority() {
-		if (tc != null)
-			return tc.getPriority();
-		return 0;
+		return priority;
 	}
 
 	@SuppressWarnings("deprecation")
 	public void stop() {
-		if (tc == null)
+		if (thread == null)
 			return;
-		tc.stop();
+		thread.stop();
 	}
-
-//	@SuppressWarnings("deprecation")
-//	public void throwException(Throwable throwable) {
-//		if (tc == null)
-//			return;
-//		tc.stop(throwable);
-//	}
 	
 	public void interupt() {
-		if (tc == null)
+		if (thread == null)
 			return;
-		tc.interrupt();
+		thread.interrupt();
+	}
+	
+	@Override
+	public String toString() {
+		if (thread != null)
+			return MSystem.toString("MThread",name,thread.getId(),thread.getPriority(),thread.getState());
+		else
+			return MSystem.toString("MThread",name);
 	}
 	
 	/**
@@ -120,125 +186,8 @@ public class MThread extends MObject implements Runnable {
 		}
 	}
 
-	private void taskFinish() {
-		tc = null;
-	}
-
-	public void taskError(Throwable t) {
-
-	}
-
-	protected static class ThreadContainer extends Thread {
-
-		private boolean running = true;
-		private MThread task = null;
-		private String name;
-		private long sleepStart;
-		private String trailConfig;
-		private boolean once;
-
-		public ThreadContainer(ThreadGroup group, String pName, boolean once) {
-			super(group, pName);
-			name = pName;
-			this.once = once;
-			setName(name + " sleeping");
-		}
-
-		public synchronized boolean newWork(MThread _task) {
-			synchronized (this) {
-				if (task != null || !running)
-					return false;
-				// remember next task
-				task = _task;
-				// remember trail log
-				trailConfig = MLogUtil.getTrailConfig();
-				notify();
-			}
-			return true;
-		}
-
-		public boolean isWorking() {
-			synchronized (this) {
-				return task != null;
-			}
-		}
-
-		public boolean isRunning() {
-			return running;
-		}
-
-		public boolean stopRunning() {
-			synchronized (this) {
-				if (task != null)
-					return false;
-				running = false;
-				notifyAll();
-			}
-			return true;
-		}
-
-		public long getSleepTime() {
-			if (task != null)
-				return 0;
-			return System.currentTimeMillis() - sleepStart;
-		}
-
-		@Override
-		public void run() {
-
-			while (running) {
-
-				sleepStart = System.currentTimeMillis();
-				while (task == null && running) {
-					// AThread.sleep( 100 );
-					try {
-						synchronized (this) {
-							this.wait();
-						}
-					} catch (InterruptedException e) {
-					}
-				}
-
-				MThread currentTask = task;
-				if (currentTask != null) {
-
-					// run ....
-					setName(name + '[' + getId() + "] "
-							+ currentTask.getTask().getClass().getName());
-
-					// set trail log if set
-					if (trailConfig != null)
-						MLogUtil.setTrailConfig(trailConfig);
-					
-					try {
-						log.t("Enter Thread Task");
-						currentTask.getTask().run();
-						log.t("Leave Thread Task");
-					} catch (Throwable t) {
-						try {
-							log.i("Thread Task Error", getName(), t);
-							currentTask.taskError(t);
-						} catch (Throwable t2) {
-							log.i("Thread Task Finish Error", getName(), t2);
-						}
-					}
-					
-					log.t("###: LEAVE THREAD");
-					MLogUtil.releaseTrailConfig(); // reset trail log
-					setName(name + " sleeping");
-				
-					currentTask.taskFinish();
-					
-					if (once)
-						running = false;
-					
-					task = null; // don't need sync
-				}
-				trailConfig = null;
-
-			}
-		}
-
+	protected void taskError(Throwable t) {
+		log().e(name,t);
 	}
 
 	public static void asynchron(Runnable task) {
@@ -255,7 +204,7 @@ public class MThread extends MObject implements Runnable {
 	 * @param nullAllowed
 	 * @return The requested value
 	 */
-	public static <T> T getWithTimeout( ValueProvider<T> provider, long timeout, boolean nullAllowed) {
+	public static <T> T getWithTimeout( final ValueProvider<T> provider, long timeout, boolean nullAllowed) {
 		long start = System.currentTimeMillis();
 		while (true) {
 			try {
@@ -268,4 +217,47 @@ public class MThread extends MObject implements Runnable {
 		}
 	}
 
+	/**
+	 * Wait for the checker to return true or throw an TimeoutRuntimeException on timeout. A exception
+	 * in the checker will be ignored.
+	 * 
+	 * @param checker
+	 * @param timeout
+	 */
+	public static void waitFor( final Checker checker, long timeout) {
+		long start = System.currentTimeMillis();
+		while (true) {
+			try {
+				if (checker.check()) return;
+			} catch (Throwable t) {
+			}
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+			sleep(200);
+		}
+	}
+
+	/**
+	 * Wait for the checker to return true or throw an TimeoutRuntimeException on timeout.
+	 * 
+	 * @param checker
+	 * @param timeout
+	 * @throws Exception Thrown if checker throws an exception
+	 */
+	public static void waitForWithException( final Checker checker, long timeout) throws Exception {
+		long start = System.currentTimeMillis();
+		while (true) {
+			try {
+				if (checker.check()) return;
+			} catch (Throwable t) {
+				throw t;
+			}
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+			sleep(200);
+		}
+	}
+
+	public Thread getThread() {
+		return thread;
+	}
+	
 }

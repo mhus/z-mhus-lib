@@ -39,40 +39,17 @@ public class MThreadDaemon extends MThread implements Runnable {
 		super(_name);
 	}
 
-	private static ThreadGroup group = new ThreadGroup("AThreadDaemon");
+	private static ThreadGroup daemonGroup = new ThreadGroup("MThreadDaemon");
 
 	@Override
-	public MThreadDaemon start() {
-		tc = start(this, name);
-		return this;
+	protected void initThread(Thread thread) {
+		super.initThread(thread);
+		thread.setDaemon(true);
+	}
+	
+	protected ThreadGroup getGroup() {
+		return daemonGroup;
 	}
 
-	private static ThreadContainer start(MThreadDaemon _task, String _name) {
-
-		ThreadContainer tc = null;
-		tc = new ThreadContainer(group, "AT_" + _name, true);
-		tc.setDaemon(true);
-		tc.start();
-
-		log.t("###: NEW THREAD",tc.getId());
-		tc.setName(_name);
-		tc.newWork(_task);
-
-		return tc;
-	}
-
-	public static void poolClean(long pendingTime) {
-	}
-
-	public static void poolClean() {
-	}
-
-	public static int poolSize() {
-		return 0;
-	}
-
-	public static int poolWorkingSize() {
-		return 0;
-	}
 
 }
