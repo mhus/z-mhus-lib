@@ -67,5 +67,4 @@ public interface MVault {
 	 */
 	VaultEntry getEntry(UUID id);
 	
-	
 }

@@ -126,6 +126,11 @@ public class FolderVaultSource extends MutableVaultSource {
 	public String toString() {
 		return MSystem.toString(this, name, entries.size(), folder);
 	}
+	
+	@Override
+	public boolean isMemoryBased() {
+		return true;
+	}
 
 
 }

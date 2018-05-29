@@ -71,6 +71,13 @@ public abstract class MutableVaultSource extends MLog implements VaultSource {
 	
 	public abstract void doSave() throws IOException;
 	
+	/**
+	 * Return true if load and save is needed to persist changed data.
+	 * 
+	 * @return true if storage is in memory
+	 */
+	public abstract boolean isMemoryBased();
+	
 	@Override
 	public String toString() {
 		return MSystem.toString(this, name, entries.size());

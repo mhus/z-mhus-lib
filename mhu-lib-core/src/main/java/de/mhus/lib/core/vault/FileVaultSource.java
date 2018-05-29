@@ -97,6 +97,10 @@ public class FileVaultSource extends MutableVaultSource {
 	public String toString() {
 		return MSystem.toString(this, name, entries.size(), file);
 	}
+	@Override
+	public boolean isMemoryBased() {
+		return true;
+	}
 
 
 }
