@@ -22,7 +22,6 @@ import java.util.UUID;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MArgs;
 import de.mhus.lib.core.cfg.CfgFile;
-import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.system.IApi.SCOPE;
@@ -31,7 +30,6 @@ public class MVaultUtil {
 
 	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
 	private static CfgFile defaultFolder = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,"de.mhus.lib.core.vault.FolderVaultSource") );
-	private static CfgString defaultPassphrase = new CfgString(MVault.class, "passphrase", "changeit" );
 	
 	public static MVault loadDefault() {
 		MVault vault = MApi.lookup(MVault.class);
@@ -42,10 +40,13 @@ public class MVaultUtil {
 	public static void checkDefault(MVault vault) {
 		VaultSource def = vault.getSource(MVault.SOURCE_DEFAULT);
 		if (def == null) {
+			
+			VaultPassphrase vaultPassphrase = MApi.lookup(VaultPassphrase.class);
+			
 			if (defaultFile.value().exists()) {
 				// legacy
 				try {
-					def = new FileVaultSource(defaultFile.value(), defaultPassphrase.value(),MVault.SOURCE_DEFAULT);
+					def = new FileVaultSource(defaultFile.value(), vaultPassphrase.getPassphrase(),MVault.SOURCE_DEFAULT);
 					vault.registerSource(def);
 				} catch (IOException e) {
 					MLogUtil.log().d(e);
@@ -53,7 +54,7 @@ public class MVaultUtil {
 			} else {
 				// default
 				try {
-					def = new FolderVaultSource(defaultFolder.value(), defaultPassphrase.value(),MVault.SOURCE_DEFAULT);
+					def = new FolderVaultSource(defaultFolder.value(), vaultPassphrase.getPassphrase(),MVault.SOURCE_DEFAULT);
 					vault.registerSource(def);
 				} catch (IOException e) {
 					MLogUtil.log().d(e);
