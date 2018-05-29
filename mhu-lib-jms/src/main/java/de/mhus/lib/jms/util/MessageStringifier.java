@@ -50,9 +50,9 @@ public class MessageStringifier {
 			
 			for (@SuppressWarnings("unchecked")Enumeration<String> e = msg.getPropertyNames();e.hasMoreElements();) {
 				String key = e.nextElement();
-				String val = msg.getStringProperty(key);
+				Object val = msg.getObjectProperty(key);
 				if (key.contains("assword")) val = "[***]";
-				sb.append("  ").append(key).append('=').append(val).append('\n');
+				sb.append("  ").append(key).append('=').append(MString.toString(val)).append('\n');
 			}
 			
 			if (msg instanceof MapMessage) {

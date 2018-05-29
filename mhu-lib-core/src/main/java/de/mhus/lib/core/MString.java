@@ -1241,7 +1241,7 @@ public class MString {
 	 * 
 	 * @see #toHexString(int)
 	 */
-	public static String toString(Color c) {
+	public static String colorToString(Color c) {
 		String s = Integer.toHexString(c.getRGB() & 0xffffff);
 		if (s.length() < 6) { // pad on left with zeros
 			s = "000000".substring(0, 6 - s.length()) + s;
@@ -1745,7 +1745,7 @@ public class MString {
 	 * @param data
 	 * @return utf-8 decoded string
 	 */
-	public static String toString(byte[] data) {
+	public static String byteToString(byte[] data) {
 		if (data == null) return null;
 		try {
 			return new String(data,CHARSET_UTF_8);
@@ -1792,7 +1792,16 @@ public class MString {
 		return out;
 	}
 
+	/**
+	 * Convert a object to string using deep stringify mechanisms.
+	 * 
+	 * @param val
+	 * @return The object as string
+	 */
 	public static String toString(Object val) {
+		if (val == null) return "[null]";
+		if (val instanceof Color) return colorToString((Color) val);
+		if (val instanceof byte[]) return byteToString((byte[]) val);
 		StringBuilder sb = new StringBuilder();
 		serialize(sb, val, null);
 		return sb.toString();
