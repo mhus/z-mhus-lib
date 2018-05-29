@@ -16,6 +16,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 /**
@@ -114,7 +115,7 @@ public class Log {
     	
     	StringBuilder sb = new StringBuilder();
     	prepare(sb);
-    	Throwable error = MSystem.serialize(sb, msg,maxMsgSize);
+    	Throwable error = MString.serialize(sb, msg,maxMsgSize);
     	
     	switch (level) {
 		case DEBUG:

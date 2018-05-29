@@ -254,6 +254,14 @@ public class MSystem {
 		return System.getProperty("java.io.tmpdir");
 	}
 	
+	/**
+	 * Return a string representation of the data. use this to Implement
+	 * toString()
+	 * 
+	 * @param sender
+	 * @param attributes
+	 * @return Stringified attributes
+	 */
 	public static String toString(Object sender, Object ... attributes) {
 		StringBuilder sb = new StringBuilder();
 		sb.append('[');
@@ -262,34 +270,12 @@ public class MSystem {
 		boolean first = true;
 		for (Object a : attributes) {
 			if (!first) sb.append(','); else first = false;
-			serialize(sb, a, null);
+			MString.serialize(sb, a, null);
 		}
 		sb.append(']');
 		return sb.toString();
 	}
 	
-	public static Throwable serialize(StringBuilder sb, Object o, Throwable error) {
-    	try {
-	    	if (o == null) {
-				sb.append("[null]");
-	    	} else
-			if (o instanceof Throwable) {
-				if (error == null) return (Throwable)o;
-				// another error
-				sb.append("[").append(o).append("]");
-			} else
-	    	if (o.getClass().isArray()) {
-	    		sb.append("{");
-	    		for (Object p : (Object[])o) {
-	    			error = serialize(sb, p, error);
-	    		}
-	    		sb.append("}");
-	    	} else
-	    		sb.append("[").append(o).append("]");
-    	} catch (Throwable t) {}
-		return error;
-	}
-
 	public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotation) {
 		Class<?> current = clazz;
 		while (current != null) {
@@ -762,19 +748,6 @@ public class MSystem {
 		
 		return clazz.getCanonicalName();
 
-	}
-
-	public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
-		Throwable error = null;
-    	for (Object o : msg) {
-			error = MSystem.serialize(sb,o, error);
-			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
-				sb.setLength(maxMsgSize);
-				sb.append("...");
-				break;
-			}
-    	}
-    	return error;
 	}
 
 	public static boolean isLockedByThread(Object value) {

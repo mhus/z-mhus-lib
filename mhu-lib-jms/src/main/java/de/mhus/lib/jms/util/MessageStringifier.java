@@ -23,6 +23,8 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
+import de.mhus.lib.core.MString;
+
 public class MessageStringifier {
 
 	private Message msg;
@@ -58,9 +60,9 @@ public class MessageStringifier {
 				MapMessage m = (MapMessage)msg;
 				for (@SuppressWarnings("unchecked")Enumeration<String> e = m.getMapNames();e.hasMoreElements();) {
 					String key = e.nextElement();
-					String val = ((MapMessage) msg).getString(key);
+					Object val = ((MapMessage) msg).getObject(key);
 					if (key.contains("assword")) val = "[***]";
-					sb.append("  ").append(key).append('=').append(val).append('\n');
+					sb.append("  ").append(key).append('=').append(MString.toString(val)).append('\n');
 				}
 			} else
 			if (msg instanceof TextMessage) {

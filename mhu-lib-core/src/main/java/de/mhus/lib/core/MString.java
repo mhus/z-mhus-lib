@@ -1792,4 +1792,45 @@ public class MString {
 		return out;
 	}
 
+	public static String toString(Object val) {
+		StringBuilder sb = new StringBuilder();
+		serialize(sb, val, null);
+		return sb.toString();
+	}
+
+	public static Throwable serialize(StringBuilder sb, Object o, Throwable error) {
+    	try {
+	    	if (o == null) {
+				sb.append("[null]");
+	    	} else
+			if (o instanceof Throwable) {
+				if (error == null) return (Throwable)o;
+				// another error
+				sb.append("[").append(o).append("]");
+			} else
+	    	if (o.getClass().isArray()) {
+	    		sb.append("{");
+	    		for (Object p : (Object[])o) {
+	    			error = serialize(sb, p, error);
+	    		}
+	    		sb.append("}");
+	    	} else
+	    		sb.append("[").append(o).append("]");
+    	} catch (Throwable t) {}
+		return error;
+	}
+
+	public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
+		Throwable error = null;
+    	for (Object o : msg) {
+			error = serialize(sb,o, error);
+			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
+				sb.setLength(maxMsgSize);
+				sb.append("...");
+				break;
+			}
+    	}
+    	return error;
+	}
+
 }
