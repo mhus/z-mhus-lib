@@ -1194,7 +1194,6 @@ public class MString {
 	 * 
 	 * @return 0x followed by unsigned hex 8-digit representation
 	 * 
-	 * @see #toString(Color)
 	 */
 	public static String toHexString(int h) {
 		String s = Integer.toHexString(h);

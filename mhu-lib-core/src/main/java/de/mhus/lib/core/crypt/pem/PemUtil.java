@@ -120,5 +120,25 @@ public class PemUtil {
 	public static String toLine(PemBlock key) {
 		return key.getString(PemBlock.METHOD, "?") + ":" + key.getBlock();
 	}
+
+	public static boolean isCipher(PemBlock block) {
+		return PemBlock.BLOCK_CIPHER.equals(block.getName());
+	}
 	
+	public static boolean isSign(PemBlock block) {
+		return PemBlock.BLOCK_SIGN.equals(block.getName());
+	}
+
+	public static boolean isHash(PemBlock block) {
+		return PemBlock.BLOCK_HASH.equals(block.getName());
+	}
+
+	public static boolean isPrivKey(PemBlock block) {
+		return PemBlock.BLOCK_PRIV.equals(block.getName());
+	}
+
+	public static boolean isPubKey(PemBlock block) {
+		return PemBlock.BLOCK_PUB.equals(block.getName());
+	}
+
 }

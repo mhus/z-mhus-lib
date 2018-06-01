@@ -46,7 +46,20 @@ public class PemBlockList extends LinkedList<PemBlock> {
 		}
 		return b.toString();
 	}
-	
+
+	public String toString(int offset, int len) {
+		StringBuilder b = new StringBuilder();
+		int cnt = 0;
+		for (PemBlock block : this) {
+			if (cnt >= offset+len) break;
+			if (cnt >= offset)
+				b.append(block);
+			//b.append('\n');
+			cnt++;
+		}
+		return b.toString();
+	}
+
 	public PemBlock find(String name) {
 		for (PemBlock block : this) {
 			if (name.equals(block.getName()))
