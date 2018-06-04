@@ -268,14 +268,14 @@ public class MDate extends Date {
 	public static String toIso8601(Calendar date) {
 		synchronized (iso8601DateFormat) {
 			iso8601DateFormat.setTimeZone(TimeZone.getDefault());
-			return iso8601DateFormat.format(date);
+			return iso8601DateFormat.format(date.getTime());
 		}
 	}
 	
 	public static String toIso8601(Calendar date, TimeZone tz) {
 		synchronized (iso8601DateFormat) {
 			iso8601DateFormat.setTimeZone(tz);
-			return iso8601DateFormat.format(date);
+			return iso8601DateFormat.format(date.getTime());
 		}
 	}
 	
@@ -285,7 +285,7 @@ public class MDate extends Date {
 	 * @return the formatted date as string
 	 */
 	public static String toFileFormat(Calendar date) {
-		return fileDateFormat.format(date);
+		return fileDateFormat.format(date.getTime());
 	}
 
 	public static Date toDate(Object in,Date def, Locale locale) {

@@ -262,4 +262,17 @@ public class MCastTest extends TestCase {
 		}
 	}
 
+	public void testDateToString() {
+		{
+			Date date = MDate.toDate("01.02.2003", null);
+			String res = MDate.toIso8601(date);
+			System.out.println(res);
+		}
+		{
+			Calendar date = Calendar.getInstance();
+			date.setTime(MDate.toDate("01.02.2003", null));
+			String res = MDate.toIso8601(date);
+			System.out.println(res);
+		}
+	}
 }
