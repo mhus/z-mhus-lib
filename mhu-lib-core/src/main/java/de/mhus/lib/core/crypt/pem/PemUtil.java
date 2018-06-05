@@ -145,4 +145,8 @@ public class PemUtil {
 		return PemBlock.BLOCK_CONTENT.equals(block.getName());
 	}
 
+	public static PemKey toKey(String key) throws ParseException {
+		return new PemKey(new PemBlockModel().parse(key));
+	}
+
 }
