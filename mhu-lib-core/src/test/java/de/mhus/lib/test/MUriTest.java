@@ -159,7 +159,7 @@ public class MUriTest extends TestCase {
 			File f = new File("/demo/demo.txt");
 			MUri uri = MUri.toUri(f);
 			assertEquals("file", uri.getScheme());
-			assertEquals(f.getAbsolutePath(), uri.getPath());
+			assertEquals(f.getAbsolutePath().replace('\\', '/'), uri.getPath()); // fix for windows
 		}
 		{
 			MUri uri = MUri.toUri("file:C:/demo/demo.txt");
