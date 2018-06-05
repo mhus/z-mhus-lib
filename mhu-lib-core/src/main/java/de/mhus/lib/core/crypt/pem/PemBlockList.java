@@ -17,6 +17,7 @@ package de.mhus.lib.core.crypt.pem;
 
 import java.util.LinkedList;
 
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.ParseException;
 
 public class PemBlockList extends LinkedList<PemBlock> {
@@ -28,10 +29,13 @@ public class PemBlockList extends LinkedList<PemBlock> {
 	public PemBlockList(String string) {
 		while(true) {
 			try {
+				int p = string.indexOf("-----START ");
+				if (p < 0) break;
 				PemBlockModel next = new PemBlockModel().parse(string);
 				add(next);
 				string = next.getRest();
 			} catch (ParseException e) {
+				MLogUtil.log().t(e);
 				break;
 			}
 		}

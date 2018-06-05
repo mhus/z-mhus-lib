@@ -27,11 +27,11 @@ public interface PemBlock extends IReadProperties {
 	String LENGTH = "Length";
 	String FORMAT = "Format";
 	String IDENT = "Ident";
-	String KEY_IDENT = "KeyIdent";
+	//String KEY_IDENT = "KeyIdent";
 	String STRING_ENCODING = "Encoding";
-	String PRIV_ID = "PrivKeyIdent"; // private key for asymmetric algorithms
-	String PUB_ID = "PubKeyIdent"; // public key for asymmetric algorithms
-	String KEY_ID = "KeyId"; // for symmetric algorithms
+	String PRIV_ID = "PrivateKey"; // private key for asymmetric algorithms
+	String PUB_ID = "PublicKey"; // public key for asymmetric algorithms
+	String KEY_ID = "Key"; // for symmetric algorithms
 	String SYMMETRIC = "Symmetric"; // set a hint if the algorithm is symmetric
 	String DESCRIPTION = "Description";
 	String CREATED = "Created";
@@ -39,6 +39,7 @@ public interface PemBlock extends IReadProperties {
 	String ENC_BLOWFISH = "blowfish";
 	String BLOCK_HASH = "HASH";
 	String EMBEDDED = "Embedded"; // declare embedded blocks in encrypted content, set to true
+	String BLOCK_CONTENT = "CONTENT";
 
 	/**
 	 * Returns the name of the block

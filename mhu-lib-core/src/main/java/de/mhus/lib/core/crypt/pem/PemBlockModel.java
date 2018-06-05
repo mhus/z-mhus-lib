@@ -97,11 +97,16 @@ public class PemBlockModel extends MProperties implements PemBlock {
 					params = false;
 				} else {
 					int pp = line.indexOf(':');
-					if (pp < 0)
-						throw new ParseException("Parameter key not identified",line);
-					String key = line.substring(0,pp).trim();
-					String value = line.substring(pp+1).trim();
-					setString(key, value);
+					if (pp < 0) {
+					//	throw new ParseException("Parameter key not identified",line);
+						// start of the block
+						params = false;
+						blockOrg = line;
+					} else {
+						String key = line.substring(0,pp).trim();
+						String value = line.substring(pp+1).trim();
+						setString(key, value);
+					}
 				}
 			} else {
 //				if (line.length() == 0)

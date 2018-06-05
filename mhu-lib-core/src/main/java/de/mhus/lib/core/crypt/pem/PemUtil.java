@@ -141,4 +141,8 @@ public class PemUtil {
 		return PemBlock.BLOCK_PUB.equals(block.getName());
 	}
 
+	public static boolean isContent(PemBlock block) {
+		return PemBlock.BLOCK_CONTENT.equals(block.getName());
+	}
+
 }
