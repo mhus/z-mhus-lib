@@ -35,6 +35,7 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 	private long lastCheck = System.currentTimeMillis();
 	private long checkTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
 	private Invalidator<K,V> invalidator;
+	private boolean refreshOnAccess = true;
 
 	@Override
 	public int size() {
@@ -221,6 +222,14 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		this.invalidator = invalidator;
 	}
 
+	public boolean isRefreshOnAccess() {
+		return refreshOnAccess;
+	}
+
+	public void setRefreshOnAccess(boolean refreshOnAccess) {
+		this.refreshOnAccess = refreshOnAccess;
+	}
+
 	private class Container<Z> extends SoftReference<Z> {
 		long time = System.currentTimeMillis();
 		long accessed = 0;
@@ -230,13 +239,14 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		}
 
 		public Z getValue() {
-			time = System.currentTimeMillis();
+			if (isRefreshOnAccess())
+				time = System.currentTimeMillis();
 			accessed++;
 			return super.get();
 		}
 
 		boolean isTimeout() {
-			return MTimeInterval.isTimeOut(time, getTimeout()) || super.get() == null;
+			return MTimeInterval.isTimeOut(time, timeout) || super.get() == null;
 		}
 	}
 	

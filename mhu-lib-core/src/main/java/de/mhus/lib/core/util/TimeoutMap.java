@@ -35,6 +35,7 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 	private long lastCheck = System.currentTimeMillis();
 	private long checkTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
 	private Invalidator<K,V> invalidator;
+	private boolean refreshOnAccess;
 
 	@Override
 	public int size() {
@@ -219,6 +220,14 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 		this.invalidator = invalidator;
 	}
 
+	public boolean isRefreshOnAccess() {
+		return refreshOnAccess;
+	}
+
+	public void setRefreshOnAccess(boolean refreshOnAccess) {
+		this.refreshOnAccess = refreshOnAccess;
+	}
+
 	private class Container<Z> {
 		Z value;
 		long time = System.currentTimeMillis();
@@ -229,13 +238,14 @@ public class TimeoutMap<K,V> implements Map<K,V> {
 		}
 
 		public Z getValue() {
-			time = System.currentTimeMillis();
+			if (isRefreshOnAccess())
+				time = System.currentTimeMillis();
 			accessed++;
 			return value;
 		}
 
 		boolean isTimeout() {
-			return System.currentTimeMillis() - time > getTimeout();
+			return System.currentTimeMillis() - time > timeout;
 		}
 	}
 	
