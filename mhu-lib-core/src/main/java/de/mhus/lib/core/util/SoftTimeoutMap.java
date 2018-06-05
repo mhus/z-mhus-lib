@@ -19,7 +19,6 @@ import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -61,7 +60,12 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 	public V get(Object key) {
 		doValidationCheck();
 		SoftTimeoutMap<K, V>.Container<V> ret = map.get(key);
-		return ret == null ? null : ret.getValue();
+		if (ret == null) return null;
+		if (ret.isTimeout()) {
+			remove(ret);
+			return null;
+		}
+		return ret.getValue();
 	}
 
 	public long getAccessCount(Object key) {
@@ -71,15 +75,12 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 	}
 	
 	public synchronized void doValidationCheck() {
-		if (System.currentTimeMillis() - lastCheck > checkTimeout) {
-			Iterator<java.util.Map.Entry<K, SoftTimeoutMap<K, V>.Container<V>>> entries = map.entrySet().iterator();
-			while (entries.hasNext()) {
-				 java.util.Map.Entry<K, SoftTimeoutMap<K, V>.Container<V>> next = entries.next();
-				 if (invalidator != null && invalidator.isInvalid(next.getKey(), next.getValue().get(), next.getValue().time, next.getValue().accessed )
-					 ||
-					 invalidator == null && next.getValue().isTimeout())
-					 entries.remove();
-			}
+		if (MTimeInterval.isTimeOut(lastCheck, checkTimeout)) {
+			map.entrySet().removeIf(e -> {
+				 return (invalidator != null && invalidator.isInvalid(e.getKey(), e.getValue().get(), e.getValue().time, e.getValue().accessed )
+						 ||
+						 e.getValue().isTimeout());
+			});
 			lastCheck = System.currentTimeMillis();
 		}
 	}
@@ -235,7 +236,7 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		}
 
 		boolean isTimeout() {
-			return System.currentTimeMillis() - time > getTimeout() || super.get() == null;
+			return MTimeInterval.isTimeOut(time, getTimeout()) || super.get() == null;
 		}
 	}
 	
