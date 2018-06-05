@@ -72,16 +72,16 @@ public class DefaultEntry implements VaultEntry {
 				if (ifc == AsyncKey.class && MVault.TYPE_RSA_PUBLIC_KEY.equals(type)) {
 					return (T) MCrypt.loadPrivateRsaKey(getValue());
 				}
-				if (ifc == PemPriv.class && getType().endsWith(".cipher.private.key")) {
+				if (ifc == PemPriv.class && getType().endsWith(MVault.SUFFIX_CIPHER_PRIVATE_KEY)) {
 					return (T) PemUtil.cipherPrivFromString(getValue());
 				}
-				if (ifc == PemPub.class && getType().endsWith(".cipher.public.key")) {
+				if (ifc == PemPub.class && getType().endsWith(MVault.SUFFIX_CIPHER_PUBLIC_KEY)) {
 					return (T) PemUtil.cipherPubFromString(getValue());
 				}
-				if (ifc == PemPriv.class && getType().endsWith(".sign.private.key")) {
+				if (ifc == PemPriv.class && getType().endsWith(MVault.SUFFIX_SIGN_PRIVATE_KEY)) {
 					return (T) PemUtil.signPrivFromString(getValue());
 				}
-				if (ifc == PemPub.class && getType().endsWith(".sign.public.key")) {
+				if (ifc == PemPub.class && getType().endsWith(MVault.SUFFIX_SIGN_PUBLIC_KEY)) {
 					return (T) PemUtil.signPubFromString(getValue());
 				}
 			} catch (Exception e) {

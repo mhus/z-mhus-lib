@@ -31,6 +31,10 @@ public interface MVault {
 	
 	static final String TYPE_TEXT = "text";
 	static final String SOURCE_DEFAULT = "default";
+	static final String SUFFIX_CIPHER_PRIVATE_KEY = ".cipher.private.key";
+	static final String SUFFIX_CIPHER_PUBLIC_KEY = ".cipher.public.key";
+	static final String SUFFIX_SIGN_PRIVATE_KEY = ".sign.private.key";
+	static final String SUFFIX_SIGN_PUBLIC_KEY = ".sign.public.key";
 	
 	/**
 	 * Register a new source for VaultEntries
