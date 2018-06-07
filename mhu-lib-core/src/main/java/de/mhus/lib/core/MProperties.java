@@ -37,6 +37,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.core.util.SetCast;
 
 public class MProperties extends AbstractProperties implements Externalizable {
@@ -142,11 +143,81 @@ public class MProperties extends AbstractProperties implements Externalizable {
 			ClassNotFoundException {
 		properties = (Properties) in.readObject();
 	}
-	
+
+	/**
+	 * This will handle the strings like options. Means a string without separator will handled
+	 * as key and set to true. e.g. val1&val2&a=b will be val1=true, val2=true, a=b
+	 * 
+	 * @param properties Rfc1738 (Url Encode) encoded string
+	 * @return The MProperties
+	 */
+	public static MProperties explodeToOptions(String properties) {
+		return explodeToMProperties(MUri.explodeArray(properties), '=');
+	}
+
+	/**
+	 * This will handle the strings like options. Means a string without separator will handled
+	 * as key and set to true. e.g. [val1, val2, a=b] will be val1=true, val2=true, a=b
+	 * 
+	 * @param properties
+	 * @return The MProperties
+	 */
+	public static MProperties explodeToOptions(String[] properties) {
+		return explodeToOptions(properties, '=');
+	}
+
+	/**
+	 * This will handle the strings like properties. Means a string without separator will be
+	 * stored as value with an increasing key as integer, e.g. val1&val2&a=b will be 0=val1, 1=val2, a=b
+	 * @param properties Rfc1738 (Url Encoded) encoded string
+	 * @return The MProperties
+	 */
+	public static MProperties explodeToMProperties(String properties) {
+		return explodeToMProperties(MUri.explodeArray(properties), '=');
+	}
+
+	/**
+	 * This will handle the strings like properties. Means a string without separator will be
+	 * stored as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2, a=b
+	 * @param properties
+	 * @return The MProperties
+	 */
 	public static MProperties explodeToMProperties(String[] properties) {
 		return explodeToMProperties(properties, '=');
 	}
 	
+	/**
+	 * This will handle the strings like options. Means a string without separator will handled
+	 * as key and set to true. e.g. [val1, val2, a=b] will be val1=true, val2=true, a=b
+	 * 
+	 * @param properties
+	 * @param separator
+	 * @return The MProperties
+	 */
+	public static MProperties explodeToOptions(String[] properties, char separator) {
+		MProperties p = new MProperties();
+		if (properties != null) {
+			for (String i : properties) {
+				if (i != null) {
+					int idx = i.indexOf(separator);
+					if (idx >= 0) {
+						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
+					} else {
+						p.setProperty(i, true);
+					}
+				}
+			}
+		}
+		return p;
+	}
+
+	/**
+	 * This will handle the strings like properties. Means a string without separator will be
+	 * stored as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2, a=b
+	 * @param properties
+	 * @param separator
+	 * @return The MProperties
+	 */
 	public static MProperties explodeToMProperties(String[] properties, char separator) {
 		MProperties p = new MProperties();
 		if (properties != null) {
@@ -166,6 +237,12 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return p;
 	}
 	
+	/**
+	 * This will handle the strings like properties. Means a string without separator will be
+	 * stored as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2, a=b
+	 * @param properties
+	 * @return The Properties
+	 */
 	public static Properties explodeToProperties(String[] properties) {
 		Properties p = new Properties();
 		if (properties != null) {

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.lang.Value;
 
@@ -60,12 +61,28 @@ public class ConsoleTable {
     public ConsoleTable() {
     }
     
+    public ConsoleTable(String options) {
+    	if (options != null) {
+    		options = options.trim();
+    		MProperties o = MProperties.explodeToMProperties(options);
+    		setFull(o.getBoolean("full", false));
+    		
+    		//TODO more options ...
+    	} else {
+			fitToConsole();
+    	}
+    }
+    
     public ConsoleTable(boolean full) {
+    	setFull(full);
+	}
+    
+    public void setFull(boolean full) {
 		if (full)
 			setMaxColSize(0);
 		else
 			fitToConsole();
-	}
+    }
 
 	public Row addRow() {
         return new Row(addIntRow());
