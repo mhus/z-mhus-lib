@@ -17,9 +17,11 @@ package de.mhus.lib.core.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * @author Brian Wing Shun Chan
@@ -178,6 +180,14 @@ public class Base64 {
 	public static String encode(String value) {
 		if (value == null) return "";
 		return encode(value.getBytes());
+	}
+
+	public static String decodeToString(String encoded) {
+		try {
+			return new String(decode(encoded),"utf-8") ;
+		} catch (UnsupportedEncodingException e) {
+			throw new MRuntimeException(encoded,e);
+		}
 	}
 
 }
