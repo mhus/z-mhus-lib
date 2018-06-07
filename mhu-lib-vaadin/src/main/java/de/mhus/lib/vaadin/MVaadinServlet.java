@@ -27,7 +27,7 @@ import com.vaadin.server.VaadinServlet;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.config.MConfigFactory;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.Log;
 
@@ -63,7 +63,7 @@ public class MVaadinServlet extends VaadinServlet {
 			}
         if (mhusConfigUrl != null)
 	        try {
-	        	config = MApi.lookup(MConfigFactory.class).createConfigFor(mhusConfigUrl.toURI());
+	        	config = MApi.lookup(MConfig.class).createConfigFor(mhusConfigUrl.toURI());
 	        } catch (Exception e) {
 	        	log.i(mhusConfigPath,e);
 	        }

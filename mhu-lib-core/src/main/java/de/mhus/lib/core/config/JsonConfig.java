@@ -78,7 +78,10 @@ public class JsonConfig extends IConfig {
 	@Override
 	public IConfig getNode(String name) {
 		JsonNode child = node.get(name);
-		if (child == null || !child.isArray() || child.size() < 1) return null;
+		if (child == null) return null;
+		if (child.isObject())
+			return new JsonConfig(name, this, (ObjectNode)child);
+		if (child.isArray() || child.size() < 1) return null;
 		return new JsonConfig(name, this, (ObjectNode)((ArrayNode)child).get(0));
 	}
 

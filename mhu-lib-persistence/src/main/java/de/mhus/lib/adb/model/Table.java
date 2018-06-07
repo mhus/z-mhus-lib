@@ -37,7 +37,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
-import de.mhus.lib.core.config.MConfigFactory;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.MObject;
@@ -115,7 +115,7 @@ public abstract class Table extends MObject {
 			}
 
 		if (table != null &&!MString.isEmptyTrim(table.attributes())) {
-			attributes = MApi.lookup(MConfigFactory.class).toConfig(table.attributes());
+			attributes = MApi.lookup(MConfig.class).toConfig(table.attributes());
 		} else {
 			attributes = new HashConfig();
 		}

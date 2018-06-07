@@ -20,7 +20,6 @@ import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.errors.MException;
 
@@ -55,7 +54,7 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				if (f.isDirectory() && f.getName().equals(key) ||
 					!f.isDirectory() && f.getName().startsWith(keyDot))
-					return MApi.lookup(MConfigFactory.class).createConfigFor(f);
+					return MConfig.createConfigFor(f);
 		} catch (Throwable e) {
 			
 		}
@@ -70,7 +69,7 @@ public class DirConfig extends PropertiesConfig {
 				try {
 					if (f.isDirectory() && f.getName().equals(key) ||
 						!f.isDirectory() && f.getName().startsWith(keyDot))
-						out.add(MApi.lookup(MConfigFactory.class).createConfigFor(f));
+						out.add(MConfig.createConfigFor(f));
 				} catch (Throwable e) {
 					
 				}
@@ -84,10 +83,10 @@ public class DirConfig extends PropertiesConfig {
 			for ( File f : dir.listFiles())
 				try {
 					if (f.isDirectory() && !f.getName().startsWith(".") && !f.isHidden())
-						out.add(MApi.lookup(MConfigFactory.class).createConfigFor(f));
+						out.add(MConfig.createConfigFor(f));
 					else
 					if (!f.isDirectory() && !f.isHidden()) {
-						IConfig conf = MApi.lookup(MConfigFactory.class).createConfigFor(f);
+						IConfig conf = MConfig.createConfigFor(f);
 						if (conf != null)
 							out.add(conf);
 					}

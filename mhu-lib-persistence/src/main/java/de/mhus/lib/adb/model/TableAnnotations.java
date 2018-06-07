@@ -20,7 +20,7 @@ import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.MConfigFactory;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
@@ -65,7 +65,7 @@ public class TableAnnotations extends Table {
 
 				} else {
 					log().t("field",mName);
-					WritableResourceNode<?> attr = MApi.lookup(MConfigFactory.class).toConfig(toAttributes(p,pk));
+					WritableResourceNode<?> attr = MApi.lookup(MConfig.class).toConfig(toAttributes(p,pk));
 					boolean v = (p !=null && p.virtual());
 
 					// check for doubled

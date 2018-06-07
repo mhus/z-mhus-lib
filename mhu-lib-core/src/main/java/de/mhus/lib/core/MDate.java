@@ -38,6 +38,11 @@ public class MDate extends Date {
 			"HH:mm:ss");
 	private static SimpleDateFormat germanDateFormat = new SimpleDateFormat(
 			"dd.MM.yyyy");
+	private static SimpleDateFormat httpHeaderDateFormat = new SimpleDateFormat(
+			"EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+	static {
+		httpHeaderDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
 
 	public MDate() {
 		super();
@@ -355,6 +360,16 @@ public class MDate extends Date {
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		int lastDay = cal.get(Calendar.DAY_OF_MONTH);
 		return lastDay;
+	}
+
+	public static String toHttpHeaderDate(long date) {
+		return toHttpHeaderDate(new Date(date));
+	}
+
+	public static String toHttpHeaderDate(Date date) {
+		synchronized (httpHeaderDateFormat) {
+			return httpHeaderDateFormat.format(date);
+		}
 	}
 	
 }
