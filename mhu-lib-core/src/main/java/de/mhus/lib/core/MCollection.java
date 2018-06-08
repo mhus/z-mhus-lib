@@ -29,6 +29,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import de.mhus.lib.core.util.EmptyList;
@@ -381,5 +383,29 @@ public class MCollection {
 		} else
 			return new LinkedList<>();
 	}
-	
+
+	/**
+	 * Process for each entry in the array. Return the new value for each entry.
+	 * 
+	 * @param array
+	 * @param manipulator
+	 */
+	public static <T> void updateEach(T[] array, Function<T, T> manipulator) {
+		if (array == null) return;
+		for (int i = 0; i < array.length; i++)
+			array[i] = manipulator.apply(array[i]);
+	}
+
+	/**
+	 * Execute the consumer for each entry of the array.
+	 * 
+	 * @param array
+	 * @param consumer
+	 */
+	public static <T> void forEach(T[] array, Consumer<T> consumer) {
+		if (array == null) return;
+		for (int i = 0; i < array.length; i++)
+			consumer.accept(array[i]);
+	}
+
 }

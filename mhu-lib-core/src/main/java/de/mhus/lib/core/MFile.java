@@ -46,6 +46,7 @@ import de.mhus.lib.core.cfg.CfgProperties;
 import de.mhus.lib.core.io.FileChecker;
 import de.mhus.lib.core.io.PdfFileChecker;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 
 /**
  * 
@@ -53,7 +54,7 @@ import de.mhus.lib.core.logging.Log;
  */
 public class MFile {
 	
-	private static final String DEFAULT_MIME = "text/plain";
+	public static final String DEFAULT_MIME = "text/plain";
 //	private static ResourceNode<?> mimeConfigCache;
 	private static Properties mhuMimeConfigCache;
 	private static Log log = Log.getLog(MFile.class);
@@ -613,6 +614,17 @@ public class MFile {
 	 * @return the mime type
 	 */
 	public static String getMimeType(String extension) {
+		loadMimeTypes();
+		return getMimeType(extension, mhuMimeConfigCache != null ? mhuMimeConfigCache.getProperty("default", DEFAULT_MIME) : DEFAULT_MIME);
+	}
+	
+	/**
+	 * Searching for the mime type in config and as last option have a static list of extensions.
+	 * @param extension full file name or only extension
+	 * @param def 
+	 * @return the mime type
+	 */
+	public static String getMimeType(String extension, String def) {
 		if (extension == null) return null;
 		extension = extension.trim().toLowerCase();
 		if (MString.isIndex(extension, '.')) extension = MString.afterLastIndex(extension, '.');
@@ -624,26 +636,28 @@ public class MFile {
 		} catch (Throwable t) {}
 		
 		if (mime == null) {
-			if (mhuMimeConfigCache == null) {
-				try {
-					mhuMimeConfigCache = new Properties();
-					MSystem.loadProperties(MFile.class, mhuMimeConfigCache, "mime-types.properties");
-				} catch (Exception e) {
-					
-				}
-			}
+			loadMimeTypes();
 			if (mhuMimeConfigCache != null) {
 				mime = mhuMimeConfigCache.getProperty(extension, null);
-				if (mime == null)
-					mime = mhuMimeConfigCache.getProperty("default", null);
 			}
 		}
 		
 		if (mime == null)
-			mime = DEFAULT_MIME;
+			mime = def;
 		
 		return mime;
 		
+	}
+
+	public static synchronized void loadMimeTypes() {
+		if (mhuMimeConfigCache == null) {
+			try {
+				mhuMimeConfigCache = new Properties();
+				MSystem.loadProperties(MFile.class, mhuMimeConfigCache, "mime-types.properties");
+			} catch (Exception e) {
+				MLogUtil.log().t(e);
+			}
+		}
 	}
 
 	/**
