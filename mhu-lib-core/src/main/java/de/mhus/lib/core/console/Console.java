@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.console;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
@@ -70,8 +71,8 @@ public abstract class Console extends PrintStream implements IBase {
 	
 	public abstract String readLine(LinkedList<String> history);
 
-	public char[] readPassword() {
-		return System.console().readPassword();
+	public String readPassword() throws IOException {
+		return new String(System.console().readPassword());
 	}
 	
 	public void cr() {
@@ -168,5 +169,4 @@ public abstract class Console extends PrintStream implements IBase {
 	public void setHeight(int h) {
 	}
 
-	
 }

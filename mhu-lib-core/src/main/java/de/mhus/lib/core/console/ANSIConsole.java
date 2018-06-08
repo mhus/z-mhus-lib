@@ -73,6 +73,11 @@ public class ANSIConsole extends Console {
 	}
 
 	@Override
+	public String readPassword() throws IOException {
+		return reader.readLine('*');
+	}
+
+	@Override
 	public String readLine(LinkedList<String> history) {
 		try {
 			return reader.readLine();

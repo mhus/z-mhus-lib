@@ -84,11 +84,10 @@ public class VirtualConsole extends Console {
 	}
 
 	@Override
-	public char[] readPassword() {
+	public String readPassword() {
 		quiet = true;
 		try {
-			String ret = readLine();
-			return ret.toCharArray();
+			return readLine();
 		} finally {
 			quiet = false;
 		}
