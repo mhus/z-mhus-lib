@@ -159,6 +159,8 @@ public class DefaultSendMail extends MLog implements MSendMail {
         msg.setSentDate(new Date());
         msg.setText(content, "UTF-8");
 		
+        log().d("plain",subject,"from",from,"to",toAddresses,"cc",ccAddresses,"bcc",bccAddresses);
+        log().t(content);
 		Transport.send(msg);
 		
 	}
@@ -229,6 +231,8 @@ public class DefaultSendMail extends MLog implements MSendMail {
         msg.setContent(multipart);
         
         // send
+        log().d("html",subject,"from",from,"to",toAddresses,"cc",ccAddresses,"bcc",bccAddresses,"attachments",attachments);
+        log().t(html);
 		Transport.send(msg);
 		
 		// delete attachments
