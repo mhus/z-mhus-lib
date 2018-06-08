@@ -77,6 +77,11 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	}
 	
 	public void setForm(DefRoot form) {
+		if (form == null) {
+			this.form = null;
+			parameterDef = null;
+			return;
+		}
 		try {
 			form = form.build();
 			parameterDef = ParameterDefinitions.create(form);
