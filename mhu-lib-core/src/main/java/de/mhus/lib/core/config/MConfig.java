@@ -17,7 +17,9 @@ package de.mhus.lib.core.config;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
@@ -244,6 +246,16 @@ public class MConfig implements IBase {
 		}
 		
 		return null;
+	}
+
+	public static String[] toStringArray(Collection<IConfig> nodes, String key) {
+		LinkedList<String> out = new LinkedList<>();
+		for ( IConfig item : nodes) {
+			String value = item.getString(key,null);
+			if (value != null)
+				out.add(value);
+		}
+		return out.toArray(new String[out.size()]);
 	}
 
 }

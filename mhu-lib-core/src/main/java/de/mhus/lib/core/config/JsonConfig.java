@@ -58,8 +58,23 @@ public class JsonConfig extends IConfig {
 		this(null,null,node);
 	}
 	
-	public JsonConfig(String name, IConfig parent, ObjectNode node) {
-		this.node = node;
+	public JsonConfig(String name, IConfig parent, JsonNode node) {
+		if (node instanceof ObjectNode)
+			this.node = (ObjectNode) node;
+		else
+		if (node instanceof ArrayNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				this.node = (ObjectNode)mapper.readValue("{}", JsonNode.class);
+			} catch (IOException e) {}
+			this.node.put("array", node);
+		} else {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				this.node = (ObjectNode)mapper.readValue("{}", JsonNode.class);
+			} catch (IOException e) {}
+			this.node.put("value", node);
+		}
 		this.name = name;
 		this.parent = parent;
 	}
@@ -69,20 +84,20 @@ public class JsonConfig extends IConfig {
 		node = (ObjectNode)mapper.readValue("{}", JsonNode.class);
 	}
 
-	public JsonConfig(String name2, JsonConfig jsonConfig, TextNode textNode) throws Exception {
+	public JsonConfig(String name, JsonConfig jsonConfig, TextNode textNode) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		node = (ObjectNode)mapper.readValue("{}", JsonNode.class);
-		node.put("_", textNode);
+		node.put("value", textNode);
+		this.name = name;
 	}
 
 	@Override
 	public IConfig getNode(String name) {
 		JsonNode child = node.get(name);
 		if (child == null) return null;
-		if (child.isObject())
-			return new JsonConfig(name, this, (ObjectNode)child);
-		if (child.isArray() || child.size() < 1) return null;
-		return new JsonConfig(name, this, (ObjectNode)((ArrayNode)child).get(0));
+		if (child.isObject() || child.isArray())
+			return new JsonConfig(name, this, child);
+		return null;
 	}
 
 	@Override
@@ -91,18 +106,7 @@ public class JsonConfig extends IConfig {
 		if (child==null || !child.isArray()) return MCollection.getEmptyList();
 		LinkedList<IConfig> out = new LinkedList<>();
 		for (int i = 0; i < child.size(); i++) {
-			JsonNode obj = child.get(i);
-			if (obj instanceof ObjectNode) {
-				out.add( new JsonConfig(name, this, (ObjectNode)child.get(i)) );
-			} else
-			if (obj instanceof org.codehaus.jackson.node.TextNode) {
-				try {
-					out.add( new JsonConfig(name, this, (org.codehaus.jackson.node.TextNode)child.get(i)) );
-				} catch (Exception e) {
-					log().d(name,e);
-				}
-			}
-			
+			out.add( new JsonConfig(name, this, child.get(i)) );
 		}
 		return out;
 	}
@@ -113,9 +117,10 @@ public class JsonConfig extends IConfig {
 		for ( JsonNode  child : node ) {
 			if (child !=null && child.isArray()) {
 				for (int i = 0; i < child.size(); i++)
-					out.add( new JsonConfig(name, this, (ObjectNode)child.get(i)));
-			}
-			
+					out.add( new JsonConfig(name, this, child.get(i)));
+			} else
+			if (child !=null && child.isObject())
+				out.add( new JsonConfig(name, this, child));
 		}
 		return out;
 	}
@@ -126,7 +131,7 @@ public class JsonConfig extends IConfig {
 		for (Iterator<String> i = node.getFieldNames(); i.hasNext();) {
 			String name = i.next();
 			JsonNode child = node.get(name);
-			if (child.isArray())
+			if (child.isArray() || child.isObject())
 				out.add(name);
 		}
 		return out;
@@ -146,7 +151,7 @@ public class JsonConfig extends IConfig {
 		for (Iterator<String> i = node.getFieldNames(); i.hasNext();) {
 			String name = i.next();
 			JsonNode child = node.get(name);
-			if (!child.isArray())
+			if (!child.isArray() && !child.isObject())
 				out.add(name);
 		}
 		return out;
@@ -155,17 +160,21 @@ public class JsonConfig extends IConfig {
 	@Override
 	public boolean isProperty(String name) {
 		JsonNode child = node.get(name);
-		return (child!=null && !child.isArray());
+		return (child!=null && !child.isArray() && !child.isObject());
 	}
 
 	@Override
 	public void removeProperty(String name) {
-		getNode().remove(name);
+		JsonNode child = node.get(name);
+		if (child!=null && !child.isArray() && !child.isObject())
+			getNode().remove(name);
 	}
 
 	@Override
 	public void setProperty(String name, Object value) {
-		getNode().put(name,MCast.objectToString(value));
+		JsonNode child = node.get(name);
+		if (child==null || !child.isArray() && !child.isObject())
+			getNode().put(name,MCast.objectToString(value));
 	}
 
 	public ObjectNode getNode() {
