@@ -33,7 +33,6 @@ import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.adb.DbType;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
@@ -115,7 +114,7 @@ public abstract class Table extends MObject {
 			}
 
 		if (table != null &&!MString.isEmptyTrim(table.attributes())) {
-			attributes = MApi.lookup(MConfig.class).toConfig(table.attributes());
+			attributes = MConfig.toConfig(table.attributes());
 		} else {
 			attributes = new HashConfig();
 		}

@@ -24,7 +24,6 @@ import javax.servlet.ServletException;
 
 import com.vaadin.server.VaadinServlet;
 
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.MConfig;
@@ -63,7 +62,7 @@ public class MVaadinServlet extends VaadinServlet {
 			}
         if (mhusConfigUrl != null)
 	        try {
-	        	config = MApi.lookup(MConfig.class).createConfigFor(mhusConfigUrl.toURI());
+	        	config = MConfig.createConfigFor(mhusConfigUrl.toURI());
 	        } catch (Exception e) {
 	        	log.i(mhusConfigPath,e);
 	        }
