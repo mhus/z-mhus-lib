@@ -143,7 +143,7 @@ public class Log {
     	}
     	
     	if (stacktraceTrace) {
-    		String stacktrace = MCast.toString(Thread.currentThread().getStackTrace());
+    		String stacktrace = MCast.toString("stacktracetrace",Thread.currentThread().getStackTrace());
     		engine.debug(stacktrace);
     	}
     	
