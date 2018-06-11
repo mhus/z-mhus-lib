@@ -21,6 +21,7 @@
     <artifactId>mhu-lib-annotations</artifactId>
     <packaging>bundle</packaging>
     <description>mhu-lib-annotations OSGi bundle project.</description>
+    <name>mhu-lib-annotations</name>
     <parent>
         <artifactId>mhus-lib</artifactId>
         <groupId>de.mhus.lib</groupId>

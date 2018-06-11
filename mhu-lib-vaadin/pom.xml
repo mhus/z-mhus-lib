@@ -20,7 +20,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mhu-lib-vaadin</artifactId>
   <packaging>bundle</packaging>
-
+  <name>mhu-lib-vaadin</name>
+  <description>Tools to develop applications with vaadin UI</description>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>

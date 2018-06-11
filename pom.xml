@@ -26,6 +26,7 @@
     <packaging>pom</packaging>
   <description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
   <url>http://www.mhus.org</url>
+  <name>mhus-lib</name>
 
   <licenses>
     <license>

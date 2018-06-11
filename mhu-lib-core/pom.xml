@@ -20,6 +20,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mhu-lib-core</artifactId>
   <packaging>bundle</packaging>
+  <name>mhu-lib-core</name>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>

@@ -20,7 +20,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mhu-lib-j2ee</artifactId>
   <packaging>bundle</packaging>
-  
+  <name>mhu-lib-j2ee</name>
+  <description>Tools to develop J2EE applications</description>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>
