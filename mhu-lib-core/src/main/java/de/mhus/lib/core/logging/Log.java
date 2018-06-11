@@ -16,6 +16,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
@@ -31,6 +32,7 @@ public class Log {
 	public enum LEVEL {TRACE,DEBUG,INFO,WARN,ERROR,FATAL};
 
 	protected boolean localTrace = true;
+	private static boolean stacktraceTrace = false;
 	protected String name;
 	protected static LevelMapper levelMapper;
     protected static ParameterMapper parameterMapper;
@@ -139,6 +141,12 @@ public class Log {
 		default:
 			break;
     	}
+    	
+    	if (stacktraceTrace) {
+    		String stacktrace = MCast.toString(Thread.currentThread().getStackTrace());
+    		engine.debug(stacktrace);
+    	}
+    	
 	}
 
 //	/**
@@ -285,6 +293,14 @@ public class Log {
 //		unregister();
 		engine.close();
 		engine = null;
+	}
+
+	public static boolean isStacktraceTrace() {
+		return stacktraceTrace;
+	}
+
+	public static void setStacktraceTrace(boolean stacktraceTrace) {
+		Log.stacktraceTrace = stacktraceTrace;
 	}
 	
 //	public UUID getId() {
