@@ -32,6 +32,7 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.io.FileWatch;
+import de.mhus.lib.core.logging.Log;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class CfgManager {
@@ -189,7 +190,7 @@ public class CfgManager {
 				IConfig system = MApi.get().getCfgManager().getCfg("system");
 				if (system != null) {
 					MApi.setDirtyTrace(system.getBoolean("log.trace", false));
-
+					Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
 					MActivator activator = MApi.get().createActivator();
 					for (IConfig node : system.getNodes()) {
 						if ("initiator".equals(node.getName())) {
