@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.security;
+package de.mhus.lib.servlet.security;
 
-public interface Rightful {
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-    public boolean hasGroup(String group);
+import de.mhus.lib.annotations.activator.DefaultImplementation;
 
-    public String getName();
+@DefaultImplementation(DefaultSecurityWatch.class)
+public interface SecurityApi {
 
+	/**
+	 * Checks a http request and decide if the request can be processed or not
+	 * @param req
+	 * @param res
+	 * @return true if the request can be processed
+	 */
+	boolean checkHttpRequest(HttpServletRequest req, HttpServletResponse res);
+	
 }

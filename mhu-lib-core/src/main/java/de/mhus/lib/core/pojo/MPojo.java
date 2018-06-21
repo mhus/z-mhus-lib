@@ -205,6 +205,13 @@ public class MPojo {
 				setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
 			}
 		} else
+		if (value.getClass().isArray()) {
+			ArrayNode array = to.arrayNode();
+			to.put(name, array);
+			for (Object o : (Object[])value) {
+				addJsonValue(array,o,factory,true,level+1);
+			}
+		} else
 		if (value instanceof Collection) {
 			ArrayNode array = to.arrayNode();
 			to.put(name, array);

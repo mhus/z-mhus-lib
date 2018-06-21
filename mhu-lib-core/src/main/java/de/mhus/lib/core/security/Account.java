@@ -51,5 +51,13 @@ public interface Account extends Rightful {
 	 * @throws NotSupportedException Thrown if attributes are not supported
 	 */
 	void putAttributes(IReadProperties properties) throws NotSupportedException;
+
+	/**
+	 * Return the set of assigned groups
+	 * 
+	 * @return List of groups
+	 * @throws NotSupportedException 
+	 */
+	 String[] getGroups() throws NotSupportedException;
 	
 }

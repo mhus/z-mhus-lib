@@ -35,5 +35,7 @@ public interface ModifyAccountApi {
 	void removeGroups(String username, String ... group) throws MException;
 
 	Collection<String> getGroups(String username) throws MException;
+
+	Collection<String> getAccountList(String filter);
 	
 }

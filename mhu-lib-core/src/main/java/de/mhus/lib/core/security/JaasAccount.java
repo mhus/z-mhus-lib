@@ -108,4 +108,9 @@ public class JaasAccount implements Account {
 		throw new NotSupportedException();
 	}
 
+	@Override
+	public String[] getGroups() throws NotSupportedException {
+		return groups.toArray(new String[groups.size()]);
+	}
+
 }
