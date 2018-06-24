@@ -687,6 +687,10 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	}
    	
 	/**
+	 * In this scenario we separate between functional parameters (starting with one underscore)
+	 * and data. Using this method functional parameters can be cascaded over multiple
+	 * levels.
+	 * 
 	 * Will remove all parameters starting with underscore and not two underscore and
 	 * remove one underscore from thoos with more underscores.
 	 * 
@@ -697,8 +701,8 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * 
 	 * @param in
 	 */
-	public static void updateInternal(Map<String,Object> in) {
-		in.keySet().removeIf(k -> isInternal(k));
+	public static void updateFunctional(Map<String,Object> in) {
+		in.keySet().removeIf(k -> isFunctional(k));
 		for (String key : new LinkedList<>(in.keySet()))
 			if (key.startsWith("_"))
 				in.put(key.substring(1), in.remove(key));
@@ -710,7 +714,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @param key
 	 * @return true if actual internal
 	 */
-	public static boolean isInternal(String key) {
+	public static boolean isFunctional(String key) {
 		return key.startsWith("_") && !key.startsWith("__");
  	}
 	
