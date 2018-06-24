@@ -15,21 +15,17 @@
  */
 package de.mhus.lib.core.mail;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Authenticator;
-import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPassword;
@@ -66,6 +62,7 @@ public class DefaultSendMail extends MLog implements MSendMail {
 	private Transport transport;
 	private long lastMailTransport;
 	private Session session;
+	private DefaultMailTransport mailTransport;
 
 	protected void connect() throws MessagingException {
 		
@@ -124,125 +121,54 @@ public class DefaultSendMail extends MLog implements MSendMail {
 	}
 
 	@Override
-	public void sendPlainMail(String from, String[] to, String[] cc, String[] bcc, String subject, String content) throws Exception {
-		
-		connect();
-		if (from == null) from = CFG_FROM.value();
-		
-		InternetAddress[] toAddresses = new InternetAddress[to.length];
-		for (int i = 0; i < to.length; i++)
-			toAddresses[i] = new InternetAddress(to[i]);
-		
-		InternetAddress[] ccAddresses = null;
-		if (cc != null && cc.length > 0) {
-			ccAddresses = new InternetAddress[cc.length];
-			for (int i = 0; i < cc.length; i++)
-				ccAddresses[i] = new InternetAddress(cc[i]);
-		}
-
-		InternetAddress[] bccAddresses = null;
-		if (bcc != null && bcc.length > 0) {
-			bccAddresses = new InternetAddress[bcc.length];
-			for (int i = 0; i < bcc.length; i++)
-				bccAddresses[i] = new InternetAddress(bcc[i]);
-		}
-
-		MimeMessage msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(from));
-		msg.setRecipients(RecipientType.TO, toAddresses);
-		if (ccAddresses != null)
-			msg.setRecipients(RecipientType.CC, ccAddresses);
-		if (bccAddresses != null)
-			msg.setRecipients(RecipientType.BCC, bccAddresses);
-		
-		msg.setSubject(subject, "UTF-8");
-        msg.setSentDate(new Date());
-        msg.setText(content, "UTF-8");
-		
-        log().d("plain",subject,"from",from,"to",toAddresses,"cc",ccAddresses,"bcc",bccAddresses);
-        log().t(content);
-		Transport.send(msg);
-		
+	public void sendMail(Mail mail) throws Exception {
+		log().d("mail",mail);
+		mail.send(getMailTransport());
 	}
-
+	
 	@Override
-	public void sendHtmlMail(String from, String[] to, String[] cc, String[] bcc, String subject, String html,
-	        MailAttachment[] attachments) throws Exception {
+	public MailTransport getMailTransport() throws Exception {
+		if (mailTransport == null)
+			mailTransport = new DefaultMailTransport();
+		return mailTransport;
+	}
+	
+	private class DefaultMailTransport implements MailTransport {
 
-		connect();
-		if (from == null) from = CFG_FROM.value();
-		
-		InternetAddress[] toAddresses = new InternetAddress[to.length];
-		for (int i = 0; i < to.length; i++)
-			toAddresses[i] = new InternetAddress(to[i]);
-		
-		InternetAddress[] ccAddresses = null;
-		if (cc != null && cc.length > 0) {
-			ccAddresses = new InternetAddress[cc.length];
-			for (int i = 0; i < cc.length; i++)
-				ccAddresses[i] = new InternetAddress(cc[i]);
+		@Override
+		public Session getSession() throws Exception {
+			connect();
+			return session;
 		}
 
-		InternetAddress[] bccAddresses = null;
-		if (bcc != null && bcc.length > 0) {
-			bccAddresses = new InternetAddress[bcc.length];
-			for (int i = 0; i < bcc.length; i++)
-				bccAddresses[i] = new InternetAddress(bcc[i]);
+		@Override
+		public Address getFrom() throws AddressException {
+			return new InternetAddress(CFG_FROM.value());
+		}
+		
+		@Override
+		public void send(MimeMessage msg) throws Exception {
+			connect();
+			Transport.send(msg);
 		}
 
-		MimeMessage msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(from));
-		msg.setRecipients(RecipientType.TO, toAddresses);
-		if (ccAddresses != null)
-			msg.setRecipients(RecipientType.CC, ccAddresses);
-		if (bccAddresses != null)
-			msg.setRecipients(RecipientType.BCC, bccAddresses);
-		
-		msg.setSubject(subject, "UTF-8");
-        msg.setSentDate(new Date());
+		@Override
+		public void cleanup(MailAttachment[] attachments) {
+			// delete attachments
+	        if (attachments != null)
+	            for (MailAttachment attachment : attachments)
+	            	if (attachment != null && attachment.isDeleteAfterSent()) 
+	            		try {
+	            			attachment.getFile().delete();
+	            		} catch (Throwable t) {}
+			
+		}
 
-        // creates message part
-        MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setHeader("Content-Type", "text/plain; charset=\"utf-8\"");
-        messageBodyPart.setHeader("Content-Transfer-Encoding", "quoted-printable");
-        messageBodyPart.setContent(html, "text/html; charset=utf-8");
- 
-        // creates multi-part
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
- 
-        // adds attachments
-        if (attachments != null)
-            for (MailAttachment attachment : attachments) {
-            	if (attachment.getFile().exists() && attachment.getFile().isFile()) {
-	                MimeBodyPart attachPart = new MimeBodyPart();
-	                try {
-	                	attachPart.setFileName(attachment.getName());
-	                    attachPart.attachFile(attachment.getFile());
-	                } catch (IOException ex) {
-	                    ex.printStackTrace();
-	                }
-	 
-	                multipart.addBodyPart(attachPart);
-            	}
-            }
-        
-        
-        msg.setContent(multipart);
-        
-        // send
-        log().d("html",subject,"from",from,"to",toAddresses,"cc",ccAddresses,"bcc",bccAddresses,"attachments",attachments);
-        log().t(html);
-		Transport.send(msg);
+		@Override
+		public String getConnectInfo() {
+			return (CFG_TLS.value() ? "tls:" : "smtp:") + "//"+ (MString.isSet(CFG_MAIL_USER.value()) ? CFG_MAIL_USER.value() + "@" : "") + CFG_HOST.value() + ":" + CFG_PORT.value();
+		}
 		
-		// delete attachments
-        if (attachments != null)
-            for (MailAttachment attachment : attachments)
-            	if (attachment.isDeleteAfterSent()) 
-            		try {
-            			attachment.getFile().delete();
-            		} catch (Throwable t) {}
-
 	}
 
 }

@@ -17,11 +17,26 @@ package de.mhus.lib.core.mail;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 
+/**
+ * Facade to hide javax.mail packages. Using this interface do not need to
+ * add dependency to javax.mail. Use Transport interface to access mail package.
+ * 
+ * @author mikehummel
+ *
+ */
 @DefaultImplementation(DefaultSendMail.class)
 public interface MSendMail {
 
-	void sendPlainMail(String from, String[] to, String[] cc, String[] bcc, String subject, String content) throws Exception;
+	default void sendPlainMail(String from, String[] to, String[] cc, String[] bcc, String subject, String content) throws Exception {
+		sendMail(new PlainTextMail().setFrom(from).setTo(to).setCc(cc).setBcc(bcc).setSubject(subject).setContent(content));
+	}
 
-	void sendHtmlMail(String from, String[] to, String[] cc, String[] bcc, String subject, String html, MailAttachment[] attachments) throws Exception;
+	default void sendHtmlMail(String from, String[] to, String[] cc, String[] bcc, String subject, String html, MailAttachment[] attachments) throws Exception {
+		sendMail(new HtmlMail().setFrom(from).setTo(to).setCc(cc).setBcc(bcc).setSubject(subject).setHtml(html).setAttachments(attachments));
+	}
 
+	void sendMail(Mail mail) throws Exception;
+	
+	MailTransport getMailTransport() throws Exception;
+	
 }
