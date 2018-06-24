@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -685,4 +686,33 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		properties.clear();
 	}
    	
+	/**
+	 * Will remove all parameters starting with underscore and not two underscore and
+	 * remove one underscore from thoos with more underscores.
+	 * 
+	 * _test will be removed
+	 * __test will be _test
+	 * 
+	 * after update
+	 * 
+	 * @param in
+	 */
+	public static void updateInternal(Map<String,Object> in) {
+		in.keySet().removeIf(k -> isInternal(k));
+		for (String key : new LinkedList<>(in.keySet()))
+			if (key.startsWith("_"))
+				in.put(key.substring(1), in.remove(key));
+	}
+	
+	/**
+	 * Return true if key starts with underscore but not with two underscores.
+	 * 
+	 * @param key
+	 * @return true if actual internal
+	 */
+	public static boolean isInternal(String key) {
+		return key.startsWith("_") && !key.startsWith("__");
+ 	}
+	
+	
 }
