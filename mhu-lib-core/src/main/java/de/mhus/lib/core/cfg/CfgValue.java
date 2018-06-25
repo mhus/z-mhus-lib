@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.cfg;
 
+import java.util.function.Consumer;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
 
@@ -24,6 +26,7 @@ public abstract class CfgValue<T> {
 	private T def;
 	private T value;
 	private String owner;
+	private Consumer<T> updateAction;
 	
 	public CfgValue(Object owner, String path, T def) {
 		if (owner instanceof Class)
@@ -75,7 +78,8 @@ public abstract class CfgValue<T> {
 	}
 	
 	protected void onPostUpdate(T newValue) {
-		
+		if (updateAction != null)
+			updateAction.accept(newValue);
 	}
 
 	public boolean isOwner(Class<?> name) {
@@ -108,4 +112,14 @@ public abstract class CfgValue<T> {
 		return MSystem.equals(value(), in);
 	}
 	
+	/**
+	 * Set the onPostUpdate action. The action will be executed on every update.
+	 * @param consumer
+	 * @return the called object
+	 */
+	@SuppressWarnings("unchecked")
+	public <C extends CfgValue<T>> C updateAction(Consumer<T> consumer) {
+		this.updateAction = consumer;
+		return (C) this;
+	}
 }
