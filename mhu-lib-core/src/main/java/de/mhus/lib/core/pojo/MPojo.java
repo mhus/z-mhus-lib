@@ -104,128 +104,135 @@ public class MPojo {
 	@SuppressWarnings("unchecked")
 	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
-		
-		if (value == null)
-			to.addNull();
-		else
-		if (value instanceof Boolean)
-			to.add((boolean)value);
-		else
-		if (value instanceof Integer)
-			to.add((int)value);
-		else
-		if (value instanceof String)
-			to.add((String)value);
-		else
-		if (value instanceof Long)
-			to.add((Long)value);
-		else
-		if (value instanceof byte[])
-			to.add((byte[])value);
-		else
-		if (value instanceof Float)
-			to.add((Float)value);
-		else
-		if (value instanceof BigDecimal)
-			to.add((BigDecimal)value);
-		else
-		if (value instanceof JsonNode)
-			to.add((JsonNode)value);
-		else
-		if (value.getClass().isEnum()) {
-			to.add(((Enum<?>)value).ordinal());
-//			to.put(name + "_", ((Enum<?>)value).name());
-		} else
-		if (value instanceof Map) {
-			ObjectNode obj = to.objectNode();
-			to.add(obj);
-			for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
-				setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
-			}
-		} else
-		if (value instanceof Collection) {
-			ArrayNode array = to.arrayNode();
-			to.add(array);
-			for (Object o : ((Collection<Object>)value)) {
-				addJsonValue(array,o,factory,true,level+1);
-			}
-		} else {
-			if (deep) {
-				ObjectNode too = to.objectNode();
-				to.add(too);
-				pojoToJson(value, too, factory, level+1);
+		try {
+			if (value == null)
+				to.addNull();
+			else
+			if (value instanceof Boolean)
+				to.add((boolean)value);
+			else
+			if (value instanceof Integer)
+				to.add((int)value);
+			else
+			if (value instanceof String)
+				to.add((String)value);
+			else
+			if (value instanceof Long)
+				to.add((Long)value);
+			else
+			if (value instanceof byte[])
+				to.add((byte[])value);
+			else
+			if (value instanceof Float)
+				to.add((Float)value);
+			else
+			if (value instanceof BigDecimal)
+				to.add((BigDecimal)value);
+			else
+			if (value instanceof JsonNode)
+				to.add((JsonNode)value);
+			else
+			if (value.getClass().isEnum()) {
+				to.add(((Enum<?>)value).ordinal());
+	//			to.put(name + "_", ((Enum<?>)value).name());
+			} else
+			if (value instanceof Map) {
+				ObjectNode obj = to.objectNode();
+				to.add(obj);
+				for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
+					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
+				}
+			} else
+			if (value instanceof Collection) {
+				ArrayNode array = to.arrayNode();
+				to.add(array);
+				for (Object o : ((Collection<Object>)value)) {
+					addJsonValue(array,o,factory,true,level+1);
+				}
 			} else {
-				to.add(String.valueOf(value));
-			}
-		}		
+				if (deep) {
+					ObjectNode too = to.objectNode();
+					to.add(too);
+					pojoToJson(value, too, factory, level+1);
+				} else {
+					to.add(String.valueOf(value));
+				}
+			}		
+		} catch (Throwable t) {
+			log.t(t);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
-		if (value == null)
-			to.putNull(name);
-		else
-		if (value instanceof Boolean)
-			to.put(name, (boolean)value);
-		else
-		if (value instanceof Integer)
-			to.put(name, (int)value);
-		else
-		if (value instanceof String)
-			to.put(name, (String)value);
-		else
-		if (value instanceof Long)
-			to.put(name, (Long)value);
-		else
-		if (value instanceof byte[])
-			to.put(name, (byte[])value);
-		else
-		if (value instanceof Float)
-			to.put(name, (Float)value);
-		else
-		if (value instanceof Date) {
-			to.put(name, ((Date)value).getTime() );
-			to.put(name + "_", MDate.toIso8601((Date)value) );
-		} else
-		if (value instanceof BigDecimal)
-			to.put(name, (BigDecimal)value);
-		else
-		if (value instanceof JsonNode)
-			to.put(name, (JsonNode)value);
-		else
-		if (value.getClass().isEnum()) {
-			to.put(name, ((Enum<?>)value).ordinal());
-			to.put(name + "_", ((Enum<?>)value).name());
-		} else
-		if (value instanceof Map) {
-			ObjectNode obj = to.objectNode();
-			to.put(name, obj);
-			for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
-				setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
-			}
-		} else
-		if (value.getClass().isArray()) {
-			ArrayNode array = to.arrayNode();
-			to.put(name, array);
-			for (Object o : (Object[])value) {
-				addJsonValue(array,o,factory,true,level+1);
-			}
-		} else
-		if (value instanceof Collection) {
-			ArrayNode array = to.arrayNode();
-			to.put(name, array);
-			for (Object o : ((Collection<Object>)value)) {
-				addJsonValue(array,o,factory,true,level+1);
-			}
-		} else {
-			if (deep) {
-				ObjectNode too = to.objectNode();
-				to.put(name, too);
-				pojoToJson(value, too, factory, level+1);
+		try {
+			if (value == null)
+				to.putNull(name);
+			else
+			if (value instanceof Boolean)
+				to.put(name, (boolean)value);
+			else
+			if (value instanceof Integer)
+				to.put(name, (int)value);
+			else
+			if (value instanceof String)
+				to.put(name, (String)value);
+			else
+			if (value instanceof Long)
+				to.put(name, (Long)value);
+			else
+			if (value instanceof byte[])
+				to.put(name, (byte[])value);
+			else
+			if (value instanceof Float)
+				to.put(name, (Float)value);
+			else
+			if (value instanceof Date) {
+				to.put(name, ((Date)value).getTime() );
+				to.put(name + "_", MDate.toIso8601((Date)value) );
+			} else
+			if (value instanceof BigDecimal)
+				to.put(name, (BigDecimal)value);
+			else
+			if (value instanceof JsonNode)
+				to.put(name, (JsonNode)value);
+			else
+			if (value.getClass().isEnum()) {
+				to.put(name, ((Enum<?>)value).ordinal());
+				to.put(name + "_", ((Enum<?>)value).name());
+			} else
+			if (value instanceof Map) {
+				ObjectNode obj = to.objectNode();
+				to.put(name, obj);
+				for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
+					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
+				}
+			} else
+			if (value.getClass().isArray()) {
+				ArrayNode array = to.arrayNode();
+				to.put(name, array);
+				for (Object o : (Object[])value) {
+					addJsonValue(array,o,factory,true,level+1);
+				}
+			} else
+			if (value instanceof Collection) {
+				ArrayNode array = to.arrayNode();
+				to.put(name, array);
+				for (Object o : ((Collection<Object>)value)) {
+					addJsonValue(array,o,factory,true,level+1);
+				}
 			} else {
-				to.put(name, String.valueOf(value));
+				if (deep) {
+					ObjectNode too = to.objectNode();
+					to.put(name, too);
+					pojoToJson(value, too, factory, level+1);
+				} else {
+					to.put(name, String.valueOf(value));
+				}
 			}
+		} catch (Throwable t) {
+			log.t(t);
 		}
 	}
 
