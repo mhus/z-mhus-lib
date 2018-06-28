@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,8 +42,8 @@ import org.codehaus.jackson.node.ObjectNode;
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.json.TransformStrategy;
-import de.mhus.lib.core.pojo.PojoAttribute;
-import de.mhus.lib.core.pojo.PojoModel;
+import de.mhus.lib.core.lang.NullValue;
+import de.mhus.lib.errors.MaxDepthReached;
 
 public class MJson {
 	
@@ -158,8 +159,26 @@ public class MJson {
 		return getValue(node, (TransformHelper)null);
 	}
 	
+	public static void setValues(ObjectNode node, Map<?, ?> map) {
+		setValues(node, map, 0);
+	}
+	
+	private static void setValues(ObjectNode node, Map<?, ?> map, int level) {
+		if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+		level++;
+		if (map == null) return;
+		for (Map.Entry<?, ?> e : map.entrySet())
+			setValue(node, String.valueOf(e.getKey()), e.getValue(), level );
+	}
+	
 	public static void setValue(ObjectNode node, String name, Object value) {
-		if (value == null) {
+		setValue(node, name, value, 0);
+	}
+	
+	private static void setValue(ObjectNode node, String name, Object value, int level) {
+		if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+		level++;
+		if (value == null || value instanceof NullValue) {
 			node.putNull(name);
 			return;
 		}
@@ -199,8 +218,136 @@ public class MJson {
 			node.put(name, (JsonNode)value);
 			return;
 		}
+		if (value.getClass().isArray()) {
+			ArrayNode array = node.arrayNode();
+			node.put(name, array);
+			setValues(array, (Object[])value, level);
+			return;
+		}
+		if (value instanceof Collection<?>) {
+			ArrayNode array = node.arrayNode();
+			node.put(name, array);
+			setValues(array, (Collection<?>)value, level);
+			return;
+		}
+		if (value instanceof Map<?,?>) {
+			ObjectNode obj = node.objectNode();
+			node.put(name, obj);
+			setValues(obj, (Map<?,?>)value);
+			return;
+		}
 		node.put(name, value.toString());
 		
+	}
+	
+	public static void setValues(ArrayNode array, Object[] value) {
+		setValues(array, value, 0);
+	}
+	
+	private static void setValues(ArrayNode array, Object[] value, int level) {
+		if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+		level++;
+		for (Object obj : value) {
+			if (obj == null || obj instanceof NullValue) {
+				array.addNull();
+			} else
+			if (obj instanceof Boolean) {
+				array.add((Boolean)obj);
+			} else
+			if (obj instanceof Double) {
+				array.add((Double)obj);
+			} else
+			if (obj instanceof BigDecimal) {
+				array.add((BigDecimal)obj);
+			} else
+			if (obj instanceof Float) {
+				array.add((Float)obj);
+			} else
+			if (obj instanceof Integer) {
+				array.add((Integer)obj);
+			} else
+			if (obj instanceof Long) {
+				array.add((Long)obj);
+			} else
+			if (obj instanceof byte[]) {
+				array.add((byte[])obj);
+			} else
+			if (obj instanceof Date) {
+				array.add(((Date)obj).getTime());
+			} else
+			if (obj instanceof JsonNode) {
+				array.add((JsonNode)obj);
+			} else
+			if (obj.getClass().isArray()) {
+				ArrayNode array2 = array.addArray();
+				setValues(array2, (Object[])obj, level);
+			} else
+			if (obj instanceof Collection<?>) {
+				ArrayNode array2 = array.addArray();
+				setValues(array2, (Collection<?>)obj, level);
+			} else
+			if (obj instanceof Map<?,?>) {
+				ObjectNode objNode = array.addObject();
+				setValues(objNode, (Map<?,?>)obj, level );
+			} else {
+				// TODO load via pojo?
+			}
+		}
+	}
+
+	public static void setValues(ArrayNode array, Collection<?> value) {
+		setValues(array, value, 0);
+	}
+	
+	private static void setValues(ArrayNode array, Collection<?> value, int level) {
+		if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+		level++;
+		for (Object obj : value) {
+			if (obj == null || obj instanceof NullValue) {
+				array.addNull();
+			} else
+			if (obj instanceof Boolean) {
+				array.add((Boolean)obj);
+			} else
+			if (obj instanceof Double) {
+				array.add((Double)obj);
+			} else
+			if (obj instanceof BigDecimal) {
+				array.add((BigDecimal)obj);
+			} else
+			if (obj instanceof Float) {
+				array.add((Float)obj);
+			} else
+			if (obj instanceof Integer) {
+				array.add((Integer)obj);
+			} else
+			if (obj instanceof Long) {
+				array.add((Long)obj);
+			} else
+			if (obj instanceof byte[]) {
+				array.add((byte[])obj);
+			} else
+			if (obj instanceof Date) {
+				array.add(((Date)obj).getTime());
+			} else
+			if (obj instanceof JsonNode) {
+				array.add((JsonNode)obj);
+			} else
+			if (obj.getClass().isArray()) {
+				ArrayNode array2 = array.addArray();
+				setValues(array2, (Object[])obj, level);
+			} else
+			if (obj instanceof Collection<?>) {
+				ArrayNode array2 = array.addArray();
+				setValues(array2, (Collection<?>)obj, level);
+			} else
+			if (obj instanceof Map<?,?>) {
+				ObjectNode objNode = array.addObject();
+				setValues(objNode, (Map<?,?>)obj, level );
+			} else {
+				// TODO load via pojo?
+			}
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -284,18 +431,6 @@ public class MJson {
 //		helper.postToJson(from, to);
 //	}
 		
-	@SuppressWarnings("unchecked")
-	public static void propertiesToPojo(Map<String,String> from, Object to, TransformHelper helper) throws IOException {
-		PojoModel model = helper.createPojoModel(from);
-		for (PojoAttribute<Object> attr : model) {
-			String name = attr.getName();
-			String value = from.get(name);
-			if (value != null) {
-				attr.set(to, value);
-			}
-		}
-	}
-
 	/**
 	 * Transform a json structure into an object
 	 * @param from

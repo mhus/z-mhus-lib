@@ -40,6 +40,7 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
+import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.SoftHashMap;
@@ -655,6 +656,18 @@ public class MPojo {
 			cacheAttributeName.put(id,name);
 		}
 		return name;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void propertiesToPojo(Map<String,String> from, Object to, TransformHelper helper) throws IOException {
+		PojoModel model = helper.createPojoModel(from);
+		for (PojoAttribute<Object> attr : model) {
+			String name = attr.getName();
+			String value = from.get(name);
+			if (value != null) {
+				attr.set(to, value);
+			}
+		}
 	}
 
 }

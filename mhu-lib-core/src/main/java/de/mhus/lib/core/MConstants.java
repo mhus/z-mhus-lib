@@ -57,6 +57,8 @@ public class MConstants {
 	public static final String PROP_LOG_MAX_MESSAGE_SIZE = "log.max.message.size";
 
 	public static final String PROP_LOG_LEVEL = "log.level";
+
+	public static final int MAX_DEPTH_LEVEL = 20;
 	
 
 }
