@@ -849,7 +849,7 @@ public final class MCast {
 	}
 	
 	public static Object getDefaultPrimitive(String type) {
-		
+		if (type == null) return null;
 		if (type.endsWith("[]")) {
 			type = type.substring(0, type.length()-2);
 			if ("int".equals(type))

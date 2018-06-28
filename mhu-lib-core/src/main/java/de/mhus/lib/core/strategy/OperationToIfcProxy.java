@@ -97,7 +97,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 	}
 
 	private Object toObject(Object value, String type, ClassLoader cl) throws ClassNotFoundException, IOException {
-		if (value == null) MCast.getDefaultPrimitive(type);
+		if (value == null) return MCast.getDefaultPrimitive(type);
 		if (type != null && type.equals(SERIALISED)) {
 			return MCast.unserializeFromString(String.valueOf(value), cl);
 		}
