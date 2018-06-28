@@ -65,7 +65,7 @@ public class DefaultBase extends Base {
 				return ret;
 			
 		} catch (Exception e) {
-			MApi.dirtyLog(ifc,e);
+			MApi.dirtyLog("info: fallback to default",ifc,def,e);
 		}
 		
 		if (def == null) return null;

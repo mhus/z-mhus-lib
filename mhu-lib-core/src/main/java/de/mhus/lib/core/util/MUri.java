@@ -279,6 +279,17 @@ public abstract class MUri implements Serializable {
 		return out;
 	}
 	
+	public static String[] explodeArray(String in, char split) {
+		
+		if ( in == null || in.length()==0) return new String[0];
+		
+		String[] out = MString.split(in, String.valueOf(split));
+		for (int i = 0; i < out.length; i++)
+			out[i]=decode(out[i]);
+		
+		return out;
+	}
+	
 	/**
 	 * Transforms a list encoded map of attributes back.
 	 * 
