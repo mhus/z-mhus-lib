@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 
 public class FilterRequest {
@@ -66,6 +68,10 @@ public class FilterRequest {
 	public Set<String> getFacetKeys() {
 		if (facets == null) return new EmptySet<String>();
 		return facets.keySet();
+	}
+
+	public IProperties toProperties() {
+		return new MProperties(facets);
 	}
 
 }
