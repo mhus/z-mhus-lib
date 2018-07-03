@@ -16,11 +16,14 @@
 package de.mhus.lib.core.config;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
+import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
 
 public class PropertiesConfigFile extends PropertiesConfig {
@@ -30,15 +33,19 @@ public class PropertiesConfigFile extends PropertiesConfig {
 
 	public PropertiesConfigFile(File file) throws IOException {
 		if (file.exists()) {
-			FileInputStream fis = new FileInputStream(file);
-			properties.load(fis);
-			fis.close();
+			Reader reader = MFile.openFileReader(file, MString.CHARSET_UTF_8);
+			properties.load(reader);
+			reader.close();
 		}
 		this.file = file;
 	}
 	
 	public PropertiesConfigFile(InputStream is) throws IOException {
-		properties.load(is);
+		this(new InputStreamReader(is, MString.CHARSET_UTF_8));
+	}
+	
+	public PropertiesConfigFile(Reader reader) throws IOException {
+		properties.load(reader);
 		this.file = null;
 	}
 	

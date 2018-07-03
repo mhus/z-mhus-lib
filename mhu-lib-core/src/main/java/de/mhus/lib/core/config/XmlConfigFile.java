@@ -16,12 +16,13 @@
 package de.mhus.lib.core.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.errors.MException;
 
@@ -33,13 +34,13 @@ public class XmlConfigFile extends XmlConfig {
 	public XmlConfigFile(File file) throws FileNotFoundException, Exception  {
 		super();
 		if (file.exists())
-			readConfig(new FileReader(file));
+			readConfig(new InputStreamReader(new FileInputStream(file),MString.CHARSET_UTF_8));
 		this.file = file;
 	}
 	
 	public XmlConfigFile(InputStream is) throws FileNotFoundException, Exception  {
 		super();
-			readConfig(new InputStreamReader(is));
+			readConfig(new InputStreamReader(is,MString.CHARSET_UTF_8));
 		this.file = null;
 	}
 	

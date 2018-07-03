@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
 
 public class JsonConfigFile extends JsonConfig {
@@ -34,7 +35,7 @@ public class JsonConfigFile extends JsonConfig {
 	}
 	
 	public JsonConfigFile(InputStream is) throws Exception {
-		super(MFile.readFile(new InputStreamReader(is))); // read utf
+		super(MFile.readFile(new InputStreamReader(is,MString.CHARSET_UTF_8))); // read utf
 		this.file = null;
 	}
 	

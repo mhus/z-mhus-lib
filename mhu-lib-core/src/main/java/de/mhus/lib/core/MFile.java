@@ -21,6 +21,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -30,6 +31,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -777,6 +779,12 @@ public class MFile {
 
 	public static FileChecker getFileCheck(String type) {
 		return fileChecker.get(type);
+	}
+
+	public static Reader openFileReader(File file, String encoding) throws FileNotFoundException, UnsupportedEncodingException {
+		FileInputStream fis = new FileInputStream(file);
+		InputStreamReader fr = new InputStreamReader(fis, encoding);
+		return fr;
 	}
 	
 }
