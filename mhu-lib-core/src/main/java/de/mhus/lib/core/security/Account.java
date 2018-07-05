@@ -26,7 +26,7 @@ public interface Account extends Rightful {
 	String ACT_UPDATE = "update";
 	String ACT_MODIFY = "modify";
 	String ACT_DELETE = "delete";
-
+	
 	boolean isValid();
 
 	boolean validatePassword(String password);

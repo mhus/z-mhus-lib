@@ -717,6 +717,17 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	public static boolean isFunctional(String key) {
 		return key.startsWith("_") && !key.startsWith("__");
  	}
+
+	public static IProperties toIProperties(IReadProperties properties) {
+		if (properties == null) return null;
+		if (properties instanceof IProperties) return (IProperties)properties;
+		return new MProperties(properties);
+	}
 	
+	public static MProperties toMProperties(IReadProperties properties) {
+		if (properties == null) return null;
+		if (properties instanceof MProperties) return (MProperties)properties;
+		return new MProperties(properties);
+	}
 	
 }

@@ -96,20 +96,28 @@ public class StringCompiler implements Parser {
 	public class EnvironmentPart implements StringPart {
 
 		private String name;
+		private String def;
 
 		public EnvironmentPart(String part) {
 			name = MString.afterIndex(part,'.');
+			int p = name.indexOf(':');
+			if (p >= 0) {
+				def = name.substring(p+1);
+				name = name.substring(0, p);
+			}
 		}
 
 		@Override
 		public void execute(StringBuilder out, Map<String, Object> attributes) {
-			out.append(System.getenv(name));
+			String v = System.getenv(name);
+			if (v == null) v = def;
+			out.append(v);
 		}
 		
 		@Override
 		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
-			out.append(getClass().getCanonicalName()).append(" ").append(name);
+			out.append(getClass().getCanonicalName()).append(" ").append(name).append(':').append(def).append('\n');
 		}
 
 	}
@@ -117,20 +125,26 @@ public class StringCompiler implements Parser {
 	public class SystemPart implements StringPart {
 
 		private String name;
+		private String def;
 
 		public SystemPart(String part) {
 			name = MString.afterIndex(part,'.');
+			int p = name.indexOf(':');
+			if (p >= 0) {
+				def = name.substring(p+1);
+				name = name.substring(0, p);
+			}
 		}
 
 		@Override
 		public void execute(StringBuilder out, Map<String, Object> attributes) {
-			out.append(System.getProperty(name));
+			out.append(System.getProperty(name,def));
 		}
 		
 		@Override
 		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
-			out.append(getClass().getCanonicalName()).append(" ").append(name).append("\n");
+			out.append(getClass().getCanonicalName()).append(" ").append(name).append(':').append(def).append("\n");
 		}
 
 	}
@@ -138,20 +152,26 @@ public class StringCompiler implements Parser {
 	public class AttributePart implements StringPart {
 
 		private String name;
+		private String def;
 
 		public AttributePart(String part) {
 			name = part;
+			int p = name.indexOf(':');
+			if (p >= 0) {
+				def = name.substring(p+1);
+				name = name.substring(0, p);
+			}
 		}
 
 		@Override
 		public void execute(StringBuilder out, Map<String, Object> attributes) {
-			if (attributes != null) out.append(attributes.get(name));
+			if (attributes != null) out.append(attributes.getOrDefault(name, def));
 		}
 		
 		@Override
 		public void dump(int level, StringBuilder out) {
 			MString.appendRepeating(level, ' ', out);
-			out.append(getClass().getCanonicalName()).append(" ").append(name).append("\n");
+			out.append(getClass().getCanonicalName()).append(" ").append(name).append(':').append(def).append("\n");
 		}
 		
 	}

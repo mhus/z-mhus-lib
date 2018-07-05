@@ -42,6 +42,12 @@ import de.mhus.lib.errors.MException;
 public class XmlConfig extends IConfig {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Use this special key to access the tag value (without inner tags).
+	 * This is a special value it will not be listed for keys and can not be removed.
+	 */
+	public static final String VALUE = "";
+	
 	// private static Logger log = Logger.getLogger(XmlConfig.class);
 	protected Element element;
 	protected boolean changed = false;
@@ -149,6 +155,10 @@ public class XmlConfig extends IConfig {
 	@Override
 	public String getProperty(String key) {
 		if (element==null || key==null) return null;
+		if (VALUE.equals(key)) {
+			// special key
+			return MXml.getValue(element, false);
+		}
 		String out = element.getAttribute(key);
 		if ( out == null || out.length() == 0 ) return null;
 		return out;

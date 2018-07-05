@@ -60,5 +60,21 @@ public class MConstants {
 
 	public static final int MAX_DEPTH_LEVEL = 20;
 	
+	public static final String ADDR_EMAIL = "email";
+	public static final String ADDR_SALUTATION = "salutation";
+	public static final String ADDR_NAME_TITLE = "nameTitle";
+	public static final String ADDR_FIRST_NAME = "firstName";
+	public static final String ADDR_NAME_MID = "nameMid";
+	public static final String ADDR_LAST_NAME = "lastName";
+	public static final String ADDR_NAME_AFFIX = "nameAffix";
+	public static final String ADDR_TOWN = "town";
+	public static final String ADDR_ZIP = "zip";
+	public static final String ADDR_STREET = "street";
+	public static final String ADDR_HOUSE_NUMBER = "houseNumber";
+	public static final String ADDR_PHONE = "phone";
+	public static final String ADDR_MOBILE = "mobile";
+	public static final String ADDR_COUNTRY = "country";
+
+	public static enum ADDR_SCOPE {PRIVATE,WORK}
 
 }

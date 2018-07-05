@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.util.EmptyList;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 
 /**
@@ -1841,4 +1844,17 @@ public class MString {
     	return error;
 	}
 
+	public static String compileAndExecute(String template, IProperties attributes) throws MException {
+		return StringCompiler.compile(template).execute(attributes);
+	}
+
+	public static String compileAndExecute(String template, IProperties attributes, String def) {
+		try {
+			return StringCompiler.compile(template).execute(attributes);
+		} catch (MException e) {
+			MLogUtil.log().t("MString.compileAndExecute",template,e);
+		}
+		return def;
+	}
+	
 }

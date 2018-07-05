@@ -17,16 +17,19 @@ package de.mhus.lib.core.config;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotFoundException;
 
 public class MConfig implements IBase {
 
@@ -256,6 +259,22 @@ public class MConfig implements IBase {
 				out.add(value);
 		}
 		return out.toArray(new String[out.size()]);
+	}
+
+	public static IConfig createFromResource(Class<?> owner, String fileName) throws MException {
+		try {
+			URL url = MSystem.locateResource(owner, fileName);
+			
+			if (fileName.endsWith(".xml"))
+				return new XmlConfigFile(url.openStream());
+			if (fileName.endsWith(".properties"))
+				return new PropertiesConfigFile(url.openStream());
+			if (fileName.endsWith(".json"))
+				return new JsonConfigFile(url.openStream());
+		} catch (Throwable t) {
+			throw new MException(fileName,t);
+		}
+		throw new NotFoundException(fileName);
 	}
 
 }

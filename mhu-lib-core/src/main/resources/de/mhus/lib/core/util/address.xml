@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<address>
+
+	<locale language="de">
+		<singular>
+			<mr>Herr</mr>
+			<mrs>Frau</mrs>
+			<company>Firma</company>
+			<agency>Behörde</agency>
+			<couple>Eheleute</couple>
+		</singular>
+		<plural>
+			<mr>Herren</mr>
+			<mrs>Frauen</mrs>
+			<company>Firmen</company>
+			<agency>Behörden</agency>
+			<couple>Eheleute</couple>
+		</plural>
+		<assemble>
+			<mr>Herr $title:$ $firstName:$ $nameMid:$ $lastName:$ $nameAffix:$</mr>
+			<mrs>Frau $title:$ $firstName:$ $nameMid:$ $lastName:$ $nameAffix:$</mrs>
+			<couple>Eheleute $lastName:$</couple>
+			<company>$lastName$ $firstName:$</company>
+			<agency>$lastName$ $firstName:$</agency>
+			<other>$firstName$ $lastName:$</other>
+		</assemble>
+		<mapping>
+			<mrs>Fräulein</mrs>
+			<mrs>Frl.</mrs>
+			<company>GmbH</company>
+		</mapping>
+		<letter>
+			<!-- https://www.studis-online.de/Studieren/Richtig_schreiben/anrede_und_gruss.php -->
+			<other>Sehr geehrte Damen und Herren,</other>
+			<mr>Sehr geehrter Herr $name:$,</mr>
+			<mrs>Sehr geehrte Frau $name:$,</mrs>
+			<company>Sehr geehrte Damen und Herren,</company>
+			<agency>Sehr geehrte Damen und Herren,</agency>
+			<couple>Sehr geehrte Damen und Herren,</couple>
+			<close>Mit freundlichen Grüßen</close>
+		</letter>
+	</locale>
+	
+	<locale language="en">
+		<singular>
+			<mr>Mr</mr>
+			<mrs>Mrs</mrs>
+			<company>Company</company>
+			<agency>Agency</agency>
+			<couple>Couple</couple>
+		</singular>
+		<plural>
+			<mr>Mr</mr>
+			<mrs>Mrs</mrs>
+			<company>Companies</company>
+			<agency>Agencies</agency>
+			<couple>Couples</couple>
+		</plural>
+		<assemble>
+			<mr>Mr. $title:$ $firstName:$ $nameMid:$ $lastName:$ $nameAffix:$</mr>
+			<mrs>Mrs. $title:$ $firstName:$ $nameMid:$ $lastName:$ $nameAffix:$</mrs>
+			<couple>Mr. and Mrs. $lastName:$</couple>
+			<company>$lastName$ $firstName:$</company>
+			<agency>$lastName$ $firstName:$</agency>
+			<other>$firstName$ $lastName:$</other>
+		</assemble>
+		<mapping>
+			<mrs>Madam</mrs>
+			<mr>Sir</mr>
+			<mr>Gentlemen</mr>
+			<company>Ltd</company>
+		</mapping>
+		<letter>
+			<!-- https://www.thebalancecareers.com/business-letter-salutation-examples-2059704 -->
+			<other>Dear Sir or Madam</other>
+			<mr>Dear Mr. $lastName:$</mr>
+			<mrs>Dear Mrs. $lastName:$</mrs>
+			<company>Dear Sir or Madam</company>
+			<agency>Dear Sir or Madam</agency>
+			<couple>Dear Mr. and Mrs. $lastName:$</couple>
+			<close>Best regards</close>
+		</letter>
+	</locale>
+	
+</address>
