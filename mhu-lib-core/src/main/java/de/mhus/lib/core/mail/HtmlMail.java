@@ -67,14 +67,14 @@ public class HtmlMail extends MLog implements Mail {
 			toAddresses[i] = new InternetAddress(to[i]);
 		
 		InternetAddress[] ccAddresses = null;
-		if (cc != null && cc.length > 0) {
+		if (cc != null && cc.length > 0 && cc[0] != null) {
 			ccAddresses = new InternetAddress[cc.length];
 			for (int i = 0; i < cc.length; i++)
 				ccAddresses[i] = new InternetAddress(cc[i]);
 		}
 
 		InternetAddress[] bccAddresses = null;
-		if (bcc != null && bcc.length > 0) {
+		if (bcc != null && bcc.length > 0 && bcc[0] != null) {
 			bccAddresses = new InternetAddress[bcc.length];
 			for (int i = 0; i < bcc.length; i++)
 				bccAddresses[i] = new InternetAddress(bcc[i]);
