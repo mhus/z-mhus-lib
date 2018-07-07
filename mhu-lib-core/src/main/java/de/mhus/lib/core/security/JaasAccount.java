@@ -37,24 +37,7 @@ public class JaasAccount implements Account {
 	public JaasAccount(String realm, Subject subject) {
 		this.realm = realm;
 		this.subject = subject;
-		
-		{  // find user name
-			groups = new HashSet<>();
-			attr = new MProperties();
-			int cnt = 0;
-			for (Principal principal : subject.getPrincipals()) {
-				switch (principal.getClass().getSimpleName()) {
-				case "UserPrincipal":
-					userName = principal.getName();
-					break;
-				case "RolePrincipal":
-					groups.add(principal.getName());
-					break;
-				}
-				attr.put(principal.getClass().getSimpleName() + "." + cnt, principal.getName());
-				cnt++;
-			}
-		}
+		reload();
 	}
 
 	@Override
@@ -111,6 +94,28 @@ public class JaasAccount implements Account {
 	@Override
 	public String[] getGroups() throws NotSupportedException {
 		return groups.toArray(new String[groups.size()]);
+	}
+
+	@Override
+	public boolean reload() {
+		{  // find user name
+			groups = new HashSet<>();
+			attr = new MProperties();
+			int cnt = 0;
+			for (Principal principal : subject.getPrincipals()) {
+				switch (principal.getClass().getSimpleName()) {
+				case "UserPrincipal":
+					userName = principal.getName();
+					break;
+				case "RolePrincipal":
+					groups.add(principal.getName());
+					break;
+				}
+				attr.put(principal.getClass().getSimpleName() + "." + cnt, principal.getName());
+				cnt++;
+			}
+		}
+		return true;
 	}
 
 }

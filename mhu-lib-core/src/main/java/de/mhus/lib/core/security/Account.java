@@ -60,4 +60,9 @@ public interface Account extends Rightful {
 	 */
 	 String[] getGroups() throws NotSupportedException;
 	
+	 /**
+	  * Reload the account data
+	 * @return true if the reload was possible
+	  */
+	 public boolean reload();
 }
