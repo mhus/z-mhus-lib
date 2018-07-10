@@ -15,9 +15,11 @@
  */
 package de.mhus.lib.adb.query;
 
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -431,21 +433,68 @@ public class Db {
 		if (MString.isEmpty(search)) return query;
 		if (helper == null) helper = DEFAULT_HELPER;
 		String[] parts = search.split(",");
+		QueryCreate<T> cont = new QueryCreate<>(query, helper);
 		for (String part : parts) {
 			if (MString.isSet(part))
-				extendObjectQueryFromParameter(query, part, helper);
+				extendObjectQueryFromParameter(cont, part);
 		}
 		return query;
 	}
 
+	// helper container to extend queries using fifo
+	private static class QueryCreate<T> {
+
+		private AQuery<T> query;
+		private SearchHelper helper;
+		private LinkedList<APart> queue = null;
+		private APart current = null;
+
+		public QueryCreate(AQuery<T> query, SearchHelper helper) {
+			this.query = query;
+			this.helper = helper;
+		}
+
+		public void add(APart pa) {
+			if (current == null)
+				query.and(pa);
+		}
+		
+		public void addOr() {
+			APart next = Db.or();
+			current = next;
+			if (queue == null) queue = new LinkedList<>();
+			queue.add(next);
+		}
+		
+		public void addAnd() {
+			APart next = Db.and();
+			current = next;
+			if (queue == null) queue = new LinkedList<>();
+			queue.add(next);
+		}
+		
+		public void reduce() {
+			if (queue == null || queue.size() == 0) {
+				MLogUtil.log().d(Db.class,"closing bracked without open bracked");
+				current = null;
+				return;
+			}
+			queue.removeLast();
+			if (queue.size() == 0)
+				current = null;
+			else
+				current = queue.getLast();
+		}
+		
+	}
+	
 	/**
 	 * <p>extendObjectQueryFromParameter.</p>
 	 *
 	 * @param query a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @param part a {@link java.lang.String} object.
-	 * @param helper a {@link de.mhus.lib.adb.query.SearchHelper} object.
 	 */
-	public static void extendObjectQueryFromParameter(AQuery<?> query, String part, SearchHelper helper) {
+	private static void extendObjectQueryFromParameter(QueryCreate<?> cont, String part) {
 		if (part.equals("_sort")) {
 			// implemented sort option
 			int p = part.indexOf(' ');
@@ -454,7 +503,19 @@ public class Db {
 				order = part.substring(p+1).trim().toLowerCase();
 				part = part.substring(0,p);
 			}
-			query.order(new AOrder(query.getType(), part, "asc".equals(order)) );
+			cont.query.order(new AOrder(cont.query.getType(), part, "asc".equals(order)) );
+			return;
+		}
+		if (part.equals("|(") || part.equals("or(")) {
+			cont.addOr();
+			return;
+		}
+		if (part.equals("&(") || part.equals("and(")) {
+			cont.addAnd();
+			return;
+		}
+		if (part.equals(")")) {
+			cont.reduce();
 			return;
 		}
 		
@@ -462,29 +523,30 @@ public class Db {
 		String key = null;
 		String value = null;
 		if (p < 0) {
-			key = helper.findKeyForValue(query, part);
+			key = cont.helper.findKeyForValue(cont.query, part);
 			value = part;
 		} else {
 			key = part.substring(0,p);
 			value = part.substring(p+1);
 		}
-		key = helper.transformKey(query, key);
+		key = cont.helper.transformKey(cont.query, key);
 		if (key == null) return; // ignore
-		value = helper.transformValue(query, key, value);
+		value = cont.helper.transformValue(cont.query, key, value);
 		
 		boolean like = false;
-		if (helper.isLikeAllowed(query,key)) {
+		if (cont.helper.isLikeAllowed(cont.query,key)) {
 			if (value.startsWith("*") || value.endsWith("*")) {
 				value = transformToLikeLike(value);
 				like = true;
 			}
 		}
 		
+		APart pa = null;
 		if (like)
-			query.like(key, value);
+			pa = cont.helper.createLike(key, value);
 		else
-			helper.extendQuery(query, key, value);
-		
+			pa = cont.helper.createEq(key, value);
+		cont.add(pa);
 	}
 
 	/**

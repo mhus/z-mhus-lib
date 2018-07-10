@@ -408,4 +408,34 @@ public class MCollection {
 			consumer.accept(array[i]);
 	}
 
+	public static boolean isEmpty(Collection<?> col) {
+		return col == null || col.size() == 0;
+	}
+	
+	public static boolean isEmpty(Map<?,?> map) {
+		return map == null || map.size() == 0;
+	}
+	
+	public static boolean isSet(Collection<?> col) {
+		return !isEmpty(col);
+	}
+	
+	public static boolean isSet(Map<?,?> map) {
+		return !isEmpty(map);
+	}
+	
+	public static boolean isEmpty(Object[] array) {
+		return array == null || array.length == 0 || isAllNull(array);
+	}
+
+	public static boolean isSet(Object[] array) {
+		return !isEmpty(array);
+	}
+
+	public static boolean isAllNull(Object[] array) {
+		for (Object o : array)
+			if (o != null) return false;
+		return true;
+	}
+	
 }

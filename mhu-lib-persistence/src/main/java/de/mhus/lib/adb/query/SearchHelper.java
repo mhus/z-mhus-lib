@@ -43,8 +43,12 @@ public class SearchHelper {
 		return true;
 	}
 
-	public void extendQuery(AQuery<?> query, String key, String value) {
-		query.eq(key, value);
+	public APart createEq(String key, String value) {
+		return Db.eq(key, value);
+	}
+
+	public APart createLike(String key, String value) {
+		return Db.like(Db.attr(key), Db.value(value));
 	}
 
 }
