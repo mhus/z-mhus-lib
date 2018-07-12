@@ -17,12 +17,12 @@ public abstract class AbstractStringPropertyReplacer {
 			out.append(in.substring(0, p));
 			int p2 = in.indexOf('}',p);
 			if (p2 < 0 ) break;
-			String key = in.substring(p+2,p);
+			String key = in.substring(p+2,p2);
 			String val = findValueFor(key);
 			if (val != null)
 				out.append(val);
 			// reduce 'in'
-			in = in.substring(p+1);
+			in = in.substring(p2+1);
 		}
 		
 		if (out != null) {
