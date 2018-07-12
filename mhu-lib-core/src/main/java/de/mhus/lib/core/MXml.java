@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -187,7 +188,7 @@ public class MXml {
 
 	/**
 	 * Returns the first found element by path. Available search definitions are slash and 
-	 * bracked, e.g. "/root/somenode/number[3]/name"
+	 * brackets, e.g. "/root/somenode/number[3]/name" or "/root/somenode/filter@key=value/name"
   	 *
 	 * @param root
 	 * @param path
@@ -258,6 +259,94 @@ public class MXml {
 		return root;
 	}
 
+	/**
+	 * Returns the first found element by path. Available search definitions are slash and 
+	 * brackets, e.g. "/root/somenode/number[3]/name" or "/root/somenode/filter@key=value/name"
+  	 * Add an amp before a node to collect all the nodes between too, e.g. "/root/somenode/&filter@key=value/name"
+  	 * 
+	 * @param root Start element
+	 * @param path Path to go
+	 * @param list Result list (findings will be added)
+	 */
+	public static void getElementsByPath(Element root, String path, List<Element> list) {
+		
+		if (root == null || path == null) return;
+		
+		if (path.startsWith("/")) {
+			while (root.getParentNode() != null && root.getParentNode() instanceof Element)
+				root = (Element) root.getParentNode();
+			path = path.substring(1);
+		}
+
+		// next part
+		int p = path.indexOf('/');
+		String part = null;
+		if (p < 0) {
+			part = path;
+			path = null;
+		} else {
+			part = path.substring(0, p);
+			path = path.substring(p+1);
+		}
+		
+		boolean remember = false;
+		if (part.startsWith("&")) {
+			remember = true;
+			part = part.substring(1);
+		}
+		
+		int index = -1;
+		String key = null;
+		String value = null;
+
+		int pos = part.indexOf('@');
+		if (pos >= 0) {
+			String kv = part.substring(pos+1);
+			key = MString.beforeIndex(kv, '=');
+			value = MString.afterIndex(kv, '=');
+			part = part.substring(0, pos);
+		}
+		
+		pos = part.indexOf('[');
+		if (pos >= 0) {
+
+			int pos2 = part.indexOf(']', pos);
+
+			try {
+				index = Integer.parseInt(part.substring(pos + 1, pos2));
+			} catch (NumberFormatException nfe) {
+				return;
+			}
+			part = part.substring(0, pos);
+
+		}
+
+		NodeList locals = getLocalElements(root, part);
+		if (index >= 0) {
+			Element next = (Element)locals.item(index);
+			if (path == null)
+				list.add(next);
+			else {
+				if (remember)
+					list.add(next);
+				getElementsByPath(next, path, list);
+			}
+		} else {
+			for (int j = 0; j < locals.getLength(); j++) {
+				Element next = (Element)locals.item(j);
+				if (key == null || value == null || next.getAttribute(key).equals(value)) {
+					if (path == null)
+						list.add(next);
+					else {
+						if (remember)
+							list.add(next);
+						getElementsByPath(next, path, list);
+					}
+				}
+			}
+		}
+	}
+	
 	@SuppressWarnings("serial")
 	private static class MyNodeList extends Vector<Node> implements NodeList {
 
