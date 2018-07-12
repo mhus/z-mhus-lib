@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.adb.query;
 
+import javax.transaction.NotSupportedException;
+
 import de.mhus.lib.core.parser.AttributeMap;
 
 public class ACompare extends APart {
@@ -48,5 +50,10 @@ public class ACompare extends APart {
 	public AAttribute getRight() {
 		return right;
 	};
+
+	@Override
+	public void append(APart pa) throws NotSupportedException {
+		throw new NotSupportedException();
+	}
 
 }

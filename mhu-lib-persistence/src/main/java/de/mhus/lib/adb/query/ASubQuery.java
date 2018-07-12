@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.adb.query;
 
+import javax.transaction.NotSupportedException;
+
 import de.mhus.lib.core.parser.AttributeMap;
 
 public class ASubQuery extends APart {
@@ -47,6 +49,11 @@ public class ASubQuery extends APart {
 
 	public AQuery<?> getSubQuery() {
 		return subQuery;
+	}
+
+	@Override
+	public void append(APart pa) throws NotSupportedException {
+		throw new NotSupportedException();
 	}
 
 }

@@ -15,6 +15,10 @@
  */
 package de.mhus.lib.adb.query;
 
+import javax.transaction.NotSupportedException;
+
 public abstract class APart extends AOperation {
+
+	public abstract void append(APart pa) throws NotSupportedException;
 
 }

@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.adb.query;
 
+import javax.transaction.NotSupportedException;
+
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -45,6 +47,11 @@ public class ALiteralList extends APart {
 
 	public APart[] getOperations() {
 		return operations;
+	}
+
+	@Override
+	public void append(APart pa) throws NotSupportedException {
+		throw new NotSupportedException();
 	}
 
 }

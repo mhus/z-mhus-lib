@@ -18,6 +18,8 @@ package de.mhus.lib.adb.query;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import javax.transaction.NotSupportedException;
+
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
@@ -457,19 +459,40 @@ public class Db {
 		public void add(APart pa) {
 			if (current == null)
 				query.and(pa);
+			else
+				try {
+					current.append(pa);
+				} catch (NotSupportedException e) {
+				}
 		}
 		
 		public void addOr() {
 			APart next = Db.or();
 			current = next;
-			if (queue == null) queue = new LinkedList<>();
+			if (queue == null) {
+				queue = new LinkedList<>();
+				query.append(next);
+			} else {
+				try {
+					queue.getLast().append(next);
+				} catch (NotSupportedException e) {
+				}
+			}
 			queue.add(next);
 		}
 		
 		public void addAnd() {
 			APart next = Db.and();
 			current = next;
-			if (queue == null) queue = new LinkedList<>();
+			if (queue == null) {
+				queue = new LinkedList<>();
+				query.append(next);
+			} else {
+				try {
+					queue.getLast().append(next);
+				} catch (NotSupportedException e) {
+				}
+			}
 			queue.add(next);
 		}
 		

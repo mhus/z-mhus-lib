@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.adb.query;
 
+import javax.transaction.NotSupportedException;
+
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -51,6 +53,11 @@ public class ANull extends APart {
 
 	public boolean isIs() {
 		return is;
+	}
+
+	@Override
+	public void append(APart pa) throws NotSupportedException {
+		throw new NotSupportedException();
 	}
 
 }

@@ -651,6 +651,10 @@ public class AQuery<T> extends APrint {
 	public List<AOperation> getOperations() {
 		return operations;
 	}
+	
+	public void append(APart part) {
+		operations.add(part);
+	}
 
 //	@SuppressWarnings("unchecked")
 //	private synchronized void initRecorder() {
