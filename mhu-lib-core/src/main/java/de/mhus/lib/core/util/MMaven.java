@@ -2,6 +2,7 @@ package de.mhus.lib.core.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,9 +21,11 @@ import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.io.http.MHttpClientBuilder;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.parser.AbstractStringPropertyReplacer;
+import de.mhus.lib.errors.UsageException;
 
 public class MMaven {
-	
+
+
 	private static CfgString CFG_MAVEN_LOCAL_REPO = new CfgString(MMaven.class, "repositoryLocaltion", null);
 	private static String repositoryLocation;
 	private static Log log = Log.getLog(MMaven.class);
@@ -43,11 +46,10 @@ public class MMaven {
 	
 	
 	// https://www.codenotfound.com/maven-change-location-local-repository.html
-	public static File locateArtifact(String groupId, String artifactId, String version, String type) {
+	public static File locateArtifact(Artifact artifact) {
 		getLocalRepositoryLocation();
-		if(type == null) type = "jar";
 		
-		String artifactLocation = groupId.replace('.', '/') + '/' + artifactId + '/' + version + '/' + artifactId + '-' + version + '.' + type;
+		String artifactLocation = artifact.toLocation();
 		
 		return new File(repositoryLocation + '/' + artifactLocation);
 	}
@@ -115,13 +117,10 @@ public class MMaven {
 	
 	/**
 	 * Downloading an artifact from repositories. This will not implement the full specification.
-	 * @param groupId
-	 * @param artifactId
-	 * @param version
-	 * @param type
+	 * @param artifact 
 	 * @return true if download was successful
 	 */
-	public static boolean downloadArtefact(String groupId, String artifactId, String version, String type) {
+	public static boolean downloadArtefact(Artifact artifact) {
 		// get mirrors
 		List<Element> mirrors = getConfigElements("mirrors/mirror");
 		// get Proxies
@@ -137,7 +136,7 @@ public class MMaven {
 			log.e(t);
 		}
 
-		boolean isRelease = version.indexOf("SNAPSHOT") < 0;
+		boolean isRelease = artifact.isRelease();
 		
 		// check for each repo
 		for (Element repo : repos) {
@@ -189,7 +188,7 @@ public class MMaven {
 				}
 			}
 
-			log.t("try download artifact:",groupId,artifactId,version,type,"source:",id,useProxyId,useMirrorId);
+			log.t("try download artifact:",artifact,"source:",id,useProxyId,useMirrorId);
 			
 			try {
 				MHttpClientBuilder client = new MHttpClientBuilder();
@@ -199,30 +198,34 @@ public class MMaven {
 				} else
 					client.setUseSystemProperties(true);
 
-				String download = url + '/' + groupId.replace('.', '/') + '/' + artifactId + '/' + version + artifactId + '-' + version + '.' + type;
+				String download = url + '/' + artifact.toLocation();
 				HttpGet action = new HttpGet(download);
 				HttpResponse response = client.execute(action);
 				
 				if (response.getStatusLine().getStatusCode() == 200) {
-					log.d("download artifact:",groupId,artifactId,version,type,"source:",id,useProxyId,useMirrorId);
+					log.d("download artifact:",artifact,"source:",id,useProxyId,useMirrorId);
 					InputStream is = response.getEntity().getContent();
-					File target = locateArtifact(groupId, artifactId, version, type);
+					File target = locateArtifact(artifact);
+					if (!target.getParentFile().exists())
+						if (!target.getParentFile().mkdirs())
+							throw new IOException("can't create directory: " + target);
 					FileOutputStream os = new FileOutputStream(target);
 					MFile.copyFile(is, os);
 					os.close();
 					is.close();
 				
-					if (!type.equals("pom")) {
+					if (!artifact.getType().equals("pom")) {
 						// download pom also
-						download = url + '/' + groupId.replace('.', '/') + '/' + artifactId + '/' + version + artifactId + '-' + version + ".pom";
+						Artifact pomArtifact = artifact.createPomArtifact();
+						download = url + '/' + pomArtifact.toLocation();
 						
 						action = new HttpGet(download);
 						response = client.execute(action);
 						
 						if (response.getStatusLine().getStatusCode() == 200) {
-							log.t("download pom:",groupId,artifactId,version,"pom","source:",id,useProxyId,useMirrorId);
+							log.t("download pom:",artifact,"pom","source:",id,useProxyId,useMirrorId);
 							is = response.getEntity().getContent();
-							target = locateArtifact(groupId, artifactId, version, "pom");
+							target = locateArtifact(pomArtifact);
 							os = new FileOutputStream(target);
 							MFile.copyFile(is, os);
 							os.close();
@@ -245,5 +248,64 @@ public class MMaven {
 		
 	}
 
-	
+	public static class Artifact {
+		private String groupId;
+		private String artifactId;
+		private String version;
+		private String type;
+		
+		private Artifact(String groupId, String artifactId, String version, String type) {
+			this.groupId = groupId;
+			this.artifactId = artifactId;
+			this.version = version;
+			if(type == null) type = "jar";
+			this.type = type;
+		}
+		
+		public Artifact createPomArtifact() {
+			if (type.equals("pom")) return this;
+			return new Artifact(groupId, artifactId, version, "pom");
+		}
+
+		public String toLocation() {
+			return  groupId.replace('.', '/') + '/' + artifactId + '/' + version + '/'+ artifactId + '-' + version + "." + type;
+		}
+
+		public boolean isRelease() {
+			return version.indexOf("SNAPSHOT") < 0;
+		}
+
+		public String getGroupId() {
+			return groupId;
+		}
+		public String getArtifactId() {
+			return artifactId;
+		}
+		public String getVersion() {
+			return version;
+		}
+		public String getType() {
+			return type;
+		}
+		
+		@Override
+		public String toString() {
+			return groupId + "/" + artifactId + "/" + version + "/" + type;
+		}
+	}
+
+	public static Artifact toArtifact(String groupId, String artifactId, String version, String type) {
+		return new Artifact(groupId, artifactId, version, type);
+	}
+	public static Artifact toArtifact(String def) {
+		if (def.indexOf('/') > -1) {
+			String[] parts = def.split("/");
+			return new Artifact(parts[0], parts[1], parts[2], parts.length > 3 ? parts[3] : null);
+		}
+		if (def.indexOf(':') > -1) {
+			String[] parts = def.split(":");
+			return new Artifact(parts[0], parts[1], parts[3], parts[2]);
+		}
+		throw new UsageException("Unknown format");
+	}	
 }
