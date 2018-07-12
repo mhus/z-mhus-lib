@@ -6,7 +6,7 @@ package de.mhus.lib.core.parser;
  * @author mikehummel
  *
  */
-public abstract class AbstractStringPropertyReplacer {
+public abstract class StringPropertyReplacer {
 
 	public String process(String in) {
 		StringBuilder out = null;
@@ -21,6 +21,9 @@ public abstract class AbstractStringPropertyReplacer {
 			String val = findValueFor(key);
 			if (val != null)
 				out.append(val);
+			else
+				out.append("${").append(key).append("}");
+
 			// reduce 'in'
 			in = in.substring(p2+1);
 		}

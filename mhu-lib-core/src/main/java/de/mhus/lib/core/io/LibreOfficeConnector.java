@@ -2,15 +2,26 @@ package de.mhus.lib.core.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.cfg.CfgString;
+import de.mhus.lib.core.parser.StringPropertyReplacer;
 import de.mhus.lib.errors.NotFoundException;
 
 public class LibreOfficeConnector {
 
-	private String binary = "soffice";
+	private static CfgString BINARY = new CfgString(LibreOfficeConnector.class, "binary", "soffice");
+	private String binary = BINARY.value();
 	private boolean valid = false;
 	private String version;
 	
@@ -113,4 +124,37 @@ public class LibreOfficeConnector {
 		String to = inst.convertToPdf("/Users/mikehummel/Devices.ods", "/tmp");
 		System.out.println(to);
 	}
+	
+	@Override
+	public String toString() {
+		return version;
+	}
+	
+	public static void replace(File from, File to, StringPropertyReplacer replacer) throws ZipException, IOException {
+		ZipFile inZip = new ZipFile(from);
+		FileOutputStream os = new FileOutputStream(to);
+		ZipOutputStream outZip = new ZipOutputStream(os);
+		
+		// copy
+		Enumeration<? extends ZipEntry> entries = inZip.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry inNext = entries.nextElement();
+			InputStream isZip = inZip.getInputStream(inNext);
+			ZipEntry e = new ZipEntry(inNext.getName());
+			outZip.putNextEntry(e);
+			if (inNext.getName().equals("content.xml") || inNext.getName().equals("word/document.xml")) {
+				String content = MFile.readFile(isZip);
+				content = replacer.process(content);
+				MFile.writeFile(outZip, content);
+			} else {
+				MFile.copyFile(isZip, outZip);
+			}
+			outZip.closeEntry();
+			isZip.close();
+		}
+		outZip.close();
+		inZip.close();
+	}
+	
+	
 }

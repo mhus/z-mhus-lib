@@ -20,7 +20,7 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.io.http.MHttpClientBuilder;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.parser.AbstractStringPropertyReplacer;
+import de.mhus.lib.core.parser.StringPropertyReplacer;
 import de.mhus.lib.errors.UsageException;
 
 public class MMaven {
@@ -30,7 +30,7 @@ public class MMaven {
 	private static String repositoryLocation;
 	private static Log log = Log.getLog(MMaven.class);
 	
-	private static AbstractStringPropertyReplacer replacer = new AbstractStringPropertyReplacer() {
+	private static StringPropertyReplacer replacer = new StringPropertyReplacer() {
 		
 		@Override
 		public String findValueFor(String key) {

@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class StringPropertyReplacerMap extends AbstractStringPropertyReplacer implements Map<String,String> {
+public class StringPropertyReplacerMap extends StringPropertyReplacer implements Map<String,String> {
 	
 	private HashMap<String,String> map = new HashMap<>();
 	

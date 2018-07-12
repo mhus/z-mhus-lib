@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -286,14 +287,31 @@ public class MFile {
 		if (_f == null) return false;
 		try {
 			OutputStream fos = new FileOutputStream(_f);
-			if (_content != null) {
-				char[] c = _content.toCharArray();
-				for (int i = 0; i < c.length; i++)
-					fos.write(c[i]);
-			}
-			fos.close();
+			OutputStreamWriter osw = new OutputStreamWriter(fos, MString.CHARSET_UTF_8);
+			osw.write(_content);
+			osw.flush();
+			osw.close();
 		} catch (Exception e) {
 			log.d(_f, e );
+			return false;
+		}
+
+		return true;
+	}
+
+	public static boolean writeFile(OutputStream os, String content) {
+		return writeFile(os, content, MString.CHARSET_UTF_8);
+	}
+	
+	public static boolean writeFile(OutputStream os, String _content, String charsetName) {
+		try {
+			if (_content != null) {
+				OutputStreamWriter osw = new OutputStreamWriter(os, charsetName);
+				osw.write(_content);
+				osw.flush();
+			}
+		} catch (Exception e) {
+			log.d(e);
 			return false;
 		}
 
