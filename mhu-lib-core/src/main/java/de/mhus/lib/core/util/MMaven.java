@@ -298,6 +298,17 @@ public class MMaven {
 		return new Artifact(groupId, artifactId, version, type);
 	}
 	public static Artifact toArtifact(String def) {
+		if (def == null) return null;
+		if (def.startsWith("mvn:")) {
+			String[] parts = def.substring(4).split("/");
+			return new Artifact(parts[0], parts[1], parts[2], parts.length > 3 ? parts[3] : null);
+		}
+		if (def.startsWith("wrap:")) {
+			int p = def.indexOf('$');
+			if (p > 0) def = def.substring(0, p);
+			String[] parts = def.substring(5).split("/");
+			return new Artifact(parts[0], parts[1], parts[2], parts.length > 3 ? parts[3] : null);
+		}
 		if (def.indexOf('/') > -1) {
 			String[] parts = def.split("/");
 			return new Artifact(parts[0], parts[1], parts[2], parts.length > 3 ? parts[3] : null);
