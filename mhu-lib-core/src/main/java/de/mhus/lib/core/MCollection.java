@@ -123,6 +123,37 @@ public class MCollection {
 		return newArray;
 	}
 
+	@SafeVarargs
+	public static <T> T[] insert(T[] array, int index, T ... newElements) {
+
+		if (newElements == null || newElements.length == 0) return array;
+		if (array == null) return newElements;
+		if (index < 0 || index > array.length)
+			throw new IndexOutOfBoundsException("Array.length: " + array.length + " Index: " + index);
+		
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length + newElements.length);
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(newElements, 0, newArray, index, newElements.length);
+		System.arraycopy(array, index, newArray, index+newElements.length, array.length-index);
+		
+		return newArray;
+	}
+
+	public static <T> T[] remove(T[] array, int offset, int len) {
+
+		if (array == null) return null;
+		if (offset < 0 || offset+len > array.length)
+			throw new IndexOutOfBoundsException("Array.length: " + array.length + " Offset: " + offset + " Len: " + len);
+
+		@SuppressWarnings("unchecked")
+		T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), array.length - len);
+		System.arraycopy(array, 0, newArray, 0, offset);
+		System.arraycopy(array, offset+len, newArray, offset, array.length-len-offset);
+		
+		return newArray;
+	}
+	
 	public static int[] order(int[] array, boolean unique) {
 		if (unique) {
 			HashSet<Integer> set = new HashSet<>();

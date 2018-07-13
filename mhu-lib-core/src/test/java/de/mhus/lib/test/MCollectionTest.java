@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.test;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +24,73 @@ import junit.framework.TestCase;
 
 public class MCollectionTest extends TestCase {
 
+	public void testArrayManipulation() {
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.append(array, "d");
+			equals(new String[] {"a","b","c","d"},array);
+		}
+		{
+			String[] array = new String[] {};
+			array = MCollection.append(array, "d");
+			equals(new String[] {"d"},array);
+		}
+		//insert
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.insert(array, 0, "d");
+			equals(new String[] {"d","a","b","c"},array);
+		}
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.insert(array, 3, "d");
+			equals(new String[] {"a","b","c","d"},array);
+		}
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.insert(array, 1, "d");
+			equals(new String[] {"a","d","b","c"},array);
+		}
+		// remove
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.remove(array, 0, 1);
+			equals(new String[] {"b","c"},array);
+		}
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.remove(array, 0, 3);
+			equals(new String[] {},array);
+		}
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.remove(array, 1, 1);
+			equals(new String[] {"a","c"},array);
+		}
+		{
+			String[] array = new String[] {"a","b","c"};
+			array = MCollection.remove(array, 2, 1);
+			equals(new String[] {"a","b"},array);
+		}
+		
+	}
+	
+	private void equals(String[] expected, String[] actual) {
+		if (expected.length != actual.length) {
+			System.err.println("Expected: " + Arrays.toString(expected));
+			System.err.println("Actual  : " + Arrays.toString(actual));
+			System.err.println("Not the same size: " + expected.length + " != " + actual.length);
+			fail();
+		}
+		for (int i = 0; i < expected.length; i++)
+			if (!expected[i].equals(actual[i])) {
+				System.err.println("Expected: " + Arrays.toString(expected));
+				System.err.println("Actual  : " + Arrays.toString(actual));
+				System.err.println("Different at index " + i );
+				fail();
+			}
+	}
+	
 	public void testListSort() {
 		LinkedList<String> l = new LinkedList<>();
 		l.add("z");

@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.adb.query;
 
-import java.util.List;
-
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.parser.AttributeMap;
 
@@ -40,9 +38,7 @@ public class AAnd extends APart {
 
 	@Override
 	public void append(APart pa) {
-		List<APart> list = MCollection.toList(operations);
-		list.add(pa);
-		operations = list.toArray(new APart[list.size()]);
+		operations = MCollection.append(operations, pa);
 	}
 
 }
