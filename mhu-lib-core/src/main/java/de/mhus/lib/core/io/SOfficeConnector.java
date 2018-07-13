@@ -18,14 +18,14 @@ import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.parser.StringPropertyReplacer;
 import de.mhus.lib.errors.NotFoundException;
 
-public class LibreOfficeConnector {
+public class SOfficeConnector {
 
-	private static CfgString BINARY = new CfgString(LibreOfficeConnector.class, "binary", "soffice");
+	private static CfgString BINARY = new CfgString(SOfficeConnector.class, "binary", "soffice");
 	private String binary = BINARY.value();
 	private boolean valid = false;
 	private String version;
 	
-	public LibreOfficeConnector() {
+	public SOfficeConnector() {
 		findVersion();
 	}	
 	
@@ -118,7 +118,7 @@ public class LibreOfficeConnector {
 	 * 
 	 */
 	public static void main(String args[]) throws NotFoundException, IOException {
-		LibreOfficeConnector inst = new LibreOfficeConnector();
+		SOfficeConnector inst = new SOfficeConnector();
 		inst.setBinary("/Users/mikehummel/dev/LibreOffice.app/Contents/MacOS/soffice");
 		System.out.println(inst.getVersion());
 		String to = inst.convertToPdf("/Users/mikehummel/Devices.ods", "/tmp");
