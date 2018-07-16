@@ -90,6 +90,9 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 			else
 			if ( MString.isIndex(date, ' ' ) )
 				sep = ' ';
+			else
+			if (MString.isIndex(date, 'T'))
+				sep = 'T';
 			
 			// TODO can't read DE: '1. Januar 2000 13:00:00'
 			

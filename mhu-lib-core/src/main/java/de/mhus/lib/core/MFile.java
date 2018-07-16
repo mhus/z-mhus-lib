@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
@@ -263,6 +264,29 @@ public class MFile {
 	 * @throws IOException 
 	 */
 	public static void readBinary(InputStream is, byte[] buffer, int offset,
+			int length) throws IOException {
+		if (is == null || buffer == null) return;
+		
+		do {
+			int j = is.read(buffer, offset, length);
+			if (j < 0)
+				throw new EOFException();
+			if (j == 0)
+				MThread.sleep(10);
+			offset = offset + j;
+			length = length - j;
+		} while (length > 0);
+	}
+
+	/**
+	 * Open and read a stream. It put the content of the file into the byte array.
+	 * @param is 
+	 * @param buffer 
+	 * @param offset 
+	 * @param length 
+	 * @throws IOException 
+	 */
+	public static void readBinary(ObjectInput is, byte[] buffer, int offset,
 			int length) throws IOException {
 		if (is == null || buffer == null) return;
 		

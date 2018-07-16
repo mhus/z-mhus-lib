@@ -15,10 +15,16 @@
  */
 package de.mhus.lib.core.util;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.MCrypt;
 
-public final class SecureString {
+public final class SecureString implements Externalizable {
 
 	private byte[] data;
 	private int length;
@@ -40,6 +46,29 @@ public final class SecureString {
 
 	public boolean isNull() {
 		return data == null;
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeInt(length);
+		if (data == null)
+			out.writeInt(-1);
+		else {
+			out.writeInt(data.length);
+			out.write(data);
+		}
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		length = in.readInt();
+		int len = in.readInt();
+		if (len < 0) {
+			data = null;
+		} else {
+			data = new byte[len];
+			MFile.readBinary(in, data, 0, len);
+		}
 	}
 	
 }

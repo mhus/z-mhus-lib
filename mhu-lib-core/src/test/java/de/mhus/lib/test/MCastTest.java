@@ -146,7 +146,11 @@ public class MCastTest extends TestCase {
 		date = MCast.toDate("2016-08-31T15:38:27", null);
 //TODO		assertNotNull(date);
 		System.out.println( MCast.toString( date ) );
-
+		
+		date = MCast.toDate("1968-12-13T00:00:00Z", null);
+		assertNotNull(date);
+		System.out.println( MCast.toString( date ) );
+		
 		System.out.println();
 	}
 	
