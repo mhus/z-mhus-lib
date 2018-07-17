@@ -144,5 +144,13 @@ public class TransactionPool extends MLog {
 //		}
 	}
 	
+	public void clean() {
+		lock.remove();
+		Encapsulation enc = encapsulate.get();
+		if (enc != null)
+			while (!enc.isEmpty())
+				enc.shift();
+		encapsulate.remove();
+	}
 	
 }
