@@ -99,11 +99,11 @@ public class DbTransaction {
 		return TransactionPool.instance().getConnection();
 	}
 	
-	public void commit() {
+	public static void commit() {
 		TransactionPool.instance().commit();
 	}
 	
-	public void rollback() throws MException {
+	public static void rollback() throws MException {
 		TransactionPool.instance().rollback();
 	}
 	
