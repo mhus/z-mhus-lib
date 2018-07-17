@@ -457,6 +457,8 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @throws Exception
 	 */
 	public void commitConnection(DbConnection con) throws Exception {
+		DbConnection c = DbTransaction.getConnection();
+		if (c != null) return;
 		con.commit();
 	}
 

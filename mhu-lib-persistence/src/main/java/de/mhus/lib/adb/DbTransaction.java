@@ -18,6 +18,7 @@ package de.mhus.lib.adb;
 import de.mhus.lib.adb.transaction.TransactionLock;
 import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 import de.mhus.lib.sql.DbConnection;
 
@@ -98,5 +99,12 @@ public class DbTransaction {
 		return TransactionPool.instance().getConnection();
 	}
 	
+	public void commit() {
+		TransactionPool.instance().commit();
+	}
+	
+	public void rollback() throws MException {
+		TransactionPool.instance().rollback();
+	}
 	
 }

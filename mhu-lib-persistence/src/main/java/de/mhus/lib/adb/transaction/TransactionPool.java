@@ -107,18 +107,7 @@ public class TransactionPool extends MLog {
 			return null;
 		return enc.getCurrent();
 	}
-		
-	public void commitAndRelease() {
-//		synchronized (encapsulate) {
-			commit();
-			Encapsulation enc = encapsulate.get();
-			if (enc == null) return;
-			enc.shift();
-			if (enc.isEmpty())
-				encapsulate.remove();
-//		}
-	}
-	
+			
 	public void commit() {
 //		synchronized (encapsulate) {
 			Encapsulation enc = encapsulate.get();
@@ -136,17 +125,6 @@ public class TransactionPool extends MLog {
 			} catch (Exception e) {
 				log().e(e);
 			}
-//		}
-	}
-
-	public void rollbackAndRelease() throws MException {
-//		synchronized (encapsulate) {
-			rollback();
-			Encapsulation enc = encapsulate.get();
-			if (enc == null) return;
-			enc.shift();
-			if (enc.isEmpty())
-				encapsulate.remove();
 //		}
 	}
 	
