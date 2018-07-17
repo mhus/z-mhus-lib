@@ -24,6 +24,30 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * Accepted formats:
+ * 
+ * now, jetzt
+ * integer as timestamp
+ * <<date>>[[ |_|T]<<time>>]
+ * date:
+ * yyyy-mm-dd
+ * dd.mm.yyyy
+ * dd/mm/yyyy
+ * mm/dd/yyyy + locale == US
+ * time:
+ * MM:HH:ss[.SSS][Z][zone]
+ * MM-HH-ss[.SSS][Z][zone]
+ * MM:HH am/pm[Z][zone]
+ * Jan 1, 2000 1:00 am[Z][zone]
+ * 
+ * Currently Not Accepted:
+ * 
+ * 1. Januar 2000 13:00:00
+ * 
+ * @author mikehummel
+ *
+ */
 public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 	private final static Log log = Log.getLog(ObjectToCalendar.class);
@@ -118,6 +142,7 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 
 			if (sep != '?') {
 				// found also time ... parse it !
+				String apm = null;
 				String time = MString.afterIndex(date, sep).trim();
 				date = MString.beforeIndex(in, sep).trim();
 
@@ -128,30 +153,83 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 				else
 				if ( MString.isIndex(time, '_' ) )
 					sep2 = '_';
+				else
+				if (MString.isIndex(time, 'Z'))
+					sep2 = 'Z';
+				
+				if (sep2 == ' ') {
+					zone = MString.afterIndex(time, sep2).trim();
+					time = MString.beforeIndex(time, sep2).trim();
+					if (zone.startsWith("am") || zone.startsWith("pm")) {
+						apm = zone.substring(0, 2);
+						zone = zone.substring(2).trim();
+					}
+				} else
 				if (sep2 != '?') {
-					zone = MString.afterIndex(time, sep2);
-					time = MString.beforeIndex(time, sep2);
+					zone = MString.afterIndex(time, sep2).trim();
+					time = MString.beforeIndex(time, sep2).trim();
+				} else
+				if (time.startsWith("+") || time.startsWith("-")) {
+					zone = time.trim();
+					time = "";
 				}
 
 				// milliseconds
 				if (MString.isIndex(time, '.')) {
-					millies = toint(MString.afterIndex(time, '.'), 0);
-					time = MString.beforeIndex(time, '.');
+					millies = toint(MString.afterLastIndex(time, '.'), 0);
+					time = MString.beforeLastIndex(time, '.');
 				}
-
-				// parse time
-				String[] parts = time.split("\\:");
-				if (parts.length > 1) {
-					hour = toint(parts[0], 0);
-					min = toint(parts[1], 0);
-					if (parts.length > 2)
-						sec = toint(parts[2], 0);
-				}
-
-				c.set(Calendar.HOUR_OF_DAY, hour);
-				c.set(Calendar.MINUTE, min);
-				c.set(Calendar.MILLISECOND, sec * 1000 + millies);
 				
+				time = time.trim();
+				if (time.length() > 0) {
+					String sep3 = null;
+					if (MString.isIndex(time, ':'))
+						sep3 = "\\:";
+					else
+					if (MString.isIndex(time, '-'))
+						sep3 = "-";
+					else
+					if (MString.isIndex(time, '.'))
+						sep3 = "\\.";
+					
+					// parse time
+					String[] parts = time.split(sep3);
+					if (parts.length > 1) {
+						hour = toint(parts[0], 0);
+						min = toint(parts[1], 0);
+						if (parts.length > 2)
+							sec = toint(parts[2], 0);
+					}
+	
+					if (apm != null) {
+						// https://www.timeanddate.com/time/am-and-pm.html
+						if (hour == 0) { // 0 is not valid - reset time to 0
+							min = 0;
+							sec = 0;
+							millies = 0;
+							zone = "";
+						} else
+						if (apm.equals("am")) {
+							if (hour == 12)
+								hour = 0;
+						} else
+						if (apm.equals("pm")) {
+							if (hour != 12)
+								hour = hour + 12;
+						}
+					}
+					c.set(Calendar.HOUR_OF_DAY, hour);
+					c.set(Calendar.MINUTE, min);
+					c.set(Calendar.MILLISECOND, sec * 1000 + millies);
+					
+					if (zone != null && zone.length() > 0) {
+						// https://www.timeanddate.com/time/gmt-utc-time.html
+						if (zone.startsWith("-") || zone.startsWith("+"))
+							zone = "GMT"+zone;
+						TimeZone tz = TimeZone.getTimeZone(zone);
+						c.setTimeZone(tz);
+					}
+				}
 			}
 			
 			if (retOk) return c;
@@ -161,10 +239,6 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 				// technical time 2000.12.31
 				String[] parts = date.split("-");
 				
-				if (zone != null) {
-					TimeZone tz = TimeZone.getTimeZone(zone);
-					c.setTimeZone(tz);
-				}
 	
 				if (parts.length == 3) {
 						int year = Integer.parseInt(parts[0]);
@@ -231,6 +305,13 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 					c.set(year,month, day);
 					return c;
 				} else
+				if (parts.length == 2) {
+					int year = Integer.parseInt(parts[1]);
+					if (parts[1].length()==2) year = year + 2000; // will this lib life for 100 years ???
+					int month = Integer.parseInt(parts[0])-1;
+					c.set(year,month, 1);
+					return c;
+				} else
 					return null;
 			} else
 			if ( date.indexOf('/') > 0) {
@@ -245,6 +326,13 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 						c.set(year,month, day);
 						return c;
 					} else
+					if (parts.length == 2) {
+						int year = Integer.parseInt(parts[1]);
+						if (parts[1].length()==2) year = year + 2000; // will this lib life for 100 years ???
+						int month = Integer.parseInt(parts[0])-1;
+						c.set(year,month, 1);
+						return c;
+					} else
 						return null;
 				} else {
 					// france or UK 31/12/2000
@@ -254,6 +342,13 @@ public class ObjectToCalendar implements Caster<Object,Calendar>{
 						int month = Integer.parseInt(parts[1])-1;
 						int day   = Integer.parseInt(parts[0]);
 						c.set(year,month, day);
+						return c;
+					} else
+					if (parts.length == 2) {
+						int year = Integer.parseInt(parts[1]);
+						if (parts[1].length()==2) year = year + 2000; // will this lib life for 100 years ???
+						int month = Integer.parseInt(parts[0])-1;
+						c.set(year,month, 1);
 						return c;
 					} else
 						return null;

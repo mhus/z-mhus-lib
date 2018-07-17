@@ -54,104 +54,141 @@ public class MCastTest extends TestCase {
 
 	public void testToDate() {
 		
-		TimeZone.setDefault(TimeZone.getTimeZone("CET")); 
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT")); 
 		
+		System.out.print("1: ");
 		Date date = MCast.toDate("2020-12-01 +0100", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_00:00:00.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T00:00:00") );
 		
+		System.out.print("2: ");
 		date = MCast.toDate("2020-12-01 13:20", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:00.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:00") );
 		
+		System.out.print("3: ");
 		date = MCast.toDate("2020-12-01 13:20:10", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
+		System.out.print("4: ");
 		date = MCast.toDate("2020-12-01 13:20:10.223", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.223 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 
+		System.out.print("5: ");
 		date = MCast.toDate("01.12.2020 13:20:10.223", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.223 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
+		System.out.print("6: ");
 		date = MCast.toDate("12/01/2020 13:20:10.223", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.223 CET") );
-
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
-		
-		
+		System.out.print("7: ");
 		date = MCast.toDate("0020-12-01 13:20:10", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("0020-12-01_13:20:10.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("0020-12-01T13:20:10") );
 		
+		System.out.print("8: ");
 		date = MCast.toDate("20-12-01 13:20:10", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
+		System.out.print("9: ");
 		date = MCast.toDate("12.2020 13:20:10", null );
-//TODO		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.000 CET") );
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
+		System.out.print("10: ");
 		date = MCast.toDate("12/2020 13:20:10.223", null );
-//TODO		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.223 CET") );
-
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
-		
+		System.out.print("11: ");
 		date = MCast.toDate("2020-12-01_13:20:10", null );
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_13:20:10.000 CET") );
-
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
-		date = MCast.toDate("2020-12-01 13:20:10 UTC", null );
+		System.out.print("12: ");
+		date = MCast.toDate("2020-12-01 13:20:10 +3:00", null );
 		assertNotNull(date);
 		Calendar c = Calendar.getInstance();
 		int t = ( 13*60*60*1000 + c.getTimeZone().getRawOffset() ) / 1000 / 60 / 60;
-		System.out.println( MCast.toString( date ) + " Hour: " + t );
-//		assertTrue( MCast.toString( date ).equals("2020-12-01_" + t + ":20:10.000 CET") );
-
+		System.out.println( MDate.toIso8601( date ) );
+		System.out.println( "   Hour: " + t );
+		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T10:20:10") ); // 13:00 in +3 means 10:00 here in GMT
 		
-		
-		
+		System.out.print("13: ");
 		date = MCast.toDate("2020-12-01 13:20:10", null );
 		assertNotNull(date);
-		System.out.println( MDate.toIsoDate(date) );
+		System.out.println( MDate.toIso8601( date ) );
 		assertTrue( MDate.toIsoDate(date).equals( "2020-12-01" ) );
-		System.out.println( MDate.toIsoDateTime(date) );
-		assertTrue( MDate.toIsoDateTime(date).equals( "2020-12-01 13:20:10" ) );
+		assertTrue( MDate.toIso8601(date).equals( "2020-12-01T13:20:10" ) );
 		
+		System.out.print("14: ");
 		date = MCast.toDate("1722-12-01 +0100", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("1722-12-01_00:00:00.000 CET") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("1722-12-01T00:00:00") );
 
+		System.out.print("15: ");
 		date = MCast.toDate("27.07.10", null );
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
-//		assertTrue( MCast.toString( date ).equals("2010-07-27_00:00:00.000 CEST") );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2010-07-27T00:00:00") );
 		
+		System.out.print("16: ");
 		date = MCast.toDate("2016-08-31T15:38:27", null);
-//TODO		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2016-08-31T15:38:27") );
 		
+		System.out.print("17: ");
 		date = MCast.toDate("1968-12-13T00:00:00Z", null);
 		assertNotNull(date);
-		System.out.println( MCast.toString( date ) );
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("1968-12-13T00:00:00") );
+		
+		System.out.print("18: ");
+		date = MCast.toDate("Jan 1, 2000 1:00 am", null);
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2000-01-01T01:00:00") );
+		
+		System.out.print("19: ");
+		date = MCast.toDate("Jan 1, 2000 1:00 pm", null);
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2000-01-01T13:00:00") );
+		
+		System.out.print("20: ");
+		date = MCast.toDate("Jan 1, 2000 12:10 pm", null);
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2000-01-01T12:10:00") );
+		
+		System.out.print("21: ");
+		date = MCast.toDate("Jan 1, 2000 12:10 am", null);
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2000-01-01T00:10:00") );
 		
 		System.out.println();
+		
+		TimeZone.setDefault(null); 
+
 	}
 	
 	
