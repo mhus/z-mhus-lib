@@ -55,6 +55,8 @@ public class MCastTest extends TestCase {
 	public void testToDate() {
 		
 		TimeZone.setDefault(TimeZone.getTimeZone("GMT")); 
+		Locale defaultLocale = Locale.getDefault();
+		Locale.setDefault(Locale.GERMANY);
 		
 		System.out.print("1: ");
 		Date date = MCast.toDate("2020-12-01 +0100", null );
@@ -86,11 +88,21 @@ public class MCastTest extends TestCase {
 		System.out.println( MDate.toIso8601( date ) );
 		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
 		
-		System.out.print("6: ");
+		Locale.setDefault(Locale.GERMANY);
+		System.out.print("6.1: ");
+		date = MCast.toDate("12/01/2020 13:20:10.223", null );
+		assertNotNull(date);
+		System.out.println( MDate.toIso8601( date ) );
+		assertTrue( MDate.toIso8601( date ).equals("2020-01-12T13:20:10") );
+		
+		Locale.setDefault(Locale.US);
+		System.out.print("6.2: ");
 		date = MCast.toDate("12/01/2020 13:20:10.223", null );
 		assertNotNull(date);
 		System.out.println( MDate.toIso8601( date ) );
 		assertTrue( MDate.toIso8601( date ).equals("2020-12-01T13:20:10") );
+
+		Locale.setDefault(Locale.GERMANY);
 		
 		System.out.print("7: ");
 		date = MCast.toDate("0020-12-01 13:20:10", null );
@@ -188,6 +200,7 @@ public class MCastTest extends TestCase {
 		System.out.println();
 		
 		TimeZone.setDefault(null); 
+		Locale.setDefault(defaultLocale);
 
 	}
 	
