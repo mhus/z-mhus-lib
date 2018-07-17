@@ -90,6 +90,8 @@ public class DefaultDbPool extends DbPool {
 					if (con == null) return null;
 					con.setPool(this);
 					pool.add(con);
+					if (tracePoolSize.value())
+						log().d("Create DB Connection",pool.size());
 					con.setUsed(true);
 					//getDialect().initializeConnection(con, this);
 					return new DbConnectionProxy(this, con);
@@ -143,6 +145,7 @@ public class DefaultDbPool extends DbPool {
 	@JmxManaged(descrition="Cleanup unused connections")
 	public void cleanup(boolean unusedAlso) {
 		log().t(getName(),"cleanup");
+		boolean removed = false;
 		synchronized (pool) {
 			for (InternalDbConnection con : new LinkedList<InternalDbConnection>(pool)) {
 				try {
@@ -150,9 +153,12 @@ public class DefaultDbPool extends DbPool {
 					if( unusedAlso && !con.isUsed() || con.isClosed()) {
 						con.close();
 						pool.remove(con);
+						removed = true;
 					}
 				} catch (Throwable t) {} // for secure - do not impact the thread
 			}
+			if (removed && tracePoolSize.value())
+				log().d("Pool cleanup",pool.size());
 		}
 	}
 

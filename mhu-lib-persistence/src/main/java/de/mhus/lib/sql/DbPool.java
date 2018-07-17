@@ -55,6 +55,7 @@ public abstract class DbPool extends MJmx {
 				stackTraces.clear();
 		}
 	};
+	protected CfgBoolean tracePoolSize = new CfgBoolean(DbConnection.class, "tracePoolSize", false);
 	private CfgLong traceWait = new CfgLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
 	private CfgBoolean autoCleanup = new CfgBoolean(DbConnection.class, "autoCleanup", true);
 	private CfgBoolean autoCleanupUnused = new CfgBoolean(DbConnection.class, "autoCleanupUnused", true);
