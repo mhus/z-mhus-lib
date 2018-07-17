@@ -19,6 +19,7 @@ import de.mhus.lib.adb.transaction.TransactionLock;
 import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.errors.TimeoutRuntimeException;
+import de.mhus.lib.sql.DbConnection;
 
 /**
  * Allow transaction and lock manageent with adb framework. This implementation should be used if you not need to
@@ -81,20 +82,21 @@ public class DbTransaction {
 	/**
 	 * <p>release.</p>
 	 */
-	public static void release() {
-		TransactionPool.instance().release();
+	public static void releaseLock() {
+		TransactionPool.instance().releaseLock();
 	}
 	
-//	public static void begin() {
-//		TransactionPool.instance().set(new TransactionEncapsulation() );	
-//	}
-//
-//	public static void commit() {
-//		TransactionPool.instance().commit();
-//	}
-//
-//	public static void rollback() {
-//		TransactionPool.instance().rollback();
-//	}
+	public static void releaseEncapsulate() {
+		TransactionPool.instance().releaseEncapsulate();
+	}
+	
+	public static void encapsulate(DbConnection con) {
+		TransactionPool.instance().encapsulate(con);
+	}
+	
+	public static DbConnection getConnection() {
+		return TransactionPool.instance().getConnection();
+	}
+	
 	
 }

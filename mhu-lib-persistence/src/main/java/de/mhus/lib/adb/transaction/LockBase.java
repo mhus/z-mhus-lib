@@ -22,11 +22,11 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
-public abstract class Transaction extends MLog {
+public abstract class LockBase extends MLog {
 
-	private LinkedList<Transaction> nested;
+	private LinkedList<LockBase> nested;
 
-	public Transaction() {
+	public LockBase() {
 	}
 	
 	public abstract void lock(long timeout) throws TimeoutRuntimeException;
@@ -39,17 +39,17 @@ public abstract class Transaction extends MLog {
 		return toString();
 	}
 
-	public synchronized void pushNestedLock(Transaction transaction) {
+	public synchronized void pushNestedLock(LockBase transaction) {
 		if (nested == null) nested = new LinkedList<>();
 		nested.add(transaction);
 	}
 
-	public Transaction popNestedLock() {
+	public LockBase popNestedLock() {
 		if (nested == null || nested.size() == 0) return null;
 		return nested.removeLast();
 	}
 
-	public Transaction getNested() {
+	public LockBase getNested() {
 		if (nested == null || nested.size() == 0) return null;
 		return nested.getLast();
 	}

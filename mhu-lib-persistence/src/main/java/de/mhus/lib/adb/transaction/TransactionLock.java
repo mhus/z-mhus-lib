@@ -33,7 +33,7 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
  * @author mikehummel
  * @version $Id: $Id
  */
-public class TransactionLock extends Transaction {
+public class TransactionLock extends LockBase {
 
 	private Persistable[] objects;
 	private DbManager manager;
@@ -142,7 +142,7 @@ public class TransactionLock extends Transaction {
 	
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void pushNestedLock(Transaction transaction) {
+	public synchronized void pushNestedLock(LockBase transaction) {
 		// validate lock objects
 		Set<String> keys = transaction.getLockKeys();
 		getLockKeys();

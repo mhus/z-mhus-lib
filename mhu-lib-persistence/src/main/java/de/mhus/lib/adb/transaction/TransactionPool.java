@@ -15,10 +15,15 @@
  */
 package de.mhus.lib.adb.transaction;
 
-public class TransactionPool {
+import de.mhus.lib.core.MLog;
+import de.mhus.lib.errors.MException;
+import de.mhus.lib.sql.DbConnection;
+
+public class TransactionPool extends MLog {
 
 	private static TransactionPool instance;
-	private ThreadLocal<Transaction> pool = new ThreadLocal<>();
+	private ThreadLocal<LockBase> lock = new ThreadLocal<>();
+	private ThreadLocal<Encapsulation> encapsulate = new ThreadLocal<>();
 
 	public static synchronized TransactionPool instance() {
 		if (instance == null)
@@ -30,10 +35,10 @@ public class TransactionPool {
 	 * Return current transaction, if cascaded transactions, return the last/current
 	 * @return x
 	 */
-	public Transaction get() {
+	public LockBase getLock() {
 //		synchronized (pool) {
-			Transaction out = pool.get();
-			Transaction nested = out.getNested();
+			LockBase out = lock.get();
+			LockBase nested = out.getNested();
 			if (nested != null) return nested;
 			return out;
 //		}
@@ -43,46 +48,123 @@ public class TransactionPool {
 	 * Return current transaction, if cascaded transactions, return the base
 	 * @return x
 	 */
-	public Transaction getBase() {
+	public LockBase getLockBase() {
 //		synchronized (pool) {
-			Transaction out = pool.get();
+			LockBase out = lock.get();
 			return out;
 //		}
 	}
 	
-	public void release() {
+	public void releaseLock() {
 //		synchronized (pool) {
-			Transaction out = pool.get();
+			LockBase out = lock.get();
 			if (out == null) return;
-			Transaction nested = out.popNestedLock();
+			LockBase nested = out.popNestedLock();
 			if (nested == null) {
-				pool.remove();
+				lock.remove();
 				out.release();
 			}
 //		}
 	}
 	
-	public void lock(long timeout, Transaction transaction) {
+	public void lock(long timeout, LockBase transaction) {
 //		synchronized (pool) {
-			Transaction current = pool.get();
+			LockBase current = lock.get();
 			if (current != null)
 				current.pushNestedLock(transaction);
 			else {
-				pool.set(transaction);
+				lock.set(transaction);
 				transaction.lock(timeout);
 			}
 //		}
 	}
 
-//	public void commit() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	public void rollback() {
-//		// TODO Auto-generated method stub
-//		
-//	}
+	public void encapsulate(DbConnection con) {
+//		synchronized (encapsulate) {
+			Encapsulation enc = encapsulate.get();
+			if (enc == null) {
+				enc = new Encapsulation();
+				encapsulate.set(enc);
+			}
+			enc.append(con);
+//		}
+	}
+	
+	public void releaseEncapsulate() {
+		Encapsulation enc = encapsulate.get();
+		if (enc == null)
+			return;
+		enc.shift();
+		if (enc.isEmpty())
+			encapsulate.remove();
+	}
+	
+	public DbConnection getConnection() {
+		Encapsulation enc = encapsulate.get();
+		if (enc == null)
+			return null;
+		if (enc.isEmpty())
+			return null;
+		return enc.getCurrent();
+	}
+		
+	public void commitAndRelease() {
+//		synchronized (encapsulate) {
+			commit();
+			Encapsulation enc = encapsulate.get();
+			if (enc == null) return;
+			enc.shift();
+			if (enc.isEmpty())
+				encapsulate.remove();
+//		}
+	}
+	
+	public void commit() {
+//		synchronized (encapsulate) {
+			Encapsulation enc = encapsulate.get();
+			if (enc == null) {
+				log().d("encapsulate not enabled - ignore commit");
+				return;
+			}
+			DbConnection cur = enc.getCurrent();
+			if (cur == null) {
+				log().d("encapsulation has no connection - ignore commit");
+				return;
+			}
+			try {
+				cur.commit();
+			} catch (Exception e) {
+				log().e(e);
+			}
+//		}
+	}
+
+	public void rollbackAndRelease() throws MException {
+//		synchronized (encapsulate) {
+			rollback();
+			Encapsulation enc = encapsulate.get();
+			if (enc == null) return;
+			enc.shift();
+			if (enc.isEmpty())
+				encapsulate.remove();
+//		}
+	}
+	
+	public void rollback() throws MException {
+//		synchronized (encapsulate) {
+			Encapsulation enc = encapsulate.get();
+			if (enc == null)
+				throw new MException("encapsulate not enabled for rollback");
+			DbConnection cur = enc.getCurrent();
+			if (cur == null)
+				throw new MException("encapsulate no connection for rollback");
+			try {
+				cur.rollback();
+			} catch (Exception e) {
+				log().e(e);
+			}
+//		}
+	}
 	
 	
 }

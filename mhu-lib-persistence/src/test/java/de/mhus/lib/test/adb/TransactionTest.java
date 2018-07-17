@@ -62,24 +62,24 @@ public class TransactionTest extends TestCase {
 		obj3.save();
 		
 		DbTransaction.lock(obj1,obj2); // simple lock
-		DbTransaction.release();
+		DbTransaction.releaseLock();
 		
-		DbTransaction.release(); // one more should be ok - robust code
+		DbTransaction.releaseLock(); // one more should be ok - robust code
 		
 		DbTransaction.lock(obj1,obj2);
 		try {
 			DbTransaction.lock(obj3); // nested not locked should fail, can't lock two times - philosophers deadlock
-			DbTransaction.release();
+			DbTransaction.releaseLock();
 			fail("Nested Transaction Not Allowed");
 		} catch (TransactionNestedException e) {
 			System.out.println(e);
 		}
-		DbTransaction.release();
+		DbTransaction.releaseLock();
 
 		DbTransaction.lock(obj1,obj2);
 		DbTransaction.lock(obj1); // nested is ok as long as it is already locked - no philosophers problem
-		DbTransaction.release();
-		DbTransaction.release();
+		DbTransaction.releaseLock();
+		DbTransaction.releaseLock();
 
 		// concurrent locking ...
 		DbTransaction.lock(obj1,obj2);
@@ -99,12 +99,12 @@ public class TransactionTest extends TestCase {
 				} catch (Throwable t) {
 					System.out.println(t);
 				} finally {
-					DbTransaction.release();
+					DbTransaction.releaseLock();
 				}
 				
 				// not concurrent
 				DbTransaction.lock(2000, obj3);
-				DbTransaction.release();
+				DbTransaction.releaseLock();
 				
 				done.setObject(true);
 			}
@@ -116,7 +116,7 @@ public class TransactionTest extends TestCase {
 		if (fail.getObject() != null)
 			fail(fail.getObject());
 		
-		DbTransaction.release();
+		DbTransaction.releaseLock();
 		
 	}
 	

@@ -435,6 +435,8 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @throws Exception
 	 */
 	public DbConnection getConnection(DbPool pool) throws Exception {
+		DbConnection con = DbTransaction.getConnection();
+		if (con != null) return con;
 		return pool.getConnection();
 	}
 
@@ -444,6 +446,8 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @param con
 	 */
 	public void closeConnection(DbConnection con) {
+		DbConnection c = DbTransaction.getConnection();
+		if (c != null) return;
 		con.close();
 	}
 

@@ -21,7 +21,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
-public class TransactionEncapsulation extends Transaction {
+public class TransactionEncapsulation extends LockBase {
 
 	@Override
 	public void release() {

@@ -30,7 +30,7 @@ public class MemoryLockStrategy extends LockStrategy {
 	private HashMap<String, LockObject> locks = new HashMap<>();
 	
 	@Override
-	public void lock(Persistable object, String key, Transaction transaction,
+	public void lock(Persistable object, String key, LockBase transaction,
 			long timeout) {
 		
 		long start = System.currentTimeMillis();
@@ -63,7 +63,7 @@ public class MemoryLockStrategy extends LockStrategy {
 
 	@Override
 	public void releaseLock(Persistable object, String key,
-			Transaction transaction) {
+			LockBase transaction) {
 		synchronized (this) {
 			LockObject obj = locks.get(key);
 			if (obj == null) return;
@@ -91,7 +91,7 @@ public class MemoryLockStrategy extends LockStrategy {
 	}
 	
 	private class LockObject {
-		public LockObject(Transaction transaction) {
+		public LockObject(LockBase transaction) {
 			owner = transaction.getName();
 		}
 		public long getAge() {
