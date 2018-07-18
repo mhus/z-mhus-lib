@@ -15,21 +15,20 @@
  */
 package de.mhus.lib.sql;
 
-import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.cfg.CfgLong;
+import de.mhus.lib.core.cfg.CfgTimeInterval;
 import de.mhus.lib.core.lang.MObject;
 
 public abstract class InternalDbConnection extends MObject implements DbConnection {
 
-	protected static final CfgLong CFG_TIMEOUT_UNUSED = new CfgLong(DbConnection.class, "timeoutUnused", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
-	protected static final CfgLong CFG_TIMEOUT_LIFETIME = new CfgLong(DbConnection.class, "timeoutLifetime", MTimeInterval.HOUR_IN_MILLISECOUNDS);
+	protected static final CfgTimeInterval CFG_TIMEOUT_UNUSED = new CfgTimeInterval(DbConnection.class, "timeoutUnused", "10m");
+	protected static final CfgTimeInterval CFG_TIMEOUT_LIFETIME = new CfgTimeInterval(DbConnection.class, "timeoutLifetime", "1h");
 	
 	protected DbPool pool;
 	protected String poolId;
 	protected long creationTime = 0;
 	protected long lastUsedTime = 0;
-	protected long timeoutUnused    = CFG_TIMEOUT_UNUSED.value();
-	protected long timeoutLifetime = CFG_TIMEOUT_LIFETIME.value();
+	protected long timeoutUnused    = CFG_TIMEOUT_UNUSED.interval();
+	protected long timeoutLifetime = CFG_TIMEOUT_LIFETIME.interval();
 
 	public InternalDbConnection() {
 		creationTime = System.currentTimeMillis();

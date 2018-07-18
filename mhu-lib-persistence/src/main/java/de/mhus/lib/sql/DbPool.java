@@ -25,9 +25,8 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
-import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgBoolean;
-import de.mhus.lib.core.cfg.CfgLong;
+import de.mhus.lib.core.cfg.CfgTimeInterval;
 import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.jmx.MJmx;
@@ -56,7 +55,7 @@ public abstract class DbPool extends MJmx {
 		}
 	};
 	protected CfgBoolean tracePoolSize = new CfgBoolean(DbConnection.class, "tracePoolSize", false);
-	private CfgLong traceWait = new CfgLong(DbConnection.class, "traceCallersWait", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private CfgTimeInterval traceWait = new CfgTimeInterval(DbConnection.class, "traceCallersWait", "10m");
 	private CfgBoolean autoCleanup = new CfgBoolean(DbConnection.class, "autoCleanup", true);
 	private CfgBoolean autoCleanupUnused = new CfgBoolean(DbConnection.class, "autoCleanupUnused", true);
 
@@ -253,7 +252,7 @@ public abstract class DbPool extends MJmx {
 	}
 	
 	public void printStackTrace() {
-		if (traceCaller.value() && lastStackTracePrint + traceWait.value() < System.currentTimeMillis()) {
+		if (traceCaller.value() && lastStackTracePrint + traceWait.interval() < System.currentTimeMillis()) {
 			lastStackTracePrint = System.currentTimeMillis();
 			LinkedList<ConnectionTrace> list = new LinkedList<ConnectionTrace>(getStackTraces().values());
 			Collections.sort(list);

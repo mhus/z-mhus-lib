@@ -199,6 +199,7 @@ public class JdbcConnection extends InternalDbConnection {
 	 *
 	 * @param timeoutUnused a long.
 	 */
+	@Override
 	public void setTimeoutUnused(long timeoutUnused) {
 		this.timeoutUnused = timeoutUnused;
 	}
@@ -208,6 +209,7 @@ public class JdbcConnection extends InternalDbConnection {
 	 *
 	 * @param timeoutLifetime a long.
 	 */
+	@Override
 	public void setTimeoutLifetime(long timeoutLifetime) {
 		this.timeoutLifetime = timeoutLifetime;
 	}

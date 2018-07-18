@@ -401,8 +401,7 @@ public class MTimeInterval {
 	}
 
 	public static long toTime(String in, long def) {
-		long out = def;
-		if (in == null) return out;
+		if (in == null) return def;
 		in = in.trim().toLowerCase();
 		if (in.endsWith("m") || in.endsWith("min") || in.endsWith("minutes") || in.endsWith("minute"))
 			return MCast.tolong( MString.integerPart(in) , 0) * MINUTE_IN_MILLISECOUNDS;
