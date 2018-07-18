@@ -80,32 +80,42 @@ public class DefaultDbPool extends DbPool {
 					if (con.isClosed() || con.checkTimedOut()) {
 						foundClosed = true;
 					} else
-						if (!con.isUsed()) {
-							con.setUsed(true);
-							return new DbConnectionProxy(this, con);
-						}
-				}
-				try {
-					InternalDbConnection con = getProvider().createConnection();
-					if (con == null) return null;
-					con.setPool(this);
-					pool.add(con);
-					if (tracePoolSize.value())
-						log().d("Create DB Connection",pool.size());
-					con.setUsed(true);
-					//getDialect().initializeConnection(con, this);
-					return new DbConnectionProxy(this, con);
-				} catch (Exception e) {
-					// special behavior for e.g. mysql, retry to get a connection after gc()
-					// Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Too many connections
-					if (e.getMessage().indexOf("Too many connections") > -1) {
-						printStackTrace();
+					if (!con.isUsed()) {
+						con.setUsed(true);
+						return new DbConnectionProxy(this, con);
 					}
-					throw e;
 				}
+				return createConnection();
 			}
 		} finally {
 			if (foundClosed) cleanup(false);
+		}
+	}
+
+	/**
+	 * Overwrite to configure new created connections before use.
+	 * 
+	 * @return created connection or null if not possible
+	 * @throws Exception
+	 */
+	protected DbConnection createConnection() throws Exception {
+		try {
+			InternalDbConnection con = getProvider().createConnection();
+			if (con == null) return null;
+			con.setPool(this);
+			pool.add(con);
+			if (tracePoolSize.value())
+				log().d("Create DB Connection",pool.size());
+			con.setUsed(true);
+			//getDialect().initializeConnection(con, this);
+			return new DbConnectionProxy(this, con);
+		} catch (Exception e) {
+			// special behavior for e.g. mysql, retry to get a connection after gc()
+			// Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Too many connections
+			if (e.getMessage().indexOf("Too many connections") > -1) {
+				printStackTrace();
+			}
+			throw e;
 		}
 	}
 
