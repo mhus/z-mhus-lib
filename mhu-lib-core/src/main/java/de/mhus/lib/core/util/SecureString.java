@@ -71,4 +71,8 @@ public final class SecureString implements Externalizable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return "[***]";
+	}
 }

@@ -33,6 +33,7 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.SingleList;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class CfgManager {
@@ -45,6 +46,7 @@ public class CfgManager {
 	private FileWatch fileWatch;
 	private String configFile;
 	private TreeMap<String,Object[]> initiators = new TreeMap<>(); // execute in an ordered way
+	private long lastConfigUpdate;
 	{
 		// default
 		initiators.put("001_system", new Object[] {new SystemCfgInitiator(), null});
@@ -79,6 +81,10 @@ public class CfgManager {
 	@Override
 	public String toString() {
 		return configFile;
+	}
+	
+	public List<CfgProvider> getProviders() {
+		return new SingleList<CfgProvider>(provider); // currently only one provider
 	}
 	
 	public IConfig getCfg(Object owner, IConfig def) {
@@ -234,6 +240,7 @@ public class CfgManager {
 				try {
 					XmlConfigFile c = new XmlConfigFile(file);
 					config = c;
+					lastConfigUpdate = System.currentTimeMillis();
 					return true;
 				} catch (Exception e) {
 					MApi.dirtyLog(e);
@@ -294,6 +301,10 @@ public class CfgManager {
 	public List<String> getOwners() {
 		initCfg();
 		return new LinkedList<>( configurations.keySet() );
+	}
+
+	public long getLastConfigUpdate() {
+		return lastConfigUpdate;
 	}
 
 }

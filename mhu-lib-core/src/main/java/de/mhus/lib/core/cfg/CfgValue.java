@@ -27,6 +27,7 @@ public abstract class CfgValue<T> {
 	private T value;
 	private String owner;
 	private Consumer<T> updateAction;
+	private long updated = 0;
 	
 	public CfgValue(Object owner, String path, T def) {
 		if (owner instanceof Class)
@@ -66,6 +67,7 @@ public abstract class CfgValue<T> {
 		if (MSystem.equals(value, newValue)) return;
 		onPreUpdate(newValue);
 		this.value = newValue;
+		this.updated = System.currentTimeMillis();
 		onPostUpdate(value);
 	}
 
@@ -121,5 +123,9 @@ public abstract class CfgValue<T> {
 	public <C extends CfgValue<T>> C updateAction(Consumer<T> consumer) {
 		this.updateAction = consumer;
 		return (C) this;
+	}
+	
+	public long getUpdated() {
+		return updated;
 	}
 }
