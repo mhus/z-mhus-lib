@@ -39,7 +39,7 @@ public abstract class CfgValue<T> {
 		this.def = def;
 		MApi.getCfgUpdater().register(this);
 		update();
-		calling = MSystem.findCalling(2);
+		calling = MSystem.findCalling(4);
 	}
 	
 	public T value() {

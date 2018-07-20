@@ -427,6 +427,13 @@ public class MSystem {
 		return clazz.getCanonicalName();
 	}
 
+	public static String getSimpleName(Object obj) {
+		Class<? extends Object> clazz = getMainClass(obj);
+		if (clazz == null)
+			return "null";
+		return clazz.getSimpleName();
+	}
+	
 	/**
 	 * Returns the class of the object or class or if the class is anonymous the
 	 * surrounding main class.
