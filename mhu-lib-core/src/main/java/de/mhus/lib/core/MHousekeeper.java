@@ -26,6 +26,4 @@ public abstract interface MHousekeeper extends IBase {
 		
 	void register(MHousekeeperTask task, long sleep);
 
-	List<String> getHousekeeperTaskInfo();
-
 }

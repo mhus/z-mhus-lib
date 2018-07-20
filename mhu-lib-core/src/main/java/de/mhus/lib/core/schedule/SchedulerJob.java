@@ -134,7 +134,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 					MLogUtil.releaseTrailConfig();
 			}
 		} else {
-			log.i("Execution delayed",task);
+			log.d("Execution delayed",task);
 		}
 	}
 
