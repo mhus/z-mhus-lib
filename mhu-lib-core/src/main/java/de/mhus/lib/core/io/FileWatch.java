@@ -16,29 +16,26 @@
 package de.mhus.lib.core.io;
 
 import java.io.File;
-import java.util.TimerTask;
 
-import de.mhus.lib.core.base.service.TimerIfc;
+import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MHousekeeper;
+import de.mhus.lib.core.MHousekeeperTask;
 
-public class FileWatch {
+public class FileWatch extends MHousekeeperTask {
 
 	private File file;
-	private TimerIfc timer;
 	private long period = 30 * 1000;
 	private long modified = -2;
 	private Listener listener;
 	private boolean started = false;
-	private TimerTask task;
 	private long lastRun;
 	private boolean startHook;
+	private boolean registered = false;
 
 	public FileWatch(File fileToWatch, Listener listener) {
-		this(fileToWatch, null, 30000, true, listener);
+		this(fileToWatch, 30000, true, listener);
 	}
 	
-	public FileWatch(File fileToWatch, TimerIfc timer, Listener listener) {
-		this(fileToWatch, timer, 30000, true, listener);
-	}
 	/**
 	 * Watch a file or directory (one level!) against changes. Check the modify date to recognize
 	 * a change. It has two ways to work:
@@ -46,41 +43,33 @@ public class FileWatch {
 	 * 2. Use of a timer.
 	 * 
 	 * @param fileToWatch
-	 * @param timer
 	 * @param period
 	 * @param startHook
 	 * @param listener
 	 */
-	public FileWatch(File fileToWatch, TimerIfc timer, long period, boolean startHook, Listener listener) {
+	public FileWatch(File fileToWatch, long period, boolean startHook, Listener listener) {
 		file = fileToWatch;
-		this.timer = timer;
 		this.period = period;
 		this.startHook = startHook;
 		this.listener = listener;
+		setName(file.getName());
 	}
 	
 	public FileWatch doStart() {
 		if (started) return this;
 		started = true; // do not need sync...
 		if (startHook) checkFile(); // init
-		if (timer != null) {
-			this.task = new TimerTask() {
 
-				@Override
-				public void run() {
-					checkFile();
-				}
-				
-			};
-			timer.schedule(task, period, period);
+		if (!registered) {
+			MHousekeeper housekeeper = MApi.lookup(MHousekeeper.class);
+			housekeeper.register(this, period);
+			registered = true;
 		}
 		return this;
 	}
 	
 	public FileWatch doStop() {
 		if (!started) return this;
-		if (task != null)
-			task.cancel();
 		return this;
 	}
 
@@ -130,5 +119,10 @@ public class FileWatch {
 
 		void onFileWatchError(FileWatch fileWatch, Throwable t);
 		
+	}
+
+	@Override
+	protected void doit() throws Exception {
+		checkFile();
 	}
 }

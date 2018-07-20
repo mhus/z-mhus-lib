@@ -25,7 +25,6 @@ import de.mhus.lib.annotations.activator.DefaultFactory;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.HashConfig;
@@ -266,8 +265,7 @@ public class CfgManager {
 				MApi.dirtyLog("--- Try to load mhus config from ", f.getAbsolutePath());
 				internalLoadConfig(f);
 				
-				TimerIfc timer = MApi.get().getBaseControl().base().lookup(TimerIfc.class);
-				fileWatch = new FileWatch(f, timer, new FileWatch.Listener() {
+				fileWatch = new FileWatch(f, new FileWatch.Listener() {
 
 					@Override
 					public void onFileChanged(FileWatch fileWatch) {

@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.base.service.TimerIfc;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.PropertiesConfigFile;
 import de.mhus.lib.core.io.FileWatch;
@@ -46,8 +45,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		load();
 		MApi.getCfgUpdater().doUpdate(name);
 		
-		TimerIfc timer = MApi.get().getBaseControl().base().lookup(TimerIfc.class);
-		fileWatch = new FileWatch(file, timer, new FileWatch.Listener() {
+		fileWatch = new FileWatch(file, new FileWatch.Listener() {
 
 			@Override
 			public void onFileChanged(FileWatch fileWatch) {
