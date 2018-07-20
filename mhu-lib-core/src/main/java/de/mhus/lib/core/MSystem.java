@@ -252,14 +252,14 @@ public class MSystem {
 		System.out.flush();
 	} // end beep
 
-	public static String findSource(int returns) {
+	public static String findCalling(int returns) {
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 		if (stack.length > returns)
 			return stack[returns].getClassName();
 		return "?";
 	}
 
-	public static String findSource() {
+	public static String findCalling() {
 		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
 		for (StackTraceElement step : stack) {
 			String n = step.getClassName();

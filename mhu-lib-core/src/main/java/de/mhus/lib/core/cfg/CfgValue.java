@@ -28,6 +28,7 @@ public abstract class CfgValue<T> {
 	private String owner;
 	private Consumer<T> updateAction;
 	private long updated = 0;
+	private String calling;
 	
 	public CfgValue(Object owner, String path, T def) {
 		if (owner instanceof Class)
@@ -38,6 +39,7 @@ public abstract class CfgValue<T> {
 		this.def = def;
 		MApi.getCfgUpdater().register(this);
 		update();
+		calling = MSystem.findCalling(2);
 	}
 	
 	public T value() {
@@ -127,5 +129,9 @@ public abstract class CfgValue<T> {
 	
 	public long getUpdated() {
 		return updated;
+	}
+	
+	public String getCalling() {
+		return calling;
 	}
 }
