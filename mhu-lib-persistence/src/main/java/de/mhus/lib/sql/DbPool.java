@@ -93,8 +93,26 @@ public abstract class DbPool extends MJmx {
 		provider.doInitialize(this.config,activator);
 
 		this.provider = provider;
+
+		init();
+	}
+
+	/**
+	 * Create a pool with the DbProvider.
+	 * 
+	 * @param provider
+	 */
+	public DbPool(DbProvider provider) {
+		doCreateConfig();
+		setProvider(provider);
 		
-		housekeeperTask = new MHousekeeperTask() {
+		init();
+	}
+
+	protected void init() {
+		if (housekeeperTask != null) return;
+		
+		housekeeperTask = new MHousekeeperTask(name) {
 			
 			@Override
 			public void doit() throws Exception {
@@ -111,19 +129,8 @@ public abstract class DbPool extends MJmx {
 		} else {
 			log().w("Housekeeper not found - autoCleanup disabled");
 		}
-
 	}
-
-	/**
-	 * Create a pool with the DbProvider.
-	 * 
-	 * @param provider
-	 */
-	public DbPool(DbProvider provider) {
-		doCreateConfig();
-		setProvider(provider);
-	}
-
+	
 	protected IConfig getConfig() {
 		return config;
 	}

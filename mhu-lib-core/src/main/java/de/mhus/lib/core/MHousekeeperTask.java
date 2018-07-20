@@ -21,6 +21,14 @@ public abstract class MHousekeeperTask extends MTimerTask {
 	
 	private Log log = Log.getLog(this.getClass());
 
+	public MHousekeeperTask() {
+		
+	}
+	
+	public MHousekeeperTask(String name) {
+		setName(name);
+	}
+	
 	protected Log log() {
 		return log;
 	}
