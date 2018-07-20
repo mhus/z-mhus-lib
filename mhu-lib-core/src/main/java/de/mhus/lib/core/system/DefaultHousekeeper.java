@@ -16,7 +16,10 @@
 package de.mhus.lib.core.system;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TimerTask;
+import java.util.WeakHashMap;
 
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
@@ -27,6 +30,7 @@ import de.mhus.lib.core.MTimerTask;
 public class DefaultHousekeeper extends MLog implements MHousekeeper {
 
 	private MTimer timer;
+	private WeakHashMap<MHousekeeperTask, Long> list = new WeakHashMap<>();
 
 	public DefaultHousekeeper() {
 		log().t("new default housekeeper");
@@ -35,7 +39,15 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 	
 	@Override
 	public void register(MHousekeeperTask task, long sleep) {
+		list.put(task, sleep);
 		timer.schedule(new MyTimerTask(task), sleep, sleep);
+	}
+	
+	@Override
+	public List<String> getHousekeeperTaskInfo() {
+		LinkedList<String> out = new LinkedList<>();
+		list.forEach((k,v) -> out.add(k.getName() + "," + k.getClass().getCanonicalName() + "," + v) );
+		return out;
 	}
 	
 	@Override

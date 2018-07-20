@@ -23,7 +23,7 @@ public interface MutableActivator {
 	void addMap(String name, Class<?> clazz);
 	void removeMap(String name);
 	void removeObject(String name);
-	void removeObject(Class<?> ifc, String name);
+	boolean removeObject(Class<?> ifc, String name);
 	String[] getMapNames();
 	String[] getObjectNames();
 

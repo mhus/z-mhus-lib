@@ -266,7 +266,7 @@ public class CfgManager {
 				MApi.dirtyLog("--- Try to load mhus config from ", f.getAbsolutePath());
 				internalLoadConfig(f);
 				
-				TimerIfc timer = MApi.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
+				TimerIfc timer = MApi.get().getBaseControl().base().lookup(TimerIfc.class);
 				fileWatch = new FileWatch(f, timer, new FileWatch.Listener() {
 
 					@Override

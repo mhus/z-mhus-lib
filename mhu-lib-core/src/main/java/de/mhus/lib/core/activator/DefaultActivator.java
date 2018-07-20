@@ -126,11 +126,11 @@ public class DefaultActivator extends MActivator implements MutableActivator {
 	}
 
 	@Override
-	public void removeObject(Class<?> ifc, String name) {
+	public boolean removeObject(Class<?> ifc, String name) {
 		if (ifc == null) {
-			instances.remove(name);
+			return instances.remove(name) != null;
 		} else {
-			instances.remove(ifc.getCanonicalName() + (name != null ? ":" + name : ""));
+			return instances.remove(ifc.getCanonicalName() + (name != null ? ":" + name : "")) != null;
 		}
 	}
 	

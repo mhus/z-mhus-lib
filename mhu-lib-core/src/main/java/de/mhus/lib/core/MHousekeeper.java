@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core;
 
+import java.util.List;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.system.DefaultHousekeeper;
@@ -23,5 +25,7 @@ import de.mhus.lib.core.system.DefaultHousekeeper;
 public abstract interface MHousekeeper extends IBase {
 		
 	void register(MHousekeeperTask task, long sleep);
+
+	List<String> getHousekeeperTaskInfo();
 
 }

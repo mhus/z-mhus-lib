@@ -40,7 +40,7 @@ public abstract class Base {
 
 	public abstract void addObject(Class<?> ifc, Object obj);
 	
-	public abstract void removeObject(Class<?> ifc);
+	public abstract boolean removeObject(Class<?> ifc);
 	
 	public Base getParent() {
 		return parent;

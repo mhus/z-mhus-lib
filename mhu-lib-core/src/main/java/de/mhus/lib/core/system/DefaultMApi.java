@@ -78,7 +78,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
 	@Override
 	public Base base() {
-		return getBaseControl().getCurrentBase();
+		return getBaseControl().base();
 	}
 
 	@Override

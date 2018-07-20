@@ -63,9 +63,9 @@ public class BaseControl {
 		return getFindStrategy().install(base);
 	}
 	
-	public Base getCurrentBase() {
-		return getFindStrategy().find();
-	}
+//	public Base getCurrentBase() {
+//		return getFindStrategy().find();
+//	}
 
 	public void inject(Object object, Base base) {
 		getInjectStrategy().inject(object, base);

@@ -46,7 +46,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 		load();
 		MApi.getCfgUpdater().doUpdate(name);
 		
-		TimerIfc timer = MApi.get().getBaseControl().getCurrentBase().lookup(TimerIfc.class);
+		TimerIfc timer = MApi.get().getBaseControl().base().lookup(TimerIfc.class);
 		fileWatch = new FileWatch(file, timer, new FileWatch.Listener() {
 
 			@Override

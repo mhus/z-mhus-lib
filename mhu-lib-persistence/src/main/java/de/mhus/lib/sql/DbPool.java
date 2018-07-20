@@ -109,7 +109,7 @@ public abstract class DbPool extends MJmx {
 		if (housekeeper != null) {
 			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000));
 		} else {
-			log().i("Housekeeper not found - autoCleanup disabled");
+			log().w("Housekeeper not found - autoCleanup disabled");
 		}
 
 	}

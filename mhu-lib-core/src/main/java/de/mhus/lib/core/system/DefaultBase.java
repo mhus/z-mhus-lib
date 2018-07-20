@@ -86,11 +86,11 @@ public class DefaultBase extends Base {
 	}
 
 	@Override
-	public void removeObject(Class<?> ifc) {
+	public boolean removeObject(Class<?> ifc) {
 		MActivator act = getActivator();
 		if (act instanceof MutableActivator)
-			((MutableActivator)act).removeObject(ifc, null);
-		
+			return ((MutableActivator)act).removeObject(ifc, null);
+		return false;
 	}
 
 }
