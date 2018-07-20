@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.core;
 
-import java.util.List;
-
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.system.DefaultHousekeeper;
