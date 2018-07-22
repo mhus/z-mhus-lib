@@ -4,7 +4,9 @@
 * Switch to vaadin 8
 * Switch to karaf 4.1.*
 * Implement pem IO directly and remove dependency to bouncycastle
-* Calendar for christian holidays (moon phase calculation)
+* Calendar for christian holidays (moon phase calculation), link https://github.com/flightonary/jholiday
+* Link https://github.com/apilayer/restcountries to get Country and Language information
+* LInk https://github.com/googlei18n/libphonenumber to work with phone numbers
 
 == 3.3.7
 
@@ -14,7 +16,7 @@
 
 == 3.3.6
 
-* Use https://github.com/danielmiessler/SecLists to validate passwords
+* Use https://github.com/danielmiessler/SecLists (copy) to validate passwords
 * Implement DB Encapsulation and divide from Locking
 
 == 3.3.4
