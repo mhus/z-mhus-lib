@@ -109,4 +109,11 @@ public class MValidatorTest extends TestCase {
 		} catch (SQLException e) {}
 	}
 	
+	public void testPassword() {
+		assertTrue(MValidator.isPassword("Hello4Everyone_", 8, true, true, "alf"));
+		assertFalse(MValidator.isPassword("HelloEveryone_", 8, true, true, "alf"));
+		assertFalse(MValidator.isPassword("Hello4Everyone", 8, true, true, "alf"));
+		assertFalse(MValidator.isPassword("Hello4Alf_", 8, true, true, "alf"));
+		assertFalse(MValidator.isPassword("asdf1234", 8, true, false));
+	}
 }

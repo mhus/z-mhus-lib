@@ -15,11 +15,21 @@
  */
 package de.mhus.lib.core;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class MValidator {
+
+	private static List<String> passwordList;
 
 	public static boolean isEmailAddress(String email) {
 		if (email == null) return false;
@@ -72,13 +82,29 @@ public class MValidator {
 	      return in.matches( "\\d+\\s+([a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+|[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+\\s[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]+)" );
 	}
 	
-	public static boolean isPassword(String in, int maxLen, boolean needNumbers, boolean needSpecials) {
-		if (in == null) return false;
+	public static boolean isPassword(String in, int maxLen, boolean needNumbers, boolean needSpecials, String ... weakContent) {
+		if (in == null || in.equals("null")) return false;
 		if (in.length() < maxLen) return false;
 		if (in.length() == 0) return true;
 		
 		char c = in.charAt(0);
 		if (!(c >='a' && c <= 'z' || c >='A' && c <= 'Z')) return false; // need to start with a letter
+		
+		// test if weak content is included
+		String lower = in.toLowerCase();
+		if (weakContent != null && weakContent.length > 0) {
+			for (String weak :weakContent)
+				if (lower.contains(weak))
+					return false;
+		}
+		
+		// check dictionary
+		getPasswordList();
+		for (String item : passwordList)
+			if (lower.equals(item))
+				return false;
+		
+		// next test for special rules
 		if (!needNumbers && !needSpecials) return true;
 		
 		boolean hasNumber = false;
@@ -96,6 +122,33 @@ public class MValidator {
 		
 	}
 	
+	public static synchronized List<String> getPasswordList() {
+		if (passwordList != null) return passwordList;
+		try {
+			// from https://github.com/danielmiessler/SecLists - Please respect MIT License, is compatible with this Apache 2.0 license
+			URL res = MSystem.locateResource(MValidator.class, "10-million-password-list-top-100000.txt");
+			InputStream is = res.openStream();
+			final LinkedList<String> list = new LinkedList<>();
+			MFile.readLines(is, new Observer() {
+				
+				@Override
+				public void update(Observable o, Object arg) {
+					String v = (String)arg;
+					// to lower case and trimm
+					v = v.trim().toLowerCase();
+					if (v.length() > 0)
+						list.add(v);
+				}
+			});
+			is.close();
+			
+			passwordList = Collections.unmodifiableList(list);
+		} catch (Throwable t) {
+			MLogUtil.log().i(MValidator.class,t);
+		}
+		return passwordList;
+	}
+
 	public static boolean isZipCode(Locale locale, String zip) {
 		if (locale == null) {
 		} else

@@ -6,10 +6,16 @@
 * Implement pem IO directly and remove dependency to bouncycastle
 * Calendar for christian holidays (moon phase calculation)
 
-== 3.3.5
+== 3.3.7
 
 * Extend MForm to support Actions
 * Vaadin AbstractSubSpaceTree - Generic component showing in a tree a list of sub spaces
+
+
+== 3.3.6
+
+* Use https://github.com/danielmiessler/SecLists to validate passwords
+* Implement DB Encapsulation and divide from Locking
 
 == 3.3.4
 

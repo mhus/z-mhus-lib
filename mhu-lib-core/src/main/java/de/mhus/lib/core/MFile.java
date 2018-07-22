@@ -753,6 +753,32 @@ public class MFile {
 		return out;
 	}
 	
+	/**
+	 * Read an stream into a list line by line. The stream will not be closed.
+	 * 
+	 * @param is
+	 * @param removeLastEmpty If you have written line by line the last ENTER will produce an empty line, set true to remove this line.
+	 * @return the file content as list of lines
+	 * @throws IOException
+	 */
+	public static List<String> readLines(InputStream is, boolean removeLastEmpty) throws IOException {
+		if (is == null) return null;
+		
+		final LinkedList<String> out = new LinkedList<>();
+		readLines(is, new Observer() {
+			
+			@Override
+			public void update(Observable o, Object arg) {
+				out.add((String)arg);
+			}
+		});
+		
+		if (removeLastEmpty && out.size() > 0 && MString.isEmpty(out.getLast()))
+			out.removeLast();
+		
+		return out;
+	}
+	
 	public static void readLines(File file, Observer lineObserver) throws IOException {
 		if (file == null || lineObserver == null) return;
 		FileReader r = new FileReader(file);
@@ -760,6 +786,19 @@ public class MFile {
 		r.close();
 	}
 
+	/**
+	 * The stream will not be closed.
+	 * 
+	 * @param is
+	 * @param lineObserver
+	 * @throws IOException
+	 */
+	public static void readLines(InputStream is, Observer lineObserver) throws IOException {
+		if (is == null || lineObserver == null) return;
+		InputStreamReader r = new InputStreamReader(is);
+		readLines(r,lineObserver);
+	}
+	
 	public static void readLines(Reader r, Observer lineObserver) throws IOException {
 		if (r == null || lineObserver == null) return;
 		BufferedReader br = new BufferedReader(r);
