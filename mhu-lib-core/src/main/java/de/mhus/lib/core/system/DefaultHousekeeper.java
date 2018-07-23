@@ -21,13 +21,14 @@ import java.util.Map;
 import java.util.TimerTask;
 import java.util.WeakHashMap;
 
+import de.mhus.lib.basics.ActivatorObjectLifecycle;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MTimer;
 import de.mhus.lib.core.MTimerTask;
 
-public class DefaultHousekeeper extends MLog implements MHousekeeper {
+public class DefaultHousekeeper extends MLog implements MHousekeeper, ActivatorObjectLifecycle {
 
 	private MTimer timer;
 	private static WeakHashMap<MHousekeeperTask, Long> list = new WeakHashMap<>();
@@ -93,6 +94,19 @@ public class DefaultHousekeeper extends MLog implements MHousekeeper {
 			r.run();
 		}
 		
+	}
+
+	@Override
+	public void objectActivated(String ifcName, Object currentObject) {
+		
+	}
+
+	@Override
+	public void objectDeactivated() {
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 }

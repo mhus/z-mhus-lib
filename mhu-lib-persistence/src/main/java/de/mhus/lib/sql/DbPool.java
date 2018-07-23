@@ -109,7 +109,7 @@ public abstract class DbPool extends MJmx {
 		init();
 	}
 
-	protected void init() {
+	protected synchronized void init() {
 		if (housekeeperTask != null) return;
 		
 		housekeeperTask = new MHousekeeperTask(name) {

@@ -18,7 +18,9 @@ package de.mhus.lib.core.activator;
 import java.io.Closeable;
 import java.util.HashMap;
 
+import de.mhus.lib.basics.ActivatorObjectLifecycle;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IFlatConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
@@ -59,7 +61,29 @@ public class DefaultActivator extends MActivator implements MutableActivator {
 	
 	@Override
 	public void setInstance(String name, Object obj) {
-		instances.put(name, obj);
+		Object old = null;
+		if (obj == null) {
+			old = instances.remove(name);
+		} else {
+			// lifecycle
+			if (obj instanceof ActivatorObjectLifecycle) {
+				old = instances.get(name);
+				try {
+					((ActivatorObjectLifecycle)obj).objectActivated(name,old);
+				} catch (Throwable t) {
+					MApi.dirtyLog(this,name,t);
+				}
+			}
+			old = instances.put(name, obj);
+		}
+		// lifecycle
+		if (old != null && old instanceof ActivatorObjectLifecycle) {
+			try {
+				((ActivatorObjectLifecycle)obj).objectDeactivated();
+			} catch (Throwable t) {
+				MApi.dirtyLog(this,name,t);
+			}
+		}
 	}
 
 	public void addMap(String name, String clazz) {
