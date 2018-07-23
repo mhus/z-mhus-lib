@@ -2,8 +2,8 @@ package de.mhus.lib.core.mail;
 
 import java.util.Date;
 
-import javax.mail.Transport;
 import javax.mail.Message.RecipientType;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 

@@ -180,6 +180,7 @@ public class HashConfig extends IConfig {
 		return newPos;
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public void removeConfig(IConfig config) throws MException {
 

@@ -46,6 +46,7 @@ public class DriverManagerImpl extends CaoDriverManager {
 	 *
 	 * @param scheme a {@link java.lang.String} object.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void unregister(String scheme) {
 		schemes.remove(schemes);
 	}
