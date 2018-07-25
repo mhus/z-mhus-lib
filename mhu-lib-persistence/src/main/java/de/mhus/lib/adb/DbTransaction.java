@@ -82,37 +82,83 @@ public class DbTransaction {
 	}
 	
 	/**
-	 * <p>release.</p>
+	 * Release all locked object ids
 	 */
 	public static void releaseLock() {
 		TransactionPool.instance().releaseLock();
 	}
 	
+	/**
+	 * Close and remove all existing transaction connections.
+	 */
 	public static void releaseEncapsulate() {
 		TransactionPool.instance().releaseEncapsulate();
 	}
 	
-	public static void encapsulate(DbTransactionable owner) {
-		TransactionPool.instance().encapsulate(owner);
+	/**
+	 * Get an Connection for from owner and hold the connection for all activities.
+	 * If the owner is already in transaction it will not be replaced and return true.
+	 * The the owner can't provide a connection this method will return false because no
+	 * transaction connection was set.
+	 * 
+	 * @param owner The connection provider
+	 * @return true if everything is ok
+	 */
+	public static boolean encapsulate(DbTransactionable owner) {
+		return TransactionPool.instance().encapsulate(owner);
 	}
 	
+	/**
+	 * Return true if a transaction connection from this owner is available.
+	 * 
+	 * @param owner
+	 * @return true if in transaction
+	 */
+	public static boolean isInTransaction(DbTransactionable owner) {
+		return TransactionPool.instance().isInTransaction(owner);
+	}
+	
+	/**
+	 * Return the deposit connection of this owner or null.
+	 * @param owner
+	 * @return the connection
+	 */
 	public static TransactionConnection getConnection(DbTransactionable owner) {
 		return TransactionPool.instance().getConnection(owner);
 	}
 	
+	/**
+	 * Commit and close all transaction connections
+	 * @return true If no error was thrown. If false some connections can be committed other not. But it will be released in every case.
+	 */
 	public static boolean commitAndRelease() {
 		return TransactionPool.instance().commitAndRelease();
 	}
 	
+	/**
+	 * Roll back and close all transaction connections.
+	 * @return If no error was thrown. If false some connections can be rolled back other not. But it will be released in every case.
+	 * @throws MException
+	 */
 	public static boolean rollbackAndRelease() throws MException {
 		return TransactionPool.instance().rollbackAndRelease();
 	}
 	
+	/**
+	 * Commit all transaction connections, do not remove the transaction. All following activities
+	 * will be done in the next transaction.
+	 * @return If no error was thrown. If false some connections can be committed other not.
+	 */
 	public static boolean commitWithoutRelease() {
 		return TransactionPool.instance().commit();
 	}
 	
-	public static boolean rollbackWithoutRelease() throws MException {
+	/**
+	 * Roll back all transaction connections, do not remove the transaction. All following activities
+	 * will be done in the next transaction.
+	 * @return If no error was thrown. If false some connections can be rolled back other not.
+	 */
+	public static boolean rollbackWithoutRelease() {
 		return TransactionPool.instance().rollback();
 	}
 	

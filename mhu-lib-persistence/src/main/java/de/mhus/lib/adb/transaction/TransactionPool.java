@@ -79,14 +79,14 @@ public class TransactionPool extends MLog {
 //		}
 	}
 
-	public void encapsulate(DbTransactionable owner) {
+	public boolean encapsulate(DbTransactionable owner) {
 //		synchronized (encapsulate) {
 			Encapsulation enc = encapsulate.get();
 			if (enc == null) {
 				enc = new Encapsulation();
 				encapsulate.set(enc);
 			}
-			enc.append(owner);
+			return enc.append(owner);
 //		}
 	}
 	
@@ -136,8 +136,14 @@ public class TransactionPool extends MLog {
 		lock.remove();
 		Encapsulation enc = encapsulate.get();
 		if (enc != null)
-			enc.rollback();
+			enc.clear();
 		encapsulate.remove();
+	}
+
+	public boolean isInTransaction(DbTransactionable owner) {
+		Encapsulation enc = encapsulate.get();
+		if (enc == null) return false;
+		return enc.isInTransaction(owner);
 	}
 	
 }

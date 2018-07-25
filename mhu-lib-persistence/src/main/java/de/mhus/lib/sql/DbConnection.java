@@ -115,6 +115,7 @@ public interface DbConnection extends TransactionConnection {
 	/**
 	 * Close the connection.
 	 */
+	@Override
 	public void close();
 
 	/**

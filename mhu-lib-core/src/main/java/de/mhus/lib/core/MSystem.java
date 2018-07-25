@@ -410,7 +410,10 @@ public class MSystem {
 	public static String getObjectId(Object o) {
 		if (o == null)
 			return "null";
-		return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
+		String name = o.getClass().getName();
+		if (name == null)
+			name = getClassName(o);
+		return name + "@" + Integer.toHexString(System.identityHashCode(o));
 	}
 
 	/**

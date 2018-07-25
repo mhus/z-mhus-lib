@@ -6,4 +6,6 @@ public interface TransactionConnection {
 
 	void rollback() throws Exception;
 
+	void close();
+
 }

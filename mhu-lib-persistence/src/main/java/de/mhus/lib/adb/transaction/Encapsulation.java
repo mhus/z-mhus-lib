@@ -16,6 +16,7 @@
 package de.mhus.lib.adb.transaction;
 
 import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.adb.TransactionConnection;
@@ -25,14 +26,18 @@ import de.mhus.lib.core.logging.MLogUtil;
 public class Encapsulation {
 	
 	private HashMap<String, TransactionConnection> connections = new HashMap<>();
+	private WeakHashMap<Object, String> objectIdList = new WeakHashMap<>();
 	
-	public void append(DbTransactionable owner) {
-		String id = MSystem.getObjectId(owner);
+	public boolean append(DbTransactionable owner) {
+		String id = getObjectId(owner);
 		synchronized (connections) {
-			if (connections.containsKey(id)) return; // already set
+			if (connections.containsKey(id)) return true; // already set
 			TransactionConnection con = owner.createTransactionalConnection();
-			if (con != null)
+			if (con != null) {
 				connections.put(id, con);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -66,12 +71,18 @@ public class Encapsulation {
 	
 	public void clear() {
 		synchronized (connections) {
+			for (TransactionConnection con : connections.values())
+				try {
+					con.close();
+				} catch (Throwable e) {
+					MLogUtil.log().w(e);
+				}
 			connections.clear();
 		}
 	}
 	
 	public TransactionConnection getCurrent(DbTransactionable owner) {
-		String id = MSystem.getObjectId(owner);
+		String id = getObjectId(owner);
 		synchronized (connections) {
 			return connections.get(id);
 		}
@@ -79,6 +90,22 @@ public class Encapsulation {
 	
 	public boolean isEmpty() {
 		return connections.isEmpty();
+	}
+
+	public boolean isInTransaction(DbTransactionable owner) {
+		String id = getObjectId(owner);
+		synchronized (connections) {
+			return connections.containsKey(id);
+		}
+	}
+
+	public synchronized String getObjectId(DbTransactionable owner) {
+		String id = objectIdList.get(owner);
+		if (id == null) {
+			id = MSystem.getObjectId(owner);
+			objectIdList.put(owner, id);
+		}
+		return id;
 	}
 
 }
