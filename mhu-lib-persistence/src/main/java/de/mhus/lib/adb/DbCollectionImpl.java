@@ -24,6 +24,7 @@ import de.mhus.lib.core.util.Table;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
+import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbResult;
 
 /**
@@ -45,6 +46,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
 	private boolean hasNext = true;
 	private boolean ownConnection;
 	private O current;
+	private DbPool pool;
 
 	public DbCollectionImpl(DbManager manager, DbConnection con, boolean ownConnection, String registryName, O object, DbResult res) throws MException {
 
@@ -61,6 +63,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
 		this.registryName = registryName;
 		this.object = object;
 		this.ownConnection = ownConnection;
+		this.pool = manager.getPool();
 
 		nextObject();
 	}
@@ -121,7 +124,7 @@ public class DbCollectionImpl<O> extends MObject implements DbCollection<O> {
 		}
 		if (con != null) {
 			if (ownConnection)
-				manager.getSchema().closeConnection(con);
+				manager.getSchema().closeConnection(pool,con);
 			con = null;
 		}
 	}

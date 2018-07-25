@@ -17,10 +17,11 @@ package de.mhus.lib.adb;
 
 import de.mhus.lib.adb.transaction.TransactionLock;
 import de.mhus.lib.adb.transaction.TransactionPool;
+import de.mhus.lib.annotations.adb.DbTransactionable;
+import de.mhus.lib.annotations.adb.TransactionConnection;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
-import de.mhus.lib.sql.DbConnection;
 
 /**
  * Allow transaction and lock manageent with adb framework. This implementation should be used if you not need to
@@ -91,20 +92,28 @@ public class DbTransaction {
 		TransactionPool.instance().releaseEncapsulate();
 	}
 	
-	public static void encapsulate(DbConnection con) {
-		TransactionPool.instance().encapsulate(con);
+	public static void encapsulate(DbTransactionable owner) {
+		TransactionPool.instance().encapsulate(owner);
 	}
 	
-	public static DbConnection getConnection() {
-		return TransactionPool.instance().getConnection();
+	public static TransactionConnection getConnection(DbTransactionable owner) {
+		return TransactionPool.instance().getConnection(owner);
 	}
 	
-	public static void commit() {
-		TransactionPool.instance().commit();
+	public static boolean commitAndRelease() {
+		return TransactionPool.instance().commitAndRelease();
 	}
 	
-	public static void rollback() throws MException {
-		TransactionPool.instance().rollback();
+	public static boolean rollbackAndRelease() throws MException {
+		return TransactionPool.instance().rollbackAndRelease();
+	}
+	
+	public static boolean commitWithoutRelease() {
+		return TransactionPool.instance().commit();
+	}
+	
+	public static boolean rollbackWithoutRelease() throws MException {
+		return TransactionPool.instance().rollback();
 	}
 	
 }

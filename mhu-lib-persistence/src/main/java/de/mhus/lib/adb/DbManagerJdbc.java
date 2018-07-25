@@ -386,7 +386,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (res != null) res.close();
 				if (sth != null) sth.close();
-				if (myCon != null) schema.closeConnection(myCon);
+				if (myCon != null) schema.closeConnection(pool, myCon);
 			} catch (Throwable t) {
 				log().w(query,attributeName,t);
 			}
@@ -497,11 +497,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {
 				log().w(t);
@@ -566,7 +566,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.closeConnection(myCon);
+						schema.closeConnection(pool, myCon);
 					} catch (Throwable t) {}
 				}
 			} catch (Throwable t) {		
@@ -669,11 +669,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -743,11 +743,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -805,11 +805,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 		if (myCon != null) {
 			try {
-				schema.commitConnection(myCon);
+				schema.commitConnection(pool, myCon);
 			} catch (Throwable t) {
 				throw new MException(t);
 			}
-			schema.closeConnection(myCon);
+			schema.closeConnection(pool, myCon);
 		}
 
 	}
@@ -878,11 +878,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -951,11 +951,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -1026,11 +1026,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -1091,11 +1091,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);
@@ -1166,11 +1166,11 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			try {
 				if (myCon != null) {
 					try {
-						schema.commitConnection(myCon);
+						schema.commitConnection(pool, myCon);
 					} catch (Throwable t) {
 						throw new MException(t);
 					}
-					schema.closeConnection(myCon);
+					schema.closeConnection(pool, myCon);
 				}
 			} catch (Throwable t) {		
 				log().w(t);

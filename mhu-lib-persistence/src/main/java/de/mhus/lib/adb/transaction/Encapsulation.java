@@ -15,38 +15,70 @@
  */
 package de.mhus.lib.adb.transaction;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
+import de.mhus.lib.annotations.adb.DbTransactionable;
+import de.mhus.lib.annotations.adb.TransactionConnection;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.sql.DbConnection;
 
 public class Encapsulation {
 	
-	private LinkedList<DbConnection> queue = new LinkedList<>();
+	private HashMap<String, TransactionConnection> connections = new HashMap<>();
 	
-	public void append(DbConnection con) {
-		queue.add(con);
-	}
-
-	public DbConnection getCurrent() {
-		if (queue.isEmpty()) return null;
-		return queue.getLast();
-	}
-
-	public void shift() {
-		if (queue.isEmpty()) return;
-		DbConnection last = queue.removeLast();
-		// for secure the default behavior
-		try {
-			if (last != null)
-				last.commit();
-		} catch (Throwable e) {
-			MLogUtil.log().w(e);
+	public void append(DbTransactionable owner) {
+		String id = MSystem.getObjectId(owner);
+		synchronized (connections) {
+			if (connections.containsKey(id)) return; // already set
+			TransactionConnection con = owner.createTransactionalConnection();
+			if (con != null)
+				connections.put(id, con);
 		}
 	}
 
+	public boolean commit() {
+		boolean success = true;
+		synchronized (connections) {
+			for (TransactionConnection con : connections.values())
+				try {
+					con.commit();
+				} catch (Throwable e) {
+					success = false;
+					MLogUtil.log().w(e);
+				}
+		}
+		return success;
+	}
+
+	public boolean rollback() {
+		boolean success = true;
+		synchronized (connections) {
+			for (TransactionConnection con : connections.values())
+				try {
+					con.rollback();
+				} catch (Throwable e) {
+					success = false;
+					MLogUtil.log().w(e);
+				}
+		}
+		return success;
+	}
+	
+	public void clear() {
+		synchronized (connections) {
+			connections.clear();
+		}
+	}
+	
+	public TransactionConnection getCurrent(DbTransactionable owner) {
+		String id = MSystem.getObjectId(owner);
+		synchronized (connections) {
+			return connections.get(id);
+		}
+	}
+	
 	public boolean isEmpty() {
-		return queue.isEmpty();
+		return connections.isEmpty();
 	}
 
 }

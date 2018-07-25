@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
@@ -42,7 +43,7 @@ import de.mhus.lib.errors.MException;
  *
  */
 @JmxManaged(descrition="Database pool")
-public abstract class DbPool extends MJmx {
+public abstract class DbPool extends MJmx implements DbTransactionable {
 
 	// Trace parameters
 	private Map<String, ConnectionTrace> stackTraces = new HashMap<>();
@@ -267,6 +268,15 @@ public abstract class DbPool extends MJmx {
 			for (ConnectionTrace trace :list) {
 				trace.log(log());
 			}
+		}
+	}
+
+	@Override
+	public DbConnection createTransactionalConnection() {
+		try {
+			return getConnection();
+		} catch (Exception e) {
+			return null;
 		}
 	}
 

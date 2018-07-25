@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.sql;
 
+import de.mhus.lib.annotations.adb.TransactionConnection;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.errors.MException;
 
@@ -25,7 +26,7 @@ import de.mhus.lib.errors.MException;
  * @author mikehummel
  *
  */
-public interface DbConnection {
+public interface DbConnection extends TransactionConnection {
 
 	public static final String LANGUAGE_COMMON = "common";
 
@@ -34,6 +35,7 @@ public interface DbConnection {
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void commit() throws Exception;
 
 	/**
@@ -49,6 +51,7 @@ public interface DbConnection {
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void rollback() throws Exception;
 
 	/**

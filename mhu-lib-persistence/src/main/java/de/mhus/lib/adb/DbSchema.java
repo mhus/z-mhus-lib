@@ -435,29 +435,31 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	 * @throws Exception
 	 */
 	public DbConnection getConnection(DbPool pool) throws Exception {
-		DbConnection con = DbTransaction.getConnection();
+		DbConnection con = (DbConnection) DbTransaction.getConnection(pool);
 		if (con != null) return con;
 		return pool.getConnection();
 	}
 
 	/**
 	 * Close the default connection given with getConnection().
+	 * @param pool 
 	 * 
 	 * @param con
 	 */
-	public void closeConnection(DbConnection con) {
-		DbConnection c = DbTransaction.getConnection();
+	public void closeConnection(DbPool pool, DbConnection con) {
+		DbConnection c = (DbConnection) DbTransaction.getConnection(pool);
 		if (c != null) return;
 		con.close();
 	}
 
 	/**
 	 * Used to commit a default connection. See getConnection()
+	 * @param pool 
 	 * @param con
 	 * @throws Exception
 	 */
-	public void commitConnection(DbConnection con) throws Exception {
-		DbConnection c = DbTransaction.getConnection();
+	public void commitConnection(DbPool pool, DbConnection con) throws Exception {
+		DbConnection c = (DbConnection) DbTransaction.getConnection(pool);
 		if (c != null) return;
 		con.commit();
 	}

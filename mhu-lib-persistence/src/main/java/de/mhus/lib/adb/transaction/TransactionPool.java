@@ -15,9 +15,9 @@
  */
 package de.mhus.lib.adb.transaction;
 
+import de.mhus.lib.annotations.adb.DbTransactionable;
+import de.mhus.lib.annotations.adb.TransactionConnection;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.errors.MException;
-import de.mhus.lib.sql.DbConnection;
 
 public class TransactionPool extends MLog {
 
@@ -79,14 +79,14 @@ public class TransactionPool extends MLog {
 //		}
 	}
 
-	public void encapsulate(DbConnection con) {
+	public void encapsulate(DbTransactionable owner) {
 //		synchronized (encapsulate) {
 			Encapsulation enc = encapsulate.get();
 			if (enc == null) {
 				enc = new Encapsulation();
 				encapsulate.set(enc);
 			}
-			enc.append(con);
+			enc.append(owner);
 //		}
 	}
 	
@@ -94,62 +94,49 @@ public class TransactionPool extends MLog {
 		Encapsulation enc = encapsulate.get();
 		if (enc == null)
 			return;
-		enc.shift();
-		if (enc.isEmpty())
-			encapsulate.remove();
+		enc.clear();
+		encapsulate.remove();
 	}
 	
-	public DbConnection getConnection() {
+	public TransactionConnection getConnection(DbTransactionable owner) {
 		Encapsulation enc = encapsulate.get();
 		if (enc == null)
 			return null;
-		if (enc.isEmpty())
-			return null;
-		return enc.getCurrent();
+		return enc.getCurrent(owner);
 	}
-			
-	public void commit() {
-//		synchronized (encapsulate) {
-			Encapsulation enc = encapsulate.get();
-			if (enc == null) {
-				log().d("encapsulate not enabled - ignore commit");
-				return;
-			}
-			DbConnection cur = enc.getCurrent();
-			if (cur == null) {
-				log().d("encapsulation has no connection - ignore commit");
-				return;
-			}
-			try {
-				cur.commit();
-			} catch (Exception e) {
-				log().e(e);
-			}
-//		}
+
+	public boolean commitAndRelease() {
+		boolean res = commit();
+		releaseEncapsulate();
+		return res;
+	}
+
+	public boolean rollbackAndRelease() {
+		boolean res = rollback();
+		releaseEncapsulate();
+		return res;
 	}
 	
-	public void rollback() throws MException {
-//		synchronized (encapsulate) {
-			Encapsulation enc = encapsulate.get();
-			if (enc == null)
-				throw new MException("encapsulate not enabled for rollback");
-			DbConnection cur = enc.getCurrent();
-			if (cur == null)
-				throw new MException("encapsulate no connection for rollback");
-			try {
-				cur.rollback();
-			} catch (Exception e) {
-				log().e(e);
-			}
-//		}
+	public boolean commit() {
+		Encapsulation enc = encapsulate.get();
+		if (enc == null) {
+			log().d("encapsulate not enabled - ignore commit");
+			return false;
+		}
+		return enc.commit();
 	}
 	
-	public void clean() {
+	public boolean rollback() {
+		Encapsulation enc = encapsulate.get();
+		if (enc == null) return false;
+		return enc.rollback();
+	}
+	
+	public void clear() {
 		lock.remove();
 		Encapsulation enc = encapsulate.get();
 		if (enc != null)
-			while (!enc.isEmpty())
-				enc.shift();
+			enc.rollback();
 		encapsulate.remove();
 	}
 	
