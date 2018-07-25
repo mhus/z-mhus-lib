@@ -20,15 +20,19 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import de.mhus.lib.core.MValidator;
+import de.mhus.lib.core.config.IConfig;
 
 public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 
 	protected HashMap<String, Container> list = new HashMap<>();
+	protected long minRuntime = 3;
 
 	@Override
 	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {
 		super.doAnalyze(connectionId, original, query, delta, t);
 		if (t != null) return;
+		
+		if (delta < minRuntime) return;
 		
 		// prepare original - replace $UUID$ entries with $uuid$ static content
 		if (original.indexOf('$') >= 0) {
@@ -59,6 +63,12 @@ public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 		synchronized (this) {
 			return Collections.unmodifiableCollection(list.values());
 		}
+	}
+
+	@Override
+	public void doConfigure(IConfig config) {
+		minRuntime = config.getLong("minRuntime", minRuntime);
+		super.doConfigure(config);
 	}
 	
 	public static class Container {
