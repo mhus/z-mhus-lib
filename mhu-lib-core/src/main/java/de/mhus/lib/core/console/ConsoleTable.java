@@ -206,8 +206,10 @@ public class ConsoleTable {
     private String getRow(List<String[]> row, int cellLine) {
     	
     	if (acceptHorizontalLine) {
-	    	if (row.size() == 1 && row.get(0).equals(SEPARATOR_LINE)) {
-	    		return underline();
+	    	if (row.size() == 1 ) {
+	    		String[] row0 = row.get(0);
+	    		if (row0 != null && row0.length == 1 && row0[0] != null && row0[0].equals(SEPARATOR_LINE))
+	    			return underline();
 	    	}
     	}
         StringBuilder line = new StringBuilder();

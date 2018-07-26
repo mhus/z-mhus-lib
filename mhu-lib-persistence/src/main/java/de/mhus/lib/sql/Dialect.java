@@ -211,7 +211,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 			if (type.equals(DbType.TYPE.INT.name()) || type.equals("INTEGER")) {
 				t = CaoMetaDefinition.TYPE.LONG;
 			} else
-			if (type.equals(DbType.TYPE.BIGDECIMAL)) {
+			if (type.equals(DbType.TYPE.BIGDECIMAL.name())) {
 				t = CaoMetaDefinition.TYPE.STRING;
 			} else
 			if (type.equals("DATE")) {

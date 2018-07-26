@@ -146,6 +146,10 @@ public class SOfficeConnector {
 	}
 	
 	public static void replace(File from, File to, StringPropertyReplacer replacer) throws ZipException, IOException {
+		replace(from, to, new StringPropertyRewriter(replacer));
+	}
+	
+	public static void replace(File from, File to, StreamRewriter replacer) throws ZipException, IOException {
 		ZipFile inZip = new ZipFile(from);
 		FileOutputStream os = new FileOutputStream(to);
 		ZipOutputStream outZip = new ZipOutputStream(os);
@@ -158,9 +162,8 @@ public class SOfficeConnector {
 			ZipEntry e = new ZipEntry(inNext.getName());
 			outZip.putNextEntry(e);
 			if (inNext.getName().equals("content.xml") || inNext.getName().equals("word/document.xml")) {
-				String content = MFile.readFile(isZip);
-				content = replacer.process(content);
-				MFile.writeFile(outZip, content);
+				InputStream isRewritten = replacer.rewriteContent(isZip);
+				MFile.copyFile(isRewritten, outZip);
 			} else {
 				MFile.copyFile(isZip, outZip);
 			}
