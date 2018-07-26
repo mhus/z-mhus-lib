@@ -29,6 +29,9 @@ public final class SecureString implements Externalizable {
 	private byte[] data;
 	private int length;
 	
+	public SecureString() {
+	}
+	
 	public SecureString(String data) {
 		this.length = data == null ? 0 : data.length();
 		if (data == null) return;
