@@ -16,6 +16,7 @@
 package de.mhus.lib.core.util;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +67,7 @@ public class MMaven {
 		
 		String artifactLocation = artifact.toLocation();
 		
-		return new File(repositoryLocation + '/' + artifactLocation);
+		return new File(repositoryLocation + '/' + MFile.normalizePath(artifactLocation));
 	}
 
 	/**
@@ -277,6 +278,23 @@ public class MMaven {
 			this.type = type;
 		}
 		
+		public Artifact(Element xml) {
+			if ("project".equals(xml.getNodeName())) {
+				Element parent = MXml.getElementByPath(xml, "parent");
+				if (parent != null) {
+					groupId = MXml.getValue(parent, "groupId", groupId);
+					version = MXml.getValue(parent, "version", version);
+				}
+			}
+			artifactId = MXml.getValue(xml, "artifactId", artifactId);
+			groupId = MXml.getValue(xml, "groupId", groupId);
+			version = MXml.getValue(xml, "version", version);
+			type = MXml.getValue(xml, "packaging", type);
+			if (type == null)
+				type = MXml.getValue(xml, "type", null);
+			if (type.equals("bundle")) type = "jar";
+		}
+
 		public Artifact createPomArtifact() {
 			if (type.equals("pom")) return this;
 			return new Artifact(groupId, artifactId, version, "pom");
@@ -303,6 +321,11 @@ public class MMaven {
 			return type;
 		}
 		
+		public Version getEstimatedVersion() {
+			if (version == null) return Version.V_0_0_0;
+			return new Version(version);
+		}
+		
 		@Override
 		public String toString() {
 			return groupId + "/" + artifactId + "/" + version + "/" + type;
@@ -312,6 +335,7 @@ public class MMaven {
 	public static Artifact toArtifact(String groupId, String artifactId, String version, String type) {
 		return new Artifact(groupId, artifactId, version, type);
 	}
+	
 	public static Artifact toArtifact(String def) {
 		if (def == null) return null;
 		if (def.startsWith("mvn:")) {
@@ -334,4 +358,44 @@ public class MMaven {
 		}
 		throw new UsageException("Unknown format");
 	}	
+	
+	public static List<Artifact> findLocalArtifacts(String groupId) {
+		getLocalRepositoryLocation();
+		
+		File start = new File(repositoryLocation + "/" + MFile.normalizePath(groupId.replace('.', '/')) );
+		List<File> pomList = MFile.findAllFiles(start, new FileFilter() {
+			
+			@Override
+			public boolean accept(File file) {
+				return (file.isDirectory() || file.isFile() && file.getName().endsWith(".pom"));
+			}
+		});
+		
+		LinkedList<Artifact> out = new LinkedList<>();
+		for (File pomFile : pomList) {
+			try {
+				Document pom = MXml.loadXml(pomFile);
+				Artifact artifact = new Artifact(pom.getDocumentElement());
+				out.add(artifact);
+			} catch (Throwable t) {
+				
+			}
+		}
+		
+		return out;
+	}
+	
+	public static boolean deleteLocalArtifact(Artifact artifact) {
+		File loc = locateArtifact(artifact);
+		if (!loc.exists()) return false;
+		if (loc.isFile()) {
+			loc = loc.getParentFile();
+		}
+		if (loc.isDirectory()) {
+			MFile.deleteDir(loc);
+			return true;
+		}
+		return false;
+	}
+	
 }

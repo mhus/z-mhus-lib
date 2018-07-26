@@ -64,6 +64,7 @@ public class MFile {
 	private static Log log = Log.getLog(MFile.class);
 	
 	public static final String TYPE_PDF = "pdf";
+	private static final int MAX_LEVELS = 100;
 	
 	private static HashMap<String, FileChecker> fileChecker = new HashMap<>();
 	static {
@@ -866,6 +867,30 @@ public class MFile {
 		FileInputStream fis = new FileInputStream(file);
 		InputStreamReader fr = new InputStreamReader(fis, encoding);
 		return fr;
+	}
+
+	public static List<File> findAllFiles(File root, FileFilter fileFilter) {
+		LinkedList<File> out = new LinkedList<>();
+		findAllFiles(root, fileFilter, out, MAX_LEVELS);
+		return out;
+	}
+
+	public static void findAllFiles(File root, FileFilter fileFilter, List<File> list, int maxLevels) {
+		maxLevels--;
+		if (maxLevels < 0) return;
+		for (File child : root.listFiles()) {
+			if (child.isDirectory()) {
+				if (child.getName().equals(".") || child.getName().equals("..")) {
+					// ignore the dotties
+				} else {
+					if (fileFilter.accept(child))
+						findAllFiles(child, fileFilter, list, maxLevels);
+				}
+			} else {
+				if (fileFilter.accept(child))
+					list.add(child);
+			}
+ 		}
 	}
 	
 }
