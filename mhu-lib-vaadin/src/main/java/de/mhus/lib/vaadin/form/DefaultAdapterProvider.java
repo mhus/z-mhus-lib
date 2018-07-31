@@ -79,6 +79,7 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 			a.addMap("layout100", UiLayout100.Adapter.class);
 			a.addMap("layout50x50", UiLayout50x50.Adapter.class);
 			a.addMap("layouttabs", UiLayoutTabs.Adapter.class);
+			a.addMap("layoutwizard", UiLayoutWizard.Adapter.class);
 			a.addMap("100", UiLayout100.Adapter.class);
 			a.addMap("50x50", UiLayout50x50.Adapter.class);
 			a.addMap("tabs", UiLayoutTabs.Adapter.class);
@@ -87,6 +88,7 @@ public class DefaultAdapterProvider extends ActivatorAdapterProvider {
 			a.addMap("panel", UiPanel.Adapter.class);
 			a.addMap("link", UiLink.Adapter.class);
 			a.addMap("label", UiLabel.Adapter.class);
+			a.addMap("action", UiAction.Adapter.class);
 		}
 	}
 

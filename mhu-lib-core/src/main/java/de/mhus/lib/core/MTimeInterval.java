@@ -281,7 +281,7 @@ public class MTimeInterval {
 	 * @param def
 	 * @return milliseconds
 	 */
-	public static long toMilliseconds(String interval, int def) {
+	public static long toMilliseconds(String interval, long def) {
 		if (interval == null) return def;
 		try {
 			// parse string

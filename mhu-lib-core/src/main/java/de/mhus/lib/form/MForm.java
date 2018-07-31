@@ -32,6 +32,7 @@ public class MForm extends MObject implements MNlsProvider {
 	private ComponentAdapterProvider adapterProvider;
 	protected IConfig model;
 	private DataSource dataSource;
+	private ActionHandler actionHandler;
 	private MNlsBundle nlsBundle;
 	private FormControl control;
 	private UiInformation informationPane;
@@ -112,6 +113,14 @@ public class MForm extends MObject implements MNlsProvider {
 	
 	public MNlsBundle getNlsBundle() {
 		return nlsBundle;
+	}
+
+	public ActionHandler getActionHandler() {
+		return actionHandler;
+	}
+
+	public void setActionHandler(ActionHandler actionHandler) {
+		this.actionHandler = actionHandler;
 	}
 	
 }

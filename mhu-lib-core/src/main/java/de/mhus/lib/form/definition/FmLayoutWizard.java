@@ -18,17 +18,17 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefDefinition;
 
-public class FmLayoutTabs extends FmElement {
+public class FmLayoutWizard extends FmElement {
 
 	private static final long serialVersionUID = 1L;
 
-	public FmLayoutTabs(IDefDefinition ... definitions) {
+	public FmLayoutWizard(IDefDefinition ... definitions) {
 		this("","","", definitions);
 	}
-	public FmLayoutTabs(String name, String title, String description, IDefDefinition ... definitions) {
+	public FmLayoutWizard(String name, String title, String description, IDefDefinition ... definitions) {
 		super(name, new FmNls(title, description));
-		addDefinition(new DefAttribute("layout", "tabs"));
-		setString("type", "layouttabs");
+		addDefinition(new DefAttribute("layout", "wizard"));
+		setString("type", "layoutwizard");
 		addDefinition(definitions);
 	}
 

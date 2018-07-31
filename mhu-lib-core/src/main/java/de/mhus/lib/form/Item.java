@@ -15,17 +15,25 @@
  */
 package de.mhus.lib.form;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 
-public class Item {
+public class Item implements Externalizable {
 
 	private String key;
 	private String caption;
 	private MNlsProvider provider;
 	private String parent;
 
+	public Item() {
+	}
+	
 	public Item(String parent, String key, String caption) {
 		this.key = key;
 		this.caption = caption;
@@ -63,5 +71,19 @@ public class Item {
 		if (in instanceof Item)
 			return MSystem.equals( ((Item)in).getKey(), key );
 		return key.equals(in);
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(key);
+		out.writeObject(caption);
+		out.writeObject(parent);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		key = (String) in.readObject();
+		caption = (String) in.readObject();
+		parent = (String) in.readObject();
 	}
 }
