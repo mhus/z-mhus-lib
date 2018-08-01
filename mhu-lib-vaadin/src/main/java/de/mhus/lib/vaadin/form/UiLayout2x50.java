@@ -57,14 +57,14 @@ import de.mhus.lib.form.UiWizard;
  *
  */
 
-public class UiLayout50x50 extends UiLayout {
+public class UiLayout2x50 extends UiLayout {
 
 	private static final long serialVersionUID = 1L;
 	private GridLayout layout;
 	private int rows;
 	private UiSlot slot;
 	
-	public UiLayout50x50() {
+	public UiLayout2x50() {
 		this.layout = new GridLayout(6,1);
 		layout.setMargin(true);
 		layout.setSpacing(true);
@@ -274,7 +274,7 @@ public class UiLayout50x50 extends UiLayout {
 
 		@Override
 		public UiComponent createAdapter(IConfig config) {
-			return new UiLayout50x50();
+			return new UiLayout2x50();
 		}
 
 		@Override
