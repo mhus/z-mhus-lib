@@ -15,25 +15,52 @@
  */
 package de.mhus.lib.vaadin.form;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ComponentAdapter;
 import de.mhus.lib.form.ComponentDefinition;
 import de.mhus.lib.form.UiComponent;
 
+public class UiVoid extends UiVaadin {
 
-public class UiLayout4x25 extends AbstractColLayout {
+	@Override
+	protected void setValue(Object value) throws MException {
+	}
 
-	private static final long serialVersionUID = 1L;
+	@Override
+	public Component createEditor() {
+		return new Label();
+	}
 
-	public UiLayout4x25() {
-		super(4);
+	@Override
+	protected Object getValue() throws MException {
+		return null;
+	}
+
+	@Override
+	protected void setCaption(String value) throws MException {
+	}
+	
+	@Override
+	public void setError(String error) {
+	}
+	
+	@Override
+	public void clearError() {
+	}
+	
+	@Override
+	public void fieldValueChangedEvent() {
 	}
 	
 	public static class Adapter implements ComponentAdapter {
 
 		@Override
 		public UiComponent createAdapter(IConfig config) {
-			return new UiLayout4x25();
+			return new UiVoid();
 		}
 
 		@Override
@@ -43,5 +70,5 @@ public class UiLayout4x25 extends AbstractColLayout {
 		}
 		
 	}
-	
+
 }
