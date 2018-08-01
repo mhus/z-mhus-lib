@@ -60,12 +60,14 @@ import de.mhus.lib.form.UiWizard;
 public class UiLayout2x50 extends UiLayout {
 
 	private static final long serialVersionUID = 1L;
+	private static final int COL = 2;
 	private GridLayout layout;
 	private int rows;
 	private UiSlot slot;
+
 	
 	public UiLayout2x50() {
-		this.layout = new GridLayout(6,1);
+		this.layout = new GridLayout(COL*3,1);
 		layout.setMargin(true);
 		layout.setSpacing(true);
 		layout.setHideEmptyRowsAndColumns(true);
@@ -95,7 +97,7 @@ public class UiLayout2x50 extends UiLayout {
 		if (slot == null) {
 			slot = new UiSlot();
 		} else {
-			if (c.getConfig().getInt("columns", 1) > 1)
+			if (c.getConfig().getInt("columns", 1) > (COL-1))
 				slot = new UiSlot();
 		}
 		
@@ -189,7 +191,7 @@ public class UiLayout2x50 extends UiLayout {
 		public void add(final UiVaadin c, final UiWizard wizard, final Component e) {
 
 			int size = 2;
-			if (c.getConfig().getInt("columns", 1) > 1) {
+			if (c.getConfig().getInt("columns", 1) > (COL-1)) {
 				size = 5;
 			}
 			UiRow row1 = createRow(col, size, startRow);
@@ -265,7 +267,7 @@ public class UiLayout2x50 extends UiLayout {
 		}
 
 		public boolean isFull() {
-			return col >= 6;
+			return col >= COL*3;
 		}
 		
 	}
