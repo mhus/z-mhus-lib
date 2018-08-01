@@ -37,10 +37,16 @@ public class DummyDataSource extends FormControlAdapter implements DataSource {
 	
 	@Override
 	public Object getObject(UiComponent component, String name, Object def) {
-		System.out.println("getObject " + component.getName() + "." + name);
+		System.out.println("getObject1 " + component.getName() + "." + name);
 		return def;
 	}
 
+	@Override
+	public Object getObject(String name, Object def) {
+		System.out.println("getObject2 " + name);
+		return def;
+	}
+	
 	@Override
 	public void setObject(UiComponent component, String name, Object value) {
 		System.out.println("setObject " + component.getName() + "." + name + ": " + value);

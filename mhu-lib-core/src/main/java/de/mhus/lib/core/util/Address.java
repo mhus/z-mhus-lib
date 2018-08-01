@@ -15,9 +15,14 @@
  */
 package de.mhus.lib.core.util;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Locale;
 
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MConstants;
@@ -28,7 +33,7 @@ import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 
-public class Address {
+public class Address implements Externalizable {
 
 	public enum SALUTATION {
 		OTHER, MR, MRS, COMPANY, AGENCY, COUPLE
@@ -40,8 +45,12 @@ public class Address {
 
 	private static HashMap<String, IConfig> locales;
 
+	@Public
 	protected IProperties attributes;
 
+	public Address() {
+	}
+	
 	public Address(IProperties attributes) {
 		this.attributes = attributes;
 	}
@@ -291,6 +300,16 @@ public class Address {
 	public static void reloadDefinition() {
 		definition = null;
 		getDefinition();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(attributes);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		attributes = (IProperties) in.readObject();
 	}
 
 }

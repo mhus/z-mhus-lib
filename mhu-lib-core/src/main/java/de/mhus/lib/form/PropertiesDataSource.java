@@ -53,6 +53,13 @@ public class PropertiesDataSource implements DataSource {
 	}
 
 	@Override
+	public Object getObject(String name, Object def) {
+		Object val = properties.getProperty(name);
+		if (val == null) return def;
+		return val;
+	}
+	
+	@Override
 	public void setObject(UiComponent component, String name, Object value) {
 		properties.put(toName(component.getName(),name), value);
 	}

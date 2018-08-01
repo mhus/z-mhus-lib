@@ -40,5 +40,7 @@ public interface DataSource {
 	void setObject(UiComponent component, String name, Object value) throws Exception;
 
 	DataSource getNext();
-	
+
+	Object getObject(String name, Object def);
+
 }

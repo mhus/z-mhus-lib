@@ -74,7 +74,7 @@ public class PojoDataSource extends MLog implements DataSource {
 	@Override
 	public Object getObject(UiComponent component, String name, Object def) {
 		try {
-			log().t("getObject",component,name,def);
+			log().t("getObject1",component,name,def);
 			Object ret = model.getAttribute(getName(component,name)).get(pojo.getPojo());
 			if (ret == null) return def;
 			return ret;
@@ -84,6 +84,19 @@ public class PojoDataSource extends MLog implements DataSource {
 		return def;
 	}
 
+	@Override
+	public Object getObject(String name, Object def) {
+		try {
+			log().t("getObject2",name,def);
+			Object ret = model.getAttribute(name).get(pojo.getPojo());
+			if (ret == null) return def;
+			return ret;
+		} catch (Throwable e) {
+			log().t(e);
+		}
+		return def;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setObject(UiComponent component, String name, Object value) throws IOException {

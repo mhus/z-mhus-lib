@@ -53,7 +53,8 @@ public class UiCombobox extends UiVaadin {
 	public void doUpdateMetadata() throws MException {
 		ComboBox cb = (ComboBox)getComponentEditor();
 		cb.removeAllItems();
-		Item[] items = (Item[]) getForm().getDataSource().getObject(this, DataSource.ITEMS, null);
+		String itemsDef = getConfig().getString("itemdef", getName() + "." + DataSource.ITEMS);
+		Item[] items = (Item[]) getForm().getDataSource().getObject(itemsDef, null);
 		if (items != null)
 			for (Item item : items) {
 				cb.addItem(item.getKey());

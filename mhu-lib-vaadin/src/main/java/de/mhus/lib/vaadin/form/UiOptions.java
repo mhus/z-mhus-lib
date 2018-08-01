@@ -68,7 +68,8 @@ public class UiOptions extends UiVaadin {
 	public void doUpdateMetadata() throws MException {
 		TwinColSelect cb = (TwinColSelect)getComponentEditor();
 		cb.removeAllItems();
-		Item[] items = (Item[]) getForm().getDataSource().getObject(this, DataSource.ITEMS, null);
+		String itemsName = getConfig().getString("itemdef", getName() + "." + DataSource.ITEMS);
+		Item[] items = (Item[]) getForm().getDataSource().getObject(itemsName, null);
 		if (items != null)
 			for (Item item : items)
 				cb.addItem(item);

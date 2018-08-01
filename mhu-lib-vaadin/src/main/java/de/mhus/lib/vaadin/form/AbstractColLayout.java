@@ -171,10 +171,9 @@ public abstract class AbstractColLayout extends UiLayout {
 		
 		public void add(final UiVaadin c, final UiWizard wizard, final Component e) {
 
-			int size = 2;
-			if (c.getConfig().getInt("columns", 1) > (columns-1)) {
-				size = 5;
-			}
+			int cc = c.getConfig().getInt("columns", 1);
+			if (cc > columns) cc = columns;
+			int size = (cc-1) * 3 + 2;
 			UiRow row1 = createRow(col, size, startRow);
 			UiRow row2 = createRow(col, size, startRow+1);
 			UiRow row3 = createRow(col, size, startRow+2);
