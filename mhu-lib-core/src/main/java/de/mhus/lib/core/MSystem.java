@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.lang.instrument.Instrumentation;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -43,6 +44,9 @@ import java.util.Properties;
 
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.system.IApi;
+import net.bytebuddy.agent.ByteBuddyAgent;
+import net.bytebuddy.description.type.TypeDescription;
+import net.bytebuddy.dynamic.ClassFileLocator;
 
 public class MSystem {
 
@@ -846,6 +850,17 @@ public class MSystem {
 
 	public static Object getJavaVersion() {
 		return System.getProperty("java.version");
+	}
+
+	private static final Instrumentation instrumentation = ByteBuddyAgent.install();
+	/*
+	 * Use byte buddy to get the lambda byte code
+	 */
+	public static byte[] getByte(Class<?> c) throws IOException {
+	    ClassFileLocator locator = ClassFileLocator.AgentBased.of(instrumentation, c);
+	    TypeDescription.ForLoadedType desc = new TypeDescription.ForLoadedType(c);
+	    ClassFileLocator.Resolution resolution = locator.locate(desc.getName());
+	    return resolution.resolve();
 	}
 
 }

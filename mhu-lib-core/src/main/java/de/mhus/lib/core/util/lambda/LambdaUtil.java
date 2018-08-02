@@ -16,7 +16,6 @@
 package de.mhus.lib.core.util.lambda;
 
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -44,9 +43,6 @@ import java.util.function.ToLongFunction;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.NotFoundException;
-import net.bytebuddy.agent.ByteBuddyAgent;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.dynamic.ClassFileLocator;
 
 /**
  * Utility to help with lambda expressions. The main goal is to find the name of referenced method.
@@ -240,7 +236,7 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 	private static String getName(Object lambda) throws NotFoundException {
 		byte[] bc = null;
 		try {
-			bc = getByteCodeOf(lambda.getClass());
+			bc = MSystem.getByte(lambda.getClass());
 			if (debugOut)
 				System.out.println(MString.toHexDump(bc, 20));
 			// split the byte code
@@ -315,17 +311,5 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 		}
 		throw new NotFoundException("method in lambda not found", MSystem.getJavaVersion(), MString.toHexDump(bc, 20), lambda);
 	}
-
-	private static final Instrumentation instrumentation = ByteBuddyAgent.install();
-	/*
-	 * Use byte buddy to get the lambda byte code
-	 */
-	static byte[] getByteCodeOf(Class<?> c) throws IOException {
-	    ClassFileLocator locator = ClassFileLocator.AgentBased.of(instrumentation, c);
-	    TypeDescription.ForLoadedType desc = new TypeDescription.ForLoadedType(c);
-	    ClassFileLocator.Resolution resolution = locator.locate(desc.getName());
-	    return resolution.resolve();
-	}
-
 	
 }
