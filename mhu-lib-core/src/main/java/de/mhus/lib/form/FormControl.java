@@ -20,18 +20,54 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 @DefaultImplementation(FormControlAdapter.class)
 public interface FormControl {
 
+	/**
+	 * Call if the control is added to the form. Remember the form object.
+	 * 
+	 * @param form
+	 */
 	void attachedForm(MForm form);
 	
+	/**
+	 * The component gets focus.
+	 * 
+	 * @param component
+	 */
 	void focus(UiComponent component);
 	
+	/**
+	 * Set a new value to the component. Return true if the value is valid.
+	 * @param component
+	 * @param newValue
+	 * @return If the value was accepted.
+	 */
 	boolean newValue(UiComponent component, Object newValue);
 
+	/**
+	 * The value was reverted.
+	 * @param component
+	 */
 	void reverted(UiComponent component);
 
 	void newValueError(UiComponent component, Object newValue, Throwable t);
 
+	/**
+	 * The method is called after every value update.
+	 * @param component
+	 */
 	void valueSet(UiComponent component);
 
+	/**
+	 * The method is called after the form is initialized to set the default
+	 * state.
+	 */
 	void setup();
 
+	/**
+	 * This function can be called by custom code, e.g. if a action is triggered.
+	 * 
+	 * @param action
+	 * @param params
+	 */
+	void doAction(String action, Object ... params);
+	
 }

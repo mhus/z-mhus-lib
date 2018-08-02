@@ -15,9 +15,12 @@
  */
 package de.mhus.lib.form;
 
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.util.MNls;
 
-public class FormControlAdapter implements FormControl {
+public class FormControlAdapter extends MLog implements FormControl {
+
+	protected MForm form;
 
 	@Override
 	public void focus(UiComponent component) {
@@ -41,7 +44,7 @@ public class FormControlAdapter implements FormControl {
 
 	@Override
 	public void attachedForm(MForm form) {
-		
+		this.form = form;
 	}
 
 	@Override
@@ -62,6 +65,10 @@ public class FormControlAdapter implements FormControl {
 	@Override
 	public void setup() {
 		
+	}
+
+	@Override
+	public void doAction(String action, Object... params) {
 	}
 
 }
