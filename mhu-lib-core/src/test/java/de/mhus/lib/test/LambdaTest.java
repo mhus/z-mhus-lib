@@ -15,12 +15,19 @@
  */
 package de.mhus.lib.test;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.lang.AlreadyBoundException;
+import de.mhus.lib.core.lang.LocalClassLoader;
 import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.form.PojoDataSource;
+import de.mhus.lib.test.util.TransferIfc;
+import de.mhus.lib.test.util.TransferImpl;
 import junit.framework.TestCase;
 
 public class LambdaTest extends TestCase {
@@ -149,5 +156,21 @@ public class LambdaTest extends TestCase {
 			assertEquals("getMyByteArray", name);
 		}
 */
+	}
+	
+	@Test
+	public void testClassTransfer() throws IOException, AlreadyBoundException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		
+		String name = TransferImpl.class.getCanonicalName();
+		byte[] code = MSystem.getBytes(TransferImpl.class);
+		LocalClassLoader cl = new LocalClassLoader();
+		cl.addClassCode(name, code);
+		
+		Class<?> clazz = cl.loadClass(name);
+		assertNotSame(TransferImpl.class, clazz);
+		
+		TransferIfc obj = (TransferIfc) clazz.newInstance();
+		int res = obj.hello();
+		assertEquals(1, res);
 	}
 }

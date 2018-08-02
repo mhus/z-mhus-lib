@@ -856,7 +856,7 @@ public class MSystem {
 	/*
 	 * Use byte buddy to get the lambda byte code
 	 */
-	public static byte[] getByte(Class<?> c) throws IOException {
+	public static byte[] getBytes(Class<?> c) throws IOException {
 	    ClassFileLocator locator = ClassFileLocator.AgentBased.of(instrumentation, c);
 	    TypeDescription.ForLoadedType desc = new TypeDescription.ForLoadedType(c);
 	    ClassFileLocator.Resolution resolution = locator.locate(desc.getName());

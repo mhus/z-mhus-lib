@@ -236,7 +236,7 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 	private static String getName(Object lambda) throws NotFoundException {
 		byte[] bc = null;
 		try {
-			bc = MSystem.getByte(lambda.getClass());
+			bc = MSystem.getBytes(lambda.getClass());
 			if (debugOut)
 				System.out.println(MString.toHexDump(bc, 20));
 			// split the byte code
