@@ -15,22 +15,19 @@
  */
 package de.mhus.lib.form.definition;
 
-import java.util.function.Function;
-
 import de.mhus.lib.core.definition.IDefAttribute;
-import de.mhus.lib.core.pojo.MPojo;
 
-public class FmTextArea extends FmElement {
+public class FmTextArea extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
-	public <T> FmTextArea(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
-		this(MPojo.toAttributeName(getter), new FmNls(title, description));
-		addDefinition(definitions);
-	}
+//	public <T> FmTextArea(Function<T,?> getter, String title, String description, IDefAttribute ... definitions) {
+//		this(MPojo.toAttributeName(getter), new FmNls(title, description));
+//		addDefinition(definitions);
+//	}
 	
 	public FmTextArea(String name, String title, String description, IDefAttribute ... definitions) {
-		this(name, new FmNls(title, description));
+		this(name, new FaNls(title, description));
 		addDefinition(definitions);
 	}
 	

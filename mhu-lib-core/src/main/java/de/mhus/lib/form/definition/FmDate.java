@@ -18,16 +18,17 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
 
-public class FmDate extends FmElement {
+public class FmDate extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
-	public enum FORMATS {DATE,DATETIME,DATETIMESECONDS,TIME,TIMESECONDS};
+	public enum FORMATS {DATE,DATETIME,DATETIMESECONDS,TIME,TIMESECONDS,CUSTOM};
 	
 	public static final String FORMAT = "format";
+	public static final String CUSTOM_FORMAT = "customformat";
 
 	public FmDate(String name, FORMATS format, String title, String description, IDefAttribute ... definitions) {
-		this(name, new DefAttribute(FORMAT, format.name()), new FmNls(title, description));
+		this(name, new DefAttribute(FORMAT, format.name()), new FaNls(title, description));
 		addDefinition(definitions);
 	}
 //	public FmDate(String name, String title, String description) {

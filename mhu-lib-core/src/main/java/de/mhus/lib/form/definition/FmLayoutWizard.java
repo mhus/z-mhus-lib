@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefDefinition;
 
-public class FmLayoutWizard extends FmElement {
+public class FmLayoutWizard extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class FmLayoutWizard extends FmElement {
 		this("","","", definitions);
 	}
 	public FmLayoutWizard(String name, String title, String description, IDefDefinition ... definitions) {
-		super(name, new FmNls(title, description));
+		super(name, new FaNls(title, description));
 		addDefinition(new DefAttribute("layout", "wizard"));
 		setString("type", "layoutwizard");
 		addDefinition(definitions);

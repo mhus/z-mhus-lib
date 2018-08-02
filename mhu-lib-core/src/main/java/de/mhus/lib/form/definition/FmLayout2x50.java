@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefDefinition;
 
-public class FmLayout2x50 extends FmElement {
+public class FmLayout2x50 extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,7 @@ public class FmLayout2x50 extends FmElement {
 	}
 	
 	public FmLayout2x50(String name, String title, String description, IDefDefinition ... definitions) {
-		super(name, new FmNls(title, description));
+		super(name, new FaNls(title, description));
 		addDefinition(new DefAttribute("layout", "50x50"));
 		setString("type", "layout50x50");
 		addDefinition(definitions);

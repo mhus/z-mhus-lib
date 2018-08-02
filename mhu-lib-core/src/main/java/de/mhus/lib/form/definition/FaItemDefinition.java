@@ -17,10 +17,10 @@ package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
 
-public class FmNotEmpty extends DefAttribute {
+public class FaItemDefinition extends DefAttribute {
 
-	public FmNotEmpty() {
-		super("validator", "not_empty");
+	public FaItemDefinition(String name) {
+		super("itemdef", name);
 	}
 
 }

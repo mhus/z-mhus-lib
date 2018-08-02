@@ -16,11 +16,12 @@
 package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
+import de.mhus.lib.form.UiComponent;
 
-public class FmItemDefinition extends DefAttribute {
+public class FaFullWidth extends DefAttribute {
 
-	public FmItemDefinition(String name) {
-		super("itemdef", name);
+	public FaFullWidth() {
+		super(UiComponent.FULL_SIZE, "true");
 	}
 
 }

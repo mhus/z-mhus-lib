@@ -18,23 +18,23 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
-public class FmCheckbox extends FmElement {
+public class FmCheckbox extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TYPE_CHECKBOX = "checkbox";
 
 	public FmCheckbox(String name, String title, String description, IDefAttribute ... definitions) {
-		this(name, new FmNls(title, description));
+		this(name, new FaNls(title, description));
 		addDefinition(definitions);
 	}
 
 	public FmCheckbox(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
-		setString(FmElement.TYPE,TYPE_CHECKBOX);
+		setString(IFmElement.TYPE,TYPE_CHECKBOX);
 	}
 	
 	public FmCheckbox defaultValue(boolean in) throws MException {
-		setBoolean(FmElement.DEFAULT, in);
+		setBoolean(IFmElement.DEFAULT, in);
 		return this;
 	}
 	

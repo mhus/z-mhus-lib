@@ -15,12 +15,21 @@
  */
 package de.mhus.lib.form.definition;
 
+import java.text.SimpleDateFormat;
+
 import de.mhus.lib.core.definition.DefAttribute;
 
-public class FmReadOnly extends DefAttribute {
+/**
+ * Sets formatting used by some component implementations. See
+ * {@link SimpleDateFormat} for format details.
+ * 
+ * @author mikehummel
+ *
+ */
+public class FaCustomDateFormat extends DefAttribute {
 
-	public FmReadOnly() {
-		super("editable", false);
+	public FaCustomDateFormat(String format) {
+		super(FmDate.CUSTOM_FORMAT, format);
 	}
 
 }

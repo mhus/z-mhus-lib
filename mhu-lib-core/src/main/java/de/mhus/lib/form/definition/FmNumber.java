@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
-public class FmNumber extends FmElement {
+public class FmNumber extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
@@ -33,18 +33,18 @@ public class FmNumber extends FmElement {
 	public static final String NUMBER_TYPE = "number";
 
 	public FmNumber(String name, TYPES type, String title, String description, IDefAttribute ... definitions) {
-		this(name, type, new FmNls(title, description));
+		this(name, type, new FaNls(title, description));
 		addDefinition(definitions);
 	}
 
 	public FmNumber(String name, TYPES type, IDefAttribute ... definitions) {
 		super(name, definitions);
-		setString(FmElement.TYPE,TYPE_NUMBER);
+		setString(IFmElement.TYPE,TYPE_NUMBER);
 		setString(NUMBER_TYPE,type.name().toLowerCase());
 	}
 	
 	public FmNumber allowNull(boolean in) throws MException {
-		setBoolean(FmElement.ALLOW_NULL, in);
+		setBoolean(IFmElement.ALLOW_NULL, in);
 		return this;
 	}
 	

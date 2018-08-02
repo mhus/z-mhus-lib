@@ -16,12 +16,11 @@
 package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
-import de.mhus.lib.form.UiComponent;
 
-public class FmFullWidth extends DefAttribute {
+public class FaDefaultValue extends DefAttribute {
 
-	public FmFullWidth() {
-		super(UiComponent.FULL_SIZE, "true");
+	public FaDefaultValue(String def) {
+		super("defaultvalue", def);
 	}
 
 }

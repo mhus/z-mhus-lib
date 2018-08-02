@@ -17,12 +17,12 @@ package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.IDefAttribute;
 
-public class FmText extends FmElement {
+public class FmText extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
 	public FmText(String name, String title, String description, IDefAttribute ... definitions) {
-		this(name, new FmNls(name + ".title=" + title, name + ".description=" + description));
+		this(name, new FaNls(name + ".title=" + title, name + ".description=" + description));
 		addDefinition(definitions);
 	}
 	

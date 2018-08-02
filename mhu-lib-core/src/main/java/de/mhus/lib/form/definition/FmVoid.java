@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import de.mhus.lib.core.definition.IDefAttribute;
 
-public class FmVoid extends FmElement {
+public class FmVoid extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 

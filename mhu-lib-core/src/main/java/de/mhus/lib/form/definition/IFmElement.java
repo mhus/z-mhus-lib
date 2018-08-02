@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
 
-public class FmElement extends DefComponent {
+public class IFmElement extends DefComponent {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TITLE = "title";
@@ -36,7 +36,7 @@ public class FmElement extends DefComponent {
 	public static final String HEIGHT = "height";
 	public static final String WIZARD = "wizard";
 
-	public FmElement(String name, IDefAttribute ... definitions) {
+	public IFmElement(String name, IDefAttribute ... definitions) {
 		super("element", definitions);
 		setString("name", name);
 	}

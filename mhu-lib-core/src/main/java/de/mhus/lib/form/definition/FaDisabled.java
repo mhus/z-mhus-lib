@@ -17,10 +17,10 @@ package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
 
-public class FmType extends DefAttribute {
+public class FaDisabled extends DefAttribute {
 
-	public FmType(IFmType type) {
-		super("type", type.getValue() );
+	public FaDisabled() {
+		super("enabled", false);
 	}
 
 }

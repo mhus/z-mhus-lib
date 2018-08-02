@@ -20,7 +20,7 @@ import java.util.TreeMap;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.form.definition.FmElement;
+import de.mhus.lib.form.definition.IFmElement;
 
 public class ParameterDefinitions extends TreeMap<String, ParameterDefinition>{
 
@@ -44,7 +44,7 @@ public class ParameterDefinitions extends TreeMap<String, ParameterDefinition>{
 	private static void collect(IConfig form, ParameterDefinitions out) throws MException {
 		
 		// TODO need more transform options
-		if (form instanceof FmElement) {
+		if (form instanceof IFmElement) {
 			String name = form.getString("name");
 			String type = form.getString("type", null);
 			ParameterDefinition def = new ParameterDefinition(name + (type != null ? ",type:" + type : ""));

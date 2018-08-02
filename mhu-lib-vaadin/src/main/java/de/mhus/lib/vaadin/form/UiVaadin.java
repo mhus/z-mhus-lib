@@ -43,7 +43,10 @@ public abstract class UiVaadin extends UiComponent {
 		setEditable( ds.getBoolean(this, DataSource.EDITABLE, true) );
 		setVisible( ds.getBoolean(this, DataSource.VISIBLE, true) );
 		doUpdateMetadata();
-		setValue(ds.getObject(this, DataSource.VALUE, getConfig().get("value") ));
+		Object val = getConfig().get("value");
+		if (val == null)
+			val = getConfig().getString("defaultvalue", null);
+		setValue(ds.getObject(this, DataSource.VALUE, val ));
 		setCaption(getCaption(ds));
 		if (componentError != null) componentError.setVisible(false);
 		editorEditable = getConfig().getBoolean("editable", true) && ds.getBoolean(this, DataSource.EDITOR_EDITABLE, true);
@@ -58,7 +61,8 @@ public abstract class UiVaadin extends UiComponent {
 	@Override
 	public void doUpdateValue() throws MException {
 		DataSource ds = getForm().getDataSource();
-		setValue(ds.getObject(this, DataSource.VALUE, null));
+		String def = getConfig().getString("defaultvalue", null);
+		setValue(ds.getObject(this, DataSource.VALUE, def));
 		getForm().getControl().valueSet(this);
 	}
 	

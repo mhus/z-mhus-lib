@@ -15,29 +15,41 @@
  */
 package de.mhus.lib.form.definition;
 
-import de.mhus.lib.core.config.HashConfig;
+import java.util.UUID;
+
+import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefComponent;
-import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
-public class FmSource extends HashConfig implements IDefAttribute {
+public class FaNls extends DefAttribute {
 
-	private static final long serialVersionUID = 1L;
-	private String tag;
+	private String title;
+	private String description;
 
-	public FmSource(String tag, String name) {
-		super(tag, null);
-		this.tag = tag;
-		setString("name", name);
+	public FaNls(String value) {
+		this(value,null,null);
 	}
 	
-	@Override
-	public void inject(DefComponent root) throws MException {
-		HashConfig sources = (HashConfig) root.getNode("sources");
-		if (sources == null) {
-			sources = (HashConfig) root.createConfig("sources");
-		}
-		sources.setConfig(tag, this);
+	public FaNls(String title, String description) {
+		this(null,title,description);
+	}
+	
+	public FaNls(String value, String title, String description) {
+		super("nls", value == null ? UUID.randomUUID().toString() : value);
+		this.title = title;
+		this.description = description;
+
 	}
 
+	@Override
+	public void inject(DefComponent root) throws MException {
+		super.inject(root);
+		if (title != null) root.setString("caption", title);
+		if (description != null) root.setString("description", description);
+	}
+
+	@Override
+	public String toString() {
+		return  getName() + "->[" + title + "," + description + "]";
+	}
 }

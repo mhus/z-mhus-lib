@@ -58,6 +58,12 @@ public class UiDate extends UiVaadin {
 			ret.setDateFormat("HH:mm:ss");
 			ret.setResolution(Resolution.SECOND);
 			break;
+		case CUSTOM:
+			String custom = getConfig().getString(FmDate.CUSTOM_FORMAT, null);
+			if (custom != null)
+				ret.setDateFormat(custom);
+			ret.setResolution(Resolution.SECOND);
+			break;
 		default:
 			break;
 		}

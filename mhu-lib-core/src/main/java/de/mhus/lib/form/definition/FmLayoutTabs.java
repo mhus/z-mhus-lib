@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefDefinition;
 
-public class FmLayoutTabs extends FmElement {
+public class FmLayoutTabs extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class FmLayoutTabs extends FmElement {
 		this("","","", definitions);
 	}
 	public FmLayoutTabs(String name, String title, String description, IDefDefinition ... definitions) {
-		super(name, new FmNls(title, description));
+		super(name, new FaNls(title, description));
 		addDefinition(new DefAttribute("layout", "tabs"));
 		setString("type", "layouttabs");
 		addDefinition(definitions);
