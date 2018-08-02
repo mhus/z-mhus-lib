@@ -31,5 +31,7 @@ public interface FormControl {
 	void newValueError(UiComponent component, Object newValue, Throwable t);
 
 	void valueSet(UiComponent component);
-	
+
+	void setup();
+
 }

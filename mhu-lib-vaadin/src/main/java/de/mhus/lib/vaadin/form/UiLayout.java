@@ -38,6 +38,7 @@ public abstract class UiLayout extends UiVaadin implements Serializable {
 	@Override
 	public void setVisible(boolean visible) throws MException {
 		getComponent().setVisible(visible);
+		super.setVisible(visible);
 	}
 	@Override
 	public boolean isVisible() throws MException {

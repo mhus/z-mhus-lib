@@ -28,17 +28,17 @@ import de.mhus.lib.errors.MException;
 
 public class MForm extends MObject implements MNlsProvider {
 
-	private Locale locale = Locale.getDefault();
-	private ComponentAdapterProvider adapterProvider;
+	protected Locale locale = Locale.getDefault();
+	protected ComponentAdapterProvider adapterProvider;
 	protected IConfig model;
-	private DataSource dataSource;
-	private ActionHandler actionHandler;
-	private MNlsBundle nlsBundle;
-	private FormControl control;
-	private UiInformation informationPane;
+	protected DataSource dataSource;
+	protected ActionHandler actionHandler;
+	protected MNlsBundle nlsBundle;
+	protected FormControl control;
+	protected UiInformation informationPane;
+	protected IUiBuilder builder;
 	
 	public MForm() {
-		
 	}
 	
 	public MForm(Locale locale, ComponentAdapterProvider adapterProvider, IConfig model) {
@@ -71,10 +71,6 @@ public class MForm extends MObject implements MNlsProvider {
 		return dataSource;
 	}
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
 	@Override
 	public synchronized MNls getNls() {
 		if (nlsBundle == null) {
@@ -83,32 +79,14 @@ public class MForm extends MObject implements MNlsProvider {
 		}
 		return nlsBundle.getNls(locale);
 	}
-
-	public void setNlsBundle(MNlsBundle bundle) {
-		this.nlsBundle = bundle;
-	}
-
-	public void setAdapterProvider(ComponentAdapterProvider adapterProvider) {
-		this.adapterProvider = adapterProvider;
-	}
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
 	
 	public FormControl getControl() {
-		if (control == null) setControl(MApi.lookup(FormControl.class));
+		if (control == null) control = MApi.lookup(FormControl.class);
 		return control;
 	}
 	
-	public void setControl(FormControl control) {
-		this.control = control;
-		if (control != null) control.attachedForm(this);
-	}
 	public UiInformation getInformationPane() {
 		return informationPane;
-	}
-	public void setInformationPane(UiInformation informationPane) {
-		this.informationPane = informationPane;
 	}
 	
 	public MNlsBundle getNlsBundle() {
@@ -119,8 +97,8 @@ public class MForm extends MObject implements MNlsProvider {
 		return actionHandler;
 	}
 
-	public void setActionHandler(ActionHandler actionHandler) {
-		this.actionHandler = actionHandler;
+	public IUiBuilder getBuilder() {
+		return builder;
 	}
 	
 }

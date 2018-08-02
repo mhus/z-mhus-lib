@@ -24,7 +24,7 @@ import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.util.MNlsBundle;
 
-public class PojoForm extends MForm {
+public class PojoForm extends MutableMForm {
 
 	public PojoForm(PojoProvider pojo) throws Exception {
 		this(pojo, "");

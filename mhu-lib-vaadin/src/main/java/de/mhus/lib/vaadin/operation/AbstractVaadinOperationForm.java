@@ -19,7 +19,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.util.MNlsBundle;
-import de.mhus.lib.form.MForm;
+import de.mhus.lib.form.MutableMForm;
 import de.mhus.lib.form.PropertiesDataSource;
 import de.mhus.lib.vaadin.form.VaadinForm;
 
@@ -38,8 +38,8 @@ public abstract class AbstractVaadinOperationForm extends AbstractVaadinOperatio
 	protected void initUI() {
 		model = createForm();
 		model.setShowInformation(true);
-        if (model.getForm().getNlsBundle() == null)
-        	model.getForm().setNlsBundle(MNlsBundle.lookup(this));
+        if (model.getForm().getNlsBundle() == null && model.getForm() instanceof MutableMForm)
+        		((MutableMForm)model.getForm()).setNlsBundle(MNlsBundle.lookup(this));
 //        model.doBuild(getActivator());
         try {
 			model.doBuild();
@@ -54,11 +54,11 @@ public abstract class AbstractVaadinOperationForm extends AbstractVaadinOperatio
 		try {
 			DefRoot formDef = operation.getDescription().getForm();
 			VaadinForm form = new VaadinForm();
-			form.setForm( new MForm( formDef ) );
+			form.setForm( new MutableMForm( formDef ) );
 			dataSource = new PropertiesDataSource();
 			initDataSource(dataSource);
 			if (dataSource.getProperties() == null) dataSource.setProperties(new MProperties());
-			form.getForm().setDataSource(dataSource);
+			((MutableMForm)form.getForm()).setDataSource(dataSource);
 			return form;
 		} catch (Throwable t) {
 			log.w(t);

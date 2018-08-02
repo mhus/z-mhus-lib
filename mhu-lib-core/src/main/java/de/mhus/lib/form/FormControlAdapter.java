@@ -59,4 +59,9 @@ public class FormControlAdapter implements FormControl {
 		
 	}
 
+	@Override
+	public void setup() {
+		
+	}
+
 }

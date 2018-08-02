@@ -18,12 +18,14 @@ package de.mhus.lib.vaadin.form;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.form.IUiBuilder;
 import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.UiComponent;
 
-public class VaadinFormBuilder {
+public class VaadinFormBuilder extends MLog implements IUiBuilder {
 
 	private MForm form;
 	private UiLayout layout;
@@ -32,6 +34,7 @@ public class VaadinFormBuilder {
 	public VaadinFormBuilder() {
 	}
 
+	@Override
 	public void doBuild() throws Exception {
 		
 		index.clear();
@@ -67,32 +70,41 @@ public class VaadinFormBuilder {
 		}
 	}
 	
+	@Override
 	public void doRevert() {
 		try {
 			layout.doRevert();
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log().e(e);
 		}
 		for (Map.Entry<String, UiVaadin> entry : index.entrySet())
 			try {
 				entry.getValue().doRevert();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log().e(entry.getKey(),e);
 			}
 	}
 
+	public void doUpdateValue(String name) {
+		UiVaadin entry = index.get(name);
+		try {
+			entry.doUpdateValue();
+		} catch (Throwable e) {
+			log().e(name,e);
+		}
+	}
+	
+	@Override
 	public void doUpdateValues() {
 		for (Map.Entry<String, UiVaadin> entry : index.entrySet())
 			try {
 				entry.getValue().doUpdateValue();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log().e(entry.getKey(),e);
 			}
 	}
 
+	@Override
 	public UiVaadin getComponent(String name) {
 		return index.get(name);
 	}
@@ -101,6 +113,7 @@ public class VaadinFormBuilder {
 		return layout;
 	}
 
+	@Override
 	public MForm getForm() {
 		return form;
 	}
@@ -108,6 +121,5 @@ public class VaadinFormBuilder {
 	public void setForm(MForm form) {
 		this.form = form;
 	}
-
 	
 }

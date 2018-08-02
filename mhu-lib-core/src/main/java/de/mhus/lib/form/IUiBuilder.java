@@ -18,5 +18,12 @@ package de.mhus.lib.form;
 public interface IUiBuilder {
 
 	void doBuild() throws Exception;
+
+	void doRevert();
 	
+	void doUpdateValues();
+
+	MForm getForm();
+	
+	UiComponent getComponent(String name);
 }

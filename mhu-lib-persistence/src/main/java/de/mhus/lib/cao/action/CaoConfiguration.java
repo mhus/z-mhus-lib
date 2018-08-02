@@ -20,10 +20,10 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.form.DataSource;
-import de.mhus.lib.form.MForm;
+import de.mhus.lib.form.MutableMForm;
 import de.mhus.lib.form.UiComponent;
 
-public abstract class CaoConfiguration extends MForm {
+public abstract class CaoConfiguration extends MutableMForm {
 
 	protected MProperties properties = new MProperties();
 	protected CaoConfiguration con;

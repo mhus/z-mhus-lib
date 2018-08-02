@@ -22,6 +22,7 @@ import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.form.ActivatorAdapterProvider;
 import de.mhus.lib.form.MForm;
+import de.mhus.lib.form.MutableMForm;
 
 public class VaadinForm extends VerticalLayout {
 
@@ -30,7 +31,7 @@ public class VaadinForm extends VerticalLayout {
 	public enum SHOW {MODEL,YES,NO};
 	
 	private VaadinFormBuilder builder;
-	private MForm form;
+	private MutableMForm form;
 	private SHOW showInformation = SHOW.MODEL;
 	private VaadinUiInformation informationPane;
 	private UiLayout layout;
@@ -38,7 +39,7 @@ public class VaadinForm extends VerticalLayout {
 	
 	public VaadinForm() {}
 	
-	public VaadinForm(MForm form) {
+	public VaadinForm(MutableMForm form) {
 		setForm(form);
 	}
 	
@@ -56,7 +57,7 @@ public class VaadinForm extends VerticalLayout {
 
 		if (isShowInformation()) {
 			informationPane = new VaadinUiInformation();
-			getForm().setInformationPane(informationPane);
+			form.setInformationPane(informationPane);
 			addComponent(informationPane);
 			setExpandRatio(informationPane, 0);
 			informationPane.setHeight("100px");
@@ -109,7 +110,7 @@ public class VaadinForm extends VerticalLayout {
 		return form;
 	}
 
-	public void setForm(MForm form) {
+	public void setForm(MutableMForm form) {
 		this.form = form;
 	}
 

@@ -44,6 +44,7 @@ import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.form.MutableMForm;
 import de.mhus.lib.vaadin.form.VaadinPojoForm;
 
 public abstract class AbstractListEditor<E> extends VerticalLayout implements MNlsProvider, ILog {
@@ -147,8 +148,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         try {
         	
 	        model = createForm();
-	        if (model.getForm().getNlsBundle() == null)
-	        	model.getForm().setNlsBundle(MNlsBundle.lookup(this));
+	        if (model.getForm().getNlsBundle() == null && model.getForm() instanceof MutableMForm)
+	        		((MutableMForm)model.getForm()).setNlsBundle(MNlsBundle.lookup(this));
 //	        model.doBuild(getActivator());
 	        model.doBuild();
 	        detailsPanelContent.addComponent(model);
