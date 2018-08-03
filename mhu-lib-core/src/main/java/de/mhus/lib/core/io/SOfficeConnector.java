@@ -174,5 +174,25 @@ public class SOfficeConnector {
 		inZip.close();
 	}
 	
+	public static String content(File from) throws ZipException, IOException {
+		ZipFile inZip = new ZipFile(from);
+		try {
+			// copy
+			Enumeration<? extends ZipEntry> entries = inZip.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry inNext = entries.nextElement();
+				InputStream isZip = inZip.getInputStream(inNext);
+				if (inNext.getName().equals("content.xml") || inNext.getName().equals("word/document.xml")) {
+					String content = MFile.readFile(isZip);
+					isZip.close();
+					return content;
+				}
+				isZip.close();
+			}
+		} finally {
+			inZip.close();
+		}
+		return null;
+	}
 	
 }
