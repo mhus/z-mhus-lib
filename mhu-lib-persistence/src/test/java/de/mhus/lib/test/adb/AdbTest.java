@@ -487,7 +487,6 @@ public class AdbTest extends TestCase {
 		pool.close();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void testDbQuery() throws Exception {
 		
 		DbPool pool = createPool("testModel2").getPool("test");

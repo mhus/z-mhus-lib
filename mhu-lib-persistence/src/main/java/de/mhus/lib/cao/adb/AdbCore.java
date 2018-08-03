@@ -68,17 +68,14 @@ public class AdbCore extends CaoCore {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AdbNodeData[] getChildren(UUID parent) throws MException {
 		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent)).toArrayAndClose(new AdbNodeData[0]);
 	}
 
-	@SuppressWarnings("unchecked")
 	public AdbNodeData getChild(UUID parent, String name) throws MException {
 		return manager.getObjectByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent).eq(M.n(AdbNodeData::getName), name) );
 	}
 	
-	@SuppressWarnings("unchecked")
 	public AdbNodeData[] getChildren(UUID parent, String name) throws MException {
 		return manager.getByQualification(Db.query(AdbNodeData.class, type).eq(M.n(AdbNodeData::getCollection), collection).eq(M.n(AdbNodeData::getParent), parent).eq(M.n(AdbNodeData::getName), name) ).toArrayAndClose(new AdbNodeData[0]);
 	}
