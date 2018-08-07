@@ -532,6 +532,10 @@ public class ConsoleTable {
 		public int weight = 0;
 	}
 	
+	public Column getColumn(int index) {
+		return header.get(index);
+	}
+	
 	public int size() {
 		return content.size();
 	}
