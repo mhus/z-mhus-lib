@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.ReadOnlyList;
@@ -467,6 +468,16 @@ public class MCollection {
 		for (Object o : array)
 			if (o != null) return false;
 		return true;
+	}
+
+	/**
+	 * Create a new map and convert all string keys to lower case.
+	 * 
+	 * @param parameters
+	 * @return map with lower case keys
+	 */
+	public static Map<String, Object> toLowerCaseKeys(Map<String, Object> parameters) {
+		return parameters.entrySet().parallelStream().collect(Collectors.toMap(entry -> entry.getKey().toLowerCase(), Map.Entry::getValue));
 	}
 	
 }
