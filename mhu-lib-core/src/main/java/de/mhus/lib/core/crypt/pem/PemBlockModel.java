@@ -59,7 +59,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 		// parse
 		
 		// find start
-		int p = block.indexOf("-----START ");
+		int p = block.indexOf("-----BEGIN ");
 		if (p < 0) throw new ParseException("start of block not found");
 		
 		block = block.substring(p+11);
@@ -155,7 +155,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("-----START ").append(getName()).append("-----\n");
+		sb.append("-----BEGIN ").append(getName()).append("-----\n");
 		for (java.util.Map.Entry<String, Object> item : entrySet())
 			sb.append(item.getKey()).append(": ").append(item.getValue()).append('\n');
 		sb.append('\n');

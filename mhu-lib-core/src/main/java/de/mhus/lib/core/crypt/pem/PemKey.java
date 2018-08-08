@@ -59,7 +59,7 @@ public class PemKey extends PemBlockModel implements PemPriv,PemPub{
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("-----START ").append(getName()).append("-----\n");
+		sb.append("-----BEGIN ").append(getName()).append("-----\n");
 		for (java.util.Map.Entry<String, Object> item : entrySet())
 			sb.append(item.getKey()).append(": ").append(item.getValue()).append('\n');
 		sb.append('\n');
