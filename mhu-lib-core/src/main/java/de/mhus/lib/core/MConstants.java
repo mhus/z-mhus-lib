@@ -75,6 +75,8 @@ public class MConstants {
 	public static final String ADDR_MOBILE = "mobile";
 	public static final String ADDR_COUNTRY = "country";
 
+	public static final String ADDR_DISPLAY_NAME = "displayName";
+
 	public static enum ADDR_SCOPE {PRIVATE,WORK}
 
 }

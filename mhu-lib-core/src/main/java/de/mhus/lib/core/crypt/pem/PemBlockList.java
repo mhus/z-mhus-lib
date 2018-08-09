@@ -29,7 +29,7 @@ public class PemBlockList extends LinkedList<PemBlock> {
 	public PemBlockList(String string) {
 		while(true) {
 			try {
-				int p = string.indexOf("-----START ");
+				int p = string.indexOf("-----BEGIN ");
 				if (p < 0) break;
 				PemBlockModel next = new PemBlockModel().parse(string);
 				add(next);
