@@ -116,4 +116,10 @@ public class MValidatorTest extends TestCase {
 		assertFalse(MValidator.isPassword("Hello4Alf_", 8, true, true, "alf"));
 		assertFalse(MValidator.isPassword("asdf1234", 8, true, false));
 	}
+	
+	public void testAZ09() {
+		assertTrue(MValidator.isAZ09("abcdefghijklmnopqrszuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"));
+		assertFalse(MValidator.isAZ09("abcdefghijklmnopqrszuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"));
+		assertFalse(MValidator.isAZ09(null));
+	}
 }

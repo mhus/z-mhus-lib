@@ -19,36 +19,42 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class Lock {
 
-	  protected Thread lock = null;
-	  protected String name;
-	  protected boolean privacy = false;
-	
-	  public Lock() {}
-	  
-	  public Lock(String name, boolean privacy) {
-		  setName(name);
-		  this.privacy = privacy;
-	  }
-	  
-	  public Lock(String name) {
-		  setName(name);
-	  }
-	  
-	  public void lock() {
-		  synchronized (this) {
-			
-		    while(isLocked()){
-		      try {
-				wait();
-			} catch (InterruptedException e) {
-				
-			}
-		    }
-		    lock = Thread.currentThread();
-		  }
-	  }
+	protected Thread lock = null;
+	protected String name;
+	protected boolean privacy = false;
 
-	  public void lockWithException(long timeout) {
+	public Lock() {
+	}
+
+	public Lock(String name, boolean privacy) {
+		setName(name);
+		this.privacy = privacy;
+	}
+
+	public Lock(String name) {
+		setName(name);
+	}
+
+	public void lock() {
+		synchronized (this) {
+
+			while (isLocked()) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+
+				}
+			}
+			lock = Thread.currentThread();
+			lockEvent(true);
+		}
+	}
+
+    protected void lockEvent(boolean locked) {
+	
+	}
+
+	public void lockWithException(long timeout) {
 		  if (lock(timeout)) return;
 		  throw new TimeoutRuntimeException(name);
 	  }
@@ -65,6 +71,7 @@ public class Lock {
 		      if (System.currentTimeMillis() - start >= timeout ) return false;
 		    }
 		    lock = Thread.currentThread();
+			lockEvent(true);
 		    return true;
 		  }
 	  }
@@ -99,11 +106,12 @@ public class Lock {
 	  /**
 	   * Unlock if the current thread is also the owner.
 	   * 
-	   * @return true if lock wass successful
+	   * @return true if lock was successful
 	   */
 	  public boolean unlock(){
 		  synchronized (this) {
 			if (lock != Thread.currentThread()) return false;
+			lockEvent(false);
 		    lock = null;
 		    notify();
 		    return true;
@@ -116,6 +124,7 @@ public class Lock {
 	   */
 	  public void unlockHard(){
 		  synchronized (this) {
+			lockEvent(false);
 		    lock = null;
 		    notify();
 		  }

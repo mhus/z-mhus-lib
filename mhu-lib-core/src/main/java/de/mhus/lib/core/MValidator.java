@@ -214,4 +214,13 @@ public class MValidator {
 		return ip.matches("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
 	}
 	
+	/**
+	 * Check if in consists of a-z A-Z 0-9
+	 * @param in
+	 * @return true if matches
+	 */
+	public static boolean isAZ09(String in) {
+		if (in == null) return false;
+		return in.matches("^[0-9|a-z|A-Z]*$");
+	}
 }
