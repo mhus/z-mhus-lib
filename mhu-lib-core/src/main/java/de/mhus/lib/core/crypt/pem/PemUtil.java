@@ -149,4 +149,8 @@ public class PemUtil {
 		return new PemKey(new PemBlockModel().parse(key));
 	}
 
+	public static PemBlock parse(String entry) throws ParseException {
+		return new PemBlockModel().parse(entry);
+	}
+
 }
