@@ -24,6 +24,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -543,15 +544,21 @@ public final class MCast {
 	 * Put all list elements in a string list. Use the toString method.
 	 * 
 	 * @param _v
-	 * @return corresponding string array
+	 * @return corresponding string array, never null
 	 */
 	public static String[] toStringArray(List<?> _v) {
-
+		if (_v == null) return new String[0];
 		String[] out = new String[_v.size()];
 		for (int i = 0; i < _v.size(); i++) {
 			Object o = _v.get(i);
 			if (o == null)
 				out[i] = null;
+			else
+			if ( o instanceof String)
+				out[i] = (String)o;
+			else
+			if (o instanceof Object[])
+				out[i] = Arrays.deepToString((Object[])o);
 			else
 				out[i] = o.toString();
 		}

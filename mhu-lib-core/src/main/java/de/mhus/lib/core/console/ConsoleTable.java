@@ -131,8 +131,11 @@ public class ConsoleTable {
 	    		return out.toArray(new String[out.size()]);
 	    	}
 	    	if (v.getClass().isArray()) {
-	    		if (maxColSize > 0)
-	    			return MString.split(Arrays.deepToString((Object[]) v), maxColSize);
+	    		Object[] a = (Object[]) v;
+	    		String[] out = new String[a.length];
+	    		for (int i = 0; i < a.length; i++)
+	    			out[i] = MString.toString(a[i]);
+	    		return out;
 	    	}
 	    	if (v instanceof Date) {
 	    		return new String[] { MDate.toIso8601((Date)v) };
