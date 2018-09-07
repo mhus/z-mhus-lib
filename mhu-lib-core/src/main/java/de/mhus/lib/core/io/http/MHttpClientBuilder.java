@@ -16,6 +16,7 @@
 package de.mhus.lib.core.io.http;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -27,11 +28,13 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
 import de.mhus.lib.core.lang.MObject;
@@ -43,6 +46,7 @@ public class MHttpClientBuilder extends MObject {
 	private int proxyPort = 3128;
 	private BasicCookieStore cookieStore;
 	private boolean useSystemProperties;
+	protected HttpClientConnectionManager connManager;
 
 	/**
 	 * The function will return the http client. If the http client not exists or was closed the
@@ -54,6 +58,7 @@ public class MHttpClientBuilder extends MObject {
 		synchronized (this) {
 			if (hc == null) {
 				HttpClientBuilder build = HttpClients.custom();
+				configureConnectionManager(build);
 				configureProxy(build);
 				configureCookieStore(build);
 				configureProtocolHandling(build);
@@ -64,13 +69,20 @@ public class MHttpClientBuilder extends MObject {
 		return hc;
 	}
 	
+	protected void configureConnectionManager(HttpClientBuilder build) {
+		build.setConnectionManagerShared(false);
+		connManager = new PoolingHttpClientConnectionManager();
+		((PoolingHttpClientConnectionManager)connManager).setMaxTotal(100);
+		((PoolingHttpClientConnectionManager)connManager).setDefaultMaxPerRoute(100);
+		build.setConnectionManager(connManager);
+	}
+
 	/**
 	 * Overwrite to customize client builder.
 	 * 
 	 * @param build
 	 */
 	protected void configureBuilder(HttpClientBuilder build) {
-		
 	}
 
 	public void close() {
@@ -80,6 +92,9 @@ public class MHttpClientBuilder extends MObject {
 					hc.close();
 				} catch (IOException e) {}
 			hc = null;
+			if (connManager != null)
+				connManager.closeIdleConnections(0, TimeUnit.NANOSECONDS);
+			connManager = null;
 		}
 	}
 	
@@ -159,6 +174,13 @@ public class MHttpClientBuilder extends MObject {
 		return getHttpClient().execute(action);
 	}
 
+	public void cleanup() {
+		synchronized (this) {
+			if (connManager != null)
+				connManager.closeIdleConnections(1, TimeUnit.SECONDS);
+		}
+	}
+	
 	public static void close(HttpResponse response) {
 		if (response == null || !(response instanceof CloseableHttpResponse)) return;
 		try {
