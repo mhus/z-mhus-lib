@@ -17,10 +17,12 @@ package de.mhus.lib.core.io.http;
 
 import java.io.IOException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -30,6 +32,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.util.EntityUtils;
 
 import de.mhus.lib.core.lang.MObject;
 
@@ -54,12 +57,22 @@ public class MHttpClientBuilder extends MObject {
 				configureProxy(build);
 				configureCookieStore(build);
 				configureProtocolHandling(build);
+				configureBuilder(build);
 				hc = build.build();
 			}
 		}
 		return hc;
 	}
 	
+	/**
+	 * Overwrite to customize client builder.
+	 * 
+	 * @param build
+	 */
+	protected void configureBuilder(HttpClientBuilder build) {
+		
+	}
+
 	public void close() {
 		synchronized (this) {
 			if (hc != null)
@@ -146,4 +159,22 @@ public class MHttpClientBuilder extends MObject {
 		return getHttpClient().execute(action);
 	}
 
+	public static void close(HttpResponse response) {
+		if (response == null || !(response instanceof CloseableHttpResponse)) return;
+		try {
+			((CloseableHttpResponse)response).close();
+		} catch (IOException e) {
+//			log().d(e);
+		}
+	}
+	
+	public static void consume(HttpEntity entity) {
+		if (entity == null) return;
+		try {
+			EntityUtils.consume(entity);
+		} catch (IOException e) {
+//			log().d(e);
+		}
+	}
+	
 }
