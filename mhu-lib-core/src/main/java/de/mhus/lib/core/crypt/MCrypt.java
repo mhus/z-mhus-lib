@@ -30,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
@@ -597,11 +598,12 @@ public class MCrypt {
         return key;
     }
 	
+	// http://www.javased.com/index.php?api=java.security.PrivateKey
 	public static PublicKey getPublicKey(String key) {
 		try {
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 			byte[] encodedKey = decodeBASE64(key);
 			X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(encodedKey);
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 			return keyFactory.generatePublic(encodedKeySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			throw new RuntimeException(e);
@@ -610,9 +612,9 @@ public class MCrypt {
 	
 	public static PrivateKey getPrivateKey(String key) {
 		try {
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 			byte[] encodedKey = decodeBASE64(key);
-			X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(encodedKey);
+			PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(encodedKey);
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 			return keyFactory.generatePrivate(encodedKeySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			throw new RuntimeException(e);
@@ -620,11 +622,11 @@ public class MCrypt {
 	}
 	
 	public static String getPublicKey(KeyPair key) {
-		return encodeBASE64(key.getPublic().getEncoded());
+		return encodeBASE64(new X509EncodedKeySpec(key.getPublic().getEncoded()).getEncoded());
 	}
 
 	public static String getPrivateKey(KeyPair key) {
-		return encodeBASE64(key.getPrivate().getEncoded());
+		return encodeBASE64(new PKCS8EncodedKeySpec(key.getPrivate().getEncoded()).getEncoded());
 	}
 
 	public static byte[] encrypt(byte[] text, PublicKey key) throws Exception
