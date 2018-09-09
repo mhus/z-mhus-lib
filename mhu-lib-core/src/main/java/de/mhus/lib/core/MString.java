@@ -17,6 +17,7 @@ package de.mhus.lib.core;
 
 import java.awt.Color;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +42,10 @@ public class MString {
 	public static final String CHARSET_UTF_8 = "UTF-8";
 	public static final String CHARSET_UTF_16 = "UTF-16";
 	public static final String CHARSET_ISO_8859_1 = "ISO-8859-1";
+
+	public static final Charset CHARSET_CHARSET_UTF_8 = Charset.forName("UTF-8");
+	public static final Charset CHARSET_CHARSET_UTF_16 = Charset.forName("UTF-16");
+	public static final Charset CHARSET_CHARSET_ISO_8859_1 = Charset.forName("ISO-8859-1");
 
 	public static final char[] WHITESPACE = new char[] { ' ', '\n', '\r', '\t' };
 	public static final String DEFAULT_SEPARATOR = ",";

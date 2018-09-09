@@ -22,8 +22,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MBigMath;
@@ -574,5 +584,105 @@ public class MCrypt {
 		
 		return out.toByteArray();
 	}
+
+	protected static final String ALGORITHM = "RSA";
+	protected static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
 	
+	// With help from https://github.com/ingoclaro/crypt-examples/tree/master/java/src
+	public static KeyPair generateKey() throws NoSuchAlgorithmException
+    {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
+        keyGen.initialize(1024);
+        KeyPair key = keyGen.generateKeyPair();
+        return key;
+    }
+	
+	public static PublicKey getPublicKey(String key) {
+		try {
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+			byte[] encodedKey = decodeBASE64(key);
+			X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(encodedKey);
+			return keyFactory.generatePublic(encodedKeySpec);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static PrivateKey getPrivateKey(String key) {
+		try {
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+			byte[] encodedKey = decodeBASE64(key);
+			X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(encodedKey);
+			return keyFactory.generatePrivate(encodedKeySpec);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static String getPublicKey(KeyPair key) {
+		return encodeBASE64(key.getPublic().getEncoded());
+	}
+
+	public static String getPrivateKey(KeyPair key) {
+		return encodeBASE64(key.getPrivate().getEncoded());
+	}
+
+	public static byte[] encrypt(byte[] text, PublicKey key) throws Exception
+    {
+        byte[] cipherText = null;
+        //
+        // get an RSA cipher object and print the provider
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+
+        // encrypt the plaintext using the public key
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        cipherText = cipher.doFinal(text);
+        return cipherText;
+    }
+
+    public static String encrypt(String text, PublicKey key) throws Exception
+    {
+        String encryptedText;
+        byte[] cipherText = encrypt(text.getBytes("UTF8"),key);
+        encryptedText = encodeBASE64(cipherText);
+        return encryptedText;
+    }
+
+    public static byte[] decrypt(byte[] text, PrivateKey key) throws Exception
+    {
+        byte[] dectyptedText = null;
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        dectyptedText = cipher.doFinal(text);
+        return dectyptedText;
+
+    }
+
+    public static String decrypt(String text, PrivateKey key) throws Exception
+    {
+        String result;
+        byte[] dectyptedText = decrypt(decodeBASE64(text),key);
+        result = new String(dectyptedText, "UTF8");
+        return result;
+
+    }
+    
+    public static String encodeBASE64(byte[] bytes)
+    {
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    public static byte[] decodeBASE64(String text)
+    {
+        return Base64.getDecoder().decode(text);
+    }
+
+	public static byte[] createRand(int size) {
+		byte[] out = new byte[size];
+		MRandom rnd = MApi.lookup(MRandom.class);
+		for (int i = 0; i < out.length; i++)
+			out[i] = rnd.getByte();
+		return out;
+	}
+    
 }
