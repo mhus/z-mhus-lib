@@ -9,7 +9,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.crypt.BouncyUtil;
 import de.mhus.lib.core.crypt.CryptedString;
-import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.core.util.SecureString;
 import junit.framework.TestCase;
