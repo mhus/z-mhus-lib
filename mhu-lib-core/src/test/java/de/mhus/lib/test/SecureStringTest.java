@@ -7,6 +7,7 @@ import java.security.PublicKey;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.crypt.BouncyUtil;
 import de.mhus.lib.core.crypt.CryptedString;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.Lorem;
@@ -41,13 +42,13 @@ public class SecureStringTest extends TestCase {
 
 		KeyPair key = CryptedString.generateKey();
 		{
-			String a = MCrypt.getPublicKey(key);
-			PublicKey b = MCrypt.getPublicKey(a);
+			String a = BouncyUtil.getPublicKey(key);
+			PublicKey b = BouncyUtil.getPublicKey(a);
 			assertEquals(key.getPublic(), b);
 		}
 		{
-			String a = MCrypt.getPrivateKey(key);
-			PrivateKey b = MCrypt.getPrivateKey(a);
+			String a = BouncyUtil.getPrivateKey(key);
+			PrivateKey b = BouncyUtil.getPrivateKey(a);
 			assertEquals(key.getPrivate(), b);
 		}
 	}
@@ -55,8 +56,8 @@ public class SecureStringTest extends TestCase {
 	public void testCryptedStringTextual() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		String text = Lorem.create();
 		KeyPair key = CryptedString.generateKey();
-		String publKey = MCrypt.getPublicKey(key);
-		String privKey = MCrypt.getPrivateKey(key);
+		String publKey = BouncyUtil.getPublicKey(key);
+		String privKey = BouncyUtil.getPrivateKey(key);
 
 		CryptedString sec = new CryptedString(publKey, text);
 		String text2 = sec.value(privKey);

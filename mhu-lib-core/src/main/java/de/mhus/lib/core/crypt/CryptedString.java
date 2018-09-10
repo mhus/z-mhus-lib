@@ -6,6 +6,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 
 import de.mhus.lib.core.MFile;
@@ -27,14 +28,14 @@ public class CryptedString implements Externalizable {
 				length = 0;
 			} else {
 				length = secret.length();
-				byte[] r = MCrypt.createRand(100);
-				rand = MCrypt.encrypt(r, key.getPublic());
+				byte[] r = BouncyUtil.createRand(100);
+				rand = BouncyUtil.encrypt(r, key.getPublic());
 				CipherBlockAdd cipher = new CipherBlockAdd(r);
 				data = secret.getBytes(MString.CHARSET_UTF_8);
 				for (int i = 0; i < data.length; i++)
 					data[i] = cipher.encode(data[i]);
 			}
-			this.pubKeyMd5 = MCrypt.md5(MCrypt.getPublicKey(key));
+			this.pubKeyMd5 = MCrypt.md5(BouncyUtil.getPublicKey(key));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -47,8 +48,8 @@ public class CryptedString implements Externalizable {
 				length = 0;
 			} else {
 				length = secret.length();
-				byte[] r = MCrypt.createRand(100);
-				rand = MCrypt.encrypt(r, MCrypt.getPublicKey(pubKey));
+				byte[] r = BouncyUtil.createRand(100);
+				rand = BouncyUtil.encrypt(r, BouncyUtil.getPublicKey(pubKey));
 				CipherBlockAdd cipher = new CipherBlockAdd(r);
 				data = secret.getBytes(MString.CHARSET_UTF_8);
 				for (int i = 0; i < data.length; i++)
@@ -63,7 +64,7 @@ public class CryptedString implements Externalizable {
 	public String value(KeyPair key) {
 		if (data == null) return null;
 		try {
-			byte[] r = MCrypt.decrypt(rand, key.getPrivate());
+			byte[] r = BouncyUtil.decrypt(rand, key.getPrivate());
 			CipherBlockAdd cipher = new CipherBlockAdd(r);
 			byte[] d = new byte[data.length];
 			for (int i = 0; i < data.length; i++)
@@ -77,9 +78,9 @@ public class CryptedString implements Externalizable {
 	public String value(String privKey) {
 		if (data == null) return null;
 		try {
-			PrivateKey key = MCrypt.getPrivateKey(privKey);
+			PrivateKey key = BouncyUtil.getPrivateKey(privKey);
 			
-			byte[] r = MCrypt.decrypt(rand, key);
+			byte[] r = BouncyUtil.decrypt(rand, key);
 			CipherBlockAdd cipher = new CipherBlockAdd(r);
 			byte[] d = new byte[data.length];
 			for (int i = 0; i < data.length; i++)
@@ -132,8 +133,8 @@ public class CryptedString implements Externalizable {
 	
 	public static KeyPair generateKey() {
 		try {
-			return MCrypt.generateKey();
-		} catch (NoSuchAlgorithmException e) {
+			return BouncyUtil.generateKey();
+		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
 			throw new RuntimeException(e);
 		}
 	}
