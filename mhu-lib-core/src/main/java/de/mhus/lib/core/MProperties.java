@@ -158,7 +158,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToOptions(String properties) {
-		return explodeToMProperties(MUri.explodeArray(properties), '=', ':');
+		return explodeToOptions(MUri.explodeArray(properties), '=');
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToMProperties(String properties) {
-		return explodeToMProperties(MUri.explodeArray(properties), '=', ':');
+		return explodeToMProperties(MUri.explodeArray(properties), '=', ':', 0, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -189,7 +189,13 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToMProperties(String[] properties) {
-		return explodeToMProperties(properties, '=', ':');
+		if (properties == null) return new MProperties();
+		return explodeToMProperties(properties, '=', ':', 0, properties.length);
+	}
+	
+	public static MProperties explodeToMProperties(String[] properties, int offset, int length) {
+		if (properties == null) return new MProperties();
+		return explodeToMProperties(properties, '=', ':', offset, length);
 	}
 	
 	/**
@@ -226,12 +232,18 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToMProperties(String[] properties, char keySeparator, char typeSeparator) {
+		return explodeToMProperties(properties, keySeparator, typeSeparator, 0, Integer.MAX_VALUE);
+	}
+	
+	public static MProperties explodeToMProperties(String[] properties, char keySeparator, char typeSeparator, int offset, int length) {
 		MProperties p = new MProperties();
 		if (properties != null) {
-			for (String i : properties) {
-				if (i != null) {
-					appendToMap(p, i, keySeparator, typeSeparator);
-				}
+			for (int i = 0; i < length; i++) {
+				int pos = i + offset;
+				if (pos >= properties.length) break;
+				String item = properties[pos];
+				if (item != null)
+					appendToMap(p, item, keySeparator, typeSeparator);
 			}
 		}
 		return p;

@@ -199,12 +199,12 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 
 		@Override
 		public boolean canRead() {
-			return true;
+			return readable;
 		}
 
 		@Override
 		public boolean canWrite() {
-			return true;
+			return writable;
 		}
 
 		@SuppressWarnings("unchecked")
