@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MBigMath;
@@ -426,7 +428,18 @@ public class MCrypt {
 			md.update(real.getBytes());
 			return MCast.toBinaryString(md.digest());
 		} catch (NoSuchAlgorithmException e) {
-			log.t(e);
+			log.w(e);
+		}
+		return null;
+	}
+	
+	public static String sha256(String text) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+			return Base64.getEncoder().encodeToString(hash);
+		} catch (NoSuchAlgorithmException e) {
+			log.w(e);
 		}
 		return null;
 	}
@@ -449,7 +462,7 @@ public class MCrypt {
 			md.update(real.getBytes());
 			return MCast.toBinaryString(salt) +  MCast.toBinaryString(md.digest());
 		} catch (NoSuchAlgorithmException e) {
-			log.t(e);
+			log.w(e);
 		}
 		return null;
 	}
