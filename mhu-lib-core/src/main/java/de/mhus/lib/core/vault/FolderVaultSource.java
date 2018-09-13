@@ -70,11 +70,11 @@ public class FolderVaultSource extends MutableVaultSource {
 		FileInputStream parent = new FileInputStream(file);
 		InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
 		ObjectInputStream ois = new ObjectInputStream(is);
-		VaultEntry entry = new FileEntry(ois);
 		try {
+			VaultEntry entry = new FileEntry(ois);
 			addEntry(entry);
-		} catch (MException e) {
-			log().d(entry,e);
+		} catch (Exception e) {
+			log().w(file,e);
 		}
 		parent.close();
 	}

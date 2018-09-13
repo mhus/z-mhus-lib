@@ -29,7 +29,7 @@ import de.mhus.lib.core.system.IApi.SCOPE;
 public class MVaultUtil {
 
 	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
-	private static CfgFile defaultFolder = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,"de.mhus.lib.core.vault.FolderVaultSource") );
+	private static CfgFile defaultFolder = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
 	
 	public static MVault loadDefault() {
 		MVault vault = MApi.lookup(MVault.class);
@@ -57,7 +57,7 @@ public class MVaultUtil {
 					def = new FolderVaultSource(defaultFolder.value(), vaultPassphrase.getPassphrase(),MVault.SOURCE_DEFAULT);
 					vault.registerSource(def);
 				} catch (IOException e) {
-					MLogUtil.log().d(e);
+					MLogUtil.log().w(e);
 				}
 			}
 		}

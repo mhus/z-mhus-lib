@@ -57,7 +57,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		if (values != null) {
 			for (int i = 0; i < values.length; i+=2) {
 				if (i+1 < values.length)
-					setString(values[i], values[i+1]);
+					appendToMap(this, values[i] + "=" + values[i+1], '=', ':');
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToOptions(String properties) {
-		return explodeToMProperties(MUri.explodeArray(properties), '=');
+		return explodeToMProperties(MUri.explodeArray(properties), '=', ':');
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToMProperties(String properties) {
-		return explodeToMProperties(MUri.explodeArray(properties), '=');
+		return explodeToMProperties(MUri.explodeArray(properties), '=', ':');
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * @return The MProperties
 	 */
 	public static MProperties explodeToMProperties(String[] properties) {
-		return explodeToMProperties(properties, '=');
+		return explodeToMProperties(properties, '=', ':');
 	}
 	
 	/**
@@ -221,22 +221,16 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	 * This will handle the strings like properties. Means a string without separator will be
 	 * stored as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2, a=b
 	 * @param properties
-	 * @param separator
+	 * @param keySeparator 
+	 * @param typeSeparator 
 	 * @return The MProperties
 	 */
-	public static MProperties explodeToMProperties(String[] properties, char separator) {
+	public static MProperties explodeToMProperties(String[] properties, char keySeparator, char typeSeparator) {
 		MProperties p = new MProperties();
 		if (properties != null) {
-			int cnt = 0;
 			for (String i : properties) {
 				if (i != null) {
-					int idx = i.indexOf(separator);
-					if (idx >= 0) {
-						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
-					} else {
-						p.setProperty(String.valueOf(cnt), i);
-						cnt++;
-					}
+					appendToMap(p, i, keySeparator, typeSeparator);
 				}
 			}
 		}
@@ -254,10 +248,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		if (properties != null) {
 			for (String i : properties) {
 				if (i != null) {
-					int idx = i.indexOf('=');
-					if (idx >= 0) {
-						p.setProperty(i.substring(0,idx).trim(),i.substring(idx+1));
-					}
+					appendToMap(p, i, '=', ':');
 				}
 			}
 		}
@@ -733,6 +724,30 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		if (properties == null) return null;
 		if (properties instanceof MProperties) return (MProperties)properties;
 		return new MProperties(properties);
+	}
+
+	public static void appendToMap(Map<?, ?> p, String para) {
+		appendToMap(p, para, '=', ':');
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void appendToMap(Map<?, ?> p, String para, char keySeparator, char typeSeparator) {
+		if (para == null) return;
+		int pos = para.indexOf(keySeparator);
+		if (pos < 0) return;
+		String k = para.substring(0, pos);
+		String v = para.substring(pos+1);
+		String t = "text";
+		if (typeSeparator != 0) {
+			pos = k.indexOf(typeSeparator);
+			if (pos > 0) {
+				t = k.substring(pos+1);
+				k = k.substring(0, pos);
+			}
+		}
+		Object obj = MCast.toType(v,t, null);
+		if (obj != null)
+			((Map<Object,Object>)p).put(k, obj);
 	}
 	
 }

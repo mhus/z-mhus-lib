@@ -5,6 +5,7 @@ import java.util.UUID;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.core.util.SecureString;
 
 public class PemEntry extends DefaultEntry {
 
@@ -51,6 +52,7 @@ public class PemEntry extends DefaultEntry {
 			} else
 				type = MVault.TYPE_TEXT;
 		}
+		value = new SecureString(block.toString());
 	}
 	
 }

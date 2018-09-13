@@ -1149,4 +1149,50 @@ public final class MCast {
 	    return result;
 	}
 
+	public static Object toType(String value, String type, String def) {
+		Class<?> t = null;
+		switch (type.toLowerCase()) {
+		case "text":
+		case "string":
+			t = String.class;
+			break;
+		case "int":
+			t = int.class;
+			break;
+		case "long":
+			t = long.class;
+			break;
+		case "date":
+			t = Date.class;
+			break;
+		case "bool":
+		case "boolean":
+			t = boolean.class;
+			break;
+		case "double":
+			t = double.class;
+			break;
+		case "byte":
+			t = byte.class;
+			break;
+		case "short":
+			t = short.class;
+			break;
+		case "float":
+			t = float.class;
+			break;
+		case "char":
+		case "character":
+			t = char.class;
+			break;
+		default:
+			try {
+				t = MApi.lookup(MActivator.class).findClass(type);
+			} catch (ClassNotFoundException e) {
+				return def;
+			}
+		}
+		return toType(value, t, def);
+	}
+
 }

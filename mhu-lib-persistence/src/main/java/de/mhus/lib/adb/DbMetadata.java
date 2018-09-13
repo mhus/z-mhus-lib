@@ -22,6 +22,7 @@ import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
@@ -31,14 +32,18 @@ import de.mhus.lib.sql.DbConnection;
 public abstract class DbMetadata extends DbComfortableObject implements UuidIdentificable {
 
 	@DbPrimaryKey
+	@Public
 	private UUID id;
 	@DbPersistent
 	@DbIndex("adb_created")
+	@Public
 	private Date creationDate;
 	@DbPersistent
 	@DbIndex("adb_modified")
+	@Public
 	private Date modifyDate;
 	@DbPersistent
+	@Public
 	private long vstamp;
 
 	@Override

@@ -41,7 +41,7 @@ public class ParameterDefinition {
 			name = MString.beforeIndex(line, ',');
 			line = MString.afterIndex(line, ',');
 			
-			properties = MProperties.explodeToMProperties(line.split(","), ':');
+			properties = MProperties.explodeToMProperties(line.split(","), ':', (char)0);
 			
 		} else {
 			name = line;
