@@ -1,10 +1,12 @@
 package de.mhus.lib.test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.crypt.BouncyUtil;
@@ -19,6 +21,17 @@ public class SecureStringTest extends TestCase {
 		String text = Lorem.create();
 		SecureString sec = new SecureString(text);
 		String text2 = sec.value();
+		assertEquals(text, text2);
+	}
+
+	public void testSecureStringSerialization() throws ClassNotFoundException, IOException {
+		String text = Lorem.create();
+		SecureString sec = new SecureString(text);
+		
+		String serial = MCast.serializeToString(sec);
+		SecureString sec2 = (SecureString) MCast.unserializeFromString(serial, getClass().getClassLoader());
+
+		String text2 = sec2.value();
 		assertEquals(text, text2);
 	}
 
@@ -84,4 +97,46 @@ public class SecureStringTest extends TestCase {
 		System.out.println("CryptedStringPerformance " + cnt + "/s");
 	}
 
+	/**
+	 * This is a example how to use CryptedKey in your code. Use the key pool
+	 * to rotate keys, send the public key to the secret encoded and decode the secret.
+	 */
+	public void testKeyPool() {
+		
+		String text = Lorem.create();
+
+		KeyPair key = BouncyUtil.getRsaKeyFromPool();
+		String pub = BouncyUtil.getPublicKey(key);
+		CryptedString sec = callToGetTheSecret(pub, text);
+		
+		String text2 = sec.value(key);
+		assertEquals(text, text2);
+	}
+
+	/**
+	 * The trusted other side, but not a trusted transfer way
+	 * @param pub
+	 * @param text
+	 * @return
+	 */
+	private CryptedString callToGetTheSecret(String pub, String text) {
+		return new CryptedString(pub, text);
+	}
+	
+	public void testCryptedStringSerialization() throws IOException, ClassNotFoundException {
+		
+		String text = Lorem.create();
+
+		KeyPair key = BouncyUtil.getRsaKeyFromPool();
+		String pub = BouncyUtil.getPublicKey(key);
+		CryptedString sec = callToGetTheSecret(pub, text);
+
+		String serial = MCast.serializeToString(sec);
+		CryptedString sec2 = (CryptedString) MCast.unserializeFromString(serial, getClass().getClassLoader());
+		
+		String text2 = sec2.value(key);
+		assertEquals(text, text2);
+
+	}
+	
 }

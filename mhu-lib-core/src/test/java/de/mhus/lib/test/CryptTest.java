@@ -21,17 +21,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.security.KeyPair;
 
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.AsyncKey;
+import de.mhus.lib.core.crypt.BouncyUtil;
 import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
 import de.mhus.lib.core.crypt.CipherOutputStream;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.util.Lorem;
 import junit.framework.TestCase;
 
 public class CryptTest extends TestCase {
@@ -570,4 +573,14 @@ public class CryptTest extends TestCase {
 		assertTrue(MCrypt.validateMd5WithSalt(md5, real));
 	}
 
+	public void testRsaBigBlocks() throws Exception {
+		String text = Lorem.create();
+		byte[] block = text.getBytes();
+		KeyPair key = BouncyUtil.generateRsaKey();
+		byte[] enc = BouncyUtil.encryptRsa(block, key.getPublic());
+		byte[] dec = BouncyUtil.decryptRsa(enc, key.getPrivate());
+		String text2 = new String(dec);
+		assertEquals(text, text2);
+	}
+	
 }

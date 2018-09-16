@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.crypt;
 
+import java.io.ByteArrayOutputStream;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -27,12 +29,17 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.LinkedList;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.cfg.CfgInt;
+import de.mhus.lib.core.cfg.CfgLong;
 
 public class BouncyUtil {
 
@@ -41,54 +48,96 @@ public class BouncyUtil {
 			Security.addProvider(new BouncyCastleProvider());
 	}
 
-	protected static final String ALGORITHM = "RSA";
+	protected static final String ALGORITHM_RSA = "RSA";
 	protected static final String PROVIDER = "BC";
 	protected static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
+
+	private static LinkedList<KeyPair> keyPool = new LinkedList<>();
+	private static long keyPoolUpdate = 0;
+	private static CfgLong CFG_POOL_UPDATE_TIME = new CfgLong(BouncyUtil.class, "poolUpdateTime", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private static CfgInt CFG_POOL_SIZE = new CfgInt(BouncyUtil.class, "poolSize", 10);
 	
+
+	/**
+	 * Generate a RSA key pair with 1024 bits.
+	 * 
+	 * @return The key pair
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 */
 	// With help from https://github.com/ingoclaro/crypt-examples/tree/master/java/src
-	public static KeyPair generateKey() throws NoSuchAlgorithmException, NoSuchProviderException
+	public static KeyPair generateRsaKey() throws NoSuchAlgorithmException, NoSuchProviderException
     {
 		init();
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM, PROVIDER);
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM_RSA, PROVIDER);
         keyGen.initialize(1024);
         KeyPair key = keyGen.generateKeyPair();
         return key;
     }
 	
+	/**
+	 * Transform a string encoded public key to a public key object.
+	 * 
+	 * @param key Public Key as string
+	 * @return Public Key as object
+	 */
 	// http://www.javased.com/index.php?api=java.security.PrivateKey
 	public static PublicKey getPublicKey(String key) {
 		try {
 			init();
-			byte[] encodedKey = decodeBASE64(key);
+			byte[] encodedKey = decodeBase64(key);
 			X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(encodedKey);
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM, PROVIDER);
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA, PROVIDER);
 			return keyFactory.generatePublic(encodedKeySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
+	/**
+	 * Transforms a string encoded private key into a private key object
+	 * @param key Private Key as string
+	 * @return Private Key as object
+	 */
 	public static PrivateKey getPrivateKey(String key) {
 		try {
 			init();
-			byte[] encodedKey = decodeBASE64(key);
+			byte[] encodedKey = decodeBase64(key);
 			PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(encodedKey);
-			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM, PROVIDER);
+			KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA, PROVIDER);
 			return keyFactory.generatePrivate(encodedKeySpec);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
+	/**
+	 * Returns the public key of a key pair as string
+	 * @param key
+	 * @return Public Key as string
+	 */
 	public static String getPublicKey(KeyPair key) {
-		return encodeBASE64(new X509EncodedKeySpec(key.getPublic().getEncoded()).getEncoded());
+		return encodeBase64(new X509EncodedKeySpec(key.getPublic().getEncoded()).getEncoded());
 	}
 
+	/**
+	 * Returns the private key of a key pair as string
+	 * @param key
+	 * @return Private Key as string
+	 */
 	public static String getPrivateKey(KeyPair key) {
-		return encodeBASE64(new PKCS8EncodedKeySpec(key.getPrivate().getEncoded()).getEncoded());
+		return encodeBase64(new PKCS8EncodedKeySpec(key.getPrivate().getEncoded()).getEncoded());
 	}
 
-	public static byte[] encrypt(byte[] text, PublicKey key) throws Exception
+	/**
+	 * Encrypt one block with maximal 117 bytes (max block size). Optimized for one block step.
+	 * 
+	 * @param text
+	 * @param key
+	 * @return The encrypted block (128 bytes)
+	 * @throws Exception
+	 */
+	public static byte[] encryptRsa117(byte[] text, PublicKey key) throws Exception
     {
         byte[] cipherText = null;
         //
@@ -101,15 +150,91 @@ public class BouncyUtil {
         return cipherText;
     }
 
-    public static String encrypt(String text, PublicKey key) throws Exception
+	/**
+	 * Encrypt a unlimited amount of bytes with rsa.
+	 * 
+	 * @param text
+	 * @param key
+	 * @return encrypted bytes
+	 * @throws Exception
+	 */
+	public static byte[] encryptRsa(byte[] text, PublicKey key) throws Exception
+    {
+        // get an RSA cipher object and print the provider
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        // encrypt the plaintext using the public key
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        int start = 0;
+        while (true) {
+        		int len = text.length - start;
+        		if (len <= 117) {
+        			byte[] out = cipher.doFinal(text, start, len);
+        			os.write(out);
+        			break;
+        		} else {
+        			byte[] out = cipher.doFinal(text, start, 117);
+        			os.write(out);
+        		}
+        		start = start + 117;
+        }
+        return os.toByteArray();
+    }
+	
+	/**
+	 * Decrypt an encrypted block.
+	 * 
+	 * @param text
+	 * @param key
+	 * @return decrypted data
+	 * @throws Exception
+	 */
+    public static byte[] decryptRsa(byte[] text, PrivateKey key) throws Exception
+    {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        int start = 0;
+        while(true) {
+        		int len = text.length - start;
+        		if (len > 128) len = 128;
+        		byte[] out = cipher.doFinal(text, start, len);
+        		os.write(out);
+        		if (start + len >= text.length) {
+	        		break;
+        		}
+        		start = start + len;
+        }
+        return os.toByteArray();
+
+    }
+
+
+    /**
+     * Encrypt a single block with max 117 bytes as base64 string. Optimized for one block encryption.
+     * The text will be encoded with UTF8.
+     * @param text UTF8 Text
+     * @param key
+     * @return encrypted string
+     * @throws Exception
+     */
+    public static String encryptRsa117(String text, PublicKey key) throws Exception
     {
         String encryptedText;
-        byte[] cipherText = encrypt(text.getBytes("UTF8"),key);
-        encryptedText = encodeBASE64(cipherText);
+        byte[] cipherText = encryptRsa(text.getBytes("UTF8"),key);
+        encryptedText = encodeBase64(cipherText);
         return encryptedText;
     }
 
-    public static byte[] decrypt(byte[] text, PrivateKey key) throws Exception
+    /**
+     * Decrypt a single rsa block (128 bytes) with a result of maximal 117 bytes. Optimized for a single block step.
+     * @param text
+     * @param key
+     * @return decrypted string
+     * @throws Exception
+     */
+    public static byte[] decryptRsa117(byte[] text, PrivateKey key) throws Exception
     {
         byte[] dectyptedText = null;
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -119,26 +244,48 @@ public class BouncyUtil {
 
     }
 
-    public static String decrypt(String text, PrivateKey key) throws Exception
+    /**
+     * Decrypt a single base64 encrypted byte block. The text will decoded with UTF8.
+     * @param text
+     * @param key
+     * @return decrypted string
+     * @throws Exception
+     */
+    public static String decryptRsa117(String text, PrivateKey key) throws Exception
     {
         String result;
-        byte[] dectyptedText = decrypt(decodeBASE64(text),key);
+        byte[] dectyptedText = decryptRsa(decodeBase64(text),key);
         result = new String(dectyptedText, "UTF8");
         return result;
 
     }
     
-    public static String encodeBASE64(byte[] bytes)
+    /**
+     * encode bytes with base64 algorithm.
+     * @param bytes
+     * @return Base64 encoded string
+     */
+    public static String encodeBase64(byte[] bytes)
     {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public static byte[] decodeBASE64(String text)
+    /**
+     * Decode Base64 encoded string to bytes
+     * @param text
+     * @return original bytes
+     */
+    public static byte[] decodeBase64(String text)
     {
         return Base64.getDecoder().decode(text);
     }
 
-	public static byte[] createRand(int size) {
+    /**
+     * Create a array of 'size' with random content.
+     * @param size
+     * @return random content
+     */
+	public static byte[] createRandom(int size) {
 		byte[] out = new byte[size];
 		MRandom rnd = MApi.lookup(MRandom.class);
 		for (int i = 0; i < out.length; i++)
@@ -146,4 +293,76 @@ public class BouncyUtil {
 		return out;
 	}
 
+	/**
+	 * Encrypt the data using symmetric AES.
+	 * @param key The key with 16, 24 or 32 bytes.
+	 * @param data
+	 * @return Encoded data
+	 */
+	public static byte[] encryptAes(byte[] key, byte[] data) {
+		init();
+		try {
+			Cipher cipher = Cipher.getInstance("AES", "BC");
+			Key skeySpec = generateAesKeySpec(key);
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+			byte[] encrypted = cipher.doFinal(data);
+			return encrypted;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Creates a key object from bytes.
+	 * @param key
+	 * @return The bytes key as object
+	 */
+	public static Key generateAesKeySpec(byte[] key) {
+		Key k = new SecretKeySpec(key, "AES");
+		return k;
+	}
+
+	/**
+	 * Decrypt a encrypted byte array.
+	 * @param key
+	 * @param encrypted
+	 * @return original bytes
+	 */
+	public static byte[] decryptAes(byte[] key, byte[] encrypted) {
+		init();
+		try {
+			Cipher cipher = Cipher.getInstance("AES", "BC");
+			Key skeySpec = generateAesKeySpec(key);
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+			byte[] decrypted = cipher.doFinal(encrypted);
+			return decrypted;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Generating RSA keys needs a lot of resources (ca 100ms per key). Therefore you can
+	 * use a keypool. The keypool will regularly renew the keys.
+	 * @return A key from the pool
+	 */
+	public synchronized static KeyPair getRsaKeyFromPool() {
+		if (MTimeInterval.isTimeOut(keyPoolUpdate, CFG_POOL_UPDATE_TIME.value())) {
+			if (keyPool.size() > 0)
+				keyPool.removeFirst();
+			keyPoolUpdate = System.currentTimeMillis();
+		}
+		if (keyPool.size() < CFG_POOL_SIZE.value()) {
+			try {
+				KeyPair key = generateRsaKey();
+				keyPool.add(key);
+				return key;
+			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		int pos = (int)(Math.random() * keyPool.size()); // use a simple random function
+		return keyPool.get( pos );
+	}
+	
 }
