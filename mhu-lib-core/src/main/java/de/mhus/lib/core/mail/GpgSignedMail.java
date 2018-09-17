@@ -59,7 +59,7 @@ import org.bouncycastle.mail.smime.SMIMESignedGenerator;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 
 // http://www.docjar.org/src/api/org/bouncycastle/mail/smime/examples/CreateSignedMail.java
 @SuppressWarnings("deprecation")
@@ -155,7 +155,7 @@ public class GpgSignedMail implements Mail {
 	@Override
 	public void send(MailTransport transport) throws Exception {
 		
-		BouncyUtil.init();
+		MBouncy.init();
 
 		InternetAddress[] toAddresses = new InternetAddress[to.length];
 		for (int i = 0; i < to.length; i++)

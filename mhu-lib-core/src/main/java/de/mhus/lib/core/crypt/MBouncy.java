@@ -16,6 +16,7 @@
 package de.mhus.lib.core.crypt;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -37,11 +38,21 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
 
-public class BouncyUtil {
+/**
+ * This utility uses explicit bouncy castle methods for cryptography.
+ * It depends on BC but not JCE. For some compatibility reasons
+ * it makes sense to use BC instead of JCE (e.g. open jdk on
+ * not common environments / hardware JCE is not available).
+ * 
+ * @author mikehummel
+ *
+ */
+public class MBouncy {
 
 	public static void init() {
 		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null)
@@ -51,11 +62,13 @@ public class BouncyUtil {
 	protected static final String ALGORITHM_RSA = "RSA";
 	protected static final String PROVIDER = "BC";
 	protected static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
+	protected static final String ALGORITHM_AES = "AES";
+	private static final Charset STRING_ENCODING = MString.CHARSET_CHARSET_UTF_8;
 
 	private static LinkedList<KeyPair> keyPool = new LinkedList<>();
 	private static long keyPoolUpdate = 0;
-	private static CfgLong CFG_POOL_UPDATE_TIME = new CfgLong(BouncyUtil.class, "poolUpdateTime", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
-	private static CfgInt CFG_POOL_SIZE = new CfgInt(BouncyUtil.class, "poolSize", 10);
+	private static CfgLong CFG_POOL_UPDATE_TIME = new CfgLong(MBouncy.class, "poolUpdateTime", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private static CfgInt CFG_POOL_SIZE = new CfgInt(MBouncy.class, "poolSize", 10);
 	
 
 	/**
@@ -139,10 +152,11 @@ public class BouncyUtil {
 	 */
 	public static byte[] encryptRsa117(byte[] text, PublicKey key) throws Exception
     {
+		init();
         byte[] cipherText = null;
         //
         // get an RSA cipher object and print the provider
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
 
         // encrypt the plaintext using the public key
         cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -160,8 +174,9 @@ public class BouncyUtil {
 	 */
 	public static byte[] encryptRsa(byte[] text, PublicKey key) throws Exception
     {
+		init();
         // get an RSA cipher object and print the provider
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
         // encrypt the plaintext using the public key
         cipher.init(Cipher.ENCRYPT_MODE, key);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -191,7 +206,8 @@ public class BouncyUtil {
 	 */
     public static byte[] decryptRsa(byte[] text, PrivateKey key) throws Exception
     {
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+    		init();
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, key);
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -222,7 +238,7 @@ public class BouncyUtil {
     public static String encryptRsa117(String text, PublicKey key) throws Exception
     {
         String encryptedText;
-        byte[] cipherText = encryptRsa(text.getBytes("UTF8"),key);
+        byte[] cipherText = encryptRsa(text.getBytes(STRING_ENCODING),key);
         encryptedText = encodeBase64(cipherText);
         return encryptedText;
     }
@@ -236,8 +252,9 @@ public class BouncyUtil {
      */
     public static byte[] decryptRsa117(byte[] text, PrivateKey key) throws Exception
     {
+    		init();
         byte[] dectyptedText = null;
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, key);
         dectyptedText = cipher.doFinal(text);
         return dectyptedText;
@@ -255,7 +272,7 @@ public class BouncyUtil {
     {
         String result;
         byte[] dectyptedText = decryptRsa(decodeBase64(text),key);
-        result = new String(dectyptedText, "UTF8");
+        result = new String(dectyptedText, STRING_ENCODING);
         return result;
 
     }
@@ -302,7 +319,7 @@ public class BouncyUtil {
 	public static byte[] encryptAes(byte[] key, byte[] data) {
 		init();
 		try {
-			Cipher cipher = Cipher.getInstance("AES", "BC");
+			Cipher cipher = Cipher.getInstance(ALGORITHM_AES, PROVIDER);
 			Key skeySpec = generateAesKeySpec(key);
 			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 			byte[] encrypted = cipher.doFinal(data);
@@ -313,12 +330,24 @@ public class BouncyUtil {
 	}
 	
 	/**
+	 * Encrypt the String using UTF8 encoding and return a base64 encoded
+	 * string.
+	 * @param key
+	 * @param data
+	 * @return Base64 encoded encrypted string
+	 */
+	public static String encryptAes(byte[] key, String data) {
+		byte[] enc = encryptAes(key, data.getBytes(STRING_ENCODING));
+		return encodeBase64(enc);
+	}
+	
+	/**
 	 * Creates a key object from bytes.
 	 * @param key
 	 * @return The bytes key as object
 	 */
 	public static Key generateAesKeySpec(byte[] key) {
-		Key k = new SecretKeySpec(key, "AES");
+		Key k = new SecretKeySpec(key, ALGORITHM_AES);
 		return k;
 	}
 
@@ -331,7 +360,7 @@ public class BouncyUtil {
 	public static byte[] decryptAes(byte[] key, byte[] encrypted) {
 		init();
 		try {
-			Cipher cipher = Cipher.getInstance("AES", "BC");
+			Cipher cipher = Cipher.getInstance(ALGORITHM_AES, PROVIDER);
 			Key skeySpec = generateAesKeySpec(key);
 			cipher.init(Cipher.DECRYPT_MODE, skeySpec);
 			byte[] decrypted = cipher.doFinal(encrypted);
@@ -340,7 +369,19 @@ public class BouncyUtil {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
+	/**
+	 * Decrypt a base64 encoded string and return the ariginal string.
+	 * String encoding is UTF8.
+	 * @param key
+	 * @param encrypted
+	 * @return The original string
+	 */
+	public static String decryptAes(byte[] key, String encrypted) {
+		byte[] dec = decryptAes(key, decodeBase64(encrypted));
+		return new String(dec, STRING_ENCODING);
+	}
+
 	/**
 	 * Generating RSA keys needs a lot of resources (ca 100ms per key). Therefore you can
 	 * use a keypool. The keypool will regularly renew the keys.

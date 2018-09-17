@@ -40,7 +40,7 @@ import javax.mail.internet.MimeMessage;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 
 // http://www.docjar.org/src/api/org/bouncycastle/mail/smime/examples/CreateEncryptedMail.java
 public class GpgEncryptedMail implements Mail {
@@ -98,7 +98,7 @@ public class GpgEncryptedMail implements Mail {
 	@Override
 	public void send(MailTransport transport) throws Exception {
 		
-		BouncyUtil.init();
+		MBouncy.init();
 		
 		InternetAddress[] toAddresses = new InternetAddress[to.length];
 		for (int i = 0; i < to.length; i++)

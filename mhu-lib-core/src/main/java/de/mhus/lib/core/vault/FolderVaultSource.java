@@ -31,7 +31,6 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
-import de.mhus.lib.errors.MException;
 
 public class FolderVaultSource extends MutableVaultSource {
 

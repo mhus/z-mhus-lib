@@ -28,7 +28,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.AsyncKey;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
@@ -576,9 +576,9 @@ public class CryptTest extends TestCase {
 	public void testRsaBigBlocks() throws Exception {
 		String text = Lorem.create();
 		byte[] block = text.getBytes();
-		KeyPair key = BouncyUtil.generateRsaKey();
-		byte[] enc = BouncyUtil.encryptRsa(block, key.getPublic());
-		byte[] dec = BouncyUtil.decryptRsa(enc, key.getPrivate());
+		KeyPair key = MBouncy.generateRsaKey();
+		byte[] enc = MBouncy.encryptRsa(block, key.getPublic());
+		byte[] dec = MBouncy.decryptRsa(enc, key.getPrivate());
 		String text2 = new String(dec);
 		assertEquals(text, text2);
 	}

@@ -29,12 +29,12 @@ public class CryptedString implements Externalizable {
 				length = 0;
 			} else {
 				length = secret.length();
-				byte[] r = BouncyUtil.createRandom(AES_SIZE);
-				rand = BouncyUtil.encryptRsa117(r, key.getPublic());
+				byte[] r = MBouncy.createRandom(AES_SIZE);
+				rand = MBouncy.encryptRsa117(r, key.getPublic());
 				data = secret.getBytes(MString.CHARSET_UTF_8);
-				data = BouncyUtil.encryptAes(r, data);
+				data = MBouncy.encryptAes(r, data);
 			}
-			this.pubKeyMd5 = MCrypt.md5(BouncyUtil.getPublicKey(key));
+			this.pubKeyMd5 = MCrypt.md5(MBouncy.getPublicKey(key));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -47,10 +47,10 @@ public class CryptedString implements Externalizable {
 				length = 0;
 			} else {
 				length = secret.length();
-				byte[] r = BouncyUtil.createRandom(AES_SIZE);
-				rand = BouncyUtil.encryptRsa117(r, BouncyUtil.getPublicKey(pubKey));
+				byte[] r = MBouncy.createRandom(AES_SIZE);
+				rand = MBouncy.encryptRsa117(r, MBouncy.getPublicKey(pubKey));
 				data = secret.getBytes(MString.CHARSET_UTF_8);
-				data = BouncyUtil.encryptAes(r, data);
+				data = MBouncy.encryptAes(r, data);
 			}
 			this.pubKeyMd5 = MCrypt.md5(pubKey);
 		} catch (Exception e) {
@@ -61,8 +61,8 @@ public class CryptedString implements Externalizable {
 	public String value(KeyPair key) {
 		if (data == null) return null;
 		try {
-			byte[] r = BouncyUtil.decryptRsa117(rand, key.getPrivate());
-			byte[] d = BouncyUtil.decryptAes(r, data);
+			byte[] r = MBouncy.decryptRsa117(rand, key.getPrivate());
+			byte[] d = MBouncy.decryptAes(r, data);
 			return new String(d, MString.CHARSET_UTF_8);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -72,10 +72,10 @@ public class CryptedString implements Externalizable {
 	public String value(String privKey) {
 		if (data == null) return null;
 		try {
-			PrivateKey key = BouncyUtil.getPrivateKey(privKey);
+			PrivateKey key = MBouncy.getPrivateKey(privKey);
 			
-			byte[] r = BouncyUtil.decryptRsa117(rand, key);
-			byte[] d = BouncyUtil.decryptAes(r, data);
+			byte[] r = MBouncy.decryptRsa117(rand, key);
+			byte[] d = MBouncy.decryptAes(r, data);
 			return new String(d, MString.CHARSET_UTF_8);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -124,7 +124,7 @@ public class CryptedString implements Externalizable {
 	
 	public static KeyPair generateKey() {
 		try {
-			return BouncyUtil.generateRsaKey();
+			return MBouncy.generateRsaKey();
 		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
 			throw new RuntimeException(e);
 		}

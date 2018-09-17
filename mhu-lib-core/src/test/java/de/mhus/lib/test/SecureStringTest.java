@@ -9,7 +9,7 @@ import java.security.PublicKey;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.crypt.BouncyUtil;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.CryptedString;
 import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.core.util.SecureString;
@@ -54,13 +54,13 @@ public class SecureStringTest extends TestCase {
 
 		KeyPair key = CryptedString.generateKey();
 		{
-			String a = BouncyUtil.getPublicKey(key);
-			PublicKey b = BouncyUtil.getPublicKey(a);
+			String a = MBouncy.getPublicKey(key);
+			PublicKey b = MBouncy.getPublicKey(a);
 			assertEquals(key.getPublic(), b);
 		}
 		{
-			String a = BouncyUtil.getPrivateKey(key);
-			PrivateKey b = BouncyUtil.getPrivateKey(a);
+			String a = MBouncy.getPrivateKey(key);
+			PrivateKey b = MBouncy.getPrivateKey(a);
 			assertEquals(key.getPrivate(), b);
 		}
 	}
@@ -68,8 +68,8 @@ public class SecureStringTest extends TestCase {
 	public void testCryptedStringTextual() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		String text = Lorem.create();
 		KeyPair key = CryptedString.generateKey();
-		String publKey = BouncyUtil.getPublicKey(key);
-		String privKey = BouncyUtil.getPrivateKey(key);
+		String publKey = MBouncy.getPublicKey(key);
+		String privKey = MBouncy.getPrivateKey(key);
 
 		CryptedString sec = new CryptedString(publKey, text);
 		String text2 = sec.value(privKey);
@@ -105,8 +105,8 @@ public class SecureStringTest extends TestCase {
 		
 		String text = Lorem.create();
 
-		KeyPair key = BouncyUtil.getRsaKeyFromPool();
-		String pub = BouncyUtil.getPublicKey(key);
+		KeyPair key = MBouncy.getRsaKeyFromPool();
+		String pub = MBouncy.getPublicKey(key);
 		CryptedString sec = callToGetTheSecret(pub, text);
 		
 		String text2 = sec.value(key);
@@ -127,8 +127,8 @@ public class SecureStringTest extends TestCase {
 		
 		String text = Lorem.create();
 
-		KeyPair key = BouncyUtil.getRsaKeyFromPool();
-		String pub = BouncyUtil.getPublicKey(key);
+		KeyPair key = MBouncy.getRsaKeyFromPool();
+		String pub = MBouncy.getPublicKey(key);
 		CryptedString sec = callToGetTheSecret(pub, text);
 
 		String serial = MCast.serializeToString(sec);
