@@ -484,6 +484,11 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 		}
 
 		@Override
+		public long count(AQuery<T> query) throws MException {
+			return service.getCountByQualification(query);
+		}
+		
+		@Override
 		public T newInstance() throws Exception {
 			@SuppressWarnings("unchecked")
 			T out = (T) table.getClazz().newInstance();

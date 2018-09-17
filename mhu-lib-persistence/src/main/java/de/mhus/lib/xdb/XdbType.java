@@ -134,6 +134,15 @@ public interface XdbType<T> {
 	long count(String query, Map<String,Object> parameterValues) throws MException;
 
 	/**
+	 * Return the amount of objects in the database.
+	 * 
+	 * @param query
+	 * @return count the objects by query
+	 * @throws MException
+	 */
+	long count(AQuery<T> query) throws MException;
+	
+	/**
 	 * Create a new instance of the type.
 	 * 
 	 * @return new object

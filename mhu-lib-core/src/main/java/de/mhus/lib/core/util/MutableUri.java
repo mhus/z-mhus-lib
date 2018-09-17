@@ -16,6 +16,7 @@
 package de.mhus.lib.core.util;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
 
 import de.mhus.lib.core.MPassword;
@@ -247,5 +248,30 @@ public class MutableUri extends MUri {
 	     throws IOException, ClassNotFoundException {
 		 parse((String)in.readObject());
 	}
-		 
+	
+	/**
+	 * Return the params as list or an empty list
+	 * @return The list, never null
+	 */
+	public LinkedList<String> getParamsAsList() {
+		if (params == null) return new LinkedList<>();
+		LinkedList<String> out = new LinkedList<>();
+		for (String p : params)
+			out.add(p);
+		return out;
+	}
+	
+	/**
+	 * Set params to the values of list. If list is null
+	 * or empty params is set to null.
+	 * @param list
+	 */
+	public void setParams(LinkedList<String> list) {
+		if (list == null || list.size() == 0) {
+			params = null;
+			return;
+		}
+		params = list.toArray(new String[list.size()]);
+	}
+	
 }

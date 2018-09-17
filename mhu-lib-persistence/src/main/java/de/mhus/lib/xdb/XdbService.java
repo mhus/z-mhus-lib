@@ -50,6 +50,11 @@ public interface XdbService {
 		return type.getByQualification(query);
 	}
 
+	default <T> long count(AQuery<T> query) throws MException {
+		XdbType<T> type = getType(query.getType());
+		return type.count(query);
+	}
+	
 	<T> XdbType<T> getType(Class<?> type) throws NotFoundException;
 
 	<T extends Persistable> T inject(T object);
