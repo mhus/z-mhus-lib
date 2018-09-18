@@ -26,6 +26,13 @@ import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.errors.MException;
 
+/**
+ * Represent a read only Form object. If you wan to modify the form cast it to MutableMForm if possible.
+ * Not all forms are mutable.
+ * 
+ * @author mikehummel
+ *
+ */
 public class MForm extends MObject implements MNlsProvider {
 
 	protected Locale locale = Locale.getDefault();
@@ -92,7 +99,7 @@ public class MForm extends MObject implements MNlsProvider {
 	public MNlsBundle getNlsBundle() {
 		return nlsBundle;
 	}
-
+	
 	public ActionHandler getActionHandler() {
 		return actionHandler;
 	}
