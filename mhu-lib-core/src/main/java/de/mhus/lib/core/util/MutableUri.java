@@ -266,7 +266,7 @@ public class MutableUri extends MUri {
 	 * or empty params is set to null.
 	 * @param list
 	 */
-	public void setParams(LinkedList<String> list) {
+	public void setParamsAsList(LinkedList<String> list) {
 		if (list == null || list.size() == 0) {
 			params = null;
 			return;
