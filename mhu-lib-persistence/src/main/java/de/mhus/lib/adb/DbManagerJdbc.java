@@ -419,9 +419,22 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 			while (res.next()) {
 				out.add( (T)res.getObject(alias));
 			}
+			try {
+				res.close();
+				sth.close();
+			} catch (Throwable t) {
+				log().w(query,alias,t);
+			}
 			return out;
 		} catch (Throwable t) {
 			throw new MException(con,query,attributes,t);
+		} finally {
+			try {
+				if (myCon != null)
+					myCon.close();
+			} catch (Throwable t) {
+				log().w(query,alias,t);
+			}
 		}
 	}
 
