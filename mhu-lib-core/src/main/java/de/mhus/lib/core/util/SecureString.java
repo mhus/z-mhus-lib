@@ -24,10 +24,10 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.MCrypt;
 
-public final class SecureString implements Externalizable {
+public class SecureString implements Externalizable {
 
-	private byte[] data;
-	private int length;
+	protected byte[] data;
+	protected int length;
 	
 	public SecureString() {
 	}

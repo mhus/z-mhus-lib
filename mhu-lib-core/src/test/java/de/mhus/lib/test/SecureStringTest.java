@@ -3,14 +3,16 @@ package de.mhus.lib.test;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
-import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.CryptedString;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.core.util.SecureString;
 import junit.framework.TestCase;
@@ -35,24 +37,70 @@ public class SecureStringTest extends TestCase {
 		assertEquals(text, text2);
 	}
 
-	public void testCryptedString() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public void testCryptedStringDefault() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
 		String text = Lorem.create();
-		KeyPair key = CryptedString.generateKey();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		CryptedString sec = new CryptedString(key, text);
 		String text2 = sec.value(key);
 		// positive check
 		assertEquals(text, text2);
 		
 		// negative check
-		Field field = sec.getClass().getDeclaredField("data");
+		Field field = SecureString.class.getDeclaredField("data");
+		field.setAccessible(true);
+		byte[] data = (byte[])field.get(sec);
+		assertFalse(text.equals(new String(data,MString.CHARSET_CHARSET_UTF_8)));
+	}
+
+	public void testCryptedString1024() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		String text = Lorem.create();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B1024);
+		CryptedString sec = new CryptedString(key, text);
+		String text2 = sec.value(key);
+		// positive check
+		assertEquals(text, text2);
+		
+		// negative check
+		Field field = SecureString.class.getDeclaredField("data");
+		field.setAccessible(true);
+		byte[] data = (byte[])field.get(sec);
+		assertFalse(text.equals(new String(data,MString.CHARSET_CHARSET_UTF_8)));
+	}
+
+	public void testCryptedString2048() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		String text = Lorem.create();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B2048);
+		CryptedString sec = new CryptedString(key, text);
+		String text2 = sec.value(key);
+		// positive check
+		assertEquals(text, text2);
+		
+		// negative check
+		Field field = SecureString.class.getDeclaredField("data");
 		field.setAccessible(true);
 		byte[] data = (byte[])field.get(sec);
 		assertFalse(text.equals(new String(data,MString.CHARSET_CHARSET_UTF_8)));
 	}
 	
-	public void testKeyConvert() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public void testCryptedString4096() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		String text = Lorem.create();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B4096);
+		CryptedString sec = new CryptedString(key, text);
+		String text2 = sec.value(key);
+		// positive check
+		assertEquals(text, text2);
+		
+		// negative check
+		Field field = SecureString.class.getDeclaredField("data");
+		field.setAccessible(true);
+		byte[] data = (byte[])field.get(sec);
+		assertFalse(text.equals(new String(data,MString.CHARSET_CHARSET_UTF_8)));
+	}
 
-		KeyPair key = CryptedString.generateKey();
+
+	public void testKeyConvert() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		{
 			String a = MBouncy.getPublicKey(key);
 			PublicKey b = MBouncy.getPublicKey(a);
@@ -65,9 +113,9 @@ public class SecureStringTest extends TestCase {
 		}
 	}
 	
-	public void testCryptedStringTextual() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+	public void testCryptedStringTextual() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
 		String text = Lorem.create();
-		KeyPair key = CryptedString.generateKey();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		String publKey = MBouncy.getPublicKey(key);
 		String privKey = MBouncy.getPrivateKey(key);
 
@@ -77,17 +125,17 @@ public class SecureStringTest extends TestCase {
 		assertEquals(text, text2);
 		
 		// negative check
-		Field field = sec.getClass().getDeclaredField("data");
+		Field field = SecureString.class.getDeclaredField("data");
 		field.setAccessible(true);
 		byte[] data = (byte[])field.get(sec);
 		assertFalse(text.equals(new String(data,MString.CHARSET_CHARSET_UTF_8)));
 	}
 	
-	public void testCryptedStringPerformance() {
+	public void testCryptedStringPerformance() throws NoSuchAlgorithmException, NoSuchProviderException {
 		String text = Lorem.create();
 		int cnt = 0;
 		long start = System.currentTimeMillis();
-		KeyPair key = CryptedString.generateKey();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		while (!MTimeInterval.isTimeOut(start, 1000)) {
 			cnt++;
 			CryptedString sec = new CryptedString(key, text);

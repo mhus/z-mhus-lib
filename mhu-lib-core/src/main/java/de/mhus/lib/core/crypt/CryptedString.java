@@ -5,19 +5,16 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.util.SecureString;
 
-public class CryptedString implements Externalizable {
+public class CryptedString extends SecureString implements Externalizable {
 	
 	private static final int AES_SIZE = 16;
-	private byte[] data;
 	private byte[] rand;
-	private int length;
 	private String pubKeyMd5;
 	
 	public CryptedString() {}
@@ -87,11 +84,6 @@ public class CryptedString implements Externalizable {
 	}
 	
 	@Override
-	public String toString() {
-		return "[***]";
-	}
-
-	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(length);
 		if (data == null)
@@ -121,13 +113,23 @@ public class CryptedString implements Externalizable {
 			pubKeyMd5 = (String) in.readObject();
 		}
 	}
+		
+	@Override
+	public String value() {
+		return MBouncy.encodeBase64(rand) + "!" + MBouncy.encodeBase64(data);
+	}
+
+	public static SecureString create(String pubKey, String secret) {
+		if (MString.isSet(pubKey))
+			return new CryptedString(pubKey, secret);
+		return new SecureString(secret);
+	}
 	
-	public static KeyPair generateKey() {
-		try {
-			return MBouncy.generateRsaKey();
-		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-			throw new RuntimeException(e);
-		}
+	public static String value(SecureString string, KeyPair key) {
+		if (string == null) return null;
+		if (!(string instanceof CryptedString))
+			return string.value();
+		return ((CryptedString)string).value(key);
 	}
 	
 }

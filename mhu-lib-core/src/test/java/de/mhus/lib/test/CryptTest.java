@@ -28,11 +28,11 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.AsyncKey;
-import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
 import de.mhus.lib.core.crypt.CipherOutputStream;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.Lorem;
 import junit.framework.TestCase;
@@ -576,7 +576,7 @@ public class CryptTest extends TestCase {
 	public void testRsaBigBlocks() throws Exception {
 		String text = Lorem.create();
 		byte[] block = text.getBytes();
-		KeyPair key = MBouncy.generateRsaKey();
+		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		byte[] enc = MBouncy.encryptRsa(block, key.getPublic());
 		byte[] dec = MBouncy.decryptRsa(enc, key.getPrivate());
 		String text2 = new String(dec);

@@ -38,6 +38,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.cfg.CfgInt;
@@ -54,6 +55,15 @@ import de.mhus.lib.core.cfg.CfgLong;
  */
 public class MBouncy {
 
+	public enum RSA_KEY_SIZE {B1024,B2048,B4096;
+		
+		private int bits = MCast.toint(name().substring(1), 1024);
+		
+		public int getBits() {
+			return bits;
+		}
+	}
+	
 	public static void init() {
 		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null)
 			Security.addProvider(new BouncyCastleProvider());
@@ -64,6 +74,7 @@ public class MBouncy {
 	protected static final String TRANSFORMATION = "RSA/ECB/PKCS1Padding";
 	protected static final String ALGORITHM_AES = "AES";
 	private static final Charset STRING_ENCODING = MString.CHARSET_CHARSET_UTF_8;
+	public static final RSA_KEY_SIZE RSA_KEY_SIZE_DEFAULT = RSA_KEY_SIZE.B1024;
 
 	private static LinkedList<KeyPair> keyPool = new LinkedList<>();
 	private static long keyPoolUpdate = 0;
@@ -73,17 +84,18 @@ public class MBouncy {
 
 	/**
 	 * Generate a RSA key pair with 1024 bits.
+	 * @param size 
 	 * 
 	 * @return The key pair
 	 * @throws NoSuchAlgorithmException
 	 * @throws NoSuchProviderException
 	 */
 	// With help from https://github.com/ingoclaro/crypt-examples/tree/master/java/src
-	public static KeyPair generateRsaKey() throws NoSuchAlgorithmException, NoSuchProviderException
+	public static KeyPair generateRsaKey(RSA_KEY_SIZE size) throws NoSuchAlgorithmException, NoSuchProviderException
     {
 		init();
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM_RSA, PROVIDER);
-        keyGen.initialize(1024);
+        keyGen.initialize(size.getBits());
         KeyPair key = keyGen.generateKeyPair();
         return key;
     }
@@ -395,7 +407,7 @@ public class MBouncy {
 		}
 		if (keyPool.size() < CFG_POOL_SIZE.value()) {
 			try {
-				KeyPair key = generateRsaKey();
+				KeyPair key = generateRsaKey(RSA_KEY_SIZE_DEFAULT);
 				keyPool.add(key);
 				return key;
 			} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
