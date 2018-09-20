@@ -116,7 +116,7 @@ public class CryptedString extends SecureString implements Externalizable {
 		
 	@Override
 	public String value() {
-		return MBouncy.encodeBase64(rand) + "!" + MBouncy.encodeBase64(data);
+		return (rand == null ? "?" : MBouncy.encodeBase64(rand)) + "!" + (data == null ? "?" : MBouncy.encodeBase64(data));
 	}
 
 	public static SecureString create(String pubKey, String secret) {
