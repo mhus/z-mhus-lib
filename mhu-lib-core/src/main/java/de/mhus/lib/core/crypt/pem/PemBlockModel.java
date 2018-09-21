@@ -140,6 +140,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 	public String getBlock() {
 		return block;
 	}
+		
 	@SuppressWarnings("unchecked")
 	public <T extends PemBlockModel> T setBlock(String block) {
 		this.block = block;
@@ -189,7 +190,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 	@Override
 	public byte[] getBytesBlock() {
 //		return Base64.decode(getBlock());
-		return Base64.getDecoder().decode(getBlock());
+		return Base64.getDecoder().decode(block);
 	}
 
 }

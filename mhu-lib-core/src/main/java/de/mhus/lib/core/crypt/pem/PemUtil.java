@@ -91,8 +91,8 @@ public class PemUtil {
 	public static boolean isPemBlock(String text) {
 		if (text == null) return false;
 		
-		int p1 = text.indexOf("-----START");
-		int p2 = text.indexOf("-----END");
+		int p1 = text.indexOf("-----BEGIN ");
+		int p2 = text.indexOf("-----END ");
 		return text.indexOf("\n") >= 0 && p1 >= 0 && p2 > 0 && p2 > p1;
 
 	}

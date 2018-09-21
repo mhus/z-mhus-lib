@@ -53,7 +53,7 @@ public interface PemBlock extends IReadProperties {
 	 * @return the text block
 	 */
 	String getBlock();
-
+	
 	byte[] getBytesBlock();
 	
 }
