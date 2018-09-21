@@ -348,7 +348,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 	
 	
 	@Override
-	public <T> XdbType<T> getType(Class<?> type) throws NotFoundException {
+	public <T> XdbType<T> getType(Class<T> type) throws NotFoundException {
 		String tableName;
 		try {
 			tableName = AdbUtil.getTableName(this,type);
@@ -557,6 +557,12 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 		@Override
 		public T getObject(String... keys) throws MException {
 			return (T) service.getObject(table.getClazz(), (Object[])keys);
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public DbCollection<T> getAll() throws MException {
+			return (DbCollection<T>) service.getAll((Class<Persistable>) table.getClazz());
 		}
 		
 	}

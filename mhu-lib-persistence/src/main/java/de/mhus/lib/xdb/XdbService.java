@@ -41,21 +41,21 @@ public interface XdbService {
 	void connect() throws Exception;
 
 	default <T> T getObjectByQualification(AQuery<T> query) throws MException {
-		XdbType<T> type = getType(query.getType());
+		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.getObjectByQualification(query);
 	}
 
 	default <T> DbCollection<T> getByQualification(AQuery<T> query) throws MException {
-		XdbType<T> type = getType(query.getType());
+		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.getByQualification(query);
 	}
 
 	default <T> long count(AQuery<T> query) throws MException {
-		XdbType<T> type = getType(query.getType());
+		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.count(query);
 	}
 	
-	<T> XdbType<T> getType(Class<?> type) throws NotFoundException;
+	<T> XdbType<T> getType(Class<T> type) throws NotFoundException;
 
 	<T extends Persistable> T inject(T object);
 

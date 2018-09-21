@@ -219,4 +219,11 @@ public interface XdbType<T> {
 	 */
 	T getObject(String ... keys) throws MException;
 
+	/**
+	 * Load all entries.
+	 * @return A collection of all entries
+	 * @throws MException
+	 */
+	DbCollection<T> getAll() throws MException;
+	
 }
