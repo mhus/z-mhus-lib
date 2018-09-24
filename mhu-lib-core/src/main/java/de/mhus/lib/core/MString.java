@@ -34,8 +34,6 @@ import de.mhus.lib.errors.MRuntimeException;
 /**
  * @author hummel
  * 
- *         To change the template for this generated type comment go to
- *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class MString {
 
@@ -58,6 +56,16 @@ public class MString {
 			'0','1','2','3','4','5','6','7','8','9'
 	};
 
+	/**
+	 * A pair (index 0 and 1) with empty strings
+	 */
+	public static final String[] EMPTY_PAIR = new String[] {"",""};
+	
+	/**
+	 * A pair (index 0 and 1) with null values
+	 */
+	public static final String[] NULL_PAIR = new String[] {null,null};
+	
 	/**
 	 * Return true if the the string is not empty also trimmed.
 	 * 
@@ -197,14 +205,18 @@ public class MString {
 
 	}
 
+	// --- Split without default
+	
 	/**
 	 * Return, if the char is located in the string (indexOf).
-	 * @param _s 
-	 * @param _c 
+	 *  If _s is null, return is false.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return true if index was found
 	 */
 
 	public static boolean isIndex(String _s, String _c) {
+		if (_s == null) return false;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return false;
@@ -214,12 +226,13 @@ public class MString {
 
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return part before the index
 	 */
 	public static String beforeIndex(String _s, String _c) {
+		if (_s == null) return null;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return "";
@@ -229,12 +242,13 @@ public class MString {
 
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return part after the index
 	 */
 	public static String afterIndex(String _s, String _c) {
+		if (_s == null) return null;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return "";
@@ -244,8 +258,9 @@ public class MString {
 
 	/**
 	 * Return, if the char is located in the string (indexOf).
-	 * @param _s 
-	 * @param _c 
+	 *  If _s is null, return is false.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return true if the index was found
 	 */
 
@@ -260,12 +275,13 @@ public class MString {
 
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return part before the index
 	 */
 	public static String beforeIndex(String _s, char _c) {
+		if (_s == null) return null;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return "";
@@ -275,12 +291,13 @@ public class MString {
 
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
-	 * @return bart after the index
+	 * empty string.  If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @return part after the index
 	 */
 	public static String afterIndex(String _s, char _c) {
+		if (_s == null) return null;
 		int p = _s.indexOf(_c);
 		if (p < 0)
 			return "";
@@ -290,13 +307,13 @@ public class MString {
 	
 	/**
 	 * Returns true if one of the chars is found in the string.
-	 * 
-	 * @param _s
-	 * @param _c
+	 *  If _s is null, return is false.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return true if one of the character was found
 	 */
 	public static boolean isIndex(String _s, char[] _c) {
-
+		if (_s == null) return false;
 		for (int i = 0; i < _c.length; i++) {
 			if (_s.indexOf(_c[i]) >= 0)
 				return true;
@@ -306,13 +323,13 @@ public class MString {
 
 	/**
 	 * Return the string before _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
+	 * empty string.  If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return part before the first found character
 	 */
 	public static String beforeIndex(String _s, char[] _c) {
-
+		if (_s == null) return null;
 		int p = -1;
 		for (int i = 0; i < _c.length; i++) {
 			if ((p = _s.indexOf(_c[i])) >= 0)
@@ -323,13 +340,13 @@ public class MString {
 
 	/**
 	 * Return the string after _c in _s. If _c is not found in _s, return is an
-	 * empty string.
-	 * @param _s 
-	 * @param _c 
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return part after the first found character
 	 */
 	public static String afterIndex(String _s, char[] _c) {
-
+		if (_s == null) return null;
 		int p = -1;
 		for (int i = 0; i < _c.length; i++) {
 			if ((p = _s.indexOf(_c[i])) >= 0)
@@ -340,14 +357,14 @@ public class MString {
 
 	/**
 	 * Returns the position where the first of one of the chars is found in the string.
-	 * 
-	 * @param _s
-	 * @param _c
+	 *  If _s is null, return is -1.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @param offset
 	 * @return position of the first found character
 	 */
 	public static int indexOf(String _s, char[] _c, int offset) {
-
+		if (_s == null) return -1;
 		for (int i = offset; i < _s.length(); i++) {
 			char c = _s.charAt(i);
 			for (int j = 0; j < _c.length; j++)
@@ -360,14 +377,332 @@ public class MString {
 	/**
 	 * Returns the position where the first of one of the chars is found in the string.
 	 *
-	 * @param _s
-	 * @param _c
+	 * @param _s The string to search in
+	 * @param _c The delimiter
 	 * @return position of the first found character
 	 */
 	public static int indexOf(String _s, char[] _c) {
 		return indexOf(_s, _c, 0);
 	}
 
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return string before the last found character
+	 */
+	public static String beforeLastIndex(String string, char c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(0,pos);
+	}
+
+	/**
+	 * Return the part after the last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return part after last found character
+	 */
+	public static String afterLastIndex(String string, char c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(pos+1);
+	}
+	
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return part before last found character
+	 */
+	public static String beforeLastIndex(String string, String c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(0,pos);
+	}
+
+	/**
+	 * Return the part after the last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @return part after last found character
+	 */
+	public static String afterLastIndex(String string, String c) {
+		if (string == null) return null;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return string;
+		return string.substring(pos+c.length());
+	}
+
+	// --- Split with default
+
+	/**
+	 * Return the string before _c in _s. If _c is not found in _s, return is an
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part before the index
+	 */
+	public static String beforeIndex(String _s, String _c, String _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return _s.substring(0, p);
+	}
+
+	/**
+	 * Return the string after _c in _s. If _c is not found in _s, return is an
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part after the index
+	 */
+	public static String afterIndex(String _s, String _c, String _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return _s.substring(p + _c.length());
+	}
+
+	/**
+	 * Return the string before _c in _s. If _c is not found in _s, return is an
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part before the index
+	 */
+	public static String beforeIndex(String _s, char _c, String _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return _s.substring(0, p);
+	}
+
+	/**
+	 * Return the string after _c in _s. If _c is not found in _s, return is an
+	 * empty string.  If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part after the index
+	 */
+	public static String afterIndex(String _s, char _c, String _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return _s.substring(p + 1);
+	}
+
+	/**
+	 * Return the string before _c in _s. If _c is not found in _s, return is an
+	 * empty string.  If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part before the first found character
+	 */
+	public static String beforeIndex(String _s, char[] _c, String _def) {
+		if (_s == null) return _def;
+		int p = -1;
+		for (int i = 0; i < _c.length; i++) {
+			if ((p = _s.indexOf(_c[i])) >= 0)
+				return _s.substring(0, p);
+		}
+		return _def;
+	}
+
+	/**
+	 * Return the string after _c in _s. If _c is not found in _s, return is an
+	 * empty string. If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part after the first found character
+	 */
+	public static String afterIndex(String _s, char[] _c, String _def) {
+		if (_s == null) return _def;
+		int p = -1;
+		for (int i = 0; i < _c.length; i++) {
+			if ((p = _s.indexOf(_c[i])) >= 0)
+				return _s.substring(p + 1);
+		}
+		return _def;
+	}
+
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return string before the last found character
+	 */
+	public static String beforeLastIndex(String string, char c, String def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return string.substring(0,pos);
+	}
+
+	/**
+	 * Return the part after the last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return part after last found character
+	 */
+	public static String afterLastIndex(String string, char c, String def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return string.substring(pos+1);
+	}
+	
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return part before last found character
+	 */
+	public static String beforeLastIndex(String string, String c, String def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return string.substring(0,pos);
+	}
+
+	/**
+	 * Return the part after the last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return part after last found character
+	 */
+	public static String afterLastIndex(String string, String c, String def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return string.substring(pos+c.length());
+	}
+
+	// --- Split returning two parts
+	
+	/**
+	 * Return the string before and after _c in _s.
+	 * If _c is not found in _s, or _s is null then return is _def.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return 0: part before the index, 1: part after the index
+	 */
+	public static String[] splitIndex(String _s, String _c, String[] _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return new String[] {_s.substring(0, p), _s.substring(p+1)};
+	}
+
+	/**
+	 * Return the string before and after _c in _s. 
+	 * If _c is not found in _s, or _s is null then return is _def.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return 0: part before the index, 1: part after the index
+	 */
+	public static String[] splitIndex(String _s, char _c, String[] _def) {
+		if (_s == null) return _def;
+		int p = _s.indexOf(_c);
+		if (p < 0)
+			return _def;
+
+		return new String[] {_s.substring(0, p), _s.substring(p+1)};
+	}
+
+	/**
+	 * Return the string before _c in _s. If _c is not found in _s, return is an
+	 * empty string.  If _s is null, return is null.
+	 * @param _s The string to search in
+	 * @param _c The delimiter
+	 * @param _def Default value, if _s is null or _c not found
+	 * @return part before the first found character
+	 */
+	public static String[] splitIndex(String _s, char[] _c, String[] _def) {
+		if (_s == null) return _def;
+		int p = -1;
+		for (int i = 0; i < _c.length; i++) {
+			if ((p = _s.indexOf(_c[i])) >= 0)
+				return new String[] {_s.substring(0, p), _s.substring(p+1)};
+		}
+		return _def;
+	}
+
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return string before the last found character
+	 */
+	public static String[] splitLastIndex(String string, char c, String[] def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return new String[] {string.substring(0, pos), string.substring(pos+1)};
+	}
+	
+	/**
+	 * Return part before last occurrence of the char. If the char
+	 * is not found it will return the hole string.
+	 * 
+	 * @param string
+	 * @param c
+	 * @param def Default value, if _s is null or _c not found
+	 * @return part before last found character
+	 */
+	public static String[] splitLastIndex(String string, String c, String[] def) {
+		if (string == null) return def;
+		int pos = string.lastIndexOf(c);
+		if (pos < 0) return def;
+		return new String[] {string.substring(0, pos), string.substring(pos+1)};
+	}
+
+	// ---
+	
 	/**
 	 * Encodes for the web. Same like MXml.encode
 	 * 
@@ -1333,66 +1668,6 @@ public class MString {
 		if (parts.length <= nr)
 			return null;
 		return parts[nr];
-	}
-
-	/**
-	 * Return part before last occurrence of the char. If the char
-	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return string before the last found character
-	 */
-	public static String beforeLastIndex(String string, char c) {
-		if (string == null) return null;
-		int pos = string.lastIndexOf(c);
-		if (pos < 0) return string;
-		return string.substring(0,pos);
-	}
-
-	/**
-	 * Return the part after the last occurrence of the char. If the char
-	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return part after last found character
-	 */
-	public static String afterLastIndex(String string, char c) {
-		if (string == null) return null;
-		int pos = string.lastIndexOf(c);
-		if (pos < 0) return string;
-		return string.substring(pos+1);
-	}
-	
-	/**
-	 * Return part before last occurrence of the char. If the char
-	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return part before last found character
-	 */
-	public static String beforeLastIndex(String string, String c) {
-		if (string == null) return null;
-		int pos = string.lastIndexOf(c);
-		if (pos < 0) return string;
-		return string.substring(0,pos);
-	}
-
-	/**
-	 * Return the part after the last occurrence of the char. If the char
-	 * is not found it will return the hole string.
-	 * 
-	 * @param string
-	 * @param c
-	 * @return part after last found character
-	 */
-	public static String afterLastIndex(String string, String c) {
-		if (string == null) return null;
-		int pos = string.lastIndexOf(c);
-		if (pos < 0) return string;
-		return string.substring(pos+c.length());
 	}
 	
 	/**

@@ -84,6 +84,17 @@ public class VirtualConsole extends Console {
 	}
 
 	@Override
+	public int read() {
+		return reader.readChar();
+	}
+
+	@Override
+	public ConsoleKey readKey() {
+		int key = read();
+		return new ConsoleKey((byte)0, false, (char)key);
+	}
+
+	@Override
 	public String readPassword() {
 		quiet = true;
 		try {

@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 public class SecureStringTest extends TestCase {
 
 	public void testSecureString() {
+		System.out.println(">>> testSecureString");
 		String text = Lorem.create();
 		SecureString sec = new SecureString(text);
 		String text2 = sec.value();
@@ -27,6 +28,7 @@ public class SecureStringTest extends TestCase {
 	}
 
 	public void testSecureStringSerialization() throws ClassNotFoundException, IOException {
+		System.out.println(">>> testSecureStringSerialization");
 		String text = Lorem.create();
 		SecureString sec = new SecureString(text);
 		
@@ -38,6 +40,7 @@ public class SecureStringTest extends TestCase {
 	}
 
 	public void testCryptedStringDefault() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedStringDefault");
 		String text = Lorem.create();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		CryptedString sec = new CryptedString(key, text);
@@ -53,6 +56,7 @@ public class SecureStringTest extends TestCase {
 	}
 
 	public void testCryptedString1024() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedString1024");
 		String text = Lorem.create();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B1024);
 		CryptedString sec = new CryptedString(key, text);
@@ -68,6 +72,7 @@ public class SecureStringTest extends TestCase {
 	}
 
 	public void testCryptedString2048() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedString2048");
 		String text = Lorem.create();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B2048);
 		CryptedString sec = new CryptedString(key, text);
@@ -83,6 +88,7 @@ public class SecureStringTest extends TestCase {
 	}
 	
 	public void testCryptedString4096() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedString4096");
 		String text = Lorem.create();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE.B4096);
 		CryptedString sec = new CryptedString(key, text);
@@ -99,7 +105,7 @@ public class SecureStringTest extends TestCase {
 
 
 	public void testKeyConvert() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
-
+		System.out.println(">>> testKeyConvert");
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		{
 			String a = MBouncy.getPublicKey(key);
@@ -114,6 +120,7 @@ public class SecureStringTest extends TestCase {
 	}
 	
 	public void testCryptedStringTextual() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException, NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedStringTextual");
 		String text = Lorem.create();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		String publKey = MBouncy.getPublicKey(key);
@@ -132,6 +139,7 @@ public class SecureStringTest extends TestCase {
 	}
 	
 	public void testCryptedStringPerformance() throws NoSuchAlgorithmException, NoSuchProviderException {
+		System.out.println(">>> testCryptedStringPerformance");
 		String text = Lorem.create();
 		int cnt = 0;
 		long start = System.currentTimeMillis();
@@ -150,7 +158,7 @@ public class SecureStringTest extends TestCase {
 	 * to rotate keys, send the public key to the secret encoded and decode the secret.
 	 */
 	public void testKeyPool() {
-		
+		System.out.println(">>> testKeyPool");
 		String text = Lorem.create();
 
 		KeyPair key = MBouncy.getRsaKeyFromPool();
@@ -172,7 +180,7 @@ public class SecureStringTest extends TestCase {
 	}
 	
 	public void testCryptedStringSerialization() throws IOException, ClassNotFoundException {
-		
+		System.out.println(">>> testCryptedStringSerialization");	
 		String text = Lorem.create();
 
 		KeyPair key = MBouncy.getRsaKeyFromPool();

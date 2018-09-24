@@ -41,16 +41,19 @@ public interface XdbService {
 	void connect() throws Exception;
 
 	default <T> T getObjectByQualification(AQuery<T> query) throws MException {
+		@SuppressWarnings("unchecked")
 		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.getObjectByQualification(query);
 	}
 
 	default <T> DbCollection<T> getByQualification(AQuery<T> query) throws MException {
+		@SuppressWarnings("unchecked")
 		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.getByQualification(query);
 	}
 
 	default <T> long count(AQuery<T> query) throws MException {
+		@SuppressWarnings("unchecked")
 		XdbType<T> type = (XdbType<T>) getType(query.getType());
 		return type.count(query);
 	}

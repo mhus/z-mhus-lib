@@ -55,6 +55,17 @@ public class SimpleConsole extends Console {
 	}
 
 	@Override
+	public int read() {
+		return reader.readChar();
+	}
+	
+	@Override
+	public ConsoleKey readKey() {
+		int key = read();
+		return new ConsoleKey((byte)0, false, (char)key);
+	}
+	
+	@Override
 	public boolean isSupportSize() {
 		return false;
 	}

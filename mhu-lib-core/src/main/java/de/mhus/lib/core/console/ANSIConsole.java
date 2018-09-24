@@ -27,6 +27,38 @@ import jline.console.ConsoleReader;
 
 public class ANSIConsole extends Console {
 
+	public static final int KEY_SPECIAL_LEFT=68;
+	public static final int KEY_SPECIAL_UP=65;
+	public static final int KEY_SPECIAL_DOWN=66;
+	public static final int KEY_SPECIAL_RIGHT=67;
+	public static final int KEY_ENTER=13;
+	
+	public static final int KEY_q=113;
+	public static final int KEY_a=97;
+	public static final int KEY_z=112;
+	public static final int KEY_A=65;
+	public static final int KEY_Z=90;
+	public static final int KEY_0=48;
+	public static final int KEY_9=57;
+
+	public static final int KEY_TAB=9;
+	public static final int KEY_ESC=27;
+	public static final int KEY_CTRL_A=1;
+	public static final int KEY_CTRL_Z=26;
+	public static final int KEY_FUNCTION=79;
+	public static final int KEY_F1=80;
+	public static final int KEY_F2=81;
+	public static final int KEY_F3=82;
+	public static final int KEY_F4=83;
+//	public static final int KEY_F5=84;
+//	public static final int KEY_F6=85;
+//	public static final int KEY_F7=86;
+//	public static final int KEY_F8=87;
+//	public static final int KEY_F9=88;
+//	public static final int KEY_F10=89;
+//	public static final int KEY_F11=90;
+
+
 	protected COLOR foreground;
 	protected COLOR background;
 	protected boolean blink;
@@ -87,6 +119,45 @@ public class ANSIConsole extends Console {
 		return null;
 //		return System.console().readLine();
 	}
+
+
+	@Override
+	public int read() {
+		try {
+			return reader.readCharacter(true);
+		} catch (IOException e) {
+			MLogUtil.log().t(e);
+		}
+		return -1;
+	}
+
+	@Override
+	public ConsoleKey readKey() {
+		while (true) {
+			int first = read();
+			if (first == 1091) {
+				int second = read();
+//				if (second == )
+				
+				switch(second) {
+				case KEY_SPECIAL_DOWN:
+				case KEY_SPECIAL_LEFT:
+				case KEY_SPECIAL_RIGHT:
+				case KEY_SPECIAL_UP:
+					return new ConsoleKey((byte)0, true, (char)second);
+				case KEY_F1:
+				case KEY_F2:
+				case KEY_F3:
+				case KEY_F4:
+					return new ConsoleKey((byte)0, true, (char)(second-79));
+				default:
+				}
+				continue;
+			}
+			return new ConsoleKey((byte)0, false, (char)first);
+		}
+	}
+	
 
 	@Override
 	public boolean isSupportSize() {
@@ -280,5 +351,5 @@ public class ANSIConsole extends Console {
 	public void setHeight(int h) {
 		this.height = h;
 	}
-	
+
 }

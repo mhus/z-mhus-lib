@@ -71,6 +71,16 @@ public abstract class Console extends PrintStream implements IBase {
 	
 	public abstract String readLine(LinkedList<String> history);
 
+	/**
+	 * Returns the next character from input stream of the console.
+	 * In some cases check for ALT key pressed and return character + 1000, see JLine ConsoleReader
+	 * In case of error a value lesser 0 will be returned.
+	 * @return pressed key
+	 */
+	public abstract int read();
+	
+	public abstract ConsoleKey readKey();
+	
 	public String readPassword() throws IOException {
 		return new String(System.console().readPassword());
 	}
