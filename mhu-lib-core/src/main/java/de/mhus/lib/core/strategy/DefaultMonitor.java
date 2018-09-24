@@ -68,8 +68,12 @@ public class DefaultMonitor implements Monitor {
 	@Override
 	public void print(Object... out) {
 		synchronized (lineBuffer) {
-			for (Object o : out)
-				lineBuffer.append(o);
+			for (Object o : out) {
+				if (o instanceof Throwable)
+					log.i(o);
+				else
+					lineBuffer.append(o);
+			}
 		}
 	}
 
