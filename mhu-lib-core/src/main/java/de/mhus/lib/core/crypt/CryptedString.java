@@ -28,6 +28,7 @@ import de.mhus.lib.core.util.SecureString;
 
 public class CryptedString extends SecureString implements Externalizable {
 	
+	private static final long serialVersionUID = 1L;
 	private static final int AES_SIZE = 16;
 	private byte[] rand;
 	private String pubKeyMd5;

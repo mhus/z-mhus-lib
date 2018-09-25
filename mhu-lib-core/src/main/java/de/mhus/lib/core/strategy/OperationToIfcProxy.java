@@ -55,15 +55,15 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		String methodName = p.getString(METHOD);
 		Method method = null;
 		
-		for (Method m : clazz.getMethods()) {
+		m: for (Method m : clazz.getMethods()) {
 //			if (m.isAccessible()) {
 				if (m.getName().equals(methodName)) {
 					// check parameters
 					Parameter[] mp = m.getParameters();
 					for (int i = 0; i < mp.length; i++) {
 						String mpType = mp[i].getType().getCanonicalName();
-						String reqType = p.getString(PARAMETERTYPE + i);
-						if (!mpType.equals(reqType)) continue;
+						String reqType = p.getString(PARAMETERTYPE + i, null);
+						if (reqType == null || !mpType.equals(reqType)) continue m;
 					}
 					// check for more parameters
 					if (p.containsKey(PARAMETERTYPE + mp.length)) continue;

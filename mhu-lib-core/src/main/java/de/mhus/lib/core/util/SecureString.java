@@ -26,6 +26,7 @@ import de.mhus.lib.core.crypt.MCrypt;
 
 public class SecureString implements Externalizable {
 
+	private static final long serialVersionUID = 1L;
 	protected byte[] data;
 	protected int length;
 	
