@@ -412,6 +412,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
 	@Override
 	public String getFormatted(String name, String def, Object ... values ) {
 		String format = getString(name, def);
+		if (format == null) return def; // probably null
 		return String.format(format, values);
 	}
 
