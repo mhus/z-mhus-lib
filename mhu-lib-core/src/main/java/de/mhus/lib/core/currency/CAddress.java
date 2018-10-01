@@ -54,6 +54,18 @@ public class CAddress implements Externalizable {
 		this.currency = currency.toUpperCase();
 	}
 
+	public CAddress(String currency, String addr, SecureString privKey) {
+		this.address = addr;
+		this.privKey = privKey;
+		this.currency = currency.trim().toUpperCase();
+	}
+
+	public CAddress(String currency, String addr, String privKey) {
+		this.address = addr;
+		this.privKey = new SecureString(privKey);
+		this.currency = currency.trim().toUpperCase();
+	}
+
 	public CAddress(String curAddr) {
 		int p = curAddr.indexOf(':');
 		this.address = curAddr.substring(p+1);
@@ -107,12 +119,14 @@ public class CAddress implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(currency);
 		out.writeObject(address);
 		out.writeObject(privKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		currency = (String) in.readObject();
 		address = (String) in.readObject();
 		privKey = (SecureString)in.readObject();
 	}

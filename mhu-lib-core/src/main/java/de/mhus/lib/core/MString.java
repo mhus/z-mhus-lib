@@ -2137,4 +2137,26 @@ public class MString {
 		return def;
 	}
 	
+	/**
+	 * Search for a pattern and cut the string after size characters. If the string is too short it will be filled
+	 * with fill characters.
+	 * @param in The string to cut
+	 * @param pattern The pattern to search for (not regex!)
+	 * @param fill Fill character or 0 to disable
+	 * @param size size after (or negative before) the found pattern 
+	 * @return The cutted string
+	 */
+	public static String cutAfter(String in, String pattern, char fill, int size) {
+		int p = in.indexOf(pattern);
+		if (p < 0) return in;
+		p = p + size;
+		if (p <= 0) return "";
+		while (in.length() < p) {
+			// not efficient
+			if (fill == 0) return in;
+			in = in + fill; 
+		}
+		return in.substring(0, p);
+	}
+	
 }
