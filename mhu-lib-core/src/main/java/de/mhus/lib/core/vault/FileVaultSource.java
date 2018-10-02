@@ -24,13 +24,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.UUID;
-
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
-public class FileVaultSource extends MutableVaultSource {
+public class FileVaultSource extends MapMutableVaultSource {
 
 	private SecureString passphrase;
 	private File file;
@@ -70,13 +69,14 @@ public class FileVaultSource extends MutableVaultSource {
 		FileOutputStream parent = new FileOutputStream(file);
 		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());
 		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeInt(1); // version
 		oos.writeUTF(name);
 		oos.writeInt(entries.size());
 		for (VaultEntry entry : entries.values()) {
 			oos.writeUTF(entry.getId().toString());
 			oos.writeUTF(entry.getType());
 			oos.writeUTF(entry.getDescription());
-			oos.writeUTF(entry.getValue());
+			oos.writeObject(entry.getValue());
 		}
 		oos.flush();
 		parent.close();
@@ -85,10 +85,17 @@ public class FileVaultSource extends MutableVaultSource {
 	private class FileEntry extends DefaultEntry {
 
 		public FileEntry(ObjectInputStream ois) throws IOException {
-			id = UUID.fromString(ois.readUTF());
-			type = ois.readUTF();
-			description = ois.readUTF();
-			value = new SecureString(ois.readUTF());
+			int v = ois.readInt();
+			if (v == 1) {
+				id = UUID.fromString(ois.readUTF());
+				type = ois.readUTF();
+				description = ois.readUTF();
+				try {
+					value = (SecureString)ois.readObject();
+				} catch (ClassNotFoundException e) {
+					throw new IOException(e);
+				}
+			}
 		}
 		
 	}
@@ -100,6 +107,10 @@ public class FileVaultSource extends MutableVaultSource {
 	@Override
 	public boolean isMemoryBased() {
 		return true;
+	}
+	@Override
+	public MutableVaultSource getEditable() {
+		return this;
 	}
 
 

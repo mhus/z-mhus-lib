@@ -33,7 +33,7 @@ public class PemUtil {
 		if (MValidator.isUUID(str)) {
 			MVault vault = MVaultUtil.loadDefault();
 			VaultEntry entry = vault.getEntry(UUID.fromString(str));
-			PemPriv key = entry.adaptTo(PemPriv.class);
+			PemPriv key = MVaultUtil.adaptTo(entry, PemPriv.class);
 			return key;
 		}
 
@@ -53,7 +53,7 @@ public class PemUtil {
 		if (MValidator.isUUID(str)) {
 			MVault vault = MVaultUtil.loadDefault();
 			VaultEntry entry = vault.getEntry(UUID.fromString(str));
-			PemPub key = entry.adaptTo(PemPub.class);
+			PemPub key = MVaultUtil.adaptTo(entry, PemPub.class);
 			return key;
 		}
 
@@ -73,7 +73,7 @@ public class PemUtil {
 		if (MValidator.isUUID(str)) {
 			MVault vault = MVaultUtil.loadDefault();
 			VaultEntry entry = vault.getEntry(UUID.fromString(str));
-			PemPriv key = entry.adaptTo(PemPriv.class);
+			PemPriv key = MVaultUtil.adaptTo(entry, PemPriv.class);
 			return key;
 		}
 
@@ -102,7 +102,7 @@ public class PemUtil {
 		if (MValidator.isUUID(str)) {
 			MVault vault = MVaultUtil.loadDefault();
 			VaultEntry entry = vault.getEntry(UUID.fromString(str));
-			PemPub key = entry.adaptTo(PemPub.class);
+			PemPub key = MVaultUtil.adaptTo(entry, PemPub.class);
 			return key;
 		}
 

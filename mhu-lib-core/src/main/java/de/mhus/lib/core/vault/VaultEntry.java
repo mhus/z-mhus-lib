@@ -17,8 +17,7 @@ package de.mhus.lib.core.vault;
 
 import java.util.UUID;
 
-import de.mhus.lib.core.parser.ParseException;
-import de.mhus.lib.errors.NotSupportedException;
+import de.mhus.lib.core.util.SecureString;
 
 public interface VaultEntry {
 
@@ -47,14 +46,6 @@ public interface VaultEntry {
 	 * 
 	 * @return The entry as text.
 	 */
-	String getValue();
+	SecureString getValue();
 	
-	/**
-	 * Try to adapt the entry to the given class or interface.
-	 * @param ifc
-	 * @return The requested interface or class.
-	 * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
-	 * @throws ParseException 
-	 */
-	<T> T adaptTo(Class<? extends T> ifc) throws NotSupportedException, ParseException;
 }

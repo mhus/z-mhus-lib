@@ -16,6 +16,7 @@
 package de.mhus.lib.adb.util;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,6 +125,18 @@ public class AdbUtil {
 		}
 		
 		return out;
+	}
+
+	public static void setId(Persistable entry, UUID id) {
+		if (entry == null) return;
+		try {
+			Field field = entry.getClass().getDeclaredField("id");
+			if (!field.isAccessible())
+				field.setAccessible(true);
+			field.set(entry, id);
+		} catch (Exception e) {
+			throw new RuntimeException("Entry " + entry.getClass(), e);
+		}
 	}
 
 }

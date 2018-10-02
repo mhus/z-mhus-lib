@@ -21,15 +21,11 @@ import java.util.UUID;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MArgs;
-import de.mhus.lib.core.cfg.CfgFile;
 import de.mhus.lib.core.console.ConsoleTable;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.system.IApi.SCOPE;
+import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public class MVaultUtil {
-
-	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
-	private static CfgFile defaultFolder = new CfgFile(MVault.class, "file", MApi.getFile(SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
 	
 	public static MVault loadDefault() {
 		MVault vault = MApi.lookup(MVault.class);
@@ -42,24 +38,12 @@ public class MVaultUtil {
 		if (def == null) {
 			
 			VaultPassphrase vaultPassphrase = MApi.lookup(VaultPassphrase.class);
+			VaultSourceFactory factory = MApi.lookup(VaultSourceFactory.class);
 			
-			if (defaultFile.value().exists()) {
-				// legacy
-				try {
-					def = new FileVaultSource(defaultFile.value(), vaultPassphrase.getPassphrase(),MVault.SOURCE_DEFAULT);
-					vault.registerSource(def);
-				} catch (IOException e) {
-					MLogUtil.log().d(e);
-				}
-			} else {
-				// default
-				try {
-					def = new FolderVaultSource(defaultFolder.value(), vaultPassphrase.getPassphrase(),MVault.SOURCE_DEFAULT);
-					vault.registerSource(def);
-				} catch (IOException e) {
-					MLogUtil.log().w(e);
-				}
-			}
+			def = factory.create(MVault.SOURCE_DEFAULT, vaultPassphrase);
+			if (def != null)
+				vault.registerSource(def);
+			
 		}
 	}
 
@@ -99,5 +83,32 @@ public class MVaultUtil {
 		}
 		
 	}
+
+	/**
+	 * Try to adapt the entry to the given class or interface.
+	 * @param entry 
+	 * @param ifc
+	 * @return The requested interface or class.
+	 * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
+	 * @throws ParseException 
+	 */
+	public static <T> T adaptTo(VaultEntry entry, Class<? extends T> ifc) throws ParseException, NotSupportedException {
+		// delegate to service
+		return MApi.lookup(VaultMutator.class).adaptTo(entry, ifc);
+	}
+
+	/**
+	 * Try to adapt the source to the given class or interface.
+	 * @param source 
+	 * @param ifc
+	 * @return The requested interface or class.
+	 * @throws NotSupportedException Thrown if the source can't be adapted to the interface.
+	 */
+//	@SuppressWarnings("unchecked")
+//	public static <T> T adaptTo(VaultSource source, Class<? extends T> ifc) throws NotSupportedException {
+//		if (ifc.isInstance(source)) return (T) source;
+//		throw new NotSupportedException(source,ifc);
+//	}
+
 
 }

@@ -32,7 +32,7 @@ import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 
-public class FolderVaultSource extends MutableVaultSource {
+public class FolderVaultSource extends MapMutableVaultSource {
 
 	private SecureString passphrase;
 	private File folder;
@@ -102,10 +102,11 @@ public class FolderVaultSource extends MutableVaultSource {
 		FileOutputStream parent = new FileOutputStream(file);
 		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());
 		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeInt(1); // version
 		oos.writeUTF(entry.getId().toString());
 		oos.writeUTF(entry.getType());
 		oos.writeUTF(entry.getDescription());
-		oos.writeUTF(entry.getValue());
+		oos.writeObject(entry.getValue());
 		oos.flush();
 		parent.close();
 	}
@@ -113,10 +114,17 @@ public class FolderVaultSource extends MutableVaultSource {
 	private class FileEntry extends DefaultEntry {
 
 		public FileEntry(ObjectInputStream ois) throws IOException {
-			id = UUID.fromString(ois.readUTF());
-			type = ois.readUTF();
-			description = ois.readUTF();
-			value = new SecureString(ois.readUTF());
+			int v = ois.readInt();
+			if (v == 1) {
+				id = UUID.fromString(ois.readUTF());
+				type = ois.readUTF();
+				description = ois.readUTF();
+				try {
+					value = (SecureString)ois.readObject();
+				} catch (ClassNotFoundException e) {
+					throw new IOException(e);
+				}
+			}
 		}
 		
 	}
@@ -129,6 +137,10 @@ public class FolderVaultSource extends MutableVaultSource {
 	@Override
 	public boolean isMemoryBased() {
 		return true;
+	}
+	@Override
+	public MutableVaultSource getEditable() {
+		return this;
 	}
 
 

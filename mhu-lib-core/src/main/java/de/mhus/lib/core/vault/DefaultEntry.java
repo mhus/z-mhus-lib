@@ -18,14 +18,7 @@ package de.mhus.lib.core.vault;
 import java.util.UUID;
 
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.crypt.AsyncKey;
-import de.mhus.lib.core.crypt.MCrypt;
-import de.mhus.lib.core.crypt.pem.PemPriv;
-import de.mhus.lib.core.crypt.pem.PemPub;
-import de.mhus.lib.core.crypt.pem.PemUtil;
-import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.core.util.SecureString;
-import de.mhus.lib.errors.NotSupportedException;
 
 public class DefaultEntry implements VaultEntry {
 	
@@ -57,38 +50,8 @@ public class DefaultEntry implements VaultEntry {
 	}
 
 	@Override
-	public String getValue() {
-		return value.value();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T adaptTo(Class<? extends T> ifc) throws ParseException, NotSupportedException {
-		if (getType() != null) {
-			try {
-				if (ifc == AsyncKey.class && MVault.TYPE_RSA_PRIVATE_KEY.equals(getType())) {
-					return (T) MCrypt.loadPrivateRsaKey(getValue());
-				}
-				if (ifc == AsyncKey.class && MVault.TYPE_RSA_PUBLIC_KEY.equals(type)) {
-					return (T) MCrypt.loadPrivateRsaKey(getValue());
-				}
-				if (ifc == PemPriv.class && getType().endsWith(MVault.SUFFIX_CIPHER_PRIVATE_KEY)) {
-					return (T) PemUtil.cipherPrivFromString(getValue());
-				}
-				if (ifc == PemPub.class && getType().endsWith(MVault.SUFFIX_CIPHER_PUBLIC_KEY)) {
-					return (T) PemUtil.cipherPubFromString(getValue());
-				}
-				if (ifc == PemPriv.class && getType().endsWith(MVault.SUFFIX_SIGN_PRIVATE_KEY)) {
-					return (T) PemUtil.signPrivFromString(getValue());
-				}
-				if (ifc == PemPub.class && getType().endsWith(MVault.SUFFIX_SIGN_PUBLIC_KEY)) {
-					return (T) PemUtil.signPubFromString(getValue());
-				}
-			} catch (Exception e) {
-				throw new ParseException(e);
-			}
-		}
-		throw new NotSupportedException(this,ifc);
+	public SecureString getValue() {
+		return value;
 	}
 	
 	@Override

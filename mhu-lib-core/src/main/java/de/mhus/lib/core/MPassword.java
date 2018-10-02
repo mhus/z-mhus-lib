@@ -74,7 +74,7 @@ public class MPassword {
 				VaultEntry entry = vault.getEntry(UUID.fromString(secret));
 				if (entry == null) throw new MRuntimeException("key not found",secret);
 				try {
-					AsyncKey key = entry.adaptTo(AsyncKey.class);
+					AsyncKey key = MVaultUtil.adaptTo(entry, AsyncKey.class);
 					return "`C:" + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
 				} catch (Exception e) {
 					throw new MRuntimeException(e);
@@ -114,7 +114,7 @@ public class MPassword {
 			VaultEntry entry = vault.getEntry(UUID.fromString(keyId));
 			if (entry == null) throw new MRuntimeException("key not found",keyId);
 			try {
-				AsyncKey key = entry.adaptTo(AsyncKey.class);
+				AsyncKey key = MVaultUtil.adaptTo(entry, AsyncKey.class);
 				return MCrypt.decodeWithSalt(key, in);
 			} catch (Exception e) {
 				throw new MRuntimeException(e);

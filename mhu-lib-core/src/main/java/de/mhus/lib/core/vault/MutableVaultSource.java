@@ -16,71 +16,25 @@
 package de.mhus.lib.core.vault;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.UUID;
 
-import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 
-public abstract class MutableVaultSource extends MLog implements VaultSource {
+public interface MutableVaultSource extends VaultSource {
 	
-	protected HashMap<UUID, VaultEntry> entries = new HashMap<>();
-	protected String name = UUID.randomUUID().toString();
+	void addEntry(VaultEntry entry) throws MException;
 	
-	@Override
-	public VaultEntry getEntry(UUID id) {
-		synchronized (entries) {
-			return entries.get(id);
-		}
-	}
+	void removeEntry(UUID id) throws MException;
 
-	@Override
-	public UUID[] getEntryIds() {
-		synchronized (entries) {
-			return entries.keySet().toArray(new UUID[entries.size()]);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T adaptTo(Class<? extends T> ifc) throws NotSupportedException {
-		if (ifc.isInstance(this)) return (T) this;
-		throw new NotSupportedException(this,ifc);
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	public void addEntry(VaultEntry entry) throws MException {
-		synchronized (entries) {
-			entries.put(entry.getId(), entry);
-		}
-	}
+	void doLoad() throws IOException;
 	
-	public void removeEntry(UUID id) throws MException {
-		synchronized (entries) {
-			entries.remove(id);
-		}
-	}
-
-	public abstract void doLoad() throws IOException;
-	
-	public abstract void doSave() throws IOException;
+	void doSave() throws IOException;
 	
 	/**
 	 * Return true if load and save is needed to persist changed data.
 	 * 
 	 * @return true if storage is in memory
 	 */
-	public abstract boolean isMemoryBased();
+	boolean isMemoryBased();
 	
-	@Override
-	public String toString() {
-		return MSystem.toString(this, name, entries.size());
-	}
-
 }
