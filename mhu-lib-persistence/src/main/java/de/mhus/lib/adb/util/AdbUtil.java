@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.DbMetadata;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
@@ -127,10 +128,10 @@ public class AdbUtil {
 		return out;
 	}
 
-	public static void setId(Persistable entry, UUID id) {
+	public static void setId(DbMetadata entry, UUID id) {
 		if (entry == null) return;
 		try {
-			Field field = entry.getClass().getDeclaredField("id");
+			Field field = DbMetadata.class.getDeclaredField("id");
 			if (!field.isAccessible())
 				field.setAccessible(true);
 			field.set(entry, id);

@@ -28,6 +28,9 @@ public class PemBlockTest extends TestCase {
 	public void testBlock() throws ParseException {
 		
 		{
+			
+			String longText = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
+			
 			String text = "Aloa Mr. Nobody\n\r"
 					+ "Aloa Mr. Nobody\n\r"
 					+ "Aloa Mr. Nobody\n\r"
@@ -40,6 +43,7 @@ public class PemBlockTest extends TestCase {
 			PemBlockModel b = new PemBlockModel("test");
 			b.setString("Version", "1.3.4");
 			b.setString("Method", "TEST-10");
+			b.setString("Long", longText);
 			b.setBlock(text);
 			
 			String block = b.toString();
@@ -52,6 +56,7 @@ public class PemBlockTest extends TestCase {
 			assertEquals("TEST", e.getName());
 			assertEquals("1.3.4", e.getString("Version",null));
 			assertEquals("TEST-10", e.getString("Method",null));
+			assertEquals(longText, e.getString("Long", null));
 			assertEquals(text, e.getBlock());
 			
 		}

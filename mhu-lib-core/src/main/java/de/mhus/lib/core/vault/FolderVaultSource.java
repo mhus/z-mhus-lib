@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.UUID;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MValidator;
@@ -36,6 +37,7 @@ public class FolderVaultSource extends MapMutableVaultSource {
 
 	private SecureString passphrase;
 	private File folder;
+	private int version;
 
 	public FolderVaultSource(File folder, String passphrase, String name) throws IOException {
 		this(folder,passphrase);
@@ -52,10 +54,16 @@ public class FolderVaultSource extends MapMutableVaultSource {
 	
 	@Override
 	public void doLoad() throws IOException {
+		version = 0;
 		{
 			File file = new File(folder, "info.txt");
 			if (file.exists())
 				name = MFile.readFile(file).trim();
+		}
+		{
+			File file = new File(folder, "version.txt");
+			if (file.exists())
+				version = MCast.toint(MFile.readFile(file).trim(), 0);
 		}
 		entries.clear();
 		for (File file : folder.listFiles()) {
@@ -70,7 +78,7 @@ public class FolderVaultSource extends MapMutableVaultSource {
 		InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
 		ObjectInputStream ois = new ObjectInputStream(is);
 		try {
-			VaultEntry entry = new FileEntry(ois);
+			VaultEntry entry = new FileEntry(version,ois);
 			addEntry(entry);
 		} catch (Exception e) {
 			log().w(file,e);
@@ -80,9 +88,14 @@ public class FolderVaultSource extends MapMutableVaultSource {
 	
 	@Override
 	public void doSave() throws IOException {
+		version = 1;
 		{
 			File file = new File(folder, "info.txt");
 			MFile.writeFile(file, name);
+		}
+		{
+			File file = new File(folder, "version.txt");
+			MFile.writeFile(file, "" + version);
 		}
 		HashSet<String> ids = new HashSet<>();
 		for (VaultEntry entry : entries.values()) {
@@ -102,7 +115,7 @@ public class FolderVaultSource extends MapMutableVaultSource {
 		FileOutputStream parent = new FileOutputStream(file);
 		OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());
 		ObjectOutputStream oos = new ObjectOutputStream(os);
-		oos.writeInt(1); // version
+		oos.writeInt(version);
 		oos.writeUTF(entry.getId().toString());
 		oos.writeUTF(entry.getType());
 		oos.writeUTF(entry.getDescription());
@@ -113,20 +126,29 @@ public class FolderVaultSource extends MapMutableVaultSource {
 
 	private class FileEntry extends DefaultEntry {
 
-		public FileEntry(ObjectInputStream ois) throws IOException {
-			int v = ois.readInt();
-			if (v == 1) {
+		public FileEntry(int version, ObjectInputStream ois) throws IOException {
+			
+			if (version == 0) {
 				id = UUID.fromString(ois.readUTF());
 				type = ois.readUTF();
 				description = ois.readUTF();
-				try {
-					value = (SecureString)ois.readObject();
-				} catch (ClassNotFoundException e) {
-					throw new IOException(e);
+				value = new SecureString(ois.readUTF());
+			} else
+			if (version > 0) {
+				int v = ois.readInt();
+				if (v == 1) {
+					id = UUID.fromString(ois.readUTF());
+					type = ois.readUTF();
+					description = ois.readUTF();
+					try {
+						value = (SecureString)ois.readObject();
+					} catch (ClassNotFoundException e) {
+						throw new IOException(e);
+					}
 				}
 			}
 		}
-		
+
 	}
 	
 	@Override

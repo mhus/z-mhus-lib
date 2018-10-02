@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.core.vault;
 
-import java.util.Set;
 import java.util.UUID;
 
 public interface VaultSource {
@@ -33,7 +32,7 @@ public interface VaultSource {
 	 * 
 	 * @return a list of ids.
 	 */
-	Set<UUID> getEntryIds();
+	Iterable<UUID> getEntryIds();
 	
 	/**
 	 * Return a unique name of the source.

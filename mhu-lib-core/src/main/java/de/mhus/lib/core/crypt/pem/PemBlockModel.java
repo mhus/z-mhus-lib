@@ -20,7 +20,6 @@ import java.util.Base64;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.ParseException;
-// import de.mhus.lib.core.util.Base64;
 
 public class PemBlockModel extends MProperties implements PemBlock {
 
@@ -84,6 +83,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
 		// read lines
 		boolean params = true;
 		String blockOrg = "";
+		String lastKey = null;
 		while(true) {
 			String line = block;
 			p = block.indexOf('\n');
@@ -92,9 +92,12 @@ public class PemBlockModel extends MProperties implements PemBlock {
 				block = block.substring(p+1);
 			}
 			if (params) {
-				line = line.trim();
-				if (line.length() == 0) {
+				String l = line.trim();
+				if (l.length() == 0) {
 					params = false;
+				} else
+				if (line.startsWith(" ") && lastKey != null) {
+					setString(lastKey, getString(lastKey,"") + line.substring(1));
 				} else {
 					int pp = line.indexOf(':');
 					if (pp < 0) {
@@ -103,9 +106,9 @@ public class PemBlockModel extends MProperties implements PemBlock {
 						params = false;
 						blockOrg = line;
 					} else {
-						String key = line.substring(0,pp).trim();
+						lastKey = line.substring(0,pp).trim();
 						String value = line.substring(pp+1).trim();
-						setString(key, value);
+						setString(lastKey, value);
 					}
 				}
 			} else {
@@ -157,8 +160,28 @@ public class PemBlockModel extends MProperties implements PemBlock {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("-----BEGIN ").append(getName()).append("-----\n");
-		for (java.util.Map.Entry<String, Object> item : entrySet())
-			sb.append(item.getKey()).append(": ").append(item.getValue()).append('\n');
+		for (java.util.Map.Entry<String, Object> item : entrySet()) {
+			String key = item.getKey().trim();
+			sb.append(key).append(": ");
+			int len = key.length() + 2;
+			String value = String.valueOf(item.getValue());
+			if (len + value.length() <= BLOCK_WIDTH)
+				sb.append(item.getValue()).append('\n');
+			else {
+				sb.append(value.substring(0, BLOCK_WIDTH - len)).append('\n');
+				len = BLOCK_WIDTH - len;
+				while (len < value.length()) {
+					sb.append(' ');
+					if (len + BLOCK_WIDTH - 1 > value.length()) {
+						sb.append(value.substring(len)).append('\n');
+						break;
+					} else {
+						sb.append(value.substring(len, len + BLOCK_WIDTH - 1)).append('\n');
+					}
+					len = len + BLOCK_WIDTH - 1;
+				}
+			}
+		}
 		sb.append('\n');
 				
 		sb.append(getEncodedBlock());
