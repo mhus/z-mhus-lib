@@ -28,27 +28,35 @@ public class DefaultRandom implements MRandom {
 
 	@Override
 	public byte getByte() {
-		return (byte)(Math.random() * 255);
+		return (byte)(random() * 255);
 	}
 
 	@Override
 	public int getInt() {
-		return (int)(Math.random() * Integer.MAX_VALUE); // no negative values!
+		return (int)(random() * Integer.MAX_VALUE); // no negative values!
 	}
 
 	@Override
 	public double getDouble() {
-		return Math.random();
+		return random();
 	}
 
 	@Override
 	public long getLong() {
-		return (long)(Math.random() * Long.MAX_VALUE); // no negative values!
+		return (long)(random() * Long.MAX_VALUE); // no negative values!
 	}
 	
+	/**
+	 * Overwrite this to deliver your own random numbers
+	 * @return
+	 */
+	protected double random() {
+		return Math.random();
+	}
+
 	public synchronized Random getRandom() {
 		if (rand == null)
-			rand = new Random(getLong());
+			rand = new MyRandom();
 		return rand;
 	}
 
@@ -65,14 +73,43 @@ public class DefaultRandom implements MRandom {
 	}
 
 	@Override
-	public SecureRandom getSecureRandom() {
+	public synchronized SecureRandom getSecureRandom() {
 		try {
 //			secureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN");
-			secureRandom = SecureRandom.getInstanceStrong();
+			if (secureRandom == null)
+				secureRandom = new MySecureRandom();
 		} catch (Exception e) {
 			MLogUtil.log().e(e);
 		}
 		return secureRandom;
 	}
 
+	private class MySecureRandom extends SecureRandom {
+
+		private static final long serialVersionUID = 1L;
+		
+	    @Override
+	    synchronized public void nextBytes(byte[] bytes) {
+	        super.nextBytes(bytes);
+	        byte b = getByte();
+	        for (int i = 0; i < bytes.length; i++)
+	        		bytes[i] = (byte)((bytes[i] + b) & 255);
+	    }
+		
+	}
+	
+	private class MyRandom extends Random {
+		private static final long serialVersionUID = 1L;
+
+		MyRandom() {
+			super(getLong());
+		}
+
+	    @Override
+		protected int next(int bits) {
+	    		setSeed(getLong());
+	    		return super.next(bits);
+	    }
+
+	}
 }
