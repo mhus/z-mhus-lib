@@ -156,8 +156,12 @@ public class ConsoleTable {
     }
     
     public void print(Console console)  {
-    	setMaxColSize(console.getWidth());
-    	print((PrintStream)console);
+	    	setMaxColSize(console.getWidth());
+	    	print((PrintStream)console);
+    }
+    
+    public void print()  {
+    		print(System.out);
     }
     
     public void print(PrintStream out)  {
