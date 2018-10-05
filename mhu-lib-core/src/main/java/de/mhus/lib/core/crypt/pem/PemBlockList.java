@@ -18,7 +18,9 @@ package de.mhus.lib.core.crypt.pem;
 import java.util.LinkedList;
 
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.errors.MException;
 
 public class PemBlockList extends LinkedList<PemBlock> {
 
@@ -66,8 +68,20 @@ public class PemBlockList extends LinkedList<PemBlock> {
 
 	public PemBlock find(String name) {
 		for (PemBlock block : this) {
-			if (name.equals(block.getName()))
+			if (name.equals(block.getName())) {
+				
 				return block;
+			}
+		}
+		return null;
+	}
+	public PemBlock find(String name, String filter ) throws MException {
+		Condition condit = new Condition(filter);
+		for (PemBlock block : this) {
+			if (name.equals(block.getName()) && condit.matches(block)) {
+				
+				return block;
+			}
 		}
 		return null;
 	}

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -261,7 +262,7 @@ public final class MCast {
 	public static byte[] fromBinaryString(String in) {
 		byte[] out = new byte[ in.length() / 2 ];
 		for ( int i = 0; i < out.length; i++ )
-			out[i] = byteFromHex( in, i*2 );
+			out[i] = hexToByte( in, i*2 );
 		return out;
 	}
 
@@ -272,7 +273,7 @@ public final class MCast {
 	 * @param offset
 	 * @return a byte
 	 */
-	public static byte byteFromHex( String in, int offset ) {
+	public static byte hexToByte( String in, int offset ) {
 		int i = Integer.parseInt(in.substring(offset, offset+2), 16);
 		byte b =(byte)( i & 0xFF );
         return b;
@@ -293,7 +294,42 @@ public final class MCast {
        
 	   return new String(hex);
 	}
-	
+
+	/**
+	 * Convert a hex string e.g. from DM5() to a byte array. Every two
+	 * characters will be converted to one signed byte (-128 to 127)
+	 * 
+	 * @param s The hex encoded string
+	 * @return The resulting byte array
+	 */
+	public static byte[] hexStringToByteArray(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
+
+	/**
+	 * Converts an array of bytes into a hex string representation. Every
+	 * byte will be presented by two characters.
+	 * 
+	 * @param bytes Array of bytes
+	 * @return Hex String
+	 */
+	public static String toHexString(byte[] bytes) {
+		Formatter formatter = new Formatter();
+		
+		for (byte b : bytes) {
+			formatter.format("%02x", b);
+		}
+		String out = formatter.toString();
+		formatter.close();
+		return out;
+	}
+
 	/**
 	 * Convert String to boolean. If the conversion was not possible it returns
 	 * "_default".

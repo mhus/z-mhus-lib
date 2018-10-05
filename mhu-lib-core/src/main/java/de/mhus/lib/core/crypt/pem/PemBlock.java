@@ -15,9 +15,11 @@
  */
 package de.mhus.lib.core.crypt.pem;
 
+import java.util.Map;
+
 import de.mhus.lib.core.IReadProperties;
 
-public interface PemBlock extends IReadProperties {
+public interface PemBlock extends IReadProperties, Map<String, Object> {
 	
 	String BLOCK_CIPHER = "CIPHER";
 	String METHOD = "Method";
