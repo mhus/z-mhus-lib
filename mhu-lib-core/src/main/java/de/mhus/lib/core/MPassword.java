@@ -24,6 +24,7 @@ import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
+import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.VaultEntry;
@@ -38,16 +39,19 @@ import de.mhus.lib.errors.UsageException;
  * The password is not allowed to start with a ":". Only the encoded password will
  * start with a ":" followed by the algorithm version and the encoded password.
  * 
+ * A - old
+ * X - not accepted - dummy password
+ * B: - rot13
+ * C: - Key Id from MVault
+ * ZMD5: - md5 encoded with salt
  * @author mhu
  *
  */
 
 public class MPassword {
+		
+	public enum METHOD {DUMMY,ROT13,RSA,HASH_MD5};
 	
-	public static final int TYPE_DUMMY = 0;
-	public static final int TYPE_ROT13 = 1;
-	public static final int TYPE_RSA   = 2;
-
 //	private static Log log = Log.getLog(MPassword.class);
 		
 	/**
@@ -58,18 +62,30 @@ public class MPassword {
 	 * @return encoded string
 	 */
 	public static String encode(String in) {
-		return encode(TYPE_ROT13,in, null);
+		return encode(METHOD.ROT13,in, (String)null);
 	}
 
-	public static String encode(int method, String in, String secret) {
+	public static String encode(METHOD method, SecureString in, String secret) {
+		return encode(method, in.value(), secret);
+	}
+
+	public static String encode(METHOD method, SecureString in, SecureString secret) {
+		return encode(method, in.value(), secret.value());
+	}
+	
+	public static String encode(METHOD method, String in, SecureString secret) {
+		return encode(method, in, secret.value());
+	}
+	
+	public static String encode(METHOD method, String in, String secret) {
 		if (in == null) return null;
 		if (isEncoded(in)) return in;
 		switch (method) {
-			case 0: // empty dummy password
+			case DUMMY: // empty dummy password
 				return "`X";
-			case 1:
+			case ROT13:
 				return "`B:" + Rot13.encode(in);
-			case 2:
+			case RSA:
 				MVault vault = MVaultUtil.loadDefault();
 				VaultEntry entry = vault.getEntry(UUID.fromString(secret));
 				if (entry == null) throw new MRuntimeException("key not found",secret);
@@ -79,13 +95,15 @@ public class MPassword {
 				} catch (Exception e) {
 					throw new MRuntimeException(e);
 				}
-
+			case HASH_MD5:
+				return "`ZMD5:" + encodePasswordMD5(secret);
+			default:
+				throw new MRuntimeException("unknown encode method",method);
 		}
-		return null;
 	}
 
-	public static String encode(int method, String in) {
-		return encode(method, in, null);
+	public static String encode(METHOD method, String in) {
+		return encode(method, in, (String)null);
 	}
 
 	public static boolean isEncoded(String in) {
@@ -217,6 +235,31 @@ public class MPassword {
 		for (int idx = 0; idx < buf.length; ++idx) 
 		      buf[idx] = symbols.charAt(random.nextInt(symbols.length()));
 		    return new String(buf);
+	}
+
+	/**
+	 * Check if the passwords are equals. The password could also be hashes.
+	 * 
+	 * @param storedPass
+	 * @param givenPass
+	 * @return true if found the are identically
+	 */
+	public static boolean equals(String storedPass, String givenPass) {
+		if (storedPass == null || givenPass == null) return false;
+		// do not accept empty pass
+		storedPass = storedPass.trim();
+		givenPass = givenPass.trim();
+		if (givenPass.length() == 0) return false;
+		if (givenPass.startsWith("`")) {
+			givenPass = decode(givenPass);
+		}
+		if (storedPass.startsWith("`")) {
+			if (storedPass.startsWith("`ZMD5:")) {
+				return validatePasswordMD5(givenPass, storedPass);
+			}
+			storedPass = decode(storedPass);
+		}
+		return storedPass.equals(givenPass);
 	}
 
 }

@@ -159,7 +159,6 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	@Deprecated
 	public AQuery<T> ne(Function<T,?> getter, Object value) {
 		operations.add(Db.ne(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
 		return this;

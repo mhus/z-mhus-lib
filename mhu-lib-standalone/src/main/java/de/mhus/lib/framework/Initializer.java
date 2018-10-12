@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MPassword.METHOD;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.activator.MutableActivator;
 import de.mhus.lib.core.config.IConfig;
@@ -71,8 +72,8 @@ public class Initializer extends MJmx {
 	}
 
 	@JmxManaged(descrition="This is a simple helpfull function to encode a password on the running system (see MPassword). p1=encoding algorithm, p2=password to encode")
-	public String encodePassword(int method, String in) {
-		return MPassword.encode(method, in);
+	public String encodePassword(String method, String in) {
+		return MPassword.encode(METHOD.valueOf(method), in);
 	}
 	
 	@JmxManaged(descrition="Start a service, p1=class, p2=interface, p3=method")
