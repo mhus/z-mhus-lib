@@ -479,5 +479,50 @@ public class MCollection {
 	public static Map<String, Object> toLowerCaseKeys(Map<String, Object> parameters) {
 		return parameters.entrySet().parallelStream().collect(Collectors.toMap(entry -> entry.getKey().toLowerCase(), Map.Entry::getValue));
 	}
-	
+
+	public static boolean equals(Object[] nr1, Object[] nr2) {
+		if (nr1 == null && nr2 == null) return true;
+		if (nr1 == null || nr2 == null) return false;
+		if (nr1.length != nr2.length) return false;
+		for (int i = 0; i < nr1.length; i++)
+			if (!MSystem.equals(nr1[i], nr2[i])) return false;
+		return true;
+	}
+
+	public static boolean equals(byte[] nr1, byte[] nr2) {
+		if (nr1 == null && nr2 == null) return true;
+		if (nr1 == null || nr2 == null) return false;
+		if (nr1.length != nr2.length) return false;
+		for (int i = 0; i < nr1.length; i++)
+			if (nr1[i] != nr2[i]) return false;
+		return true;
+	}
+
+	public static boolean equals(int[] nr1, int[] nr2) {
+		if (nr1 == null && nr2 == null) return true;
+		if (nr1 == null || nr2 == null) return false;
+		if (nr1.length != nr2.length) return false;
+		for (int i = 0; i < nr1.length; i++)
+			if (nr1[i] != nr2[i]) return false;
+		return true;
+	}
+
+	public static boolean equals(double[] nr1, double[] nr2) {
+		if (nr1 == null && nr2 == null) return true;
+		if (nr1 == null || nr2 == null) return false;
+		if (nr1.length != nr2.length) return false;
+		for (int i = 0; i < nr1.length; i++)
+			if (nr1[i] != nr2[i]) return false;
+		return true;
+	}
+
+	public static boolean equals(char[] nr1, char[] nr2) {
+		if (nr1 == null && nr2 == null) return true;
+		if (nr1 == null || nr2 == null) return false;
+		if (nr1.length != nr2.length) return false;
+		for (int i = 0; i < nr1.length; i++)
+			if (nr1[i] != nr2[i]) return false;
+		return true;
+	}
+
 }

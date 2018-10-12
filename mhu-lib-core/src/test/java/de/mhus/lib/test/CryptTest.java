@@ -24,16 +24,19 @@ import java.math.BigInteger;
 import java.security.KeyPair;
 
 import de.mhus.lib.core.MBigMath;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.crypt.AsyncKey;
+import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.crypt.CipherBlockAdd;
 import de.mhus.lib.core.crypt.CipherBlockRotate;
 import de.mhus.lib.core.crypt.CipherInputStream;
 import de.mhus.lib.core.crypt.CipherOutputStream;
 import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.crypt.Twofish;
 import de.mhus.lib.core.util.Lorem;
 import junit.framework.TestCase;
 
@@ -583,4 +586,73 @@ public class CryptTest extends TestCase {
 		assertEquals(text, text2);
 	}
 	
+	public void testBlowfish() throws Exception {
+		String text = Lorem.create();
+		{ 
+			String key = "";
+			String enc = Blowfish.encrypt(text, key);
+			String dec = Blowfish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+		{
+			String key = "A";
+			String enc = Blowfish.encrypt(text, key);
+			String dec = Blowfish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+		{
+			String key = "create an instance of cipher";
+			String enc = Blowfish.encrypt(text, key);
+			String dec = Blowfish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+	}
+
+	public void testTwofish() throws Exception {
+		String text = Lorem.create();
+		{ 
+			String key = "";
+			String enc = Twofish.encrypt(text, key);
+			String dec = Twofish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+		{
+			String key = "A";
+			String enc = Twofish.encrypt(text, key);
+			String dec = Twofish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+		{
+			String key = "create an instance of cipher";
+			String enc = Twofish.encrypt(text, key);
+			String dec = Twofish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+	}
+	
+	public void testPepper() {
+		{
+			String text = "";
+			String peppered = MCrypt.addPepper(text);
+			String content = MCrypt.removePepper(peppered);
+			assertFalse(text.equals(peppered));
+			assertFalse(content.equals(peppered));
+			assertEquals(text, content);
+		}
+		{
+			String text = Lorem.create();
+			String peppered = MCrypt.addPepper(text);
+			String content = MCrypt.removePepper(peppered);
+			assertFalse(text.equals(peppered));
+			assertFalse(content.equals(peppered));
+			assertEquals(text, content);
+		}
+		{
+			byte[] text = Lorem.create().getBytes();
+			byte[] peppered = MCrypt.addPepper(text);
+			byte[] content = MCrypt.removePepper(peppered);
+			assertTrue(MCollection.equals(text, content));
+		}
+	}
+
 }

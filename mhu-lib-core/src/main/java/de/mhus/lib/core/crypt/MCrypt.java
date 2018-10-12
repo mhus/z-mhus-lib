@@ -492,6 +492,7 @@ public class MCrypt {
 	}
 	
 	private static final int MAX_SPACE = 10;
+	private static final int PEPPER_SIZE = 10;
 
 	/**
 	 * Encode the byte array synchronous using the pass phrase.
@@ -588,4 +589,71 @@ public class MCrypt {
 		return out.toByteArray();
 	}
     
+	/**
+	 * Add a pepper string in front of the content
+	 * @param content
+	 * @return pepper and content
+	 */
+	public static String addPepper(String content) {
+		MRandom rnd = MApi.lookup(MRandom.class);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < PEPPER_SIZE; i++) {
+			char c = rnd.getChar();
+			if (c == '+') c = 'x'; // for secure
+			sb.append(c);
+		}
+		sb.append('+');
+		sb.append(content);
+		return sb.toString();
+	}
+	
+	/**
+	 * Remove a pepper string from front of content
+	 * @param withPepper pepper + content
+	 * @return content only
+	 */
+	public static String removePepper(String withPepper) {
+		int p = withPepper.indexOf('+');
+		if (p < 0) return withPepper;
+		return withPepper.substring(p+1);
+	}
+	
+	/**
+	 * Add a pepper array in front of a byte array
+	 * @param content
+	 * @return pepper and content as new array
+	 */
+	public static byte[] addPepper(byte[] content) {
+		MRandom rnd = MApi.lookup(MRandom.class);
+		byte[] out = new byte[content.length + 1 + PEPPER_SIZE];
+		for (int i = 0; i < PEPPER_SIZE; i++) {
+			byte b = rnd.getByte();
+			if (b == 0) b = 1;
+			out[i] = b;
+		}
+		out[PEPPER_SIZE] = 0;
+		System.arraycopy(content, 0, out, PEPPER_SIZE+1, content.length);
+		return out;
+	}
+	
+	/**
+	 * Remove a pepper from content
+	 * @param withPepper
+	 * @return new array with content only
+	 */
+	public static byte[] removePepper(byte[] withPepper) {
+		for (int i = 0; i < withPepper.length; i++) {
+			if (withPepper[i] == 0) {
+				byte[] out = new byte[withPepper.length - i - 1];
+				System.arraycopy(withPepper, i+1, out, 0, out.length);
+				return out;
+			}
+		}
+		// need to clone the pepper - behavior is to return an new array
+		// so inserted array could be manipulated afterwards without changing this result
+		byte[] out = new byte[withPepper.length];
+		System.arraycopy(withPepper, 0, out, 0, withPepper.length);
+		return withPepper;
+	}
+
 }
