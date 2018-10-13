@@ -64,5 +64,5 @@ public interface Account extends Rightful {
 	  * Reload the account data
 	 * @return true if the reload was possible
 	  */
-	 public boolean reload();
+	 public boolean reloadAccount();
 }

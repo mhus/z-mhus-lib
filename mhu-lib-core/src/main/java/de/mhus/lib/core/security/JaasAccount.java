@@ -37,7 +37,7 @@ public class JaasAccount implements Account {
 	public JaasAccount(String realm, Subject subject) {
 		this.realm = realm;
 		this.subject = subject;
-		reload();
+		reloadAccount();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class JaasAccount implements Account {
 	}
 
 	@Override
-	public boolean reload() {
+	public boolean reloadAccount() {
 		{  // find user name
 			groups = new HashSet<>();
 			attr = new MProperties();
