@@ -796,7 +796,7 @@ public class MFile {
 	 */
 	public static void readLines(InputStream is, Observer lineObserver) throws IOException {
 		if (is == null || lineObserver == null) return;
-		InputStreamReader r = new InputStreamReader(is);
+		InputStreamReader r = new InputStreamReader(is, MString.CHARSET_CHARSET_UTF_8); // default charset is UTF-8
 		readLines(r,lineObserver);
 	}
 	
