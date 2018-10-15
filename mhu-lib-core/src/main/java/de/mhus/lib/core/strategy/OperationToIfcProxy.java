@@ -36,6 +36,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 	public static final String TYPE = "type";
 	public static final String SERIALISED = ":s";
 	public static final String PARAMETERTYPE = "ptype";
+	public static final String NULL = ":null";
 
 	protected abstract Class<?> getInterfaceClass();
 	
@@ -63,6 +64,9 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 					for (int i = 0; i < mp.length; i++) {
 						String mpType = mp[i].getType().getCanonicalName();
 						String reqType = p.getString(PARAMETERTYPE + i, null);
+						if (reqType != null && reqType.equals("null")) {
+							reqType = p.getString(TYPE + i, null);
+						}
 						if (reqType == null || !mpType.equals(reqType)) continue m;
 					}
 					// check for more parameters
@@ -74,7 +78,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 //			}
 		}
 		
-		if (method == null) throw new NotFoundException("Method not found",methodName);
+		if (method == null) throw new NotFoundException("Method not found",methodName,p);
 
 		int pcount = method.getParameterCount();
 		Object[] params = new Object[pcount];
@@ -97,6 +101,9 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 	}
 
 	private Object toObject(Object value, String type, ClassLoader cl) throws ClassNotFoundException, IOException {
+		if (type != null && type.equals(NULL)) {
+			return null;
+		}
 		if (value == null) return MCast.getDefaultPrimitive(type);
 		if (type != null && type.equals(SERIALISED)) {
 			return MCast.unserializeFromString(String.valueOf(value), cl);
