@@ -58,6 +58,10 @@ public class FileWatch extends MHousekeeperTask {
 	public FileWatch doStart() {
 		if (started) return this;
 		started = true; // do not need sync...
+		
+		if (!file.exists())
+			log().w("file not found",file);
+
 		if (startHook) checkFile(); // init
 
 		if (!registered) {
