@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.concurrent;
 
+import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.base.service.LockManager;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class Lock {
@@ -22,17 +24,19 @@ public class Lock {
 	protected Thread lock = null;
 	protected String name;
 	protected boolean privacy = false;
+	protected long lockTime = 0;
 
 	public Lock() {
 	}
 
 	public Lock(String name, boolean privacy) {
-		setName(name);
+		this(name);
 		this.privacy = privacy;
 	}
 
 	public Lock(String name) {
 		setName(name);
+		MApi.lookup(LockManager.class).register(this);
 	}
 
 	public void lock() {
@@ -46,10 +50,16 @@ public class Lock {
 				}
 			}
 			lock = Thread.currentThread();
+			lockTime = System.currentTimeMillis();
 			lockEvent(true);
 		}
 	}
 
+	/**
+	 * Overwrite this to get the lock events.
+	 * 
+	 * @param locked
+	 */
     protected void lockEvent(boolean locked) {
 	
 	}
@@ -71,6 +81,7 @@ public class Lock {
 		      if (System.currentTimeMillis() - start >= timeout ) return false;
 		    }
 		    lock = Thread.currentThread();
+			lockTime = System.currentTimeMillis();
 			lockEvent(true);
 		    return true;
 		  }
@@ -106,18 +117,28 @@ public class Lock {
 	  /**
 	   * Unlock if the current thread is also the owner.
 	   * 
-	   * @return true if lock was successful
+	   * @return true if unlock was successful
 	   */
 	  public boolean unlock(){
 		  synchronized (this) {
 			if (lock != Thread.currentThread()) return false;
 			lockEvent(false);
 		    lock = null;
+			lockTime = 0;
 		    notify();
 		    return true;
 		  }
 	  }
-	  
+
+	  /**
+	   * A synonym to unlock()
+	   * 
+	   * @return true if unlock was successful
+	   */
+	  public boolean release() {
+		  return unlock();
+	  }
+
 	  /**
 	   * Unlock in every case !!! This can break a locked area.
 	   * 
@@ -126,6 +147,7 @@ public class Lock {
 		  synchronized (this) {
 			lockEvent(false);
 		    lock = null;
+			lockTime = 0;
 		    notify();
 		  }
 	  }
@@ -192,4 +214,8 @@ public class Lock {
 		return name + (lock != null ? " " + lock.getName() : "");
 	}
 	  
+	public long getLockTime() {
+		return lockTime;
+	}
+	
 }

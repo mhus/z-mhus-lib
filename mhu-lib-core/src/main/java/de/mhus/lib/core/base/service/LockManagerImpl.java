@@ -20,12 +20,21 @@ import java.util.HashMap;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.util.SoftHashMap;
+import de.mhus.lib.core.util.WeakList;
 
+/**
+ * The manager have got two mechanisms. First will create locks like a factory. Second will register
+ * created new Lock() locks.
+ * 
+ * @author mikehummel
+ *
+ */
 public class LockManagerImpl extends MLog implements LockManager {
 	
 	private HashMap<String, Lock> locks = new HashMap<>();
 	private SoftHashMap<String, Lock> cache = new SoftHashMap<>();
-	
+	private WeakList<Lock> register = new WeakList<>();
+
 	public LockManagerImpl() {
 		log().i("Start DefaultLockManager");
 	}
@@ -59,10 +68,20 @@ public class LockManagerImpl extends MLog implements LockManager {
 	}
 
 	@Override
-	public String[] currentLocks() {
+	public Lock[] managedLocks() {
 		synchronized (cache) {
-			return locks.keySet().toArray(new String[locks.size()]);
+			return cache.values().toArray(new Lock[locks.size()]);
 		}
 	}
+
+	@Override
+	public void register(Lock lock) {
+		register.add(lock);
+	}
 	
+	@Override
+	public Lock[] getRegisteredLocks() {
+		return register.toArray(new Lock[register.size()]);
+	}
+
 }

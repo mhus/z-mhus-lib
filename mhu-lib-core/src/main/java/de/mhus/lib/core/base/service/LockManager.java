@@ -27,6 +27,10 @@ public interface LockManager {
 	 * Return a list of names with current locks.
 	 * @return List
 	 */
-	String[] currentLocks();
+	Lock[] managedLocks();
+
+	void register(Lock lock);
+
+	Lock[] getRegisteredLocks();
 	
 }
