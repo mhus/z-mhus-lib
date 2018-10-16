@@ -36,6 +36,10 @@ public class Lock {
 
 	public Lock(String name) {
 		setName(name);
+		register();
+	}
+
+	protected void register() {
 		MApi.lookup(LockManager.class).register(this);
 	}
 
