@@ -20,6 +20,7 @@ import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.adb.TransactionConnection;
 import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -83,16 +84,36 @@ public class DbTransaction {
 	
 	/**
 	 * Release all locked object ids
+	 * This method will never throw an Throwable.
 	 */
 	public static void releaseLock() {
-		TransactionPool.instance().releaseLock();
+		try {
+			TransactionPool.instance().releaseLock();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+		}
 	}
 	
 	/**
 	 * Close and remove all existing transaction connections.
+	 * This method will never throw an Throwable.
 	 */
 	public static void releaseEncapsulate() {
-		TransactionPool.instance().releaseEncapsulate();
+		try {
+			TransactionPool.instance().releaseEncapsulate();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -129,37 +150,81 @@ public class DbTransaction {
 	
 	/**
 	 * Commit and close all transaction connections
+	 * This method will never throw an Throwable.
 	 * @return true If no error was thrown. If false some connections can be committed other not. But it will be released in every case.
 	 */
 	public static boolean commitAndRelease() {
-		return TransactionPool.instance().commitAndRelease();
+		try {
+			return TransactionPool.instance().commitAndRelease();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+			return false;
+		}
 	}
 	
 	/**
 	 * Roll back and close all transaction connections.
+	 * This method will never throw an Throwable.
 	 * @return If no error was thrown. If false some connections can be rolled back other not. But it will be released in every case.
 	 * @throws MException
 	 */
 	public static boolean rollbackAndRelease() throws MException {
-		return TransactionPool.instance().rollbackAndRelease();
+		try {
+			return TransactionPool.instance().rollbackAndRelease();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+			return false;
+		}
 	}
 	
 	/**
 	 * Commit all transaction connections, do not remove the transaction. All following activities
 	 * will be done in the next transaction.
+	 * This method will never throw an Throwable.
 	 * @return If no error was thrown. If false some connections can be committed other not.
 	 */
 	public static boolean commitWithoutRelease() {
-		return TransactionPool.instance().commit();
+		try {
+			return TransactionPool.instance().commit();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+			return false;
+		}
 	}
 	
 	/**
 	 * Roll back all transaction connections, do not remove the transaction. All following activities
 	 * will be done in the next transaction.
+	 * This method will never throw an Throwable.
 	 * @return If no error was thrown. If false some connections can be rolled back other not.
 	 */
 	public static boolean rollbackWithoutRelease() {
-		return TransactionPool.instance().rollback();
+		try {
+			return TransactionPool.instance().rollback();
+		} catch (Throwable t) {
+			try {
+				MLogUtil.log().e(t);
+			} catch (Throwable t2) {
+				t.printStackTrace();
+				t2.printStackTrace();
+			}
+			return false;
+		}
 	}
 	
 }
