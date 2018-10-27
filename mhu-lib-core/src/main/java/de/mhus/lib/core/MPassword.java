@@ -251,7 +251,8 @@ public class MPassword {
 		givenPass = givenPass.trim();
 		if (givenPass.length() == 0) return false;
 		if (givenPass.startsWith("`")) {
-			givenPass = decode(givenPass);
+			//givenPass = decode(givenPass);
+			return false; // given password can't be encoded, this will give the ability to use the encoded string itself as password instead of clear text
 		}
 		if (storedPass.startsWith("`")) {
 			if (storedPass.startsWith("`ZMD5:")) {
