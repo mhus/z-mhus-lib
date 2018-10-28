@@ -37,5 +37,7 @@ public interface ModifyAccountApi {
 	Collection<String> getGroups(String username) throws MException;
 
 	Collection<String> getAccountList(String filter);
+
+	void changePasswordInternal(String username, String md5Password) throws MException;
 	
 }
