@@ -173,15 +173,20 @@ public class MPassword {
 	
 	public static boolean validatePasswordMD5(String real, String md5) {
 		if (md5 == null || real == null || md5.length() < 2) return false;
+		if (md5.startsWith(PREFIX_HASH_MD5))
+			md5 = md5.substring(MPassword.PREFIX_HASH_MD5.length());
 		return MCrypt.validateMd5WithSalt(md5, real);
 	}
 	
 	public static String encodePasswordMD5(String real) {
 		if (!real.startsWith(MPassword.PREFIX_HASH_MD5))
-			real = MPassword.encodePasswordMD5(real);
-		else
-			real = real.substring(MPassword.PREFIX_HASH_MD5.length());
-		return MCrypt.md5WithSalt(real);
+			real = MPassword.PREFIX_HASH_MD5 + MCrypt.md5WithSalt(real);
+		return real;
+	}
+
+	public static String forceEncodePasswordMD5(String real) {
+		real = MPassword.PREFIX_HASH_MD5 + MCrypt.md5WithSalt(real);
+		return real;
 	}
 
 	public static String sha1(String ... input) throws NoSuchAlgorithmException {

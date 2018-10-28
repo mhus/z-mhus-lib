@@ -2076,7 +2076,7 @@ public class MString {
 
 	/**
 	 * Convert a object to string using deep stringify mechanisms.
-	 * 
+	 * Will never return null, instead of null the string '[null]' will be returned.
 	 * @param val
 	 * @return The object as string
 	 */
@@ -2084,6 +2084,22 @@ public class MString {
 		if (val == null) return "[null]";
 		if (val instanceof Color) return colorToString((Color) val);
 		if (val instanceof byte[]) return byteToString((byte[]) val);
+		if (val instanceof String) return (String)val;
+		StringBuilder sb = new StringBuilder();
+		serialize(sb, val, null);
+		return sb.toString();
+	}
+
+	/**
+	 * Like toString but if the value is null the return is null.
+	 * @param val
+	 * @return The object as string or null
+	 */
+	public static String toStringOrNull(Object val) {
+		if (val == null) return null;
+		if (val instanceof Color) return colorToString((Color) val);
+		if (val instanceof byte[]) return byteToString((byte[]) val);
+		if (val instanceof String) return (String)val;
 		StringBuilder sb = new StringBuilder();
 		serialize(sb, val, null);
 		return sb.toString();
