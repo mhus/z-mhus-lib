@@ -50,8 +50,16 @@ import de.mhus.lib.errors.UsageException;
 
 public class MPassword {
 		
-	public enum METHOD {DUMMY,ROT13,RSA,HASH_MD5};
-	
+	private static final Random random = new Random();
+	public enum METHOD {DUMMY,ROT13,RSA,HASH_MD5}
+
+	public static final String PREFIX_DUMMY = "`X";
+	public static final String PREFIX_ROT13 = "`B:";
+	public static final String PREFIX_RSA = "`C:";
+	public static final String PREFIX_HASH_MD5 = "`ZMD5:";
+	public static final String PREFIX_SPECIAL1 = "`A";
+	public static final String PREFIX = "`";
+
 //	private static Log log = Log.getLog(MPassword.class);
 		
 	/**
@@ -82,21 +90,21 @@ public class MPassword {
 		if (isEncoded(in)) return in;
 		switch (method) {
 			case DUMMY: // empty dummy password
-				return "`X";
+				return PREFIX_DUMMY;
 			case ROT13:
-				return "`B:" + Rot13.encode(in);
+				return PREFIX_ROT13 + Rot13.encode(in);
 			case RSA:
 				MVault vault = MVaultUtil.loadDefault();
 				VaultEntry entry = vault.getEntry(UUID.fromString(secret));
 				if (entry == null) throw new MRuntimeException("key not found",secret);
 				try {
 					AsyncKey key = MVaultUtil.adaptTo(entry, AsyncKey.class);
-					return "`C:" + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
+					return PREFIX_RSA + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
 				} catch (Exception e) {
 					throw new MRuntimeException(e);
 				}
 			case HASH_MD5:
-				return "`ZMD5:" + encodePasswordMD5(secret);
+				return PREFIX_HASH_MD5 + encodePasswordMD5(secret);
 			default:
 				throw new MRuntimeException("unknown encode method",method);
 		}
@@ -120,9 +128,9 @@ public class MPassword {
 	public static String decode(String in) {
 		if (in == null) return null;
 		if (!isEncoded(in)) return in;
-		if (in.startsWith("`B:"))
+		if (in.startsWith(PREFIX_ROT13))
 			return Rot13.decode(in.substring(3));
-		if (in.startsWith("`C:")) {
+		if (in.startsWith(PREFIX_RSA)) {
 			in = in.substring(3);
 			int p = in.indexOf(':');
 			if (p < 0) throw new UsageException("key id not found");
@@ -138,9 +146,9 @@ public class MPassword {
 				throw new MRuntimeException(e);
 			}
 		}
-		if (in.startsWith("`X"))
+		if (in.startsWith(PREFIX_DUMMY))
 			throw new MRuntimeException("try to encode a dummy password");
-		if (in.startsWith("`A")) {
+		if (in.startsWith(PREFIX_SPECIAL1)) {
 			StringBuilder out = new StringBuilder();
 			for (int i = 2; i < in.length(); i++) {
 				char c = in.charAt(i);
@@ -169,6 +177,10 @@ public class MPassword {
 	}
 	
 	public static String encodePasswordMD5(String real) {
+		if (!real.startsWith(MPassword.PREFIX_HASH_MD5))
+			real = MPassword.encodePasswordMD5(real);
+		else
+			real = real.substring(MPassword.PREFIX_HASH_MD5.length());
 		return MCrypt.md5WithSalt(real);
 	}
 
@@ -193,9 +205,7 @@ public class MPassword {
 		}
 		System.out.println("encoded: " + encode(args[0]));
 	}
-	
-    private static final Random random = new Random();
-    
+	    
 	public static String generate(int min, int max, boolean upper, boolean numbers, boolean specials) {
 		char[] symbols = new char[ 75 - 3 ];
 		int i = 0;
@@ -254,8 +264,8 @@ public class MPassword {
 			//givenPass = decode(givenPass);
 			return false; // given password can't be encoded, this will give the ability to use the encoded string itself as password instead of clear text
 		}
-		if (storedPass.startsWith("`")) {
-			if (storedPass.startsWith("`ZMD5:")) {
+		if (storedPass.startsWith(PREFIX)) {
+			if (storedPass.startsWith(PREFIX_HASH_MD5)) {
 				return validatePasswordMD5(givenPass, storedPass);
 			}
 			storedPass = decode(storedPass);
