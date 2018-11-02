@@ -16,6 +16,7 @@
 package de.mhus.lib.core.security;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.HashSet;
 
 import javax.security.auth.Subject;
@@ -116,6 +117,16 @@ public class JaasAccount implements Account {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public Date getCreationDate() {
+		return null;
+	}
+
+	@Override
+	public Date getModifyDate() {
+		return null;
 	}
 
 }

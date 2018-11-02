@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.security;
 
+import java.util.Date;
+
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -64,5 +66,9 @@ public interface Account extends Rightful {
 	  * Reload the account data
 	 * @return true if the reload was possible
 	  */
-	 public boolean reloadAccount();
+	boolean reloadAccount();
+
+	Date getCreationDate();
+
+	Date getModifyDate();
 }
