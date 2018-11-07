@@ -16,6 +16,7 @@
 package de.mhus.lib.core.security;
 
 import java.util.Date;
+import java.util.UUID;
 
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.errors.NotSupportedException;
@@ -68,7 +69,28 @@ public interface Account extends Rightful {
 	  */
 	boolean reloadAccount();
 
+	/**
+	 * Return the user creation date or null if not supported.
+	 * @return Creation date
+	 */
 	Date getCreationDate();
 
+	/**
+	 * Return the user modify date or null if not supported.
+	 * @return Modify date
+	 */
 	Date getModifyDate();
+	
+	/**
+	 * Return the users UUID or null if not supported.
+	 * @return Unique id of the user
+	 */
+	UUID getUUID();
+	
+	/**
+	 * Return true if the user is active and the user can log in.
+	 * @return True if the user can log in.
+	 */
+	boolean isActive();
+	
 }

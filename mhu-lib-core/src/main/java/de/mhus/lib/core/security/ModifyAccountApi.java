@@ -29,6 +29,8 @@ public interface ModifyAccountApi {
 	void changePassword(String username, String newPassword) throws MException;
 	
 	void changeAccount(String username, IReadProperties properties) throws MException;
+
+	void activateAccount(String username, boolean active) throws MException;
 	
 	void appendGroups(String username, String ... group) throws MException;
 	

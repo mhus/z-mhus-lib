@@ -18,6 +18,7 @@ package de.mhus.lib.core.security;
 import java.security.Principal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.UUID;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
@@ -127,6 +128,16 @@ public class JaasAccount implements Account {
 	@Override
 	public Date getModifyDate() {
 		return null;
+	}
+
+	@Override
+	public UUID getUUID() {
+		return null;
+	}
+
+	@Override
+	public boolean isActive() {
+		return true;
 	}
 
 }
