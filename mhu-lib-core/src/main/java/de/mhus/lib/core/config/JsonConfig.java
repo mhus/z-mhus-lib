@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -114,13 +115,15 @@ public class JsonConfig extends IConfig {
 	@Override
 	public List<IConfig> getNodes() {
 		LinkedList<IConfig> out = new LinkedList<>();
-		for ( JsonNode  child : node ) {
+		for ( Map.Entry<String, JsonNode> entry : MCollection.iterate(node.getFields()) ) {
+			JsonNode child = entry.getValue();
+			String childName = entry.getKey();
 			if (child !=null && child.isArray()) {
 				for (int i = 0; i < child.size(); i++)
-					out.add( new JsonConfig(name, this, child.get(i)));
+					out.add( new JsonConfig(childName, this, child.get(i)));
 			} else
 			if (child !=null && child.isObject())
-				out.add( new JsonConfig(name, this, child));
+				out.add( new JsonConfig(childName, this, child));
 		}
 		return out;
 	}

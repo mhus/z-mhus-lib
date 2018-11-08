@@ -525,4 +525,14 @@ public class MCollection {
 		return true;
 	}
 
+	public static <T> Iterable<T> iterate(final Iterator<T> iterator) {
+		return new Iterable<T>() {
+			@Override
+			public Iterator<T> iterator() {
+				return iterator;
+			}
+			
+		};
+	}
+
 }

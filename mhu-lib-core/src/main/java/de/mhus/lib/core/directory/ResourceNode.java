@@ -376,16 +376,15 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
 		return sb.toString();
 	}
 
-	@SuppressWarnings("deprecation")
 	void dump(StringBuilder sb, int level) throws MException {
-		sb.append(MString.getRepeatig(level, ' '));
+		sb.append(MString.getRepeating(level, ' '));
 		sb.append('<').append(getName());
 		for (String key : keys())
-			sb.append('\n').append(MString.getRepeatig(level+1, ' ')).append(key).append("='").append(getString(key)).append("'");
+			sb.append('\n').append(MString.getRepeating(level+2, ' ')).append(key).append("='").append(getString(key)).append("'");
 		sb.append(">\n");
 		for (T node : getNodes())
-			node.dump(sb, level+1);
-		sb.append(MString.getRepeatig(level, ' '));
+			node.dump(sb, level+2);
+		sb.append(MString.getRepeating(level, ' '));
 		sb.append("</").append(getName()).append(">\n");
 		
 	}

@@ -1822,10 +1822,10 @@ public class MString {
 		return buffer.toString();
 	}
 
-	@Deprecated // legacy
-	public static String getRepeatig(int amount, char fill) {
-		return getRepeating(amount, fill);
-	}
+//	@Deprecated // legacy
+//	public static String getRepeatig(int amount, char fill) {
+//		return getRepeating(amount, fill);
+//	}
 
 	/**
 	 * Return true if the character is in the list of whitespace.
