@@ -209,11 +209,23 @@ public class Db {
 	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @return a {@link de.mhus.lib.adb.query.AOperation} object.
 	 */
-	public static AOperation in(AAttribute left, AAttribute projection,
+	public static APart in(AAttribute left, AAttribute projection,
 			AQuery<?> subQuery) {
 		return new ASubQuery(left, projection, subQuery);
 	}
 
+	/**
+	 * <p>in.</p>
+	 *
+	 * @param left a {@link java.lang.String} object.
+	 * @param projection a {@link java.lang.String} object.
+	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
+	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
+	 */
+	public APart in(String left, String projection, AQuery<?> subQuery) {
+		return new ASubQuery(Db.attr(left), Db.attr(projection), subQuery);
+	}
+	
 	/**
 	 * <p>and.</p>
 	 *

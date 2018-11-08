@@ -15,9 +15,14 @@
  */
 package de.mhus.lib.adb;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Date;
 import java.util.UUID;
 
+import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
@@ -25,11 +30,13 @@ import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.basics.UuidIdentificable;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 
 @DbTable(features=DbAccessManager.FEATURE_NAME)
-public abstract class DbMetadata extends DbComfortableObject implements UuidIdentificable {
+public abstract class DbMetadata extends DbComfortableObject implements UuidIdentificable, Externalizable {
 
 	@DbPrimaryKey
 	@Public
@@ -81,6 +88,33 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 	@Override
 	public String toString() {
 		return MSystem.toString(this,getId());
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
+		for (PojoAttribute<?> field : model) {
+			out.writeBoolean(true);
+			out.writeUTF(field.getName());
+			out.writeObject(field.get(this));
+		}
+		out.writeBoolean(false);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
+		while (in.readBoolean()) {
+			String name = in.readUTF();
+			Object value = in.readObject();
+			@SuppressWarnings("rawtypes")
+			PojoAttribute attr = model.getAttribute(name);
+			if (attr != null)
+				attr.set(this, value);
+			else
+				log().d("can't read external",name);
+		}
 	}
 
 }
