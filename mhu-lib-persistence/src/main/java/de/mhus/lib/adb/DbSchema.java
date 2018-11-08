@@ -32,16 +32,13 @@ import de.mhus.lib.adb.model.Table;
 import de.mhus.lib.adb.model.TableAnnotations;
 import de.mhus.lib.adb.model.TableDynamic;
 import de.mhus.lib.adb.transaction.LockStrategy;
-import de.mhus.lib.annotations.adb.DbPersistent;
-import de.mhus.lib.annotations.adb.DbPrimaryKey;
-import de.mhus.lib.annotations.adb.DbRelation;
+import de.mhus.lib.adb.util.AdbUtil;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoModelFactory;
-import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
@@ -74,11 +71,10 @@ public abstract class DbSchema extends MObject implements PojoModelFactory {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public PojoModel createPojoModel(Class<?> clazz) {
-		return new PojoParser().parse(clazz, "_", false, new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(true,false,true,false,true).getModel();
+		return AdbUtil.createDefaultPojoModel(clazz);
 	}
-
+	
 	/**
 	 * This should be called after the manager is created.
 	 * 

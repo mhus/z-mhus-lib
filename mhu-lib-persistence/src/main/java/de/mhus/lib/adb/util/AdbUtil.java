@@ -25,8 +25,13 @@ import java.util.UUID;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbMetadata;
 import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+import de.mhus.lib.annotations.adb.DbRelation;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.pojo.PojoModel;
+import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
 
@@ -138,6 +143,11 @@ public class AdbUtil {
 		} catch (Exception e) {
 			throw new RuntimeException("Entry " + entry.getClass(), e);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static PojoModel createDefaultPojoModel(Class<?> clazz) {
+		return new PojoParser().parse(clazz, "_", false, new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(true,false,true,false,true).getModel();
 	}
 
 }
