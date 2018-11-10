@@ -561,6 +561,19 @@ public class AQuery<T> extends APrint {
 	}
 	
 	/**
+	 * <p>in.</p>
+	 *
+	 * @param left a {@link java.lang.String} object.
+	 * @param projection a {@link java.lang.String} object.
+	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
+	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
+	 */
+	public AQuery<T> in(Function<T,?> left, Function<T,?> projection, AQuery<?> subQuery) {
+		operations.add(Db.in(Db.attr(MPojo.toAttributeNameWithCache(left)), Db.attr(MPojo.toAttributeNameWithCache(projection)), subQuery ));
+		return this;
+	}
+
+	/**
 	 * <p>limit.</p>
 	 *
 	 * @param limit a int.
