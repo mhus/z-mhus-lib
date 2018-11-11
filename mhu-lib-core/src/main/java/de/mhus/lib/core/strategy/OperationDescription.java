@@ -16,6 +16,7 @@
 package de.mhus.lib.core.strategy;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MSystem;
@@ -45,35 +46,36 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 	private MNlsProvider nlsProvider;
 
 	private Version version;
+	private UUID uuid;
 	
 	public OperationDescription() {}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String version, String title) {
-		this(clazz, nlsProvider, new Version(version), title, null);
+	public OperationDescription(UUID uuid, Class<?> clazz, MNlsProvider nlsProvider, String version, String title) {
+		this(uuid, clazz, nlsProvider, new Version(version), title, null);
 	}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title) {
-		this(clazz, nlsProvider, version, title, null);
+	public OperationDescription(UUID uuid, Class<?> clazz, MNlsProvider nlsProvider, Version version, String title) {
+		this(uuid, clazz, nlsProvider, version, title, null);
 	}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, String title) {
-		this(clazz, nlsProvider, new Version(null), title, null);
+	public OperationDescription(UUID uuid, Class<?> clazz, MNlsProvider nlsProvider, String title) {
+		this(uuid, clazz, nlsProvider, new Version(null), title, null);
 	}
 	
 	public OperationDescription(Operation owner, Version version, String title, DefRoot form) {
-		this(owner.getClass(), owner, version, title, form);
+		this(owner.getUuid(), owner.getClass(), owner, version, title, form);
 	}
 	
 	public OperationDescription(Operation owner, String title, DefRoot form) {
-		this(owner.getClass(), owner, new Version(null), title, form);
+		this(owner.getUuid(), owner.getClass(), owner, new Version(null), title, form);
 	}
 	
 	public OperationDescription(Operation owner, String group, String id, String title, DefRoot form) {
-		this(group, id, new Version(null), owner, title, form);
+		this(owner.getUuid(), group, id, new Version(null), owner, title, form);
 	}
 	
-	public OperationDescription(Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
-		this(clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title, form);
+	public OperationDescription(UUID uuid, Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
+		this(uuid, clazz.getPackage().getName(), clazz.getSimpleName(), version, nlsProvider, title, form);
 	}
 	
 	public void setForm(DefRoot form) {
@@ -100,15 +102,16 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 		return parameterDef;
 	}
 
-	public OperationDescription(OperationGroupDescription group, String id, Version version, MNlsProvider nlsProvider, String title ) {
-		this(group.getGroup(),id, version, nlsProvider, title, null);
+	public OperationDescription(UUID uuid, OperationGroupDescription group, String id, Version version, MNlsProvider nlsProvider, String title ) {
+		this(uuid, group.getGroup(),id, version, nlsProvider, title, null);
 	}
 	
-	public OperationDescription(String group, String id, Version version, MNlsProvider nlsProvider, String title) {
-		this(group, id, version, nlsProvider, title, null);
+	public OperationDescription(UUID uuid, String group, String id, Version version, MNlsProvider nlsProvider, String title) {
+		this(uuid, group, id, version, nlsProvider, title, null);
 	}
 	
-	public OperationDescription(String group, String id, Version version, MNlsProvider nlsProvider, String title, DefRoot form) {
+	public OperationDescription(UUID uuid, String group, String id, Version version, MNlsProvider nlsProvider, String title, DefRoot form) {
+		this.uuid = uuid;
 		this.id = id;
 		this.group = group;
 		this.nlsProvider = nlsProvider;
@@ -190,6 +193,10 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
 	public String getCaption() {
 		return nls("caption=" + getTitle());
+	}
+
+	public UUID getUuid() {
+		return uuid;
 	}
 	
 }

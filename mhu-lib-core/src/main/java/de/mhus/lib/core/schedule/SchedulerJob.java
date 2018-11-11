@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.schedule;
 
+import java.util.UUID;
+
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MSystem;
@@ -51,6 +53,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private String info;
 	private TimerTaskIntercepter intercepter;
 	private String logTrailConfig;
+	private UUID uuid = UUID.randomUUID();
 	
 	public SchedulerJob(ITimerTask task) {
 		setTask(task);
@@ -380,6 +383,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
 	public void setLogTrailConfig(String logTrailConfig) {
 		this.logTrailConfig = logTrailConfig;
+	}
+	
+	@Override
+	public UUID getUuid() {
+		return uuid;
 	}
 	
 }

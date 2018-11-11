@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.strategy;
 
+import java.util.UUID;
+
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.core.util.Nls;
 
@@ -27,5 +29,6 @@ public interface Operation extends MNlsProvider, Nls{
 	boolean isBusy();
 	boolean setBusy(Object owner);
 	boolean releaseBusy(Object owner);
-
+	UUID getUuid();
+	
 }

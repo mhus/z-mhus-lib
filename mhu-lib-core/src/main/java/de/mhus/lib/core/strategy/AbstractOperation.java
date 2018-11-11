@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.strategy;
 
+import java.util.UUID;
+
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.ParameterDefinition;
@@ -25,6 +27,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 	private Object owner;
 	private OperationDescription description;
 	private MNls nls;
+	private UUID uuid = UUID.randomUUID();
 
 	@Override
 	public boolean hasAccess() {
@@ -117,5 +120,10 @@ public abstract class AbstractOperation extends MLog implements Operation {
 	public String nls(String text) {
 		return MNls.find(this, text);
 	}
-	
+
+	@Override
+	public UUID getUuid() {
+		return uuid;
+	}
+
 }
