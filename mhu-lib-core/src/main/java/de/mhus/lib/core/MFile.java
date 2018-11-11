@@ -106,9 +106,25 @@ public class MFile {
 		if (path == null) return null;
 		
 		while (MString.isIndex(path, File.separatorChar))
-			path = MString.afterIndex(path, File.separatorChar);
+			path = MString.afterLastIndex(path, File.separatorChar);
 
 		return path;
+
+	}
+
+	/**
+	 * Returns the directory without file name or current directory.
+	 * /dir/subdir/file will return /dir/subdir
+	 * @param path
+	 * @return The previous directory name or null
+	 */
+	public static String getFileDirectory(String path) {
+		if (path == null) return null;
+		
+		while (MString.isIndex(path, File.separatorChar))
+			path = MString.beforeLastIndex(path, File.separatorChar);
+
+		return null;
 
 	}
 
