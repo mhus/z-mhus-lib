@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 
 import de.mhus.lib.core.MBigMath;
@@ -600,11 +601,15 @@ public class CryptTest extends TestCase {
 			String dec = Blowfish.decrypt(enc, key);
 			assertEquals(text, dec);
 		}
-		{
+		// https://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html#importlimits
+		try {
 			String key = "create an instance of cipher";
 			String enc = Blowfish.encrypt(text, key);
 			String dec = Blowfish.decrypt(enc, key);
 			assertEquals(text, dec);
+		} catch (InvalidKeyException e) {
+			System.out.println("!!!! JCE not installed !!!");
+			System.out.println(e);
 		}
 	}
 
@@ -622,11 +627,14 @@ public class CryptTest extends TestCase {
 			String dec = Twofish.decrypt(enc, key);
 			assertEquals(text, dec);
 		}
-		{
+		try {
 			String key = "create an instance of cipher";
 			String enc = Twofish.encrypt(text, key);
 			String dec = Twofish.decrypt(enc, key);
 			assertEquals(text, dec);
+		} catch (InvalidKeyException e) {
+			System.out.println("!!!! JCE not installed !!!");
+			System.out.println(e);
 		}
 	}
 	
