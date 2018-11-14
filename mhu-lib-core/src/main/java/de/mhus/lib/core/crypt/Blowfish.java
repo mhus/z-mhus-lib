@@ -34,7 +34,7 @@ public class Blowfish {
 	public static byte[] encrypt(byte[] strClearText,String strKey) throws Exception{
 		strKey = fixKey(strKey);
         SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes("utf-8"),"Blowfish");
-        Cipher cipher=Cipher.getInstance("Blowfish");
+        Cipher cipher=Cipher.getInstance("Blowfish", "BC");
         cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
         byte[] encrypted=cipher.doFinal(strClearText);
         return encrypted;
@@ -43,7 +43,7 @@ public class Blowfish {
 	public static byte[] decrypt(byte[] strEncrypted, String strKey) throws Exception{
 		strKey = fixKey(strKey);
         SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes("utf-8"),"Blowfish");
-        Cipher cipher=Cipher.getInstance("Blowfish");
+        Cipher cipher=Cipher.getInstance("Blowfish", "BC");
         cipher.init(Cipher.DECRYPT_MODE, skeyspec);
         byte[] decrypted=cipher.doFinal(strEncrypted);
         return decrypted;
