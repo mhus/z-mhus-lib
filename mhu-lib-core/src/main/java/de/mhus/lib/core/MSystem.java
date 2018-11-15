@@ -860,6 +860,10 @@ public class MSystem {
 	 * Use byte buddy to get the lambda byte code
 	 */
 	public static byte[] getBytes(Class<?> c) throws IOException {
+//		String name = '/' + c.getName().replace('.', '/')+ ".class";
+//		InputStream is = c.getClassLoader().getResourceAsStream(name);
+//		byte[] bytes = MFile.readBinary(is);
+//		return bytes;
 	    ClassFileLocator locator = ClassFileLocator.AgentBased.of(instrumentation, c);
 	    TypeDescription.ForLoadedType desc = new TypeDescription.ForLoadedType(c);
 	    ClassFileLocator.Resolution resolution = locator.locate(desc.getName());
