@@ -16,9 +16,6 @@
 package de.mhus.lib.core.util.lambda;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -237,18 +234,17 @@ CAFEBABE 00000034 00140100 3E64652F 6D687573  <00><00><00>4<00><14><01><00>>de/m
 
 	 */
 	
-	static String getName(Object lambda) throws NotFoundException {
-		try {
-			Method m = lambda.getClass().getDeclaredMethod("writeReplace");
-			m.setAccessible(true);
-			SerializedLambda sl = (SerializedLambda) m.invoke(lambda);
-			return sl.getImplMethodName();
-		} catch (ReflectiveOperationException ex) {
-		}
-		return getNameByBytecode(lambda);
-	}
-
-	private static String getNameByBytecode(Object lambda) throws NotFoundException {
+//	static String getName(Object lambda) throws NotFoundException {
+//		try {
+//			Method m = lambda.getClass().getDeclaredMethod("writeReplace");
+//			m.setAccessible(true);
+//			SerializedLambda sl = (SerializedLambda) m.invoke(lambda);
+//			return sl.getImplMethodName();
+//		} catch (ReflectiveOperationException ex) {
+//		}
+//	}
+	
+	private static String getName(Object lambda) throws NotFoundException {
 		byte[] bc = null;
 		try {
 			bc = MSystem.getBytes(lambda.getClass());
