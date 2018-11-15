@@ -127,12 +127,13 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                
 	                for (Entry<String, String> field : fields.entrySet() ) {
 	                		c.append("public static final Identifier ")
-	                			.append(field.getKey()).append(" = new Identifier(\"")
+	                			.append(field.getKey()).append(" = new Identifier(")
+	                			.append(clazz.getCanonicalName()).append(".class, \"")
 	                			.append(field.getValue().replace("\\", "\\\\").replace("\"", "\\\"") )
 	                			.append("\");\n");
 	                }
 	                
-	                c.append("}");
+	                c.append("\n}");
 	                
 	                // write
 	                File dir = constFile.getParentFile();
@@ -170,20 +171,20 @@ public class ConstGeneratorMojo extends AbstractMojo {
     		TreeMap<String,String> out = new TreeMap<String,String>();
     		for (Field field : clazz.getDeclaredFields()) {
     			if (field.getAnnotation(Hidden.class) != null) continue;
-    			out.put("FIELD_" + field.getName().toUpperCase(), field.getName());
+    			out.put("FIELD_" + toName(field.getName()), field.getName());
     			if (field.getAnnotation(DbPersistent.class) != null || field.getAnnotation(DbPrimaryKey.class) != null) {
-        			out.put( field.getName().toUpperCase(), field.getName());
+        			out.put( toName(field.getName()), field.getName());
     			}
     		}
     		for (Method meth : clazz.getDeclaredMethods()) {
     			if (meth.getAnnotation(Hidden.class) != null) continue;
-    			out.put("METHOD_" + meth.getName().toUpperCase(), meth.getName());
+    			out.put("METHOD_" + toName(meth.getName()), meth.getName());
     			if (meth.getAnnotation(DbPersistent.class) != null || meth.getAnnotation(DbPrimaryKey.class) != null) {
     				String name = meth.getName();
     				if (name.startsWith("get") || name.startsWith("set")) name = name.substring(3);
     				else
     				if (name.startsWith("is")) name = name.substring(2);
-    				out.put(name.toUpperCase(), name);
+    				out.put(toName(name), name);
     			}
     		}
     		
@@ -195,6 +196,21 @@ public class ConstGeneratorMojo extends AbstractMojo {
     		out.put("PROJECT_DESCRIPTION", project.getDescription());
 
 		return out;
+	}
+
+	private String toName(String name) {
+		StringBuilder out = new StringBuilder();
+		boolean lastUpper = false;
+		for (int i = 0; i < name.length(); i++) {
+			char c = name.charAt(i);
+			boolean isUpper = Character.isUpperCase(c);
+			if (i != 0 && isUpper && !lastUpper)
+				out.append('_');
+			lastUpper = isUpper;
+			c = Character.toUpperCase(c);
+			out.append(c);
+		}
+		return out.toString();
 	}
 
 	private File findClassSourceFile(Class<?> clazz) {

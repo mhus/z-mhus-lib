@@ -634,7 +634,7 @@ public class MPojo {
 		StringBuilder out = new StringBuilder();
 		for (Identifier ident : idents) {
 			if (out.length() > 0) out.append('_');
-			out.append(ident.toString().toLowerCase());
+			out.append(ident.getPojoName());
 		}
 		return out.toString();
 	}
