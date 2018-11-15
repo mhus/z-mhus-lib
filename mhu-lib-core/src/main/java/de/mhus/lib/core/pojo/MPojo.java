@@ -31,6 +31,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
@@ -86,24 +87,31 @@ public class MPojo {
 	}
 	
 	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory) throws IOException {
-		pojoToJson(from, to, factory, 0);
+		pojoToJson(from, to, factory, false, 0);
 	}
 	
-	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory, int level) throws IOException {
+	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory, boolean usePublic) throws IOException {
+		pojoToJson(from, to, factory, usePublic, 0);
+	}
+	
+	public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory, boolean usePublic,int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
 			
 			if (!attr.canRead()) continue;
-
+			if (usePublic) {
+				Public pub = attr.getAnnotation(Public.class);
+				if (pub != null && !pub.readable()) continue;
+			}
 			Object value = attr.get(from);
 			String name = attr.getName();
-			setJsonValue(to, name, value, factory, false, level+1);
+			setJsonValue(to, name, value, factory, usePublic, false, level+1);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
+	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean usePublic, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		try {
 			if (value == null)
@@ -141,20 +149,20 @@ public class MPojo {
 				ObjectNode obj = to.objectNode();
 				to.add(obj);
 				for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
-					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
+					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, usePublic, true, level+1 );
 				}
 			} else
 			if (value instanceof Collection) {
 				ArrayNode array = to.arrayNode();
 				to.add(array);
 				for (Object o : ((Collection<Object>)value)) {
-					addJsonValue(array,o,factory,true,level+1);
+					addJsonValue(array,o,factory,usePublic, true,level+1);
 				}
 			} else {
 				if (deep) {
 					ObjectNode too = to.objectNode();
 					to.add(too);
-					pojoToJson(value, too, factory, level+1);
+					pojoToJson(value, too, factory, usePublic, level+1);
 				} else {
 					to.add(String.valueOf(value));
 				}
@@ -165,7 +173,7 @@ public class MPojo {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean deep, int level) throws IOException {
+	public static void setJsonValue(ObjectNode to, String name, Object value, PojoModelFactory factory, boolean usePublic, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;
 		try {
 			if (value == null)
@@ -207,27 +215,27 @@ public class MPojo {
 				ObjectNode obj = to.objectNode();
 				to.put(name, obj);
 				for (Map.Entry<Object, Object> entry : ((Map<Object,Object>)value).entrySet()) {
-					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, true, level+1 );
+					setJsonValue(obj, String.valueOf(entry.getKey()), entry.getValue(), factory, usePublic, true, level+1 );
 				}
 			} else
 			if (value.getClass().isArray()) {
 				ArrayNode array = to.arrayNode();
 				to.put(name, array);
 				for (Object o : (Object[])value) {
-					addJsonValue(array,o,factory,true,level+1);
+					addJsonValue(array,o,factory,usePublic, true,level+1);
 				}
 			} else
 			if (value instanceof Collection) {
 				ArrayNode array = to.arrayNode();
 				to.put(name, array);
 				for (Object o : ((Collection<Object>)value)) {
-					addJsonValue(array,o,factory,true,level+1);
+					addJsonValue(array,o,factory,usePublic, true,level+1);
 				}
 			} else {
 				if (deep) {
 					ObjectNode too = to.objectNode();
 					to.put(name, too);
-					pojoToJson(value, too, factory, level+1);
+					pojoToJson(value, too, factory, usePublic, level+1);
 				} else {
 					to.put(name, String.valueOf(value));
 				}

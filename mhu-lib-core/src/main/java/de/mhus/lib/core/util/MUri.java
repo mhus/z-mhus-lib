@@ -486,4 +486,28 @@ public abstract class MUri implements Serializable {
 		
 	}
 	
+	public static String getFileName(String path) {
+		if (path == null) return null;
+		
+		if (MString.isIndex(path, "/"))
+			path = MString.afterLastIndex(path, "/");
+
+		return path;
+
+	}
+
+	public static String getFileDirectory(String path) {
+		if (path == null) return null;
+		
+		if (MString.isIndex(path, "/")) {
+			String ret = MString.beforeLastIndex(path, "/");
+			while (ret.endsWith("/"))
+				ret = ret.substring(0, ret.length()-1);
+			if (ret.length() == 0) return null;
+			return ret;
+		}
+		return null;
+
+	}
+
 }

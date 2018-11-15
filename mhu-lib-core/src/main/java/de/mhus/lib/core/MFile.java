@@ -105,7 +105,7 @@ public class MFile {
 	public static String getFileName(String path) {
 		if (path == null) return null;
 		
-		while (MString.isIndex(path, File.separatorChar))
+		if (MString.isIndex(path, File.separatorChar))
 			path = MString.afterLastIndex(path, File.separatorChar);
 
 		return path;
@@ -121,13 +121,17 @@ public class MFile {
 	public static String getFileDirectory(String path) {
 		if (path == null) return null;
 		
-		while (MString.isIndex(path, File.separatorChar))
-			path = MString.beforeLastIndex(path, File.separatorChar);
-
+		if (MString.isIndex(path, File.separatorChar)) {
+			String ret = MString.beforeLastIndex(path, File.separatorChar);
+			while (ret.endsWith(""+File.separatorChar))
+				ret = ret.substring(0, ret.length()-1);
+			if (ret.length() == 0) return null;
+			return ret;
+		}
 		return null;
 
 	}
-
+	
 	/**
 	 * return the internal working directory.
 	 * @return current directory
