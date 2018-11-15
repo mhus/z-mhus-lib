@@ -60,14 +60,14 @@
 		<compileSource>1.8</compileSource>
 		<osgi.version>5.0.0</osgi.version>
 		<activemq.version>5.7.0</activemq.version>
-		<bundle.plugin.version>2.5.3</bundle.plugin.version>
+		<bundle.plugin.version>3.5.1</bundle.plugin.version>
 		<vaadin.version>7.7.9</vaadin.version>
 		<servlet.version>3.1.0</servlet.version>
 		<portlet.version>2.0</portlet.version>
 		<javax.mail.version>1.4.1</javax.mail.version>
 
 		<felix.plugin.version>3.0.1</felix.plugin.version>
-		<maven.version>2.0.9</maven.version>
+		<maven.version>3.5.0</maven.version>
 		<jackson.version>1.9.5</jackson.version>
 
 		<mongo.version>3.6.0</mongo.version>
@@ -230,6 +230,7 @@
 			</activation>
 			<modules>
 				<module>mhu-lib-annotations</module>
+				<module>mhu-lib-constgenerator</module>
 				<module>mhu-lib-core</module>
 				<module>mhu-lib-j2ee</module>
 				<module>mhu-lib-persistence</module>
@@ -252,6 +253,7 @@
 			</activation>
 			<modules>
 				<module>mhu-lib-annotations</module>
+				<module>mhu-lib-constgenerator</module>
 				<module>mhu-lib-core</module>
 				<module>mhu-lib-persistence</module>
 				<module>mhu-lib-j2ee</module>

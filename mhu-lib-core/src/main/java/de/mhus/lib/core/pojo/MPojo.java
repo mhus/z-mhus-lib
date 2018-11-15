@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
@@ -32,6 +31,7 @@ import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
 
 import de.mhus.lib.annotations.generic.Public;
+import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
@@ -44,17 +44,12 @@ import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
-import de.mhus.lib.core.util.SoftHashMap;
-import de.mhus.lib.core.util.lambda.LambdaUtil;
-import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.NotFoundRuntimeException;
 
 public class MPojo {
 
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
 	private static PojoModelFactory defaultModelFactory;
-	private static SoftHashMap<String, String> cacheAttributeName = new SoftHashMap<>();
 
 	public static synchronized PojoModelFactory getDefaultModelFactory() {
 		if (defaultModelFactory == null)
@@ -628,42 +623,20 @@ public class MPojo {
 
 	/**
 	 * <p>toAttributeName.</p>
-	 *
-	 * @param getter a {@link java.util.function.Function} object.
+	 * @param idents
 	 * @return a {@link java.lang.String} object.
 	 * @since 3.3.0
 	 */
-	public static <T> String toAttributeName(Function<T, ?> getter) {
-        try {
-			String name = LambdaUtil.getFunctionName(getter);
-			name = name.toLowerCase();
-			if (name.startsWith("get")) name = name.substring(3);
-			else
-			if (name.startsWith("is")) name = name.substring(2);
-			return name;
-		} catch (NotFoundException e) {
-			throw new NotFoundRuntimeException(e);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> String toAttributeName(Function<T,?> ... getters ) {
+	public static String toAttributeName(Identifier ... idents  ) {
+		if (idents == null) return null;
+		if (idents.length == 0) return "";
+		if (idents.length == 1) return idents[0].toString();
 		StringBuilder out = new StringBuilder();
-		for (Function<T, ?> getter : getters) {
+		for (Identifier ident : idents) {
 			if (out.length() > 0) out.append('_');
-			out.append(toAttributeName(getter));
+			out.append(ident.toString().toLowerCase());
 		}
 		return out.toString();
-	}
-
-	public static synchronized <T> String toAttributeNameWithCache(Function<T, ?> getter) {
-		String id = MSystem.getCanonicalClassName(getter.getClass());
-		String name = cacheAttributeName.get(id);
-		if (name == null) {
-			name = toAttributeName(getter);
-			cacheAttributeName.put(id,name);
-		}
-		return name;
 	}
 	
 	@SuppressWarnings("unchecked")

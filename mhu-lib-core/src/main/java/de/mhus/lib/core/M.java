@@ -16,8 +16,8 @@
 package de.mhus.lib.core;
 
 import java.util.Date;
-import java.util.function.Function;
 
+import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.pojo.MPojo;
 
 /**
@@ -35,8 +35,7 @@ public class M {
 	 * and joined with underscore.
 	 * 
 	 * This is used to create identifiers for MForm or Adb.
-	 * 
-	 * @param getter
+	 * @param idents
 	 * @return combined name of the getters e.g. address_firstname
 	 */
 //	@SuppressWarnings("unchecked")
@@ -44,18 +43,8 @@ public class M {
 //		return MPojo.toAttributeName(getters);
 //	}
 	
-	public static <T> String n(Function<T,?> getter ) {
-		return MPojo.toAttributeName(getter);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T,U> String n(Function<T,?> getter1, Function<U,?> getter2 ) {
-		return MPojo.toAttributeName(new Function[] {getter1,getter2});
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T,U,V> String n(Function<T,?> getter1, Function<U,?> getter2, Function<V,?> getter3 ) {
-		return MPojo.toAttributeName(new Function[] {getter1,getter2,getter3});
+	public static <T,U> String n(Identifier ... idents ) {
+		return MPojo.toAttributeName(idents);
 	}
 	
 	/**

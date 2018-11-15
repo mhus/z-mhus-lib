@@ -28,13 +28,11 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.adb.query.Db;
-import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.core.util.lambda.LambdaUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 import de.mhus.lib.sql.DbPool;
@@ -545,13 +543,13 @@ public class AdbTest extends TestCase {
 			assertEquals("Max",res.get(0).getName());
 		}
 
-		{
-			LambdaUtil.debugOut = true;
-			AQuery<Person2> q1 = Db.query(Person2.class).eq(M.n(Person2::getName), "Max");
-			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
-			assertEquals(1, res.size());
-			assertEquals("Max",res.get(0).getName());
-		}
+//		{
+//			LambdaUtil.debugOut = true;
+//			AQuery<Person2> q1 = Db.query(Person2.class).eq(M.n(Person2::getName), "Max");
+//			List<Person2> res = manager.getByQualification(q1).toCacheAndClose();
+//			assertEquals(1, res.size());
+//			assertEquals("Max",res.get(0).getName());
+//		}
 		
 		{
 			AQuery<Person2> q1 = Db.query(Person2.class).eq("name", "Max");

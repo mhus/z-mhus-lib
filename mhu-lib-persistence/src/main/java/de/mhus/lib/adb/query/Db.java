@@ -17,10 +17,10 @@ package de.mhus.lib.adb.query;
 
 import java.util.LinkedList;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import javax.transaction.NotSupportedException;
 
+import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
@@ -224,8 +224,8 @@ public class Db {
 	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
-	public <T> APart in(Function<T,?> left, Function<T,?> projection, AQuery<?> subQuery) {
-		return new ASubQuery(attr(MPojo.toAttributeNameWithCache(left)), attr(MPojo.toAttributeNameWithCache(projection)), subQuery);
+	public <T> APart in(Identifier left, Identifier projection, AQuery<?> subQuery) {
+		return new ASubQuery(attr(MPojo.toAttributeName(left)), attr(MPojo.toAttributeName(projection)), subQuery);
 	}
 	
 	/**

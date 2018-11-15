@@ -18,8 +18,8 @@ package de.mhus.lib.adb.query;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
+import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.core.pojo.MPojo;
 
@@ -122,8 +122,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> eq(Function<T,?> getter, Object value) {
-		operations.add(Db.eq(MPojo.toAttributeNameWithCache(getter), value));
+	public AQuery<T> eq(Identifier getter, Object value) {
+		operations.add(Db.eq(MPojo.toAttributeName(getter), value));
 		return this;
 	}
 	
@@ -159,8 +159,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> ne(Function<T,?> getter, Object value) {
-		operations.add(Db.ne(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> ne(Identifier getter, Object value) {
+		operations.add(Db.ne(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -196,8 +196,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> lt(Function<T,?> getter, Object value) {
-		operations.add(Db.lt(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> lt(Identifier getter, Object value) {
+		operations.add(Db.lt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -233,8 +233,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> le(Function<T,?> getter, Object value) {
-		operations.add(Db.le(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> le(Identifier getter, Object value) {
+		operations.add(Db.le(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -270,8 +270,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> gt(Function<T,?> getter, Object value) {
-		operations.add(Db.gt(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> gt(Identifier getter, Object value) {
+		operations.add(Db.gt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -307,8 +307,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> ge(Function<T,?> getter, Object value) {
-		operations.add(Db.ge(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> ge(Identifier getter, Object value) {
+		operations.add(Db.ge(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -332,8 +332,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> el(Function<T,?> getter, Object value) {
-		operations.add(Db.el(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> el(Identifier getter, Object value) {
+		operations.add(Db.el(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -357,8 +357,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> eg(Function<T,?> getter, Object value) {
-		operations.add(Db.eg(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> eg(Identifier getter, Object value) {
+		operations.add(Db.eg(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -394,8 +394,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> like(Function<T,?> getter, Object value) {
-		operations.add(Db.like(Db.attr(MPojo.toAttributeNameWithCache(getter)), Db.value(value)));
+	public AQuery<T> like(Identifier getter, Object value) {
+		operations.add(Db.like(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
 		return this;
 	}
 
@@ -450,8 +450,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> asc(Function<T,?> getter) {
-		return asc(MPojo.toAttributeNameWithCache(getter));
+	public AQuery<T> asc(Identifier getter) {
+		return asc(MPojo.toAttributeName(getter));
 	}
 
 	
@@ -473,8 +473,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> desc(Function<T,?> getter) {
-		return desc(MPojo.toAttributeNameWithCache(getter));
+	public AQuery<T> desc(Identifier getter) {
+		return desc(MPojo.toAttributeName(getter));
 	}
 	
 	/**
@@ -529,8 +529,8 @@ public class AQuery<T> extends APrint {
 	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
-	public AQuery<T> in(Function<T,?> left, AAttribute ... right) {
-		operations.add(Db.in( Db.attr(MPojo.toAttributeNameWithCache(left)) , new AList(right) ));
+	public AQuery<T> in(Identifier left, AAttribute ... right) {
+		operations.add(Db.in( Db.attr(MPojo.toAttributeName(left)) , new AList(right) ));
 		return this;
 	}
 	
@@ -568,8 +568,8 @@ public class AQuery<T> extends APrint {
 	 * @param subQuery a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
-	public AQuery<T> in(Function<T,?> left, Function<T,?> projection, AQuery<?> subQuery) {
-		operations.add(Db.in(Db.attr(MPojo.toAttributeNameWithCache(left)), Db.attr(MPojo.toAttributeNameWithCache(projection)), subQuery ));
+	public AQuery<T> in(Identifier left, Identifier projection, AQuery<?> subQuery) {
+		operations.add(Db.in(Db.attr(MPojo.toAttributeName(left)), Db.attr(MPojo.toAttributeName(projection)), subQuery ));
 		return this;
 	}
 
@@ -602,8 +602,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> isNull(Function<T,?> getter) {
-		operations.add(Db.isNull(Db.attr(MPojo.toAttributeNameWithCache(getter))));
+	public AQuery<T> isNull(Identifier getter) {
+		operations.add(Db.isNull(Db.attr(MPojo.toAttributeName(getter))));
 		return this;
 	}
 	
@@ -625,8 +625,8 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 * @since 3.3.0
 	 */
-	public AQuery<T> isNotNull(Function<T,?> getter) {
-		operations.add(Db.isNotNull(Db.attr(MPojo.toAttributeNameWithCache(getter))));
+	public AQuery<T> isNotNull(Identifier getter) {
+		operations.add(Db.isNotNull(Db.attr(MPojo.toAttributeName(getter))));
 		return this;
 	}
 	
