@@ -2,13 +2,17 @@ package de.mhus.lib.constgenerator;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,15 +29,28 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.xbean.finder.ClassFinder;
 
-import de.mhus.lib.annotations.adb.DbPersistent;
-import de.mhus.lib.annotations.adb.DbPrimaryKey;
-import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.basics.consts.GenerateConst;
+import de.mhus.lib.basics.consts.GenerateHidden;
 import de.mhus.lib.basics.consts.Identifier;
 
 @Mojo(name = "const-generate", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, inheritByDefault = false)
 public class ConstGeneratorMojo extends AbstractMojo {
     
+	private HashSet<String> ignoreList = new HashSet<>();
+	{
+		ignoreList.add("EQUALS");
+		ignoreList.add("CLASS");
+		ignoreList.add("CLONE");
+		ignoreList.add("WAIT");
+		ignoreList.add("FINALIZE");
+		ignoreList.add("HASH_CODE");
+		ignoreList.add("NOTIFY");
+		ignoreList.add("NOTIFY_ALL");
+		ignoreList.add("WRITE_EXTERNAL");
+		ignoreList.add("READ_EXTERNAL");
+		ignoreList.add("TO_STRING");
+	}
+	
 	@Parameter(defaultValue = "${project}")
     protected MavenProject project;
 	
@@ -57,12 +74,23 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	protected boolean force = false;
 	
 	@Parameter
-	protected String suffix = "_";
+	protected String prefix = "_";
+	
+	@Parameter
+	protected String ignore = null;
 	
 	private URLClassLoader loader;
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		
+		// fill ignore list
+		if (ignore != null) {
+			for (String i : ignore.split(",")) {
+				ignoreList.add(i.toUpperCase());
+			}
+		}
+		
 		try {
 			ClassFinder finder = createFinder(classLoader);
 			 List<Class<?>> classes = finder.findAnnotatedClasses(GenerateConst.class);
@@ -79,12 +107,12 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                }
 	                
 	                // find target file
-	                String constClassName = clazz.getCanonicalName() + suffix;
+	                String constClassName = prefix + clazz.getCanonicalName();
 	                File constFile = null;
 	                if (outputDirectory != null)
 	                		constFile = new File(outputDirectory + File.separatorChar + constClassName.replace('.', File.separatorChar) + ".java" );
 	                else
-	                		constFile = new File(classSource.getParentFile(), clazz.getSimpleName() + suffix + ".java" );
+	                		constFile = new File(classSource.getParentFile(), prefix + clazz.getSimpleName() + ".java" );
 	                
 	                // find current declared fields
 	                HashMap<String, String> constFields = new HashMap<>();
@@ -123,7 +151,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                c.append("import de.mhus.lib.basics.consts.Identifier;\n");
 	                c.append("import de.mhus.lib.basics.consts.ConstBase;\n");
 	                c.append("/**\n * File created by mhu const generator. Changes will be overwritten.\n").append(" **/\n");
-	                c.append("public class ").append(clazz.getSimpleName()).append(suffix).append(" extends ConstBase {\n\n");
+	                c.append("public class ").append(prefix).append(clazz.getSimpleName()).append(" extends ConstBase {\n\n");
 	                
 	                for (Entry<String, String> field : fields.entrySet() ) {
 	                		c.append("public static final Identifier ")
@@ -168,28 +196,51 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	}
 
 	private Map<String, String> analyzeClass(Class<?> clazz) {
+		
+		GenerateConst config = clazz.getAnnotation(GenerateConst.class);
+		
     		TreeMap<String,String> out = new TreeMap<String,String>();
-    		for (Field field : clazz.getDeclaredFields()) {
-    			if (field.getAnnotation(Hidden.class) != null) continue;
-    			out.put("FIELD_" + toName(field.getName()), field.getName());
-    			if (field.getAnnotation(DbPersistent.class) != null || field.getAnnotation(DbPrimaryKey.class) != null) {
-        			out.put( toName(field.getName()), field.getName());
-    			}
+    		for (Field field : findFields(clazz)) {
+    			
+    			String name = field.getName();
+    			String orgName = name;
+    			name = toName(field.getName());
+    			
+    			if (ignore(config, name)) continue;
+    			if (field.getAnnotation(GenerateHidden.class) != null) continue;
+    			
+    			if (config.restricted() || Modifier.isPublic(field.getModifiers()) )
+    				out.put("FIELD_" + name, orgName);
+    			
+    			if (!hasAnnotation(config, field.getAnnotations())) continue;
+
+    			out.put("_" + name, orgName);
+
     		}
-    		for (Method meth : clazz.getDeclaredMethods()) {
-    			if (meth.getAnnotation(Hidden.class) != null) continue;
-    			out.put("METHOD_" + toName(meth.getName()), meth.getName());
-    			if (meth.getAnnotation(DbPersistent.class) != null || meth.getAnnotation(DbPrimaryKey.class) != null) {
-    				String name = meth.getName();
-    				if (name.startsWith("get") || name.startsWith("set")) name = name.substring(3);
-    				else
-    				if (name.startsWith("is")) name = name.substring(2);
-    				out.put(toName(name), name);
-    			}
+    		for (Method meth : findMethods(clazz)) {
+			String name = meth.getName();
+			
+			if (name.startsWith("get") || name.startsWith("set")) name = name.substring(3);
+			else
+			if (name.startsWith("is")) name = name.substring(2);
+			String orgName = name;
+			name = toName(name);
+			
+			if (ignore(config, name)) continue;
+			if (meth.getAnnotation(GenerateHidden.class) != null) continue;
+
+			if (config.restricted() || Modifier.isPublic(meth.getModifiers()) )
+				out.put("METHOD_" + toName(meth.getName()), meth.getName());
+			
+			if (!hasAnnotation(config, meth.getAnnotations())) continue;
+
+			out.put("_" + name, orgName);
+
     		}
     		
     		out.put("CLASS_NAME", clazz.getName());
     		out.put("CLASS_PATH", clazz.getCanonicalName());
+    		out.put("CLASS_EXTENDS", clazz.getSuperclass().getCanonicalName());
     		out.put("PROJECT_VERSION", project.getVersion());
     		out.put("PROJECT_ARTIFACT", project.getArtifactId());
     		out.put("PROJECT_GROUP", project.getGroupId());
@@ -198,6 +249,51 @@ public class ConstGeneratorMojo extends AbstractMojo {
 		return out;
 	}
 
+	private boolean hasAnnotation(GenerateConst config, Annotation[] annotations) {
+		if (config == null || config.annotation().length == 0) return true;
+		
+		// x^n !!!
+		for (Class<? extends Annotation> a1 : config.annotation()) 
+			for (Annotation a2 : annotations) {
+				if (a1.getCanonicalName().equals( a2.annotationType().getCanonicalName() )) return true;
+			}
+		return false;
+	}
+
+	private boolean ignore(GenerateConst config, String name) {
+		name = name.toUpperCase();
+		if ( ignoreList.contains(name) ) return true;
+		for (String item : config.ignore())
+			if (name.equals(item.toUpperCase())) return true;
+		return false;
+	}
+
+	private List<Method> findMethods(Class<?> clazz) {
+		LinkedList<Method> list = new LinkedList<>();
+		findMethods(list, clazz);
+		return list;
+	}
+
+	private void findMethods(LinkedList<Method> list, Class<?> clazz) {
+		if (clazz == null) return;
+		for (Method m : clazz.getDeclaredMethods())
+			list.add(m);
+		findMethods(list, clazz.getSuperclass());
+	}
+
+	private List<Field> findFields(Class<?> clazz) {
+		LinkedList<Field> list = new LinkedList<>();
+		findFields(list, clazz);
+		return list;
+	}
+
+	private void findFields(List<Field> list, Class<?> clazz) {
+		if (clazz == null) return;
+		for (Field f : clazz.getDeclaredFields())
+			list.add(f);
+		findFields(list, clazz.getSuperclass());
+	}
+	
 	private String toName(String name) {
 		StringBuilder out = new StringBuilder();
 		boolean lastUpper = false;

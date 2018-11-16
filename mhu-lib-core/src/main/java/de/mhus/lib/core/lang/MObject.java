@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.lang;
 
+import de.mhus.lib.basics.consts.GenerateHidden;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.MNls;
@@ -23,6 +24,7 @@ import de.mhus.lib.core.util.Nls;
 
 public class MObject extends MLog implements MNlsProvider, Nls {
 	
+	@GenerateHidden
 	private MNls nls;
 
 	public MObject() {
@@ -34,11 +36,13 @@ public class MObject extends MLog implements MNlsProvider, Nls {
 	}
 
 	@Override
+	@GenerateHidden
 	public String nls(String text) {
 		return MNls.find(this, text);
 	}
 
 	@Override
+	@GenerateHidden
 	public MNls getNls() {
 		if (nls == null)
 			nls = MNls.lookup(this);

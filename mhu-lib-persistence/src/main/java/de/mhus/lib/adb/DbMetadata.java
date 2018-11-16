@@ -29,6 +29,7 @@ import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.basics.UuidIdentificable;
+import de.mhus.lib.basics.consts.GenerateHidden;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
@@ -59,6 +60,7 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 	}
 
 	@Override
+	@GenerateHidden
 	public void doPreCreate(DbConnection con) {
 		creationDate = new Date();
 		modifyDate = creationDate;
@@ -66,6 +68,7 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 	}
 	
 	@Override
+	@GenerateHidden
 	public void doPreSave(DbConnection con) {
 		modifyDate = new Date();
 		vstamp++;
@@ -83,6 +86,7 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 		return vstamp;
 	}
 
+	@GenerateHidden
 	public abstract DbMetadata findParentObject() throws MException;
 	
 	@Override

@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.adb;
 
+import de.mhus.lib.basics.consts.GenerateHidden;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
@@ -122,6 +123,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
+	@GenerateHidden
 	public void doPreCreate(DbConnection con) {
 	}
 
@@ -131,6 +133,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook, the default behavior is to call doPostLoad().
 	 */
 	@Override
+	@GenerateHidden
 	public void doPostCreate(DbConnection con) {
 		doPostLoad(con);
 	}
@@ -141,6 +144,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
+	@GenerateHidden
 	public void doPreSave(DbConnection con) {
 	}
 
@@ -151,6 +155,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * to store the data.
 	 */
 	@Override
+	@GenerateHidden
 	public void doInit(DbObjectHandler manager, String registryName, boolean isPersistent) {
 		this.manager = manager;
 		this.registryName = registryName;
@@ -159,6 +164,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 
 	/** {@inheritDoc} */
 	@Override
+	@GenerateHidden
 	public boolean setDbHandler(DbObjectHandler manager) {
 		if (this.manager != null) return false;
 		this.manager = manager;
@@ -177,6 +183,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
+	@GenerateHidden
 	public void doPreDelete(DbConnection con) {
 	}
 
@@ -186,6 +193,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
+	@GenerateHidden
 	public void doPostLoad(DbConnection con) {
 	}
 
@@ -195,6 +203,7 @@ public class DbComfortableObject extends MObject implements DbObject {
 	 * Overwrite to get the hook.
 	 */
 	@Override
+	@GenerateHidden
 	public void doPostDelete(DbConnection con) {
 	}
 
