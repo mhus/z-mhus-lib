@@ -2,6 +2,7 @@ package de.mhus.lib.constgenerator;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,7 +16,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.maven.artifact.Artifact;
@@ -28,12 +28,19 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.xbean.finder.ClassFinder;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
 import de.mhus.lib.basics.consts.GenerateConst;
 import de.mhus.lib.basics.consts.GenerateHidden;
 import de.mhus.lib.basics.consts.Identifier;
 
-@Mojo(name = "const-generate", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, inheritByDefault = false)
+@Mojo(
+		name = "const-generate", 
+		defaultPhase = LifecyclePhase.PROCESS_CLASSES, 
+		requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, 
+		inheritByDefault = false
+	)
 public class ConstGeneratorMojo extends AbstractMojo {
     
 	private HashSet<String> ignoreList = new HashSet<>();
@@ -79,6 +86,9 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	@Parameter
 	protected String ignore = null;
 	
+	@Parameter
+	protected String template = null;
+	
 	private URLClassLoader loader;
 	
 	@Override
@@ -91,6 +101,29 @@ public class ConstGeneratorMojo extends AbstractMojo {
 			}
 		}
 		
+		// load template
+		if (template == null) {
+			try {
+				template = project.getBuild().getOutputDirectory() + "/template.twig";
+				File templateFile = new File(template);
+				if (force || !templateFile.exists()) {
+					InputStream is = getClass().getResourceAsStream("/template.twig");
+					FileOutputStream os = new FileOutputStream(template);
+					while(true) {
+						int b = is.read();
+						if (b < 0) break;
+						os.write(b);
+					}
+					is.close();
+					os.close();
+				}
+			} catch (Exception e) {
+				throw new MojoExecutionException(template,e);
+			}
+		}
+		File templateFile = new File(template);
+		JtwigTemplate jtwigTemplate = JtwigTemplate.fileTemplate(templateFile);
+
 		try {
 			ClassFinder finder = createFinder(classLoader);
 			 List<Class<?>> classes = finder.findAnnotatedClasses(GenerateConst.class);
@@ -145,30 +178,40 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                
 	                getLog().info("Write " + constFile);
 	                
+	                HashMap<String, Object> parameters = new HashMap<>();
+	                parameters.put("constPackage", clazz.getPackage().getName());
+	                parameters.put("constName", prefix + clazz.getSimpleName());
+	                parameters.put("constClass", clazz.getPackage().getName() + "." + prefix + clazz.getSimpleName());
+	                parameters.put("baseName", clazz.getSimpleName());
+	                parameters.put("baseClass", clazz.getCanonicalName());
+	                parameters.put("basePackage", clazz.getPackage().getName());
+	                parameters.put("fields", fields);
+	    	        		JtwigModel jtwigModel = JtwigModel.newModel(parameters);
+
 	                // create
-	                StringBuilder c = new StringBuilder(); // content
-	                c.append("package ").append(clazz.getPackage().getName()).append(";\n\n");
-	                c.append("import de.mhus.lib.basics.consts.Identifier;\n");
-	                c.append("import de.mhus.lib.basics.consts.ConstBase;\n");
-	                c.append("/**\n * File created by mhu const generator. Changes will be overwritten.\n").append(" **/\n");
-	                c.append("public class ").append(prefix).append(clazz.getSimpleName()).append(" extends ConstBase {\n\n");
-	                
-	                for (Entry<String, String> field : fields.entrySet() ) {
-	                		c.append("public static final Identifier ")
-	                			.append(field.getKey()).append(" = new Identifier(")
-	                			.append(clazz.getCanonicalName()).append(".class, \"")
-	                			.append(field.getValue().replace("\\", "\\\\").replace("\"", "\\\"") )
-	                			.append("\");\n");
-	                }
-	                
-	                c.append("\n}");
+//	                StringBuilder c = new StringBuilder(); // content
+//	                c.append("package ").append(clazz.getPackage().getName()).append(";\n\n");
+//	                c.append("import de.mhus.lib.basics.consts.Identifier;\n");
+//	                c.append("import de.mhus.lib.basics.consts.ConstBase;\n");
+//	                c.append("/**\n * File created by mhu const generator. Changes will be overwritten.\n").append(" **/\n");
+//	                c.append("public class ").append(prefix).append(clazz.getSimpleName()).append(" extends ConstBase {\n\n");
+//	                
+//	                for (Entry<String, String> field : fields.entrySet() ) {
+//	                		c.append("public static final Identifier ")
+//	                			.append(field.getKey()).append(" = new Identifier(")
+//	                			.append(clazz.getCanonicalName()).append(".class, \"")
+//	                			.append(field.getValue().replace("\\", "\\\\").replace("\"", "\\\"") )
+//	                			.append("\");\n");
+//	                }
+//	                
+//	                c.append("\n}");
 	                
 	                // write
 	                File dir = constFile.getParentFile();
 	                if (!dir.exists()) dir.mkdirs();
 	                
 	                FileOutputStream fos = new FileOutputStream(constFile);
-	                fos.write(c.toString().getBytes("utf-8"));
+	    				jtwigTemplate.render(jtwigModel, fos);
 	                fos.close();
 	                
 	                

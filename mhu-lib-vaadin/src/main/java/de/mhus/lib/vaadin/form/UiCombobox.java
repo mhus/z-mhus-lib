@@ -55,11 +55,17 @@ public class UiCombobox extends UiVaadin {
 		cb.removeAllItems();
 		String itemsDef = getConfig().getString("itemdef", getName() + "." + DataSource.ITEMS);
 		Item[] items = (Item[]) getForm().getDataSource().getObject(itemsDef, null);
-		if (items != null)
+		if (items != null) {
 			for (Item item : items) {
 				cb.addItem(item.getKey());
 				cb.setItemCaption(item.getKey(), item.getCaption());
 			}
+		} else {
+			String itemsStr = getConfig().getString("items", null);
+			if (itemsStr != null) {
+				//TODO 
+			}
+		}
 	}
 
 	public static class Adapter implements ComponentAdapter {

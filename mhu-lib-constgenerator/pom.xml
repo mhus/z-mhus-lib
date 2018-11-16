@@ -63,12 +63,76 @@
             <version>4.12</version>
         </dependency>
         
+        <!-- embedded -->
         <dependency>
 	        	<groupId>de.mhus.lib</groupId>
 	        	<artifactId>mhu-lib-annotations</artifactId>
 	        	<version>${project.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jtwig/jtwig-core -->
+        <dependency>
+            <groupId>org.jtwig</groupId>
+            <artifactId>jtwig-core</artifactId>
+            <version>5.86.1.RELEASE</version>
+        </dependency>
         
+	    <dependency>
+	      <groupId>org.jtwig</groupId>
+	      <artifactId>jtwig-reflection</artifactId>
+	      <version>5.86.1.RELEASE</version>
+	      <scope>compile</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.google.guava</groupId>
+	      <artifactId>guava</artifactId>
+	      <version>18.0</version>
+	      <scope>compile</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.apache.commons</groupId>
+	      <artifactId>commons-lang3</artifactId>
+	      <version>3.6</version>
+	      <scope>compile</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.parboiled</groupId>
+	      <artifactId>parboiled-java</artifactId>
+	      <version>1.1.7</version>
+	      <scope>compile</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+	      <artifactId>concurrentlinkedhashmap-lru</artifactId>
+	      <version>1.4.2</version>
+	      <scope>compile</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.parboiled</groupId>
+	        <artifactId>parboiled-core</artifactId>
+	        <version>1.1.7</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.ow2.asm</groupId>
+	        <artifactId>asm</artifactId>
+	        <version>5.0.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.ow2.asm</groupId>
+	        <artifactId>asm-tree</artifactId>
+	        <version>5.0.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.ow2.asm</groupId>
+	        <artifactId>asm-analysis</artifactId>
+	        <version>5.0.3</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.ow2.asm</groupId>
+	        <artifactId>asm-util</artifactId>
+	        <version>5.0.3</version>
+	    </dependency>
+	        
     </dependencies>
 
     <build>
@@ -85,6 +149,44 @@
                     </execution>
                 </executions>
             </plugin>
+            
+        <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-shade-plugin</artifactId>
+		    <version>3.2.0</version>
+		    <executions>
+		      <execution>
+		        <phase>package</phase>
+		        <goals>
+		          <goal>shade</goal>
+		        </goals>
+		        <configuration>
+		        <artifactSet>
+		        <!-- 
+		          <includes>de.mhus.lib:*</includes>
+                  <includes>org.jtwig:*</includes>
+		         -->
+		         <excludes>
+                    <exclude>org.apache.maven:*</exclude>
+                    <exclude>org.apache.maven.plugin-tools:*</exclude>
+                    <exclude>org.apache.maven.resolver:*</exclude>
+                    <exclude>org.apache.xbean:*</exclude>
+		         </excludes>
+		        </artifactSet>
+				<filter>
+				  <artifact>*:*</artifact>
+				  <excludes>
+				    <exclude>META-INF/*.SF</exclude> 
+				    <exclude>META-INF/*.DSA</exclude> 
+				    <exclude>META-INF/*.RSA</exclude> 
+				    <exclude>META-INF/ECLIPSE*</exclude> 
+				  </excludes>
+				</filter>
+		        </configuration>
+		      </execution>
+		    </executions>
+		  </plugin>
+                  
         </plugins>
     </build>
 
