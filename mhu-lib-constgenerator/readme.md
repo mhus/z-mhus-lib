@@ -17,6 +17,8 @@ annotation @GenerateConst
 
 * The new const class will be generated using a jtwig template. The default template will be delivered with the plugin.
 
+* set -Dmaven.generate.force=true to set force to true
+
 ## Parameters
 
 ### outputDirectory
@@ -74,6 +76,36 @@ Optional additional ignore list for the class.
 ### restricted
 
 Set to true if you want references also for non public elements.
+
+## Template
+
+### constPackage
+
+Package of the const class
+
+### constName
+
+Name of const class (simple name)
+
+### constClass
+
+Canonicla name of the const class
+
+### basePackage
+
+Package of the base class
+
+### baseName
+
+Name of base class (simple name)
+
+### baseClass
+
+Canonicla name of the base class
+
+### fields
+
+Collection (key,value) of references to generate.
 
 # Example
 

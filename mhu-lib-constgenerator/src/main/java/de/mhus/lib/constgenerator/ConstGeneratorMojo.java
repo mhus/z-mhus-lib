@@ -94,6 +94,10 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		
+		// forced force
+		if ("true".equals(System.getenv("maven.generate.force")))
+			force = true;
+		
 		// fill ignore list
 		if (ignore != null) {
 			for (String i : ignore.split(",")) {
@@ -121,9 +125,12 @@ public class ConstGeneratorMojo extends AbstractMojo {
 				throw new MojoExecutionException(template,e);
 			}
 		}
+		
+		// prepare template
 		File templateFile = new File(template);
 		JtwigTemplate jtwigTemplate = JtwigTemplate.fileTemplate(templateFile);
 
+		// analyze
 		try {
 			ClassFinder finder = createFinder(classLoader);
 			 List<Class<?>> classes = finder.findAnnotatedClasses(GenerateConst.class);
@@ -178,6 +185,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                
 	                getLog().info("Write " + constFile);
 	                
+	                // prepare template
 	                HashMap<String, Object> parameters = new HashMap<>();
 	                parameters.put("constPackage", clazz.getPackage().getName());
 	                parameters.put("constName", prefix + clazz.getSimpleName());
