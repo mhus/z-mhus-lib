@@ -55,6 +55,9 @@
 		            javax.mail.*;resolution:=optional,
 		            *
 	            </Import-Package>
+	            <Private-Package>
+	               net.bytebuddy*
+	            </Private-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
 				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
