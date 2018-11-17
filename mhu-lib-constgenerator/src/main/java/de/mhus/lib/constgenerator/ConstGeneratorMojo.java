@@ -137,17 +137,19 @@ public class ConstGeneratorMojo extends AbstractMojo {
 			 for (Class<?> clazz : classes) {
 	                URL classUrl = clazz.getClassLoader().getResource(clazz.getName().replace('.', '/') + ".class");
 	                if (classUrl == null || clazz.getName() == null || clazz.getCanonicalName().indexOf('$') > -1) { // do not process inner classes
-	                    getLog().info("Ignoring non main class " + classUrl);
+	                		if (debug)
+	                			getLog().info("Ignoring non main class " + classUrl);
 	                    continue;
 	                }
 	                File classSource = findClassSourceFile(clazz);
 	                if (classSource == null) {
-	                		getLog().info("Ignoring, source not found " + classUrl);
+	                		if (debug)
+	                			getLog().info("Ignoring, source not found " + classUrl);
 	                		continue;
 	                }
 	                
 	                // find target file
-	                String constClassName = prefix + clazz.getCanonicalName();
+	                String constClassName = clazz.getPackage().getName() + "." + prefix + clazz.getSimpleName();
 	                File constFile = null;
 	                if (outputDirectory != null)
 	                		constFile = new File(outputDirectory + File.separatorChar + constClassName.replace('.', File.separatorChar) + ".java" );
@@ -164,7 +166,11 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	                				String value = ((Identifier)f.get(null)).toString();
 	                				constFields.put(f.getName(), value);
 	                			}
-	                } catch (ClassNotFoundException e) {}
+	                } catch (ClassNotFoundException e) {
+	                		if (debug) {
+	                			getLog().warn(constClassName, e);
+	                		}
+	                }
 	                if (debug) {
 		                getLog().info("Found " + classSource);
 		                getLog().info("   To: " + constFile);
@@ -234,13 +240,20 @@ public class ConstGeneratorMojo extends AbstractMojo {
 
     private boolean compareList(Collection<String> set1, Collection<String> set2) {
     		if (set1.size() != set2.size()) {
-    			if (debug)
-    				getLog().info("--- differnt size");
+    			if (debug) {
+    				getLog().info("--- different size");
+    				getLog().info("--- 1: " + set1);
+    				getLog().info("--- 2: " + set2);
+    			}
     			return false;
     		}
     		for (String key : set1)
     			if (!set2.contains(key)) {
-    				if (debug) getLog().info("--- key not found " + key);
+    				if (debug) {
+    					getLog().info("--- key not found " + key);
+        				getLog().info("--- 1: " + set1);
+        				getLog().info("--- 2: " + set2);
+    				}
     				return false;
     			}
 		return true;
