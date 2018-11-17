@@ -33,10 +33,10 @@ public class ASubQuery extends APart {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
-		left.getAttributes(map);
-		projection.getAttributes(map);
-		subQuery.getAttributes(map);
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
+		left.getAttributes(query, map);
+		projection.getAttributes(query, map);
+		subQuery.getAttributes(query, map);
 	}
 
 	public AAttribute getLeft() {

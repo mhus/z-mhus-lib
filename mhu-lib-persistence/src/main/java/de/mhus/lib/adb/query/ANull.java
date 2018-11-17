@@ -43,8 +43,8 @@ public class ANull extends APart {
 
 	/** {@inheritDoc} */
 	@Override
-	public void getAttributes(AttributeMap map) {
-		attr.getAttributes(map);
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
+		attr.getAttributes(query, map);
 	}
 
 	public AAttribute getAttr() {

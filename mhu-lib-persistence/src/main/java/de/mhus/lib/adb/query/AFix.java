@@ -26,7 +26,7 @@ public class AFix extends AAttribute {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 	}
 
 	public String getValue() {

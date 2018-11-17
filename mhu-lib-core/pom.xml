@@ -57,7 +57,7 @@
 	            </Import-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
-				<Embed-Dependency></Embed-Dependency>
+				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
 
 	          </instructions>
 	        </configuration>

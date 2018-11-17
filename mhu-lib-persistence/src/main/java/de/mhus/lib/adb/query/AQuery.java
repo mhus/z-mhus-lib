@@ -35,6 +35,8 @@ public class AQuery<T> extends APrint {
 	private LinkedList<AOperation> operations;
 	private Class<? extends T> type;
 	private ACreateContext context;
+	private int unique = 0;
+	private AttributeMap map;
 	
 	/**
 	 * <p>Constructor for AQuery.</p>
@@ -78,16 +80,18 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link java.util.Map} object.
 	 */
 	public Map<String, Object> getAttributes() {
-		AttributeMap map = new AttributeMap();
-		getAttributes(map);
+		if (map  == null) {
+			map = new AttributeMap();
+			getAttributes(this, map);
+		}
 		return map;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 		for (AOperation operation : operations)
-			operation.getAttributes(map);
+			operation.getAttributes(query, map);
 	}
 
 	/**
@@ -666,6 +670,18 @@ public class AQuery<T> extends APrint {
 	
 	public void append(APart part) {
 		operations.add(part);
+	}
+
+	public synchronized int nextUnique() {
+		return ++unique;
+	}
+
+	public void doFinal() {
+		getAttributes();
+	}
+	
+	public boolean isFinal() {
+		return map != null;
 	}
 
 //	@SuppressWarnings("unchecked")

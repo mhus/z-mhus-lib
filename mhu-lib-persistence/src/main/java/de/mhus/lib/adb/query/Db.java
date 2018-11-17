@@ -403,9 +403,9 @@ public class Db {
 		}
 
 		@Override
-		public void getAttributes(AttributeMap map) {
+		public void getAttributes(AQuery<?> query, AttributeMap map) {
 			AttributeMap map2 = new AttributeMap();
-			attr.getAttributes(map2);
+			attr.getAttributes(query, map2);
 			
 			for (Entry<String, Object> entry : map2.entrySet())
 				map.put(entry.getKey(), "%" + entry.getValue() + "%" );

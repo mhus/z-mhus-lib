@@ -38,9 +38,9 @@ public class AConcat extends AAttribute {
 
 	/** {@inheritDoc} */
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 		for (AAttribute part : parts)
-			part.getAttributes(map);
+			part.getAttributes(query, map);
 	}
 
 	public AAttribute[] getParts() {

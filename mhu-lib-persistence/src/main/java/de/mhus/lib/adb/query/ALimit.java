@@ -32,7 +32,7 @@ public class ALimit extends AOperation {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 	}
 
 	public int getLimit() {

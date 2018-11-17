@@ -27,9 +27,9 @@ public class AOr extends APart {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 		for (APart part : operations)
-			part.getAttributes(map);
+			part.getAttributes(query, map);
 	}
 
 	public APart[] getOperations() {

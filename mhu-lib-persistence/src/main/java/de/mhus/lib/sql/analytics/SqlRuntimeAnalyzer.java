@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.config.IConfig;
 
 public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
@@ -35,18 +34,19 @@ public class SqlRuntimeAnalyzer extends SqlRuntimeWarning {
 		if (delta < minRuntime) return;
 		
 		// prepare original - replace $UUID$ entries with $uuid$ static content
-		if (original.indexOf('$') >= 0) {
-			StringBuilder s = new StringBuilder();
-			for (String part : original.split("\\$")) {
-				if (s.length() != 0)
-					s.append('$');
-				if (MValidator.isUUID(part))
-					s.append("uuid");
-				else
-					s.append(part);
-			}
-			original = s.toString();
-		}
+		// do not use uuid any more
+//		if (original.indexOf('$') >= 0) {
+//			StringBuilder s = new StringBuilder();
+//			for (String part : original.split("\\$")) {
+//				if (s.length() != 0)
+//					s.append('$');
+//				if (MValidator.isUUID(part))
+//					s.append("uuid");
+//				else
+//					s.append(part);
+//			}
+//			original = s.toString();
+//		}
 		
 		synchronized (this) {
 			Container container = list.get(original);

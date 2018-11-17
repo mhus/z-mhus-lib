@@ -122,6 +122,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> DbCollection<T> getByQualification(AQuery<T> qualification) throws MException {
+		qualification.doFinal();
 		return (DbCollection<T>) getByQualification(null, qualification.getType(), null, toQualification(qualification), qualification.getAttributes());
 	}
 
@@ -190,6 +191,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	@Override
 	public <T> long getCountByQualification(AQuery<T> qualification) throws MException {
+		qualification.doFinal();
 		return getCountByQualification(null, qualification.getType(), null, toQualification(qualification), qualification.getAttributes());
 	}
 
@@ -241,6 +243,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	@Override
 	public <T> long getMaxByQualification(String field, AQuery<T> qualification) throws MException {
+		qualification.doFinal();
 		return getMaxByQualification(null, qualification.getType(), null, field, toQualification(qualification), qualification.getAttributes());
 	}
 
@@ -270,6 +273,7 @@ public class DbManagerJdbc extends DbManager implements DbObjectHandler {
 
 	@Override
 	public <T,R> List<R> getAttributeByQualification(String attribute, AQuery<? extends T> qualification) throws MException {
+		qualification.doFinal();
 		return getAttributeByQualification(null, (Class<? extends T>)qualification.getType(), null, attribute, toQualification(qualification), qualification.getAttributes());
 	}
 

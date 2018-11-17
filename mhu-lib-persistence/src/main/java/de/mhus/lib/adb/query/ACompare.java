@@ -34,9 +34,9 @@ public class ACompare extends APart {
 	public enum TYPE {EQ,LT,GT,EL, EG, LIKE, NE, IN, LE, GE}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
-		left.getAttributes(map);
-		right.getAttributes(map);
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
+		left.getAttributes(query, map);
+		right.getAttributes(query, map);
 	}
 
 	public TYPE getEq() {

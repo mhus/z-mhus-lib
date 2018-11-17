@@ -19,6 +19,6 @@ import de.mhus.lib.core.parser.AttributeMap;
 
 public abstract class APrint {
 
-	public abstract void getAttributes(AttributeMap map);
+	public abstract void getAttributes(AQuery<?> query, AttributeMap map);
 
 }

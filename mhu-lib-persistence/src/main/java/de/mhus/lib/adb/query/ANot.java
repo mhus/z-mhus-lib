@@ -28,8 +28,8 @@ public class ANot extends APart {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
-		operation.getAttributes(map);
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
+		operation.getAttributes(query, map);
 	}
 
 	public APart getOperation() {

@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.adb.query;
 
-import java.util.UUID;
-
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -36,7 +34,7 @@ public class ADynValue extends AAttribute {
 	 * @param value a {@link java.lang.Object} object.
 	 */
 	public ADynValue(Object value) {
-		this(UUID.randomUUID().toString(), value);
+		this(null, value);
 	}
 
 	/**
@@ -52,7 +50,9 @@ public class ADynValue extends AAttribute {
 
 	/** {@inheritDoc} */
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
+		if (name == null)
+			name = "v" + query.nextUnique();
 		map.put(name, value);
 	}
 	

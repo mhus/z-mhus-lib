@@ -26,9 +26,9 @@ public class AList extends AAttribute {
 	}
 
 	@Override
-	public void getAttributes(AttributeMap map) {
+	public void getAttributes(AQuery<?> query, AttributeMap map) {
 		for (AAttribute part : operations)
-			part.getAttributes(map);
+			part.getAttributes(query, map);
 	}
 
 	public AAttribute[] getOperations() {
