@@ -267,6 +267,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
     		for (Field field : findFields(clazz)) {
     			
     			String name = field.getName();
+    			if (name.contains("$")) continue;
     			String orgName = name;
     			name = toName(field.getName());
     			
@@ -282,23 +283,24 @@ public class ConstGeneratorMojo extends AbstractMojo {
 
     		}
     		for (Method meth : findMethods(clazz)) {
-			String name = meth.getName();
-			
-			if (name.startsWith("get") || name.startsWith("set")) name = name.substring(3);
-			else
-			if (name.startsWith("is")) name = name.substring(2);
-			String orgName = name;
-			name = toName(name);
-			
-			if (ignore(config, name)) continue;
-			if (meth.getAnnotation(GenerateHidden.class) != null) continue;
-
-			if (config.restricted() || Modifier.isPublic(meth.getModifiers()) )
-				out.put("METHOD_" + toName(meth.getName()), meth.getName());
-			
-			if (!hasAnnotation(config, meth.getAnnotations())) continue;
-
-			out.put("_" + name, orgName);
+				String name = meth.getName();
+				if (name.contains("$")) continue;
+				
+				if (name.startsWith("get") || name.startsWith("set")) name = name.substring(3);
+				else
+				if (name.startsWith("is")) name = name.substring(2);
+				String orgName = name;
+				name = toName(name);
+				
+				if (ignore(config, name)) continue;
+				if (meth.getAnnotation(GenerateHidden.class) != null) continue;
+	
+				if (config.restricted() || Modifier.isPublic(meth.getModifiers()) )
+					out.put("METHOD_" + toName(meth.getName()), meth.getName());
+				
+				if (!hasAnnotation(config, meth.getAnnotations())) continue;
+	
+				out.put("_" + name, orgName);
 
     		}
     		
