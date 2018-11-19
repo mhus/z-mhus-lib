@@ -38,7 +38,7 @@ public class StringPropertyRewriter implements StreamRewriter {
 	}
 
 	@Override
-	public InputStream rewriteContent(InputStream in) {
+	public InputStream rewriteContent(String name, InputStream in) {
 		String content = MFile.readFile(in);
 		content = replacer.process(content);
 		return new ByteArrayInputStream(MString.toBytes(content));

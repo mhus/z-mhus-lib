@@ -35,6 +35,8 @@ import de.mhus.lib.errors.NotFoundException;
 
 public class SOfficeConnector {
 
+	public static final String SOFFICE_CONTENT = "content.xml";
+	public static final String WORD_CONTENT = "word/document.xml";
 	private static CfgString BINARY = new CfgString(SOfficeConnector.class, "binary", "soffice");
 	private String binary = BINARY.value();
 	private boolean valid = false;
@@ -145,11 +147,11 @@ public class SOfficeConnector {
 		return version;
 	}
 	
-	public static void replace(File from, File to, StringPropertyReplacer replacer) throws ZipException, IOException {
+	public static void replace(File from, File to, StringPropertyReplacer replacer) throws Exception {
 		replace(from, to, new StringPropertyRewriter(replacer));
 	}
 	
-	public static void replace(File from, File to, StreamRewriter replacer) throws ZipException, IOException {
+	public static void replace(File from, File to, StreamRewriter replacer) throws Exception {
 		ZipFile inZip = new ZipFile(from);
 		FileOutputStream os = new FileOutputStream(to);
 		ZipOutputStream outZip = new ZipOutputStream(os);
@@ -161,8 +163,8 @@ public class SOfficeConnector {
 			InputStream isZip = inZip.getInputStream(inNext);
 			ZipEntry e = new ZipEntry(inNext.getName());
 			outZip.putNextEntry(e);
-			if (inNext.getName().equals("content.xml") || inNext.getName().equals("word/document.xml")) {
-				InputStream isRewritten = replacer.rewriteContent(isZip);
+			if (inNext.getName().equals(SOFFICE_CONTENT) || inNext.getName().equals(WORD_CONTENT)) {
+				InputStream isRewritten = replacer.rewriteContent(inNext.getName(), isZip);
 				MFile.copyFile(isRewritten, outZip);
 			} else {
 				MFile.copyFile(isZip, outZip);
@@ -182,7 +184,7 @@ public class SOfficeConnector {
 			while (entries.hasMoreElements()) {
 				ZipEntry inNext = entries.nextElement();
 				InputStream isZip = inZip.getInputStream(inNext);
-				if (inNext.getName().equals("content.xml") || inNext.getName().equals("word/document.xml")) {
+				if (inNext.getName().equals(SOFFICE_CONTENT) || inNext.getName().equals(WORD_CONTENT)) {
 					String content = MFile.readFile(isZip);
 					isZip.close();
 					return content;

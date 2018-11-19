@@ -22,10 +22,11 @@ public interface StreamRewriter {
 	/**
 	 * Load the incoming stream and return a new stream for rewritten content.
 	 * The rewriter can consume the incoming stream fully until EOF.
-	 * 
+	 * @param file name of the file
 	 * @param in Incoming content
 	 * @return Replacement stream e.g the incoming stream
+	 * @throws Exception 
 	 */
-	InputStream rewriteContent(InputStream in);
+	InputStream rewriteContent(String file, InputStream in) throws Exception;
 	
 }

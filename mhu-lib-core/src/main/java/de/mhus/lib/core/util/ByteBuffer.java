@@ -28,6 +28,8 @@ public class ByteBuffer {
 	private byte[] buffer = new byte[1];
 	private int size = 0;
 
+	private int firstPos = 0;
+
 	public ByteBuffer() {
 	}
 
@@ -38,8 +40,10 @@ public class ByteBuffer {
 	}
 
 	public void append(byte in) {
-		buffer[0] = in;
-		append(buffer, 0, 1);
+		synchronized (this) {
+			buffer[0] = in;
+			append(buffer, 0, 1);
+		}
 	}
 
 	public void append(byte[] in) {
@@ -47,50 +51,79 @@ public class ByteBuffer {
 	}
 
 	public void append(byte[] in, int offset, int len) {
-
-		if (last == null) {
-			last = new byte[Math.max(extend, len)];
-			list.addLast(last);
-			lastPos = 0;
-		}
-		while (len > 0) {
-			if (len < last.length - lastPos) {
-				System.arraycopy(in, offset, last, lastPos, len);
-				lastPos += len;
-				size += len;
-				len = 0;
-			} else {
-				int max = last.length - lastPos;
-				System.arraycopy(in, offset, last, lastPos, max);
-				offset += max;
-				len -= max;
-				size += max;
-				last = null;
+		synchronized (this) {
+			while (len > 0) {
+				if (last == null) {
+					last = new byte[Math.max(extend, len)];
+					list.addLast(last);
+					lastPos = 0;
+				}
+				if (len < last.length - lastPos) {
+					System.arraycopy(in, offset, last, lastPos, len);
+					lastPos += len;
+					size += len;
+					len = 0;
+				} else {
+					int max = last.length - lastPos;
+					System.arraycopy(in, offset, last, lastPos, max);
+					offset += max;
+					len -= max;
+					size += max;
+					last = null;
+				}
 			}
 		}
-
 	}
-
-	public int getSize() {
+	
+	public int size() {
 		return size;
 	}
 
 	public byte[] toByte() {
 		byte[] out = new byte[size];
 		int pos = 0;
+		boolean first = true;
 		for (Iterator<byte[]> i = list.iterator(); i.hasNext();) {
 			byte[] part = i.next();
 			int len = part.length;
 			if (pos + len >= out.length)
 				len = out.length - pos;
-			System.arraycopy(part, 0, out, pos, len);
+			int fp = 0;
+			if (first) {
+				fp = firstPos;
+				first = false;
+			}
+			System.arraycopy(part, fp, out, pos, len);
 		}
 		return out;
 	}
 
 	public void clear() {
-		list.clear();
-		size = 0;
+		synchronized (this) {
+			list.clear();
+			size = 0;
+			lastPos = 0;
+			firstPos = 0;
+		}
+	}
+
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+
+	public int shift() {
+		synchronized (this) {
+			if (list.isEmpty()) return -1;
+			byte[] first = list.getFirst();
+			byte b = first[firstPos];
+			firstPos++;
+			if (firstPos >= first.length) {
+				list.removeFirst();
+				firstPos = 0;
+			}
+			size--;
+			return b;
+		}
 	}
 
 }
