@@ -55,6 +55,19 @@ public class SOfficeConnector {
 			version = res[0];
 			valid = MString.isSet(version) && version.startsWith("LibreOffice ");
 		} catch (IOException e) {
+			if (MSystem.isUnix()) {
+				// retry with unix default location
+				File f = new File("/usr/bin/soffice");
+				if (f.exists() && f.canExecute()) {
+					binary = f.getPath();
+					try {
+						String[] res = MSystem.execute(binary,"--version");
+						version = res[0];
+						valid = MString.isSet(version) && version.startsWith("LibreOffice ");
+					} catch (IOException e2) {
+					}
+				}
+			}
 		}
 		
 	}

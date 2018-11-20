@@ -53,6 +53,7 @@ import net.bytebuddy.dynamic.ClassFileLocator;
 
 public class MSystem {
 
+	public enum OS {OTHER,UNIX,WINDOWS,MACOS,SOLARIS}
 	private static Log log = Log.getLog(MSystem.class);
 	private static ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
 
@@ -776,7 +777,35 @@ public class MSystem {
 		final String os = System.getProperty("os.name");
 		return os.contains("Windows");
 	}
+	
+	public static boolean isMac() {
+		final String os = System.getProperty("os.name");
+        return (os.indexOf("mac") >= 0);
+    }
 
+    public static boolean isUnix() {
+		final String os = System.getProperty("os.name");
+        return (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0 );
+    }
+
+    public static boolean isSolaris() {
+		final String os = System.getProperty("os.name");
+        return (os.indexOf("sunos") >= 0);
+    }
+
+    public static OS getOS(){
+        if (isWindows()) {
+            return OS.WINDOWS;
+        } else if (isMac()) {
+            return OS.MACOS;
+        } else if (isUnix()) {
+            return OS.UNIX;
+        } else if (isSolaris()) {
+            return OS.SOLARIS;
+        } else {
+            return OS.OTHER;
+        }
+    }
 	public static File getUserHome() {
 		String currentUsersHomeDir = System.getProperty("user.home");
 		return new File(currentUsersHomeDir);
@@ -922,4 +951,5 @@ public class MSystem {
 			return -1;
 		}
 	}
+
 }
