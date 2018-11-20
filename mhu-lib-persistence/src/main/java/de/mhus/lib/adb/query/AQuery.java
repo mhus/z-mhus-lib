@@ -516,6 +516,18 @@ public class AQuery<T> extends APrint {
 
 	/**
 	 * <p>in.</p>
+	 * @param left 
+	 * @param right 
+	 * @return the query
+	 *
+	 */
+	public AQuery<T> in(Identifier left, Object ... right) {
+		operations.add(Db.in(left,right));
+		return this;
+	}
+
+	/**
+	 * <p>in.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
 	 * @param right a {@link de.mhus.lib.adb.query.AAttribute} object.

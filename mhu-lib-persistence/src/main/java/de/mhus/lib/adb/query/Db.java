@@ -191,6 +191,13 @@ public class Db {
 	public static APart contains(AAttribute left, AAttribute right) {
 		return new ACompare(ACompare.TYPE.LIKE,left, new AContainsWrap( right ) );
 	}
+
+	public static APart in(Identifier left, Object ... right) {
+		AAttribute[] list = new AAttribute[right.length];
+		for (int i = 0; i < list.length ; i++)
+			list[i] = new ADynValue(right[i]);
+		return new ACompare(ACompare.TYPE.IN,attr(MPojo.toAttributeName(left)),new AList(list));
+	}
 	
 	/**
 	 * <p>in.</p>
