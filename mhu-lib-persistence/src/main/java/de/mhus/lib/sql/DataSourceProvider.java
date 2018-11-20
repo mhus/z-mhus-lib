@@ -62,7 +62,7 @@ public class DataSourceProvider extends DbProvider {
 		} catch (Exception e) {
 			// special behavior for e.g. mysql, retry to get a connection after gc()
 			// Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Too many connections
-			if (e.getMessage().indexOf("Too many connections") > -1) {
+			if (e.getMessage() != null && e.getMessage().indexOf("Too many connections") > -1) {
 				System.gc();
 				con = dataSource.getConnection();
 			} else
