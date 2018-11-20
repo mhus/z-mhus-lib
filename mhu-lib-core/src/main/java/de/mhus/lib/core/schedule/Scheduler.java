@@ -62,7 +62,11 @@ public class Scheduler extends MLog implements Named {
 			
 			@Override
 			public void run() {
-				doTick();
+				try {
+					doTick();
+				} catch (Throwable t) {
+					log().e(t);
+				}
 			}
 		}, 1000, 1000);
 	}
@@ -104,7 +108,12 @@ public class Scheduler extends MLog implements Named {
 						}
 					}
 				}
-			} catch (ConcurrentModificationException cme) {}
+			} catch (ConcurrentModificationException cme) {
+				// ignore if a job ends in the same time
+			} catch (Throwable t) {
+				log().e(t); // should not happen
+			}
+			
 			nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
 		}
 		
