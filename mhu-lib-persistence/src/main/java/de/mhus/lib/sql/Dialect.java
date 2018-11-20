@@ -414,4 +414,23 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 		con.setAutoCommit(false);
 	}
 
+	public static Dialect findDialect(String driver) {
+		Dialect dialect = null;
+		if (driver != null) {
+			driver = driver.toLowerCase();
+			if (driver.indexOf("hsqldb") > 0)
+				dialect = new DialectHsqldb();
+			else
+			if (driver.indexOf("mysql") > 0 || driver.indexOf("mariadb") > 0)
+				dialect = new DialectMysql();
+			else
+			if (driver.indexOf("postgresql") > 0)
+				dialect = new DialectPostgresql();
+		}
+		if (dialect == null) {
+			dialect = new DialectDefault();
+		}
+		return dialect;
+	}
+
 }

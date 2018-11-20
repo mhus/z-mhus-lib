@@ -37,7 +37,7 @@ public class JdbcProvider extends DbProvider {
 		if (dialect == null) {
 			// ResourceNode concon = config.getNode("connection");
 			String dialectName = config.getExtracted("dialect");
-			if (dialect != null) {
+			if (dialectName != null) {
 				try {
 					dialect = (Dialect)activator.getObject(dialectName);
 				} catch (Exception e) {
@@ -47,18 +47,8 @@ public class JdbcProvider extends DbProvider {
 			if (dialect == null) {
 				String driver = config.getExtracted("driver");
 				if (driver != null) {
-					if (driver.indexOf("hsqldb") > 0)
-						dialect = new DialectHsqldb();
-					else
-					if (driver.indexOf("mysql") > 0)
-						dialect = new DialectMysql();
-					else
-					if (driver.indexOf("postgresql") > 0)
-						dialect = new DialectPostgresql();
+					dialect = Dialect.findDialect(driver);
 				}
-			}
-			if (dialect == null) {
-				dialect = new DialectDefault();
 			}
 			log().t("dialect",dialect.getClass().getCanonicalName());
 		}
