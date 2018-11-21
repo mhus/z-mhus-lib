@@ -103,6 +103,9 @@ public class DialectPostgresql extends DialectDefault {
 		if (t.equals(DbType.TYPE.DOUBLE.name()))
 			t = "DOUBLE PRECISION";
 		else
+		if (t.equals(DbType.TYPE.BOOL))
+			t = "BOOLEAN";
+		else
 			t = super.getDbType(type, size);
 
 		return t;
