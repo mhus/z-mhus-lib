@@ -810,4 +810,9 @@ public class DialectDefault extends Dialect {
 		
 	}
 
+	@Override
+	public String toBoolValue(boolean value) {
+		return value ? "1" : "0";
+	}
+
 }

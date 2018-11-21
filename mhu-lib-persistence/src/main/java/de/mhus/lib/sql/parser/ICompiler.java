@@ -31,4 +31,6 @@ public interface ICompiler {
 
 	String escape(String text);
 
+	String toBoolValue(boolean value);
+
 }

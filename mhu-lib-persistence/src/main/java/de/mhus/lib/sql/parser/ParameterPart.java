@@ -125,7 +125,7 @@ public class ParameterPart extends StringParsingPart {
 									out.append(compiler.valueToString(value));
 								else
 									if ("bool".equals(type))
-										out.append( MCast.toboolean(value.toString(),false) ? "1" : "0" );
+										out.append( compiler.toBoolValue( MCast.toboolean(value.toString(),false) ) );
 									else
 										log().w("Unknown attribute type:",type);
 	}

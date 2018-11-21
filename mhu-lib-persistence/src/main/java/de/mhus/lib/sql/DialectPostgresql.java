@@ -65,6 +65,11 @@ public class DialectPostgresql extends DialectDefault {
 	}
 
 	@Override
+	public String toBoolValue(boolean value) {
+		return value ? "'true'" : "'false'";
+	}
+
+	@Override
 	protected void createTableLastCheck(IConfig ctable, String tn, StringBuilder sql) {
 	}
 
