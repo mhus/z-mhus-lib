@@ -45,12 +45,12 @@ public class JdbcProvider extends DbProvider {
 				}
 			}
 			if (dialect == null) {
-				String driver = config.getExtracted("driver");
-				if (driver != null) {
-					dialect = Dialect.findDialect(driver);
+				dialectName = config.getExtracted("driver");
+				if (dialectName != null) {
+					dialect = Dialect.findDialect(dialectName);
 				}
 			}
-			log().t("dialect",dialect.getClass().getCanonicalName());
+			log().i("found dialect",getName(), dialectName, dialect);
 		}
 		return dialect;
 	}

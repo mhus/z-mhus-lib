@@ -75,9 +75,20 @@ public class DataSourceProvider extends DbProvider {
 	/** {@inheritDoc} */
 	@Override
 	public Dialect getDialect() {
-		if (dialect == null)
+		if (dialect == null) {
 			// default is mysql, can ignore sync!
-			dialect = new DialectMysql();
+			if (dataSource == null) return null;
+			String driverName = null;
+			try {
+				Connection con = dataSource.getConnection();
+				driverName = con.getMetaData().getDriverName();
+				con.close();
+			} catch (Throwable t) {
+				log().d(t);
+			}
+			dialect = Dialect.findDialect(driverName);
+			log().i("found dialect", getName(), driverName, dialect);
+		}
 		return dialect;
 	}
 
