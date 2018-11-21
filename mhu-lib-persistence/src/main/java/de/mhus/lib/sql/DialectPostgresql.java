@@ -51,7 +51,7 @@ public class DialectPostgresql extends DialectDefault {
 	
 	@Override
 	public String normalizeIndexName(String tableName, String tableOrg) throws Exception {
-		return tableOrg + tableName;
+		return (tableOrg + tableName).toLowerCase();
 	}
 
 
