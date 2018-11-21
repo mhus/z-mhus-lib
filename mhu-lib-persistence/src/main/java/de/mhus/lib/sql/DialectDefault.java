@@ -265,6 +265,8 @@ public class DialectDefault extends Dialect {
 					alterTableAddPrimaryKey(sth,tn,keys);
 				}
 			}
+			
+			con.commit();
 		}
 		sth.close();
 	}
@@ -301,7 +303,7 @@ public class DialectDefault extends Dialect {
 		}
 		sql.append(" )");
 		createTableLastCheck(ctable, tn, sql);
-		log().t(sql);
+		log().d(sql);
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
@@ -472,7 +474,7 @@ public class DialectDefault extends Dialect {
 			}
 			if (columns2 == null) {
 				//create index
-				log().t("create index",doubleExists,iNameOrg,columnsOrg);
+				log().d("create index",doubleExists,iNameOrg,columnsOrg);
 				if (doubleExists)
 					recreateIndex(sth,unique,btree,iName,table,columns);
 				else
@@ -480,12 +482,13 @@ public class DialectDefault extends Dialect {
 			} else {
 
 				if (!columns.equals(columns2)) {
-					log().t("recreate index",doubleExists,iName,columns2,columns);
+					log().d("recreate index",doubleExists,iName,columns2,columns);
 					recreateIndex(sth,unique,btree,iName,table,columns);
 
 				}
 			}
 
+			con.commit();
 		}
 		sth.close();
 	}
