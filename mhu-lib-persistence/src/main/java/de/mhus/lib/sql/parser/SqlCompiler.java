@@ -124,4 +124,9 @@ public class SqlCompiler implements  Parser, ICompiler {
 		return MSql.escape(text);
 	}
 
+	@Override
+	public String toBoolValue(boolean value) {
+		return value ? "1" : "0";
+	}
+
 }
