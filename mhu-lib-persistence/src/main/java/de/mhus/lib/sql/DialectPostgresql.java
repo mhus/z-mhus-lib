@@ -18,6 +18,7 @@ package de.mhus.lib.sql;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -134,5 +135,31 @@ public class DialectPostgresql extends DialectDefault {
 			super.createQuery(p, query);
 
 	}
+	
+	protected void alterColumn(Statement sth,String tn, IConfig cfield) {
+		
+		String type = getDbType(cfield);
+
+		String typeName = normalizeColumnName(cfield.getString("name",null));
+
+		String sql = "ALTER TABLE " + tn + " ALTER COLUMN " + typeName + " TYPE " + type;
+		
+		String def = cfield.getExtracted("default");
+		if (def != null) {
+			def = getDbDef(def);
+			sql = sql + ",ALTER COLUMN " + typeName + " SET DEFAULT " + def;
+		}
+		boolean notNull = cfield.getBoolean("notnull", false);
+		sql = sql + ",ALTER COLUMN " + typeName + (notNull ? " SET NOT NULL" : " DROP NOT NULL");
+		
+		log().d("alter table",sql);
+		try {
+			sth.execute(sql);
+		} catch (Exception e) {
+			log().i(sql,e);
+		}
+
+	}
+
 	
 }
