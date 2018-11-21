@@ -418,13 +418,13 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 		Dialect dialect = null;
 		if (driver != null) {
 			driver = driver.toLowerCase();
-			if (driver.indexOf("hsqldb") > 0)
+			if (driver.indexOf("hsqldb") > -1)
 				dialect = new DialectHsqldb();
 			else
-			if (driver.indexOf("mysql") > 0 || driver.indexOf("mariadb") > 0)
+			if (driver.indexOf("mysql") > -1 || driver.indexOf("mariadb") > -1)
 				dialect = new DialectMysql();
 			else
-			if (driver.indexOf("postgresql") > 0)
+			if (driver.indexOf("postgresql") > -1)
 				dialect = new DialectPostgresql();
 		}
 		if (dialect == null) {
