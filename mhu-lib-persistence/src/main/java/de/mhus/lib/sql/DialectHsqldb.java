@@ -177,7 +177,7 @@ public class DialectHsqldb extends DialectDefault {
 
 	/** {@inheritDoc} */
 	@Override
-	public String normalizeIndexName(String tableName) throws Exception {
+	public String normalizeIndexName(String tableName, String tableOrg) throws Exception {
 		return tableName.toUpperCase() + "_";
 	}
 
