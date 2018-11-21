@@ -422,10 +422,10 @@ public class DialectDefault extends Dialect {
 		// first check tables
 		for (IConfig cindex : data.getNodes("index")) {
 			String  iNameOrg   = cindex.getExtracted("name");
-			String iName = normalizeIndexName(iNameOrg);
 			String  tableName   = cindex.getExtracted("table");
 			String  prefix   = cindex.getExtracted("prefix","");
 			String  tableOrg = prefix + tableName;
+			String iName = normalizeIndexName(iNameOrg, tableOrg);
 			String  table = normalizeTableName(tableOrg);
 			// String type    = cindex.getExtracted("type");
 			boolean btree   = cindex.getBoolean("btree",false);
@@ -607,7 +607,7 @@ public class DialectDefault extends Dialect {
 	}
 
 	@Override
-	public String normalizeIndexName(String tableName) throws Exception {
+	public String normalizeIndexName(String tableName, String tableOrg) throws Exception {
 		return tableName;
 	}
 

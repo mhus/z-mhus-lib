@@ -48,6 +48,12 @@ public class DialectPostgresql extends DialectDefault {
 		//		return columnName;
 		return columnName + "_"; // TODO not working at all
 	}
+	
+	@Override
+	public String normalizeIndexName(String tableName, String tableOrg) throws Exception {
+		return tableOrg + tableName;
+	}
+
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

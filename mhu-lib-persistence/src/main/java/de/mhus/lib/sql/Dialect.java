@@ -329,7 +329,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 	 * @return x
 	 * @throws Exception
 	 */
-	public abstract String normalizeIndexName(String tableName) throws Exception;
+	public abstract String normalizeIndexName(String tableName, String tableOrg) throws Exception;
 
 	/**
 	 * Return a valid table name.
