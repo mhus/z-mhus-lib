@@ -17,6 +17,7 @@ package de.mhus.lib.vaadin.form;
 
 import java.io.Serializable;
 
+import com.vaadin.data.HasValue;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.errors.MException;
@@ -50,11 +51,13 @@ public abstract class UiLayout extends UiVaadin implements Serializable {
 	}
 	@Override
 	public void setEditable(boolean editable) throws MException {
-		getComponent().setReadOnly(!editable);
+		if (!(getComponent() instanceof HasValue)) return;
+		((HasValue<?>)getComponent()).setReadOnly(!editable);
 	}
 	@Override
 	public boolean isEnabled() throws MException {
-		return !getComponent().isReadOnly();
+		if (!(getComponent() instanceof HasValue)) return true;
+		return !((HasValue<?>)getComponent()).isReadOnly();
 	}
 	@Override
 	public void setError(String error) {

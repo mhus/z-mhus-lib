@@ -64,12 +64,12 @@
 	
 	<dependency>
 		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-shared</artifactId>
+		<artifactId>vaadin-compatibility-shared</artifactId>
 		<version>${vaadin.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>com.vaadin</groupId>
-		<artifactId>vaadin-client</artifactId>
+		<artifactId>vaadin-compatibility-client</artifactId>
 		<version>${vaadin.version}</version>
 	</dependency>
   </dependencies>

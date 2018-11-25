@@ -22,18 +22,18 @@ import javax.security.auth.Subject;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Page;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.mhus.lib.core.logging.MLogUtil;

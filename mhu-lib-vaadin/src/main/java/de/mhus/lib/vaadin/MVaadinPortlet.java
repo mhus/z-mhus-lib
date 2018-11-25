@@ -19,9 +19,9 @@ package de.mhus.lib.vaadin;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class MVaadinPortlet extends MVaadinApplication {
@@ -67,7 +67,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 			createCustomButtons(control);
 			
 			bHeightAdd = new Button(" \\/ ");
-			bHeightAdd.addListener(new Button.ClickListener() {
+			bHeightAdd.addClickListener(new Button.ClickListener() {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
@@ -78,7 +78,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 			control.addComponent(bHeightAdd);
 			
 			bHeightSub = new Button(" /\\ ");
-			bHeightSub.addListener(new Button.ClickListener() {
+			bHeightSub.addClickListener(new Button.ClickListener() {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
@@ -89,7 +89,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 			control.addComponent(bHeightSub);
 			
 			bWidthAdd = new Button(" > ");
-			bWidthAdd.addListener(new Button.ClickListener() {
+			bWidthAdd.addClickListener(new Button.ClickListener() {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
@@ -100,7 +100,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 			control.addComponent(bWidthAdd);
 			
 			bWidthSub = new Button(" < ");
-			bWidthSub.addListener(new Button.ClickListener() {
+			bWidthSub.addClickListener(new Button.ClickListener() {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {
@@ -111,7 +111,7 @@ public class MVaadinPortlet extends MVaadinApplication {
 			control.addComponent(bWidthSub);
 	
 			bFull = new Button(" * ");
-			bFull.addListener(new Button.ClickListener() {
+			bFull.addClickListener(new Button.ClickListener() {
 				
 				@Override
 				public void buttonClick(ClickEvent event) {

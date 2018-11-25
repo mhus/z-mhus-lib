@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.vaadin.ui;
 
-import com.vaadin.data.validator.AbstractStringValidator;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.data.validator.AbstractStringValidator;
+import com.vaadin.v7.ui.TextField;
 
 public class SpinnerNumberField<T> extends TextField {
 

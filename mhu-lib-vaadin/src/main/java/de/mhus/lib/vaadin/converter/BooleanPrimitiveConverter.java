@@ -17,7 +17,7 @@ package de.mhus.lib.vaadin.converter;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 
@@ -28,14 +28,14 @@ public class BooleanPrimitiveConverter implements Converter<String, Boolean> {
 	@Override
 	public Boolean convertToModel(String value,
 			Class<? extends Boolean> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 			return MCast.toboolean(value, false);
 	}
 
 	@Override
 	public String convertToPresentation(Boolean value,
 			Class<? extends String> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
 		return value.booleanValue() ? "\u2612" : "\u2610";
 	}

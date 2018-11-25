@@ -17,7 +17,7 @@ package de.mhus.lib.vaadin;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 
 public abstract class MVaadinApplication extends UI {

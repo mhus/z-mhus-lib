@@ -17,10 +17,10 @@ package de.mhus.lib.vaadin;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.PasswordField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 public class PasswordInputDialog extends ModalDialog {
 

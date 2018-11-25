@@ -17,9 +17,9 @@ package de.mhus.lib.vaadin;
 
 import java.util.LinkedList;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.util.IndexedContainer;
 
 import de.mhus.lib.core.logging.MLogUtil;
 

@@ -15,9 +15,9 @@
  */
 package de.mhus.lib.vaadin;
 
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 public class InfoDialog extends ModalDialog {
 

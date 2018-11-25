@@ -17,7 +17,7 @@ package de.mhus.lib.vaadin.converter;
 
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 
@@ -28,14 +28,14 @@ public class DoublePrimitiveConverter implements Converter<String, Double> {
 	@Override
 	public Double convertToModel(String value,
 			Class<? extends Double> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 			return MCast.todouble(value, 0);
 	}
 
 	@Override
 	public String convertToPresentation(Double value,
 			Class<? extends String> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
 		return String.valueOf(value);
 	}

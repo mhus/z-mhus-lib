@@ -16,7 +16,7 @@
 package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.config.IConfig;

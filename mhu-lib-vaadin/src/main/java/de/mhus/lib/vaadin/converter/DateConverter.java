@@ -18,7 +18,7 @@ package de.mhus.lib.vaadin.converter;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
@@ -30,7 +30,7 @@ public class DateConverter implements Converter<String, Date> {
 	@Override
 	public Date convertToModel(String value,
 			Class<? extends Date> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
 			return MCast.toDate(value, null);
 	}
@@ -38,7 +38,7 @@ public class DateConverter implements Converter<String, Date> {
 	@Override
 	public String convertToPresentation(Date value,
 			Class<? extends String> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
     	if (value == null || ((Date) value).getTime() == 0) return "-";
         return MDate.toDateString( ((Date) value) );

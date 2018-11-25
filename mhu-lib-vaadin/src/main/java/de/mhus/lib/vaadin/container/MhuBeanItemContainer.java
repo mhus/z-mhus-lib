@@ -35,8 +35,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeMap;
 
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.Align;
 
 import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.MCollection;

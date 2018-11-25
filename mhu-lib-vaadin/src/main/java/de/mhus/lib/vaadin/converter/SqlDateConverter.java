@@ -19,7 +19,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import com.vaadin.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 
@@ -30,7 +30,7 @@ public class SqlDateConverter implements Converter<String, Date> {
 	@Override
 	public Date convertToModel(String value,
 			Class<? extends Date> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
 			return new Date(MCast.toDate(value, null).getTime());
 	}
@@ -38,7 +38,7 @@ public class SqlDateConverter implements Converter<String, Date> {
 	@Override
 	public String convertToPresentation(Date value,
 			Class<? extends String> targetType, Locale locale)
-			throws com.vaadin.data.util.converter.Converter.ConversionException {
+			throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
 		
     	if (value == null || ((Date) value).getTime() == 0) return "-";
         SimpleDateFormat df = new SimpleDateFormat();

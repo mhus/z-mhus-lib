@@ -15,14 +15,14 @@
  */
 package de.mhus.lib.vaadin;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.HorizontalLayout;
 
 import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;

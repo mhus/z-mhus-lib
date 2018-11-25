@@ -15,9 +15,9 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
+import com.vaadin.v7.ui.DateField;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;

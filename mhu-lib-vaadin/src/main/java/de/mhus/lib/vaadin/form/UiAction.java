@@ -18,7 +18,7 @@ package de.mhus.lib.vaadin.form;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.TextField;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;

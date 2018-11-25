@@ -25,8 +25,8 @@ package de.mhus.lib.vaadin.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.shared.ui.label.ContentMode;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.UI;
 
 public class HelpManager {

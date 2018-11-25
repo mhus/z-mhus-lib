@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.vaadin.treetable;
 
-import com.vaadin.ui.TreeTable;
+import com.vaadin.v7.ui.TreeTable;
 
 public class AbstractTreeTable extends TreeTable {
 

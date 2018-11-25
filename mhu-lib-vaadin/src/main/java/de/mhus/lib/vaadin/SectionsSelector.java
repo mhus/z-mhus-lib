@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import de.mhus.lib.core.MObserverHandler;
 import de.mhus.lib.vaadin.ui.Border;
@@ -126,7 +126,7 @@ public class SectionsSelector extends VerticalLayout {
 			button.setBorder(new Border(1,1,1,1));
 			button.setMargin(new Border(1,0,0,0));
 			button.setData(name);
-			button.addListener(this);
+			button.addClickListener(this);
 			doUpdate();
 			
 			synchronized (sections) {

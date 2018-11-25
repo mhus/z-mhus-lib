@@ -15,12 +15,16 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents;
+
+import org.hamcrest.core.IsInstanceOf;
+
+import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.ui.AbstractField;
+import com.vaadin.v7.event.FieldEvents.FocusNotifier;
+import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.util.MNls;
@@ -99,7 +103,8 @@ public abstract class UiVaadin extends UiComponent {
 
 	@Override
 	public void setEditable(boolean editable) throws MException {
-		if (componentEditor != null && editorEditable) componentEditor.setReadOnly(!editable);
+		if (!(componentEditor instanceof HasValue)) return;
+		if (componentEditor != null && editorEditable) ((HasValue<?>)componentEditor).setReadOnly(!editable);
 //		if (componentWizard != null) componentWizard.setReadOnly(!editable);
 	}
 

@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.vaadin;
 
-import com.vaadin.data.util.converter.Converter;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.ui.Table;
 
 import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.logging.MLogUtil;

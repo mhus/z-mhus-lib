@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.vaadin.ui.Component;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.config.IConfig;

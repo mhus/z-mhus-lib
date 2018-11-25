@@ -17,6 +17,7 @@ public class Twofish {
 	}
 
 	public static byte[] encrypt(byte[] strClearText,String strKey) throws Exception{
+		MBouncy.init();
 		strKey = fixKey(strKey);
         SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes("utf-8"),"twofish");
         Cipher cipher=Cipher.getInstance("twofish", MBouncy.PROVIDER);
@@ -26,6 +27,7 @@ public class Twofish {
 	}
 	
 	public static byte[] decrypt(byte[] strEncrypted, String strKey) throws Exception{
+		MBouncy.init();
 		strKey = fixKey(strKey);
         SecretKeySpec skeyspec=new SecretKeySpec(strKey.getBytes("utf-8"),"twofish");
         Cipher cipher=Cipher.getInstance("twofish", MBouncy.PROVIDER);

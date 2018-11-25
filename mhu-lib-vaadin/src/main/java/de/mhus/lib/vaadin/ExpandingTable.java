@@ -17,8 +17,8 @@ package de.mhus.lib.vaadin;
 
 import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.ui.Table;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.ui.Table;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MEventHandler;

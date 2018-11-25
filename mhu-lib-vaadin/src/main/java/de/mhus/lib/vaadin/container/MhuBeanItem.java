@@ -44,11 +44,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.data.util.NestedMethodProperty;
-import com.vaadin.data.util.PropertysetItem;
-import com.vaadin.data.util.VaadinPropertyDescriptor;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractProperty;
+import com.vaadin.v7.data.util.NestedMethodProperty;
+import com.vaadin.v7.data.util.PropertysetItem;
+import com.vaadin.v7.data.util.VaadinPropertyDescriptor;
 
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
@@ -257,11 +257,11 @@ public class MhuBeanItem<BT> extends PropertysetItem {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void setValue(T newValue)
-				throws com.vaadin.data.Property.ReadOnlyException {
+				throws com.vaadin.v7.data.Property.ReadOnlyException {
 			try {
 				attr.set(bean, newValue);
 			} catch (IOException e) {
-				throw new com.vaadin.data.Property.ReadOnlyException("Can't write " + attr.getName() +": " + e);
+				throw new com.vaadin.v7.data.Property.ReadOnlyException("Can't write " + attr.getName() +": " + e);
 			}
 		}
 

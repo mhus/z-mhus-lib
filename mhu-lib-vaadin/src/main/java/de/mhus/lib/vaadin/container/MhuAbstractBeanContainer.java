@@ -39,22 +39,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.Filterable;
-import com.vaadin.data.Container.PropertySetChangeNotifier;
-import com.vaadin.data.Container.SimpleFilterable;
-import com.vaadin.data.Container.Sortable;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.Property.ValueChangeNotifier;
-import com.vaadin.data.util.AbstractInMemoryContainer;
-import com.vaadin.data.util.ItemSorter;
-import com.vaadin.data.util.MethodProperty.MethodException;
-import com.vaadin.data.util.VaadinPropertyDescriptor;
-import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.util.filter.UnsupportedFilterException;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.Container.Filterable;
+import com.vaadin.v7.data.Container.PropertySetChangeNotifier;
+import com.vaadin.v7.data.Container.SimpleFilterable;
+import com.vaadin.v7.data.Container.Sortable;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
+import com.vaadin.v7.data.Property.ValueChangeNotifier;
+import com.vaadin.v7.data.util.AbstractInMemoryContainer;
+import com.vaadin.v7.data.util.ItemSorter;
+import com.vaadin.v7.data.util.MethodProperty.MethodException;
+import com.vaadin.v7.data.util.VaadinPropertyDescriptor;
+import com.vaadin.v7.data.util.filter.SimpleStringFilter;
+import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 
 import de.mhus.lib.vaadin.container.MhuBeanItem.PojoPropertyDescriptor;
 
