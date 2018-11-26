@@ -37,6 +37,7 @@ public class SpinnerNumberField<T> extends TextField {
 		this.numberClass = numberClass;
 		validator = new SpinnerValidator("Insert a valid number.");
 		addValidator(validator);
+		// https://stackoverflow.com/questions/42491883/how-to-add-validators-in-vaadin-8
 	}
 
 	public void setAllowNegative(boolean boolean1) {

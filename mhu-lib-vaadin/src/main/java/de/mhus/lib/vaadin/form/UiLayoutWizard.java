@@ -17,13 +17,13 @@ package de.mhus.lib.vaadin.form;
 
 import java.util.LinkedList;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
@@ -60,7 +60,7 @@ public class UiLayoutWizard extends UiLayout {
 		iEditor.setExpandRatio(editor, 1);
 		
 		HorizontalLayout toolBar = new HorizontalLayout();
-		Button bBack = new Button(FontAwesome.ARROW_LEFT);
+		Button bBack = new Button(VaadinIcons.ARROW_LEFT);
 		bBack.addClickListener(e -> {
 			if (current < 1) return;
 			layout.setSelectedTab(current-2);
@@ -72,7 +72,7 @@ public class UiLayoutWizard extends UiLayout {
 		toolBar.addComponent(spacer);
 		toolBar.setExpandRatio(spacer, 1);
 		
-		Button bNext = new Button(FontAwesome.ARROW_RIGHT);
+		Button bNext = new Button(VaadinIcons.ARROW_RIGHT);
 		bNext.addClickListener(e -> {
 			if (current >= tabIndex.size()) return;
 			layout.setSelectedTab(current);

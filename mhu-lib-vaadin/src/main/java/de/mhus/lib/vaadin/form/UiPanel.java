@@ -18,7 +18,7 @@ package de.mhus.lib.vaadin.form;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;

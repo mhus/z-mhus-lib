@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.ui.ComboBox;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;

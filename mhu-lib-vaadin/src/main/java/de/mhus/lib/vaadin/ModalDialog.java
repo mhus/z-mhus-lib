@@ -22,10 +22,10 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public abstract class ModalDialog extends Window {
 
@@ -127,7 +127,6 @@ public abstract class ModalDialog extends Window {
 	
 	protected abstract void initContent(VerticalLayout layout) throws Exception;
 
-	@SuppressWarnings("deprecation")
 	protected void updateButtons() {
 		buttonBar.removeAllComponents();
 		for (final Action a : actions) {

@@ -15,9 +15,10 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.v7.ui.Label;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.form.UiInformation;
 
@@ -30,12 +31,11 @@ public class VaadinUiInformation extends Panel implements UiInformation {
 		initUI();
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected void initUI() {
 		setWidth("100%");
 		setHeight("100px");
 		description = new Label();
-		description.setContentMode(Label.CONTENT_XHTML);
+		description.setContentMode(ContentMode.HTML);
 		//description.setWidth("100%");
 		VerticalLayout layout = new VerticalLayout();
 		layout.addComponent(description);

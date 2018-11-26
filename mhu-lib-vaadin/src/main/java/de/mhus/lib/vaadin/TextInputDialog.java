@@ -17,10 +17,11 @@ package de.mhus.lib.vaadin;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class TextInputDialog extends ModalDialog {
 
@@ -58,11 +59,10 @@ public class TextInputDialog extends ModalDialog {
 		return textField;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void initContent(VerticalLayout layout) throws Exception {
 		label = new Label(message);
-		label.setContentMode(Label.CONTENT_XHTML);
+		label.setContentMode(ContentMode.HTML);
 		layout.addComponent(label);
 		
 		textField = new TextField();
@@ -78,7 +78,6 @@ public class TextInputDialog extends ModalDialog {
 			    	confirm.doAction(TextInputDialog.this);
 			    }
 			});
-		textField.setImmediate(true);
 		
 		layout.addComponent(textField);
 		txtInput = null;

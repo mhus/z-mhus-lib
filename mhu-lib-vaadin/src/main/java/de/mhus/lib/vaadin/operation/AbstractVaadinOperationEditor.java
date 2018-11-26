@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.vaadin.operation;
 
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.logging.Log;

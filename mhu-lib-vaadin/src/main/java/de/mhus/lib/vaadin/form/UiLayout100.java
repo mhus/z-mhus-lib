@@ -19,7 +19,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.form.ComponentAdapter;

@@ -15,12 +15,12 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Label;
 
 import de.mhus.lib.form.UiWizard;
 
@@ -207,7 +207,7 @@ public abstract class AbstractColLayout extends UiLayout {
 				
 				if (wizard != null) {
 					Button b = new Button();
-					b.setIcon(FontAwesome.COG);
+					b.setIcon(VaadinIcons.COG); //FontAwesome.COG
 					b.addClickListener(new Button.ClickListener() {
 						
 						private static final long serialVersionUID = 1L;

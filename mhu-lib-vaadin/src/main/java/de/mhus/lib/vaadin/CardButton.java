@@ -16,7 +16,7 @@
 package de.mhus.lib.vaadin;
 
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.themes.BaseTheme;
+import com.vaadin.ui.themes.ValoTheme;
 
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.vaadin.ui.Border;
@@ -42,8 +42,8 @@ public class CardButton extends Button {
 		setCaption(caption);
 	}
 	public CardButton() {
-		setHtmlContentAllowed(true);
-		setStyleName(BaseTheme.BUTTON_LINK);
+		setCaptionAsHtml(true);
+		setStyleName(ValoTheme.BUTTON_LINK);
 	}
 	
 	@Override

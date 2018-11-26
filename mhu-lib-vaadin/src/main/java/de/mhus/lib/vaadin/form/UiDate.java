@@ -15,9 +15,18 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.v7.shared.ui.datefield.Resolution;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
+import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.DateField;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.DateTimeField;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;
@@ -30,49 +39,84 @@ import de.mhus.lib.form.definition.FmDate.FORMATS;
 
 public class UiDate extends UiVaadin {
 
+	ZoneId zoneId = ZoneId.systemDefault();
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void setValue(Object value) throws MException {
-		((DateField)getComponentEditor()).setValue(MCast.toDate(value, null));
+		Date date = MCast.toDate(value, null);
+        Component field = getComponentEditor();
+        if (date == null) {
+        		((AbstractDateField)field).setValue(null);
+        } else
+        if (field instanceof DateField) {
+	        	LocalDate localDate = Instant.ofEpochMilli(date.getTime()).atZone(zoneId)
+	        			.toLocalDate();
+        		((DateField)field).setValue(localDate);
+        } else
+        if (field instanceof DateTimeField) {
+	        	LocalDateTime localDate = Instant.ofEpochMilli(date.getTime()).atZone(zoneId)
+	        			.toLocalDateTime();
+        	((DateTimeField)field).setValue(localDate);
+        }
 	}
 
 	@Override
 	public Component createEditor() {
-		DateField ret = new DateField();
-		ret.setLocale(getForm().getLocale());
+		// DateField ret = new DateField();
+		// DateTimeField
+		AbstractDateField<?,?> ret = null;
 		FORMATS format = FmDate.FORMATS.valueOf(getConfig().getString("format",FmDate.FORMATS.DATE.name()).toUpperCase());
 		switch (format) {
 		case DATE:
-			ret.setResolution(Resolution.DAY);
+			ret = new DateField();
+			((DateField)ret).setResolution(DateResolution.DAY);
 			break;
 		case DATETIME:
-			ret.setResolution(Resolution.MINUTE);
+			ret = new DateTimeField();
+			((DateTimeField)ret).setResolution(DateTimeResolution.MINUTE);
 			break;
 		case DATETIMESECONDS:
-			ret.setResolution(Resolution.SECOND);
+			ret = new DateTimeField();
+			((DateTimeField)ret).setResolution(DateTimeResolution.SECOND);
 			break;
 		case TIME:
-			ret.setDateFormat("HH:mm");
-			ret.setResolution(Resolution.MINUTE);
+			ret = new DateTimeField();
+			((DateTimeField)ret).setDateFormat("HH:mm");
+			((DateTimeField)ret).setResolution(DateTimeResolution.MINUTE);
 			break;
 		case TIMESECONDS:
+			ret = new DateTimeField();
 			ret.setDateFormat("HH:mm:ss");
-			ret.setResolution(Resolution.SECOND);
+			((DateTimeField)ret).setResolution(DateTimeResolution.SECOND);
 			break;
 		case CUSTOM:
+			ret = new DateTimeField();
 			String custom = getConfig().getString(FmDate.CUSTOM_FORMAT, null);
 			if (custom != null)
 				ret.setDateFormat(custom);
-			ret.setResolution(Resolution.SECOND);
+			((DateTimeField)ret).setResolution(DateTimeResolution.SECOND);
 			break;
 		default:
+			ret = new DateField();
 			break;
 		}
+		ret.setLocale(getForm().getLocale());
 		return ret;
 	}
 
 	@Override
 	protected Object getValue() throws MException {
-		return ((DateField)getComponentEditor()).getValue();
+		Component field = getComponentEditor();
+		if (field instanceof DateField) {
+			LocalDate localDate = ((DateField)field).getValue();
+			return Date.from(localDate.atStartOfDay(zoneId).toInstant());
+		} else
+		if (field instanceof DateTimeField) {
+			LocalDateTime localDate = ((DateTimeField)field).getValue();
+			return Date.from(localDate.atZone(zoneId).toInstant());
+		}
+		return null;
 	}
 
 	public static class Adapter implements ComponentAdapter {

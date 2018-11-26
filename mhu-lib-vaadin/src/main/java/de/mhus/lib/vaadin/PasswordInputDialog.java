@@ -17,10 +17,11 @@ package de.mhus.lib.vaadin;
 
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 public class PasswordInputDialog extends ModalDialog {
 
@@ -58,11 +59,10 @@ public class PasswordInputDialog extends ModalDialog {
 		return textField;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void initContent(VerticalLayout layout) throws Exception {
 		label = new Label(message);
-		label.setContentMode(Label.CONTENT_XHTML);
+		label.setContentMode(ContentMode.HTML);
 		layout.addComponent(label);
 		
 		textField = new PasswordField();
@@ -78,7 +78,6 @@ public class PasswordInputDialog extends ModalDialog {
 			    	confirm.doAction(PasswordInputDialog.this);
 			    }
 			});
-		textField.setImmediate(true);
 
 		layout.addComponent(textField);
 		txtInput = null;

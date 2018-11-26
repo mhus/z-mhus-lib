@@ -16,7 +16,7 @@
 package de.mhus.lib.vaadin.form;
 
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.TextArea;
+import com.vaadin.ui.TextArea;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;

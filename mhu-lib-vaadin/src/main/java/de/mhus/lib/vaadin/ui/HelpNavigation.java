@@ -18,14 +18,15 @@ package de.mhus.lib.vaadin.ui;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.HorizontalLayout;
 
 import de.mhus.lib.core.MString;
 
@@ -48,7 +49,7 @@ public class HelpNavigation extends HorizontalLayout {
 		
 		if (MString.isSetTrim(helpUrl)) {
 			Button helpBtn = new Button("Hilfe");
-			helpBtn.setIcon(FontAwesome.QUESTION);
+			helpBtn.setIcon(VaadinIcons.QUESTION);
 			helpBtn.setDescription("Hier klicken, um Hilfe zu erhalten");
 			helpBtn.addClickListener(new Button.ClickListener() {
 				private static final long serialVersionUID = 1L;

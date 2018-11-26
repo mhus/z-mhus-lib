@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.StringToBooleanConverter;
@@ -29,9 +31,7 @@ import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
 import com.vaadin.v7.data.util.converter.StringToLongConverter;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.v7.ui.AbstractField;
-import com.vaadin.ui.Component;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.TableFieldFactory;
 import com.vaadin.v7.ui.TextField;

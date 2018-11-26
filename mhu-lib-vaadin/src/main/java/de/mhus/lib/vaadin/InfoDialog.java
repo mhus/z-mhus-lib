@@ -15,9 +15,10 @@
  */
 package de.mhus.lib.vaadin;
 
-import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 public class InfoDialog extends ModalDialog {
 
@@ -47,11 +48,10 @@ public class InfoDialog extends ModalDialog {
 		return label;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void initContent(VerticalLayout layout) throws Exception {
 		label = new Label(message);
-		label.setContentMode(Label.CONTENT_XHTML);
+		label.setContentMode(ContentMode.HTML);
 		layout.addComponent(label);
 	}
 

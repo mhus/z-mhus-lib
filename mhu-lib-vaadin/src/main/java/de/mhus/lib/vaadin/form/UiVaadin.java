@@ -15,16 +15,13 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.event.FieldEvents;
-
-import org.hamcrest.core.IsInstanceOf;
-
 import com.vaadin.data.HasValue;
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.v7.event.FieldEvents.FocusNotifier;
-import com.vaadin.v7.ui.AbstractField;
+import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.util.MNls;
@@ -195,19 +192,19 @@ public abstract class UiVaadin extends UiComponent {
 		getForm().getControl().focus(this);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public void setListeners() {
 		Component e = getComponentEditor();
 		if (e == null) return;
 		
 		if (e instanceof AbstractField) {
-			((AbstractField)e).setImmediate(true);
-			((AbstractField)e).addValueChangeListener(new Property.ValueChangeListener() {
+//			((AbstractField)e).setImmediate(true);
+			((AbstractField<Object>)e).addValueChangeListener(new ValueChangeListener<Object>() {
 				
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void valueChange(ValueChangeEvent event) {
+				public void valueChange(ValueChangeEvent<Object> event) {
 					fieldValueChangedEvent();
 				}
 			});

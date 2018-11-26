@@ -20,9 +20,9 @@ import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.v7.ui.AbstractTextField;
-import com.vaadin.v7.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.AbstractTextField;
+import com.vaadin.ui.TextField;
 
 public class MVaadin {
 	

@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MObserverHandler;
 import de.mhus.lib.vaadin.ui.Border;
@@ -116,7 +116,6 @@ public class SectionsSelector extends VerticalLayout {
 		private boolean selected = false;
 		private Object userData;
 
-		@SuppressWarnings("deprecation")
 		public Section(String name, String title) {
 			this.name = name;
 			this.title = title;

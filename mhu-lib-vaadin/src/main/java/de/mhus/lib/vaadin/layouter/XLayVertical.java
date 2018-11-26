@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.vaadin.layouter;
 
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;

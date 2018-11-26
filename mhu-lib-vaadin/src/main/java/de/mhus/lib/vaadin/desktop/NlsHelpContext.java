@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.util.MNls;

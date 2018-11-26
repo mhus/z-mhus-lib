@@ -20,18 +20,18 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.TreeMap;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
@@ -266,7 +266,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 			AbstractComponent tile = space.createTile();
 			if (tile == null) {
 				NativeButton button = new NativeButton();
-				button.setHtmlContentAllowed(false);
+				button.setCaptionAsHtml(false);
 				button.setCaption( space.getDisplayName(locale));
 				button.addClickListener(new NativeButton.ClickListener() {
 					private static final long serialVersionUID = 1L;
@@ -403,7 +403,7 @@ public class Desktop extends CssLayout implements MNlsProvider {
 					String x = history.get(history.size() - cnt - 1);
 					c.setText(MString.beforeIndex(x, '|'));
 					c.setDescription(x);
-					c.setIcon(FontAwesome.ARROW_RIGHT);
+					c.setIcon(VaadinIcons.ARROW_RIGHT); //  FontAwesome.ARROW_RIGHT
 				}
 			}
 			cnt++;

@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.vaadin.form;
 
-import com.vaadin.v7.ui.CheckBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CheckBox;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;
