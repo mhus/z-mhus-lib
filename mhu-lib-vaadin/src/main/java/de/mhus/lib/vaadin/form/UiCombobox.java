@@ -54,16 +54,30 @@ public class UiCombobox extends UiVaadin {
 		ComboBox cb = (ComboBox)getComponentEditor();
 		cb.removeAllItems();
 		String itemsDef = getConfig().getString("itemdef", getName() + "." + DataSource.ITEMS);
-		Item[] items = (Item[]) getForm().getDataSource().getObject(itemsDef, null);
-		if (items != null) {
-			for (Item item : items) {
-				cb.addItem(item.getKey());
-				cb.setItemCaption(item.getKey(), item.getCaption());
-			}
-		} else {
-			String itemsStr = getConfig().getString("items", null);
-			if (itemsStr != null) {
-				//TODO 
+		Object itemsObj = getForm().getDataSource().getObject(itemsDef, null);
+		if (itemsObj == null)
+			itemsObj = getConfig().getString("items", null);
+		if (itemsObj != null) {
+			if (itemsObj instanceof Item[]) {
+				Item[] items = (Item[]) itemsObj;
+				for (Item item : items) {
+					cb.addItem(item.getKey());
+					cb.setItemCaption(item.getKey(), item.getCaption());
+				}
+			} else
+			if (itemsObj instanceof String) {
+				for (String item : ((String) itemsObj).split(";")) {
+					String[] parts = item.split("=",2);
+					if (parts.length == 2) {
+						cb.addItem(parts[0]);
+						cb.setItemCaption(parts[0], parts[1]);
+					} else
+					if (parts.length == 1) {
+						cb.addItem(parts[0]);
+						cb.setItemCaption(parts[0], parts[0]);
+					}
+				}
+				
 			}
 		}
 	}
