@@ -98,9 +98,11 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 	public void writeExternal(ObjectOutput out) throws IOException {
 		PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
 		for (PojoAttribute<?> field : model) {
-			out.writeBoolean(true);
-			out.writeUTF(field.getName());
-			out.writeObject(field.get(this));
+			if (field.canRead()) {
+				out.writeBoolean(true);
+				out.writeUTF(field.getName());
+				out.writeObject(field.get(this));
+			}
 		}
 		out.writeBoolean(false);
 	}
@@ -114,9 +116,10 @@ public abstract class DbMetadata extends DbComfortableObject implements UuidIden
 			Object value = in.readObject();
 			@SuppressWarnings("rawtypes")
 			PojoAttribute attr = model.getAttribute(name);
-			if (attr != null)
-				attr.set(this, value);
-			else
+			if (attr != null) {
+				if (attr.canWrite())
+					attr.set(this, value);
+			} else
 				log().d("can't read external",name);
 		}
 	}

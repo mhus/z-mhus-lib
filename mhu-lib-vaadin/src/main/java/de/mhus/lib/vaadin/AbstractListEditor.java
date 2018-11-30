@@ -340,7 +340,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 			try {
 				doUpdate(selectedId);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log().i(e);
 			}
 			
 			// fill 
@@ -368,13 +368,13 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 				}
 				
 				updateDataSource();
-            	modified = true;
+	            	modified = true;
+	            	editMode = null;
 				
 			} catch (Throwable e) {
 				log().i(e);
 				showError(e);
 			}
-			editMode = null;
 		}
 		
 		updateEnabled();
