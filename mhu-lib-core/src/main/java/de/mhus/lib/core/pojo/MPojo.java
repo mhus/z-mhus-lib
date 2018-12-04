@@ -104,7 +104,7 @@ public class MPojo {
 			setJsonValue(to, name, value, factory, usePublic, false, level+1);
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public static void addJsonValue(ArrayNode to, Object value, PojoModelFactory factory, boolean usePublic, boolean deep, int level) throws IOException {
 		if (level > MAX_LEVEL) return;

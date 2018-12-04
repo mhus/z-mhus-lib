@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.mhus.lib.core.MFile;
+
 public class MHttp {
 
 	public static final Map<Integer, String> HTTP_STATUS_CODES = Collections
@@ -51,6 +53,11 @@ public class MHttp {
 			        put(505, "HTTP Version not supported");
 		        }
 	        });
+	
+	public static final String CONTENT_TYPE_JSON = "application/json";
+	public static final String CONTENT_TYPE_HTML = "text/html";
+	public static final String CONTENT_TYPE_TEXT = "text/plain";
+	public static final String CONTENT_TYPE_PDF = "application/pdf";
 
 	public enum METHOD {
 		GET,
@@ -68,4 +75,8 @@ public class MHttp {
 		return METHOD.valueOf(in.trim().toUpperCase());
 	}
 	
+	public static String getContentType(String extension) {
+		return MFile.getMimeType(extension);
+	}
+
 }
