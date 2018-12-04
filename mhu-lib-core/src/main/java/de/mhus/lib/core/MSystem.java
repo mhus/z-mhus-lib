@@ -30,6 +30,7 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -952,4 +953,28 @@ public class MSystem {
 		}
 	}
 
+	public static LinkedList<Method> getMethods(Class<?> clazz) {
+		LinkedList<Method> out = new LinkedList<Method>();
+		do {
+			for (Method m : clazz.getMethods()) {
+				out.add(m);
+			}
+			clazz = clazz.getSuperclass();
+		} while (clazz != null);
+		
+		return out;
+	}
+	
+	public static LinkedList<Field> getAttributes(Class<?> clazz) {
+		LinkedList<Field> out = new LinkedList<Field>();
+		do {
+			for (Field field : clazz.getDeclaredFields())
+				out.add(field);
+			clazz = clazz.getSuperclass();
+		} while (clazz != null);
+
+		return out;
+	}
+
+	
 }

@@ -18,10 +18,10 @@ package de.mhus.lib.core.pojo;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.LinkedList;
 
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.annotations.pojo.Embedded;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.lang.MObject;
 
 public class FunctionsStrategy extends MObject implements PojoStrategy {
@@ -61,7 +61,7 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 
 		if (level > 10 ) return; // logging ?
 		
-		for (Method m : getMethods(clazz)) {
+		for (Method m : MSystem.getMethods(clazz)) {
 
 			// ignore static methods
 			if (Modifier.isStatic(m.getModifiers()))
@@ -173,22 +173,6 @@ public class FunctionsStrategy extends MObject implements PojoStrategy {
 				if (setter.isAnnotationPresent(a)) return true;
 		}
 		return false;
-	}
-
-	protected LinkedList<Method> getMethods(Class<?> clazz) {
-		LinkedList<Method> out = new LinkedList<Method>();
-//		HashSet<String> names = new HashSet<String>();
-		do {
-			for (Method m : clazz.getMethods()) {
-//				if (!names.contains(m.getName())) {
-					out.add(m);
-//					names.add(m.getName());
-//				}
-			}
-			clazz = clazz.getSuperclass();
-		} while (clazz != null);
-		
-		return out;
 	}
 
 	@Override

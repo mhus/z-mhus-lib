@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.LinkedList;
 
 import de.mhus.lib.annotations.base.IgnoreBind;
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.lang.MObject;
 
 @IgnoreBind
@@ -62,7 +62,7 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 
 	protected void parse (String prefix, Attribute<Object> parent, PojoParser parser, Class<?> clazz, PojoModelImpl model) {
 		
-		for (Field field : getAttributes(clazz)) {
+		for (Field field : MSystem.getAttributes(clazz)) {
 			
 			// ignore static and final fields
 			if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) )
@@ -118,17 +118,6 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 		for (Class<? extends Annotation> a :annotationMarker)
 			if (field.isAnnotationPresent(a)) return true;
 		return false;
-	}
-
-	protected LinkedList<Field> getAttributes(Class<?> clazz) {
-		LinkedList<Field> out = new LinkedList<Field>();
-		do {
-			for (Field field : clazz.getDeclaredFields())
-				out.add(field);
-			clazz = clazz.getSuperclass();
-		} while (clazz != null);
-
-		return out;
 	}
 
 	public boolean isAllowPublic() {
