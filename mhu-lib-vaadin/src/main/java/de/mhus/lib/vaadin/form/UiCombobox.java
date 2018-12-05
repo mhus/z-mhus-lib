@@ -52,6 +52,7 @@ public class UiCombobox extends UiVaadin {
 	@Override
 	public void doUpdateMetadata() throws MException {
 		ComboBox cb = (ComboBox)getComponentEditor();
+		Object value = cb.getValue();
 		cb.removeAllItems();
 		String itemsDef = getConfig().getString("itemdef", getName() + "." + DataSource.ITEMS);
 		Object itemsObj = getForm().getDataSource().getObject(itemsDef, null);
@@ -80,6 +81,7 @@ public class UiCombobox extends UiVaadin {
 				
 			}
 		}
+		cb.setValue(value);
 	}
 
 	public static class Adapter implements ComponentAdapter {
