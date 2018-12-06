@@ -412,6 +412,18 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 		return MCast.objectToString(value);
 	}
 
+	@Override
+	public String valueToNumber(Object value) {
+		if (value == null) return "0";
+		if (value instanceof Date) {
+			return String.valueOf(((Date)value).getTime());
+		}
+		if (value instanceof Calendar) {
+			return String.valueOf(((Calendar)value).getTimeInMillis());
+		}
+		return MCast.objectToString(value);
+	}
+	
 	/**
 	 * Detects the language of this query string. By default it will return null
 	 * what means the default language.

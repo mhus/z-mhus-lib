@@ -15,6 +15,9 @@
  */
 package de.mhus.lib.sql.parser;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
@@ -53,6 +56,18 @@ public class SimpleQueryCompiler extends StringCompiler implements ICompiler {
 		return MCast.objectToString(value);
 	}
 
+	@Override
+	public String valueToNumber(Object value) {
+		if (value == null) return "0";
+		if (value instanceof Date) {
+			return String.valueOf(((Date)value).getTime());
+		}
+		if (value instanceof Calendar) {
+			return String.valueOf(((Calendar)value).getTimeInMillis());
+		}
+		return MCast.objectToString(value);
+	}
+	
 	@Override
 	public String escape(String text) {
 		return MSql.escape(text);

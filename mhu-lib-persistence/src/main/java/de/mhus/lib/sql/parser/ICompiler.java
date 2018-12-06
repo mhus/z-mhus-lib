@@ -27,6 +27,8 @@ public interface ICompiler {
 
 	String valueToString(Object value);
 
+	String valueToNumber(Object value);
+	
 	String escape(String text);
 
 	String toBoolValue(boolean value);

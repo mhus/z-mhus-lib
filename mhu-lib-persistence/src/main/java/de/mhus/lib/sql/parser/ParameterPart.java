@@ -105,18 +105,18 @@ public class ParameterPart extends StringParsingPart {
 		else
 			if (MConstants.TYPE_INT.equals(type)) {
 				if (value instanceof Enum)
-					out.append(compiler.valueToString( ((Enum<?>)value).ordinal() ) );
+					out.append(compiler.valueToNumber( ((Enum<?>)value).ordinal() ) );
 				else
-					out.append(compiler.valueToString(MCast.toint(value.toString(),0)));
+					out.append(compiler.valueToNumber(MCast.toint(value.toString(),0)));
 			} else
 				if (MConstants.TYPE_LONG.equals(type))
-					out.append(compiler.valueToString(MCast.tolong(value.toString(),0)));
+					out.append(compiler.valueToNumber(MCast.tolong(value.toString(),0)));
 				else
 				if (MConstants.TYPE_FLOAT.equals(type))
-					out.append(compiler.valueToString(MCast.tofloat(value.toString(),0)));
+					out.append(compiler.valueToNumber(MCast.tofloat(value.toString(),0)));
 				else
 				if (MConstants.TYPE_DOUBLE.equals(type))
-					out.append(compiler.valueToString(MCast.todouble(value.toString(),0)));
+					out.append(compiler.valueToNumber(MCast.todouble(value.toString(),0)));
 				else
 				if (MConstants.TYPE_DATE.equals(type))
 					out.append( compiler.toSqlDateValue( value ) );
