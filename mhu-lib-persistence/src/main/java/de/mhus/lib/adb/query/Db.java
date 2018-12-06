@@ -76,7 +76,19 @@ public class Db {
 	public static APart eq(String attr, Object value) {
 		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(null, attr, value));
 	}
-		
+
+	/**
+	 * <p>eq.</p>
+	 *
+	 * @param attr a {@link java.lang.String} object.
+	 * @param value a {@link java.lang.Object} object.
+	 * @return a {@link de.mhus.lib.adb.query.APart} object.
+	 */
+	public static APart eq(Identifier attr, Object value) {
+		String name = MPojo.toAttributeName(attr);
+		return new ACompare(ACompare.TYPE.EQ,attr(name),value(attr.getClazz(), name, value));
+	}
+
 	/**
 	 * <p>like</p>
 	 *
@@ -87,6 +99,11 @@ public class Db {
 	 */
 	public static APart like(String attr, Object value) {
 		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(null, attr, value));
+	}
+
+	public static APart like(Identifier left, Object value) {
+		String attr = MPojo.toAttributeName(left);
+		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(left.getClazz(), attr, value));
 	}
 
 	/**
