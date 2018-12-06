@@ -114,7 +114,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> eq(String attr, Object value) {
-		operations.add(Db.eq(attr, value));
+		operations.add(Db.eq(Db.attr(attr), Db.value(type, attr, value)));
 		return this;
 	}
 
@@ -127,7 +127,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> eq(Identifier getter, Object value) {
-		operations.add(Db.eq(MPojo.toAttributeName(getter), value));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.eq(Db.attr(name), Db.value(type, name, value)));
 		return this;
 	}
 	
@@ -151,7 +152,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> ne(String left, Object right) {
-		operations.add(Db.ne(Db.attr(left), Db.value(right)));
+		operations.add(Db.ne(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 
@@ -164,7 +165,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> ne(Identifier getter, Object value) {
-		operations.add(Db.ne(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.ne(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -188,7 +190,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> lt(String left, Object right) {
-		operations.add(Db.lt(Db.attr(left), Db.value(right)));
+		operations.add(Db.lt(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 	
@@ -201,7 +203,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> lt(Identifier getter, Object value) {
-		operations.add(Db.lt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.lt(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -225,7 +228,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> le(String left, Object right) {
-		operations.add(Db.le(Db.attr(left), Db.value(right)));
+		operations.add(Db.le(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 	
@@ -238,7 +241,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> le(Identifier getter, Object value) {
-		operations.add(Db.le(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.le(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -262,7 +266,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> gt(String left, Object right) {
-		operations.add(Db.gt(Db.attr(left), Db.value(right)));
+		operations.add(Db.gt(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 	
@@ -275,7 +279,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> gt(Identifier getter, Object value) {
-		operations.add(Db.gt(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.gt(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -299,7 +304,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> ge(String left, Object right) {
-		operations.add(Db.ge(Db.attr(left), Db.value(right)));
+		operations.add(Db.ge(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 	
@@ -312,7 +317,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> ge(Identifier getter, Object value) {
-		operations.add(Db.ge(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.ge(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -337,7 +343,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> el(Identifier getter, Object value) {
-		operations.add(Db.el(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.el(Db.attr(name), Db.value(type, name, value)));
 		return this;
 	}
 
@@ -362,7 +369,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> eg(Identifier getter, Object value) {
-		operations.add(Db.eg(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.eg(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 
@@ -374,7 +382,7 @@ public class AQuery<T> extends APrint {
 	 * @return a {@link de.mhus.lib.adb.query.AQuery} object.
 	 */
 	public AQuery<T> like(String left, String right) {
-		operations.add(Db.like(Db.attr(left), Db.value(right)));
+		operations.add(Db.like(Db.attr(left), Db.value(type, left, right)));
 		return this;
 	}
 
@@ -399,7 +407,8 @@ public class AQuery<T> extends APrint {
 	 * @since 3.3.0
 	 */
 	public AQuery<T> like(Identifier getter, Object value) {
-		operations.add(Db.like(Db.attr(MPojo.toAttributeName(getter)), Db.value(value)));
+		String name = MPojo.toAttributeName(getter);
+		operations.add(Db.like(Db.attr(name), Db.value(getter.getClazz(), name, value)));
 		return this;
 	}
 

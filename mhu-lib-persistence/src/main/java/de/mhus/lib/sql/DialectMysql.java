@@ -61,7 +61,7 @@ public class DialectMysql extends DialectDefault {
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String toSqlDateValue(Date date) {
+	public String toSqlDate(Date date) {
 		synchronized (dateFormat) {
 			return "'" + dateFormat.format(date) + "'";
 		}

@@ -74,7 +74,7 @@ public class Db {
 	 * @return a {@link de.mhus.lib.adb.query.APart} object.
 	 */
 	public static APart eq(String attr, Object value) {
-		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(value));
+		return new ACompare(ACompare.TYPE.EQ,attr(attr),value(null, attr, value));
 	}
 		
 	/**
@@ -86,7 +86,7 @@ public class Db {
 	 * @since 3.3.0
 	 */
 	public static APart like(String attr, Object value) {
-		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(value));
+		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(null, attr, value));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class Db {
 	}
 
 	public static APart lt(String attr, Object value) {
-		return new ACompare(ACompare.TYPE.LT,attr(attr),value(value));
+		return new ACompare(ACompare.TYPE.LT,attr(attr),value(null, attr, value));
 	}
 	
 	/**
@@ -193,10 +193,11 @@ public class Db {
 	}
 
 	public static APart in(Identifier left, Object ... right) {
+		String attr = MPojo.toAttributeName(left);
 		AAttribute[] list = new AAttribute[right.length];
 		for (int i = 0; i < list.length ; i++)
-			list[i] = new ADynValue(right[i]);
-		return new ACompare(ACompare.TYPE.IN,attr(MPojo.toAttributeName(left)),new AList(list));
+			list[i] = new ADynValue(left.getClazz(), attr, null, right[i]);
+		return new ACompare(ACompare.TYPE.IN,attr(attr),new AList(list));
 	}
 	
 	/**
@@ -289,13 +290,13 @@ public class Db {
 
 	/**
 	 * A dynamic value.
-	 *
-	 * @param name a {@link java.lang.String} object.
+	 * @param type 
+	 * @param attr 
 	 * @param value a {@link java.lang.Object} object.
 	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
 	 */
-	public static AAttribute value(String name, Object value) {
-		return new ADynValue(name,value);
+	public static AAttribute value(Class<?> type, String attr, Object value) {
+		return new ADynValue(type, attr, null,value);
 	}
 
 	/**
@@ -304,9 +305,9 @@ public class Db {
 	 * @param value a {@link java.lang.Object} object.
 	 * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
 	 */
-	public static AAttribute value(Object value) {
-		return new ADynValue(value);
-	}
+//	public static AAttribute value(Object value) {
+//		return new ADynValue(value);
+//	}
 
 	/**
 	 * A database field.

@@ -76,7 +76,17 @@ public class MConstants {
 	public static final String ADDR_COUNTRY = "country";
 
 	public static final String ADDR_DISPLAY_NAME = "displayName";
-
+	
 	public static enum ADDR_SCOPE {PRIVATE,WORK}
+	
+	public static final String TYPE_DATE = "date";
+	public static final String TYPE_RAW = "raw";
+	public static final String TYPE_BOOL = "bool";
+	public static final String TYPE_INT = "int";
+	public static final String TYPE_TEXT = "text";
+	public static final String TYPE_STRING = "string";
+	public static final String TYPE_LONG = "long";
+	public static final String TYPE_FLOAT = "float";
+	public static final String TYPE_DOUBLE = "double";
 
 }

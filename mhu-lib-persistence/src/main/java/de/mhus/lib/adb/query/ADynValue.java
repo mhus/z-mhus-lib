@@ -15,6 +15,12 @@
  */
 package de.mhus.lib.adb.query;
 
+import java.util.Date;
+
+import de.mhus.lib.adb.DbManager;
+import de.mhus.lib.adb.model.Field;
+import de.mhus.lib.adb.model.Table;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.parser.AttributeMap;
 
 /**
@@ -27,24 +33,29 @@ public class ADynValue extends AAttribute {
 
 	private String name;
 	private Object value;
+	private Class<?> type;
+	private String field;
 
 	/**
 	 * <p>Constructor for ADynValue.</p>
 	 *
 	 * @param value a {@link java.lang.Object} object.
 	 */
-	public ADynValue(Object value) {
-		this(null, value);
-	}
+//	public ADynValue(Object value) {
+//		this(null, value);
+//	}
 
 	/**
 	 * <p>Constructor for ADynValue.</p>
-	 *
+	 * @param type 
+	 * @param field 
 	 * @param name a {@link java.lang.String} object.
 	 * @param value a {@link java.lang.Object} object.
 	 */
-	public ADynValue(String name, Object value) {
+	public ADynValue(Class<?> type, String field,String name, Object value) {
+		this.type = type;
 		this.name = name;
+		this.field = field;
 		this.value = value;
 	}
 
@@ -82,4 +93,37 @@ public class ADynValue extends AAttribute {
 	public String getName() {
 		return name;
 	}
+	
+	public Class<?> getType() {
+		return type;
+	}
+	
+	public String getField() {
+		return field;
+	}
+
+	public String getDefinition(DbManager manager) {
+		String t = null;
+		if (manager != null && type != null && field != null) {
+			String regName = manager.getRegistryName(type);
+			if (regName != null) {
+				Table table = manager.getTable(regName);
+				if (table != null) {
+					Field field = table.getField(this.field);
+					if (field != null) {
+						Class<?> fType = field.getType();
+						if (Date.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_DATE;
+						if (String.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_TEXT;
+					}
+				}
+			}		
+		}
+		if (t != null) {
+			return getName() + "," + t;
+		}
+		return getName();
+	}
+	
 }

@@ -58,7 +58,7 @@ public class DialectPostgresql extends DialectDefault {
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
-	public String toSqlDateValue(Date date) {
+	public String toSqlDate(Date date) {
 		synchronized (dateFormat) {
 			return "'" + dateFormat.format(date) + "'";
 		}
@@ -150,6 +150,7 @@ public class DialectPostgresql extends DialectDefault {
 
 	}
 	
+	@Override
 	protected void alterColumn(Statement sth,String tn, IConfig cfield) {
 		
 		String type = getDbType(cfield);

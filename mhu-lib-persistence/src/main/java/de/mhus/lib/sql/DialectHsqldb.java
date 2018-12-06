@@ -89,7 +89,7 @@ public class DialectHsqldb extends DialectDefault {
 
 	/** {@inheritDoc} */
 	@Override
-	public String toSqlDateValue(Date date) {
+	public String toSqlDate(Date date) {
 		synchronized (dateFormat) {
 			return "TO_DATE('" + dateFormat.format(date) + "','YYYY-MM-DD HH:MI:SS')";
 		}

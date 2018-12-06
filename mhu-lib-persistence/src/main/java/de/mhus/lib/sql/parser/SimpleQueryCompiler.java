@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.sql.parser;
 
-import java.util.Date;
-
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MString;
@@ -46,7 +44,7 @@ public class SimpleQueryCompiler extends StringCompiler implements ICompiler {
 	}
 
 	@Override
-	public String toSqlDateValue(Date string) {
+	public String toSqlDateValue(Object string) {
 		return "'" + MCast.toString(string) + "'";
 	}
 

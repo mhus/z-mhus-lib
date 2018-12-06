@@ -20,7 +20,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbCollection;
@@ -638,6 +640,82 @@ public class AdbTest extends TestCase {
 		
 	}
 	
+	public void testDateType() throws Exception {
+		DbPool pool = createPool("testDataTypes").getPool("test");
+		
+		BookStoreSchema schema = new BookStoreSchema();
+		DbManager manager = new DbManagerJdbc("",pool, schema);
+
+		for (int i = 1; i < 10; i++) {
+			Store store = manager.inject(new Store());
+			store.setName("Store " + i);
+			store.setIntValue(i);
+			store.setSqlDate(new Date(i*1000*60*60*24));
+			// System.out.println(store.getName() + " " + store.getSqlDate());
+			store.save();
+		}
+		
+		{
+			System.out.println(">>> test query with date");
+			List<Store> res = manager.getByQualification(Db.query(Store.class).ge("sqldate", new Date(3*1000*60*60*24)).le("sqldate", new Date(5*1000*60*60*24)) ).toCacheAndClose();
+			res.forEach(o -> System.out.println(o.getName() + " " + o.getSqlDate()));
+			assertEquals(3, res.size());
+		}
+		{
+			System.out.println(">>> test query with number");
+			List<Store> res = manager.getByQualification(Db.query(Store.class).ge("sqldate", 3*1000*60*60*24).le("sqldate", 5*1000*60*60*24) ).toCacheAndClose();
+			res.forEach(o -> System.out.println(o.getName() + " " + o.getSqlDate()));
+			assertEquals(3, res.size());
+		}
+		{
+			System.out.println(">>> test query with calendar");
+			Calendar from = Calendar.getInstance(Locale.UK);
+			from.setTime( new Date(3*1000*60*60*24) );
+			Calendar to = Calendar.getInstance(Locale.UK);
+			to.setTime( new Date(5*1000*60*60*24) );
+			List<Store> res = manager.getByQualification(Db.query(Store.class).ge("sqldate", from).le("sqldate", to) ).toCacheAndClose();
+			res.forEach(o -> System.out.println(o.getName() + " " + o.getSqlDate()));
+			assertEquals(3, res.size());
+		}
+	}
+
+	public void testTextType() throws Exception {
+		DbPool pool = createPool("testDataTypes").getPool("test");
+		
+		BookStoreSchema schema = new BookStoreSchema();
+		DbManager manager = new DbManagerJdbc("",pool, schema);
+
+		for (int i = 1; i < 10; i++) {
+			Store store = manager.inject(new Store());
+			store.setName("Store " + i);
+			store.setIntValue(i);
+			store.setSqlDate(new Date(i*1000*60*60*24));
+			System.out.println(store.getName() + " " + store.getSqlDate());
+			store.save();
+		}
+		
+		for (int i = 1; i < 10; i++) {
+			Store store = manager.inject(new Store());
+			store.setName("" + i);
+			store.setIntValue(i);
+			store.save();
+		}
+
+		{
+			System.out.println(">>> test query with text");
+			List<Store> res = manager.getByQualification(Db.query(Store.class).eq("name", "5") ).toCacheAndClose();
+			res.forEach(o -> System.out.println(o.getName() + " " + o.getSqlDate()));
+			assertEquals(1, res.size());
+		}
+		{
+			System.out.println(">>> test query with number");
+			List<Store> res = manager.getByQualification(Db.query(Store.class).eq("name", 5) ).toCacheAndClose();
+			res.forEach(o -> System.out.println(o.getName() + " " + o.getSqlDate()));
+			assertEquals(1, res.size());
+		}
+		
+	}
+
 	public void testDataTypesAlter() throws Exception {
 		DbPool pool = createPool("testDataTypesAlter").getPool("test");
 		

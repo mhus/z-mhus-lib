@@ -17,6 +17,7 @@ package de.mhus.lib.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.mhus.lib.adb.query.AQueryCreator;
@@ -326,6 +327,7 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 	 * Return a valid index name.
 	 * 
 	 * @param tableName
+	 * @param tableOrg 
 	 * @return x
 	 * @throws Exception
 	 */
@@ -386,7 +388,22 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 	}
 
 	@Override
-	public String toSqlDateValue(Date date) {
+	public String toSqlDateValue(Object value) {
+		if (value == null) return "null";
+		if (value instanceof Calendar)
+			return toSqlDate(((Calendar)value).getTime());
+		if (value instanceof Date)
+			return toSqlDate((Date)value);
+		if (value instanceof Number) {
+			Date date = new Date( ((Number)value).longValue() );
+			return toSqlDate(date);
+		}
+		Date date = MCast.toDate(value, null);
+		if (date == null) return "null";
+		return toSqlDate(date);
+	}
+
+	public String toSqlDate(Date date) {
 		return "'" + MDate.toIsoDate(date) + "'";
 	}
 

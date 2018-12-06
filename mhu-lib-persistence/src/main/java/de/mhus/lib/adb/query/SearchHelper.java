@@ -48,7 +48,7 @@ public class SearchHelper {
 	}
 
 	public APart createLike(String key, String value) {
-		return Db.like(Db.attr(key), Db.value(value));
+		return Db.like(Db.attr(key), Db.value(null, key, value));
 	}
 
 }

@@ -15,8 +15,6 @@
  */
 package de.mhus.lib.sql.parser;
 
-import java.util.Date;
-
 import de.mhus.lib.core.parser.ParsingPart;
 
 public interface ICompiler {
@@ -25,7 +23,7 @@ public interface ICompiler {
 
 	ParsingPart compileFunction(FunctionPart function);
 
-	String toSqlDateValue(Date string);
+	String toSqlDateValue(Object value);
 
 	String valueToString(Object value);
 

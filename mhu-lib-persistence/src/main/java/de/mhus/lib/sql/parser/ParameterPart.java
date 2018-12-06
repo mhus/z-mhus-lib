@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.lang.Raw;
 import de.mhus.lib.core.parser.ParseException;
@@ -33,8 +34,7 @@ import de.mhus.lib.core.util.FallbackMap;
 import de.mhus.lib.sql.DbStatement;
 
 public class ParameterPart extends StringParsingPart {
-
-
+	
 	private StringBuilder buffer;
 	public String[] attribute;
 
@@ -84,50 +84,50 @@ public class ParameterPart extends StringParsingPart {
 			type = attribute[1];
 		} else {
 			if (value instanceof Number || value instanceof Raw)
-				type = "raw";  // direct toString() operation (via compiler request)
+				type = MConstants.TYPE_RAW;  // direct toString() operation (via compiler request)
 			else
-				if (value instanceof Date || value instanceof Calendar || value instanceof java.sql.Date )
-					type = "date";
-				else
-					if (value instanceof Boolean)
-						type = "bool";
-					else
-						if (value instanceof Enum)
-							type = "int";
+			if (value instanceof Date || value instanceof Calendar || value instanceof java.sql.Date )
+				type = MConstants.TYPE_DATE;
+			else
+			if (value instanceof Boolean)
+				type = MConstants.TYPE_BOOL;
+			else
+				if (value instanceof Enum)
+					type = MConstants.TYPE_INT;
 		}
 		if (type == null)
-			type = "text";
+			type = MConstants.TYPE_TEXT;
 
 		log().t(type,value);
 
-		if ("text".equals(type) || "string".equals(type))
+		if (MConstants.TYPE_TEXT.equals(type) || MConstants.TYPE_STRING.equals(type))
 			out.append("'").append(compiler.escape(String.valueOf(value))).append("'");
 		else
-			if ("int".equals(type)) {
+			if (MConstants.TYPE_INT.equals(type)) {
 				if (value instanceof Enum)
 					out.append(compiler.valueToString( ((Enum<?>)value).ordinal() ) );
 				else
 					out.append(compiler.valueToString(MCast.toint(value.toString(),0)));
 			} else
-				if ("long".equals(type))
+				if (MConstants.TYPE_LONG.equals(type))
 					out.append(compiler.valueToString(MCast.tolong(value.toString(),0)));
 				else
-					if ("float".equals(type))
-						out.append(compiler.valueToString(MCast.tofloat(value.toString(),0)));
-					else
-						if ("double".equals(type))
-							out.append(compiler.valueToString(MCast.todouble(value.toString(),0)));
-						else
-							if ("date".equals(type))
-								out.append( compiler.toSqlDateValue( MCast.objectToDate(value) ) );
-							else
-								if ("raw".equals(type))
-									out.append(compiler.valueToString(value));
-								else
-									if ("bool".equals(type))
-										out.append( compiler.toBoolValue( MCast.toboolean(value.toString(),false) ) );
-									else
-										log().w("Unknown attribute type:",type);
+				if (MConstants.TYPE_FLOAT.equals(type))
+					out.append(compiler.valueToString(MCast.tofloat(value.toString(),0)));
+				else
+				if (MConstants.TYPE_DOUBLE.equals(type))
+					out.append(compiler.valueToString(MCast.todouble(value.toString(),0)));
+				else
+				if (MConstants.TYPE_DATE.equals(type))
+					out.append( compiler.toSqlDateValue( value ) );
+				else
+				if (MConstants.TYPE_RAW.equals(type))
+					out.append(compiler.valueToString(value));
+				else
+				if (MConstants.TYPE_BOOL.equals(type))
+					out.append( compiler.toBoolValue( MCast.toboolean(value.toString(),false) ) );
+				else
+					log().w("Unknown attribute type:",type);
 	}
 
 	@Override

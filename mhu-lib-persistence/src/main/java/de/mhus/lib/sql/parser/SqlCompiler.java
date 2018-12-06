@@ -17,6 +17,7 @@ package de.mhus.lib.sql.parser;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.mhus.lib.core.MCast;
@@ -108,10 +109,25 @@ public class SqlCompiler implements  Parser, ICompiler {
 
 	/** {@inheritDoc} */
 	@Override
-	public String toSqlDateValue(Date date) {
-		return "'" + MDate.toIsoDate(date) + "'";
+	public String toSqlDateValue(Object value) {
+		if (value == null) return "null";
+		if (value instanceof Calendar)
+			return toSqlDate(((Calendar)value).getTime());
+		if (value instanceof Date)
+			return toSqlDate((Date)value);
+		if (value instanceof Number) {
+			Date date = new Date( ((Number)value).longValue() );
+			return toSqlDate(date);
+		}
+		Date date = MCast.toDate(value, null);
+		if (date == null) return "null";
+		return toSqlDate(date);
 	}
 
+	public String toSqlDate(Date date) {
+		return "'" + MDate.toIsoDate(date) + "'";
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public String valueToString(Object value) {

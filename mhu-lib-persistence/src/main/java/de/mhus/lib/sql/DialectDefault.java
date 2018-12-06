@@ -731,7 +731,8 @@ public class DialectDefault extends Dialect {
 			buffer.append("$").append(name).append('$');
 		} else
 		if (p instanceof ADynValue) {
-			buffer.append('$').append(((ADynValue)p).getName()).append('$');
+			DbManager manager = ((SqlDialectCreateContext)query.getContext()).getManager();
+			buffer.append('$').append(((ADynValue)p).getDefinition(manager)).append('$');
 		} else
 		if (p instanceof AEnumFix) {
 			buffer.append(((AEnumFix)p).getValue().ordinal());
