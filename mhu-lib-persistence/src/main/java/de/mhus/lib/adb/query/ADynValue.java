@@ -114,8 +114,21 @@ public class ADynValue extends AAttribute {
 						Class<?> fType = field.getType();
 						if (Date.class.isAssignableFrom(fType))
 							t = MConstants.TYPE_DATE;
+						else
 						if (String.class.isAssignableFrom(fType))
 							t = MConstants.TYPE_TEXT;
+						else
+						if (int.class == fType || short.class == fType || byte.class == fType || Integer.class.isAssignableFrom(fType) || Short.class.isAssignableFrom(fType) || Byte.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_INT;
+						else
+						if (long.class == fType || char.class == fType || Long.class.isAssignableFrom(fType) || Character.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_LONG;
+						else
+						if (double.class == fType || Double.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_DOUBLE;
+						else
+						if (float.class == fType || Float.class.isAssignableFrom(fType))
+							t = MConstants.TYPE_FLOAT;
 					}
 				}
 			}		

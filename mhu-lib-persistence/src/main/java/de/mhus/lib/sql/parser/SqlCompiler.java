@@ -130,24 +130,6 @@ public class SqlCompiler implements  Parser, ICompiler {
 	
 	/** {@inheritDoc} */
 	@Override
-	public String valueToString(Object value) {
-		return MCast.objectToString(value);
-	}
-
-	@Override
-	public String valueToNumber(Object value) {
-		if (value == null) return "0";
-		if (value instanceof Date) {
-			return String.valueOf(((Date)value).getTime());
-		}
-		if (value instanceof Calendar) {
-			return String.valueOf(((Calendar)value).getTimeInMillis());
-		}
-		return MCast.objectToString(value);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String escape(String text) {
 		return MSql.escape(text);
 	}

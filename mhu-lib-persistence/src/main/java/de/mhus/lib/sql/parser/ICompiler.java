@@ -15,6 +15,10 @@
  */
 package de.mhus.lib.sql.parser;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.parser.ParsingPart;
 
 public interface ICompiler {
@@ -23,12 +27,42 @@ public interface ICompiler {
 
 	ParsingPart compileFunction(FunctionPart function);
 
-	String toSqlDateValue(Object value);
+	default String toSqlDateValue(Object string) {
+		return "'" + MCast.toString(string) + "'";
+	}
 
-	String valueToString(Object value);
+	default String valueToString(Object value) {
+		return MCast.objectToString(value);
+	}
 
-	String valueToNumber(Object value);
+	default String valueToNumber(Object value) {
+		if (value == null) return "0";
+		if (value instanceof Date) {
+			return String.valueOf(((Date)value).getTime());
+		}
+		if (value instanceof Calendar) {
+			return String.valueOf(((Calendar)value).getTimeInMillis());
+		}
+		if (value instanceof Number) {
+			return String.valueOf(((Number)value).longValue());
+		}
+		return MCast.objectToString(value);
+	}
 	
+	default String valueToFloating(Object value) {
+		if (value == null) return "0";
+		if (value instanceof Date) {
+			return String.valueOf(((Date)value).getTime());
+		}
+		if (value instanceof Calendar) {
+			return String.valueOf(((Calendar)value).getTimeInMillis());
+		}
+		if (value instanceof Number) {
+			return String.valueOf(((Number)value).doubleValue());
+		}
+		return MCast.objectToString(value);
+	}
+
 	String escape(String text);
 
 	String toBoolValue(boolean value);

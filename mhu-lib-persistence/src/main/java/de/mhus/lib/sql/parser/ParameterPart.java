@@ -83,6 +83,15 @@ public class ParameterPart extends StringParsingPart {
 		if (attribute.length > 1 && !MString.isEmptyTrim(attribute[1])) {
 			type = attribute[1];
 		} else {
+			if (value instanceof Integer || value instanceof Short || value instanceof Byte)
+				type = MConstants.TYPE_INT;
+			else 
+			if (value instanceof Long || value instanceof Character)
+				type = MConstants.TYPE_LONG;
+			else 
+			if (value instanceof Double || value instanceof Float)
+				type = MConstants.TYPE_DOUBLE;
+			else 
 			if (value instanceof Number || value instanceof Raw)
 				type = MConstants.TYPE_RAW;  // direct toString() operation (via compiler request)
 			else
@@ -107,16 +116,13 @@ public class ParameterPart extends StringParsingPart {
 				if (value instanceof Enum)
 					out.append(compiler.valueToNumber( ((Enum<?>)value).ordinal() ) );
 				else
-					out.append(compiler.valueToNumber(MCast.toint(value.toString(),0)));
+					out.append(compiler.valueToNumber(value));
 			} else
 				if (MConstants.TYPE_LONG.equals(type))
-					out.append(compiler.valueToNumber(MCast.tolong(value.toString(),0)));
+					out.append(compiler.valueToNumber(value));
 				else
-				if (MConstants.TYPE_FLOAT.equals(type))
-					out.append(compiler.valueToNumber(MCast.tofloat(value.toString(),0)));
-				else
-				if (MConstants.TYPE_DOUBLE.equals(type))
-					out.append(compiler.valueToNumber(MCast.todouble(value.toString(),0)));
+				if (MConstants.TYPE_FLOAT.equals(type) || MConstants.TYPE_DOUBLE.equals(type))
+					out.append(compiler.valueToFloating(value));
 				else
 				if (MConstants.TYPE_DATE.equals(type))
 					out.append( compiler.toSqlDateValue( value ) );
