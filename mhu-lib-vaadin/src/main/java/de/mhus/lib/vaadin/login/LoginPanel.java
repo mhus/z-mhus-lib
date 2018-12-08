@@ -32,6 +32,7 @@ import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.vaadin.ui.HelpManager;
 
+@SuppressWarnings("deprecation")
 public class LoginPanel extends VerticalLayout implements MNlsProvider {
 
 	private static final long serialVersionUID = 1L;

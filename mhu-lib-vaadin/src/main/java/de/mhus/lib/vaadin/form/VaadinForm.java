@@ -60,7 +60,8 @@ public class VaadinForm extends VerticalLayout {
 			form.setInformationPane(informationPane);
 			addComponent(informationPane);
 			setExpandRatio(informationPane, 0);
-			informationPane.setHeight("100px");
+			int h = form.getModel().getInt("showInformationHeight", 0);
+			informationPane.setHeight(h > 0 ? h + "px" : "100px");
 			informationPane.setWidth("100%");
 		}
 		if (builder == null)

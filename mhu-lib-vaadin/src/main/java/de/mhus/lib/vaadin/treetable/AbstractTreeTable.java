@@ -17,6 +17,7 @@ package de.mhus.lib.vaadin.treetable;
 
 import com.vaadin.v7.ui.TreeTable;
 
+@SuppressWarnings("deprecation")
 public class AbstractTreeTable extends TreeTable {
 
 	private static final long serialVersionUID = 1L;

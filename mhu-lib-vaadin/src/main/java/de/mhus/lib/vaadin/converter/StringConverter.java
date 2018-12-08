@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import com.vaadin.v7.data.util.converter.Converter;
 
+@SuppressWarnings("deprecation")
 public class StringConverter implements Converter<String, String> {
 
 	private static final long serialVersionUID = 1L;

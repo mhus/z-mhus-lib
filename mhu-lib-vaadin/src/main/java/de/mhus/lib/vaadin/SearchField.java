@@ -28,6 +28,7 @@ import de.mhus.lib.core.util.FilterRequest;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsProvider;
 
+@SuppressWarnings("deprecation")
 public class SearchField extends HorizontalLayout {
 
 	private static final long serialVersionUID = 1L;

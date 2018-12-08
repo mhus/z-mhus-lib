@@ -49,7 +49,7 @@ import de.mhus.lib.vaadin.converter.LongPrimitiveConverter;
 import de.mhus.lib.vaadin.converter.SqlDateConverter;
 import de.mhus.lib.vaadin.converter.SqlTimeConverter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial","deprecation"})
 public class MhuTable extends ExpandingTable {
 	
 	private static final long serialVersionUID = 1L;

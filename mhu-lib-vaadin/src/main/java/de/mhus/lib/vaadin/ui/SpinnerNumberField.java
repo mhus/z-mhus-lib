@@ -18,6 +18,7 @@ package de.mhus.lib.vaadin.ui;
 import com.vaadin.v7.data.validator.AbstractStringValidator;
 import com.vaadin.v7.ui.TextField;
 
+@SuppressWarnings("deprecation")
 public class SpinnerNumberField<T> extends TextField {
 
 	/**

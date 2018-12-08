@@ -26,6 +26,7 @@ import de.mhus.lib.form.UiComponent;
 import de.mhus.lib.form.definition.FmNumber;
 import de.mhus.lib.vaadin.ui.SpinnerNumberField;
 
+@SuppressWarnings("deprecation")
 public class UiNumber extends UiVaadin {
 
 	private String type;

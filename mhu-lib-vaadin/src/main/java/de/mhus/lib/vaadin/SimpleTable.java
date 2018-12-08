@@ -23,6 +23,7 @@ import com.vaadin.v7.data.util.IndexedContainer;
 
 import de.mhus.lib.core.logging.MLogUtil;
 
+@SuppressWarnings("deprecation")
 public class SimpleTable extends ExpandingTable {
 
 	private static final long serialVersionUID = 1L;

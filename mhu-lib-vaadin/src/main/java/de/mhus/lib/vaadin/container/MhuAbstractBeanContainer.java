@@ -81,6 +81,7 @@ import de.mhus.lib.vaadin.container.MhuBeanItem.PojoPropertyDescriptor;
  * 
  * @since 6.5
  */
+@SuppressWarnings("deprecation")
 public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
         AbstractInMemoryContainer<IDTYPE, String, MhuBeanItem<BEANTYPE>> implements
         Filterable, SimpleFilterable, Sortable, ValueChangeListener,
@@ -448,7 +449,6 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyId
      *            The id of the property
      */
-    @SuppressWarnings("deprecation")
 	private void addValueChangeListener(Item item, Object propertyId) {
         Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
@@ -468,7 +468,6 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @param propertyId
      *            The id of the property
      */
-    @SuppressWarnings("deprecation")
 	private void removeValueChangeListener(Item item, Object propertyId) {
         Property<?> property = item.getItemProperty(propertyId);
         if (property instanceof ValueChangeNotifier) {
@@ -814,7 +813,7 @@ public abstract class MhuAbstractBeanContainer<IDTYPE, BEANTYPE> extends
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     *             #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)
      **/
     @Deprecated
     @Override

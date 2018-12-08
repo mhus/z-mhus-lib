@@ -30,6 +30,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 import de.mhus.lib.core.MString;
 
+@SuppressWarnings("deprecation")
 public class HelpNavigation extends HorizontalLayout {
 	
 	private static final long serialVersionUID = 1L;

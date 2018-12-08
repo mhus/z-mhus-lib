@@ -27,6 +27,7 @@ import de.mhus.lib.form.DataSource;
 import de.mhus.lib.form.Item;
 import de.mhus.lib.form.UiComponent;
 
+@SuppressWarnings("deprecation")
 public class UiCombobox extends UiVaadin {
 
 	@Override

@@ -80,7 +80,7 @@ import de.mhus.lib.vaadin.container.MhuBeanItem.PojoPropertyDescriptor;
  * 
  * @since 5.4
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial","deprecation"})
 public class MhuBeanItemContainer<BEANTYPE> extends
         MhuAbstractBeanContainer<BEANTYPE, BEANTYPE> {
 
@@ -292,7 +292,7 @@ public class MhuBeanItemContainer<BEANTYPE> extends
      * @param newItemId
      *            the bean (of type BT) to add (not null)
      * 
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
+     * com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -325,7 +325,7 @@ public class MhuBeanItemContainer<BEANTYPE> extends
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
-     * @see com.vaadin.data.Container#addItem(Object)
+     * com.vaadin.data.Container#addItem(Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -338,7 +338,7 @@ public class MhuBeanItemContainer<BEANTYPE> extends
      * 
      * The bean is used both as the item contents and as the item identifier.
      * 
-     * @see com.vaadin.data.Container#addItem(Object)
+     * com.vaadin.data.Container#addItem(Object)
      */
     @Override
     public MhuBeanItem<BEANTYPE> addBean(BEANTYPE bean) {

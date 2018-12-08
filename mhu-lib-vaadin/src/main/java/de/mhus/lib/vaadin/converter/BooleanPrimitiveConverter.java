@@ -21,6 +21,7 @@ import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 
+@SuppressWarnings("deprecation")
 public class BooleanPrimitiveConverter implements Converter<String, Boolean> {
 
 	private static final long serialVersionUID = 1L;

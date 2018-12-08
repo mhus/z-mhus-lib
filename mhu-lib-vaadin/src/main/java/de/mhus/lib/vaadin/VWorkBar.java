@@ -30,6 +30,7 @@ import com.vaadin.v7.ui.Label;
 
 import de.mhus.lib.core.util.Pair;
 
+@SuppressWarnings("deprecation")
 public abstract class VWorkBar extends HorizontalLayout {
 
 	private static final long serialVersionUID = 1L;

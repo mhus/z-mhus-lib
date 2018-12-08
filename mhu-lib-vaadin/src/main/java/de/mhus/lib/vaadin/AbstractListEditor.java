@@ -47,6 +47,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.form.MutableMForm;
 import de.mhus.lib.vaadin.form.VaadinPojoForm;
 
+@SuppressWarnings("deprecation")
 public abstract class AbstractListEditor<E> extends VerticalLayout implements MNlsProvider, ILog {
 
 	/**

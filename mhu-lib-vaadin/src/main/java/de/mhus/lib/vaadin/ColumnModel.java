@@ -22,6 +22,7 @@ import de.mhus.lib.annotations.vaadin.Column;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.vaadin.converter.ObjectConverter;
 
+@SuppressWarnings("deprecation")
 public class ColumnModel {
 
 	private Table table;

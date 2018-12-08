@@ -24,6 +24,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("deprecation")
 public class MVaadin {
 	
 	public static boolean closeDialog(AbstractComponent component) {

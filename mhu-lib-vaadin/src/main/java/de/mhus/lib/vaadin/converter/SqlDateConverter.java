@@ -23,6 +23,7 @@ import com.vaadin.v7.data.util.converter.Converter;
 
 import de.mhus.lib.core.MCast;
 
+@SuppressWarnings("deprecation")
 public class SqlDateConverter implements Converter<String, Date> {
 
 	private static final long serialVersionUID = 1L;

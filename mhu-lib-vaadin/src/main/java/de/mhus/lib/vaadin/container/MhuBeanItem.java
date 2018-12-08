@@ -61,7 +61,7 @@ import de.mhus.lib.core.pojo.PojoParser;
  * @param <BT> 
  * @since 3.0
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial","deprecation"})
 public class MhuBeanItem<BT> extends PropertysetItem {
 
     /**
