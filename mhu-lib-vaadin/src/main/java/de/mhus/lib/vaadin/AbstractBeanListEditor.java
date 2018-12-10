@@ -164,7 +164,7 @@ public abstract class AbstractBeanListEditor<E> extends AbstractListEditor<E> {
 		boolean ok = false;
 		boolean done = false;
 		
-		for (String mask : filter.getGeneralFilters()) {
+		for (String mask : filter.getText()) {
 			if (MString.isSet(mask)) {
 				done = true;
 				for (PojoAttribute<?> attr : beanModel) {

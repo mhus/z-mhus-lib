@@ -15,12 +15,14 @@
  */
 package de.mhus.lib.core.util;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 
@@ -41,8 +43,12 @@ public class FilterRequest {
 		for (String part : text.split(" ")) {
 			part = part.trim();
 			if (MString.isSet(part)) {
-				if (part.indexOf(':') > 0) {
-					facets.put(MString.beforeIndex(part, ':'), MString.afterIndex(part, ':'));
+				if (part.startsWith("'") && part.endsWith("'") && part.length() > 1) {
+					part = MUri.decode(part.substring(1,part.length()-1));
+				}
+				int p = part.indexOf(':');
+				if (p > 0) {
+					facets.put(part.substring(0, p), part.substring(p+1));
 				} else {
 					lText.add(part);
 				}
@@ -51,7 +57,7 @@ public class FilterRequest {
 		this.text = lText.toArray(new String[lText.size()]);
 	}
 	
-	public String[] getGeneralFilters() {
+	public String[] getText() {
 		if (text == null) return new String[0];
 		return text;
 	}
@@ -65,6 +71,26 @@ public class FilterRequest {
 		return facets.get(name);
 	}
 	
+	public Date getFacet(String name, Date def) {
+		if (facets == null) return def;
+		return MCast.toDate(facets.get(name), def);
+	}
+	
+	public int getFacet(String name, int def) {
+		if (facets == null) return def;
+		return MCast.toint(facets.get(name), def);
+	}
+	
+	public long getFacet(String name, long def) {
+		if (facets == null) return def;
+		return MCast.tolong(facets.get(name), def);
+	}
+	
+	public boolean getFacet(String name, boolean def) {
+		if (facets == null) return def;
+		return MCast.toboolean(facets.get(name), def);
+	}
+	
 	public Set<String> getFacetKeys() {
 		if (facets == null) return new EmptySet<String>();
 		return facets.keySet();
@@ -72,6 +98,14 @@ public class FilterRequest {
 
 	public IProperties toProperties() {
 		return new MProperties(facets);
+	}
+
+	public boolean isText() {
+		return text != null && text.length > 0;
+	}
+
+	public boolean isFacet(String key) {
+		return facets != null && facets.containsKey(key);
 	}
 
 }
