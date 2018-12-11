@@ -601,6 +601,13 @@ public class CryptTest extends TestCase {
 			String dec = Blowfish.decrypt(enc, key);
 			assertEquals(text, dec);
 		}
+		{
+			String key = "Secret!";
+			String enc = Blowfish.encrypt(text, key);
+			String dec = Blowfish.decrypt(enc, key);
+			assertEquals(text, dec);
+		}
+		
 		// https://docs.oracle.com/javase/7/docs/technotes/guides/security/SunProviders.html#importlimits
 		try {
 			String key = "create an instance of cipher";
@@ -611,6 +618,17 @@ public class CryptTest extends TestCase {
 			System.out.println("!!!! JCE not installed !!!");
 			System.out.println(e);
 		}
+		
+		{
+			String pass = "Secret!";
+			String text1 = "Acdfgtrertgfdsertfdrtytghioplkhgfdser54spoikjhgfty78kjuhX";
+			byte[] enc1 = Blowfish.encrypt(text1.getBytes(), pass);
+			byte[] enc2 = Blowfish.encrypt(text1.getBytes(), pass);
+			assertEquals(enc1.length, enc2.length);
+			for (int i = 0; i < enc1.length; i++)
+				assertEquals(enc1[i], enc2[i]);
+		}
+		
 	}
 
 	public void testTwofish() throws Exception {

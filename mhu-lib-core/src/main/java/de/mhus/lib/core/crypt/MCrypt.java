@@ -496,6 +496,8 @@ public class MCrypt {
 
 	/**
 	 * Encode the byte array synchronous using the pass phrase.
+	 * The encryption is not stable, two encryptions of the same 
+	 * sample will result in different encryptions.
 	 * 
 	 * @param passphrase
 	 * @param in
@@ -655,5 +657,5 @@ public class MCrypt {
 		System.arraycopy(withPepper, 0, out, 0, withPepper.length);
 		return withPepper;
 	}
-
+	
 }
