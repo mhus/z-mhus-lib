@@ -58,17 +58,17 @@ public class GpgEncryptedMail implements Mail {
 		return this;
 	}
 	
-	public GpgEncryptedMail setTo(String[] to) {
+	public GpgEncryptedMail setTo(String ... to) {
 		this.to = to;
 		return this;
 	}
 	
-	public GpgEncryptedMail setCc(String[] cc) {
+	public GpgEncryptedMail setCc(String ... cc) {
 		this.cc = cc;
 		return this;
 	}
 
-	public GpgEncryptedMail setBcc(String[] bcc) {
+	public GpgEncryptedMail setBcc(String ... bcc) {
 		this.bcc = bcc;
 		return this;
 	}

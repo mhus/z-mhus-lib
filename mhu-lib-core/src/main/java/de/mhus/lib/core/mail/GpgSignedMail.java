@@ -87,17 +87,17 @@ public class GpgSignedMail implements Mail {
 		return this;
 	}
 	
-	public GpgSignedMail setTo(String[] to) {
+	public GpgSignedMail setTo(String ... to) {
 		this.to = to;
 		return this;
 	}
 	
-	public GpgSignedMail setCc(String[] cc) {
+	public GpgSignedMail setCc(String ... cc) {
 		this.cc = cc;
 		return this;
 	}
 
-	public GpgSignedMail setBcc(String[] bcc) {
+	public GpgSignedMail setBcc(String ... bcc) {
 		this.bcc = bcc;
 		return this;
 	}

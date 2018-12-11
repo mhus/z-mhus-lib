@@ -44,17 +44,17 @@ public class HtmlMail extends MLog implements Mail {
 		return this;
 	}
 	
-	public HtmlMail setTo(String[] to) {
+	public HtmlMail setTo(String ... to) {
 		this.to = to;
 		return this;
 	}
 	
-	public HtmlMail setCc(String[] cc) {
+	public HtmlMail setCc(String ... cc) {
 		this.cc = cc;
 		return this;
 	}
 
-	public HtmlMail setBcc(String[] bcc) {
+	public HtmlMail setBcc(String ... bcc) {
 		this.bcc = bcc;
 		return this;
 	}
@@ -69,7 +69,7 @@ public class HtmlMail extends MLog implements Mail {
 		return this;
 	}
 	
-	public HtmlMail setAttachments(MailAttachment[] attachments) {
+	public HtmlMail setAttachments(MailAttachment ... attachments) {
 		this.attachments = attachments;
 		return this;
 	}

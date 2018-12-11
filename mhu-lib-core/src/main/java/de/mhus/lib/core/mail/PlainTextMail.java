@@ -40,17 +40,17 @@ public class PlainTextMail extends MLog implements Mail {
 		return this;
 	}
 	
-	public PlainTextMail setTo(String[] to) {
+	public PlainTextMail setTo(String ... to) {
 		this.to = to;
 		return this;
 	}
 	
-	public PlainTextMail setCc(String[] cc) {
+	public PlainTextMail setCc(String ... cc) {
 		this.cc = cc;
 		return this;
 	}
 
-	public PlainTextMail setBcc(String[] bcc) {
+	public PlainTextMail setBcc(String ... bcc) {
 		this.bcc = bcc;
 		return this;
 	}
