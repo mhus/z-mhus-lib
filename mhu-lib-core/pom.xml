@@ -60,7 +60,7 @@
 	            </Private-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
-				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
+				<Embed-Dependency>byte-buddy,byte-buddy-agent,jline</Embed-Dependency>
 
 	          </instructions>
 	        </configuration>
