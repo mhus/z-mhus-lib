@@ -15,6 +15,9 @@
  */
 package de.mhus.lib.core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,6 +56,12 @@ public class MJson {
 	private static JsonFactory factory = new JsonFactory();
 
 	
+	public static void save(JsonNode json, File file) throws JsonGenerationException, JsonMappingException, IOException {
+		FileOutputStream os = new FileOutputStream(file);
+		save(json, os);
+		os.close();
+	}
+	
 	public static void save(JsonNode json, Writer w) throws JsonGenerationException, JsonMappingException, IOException {
 		mapper.writeValue(w,json);
 	}
@@ -60,7 +69,16 @@ public class MJson {
 	public static void save(JsonNode json, OutputStream w) throws JsonGenerationException, JsonMappingException, IOException {
 		mapper.writeValue(w,json);
 	}
-	
+
+	public static JsonNode load(File file) throws JsonProcessingException, IOException {
+		FileInputStream is = new FileInputStream(file);
+		try {
+			return load(is);
+		} finally {
+			is.close();
+		}
+	}
+
 	public static JsonNode load(InputStream r) throws JsonProcessingException, IOException {
 		JsonParser parser = factory.createJsonParser(r);
 		JsonNode in = mapper.readTree(parser);
