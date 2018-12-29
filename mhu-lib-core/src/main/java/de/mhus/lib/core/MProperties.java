@@ -597,6 +597,11 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		return out;
 	}
 	
+	public void putAll(String prefix, Map<?,?> map) {
+		for (Entry<?, ?> entry : map.entrySet())
+			put(String.valueOf(prefix + entry.getKey()), entry.getValue());
+	}
+	
 	@Override
 	public int size() {
 		return properties.size();
