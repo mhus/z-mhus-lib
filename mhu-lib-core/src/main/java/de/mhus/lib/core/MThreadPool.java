@@ -123,6 +123,10 @@ public class MThreadPool extends MObject implements Runnable {
 	private void taskFinish() {
 		tc = null;
 	}
+	
+	public boolean isAlive() {
+		return tc != null;
+	}
 
 	public void taskError(Throwable t) {
 

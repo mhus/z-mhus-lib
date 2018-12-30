@@ -18,6 +18,7 @@ package de.mhus.lib.core;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.lang.Checker;
 import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -217,6 +218,80 @@ public class MThread extends MObject implements Runnable {
 		}
 	}
 
+	/**
+	 * Like getWithTimeout but executed in a separate task, this means unblocking.
+	 * 
+	 * @param provider
+	 * @param timeout
+	 * @param nullAllowed
+	 * @return The requested value
+	 */
+	public static <T> T getAsynchronWithTimeout( final ValueProvider<T> provider, long timeout, boolean nullAllowed) {
+		long start = System.currentTimeMillis();
+		final Value<T> value = new Value<>();
+		MThreadPool t = new MThreadPool(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						T val = provider.getValue();
+						if (nullAllowed || val != null) {
+							value.value = val;
+							return;
+						}
+					} catch (Throwable t) {}
+					if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+					sleep(200);
+				}
+			}
+		});
+		t.start();
+		while (t.isAlive()) {
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+			sleep(200);
+		}
+		return value.value;
+	}
+
+	/**
+	 * Calls the provider once and will return the result. The provider is called in a separate thread to 
+	 * 
+	 * @param provider
+	 * @param timeout
+	 * @return The requested value
+	 * @throws Exception
+	 */
+	public static <T> T getAsynchronWithTimeout( final ValueProvider<T> provider, long timeout) throws Exception {
+		long start = System.currentTimeMillis();
+		final Value<T> value = new Value<>();
+		final Value<Throwable> error = new Value<>();
+		MThreadPool t = new MThreadPool(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					value.value = provider.getValue();
+				} catch (Throwable t) {
+					error.value = t;
+				}
+			}
+		});
+		t.start();
+		while (t.isAlive()) {
+			if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
+			sleep(200);
+		}
+		if (error.value != null) {
+			if (error.value instanceof RuntimeException)
+				throw (RuntimeException)error.value;
+			if (error.value instanceof Exception)
+				throw (Exception)error.value;
+			throw new Exception(error.value);
+		}
+		return value.value;
+	}
+	
 	/**
 	 * Wait for the checker to return true or throw an TimeoutRuntimeException on timeout. A exception
 	 * in the checker will be ignored.
