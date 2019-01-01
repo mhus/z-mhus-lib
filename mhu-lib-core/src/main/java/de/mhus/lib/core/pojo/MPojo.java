@@ -630,7 +630,7 @@ public class MPojo {
 	public static String toAttributeName(Identifier ... idents  ) {
 		if (idents == null) return null;
 		if (idents.length == 0) return "";
-		if (idents.length == 1) return idents[0].toString();
+		if (idents.length == 1) return idents[0].getPojoName();
 		StringBuilder out = new StringBuilder();
 		for (Identifier ident : idents) {
 			if (out.length() > 0) out.append('_');
