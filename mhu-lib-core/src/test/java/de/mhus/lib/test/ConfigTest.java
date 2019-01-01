@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import de.mhus.lib.core.MString;
@@ -31,10 +32,11 @@ import de.mhus.lib.core.config.PropertiesConfig;
 import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ConfigTest extends TestCase {
+public class ConfigTest {
 
+	@Test
 	public void testProperties() throws MException {
 		Properties p = new Properties();
 		p.setProperty("test1", "wow");
@@ -45,6 +47,7 @@ public class ConfigTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testXml() throws Exception {
 		
 		String xml = "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
@@ -56,6 +59,7 @@ public class ConfigTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testJson() throws Exception {
 		
 		String json = MString.replaceAll("{'test1':'wow','test2':'alf'," +
@@ -70,6 +74,7 @@ public class ConfigTest extends TestCase {
 		derTeschd(c, true);
 	}
 
+	@Test
 	public void testHash() throws Exception {
 	
 		HashConfig c = new HashConfig();
@@ -88,6 +93,7 @@ public class ConfigTest extends TestCase {
 		derTeschd(c, true);
 	}
 	
+	@Test
 	public void testClone() throws Exception {
 		
 		ConfigBuilder builder = new ConfigBuilder();
@@ -113,6 +119,7 @@ public class ConfigTest extends TestCase {
 		
 	}
 	
+	@Test
 	private void derTeschd(IConfig c, boolean testsub) throws MException {
 		
 		assertEquals("wow", c.getString("test1", "no") );

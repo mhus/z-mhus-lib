@@ -16,10 +16,13 @@
 package de.mhus.lib.test;
 
 import de.mhus.lib.core.MPassword;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MPasswordTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class MPasswordTest {
+
+	@Test
 	public void testPassword() {
 		String pw = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-_.:,;+*#<>";
 		System.out.println(MPassword.encode(pw));

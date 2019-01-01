@@ -17,13 +17,16 @@ package de.mhus.lib.test;
 
 import java.util.LinkedList;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.base.AnnotationInjectStrategy;
 import de.mhus.lib.core.base.BaseByThreadStrategy;
-import junit.framework.TestCase;
+//import static org.junit.jupiter.api.Assertions.*;
 
-public class MBaseTest extends TestCase {
+public class MBaseTest {
 	
+	@Test
 	public void testInject() {
 		MApi.get().getBaseControl().setFindStrategy(new BaseByThreadStrategy());
 		MApi.get().getBaseControl().setInjectStrategy(new AnnotationInjectStrategy());

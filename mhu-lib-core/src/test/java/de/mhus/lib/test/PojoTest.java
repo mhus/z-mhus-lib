@@ -24,11 +24,14 @@ import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PojoTest extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class PojoTest {
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFunctionStrategy() throws Exception {
 		
 		PojoExample example = new PojoExample();
@@ -82,6 +85,7 @@ public class PojoTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "unchecked" })
+	@Test
 	public void testFunctionUpper() {
 		
 		PojoExample example = new PojoExample();
@@ -105,6 +109,7 @@ public class PojoTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
+	@Test
 	public void testAttributeStrategy() throws Exception {
 		
 		PojoExample example = new PojoExample();
@@ -149,6 +154,7 @@ public class PojoTest extends TestCase {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
+	@Test
 	public void testDefaultStrategy() throws Exception {
 		
 		PojoExample example = new PojoExample();

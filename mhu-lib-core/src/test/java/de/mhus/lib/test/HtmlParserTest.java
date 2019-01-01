@@ -22,12 +22,15 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.HtmlParser;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HtmlParserTest extends TestCase {
+public class HtmlParserTest {
 
+	@Test
 	public void testParser() throws IOException {
 		HtmlParser parser = new HtmlParser();
 		parser.setTrim(true);

@@ -17,13 +17,16 @@ package de.mhus.lib.test;
 
 import java.util.HashMap;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.core.matcher.Matcher;
 import de.mhus.lib.errors.MException;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MatcherTest extends TestCase {
+public class MatcherTest {
 
+	@Test
 	public void testSimple() throws MException {
 		{
 			Matcher filter = new Matcher(".*aaa.*");
@@ -97,6 +100,7 @@ public class MatcherTest extends TestCase {
 
 	}
 
+	@Test
 	public void testBrackets() throws MException {
 		{
 			Matcher filter = new Matcher("not (.*aaa.* or .*bbb.*)");
@@ -139,6 +143,7 @@ public class MatcherTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testPatterns() throws MException {
 		{
 			Matcher filter = new Matcher("fs *aaa*");
@@ -157,6 +162,7 @@ public class MatcherTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testCondition() throws MException {
 		HashMap<String, Object> val = new HashMap<String,Object>();
 		val.put("param1", "aloa");

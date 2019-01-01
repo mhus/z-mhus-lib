@@ -16,10 +16,13 @@
 package de.mhus.lib.test;
 
 import de.mhus.lib.core.MArgs;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MArgsTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class MArgsTest {
+
+	@Test
 	public void testDefaultParsing() {
 		String[] args = new String[] { "a", "b", "c" };
 		MArgs ma = new MArgs(args);
@@ -27,6 +30,7 @@ public class MArgsTest extends TestCase {
 		assertTrue( ma.getValues(MArgs.DEFAULT).length == 3 );
 	}
 	
+	@Test
 	public void testKeyParsing() {
 		String[] args = new String[] { "-a", "aa", "-a", "bb", "-a", "cc" };
 		MArgs ma = new MArgs(args);
@@ -34,6 +38,7 @@ public class MArgsTest extends TestCase {
 		assertTrue( ma.getValues("a").length == 3 );
 	}
 	
+	@Test
 	public void testMultiParsing() {
 		String[] args = new String[] { "default", "-a", "aa", "default", "-a", "bb", "-b", "cc" };
 		MArgs ma = new MArgs(args);
@@ -43,6 +48,7 @@ public class MArgsTest extends TestCase {
 		assertTrue( ma.getValues("b").length == 1 );
 	}
 	
+	@Test
 	public void testOrder() {
 		String[] args = new String[] { "-a", "zz", "-a", "bb", "-a", "aa" };
 		MArgs ma = new MArgs(args);

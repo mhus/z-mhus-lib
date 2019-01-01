@@ -18,12 +18,15 @@ package de.mhus.lib.test;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MValidator;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MValidatorTest extends TestCase {
+public class MValidatorTest {
 
+	@Test
 	public void testEMail() {
 		assertEquals(false, MValidator.isEmailAddress(null));
 		assertEquals(false, MValidator.isEmailAddress(""));
@@ -35,6 +38,7 @@ public class MValidatorTest extends TestCase {
 		assertEquals(true, MValidator.isEmailAddress("mike@alababa.aha.soso.local"));
 	}
 	
+	@Test
 	public void testZip() {
 		Locale l = new Locale("de","DE");
 		assertEquals(true, MValidator.isZipCode(l, "04212"));
@@ -50,12 +54,14 @@ public class MValidatorTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testNames() {
 		assertEquals(true, MValidator.isFirstName("Güven"));
 		assertEquals(true, MValidator.isFirstName("André"));
 		assertEquals(true, MValidator.isLastName("Müller"));
 	}
 
+	@Test
 	public void testPhone() {
 		assertEquals(true, MValidator.isPhoneNumber("+49 40 43214") );
 		assertEquals(true, MValidator.isPhoneNumber("040-43214") );
@@ -74,6 +80,7 @@ public class MValidatorTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testSqlColumnName() throws SQLException {
 		MSql.column("_servus_mr_nobody");
 		MSql.column("_servus_mr_nobody0");
@@ -109,6 +116,7 @@ public class MValidatorTest extends TestCase {
 		} catch (SQLException e) {}
 	}
 	
+	@Test
 	public void testPassword() {
 		assertTrue(MValidator.isPassword("Hello4Everyone_", 8, true, true, "alf"));
 		assertFalse(MValidator.isPassword("HelloEveryone_", 8, true, true, "alf"));
@@ -117,6 +125,7 @@ public class MValidatorTest extends TestCase {
 		assertFalse(MValidator.isPassword("asdf1234", 8, true, false));
 	}
 	
+	@Test
 	public void testAZ09() {
 		assertTrue(MValidator.isAZ09("abcdefghijklmnopqrszuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"));
 		assertFalse(MValidator.isAZ09("abcdefghijklmnopqrszuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"));

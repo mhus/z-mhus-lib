@@ -19,11 +19,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MCollection;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MCollectionTest extends TestCase {
+public class MCollectionTest {
 
+	@Test
 	public void testArrayManipulation() {
 		{
 			String[] array = new String[] {"a","b","c"};
@@ -91,6 +94,7 @@ public class MCollectionTest extends TestCase {
 			}
 	}
 	
+	@Test
 	public void testListSort() {
 		LinkedList<String> l = new LinkedList<>();
 		l.add("z");
@@ -102,6 +106,7 @@ public class MCollectionTest extends TestCase {
 		assertEquals("z", s.get(2));
 	}
 	
+	@Test
 	public void testStringList() {
 		String list = null;
 		char S = ',';

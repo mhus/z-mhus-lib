@@ -17,12 +17,15 @@ package de.mhus.lib.test;
 
 import java.io.File;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.util.MUri;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MUriTest extends TestCase {
+public class MUriTest {
 
+	@Test
 	public void testParser() {
 		{ // full
 			MUri uri = MUri.toUri("http://user:pass@domain.com/path1/path2;param1;param2?q1=abc&q2=def#fragment");
@@ -154,6 +157,7 @@ public class MUriTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testFile() {
 		{
 			File f = new File("/demo/demo.txt");
@@ -173,6 +177,7 @@ public class MUriTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testSpecial() {
 		{
 			MUri uri = MUri.toUri("xdb:adb/test/local");

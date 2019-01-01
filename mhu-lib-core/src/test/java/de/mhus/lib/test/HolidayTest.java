@@ -19,13 +19,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.calendar.Holidays;
 import de.mhus.lib.errors.NotFoundException;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HolidayTest extends TestCase {
+public class HolidayTest {
 
 	@SuppressWarnings("deprecation")
 	@Test

@@ -22,17 +22,21 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MCastTest extends TestCase {
+public class MCastTest {
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeAll
+	public static void setUp() throws Exception {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 	
+	@Test
 	public void testCurrencyString() {
 		
 		String out = null;
@@ -52,6 +56,7 @@ public class MCastTest extends TestCase {
 
 	}
 
+	@Test
 	public void testToDate() {
 		
 		TimeZone.setDefault(TimeZone.getTimeZone("GMT")); 
@@ -204,7 +209,7 @@ public class MCastTest extends TestCase {
 
 	}
 	
-	
+	@Test
 	public void testBinary() throws UnsupportedEncodingException {
 		
 		byte[] b = new byte[256];
@@ -218,6 +223,7 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testGenericTypeCast() {
 		boolean b = (boolean) MCast.toType("true", boolean.class, null);
 		assertTrue(b);
@@ -234,6 +240,7 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testLocalFormating() {
 
 		System.out.println(TimeZone.getDefault());
@@ -263,6 +270,7 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testDateTransform() {
 		String str = MDate.transform("dd.MM.yyyy", "2016-07-20", null );
 //		String str = new java.text.SimpleDateFormat("dd.MM.yyyy").format( de.mhus.lib.core.MDate.toDate("2016-07-20", null) );
@@ -270,6 +278,7 @@ public class MCastTest extends TestCase {
 		assertEquals("20.07.2016", str);
 	}
 	
+	@Test
 	public void testDouble() {
 		Locale def = Locale.getDefault();
 		Locale.setDefault(Locale.GERMANY);
@@ -288,6 +297,7 @@ public class MCastTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testLongToBytes() {
 		System.out.println(">>> testLongToBytes");
 		{
@@ -316,6 +326,7 @@ public class MCastTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDateToString() {
 		{
 			Date date = MDate.toDate("01.02.2003", null);

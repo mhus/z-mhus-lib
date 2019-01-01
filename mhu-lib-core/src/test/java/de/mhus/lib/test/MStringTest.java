@@ -16,10 +16,13 @@
 package de.mhus.lib.test;
 
 import de.mhus.lib.core.MString;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MStringTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class MStringTest {
+
+	@Test
 	public void testInitials() {
 		String title = " ";
 		String res = MString.findInitials(title, true, true, 0);
@@ -41,6 +44,7 @@ public class MStringTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testEncodeUnicode() {
 		{
 			String test = "Herr Müller";

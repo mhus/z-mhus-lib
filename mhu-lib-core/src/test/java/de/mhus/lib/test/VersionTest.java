@@ -15,13 +15,13 @@
  */
 package de.mhus.lib.test;
 
-import org.junit.Test;
-
 import de.mhus.lib.core.util.Version;
 import de.mhus.lib.core.util.VersionRange;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class VersionTest extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class VersionTest {
 
 	
 	@Test

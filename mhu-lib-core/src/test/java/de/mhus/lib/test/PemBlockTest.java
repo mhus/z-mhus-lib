@@ -15,14 +15,14 @@
  */
 package de.mhus.lib.test;
 
-import org.junit.Test;
-
 import de.mhus.lib.core.crypt.pem.PemBlockList;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
 import de.mhus.lib.core.parser.ParseException;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PemBlockTest extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class PemBlockTest {
 
 	@Test
 	public void testBlock() throws ParseException {

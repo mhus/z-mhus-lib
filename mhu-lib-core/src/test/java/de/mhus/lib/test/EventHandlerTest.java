@@ -17,39 +17,21 @@ package de.mhus.lib.test;
 
 import java.util.ConcurrentModificationException;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MEventHandler;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit test for simple App.
  */
-public class EventHandlerTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public EventHandlerTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( EventHandlerTest.class );
-    }
+public class EventHandlerTest {
 
     /**
      * Test registration of normal and weak listeners. Test if weak
      * listener will be removed after full gc().
      */
+	@Test
     public void testListeners()
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
@@ -76,6 +58,7 @@ public class EventHandlerTest
     /**
      * Test unregister for normal and weak listeners
      */
+	@Test
     public void testUnregister()
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>() {
@@ -101,6 +84,7 @@ public class EventHandlerTest
     /**
      * Test if weak mode is supported.
      */
+	@Test
     public void testWeakMode()
     {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
@@ -124,6 +108,7 @@ public class EventHandlerTest
     	
     }
     
+	@Test
     public void testIterator() {
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
 			@Override
@@ -145,6 +130,7 @@ public class EventHandlerTest
     	assertTrue( cnt == 2 );
     }
 
+	@Test
     public void testConcurrentModification() {
     	
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {
@@ -162,7 +148,7 @@ public class EventHandlerTest
 	    	for ( MyListener cur : eh.getListeners() ) {
 	    		cur.doIt();
 	    	}
-	    	assertTrue("Error should be thrown",false);
+	    	assertTrue(false,"Error should be thrown");
     	} catch ( ConcurrentModificationException ex ) {
     	}
     	
@@ -172,6 +158,7 @@ public class EventHandlerTest
     	
     }
     
+	@Test
     public void testFireMethod() throws SecurityException, NoSuchMethodException {
     	
     	MEventHandler<MyListener> eh = new MEventHandler<MyListener>(true) {

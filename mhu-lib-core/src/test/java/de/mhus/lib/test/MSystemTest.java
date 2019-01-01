@@ -17,13 +17,16 @@ package de.mhus.lib.test;
 
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.test.util.StringValue;
 import de.mhus.lib.test.util.Template;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MSystemTest extends TestCase {
+public class MSystemTest {
 
+	@Test
 	public void testTemplateNames() {
 		Class<?> testy = StringValue.class;
 		
@@ -36,6 +39,7 @@ public class MSystemTest extends TestCase {
 
 	}
 	
+	@Test
 	public void testCanonicalClassNames() {
 		{
 			String name = MSystem.getCanonicalClassName(String.class);

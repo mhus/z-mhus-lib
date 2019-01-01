@@ -1,10 +1,13 @@
 package de.mhus.lib.test;
 
 import de.mhus.lib.core.MTimeInterval;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MTimeIntervalTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class MTimeIntervalTest {
+
+	@Test
 	public void testParse() {
 		{
 			MTimeInterval i = new MTimeInterval("1h");
@@ -20,6 +23,7 @@ public class MTimeIntervalTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testGet() {
 		
 		MTimeInterval i = new MTimeInterval("1d 1h 5M");

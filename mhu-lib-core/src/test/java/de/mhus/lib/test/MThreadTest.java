@@ -19,13 +19,16 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MThreadDaemon;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MThreadTest extends TestCase {
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+public class MThreadTest {
 
 	protected boolean done;
 
-	
+	@Test
 	public void testThread() throws Exception {
 		
 		System.out.println(">>> Thread");
@@ -44,6 +47,7 @@ public class MThreadTest extends TestCase {
 			
 	}
 	
+	@Test
 	public void testThreadDaemon() throws Exception {
 		
 		System.out.println(">>> ThreadDaemon");
@@ -63,7 +67,7 @@ public class MThreadTest extends TestCase {
 			
 	}
 
-
+	@Test
 	public void testThreadDirect() throws Exception {
 		
 		System.out.println(">>> Thread Direct");
@@ -81,6 +85,7 @@ public class MThreadTest extends TestCase {
 			
 	}
 
+	@Test
 	public void testThreadException() throws Exception {
 		
 		System.out.println(">>> Thread Exception");
@@ -104,8 +109,8 @@ public class MThreadTest extends TestCase {
 			
 	}
 
-	@Override
-	protected void setUp() throws Exception {
+	@BeforeAll
+	public static void setUp() throws Exception {
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 	}
 

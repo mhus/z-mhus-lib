@@ -16,10 +16,13 @@
 package de.mhus.lib.test;
 
 import de.mhus.lib.core.MFile;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MFileTest extends TestCase {
+import org.junit.jupiter.api.Test;
 
+public class MFileTest {
+
+	@Test
 	public void testMimeTypes() {
 		{
 			String res = MFile.getMimeType("pdf");

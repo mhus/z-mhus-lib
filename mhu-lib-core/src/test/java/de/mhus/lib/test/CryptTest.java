@@ -24,6 +24,8 @@ import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MFile;
@@ -39,9 +41,9 @@ import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.Twofish;
 import de.mhus.lib.core.util.Lorem;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CryptTest extends TestCase {
+public class CryptTest {
 
 	final static String key2048 =
 			"-----BEGIN RSA PRIVATE KEY-----\n"+
@@ -80,6 +82,7 @@ public class CryptTest extends TestCase {
 			"yi5qv/qyAZtnn9SgaQIRAJNnH1i7zc7VZ4Zk0udBLLY=\n"+
 			"-----END RSA PRIVATE KEY-----";
 	
+	@Test
 	public void testPrivateKeyLoad() throws IOException {
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		System.out.println(pair256);
@@ -88,6 +91,7 @@ public class CryptTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testEnDeCode() throws IOException {
 		System.out.println(">>> testEnDeCode");
 		{
@@ -143,6 +147,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testEnDeCodeBinary() throws IOException {
 		System.out.println(">>> testEnDeCodeBinary");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
@@ -158,6 +163,7 @@ public class CryptTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testNegativeValue() throws Exception {
 		System.out.println(">>> testNegativeValue");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
@@ -175,6 +181,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testBase62Encode() throws IOException {
 		System.out.println(">>> testBase62Encode");
 		{
@@ -207,6 +214,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testBase62() {
 		System.out.println(">>> testBase62");
 		{
@@ -240,6 +248,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBase91Encode() throws IOException {
 		System.out.println(">>> testBase91Encode");
 		{
@@ -272,6 +281,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testBase91() {
 		System.out.println(">>> testBase91");
 		{
@@ -305,6 +315,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testCipherBlockArithmetic() {
 		System.out.println(">>> testCipherBlockArithmetic");
 		CipherBlockAdd enc = new CipherBlockAdd(255);
@@ -342,6 +353,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testCipherBlockRotate() {
 		System.out.println(">>> testCipherBlockRotate");
 		CipherBlockRotate enc = new CipherBlockRotate(255);
@@ -379,6 +391,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testUtil() throws IOException {
 		System.out.println(">>> testUtil");
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
@@ -391,6 +404,7 @@ public class CryptTest extends TestCase {
 		assertEquals(org, copy);
 	}
 	
+	@Test
 	public void testCipherStream() {
 		System.out.println(">>> testCipherStream");
 		byte[] buf = "Fischers Fritze fischt frische Fische".getBytes();
@@ -413,6 +427,7 @@ public class CryptTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testMCipherStreamSymetry() throws IOException {
 		System.out.println(">>> testMCipherStreamSymetry");
 		String pass = "aaaaaaaaaa";
@@ -476,6 +491,7 @@ public class CryptTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testMCipherStreamReal() throws IOException {
 		System.out.println(">>> testMCipherStreamReal");
 		String pass = "passphrase123";
@@ -539,6 +555,7 @@ public class CryptTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testObfuscate() {
 		System.out.println(">>> testObfuscate");
 		byte[] org = new byte[256];
@@ -549,6 +566,7 @@ public class CryptTest extends TestCase {
 			assertEquals(org[i],copy[i]);
 	}
 	
+	@Test
 	public void testEnDeDirect() throws IOException {
 		System.out.println(">>> testEnDeDirect");
 
@@ -571,12 +589,14 @@ public class CryptTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testMd5Salt() throws IOException {
 		String real = "Hello World!";
 		String md5 = MCrypt.md5WithSalt(real);
 		assertTrue(MCrypt.validateMd5WithSalt(md5, real));
 	}
 
+	@Test
 	public void testRsaBigBlocks() throws Exception {
 		String text = Lorem.create();
 		byte[] block = text.getBytes();
@@ -587,6 +607,7 @@ public class CryptTest extends TestCase {
 		assertEquals(text, text2);
 	}
 	
+	@Test
 	public void testBlowfish() throws Exception {
 		String text = Lorem.create();
 		{ 
@@ -631,6 +652,7 @@ public class CryptTest extends TestCase {
 		
 	}
 
+	@Test
 	public void testTwofish() throws Exception {
 		String text = Lorem.create();
 		{ 
@@ -656,6 +678,7 @@ public class CryptTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testPepper() {
 		{
 			String text = "";

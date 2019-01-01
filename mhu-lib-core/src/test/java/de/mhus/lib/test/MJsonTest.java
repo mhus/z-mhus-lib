@@ -23,16 +23,18 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.codehaus.jackson.JsonNode;
+import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.JacksonTransformer;
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.SimpleObjectTransformer;
 import de.mhus.lib.core.json.TransformHelper;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MJsonTest extends TestCase {
+public class MJsonTest {
 
+	@Test
 	public void testSerializerTransformations() {
 		TransformHelper helper = new TransformHelper() {
 			{
@@ -122,6 +124,7 @@ public class MJsonTest extends TestCase {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
 	public void testJacksonTransformations() {
 		TransformHelper helper = new TransformHelper() {
 			{
@@ -158,6 +161,7 @@ public class MJsonTest extends TestCase {
 		
 	}
 	
+	@Test
 	public void testSimpleTransformations() {
 		TransformHelper helper = new TransformHelper() {
 			{
@@ -174,6 +178,7 @@ public class MJsonTest extends TestCase {
 		}
 	}
 		
+	@Test
 	public void testUtility() {
 		
 		{

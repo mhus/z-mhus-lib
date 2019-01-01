@@ -2,12 +2,15 @@ package de.mhus.lib.test;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.io.StreamBuffer;
 import de.mhus.lib.core.util.ByteBuffer;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MUtilsTest extends TestCase {
+public class MUtilsTest {
 
+	@Test
 	public void testByteBuffer() {
 		ByteBuffer buffer = new ByteBuffer();
 		for (int i = 0; i < 1000; i++) { // 1024 * 10 buffer size, 1000 * 10 
@@ -30,6 +33,7 @@ public class MUtilsTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testByteStream() throws IOException {
 		StreamBuffer stream = new StreamBuffer();
 		for (int i = 0; i < 10000; i++)

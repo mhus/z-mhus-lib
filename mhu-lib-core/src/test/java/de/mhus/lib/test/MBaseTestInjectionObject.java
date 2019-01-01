@@ -17,7 +17,7 @@ package de.mhus.lib.test;
 
 import java.util.LinkedList;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 import de.mhus.lib.annotations.base.Bind;
 import de.mhus.lib.core.lang.MBaseObject;
@@ -29,7 +29,7 @@ public class MBaseTestInjectionObject extends MBaseObject {
 	private LinkedList<String> list;
 
 	public void test() {
-		Assert.assertEquals(1,list.size());
+		assertEquals(1,list.size());
 	}
 	
 }

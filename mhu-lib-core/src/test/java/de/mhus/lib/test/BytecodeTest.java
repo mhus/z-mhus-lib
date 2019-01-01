@@ -17,7 +17,7 @@ package de.mhus.lib.test;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.lang.AlreadyBoundException;
@@ -25,9 +25,9 @@ import de.mhus.lib.core.lang.LocalClassLoader;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.test.util.TransferIfc;
 import de.mhus.lib.test.util.TransferImpl;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BytecodeTest extends TestCase {
+public class BytecodeTest {
 
 	@Test
 	public void testGetMethodName() throws NotFoundException {

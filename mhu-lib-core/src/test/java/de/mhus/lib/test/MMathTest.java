@@ -17,13 +17,16 @@ package de.mhus.lib.test;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MMath;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MMathTest extends TestCase {
+public class MMathTest {
 
+	@Test
 	public void testByteAddRotate() {
 		for (byte d = Byte.MIN_VALUE; d < Byte.MAX_VALUE; d++) {
 			for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
@@ -38,6 +41,7 @@ public class MMathTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testByteRotate() {
 		for (int d = 1; d < 8; d++) {
 			for (byte b = Byte.MIN_VALUE; b < Byte.MAX_VALUE; b++) {
@@ -52,6 +56,7 @@ public class MMathTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testIntRotate() {
 		for (int d = 1; d < 32; d++) {
 			{
@@ -92,6 +97,7 @@ public class MMathTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testBigMath() {
 		BigDecimal a = BigDecimal.valueOf(10);
 		BigDecimal b = BigDecimal.valueOf(20);

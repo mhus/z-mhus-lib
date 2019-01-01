@@ -15,10 +15,13 @@
  */
 package de.mhus.lib.test;
 
-import junit.framework.TestCase;
+//import static org.junit.jupiter.api.Assertions.*;
 
-public class LogTest  extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class LogTest {
 	
+	@Test
 	public void testLogName() throws Exception {
 //		log.e("test");
 //		assertEquals(log.getName(), getClass().getCanonicalName());

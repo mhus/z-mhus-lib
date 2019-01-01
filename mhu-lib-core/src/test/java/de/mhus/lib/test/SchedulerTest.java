@@ -17,14 +17,14 @@ package de.mhus.lib.test;
 
 import java.util.Date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.schedule.CronJob;
 import de.mhus.lib.core.schedule.CronJob.Definition;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SchedulerTest extends TestCase {
+public class SchedulerTest {
 
 	@Test
 	public void testCron() {
