@@ -373,7 +373,7 @@ public class MTimeInterval {
 //	}
 	
 	public long getAllMilliseconds() {
-		return ( ( ( ( weeks * 7 ) + days * 24 ) + minutes * 60 ) + seconds * 1000 ) + millisec;
+		return ( ( ( ( weeks * 7  + days) * 24  + hours) * 60 + minutes) * 60 + seconds) * 1000 + millisec;
 	}
 
 	public long getAllSecounds() {
@@ -384,12 +384,16 @@ public class MTimeInterval {
 		return getAllMilliseconds() / 1000 / 60;
 	}
 	
+	public long getAllHours() {
+		return getAllMilliseconds() / 1000 / 60 / 60;
+	}
+	
 	public long getAllDays() {
-		return getAllMilliseconds() / 1000 / 60 / 24;
+		return getAllMilliseconds() / 1000 / 60 / 60 / 24;
 	}
 	
 	public long getAllWeeks() {
-		return getAllMilliseconds() / 1000 / 60 / 24 / 7;
+		return getAllMilliseconds() / 1000 / 60 / 60 / 24 / 7;
 	}
 
 	public static boolean isTimeOut(long start, long stop, long timeout) {
