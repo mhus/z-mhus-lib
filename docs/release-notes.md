@@ -1,4 +1,8 @@
 
+## 3.5.0
+
+* update dependencies for karaf 4.2.1 (needed if running as bundle)
+
 ## 3.4.0
 
 * Java 12 compatible

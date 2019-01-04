@@ -1,12 +1,19 @@
 
 ## Future
 
-* Switch to vaadin 8
-* Switch to karaf 4.1.* / 4.2.*
-* Implement pem IO directly and remove dependency to bouncycastle
+* Concept for i18n error messages with MException
 * Calendar for christian holidays (moon phase calculation), link https://github.com/flightonary/jholiday
 * Link https://github.com/apilayer/restcountries to get Country and Language information
 * Link https://github.com/googlei18n/libphonenumber to work with phone numbers
+
+## 3.5.0
+
+* dependencies for karaf 4.2.*
+
+## 3.4.0
+
+* Switch to vaadin 8
+* Java 10 compatibility
 
 ## 3.3.7
 
