@@ -23,7 +23,7 @@
 
 	<groupId>de.mhus.lib</groupId>
 	<artifactId>mhus-lib</artifactId>
-	<version>3.4.0</version>
+	<version>3.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
 	<url>http://www.mhus.org</url>
