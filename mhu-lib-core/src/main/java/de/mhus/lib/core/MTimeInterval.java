@@ -26,7 +26,9 @@ import java.util.Date;
  */
 public class MTimeInterval {
 
-	
+
+	public static final long MONTH_AVERAGE_MILLISECONDS = 2629746000l; // for 10.000 years
+	public static final long YEAR_AVERAGE_MILLISECONDS = MONTH_AVERAGE_MILLISECONDS * 12; // for 10.000 years
 	public static final long SECOUND_IN_MILLISECOUNDS = 1000;
 	public static final long MINUTE_IN_MILLISECOUNDS = SECOUND_IN_MILLISECOUNDS * 60;
 	public static final long HOUR_IN_MILLISECOUNDS = MINUTE_IN_MILLISECOUNDS * 60;
@@ -39,14 +41,13 @@ public class MTimeInterval {
 	public final static int HOUR = 4;
 	public final static int DAY = 5;
 	public final static int WEEK = 6;
-//	public final static int MONTH = 7;
-//	public final static int YEAR = 8;
-//	public final static int DECADE = 9;
-//	public final static int CENTURY = 10;
-//	public final static int MILLENIUM = 11;
+	public final static int MONTH = 7;
+	public final static int YEAR = 8;
+	public final static int DECADE = 9;
+	public final static int CENTURY = 10;
+	public final static int MILLENIUM = 11;
 
 	private long days = 0;
-	private long weeks = 0;
 //	private long months = 0;
 //	private long years = 0;
 	private long hours = 0;
@@ -58,8 +59,12 @@ public class MTimeInterval {
 
 	}
 
+	public MTimeInterval(long millisec) {
+		this.millisec = millisec;
+		optimize();
+	}
+	
 	public MTimeInterval(String _interval) throws NumberFormatException {
-		this();
 		parse(_interval);
 	}
 
@@ -120,6 +125,22 @@ public class MTimeInterval {
 				add(MILLISECOND, Integer.parseInt(buffer.toString()));
 				buffer.setLength(0);
 				break;
+			case 'm':
+				add(MONTH, Integer.parseInt(buffer.toString()));
+				buffer.setLength(0);
+				break;
+			case 'y':
+				add(YEAR, Integer.parseInt(buffer.toString()));
+				buffer.setLength(0);
+				break;
+			case 'c':
+				add(CENTURY, Integer.parseInt(buffer.toString()));
+				buffer.setLength(0);
+				break;
+			case 'x':
+				add(MILLENIUM, Integer.parseInt(buffer.toString()));
+				buffer.setLength(0);
+				break;
 			case ' ':
 			case '\t':
 				// ignore
@@ -148,14 +169,14 @@ public class MTimeInterval {
 
 		switch (_type) {
 
-//		case YEAR:
-//			years += _value;
-//			break;
-//		case MONTH:
-//			months += _value;
-//			break;
+		case YEAR:
+			millisec += _value * YEAR_AVERAGE_MILLISECONDS;
+			break;
+		case MONTH:
+			millisec += _value * MONTH_AVERAGE_MILLISECONDS;
+			break;
 		case WEEK:
-			weeks += _value;
+			days += _value*7;
 			break;
 		case DAY:
 			days += _value;
@@ -172,24 +193,24 @@ public class MTimeInterval {
 		case MILLISECOND:
 			millisec += _value;
 			break;
-//		case DECADE:
-//			years += _value * 10;
-//			break;
-//		case CENTURY:
-//			years += _value * 100;
-//			break;
-//		case MILLENIUM:
-//			years += _value * 1000;
-//			break;
+		case DECADE:
+			millisec += _value * 10 * YEAR_AVERAGE_MILLISECONDS;
+			break;
+		case CENTURY:
+			millisec += _value * 100 * YEAR_AVERAGE_MILLISECONDS;
+			break;
+		case MILLENIUM:
+			millisec += _value * 1000 * YEAR_AVERAGE_MILLISECONDS;
+			break;
 		}
 
 	}
 
 	public void optimize() {
 
-		if (millisec >= 100) {
-			seconds += millisec / 100;
-			millisec = millisec % 100;
+		if (millisec >= 1000) {
+			seconds += millisec / 1000;
+			millisec = millisec % 1000;
 		}
 		if (seconds >= 60) {
 			minutes += seconds / 60;
@@ -203,19 +224,15 @@ public class MTimeInterval {
 			days += hours / 24;
 			hours = hours % 24;
 		}
-		if (days >= 7) {
-			weeks += weeks / 7;
-			days = days % 7;
-		}
 
 //		if (months >= 12) {
 //			years += months / 12;
 //			months = months % 12;
 //		}
 
-		if (millisec <= -100) {
-			seconds += millisec / 100;
-			millisec = -((-millisec) % 100);
+		if (millisec <= -1000) {
+			seconds += millisec / 1000;
+			millisec = -((-millisec) % 1000);
 		}
 		if (seconds <= -60) {
 			minutes += seconds / 60;
@@ -228,10 +245,6 @@ public class MTimeInterval {
 		if (hours <= -24) {
 			days += hours / 24;
 			hours = -((-hours) % 24);
-		}
-		if (days <= -7) {
-			weeks += weeks / 7;
-			days = -((-days) % 7);
 		}
 
 //		if (months <= -12) {
@@ -254,7 +267,7 @@ public class MTimeInterval {
 		_cal.add(Calendar.SECOND, (int)seconds);
 		_cal.add(Calendar.MINUTE, (int)minutes);
 		_cal.add(Calendar.HOUR, (int)hours);
-		_cal.add(Calendar.DATE, (int)(days + weeks * 7));
+		_cal.add(Calendar.DATE, (int)days);
 //		_cal.add(Calendar.MONTH, (int)months);
 //		_cal.add(Calendar.YEAR, (int)years);
 
@@ -262,7 +275,7 @@ public class MTimeInterval {
 
 	@Override
 	public String toString() {
-		return "" + weeks + "w " + days + "d "
+		return "" + days + "d "
 				+ hours + "h " + minutes + "M " + seconds + "s " + millisec
 				+ "S";
 //		return "" + years + "y " + months + "m " + weeks + "w " + days + "d "
@@ -359,11 +372,7 @@ public class MTimeInterval {
 	public int getDays() {
 		return (int)days;
 	}
-	
-	public int getWeeks() {
-		return (int)weeks;
-	}
-	
+		
 //	public int getMonths() {
 //		return (int)months;
 //	}
@@ -373,7 +382,7 @@ public class MTimeInterval {
 //	}
 	
 	public long getAllMilliseconds() {
-		return ( ( ( ( weeks * 7  + days) * 24  + hours) * 60 + minutes) * 60 + seconds) * 1000 + millisec;
+		return ( ( ( days * 24  + hours) * 60 + minutes) * 60 + seconds) * 1000 + millisec;
 	}
 
 	public long getAllSecounds() {
@@ -395,7 +404,15 @@ public class MTimeInterval {
 	public long getAllWeeks() {
 		return getAllMilliseconds() / 1000 / 60 / 60 / 24 / 7;
 	}
+	
+	public long getAverageMonths() {
+		return getAllMilliseconds() / MONTH_AVERAGE_MILLISECONDS;
+	}
 
+	public long getAverageYears() {
+		return getAllMilliseconds() / YEAR_AVERAGE_MILLISECONDS;
+	}
+	
 	public static boolean isTimeOut(long start, long stop, long timeout) {
 		return timeout > -1 && stop - start > timeout;
 	}
@@ -407,7 +424,7 @@ public class MTimeInterval {
 	public static long toTime(String in, long def) {
 		if (in == null) return def;
 		in = in.trim().toLowerCase();
-		if (in.endsWith("m") || in.endsWith("min") || in.endsWith("minutes") || in.endsWith("minute"))
+		if (in.endsWith("M") || in.endsWith("min") || in.endsWith("minutes") || in.endsWith("minute"))
 			return MCast.tolong( MString.integerPart(in) , 0) * MINUTE_IN_MILLISECOUNDS;
 
 		if (in.endsWith("h") || in.endsWith("hour") || in.endsWith("hours")) 
@@ -434,11 +451,13 @@ public class MTimeInterval {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long years = days / 365;
+		long months = msec / MINUTE_IN_MILLISECOUNDS % 12;
+		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
 				(negative ? "-" : "") 
 				+ (years > 0 ? MCast.toString(years) + "y " : "")
+				+ (years > 0 || months > 0 ? MCast.toString(months) + "m " : "")
 				+ MCast.toString( (int) (days % 365), 2) + ' '
 				+ MCast.toString((int) (hours % 24), 2) + ':'
 				+ MCast.toString((int) (min % 60), 2) + ':'
@@ -452,10 +471,12 @@ public class MTimeInterval {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long years = days / 365;
+		long months = msec / MINUTE_IN_MILLISECOUNDS % 12;
+		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
 				(years > 0 ? MCast.toString(years) + "y " : "")
+				+ (years > 0 || months > 0 ? MCast.toString(months) + "m " : "")
 				+ MCast.toString( (int) (days % 365), 2) + ' '
 				+ MCast.toString((int) (hours % 24), 2) + ':'
 				+ MCast.toString((int) (min % 60), 2) + ':'
@@ -468,10 +489,12 @@ public class MTimeInterval {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long years = days / 365;
+		long months = msec / MINUTE_IN_MILLISECOUNDS % 12;
+		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
 				(years > 0 ? MCast.toString(years) + "y " : "")
+				+ (years > 0 || months > 0 ? MCast.toString(months) + "m " : "")
 				+ MCast.toString( (int) (days % 365), 2) + ' '
 				+ MCast.toString((int) (hours % 24), 2) + ':'
 				+ MCast.toString((int) (min % 60), 2);

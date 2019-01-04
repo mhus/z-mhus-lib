@@ -5,7 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimeInterval;
 import de.mhus.lib.core.logging.Log;
@@ -14,66 +18,72 @@ import de.mhus.lib.core.logging.Log;
 public class AtomicClockUtil {
 
 	private static Log log = Log.getLog(AtomicClockUtil.class);
-	private static final long TIMEOUT = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
+	private static final long TIMEOUT_RELOAD = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
 	private static long lastUpdate;
 	private static long now;
 
 	//Some time RFC868 servers.
-	private static String[] timeServers=new String[] {
-	"time-a.timefreq.bldrdoc.gov",
-	"time-a.timefreq.bldrdoc.gov",
-	"time-b.timefreq.bldrdoc.gov",
-	"time-c.timefreq.bldrdoc.gov",
-	"utcnist.colorado.edu",
-	"time-nw.nist.gov",
-	"nist1.nyc.certifiedtime.com",
-	"nist1.dc.certifiedtime.com",
-	"nist1.sjc.certifiedtime.com",
-	"nist1.datum.com",
-	"ntp2.cmc.ec.gc.ca",
-	"ntps1-0.uni-erlangen.de",
-	"ntps1-1.uni-erlangen.de",
-	"ntps1-2.uni-erlangen.de",
-	"ntps1-0.cs.tu-berlin.de",
-	"time.ien.it",
-	"ptbtime1.ptb.de",
-	"ptbtime2.ptb.de"
-	};
+	public final static List<String> TIME_SERVERS=new LinkedList<String>(MCollection.toList(new String[] {
+		"time-a.timefreq.bldrdoc.gov",
+		"time-a.timefreq.bldrdoc.gov",
+		"time-b.timefreq.bldrdoc.gov",
+		"time-c.timefreq.bldrdoc.gov",
+		"utcnist.colorado.edu",
+		"time-nw.nist.gov",
+		"nist1.nyc.certifiedtime.com",
+		"nist1.dc.certifiedtime.com",
+		"nist1.sjc.certifiedtime.com",
+		"nist1.datum.com",
+		"ntp2.cmc.ec.gc.ca",
+		"ntps1-0.uni-erlangen.de",
+		"ntps1-1.uni-erlangen.de",
+		"ntps1-2.uni-erlangen.de",
+		"ntps1-0.cs.tu-berlin.de",
+		"time.ien.it",
+		"ptbtime1.ptb.de",
+		"ptbtime2.ptb.de"
+	} ));
 	private static int currentServer = 0;
 
-	public static long getAtomicTime(String timeServerInternet) throws UnknownHostException, IOException {
+	public static long getAtomicTime(String timeServerInternet) throws UnknownHostException, IOException, TimeoutException {
 
-		Socket socket = new Socket(timeServerInternet, 37);
-		InputStream is = socket.getInputStream();
-		OutputStream os = socket.getOutputStream();
-		
 		long secondsSince1900=0;
 		long miliSecondsSince1970=0;
 		long[] buffer = new long[4];
 		boolean readedTime = false;
 		int i=0;
-		while (readedTime==false)
-		{
-			//Assumption that the data will be received. 
-			//As mention not exception control implemented
-			if (is.available() >= 4) 
+		long timeout = 6000; // * 10 ms
+
+		Socket socket = new Socket(timeServerInternet, 37);
+		InputStream is = socket.getInputStream();
+		OutputStream os = socket.getOutputStream();
+		try {
+			while (readedTime==false)
 			{
-				//Read the 4 bytes (32 bits) from the server
-				for (i=0;i<4;i++) buffer[i]=is.read();
-				//Once finish we can exit of the loop. 
-				//Maybe a while implementation is more elegant ;)
-				readedTime=true;
+				//Assumption that the data will be received. 
+				//As mention not exception control implemented
+				if (is.available() >= 4) 
+				{
+					//Read the 4 bytes (32 bits) from the server
+					for (i=0;i<4;i++) buffer[i]=is.read();
+					//Once finish we can exit of the loop. 
+					//Maybe a while implementation is more elegant ;)
+					readedTime=true;
+				}
+				if (!readedTime) {
+					MThread.sleep(10);
+					timeout--;
+					if (timeout <=0)
+						throw new TimeoutException();
+				}
 			}
-			if (!readedTime)
-				MThread.sleep(10);
+		} finally {
+			//Close the sockets and the connection
+			is.close();
+			os.close();
+			socket.close();
 		}
-
 		
-		//Close the sockets and the connection
-		is.close();
-		os.close();
-		socket.close();
-
 		//Calculate the seconds from 1/1/1990
 
 		secondsSince1900=buffer[0]*16777216 + buffer[1]*65536 + 
@@ -98,16 +108,16 @@ public class AtomicClockUtil {
 	 * @return actual time millies in UTC 
 	 */
 	public synchronized static long getCurrentTime() {
-		if (MTimeInterval.isTimeOut(lastUpdate, TIMEOUT)) {
-			for (int i = 0; i < timeServers.length; i++) {
+		if (MTimeInterval.isTimeOut(lastUpdate, TIMEOUT_RELOAD)) {
+			for (int i = 0; i < TIME_SERVERS.size(); i++) {
 				try {
-					now = getAtomicTime(timeServers[currentServer ]);
+					now = getAtomicTime(TIME_SERVERS.get(currentServer) );
 					lastUpdate = System.currentTimeMillis();
 					return now;
 				} catch (Throwable t) {
 					log.i(t);
 				}
-				currentServer = (currentServer + 1) % timeServers.length;
+				currentServer = (currentServer + 1) % TIME_SERVERS.size();
 			}
 		}
 		return now + (System.currentTimeMillis() - lastUpdate); // interpolate with last update
