@@ -460,7 +460,7 @@ public class MPeriod {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long months = (msec / MINUTE_IN_MILLISECOUNDS) % 12;
+		long months = (msec / MONTH_AVERAGE_MILLISECONDS) % 12;
 		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
@@ -480,7 +480,7 @@ public class MPeriod {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long months = (msec / MINUTE_IN_MILLISECOUNDS) % 12;
+		long months = (msec / MONTH_AVERAGE_MILLISECONDS) % 12;
 		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
@@ -498,7 +498,7 @@ public class MPeriod {
 		long min = sec / 60;
 		long hours = min / 60;
 		long days = hours / 24;
-		long months = (msec / MINUTE_IN_MILLISECOUNDS) % 12;
+		long months = (msec / MONTH_AVERAGE_MILLISECONDS) % 12;
 		long years = msec / YEAR_AVERAGE_MILLISECONDS;
 		
 		return 
