@@ -32,7 +32,7 @@ import de.mhus.lib.cao.util.MutableMetadata;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.errors.MException;
 
 public class FdbCore extends CaoCore {
@@ -275,7 +275,7 @@ public class FdbCore extends CaoCore {
 	}
 
 	public void lock() throws IOException, TimeoutException {
-		lock(MTimeInterval.MINUTE_IN_MILLISECOUNDS);
+		lock(MPeriod.MINUTE_IN_MILLISECOUNDS);
 	}
 
 	public void lock(long timeout) throws IOException, TimeoutException {

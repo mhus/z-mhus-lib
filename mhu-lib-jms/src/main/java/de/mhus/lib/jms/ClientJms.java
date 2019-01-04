@@ -28,7 +28,7 @@ import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.logging.MLogUtil;
 
@@ -42,8 +42,8 @@ public class ClientJms extends JmsChannel implements MessageListener {
 	
 	private HashMap<String, Message> responses = null;
 	private HashSet<String> allowedIds = new HashSet<>();
-	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 5;
-	private long warnTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+	private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 5;
+	private long warnTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS;
 	private long broadcastTimeout = 5000; // 5 sec. to wait for answers by default
 
 	private JmsInterceptor interceptorOut;

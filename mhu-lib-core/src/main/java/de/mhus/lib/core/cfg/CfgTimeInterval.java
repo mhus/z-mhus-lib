@@ -16,7 +16,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.directory.ResourceNode;
 
 public class CfgTimeInterval extends CfgValue<String>{
@@ -45,9 +45,9 @@ public class CfgTimeInterval extends CfgValue<String>{
 	@Override
 	void update() {
 		String newValue = loadValue();
-		interval = MTimeInterval.toTime(newValue, -1);
+		interval = MPeriod.toTime(newValue, -1);
 		if (interval == -1)
-			interval = MTimeInterval.toTime(getDefault(), -1);
+			interval = MPeriod.toTime(getDefault(), -1);
 		super.update();
 	}
 

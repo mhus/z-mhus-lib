@@ -29,7 +29,7 @@ import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -42,7 +42,7 @@ public class Scheduler extends MLog implements Named {
 	protected HashSet<SchedulerJob> jobs = new HashSet<>();
 	private long nextTimeoutCheck;
 	private long lastQueueCheck = System.currentTimeMillis();
-	private long queueCheckTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+	private long queueCheckTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS;
 	
 	public Scheduler() {}
 	
@@ -74,7 +74,7 @@ public class Scheduler extends MLog implements Named {
 	protected void doTick() {
 		synchronized (jobs) {
 			// check queue
-			if (MTimeInterval.isTimeOut(lastQueueCheck, queueCheckTimeout))
+			if (MPeriod.isTimeOut(lastQueueCheck, queueCheckTimeout))
 				doQueueCheck();
 			
 			// execute overdue jobs
@@ -96,7 +96,7 @@ public class Scheduler extends MLog implements Named {
 		if (nextTimeoutCheck < time) {
 			try {
 				for (SchedulerJob job : running) {
-					long timeout = job.getTimeoutInMinutes() * MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+					long timeout = job.getTimeoutInMinutes() * MPeriod.MINUTE_IN_MILLISECOUNDS;
 					if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
 						try {
 							if (job.isBusy()) {
@@ -114,7 +114,7 @@ public class Scheduler extends MLog implements Named {
 				log().e(t); // should not happen
 			}
 			
-			nextTimeoutCheck = time + MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+			nextTimeoutCheck = time + MPeriod.MINUTE_IN_MILLISECOUNDS;
 		}
 		
 	}
@@ -315,7 +315,7 @@ public class Scheduler extends MLog implements Named {
 			if (interval.indexOf('-') > 0 || interval.indexOf('.') > 0 || interval.indexOf('/') > 0 )
 				s = MDate.toDate(interval, new Date()).getTime();
 			else
-				s = System.currentTimeMillis() + MTimeInterval.toTime(interval, -1);
+				s = System.currentTimeMillis() + MPeriod.toTime(interval, -1);
 			return new OnceJob(s, task);
 		} else
 		if (interval.startsWith("cron:")) {
@@ -341,13 +341,13 @@ public class Scheduler extends MLog implements Named {
 				s = MDate.toDate(sStr, new Date()).getTime();
 			else
 				// it should be a time interval
-				s = System.currentTimeMillis() + MTimeInterval.toTime(sStr, -1);
+				s = System.currentTimeMillis() + MPeriod.toTime(sStr, -1);
 			// delay is in every case a time interval
-			long l = MTimeInterval.toTime(MString.afterIndex(interval,','), -1);
+			long l = MPeriod.toTime(MString.afterIndex(interval,','), -1);
 			if (s > 0 && l > 0)
 				return new IntervalWithStartTimeJob(s,l, task);
 		} else {
-			long l = MTimeInterval.toTime(interval, -1);
+			long l = MPeriod.toTime(interval, -1);
 			if (l > 0)
 				return new IntervalJob(l, task);
 		}

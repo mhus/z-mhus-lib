@@ -16,7 +16,7 @@
 package de.mhus.lib.sql.analytics;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -25,7 +25,7 @@ import de.mhus.lib.core.system.IApiInternal;
 
 public class SqlRuntimeWarning extends MLog implements SqlAnalyzer, CfgInitiator {
 
-	private long traceMaxRuntime = MTimeInterval.MINUTE_IN_MILLISECOUNDS;
+	private long traceMaxRuntime = MPeriod.MINUTE_IN_MILLISECOUNDS;
 
 	@Override
 	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {

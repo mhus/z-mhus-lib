@@ -18,13 +18,13 @@ package de.mhus.lib.adb.transaction;
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class DbLockObjectStrategy extends LockStrategy {
 
-	private long maxLockAge = MTimeInterval.HOUR_IN_MILLISECOUNDS;
+	private long maxLockAge = MPeriod.HOUR_IN_MILLISECOUNDS;
 	private long sleepTime = 200;
 
 	@Override

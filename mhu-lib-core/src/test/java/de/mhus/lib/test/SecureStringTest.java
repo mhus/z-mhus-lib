@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.crypt.CryptedString;
 import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.util.Lorem;
@@ -169,7 +169,7 @@ public class SecureStringTest {
 		int cnt = 0;
 		long start = System.currentTimeMillis();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
-		while (!MTimeInterval.isTimeOut(start, 1000)) {
+		while (!MPeriod.isTimeOut(start, 1000)) {
 			cnt++;
 			CryptedString sec = new CryptedString(key, text);
 			sec.value(key);

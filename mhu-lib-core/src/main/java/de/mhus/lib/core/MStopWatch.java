@@ -126,7 +126,7 @@ public class MStopWatch extends MJmx {
 	}
 
 	public String getCurrentTimeAsString() {
-		return MTimeInterval.getIntervalAsString(getCurrentTime());
+		return MPeriod.getIntervalAsString(getCurrentTime());
 	}
 
 	public String getName() {

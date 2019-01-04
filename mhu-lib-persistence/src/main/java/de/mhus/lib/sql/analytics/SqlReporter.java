@@ -16,14 +16,14 @@
 package de.mhus.lib.sql.analytics;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.config.IConfig;
 
 public class SqlReporter extends MLog implements SqlAnalyzer {
 
 	@Override
 	public void doAnalyze(long connectionId, String original, String query, long delta, Throwable t) {
-		log().i(connectionId,MTimeInterval.getIntervalAsString(delta),original,query);
+		log().i(connectionId,MPeriod.getIntervalAsString(delta),original,query);
 	}
 
 	@Override

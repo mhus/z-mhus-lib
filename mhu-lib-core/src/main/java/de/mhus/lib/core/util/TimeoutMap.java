@@ -25,15 +25,15 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class TimeoutMap<K,V> implements Map<K,V> {
 
 	private Map<K,Container<V>> map = new HashMap<>();
-	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 	private long lastCheck = System.currentTimeMillis();
-	private long checkTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	private long checkTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 	private Invalidator<K,V> invalidator;
 	private boolean refreshOnAccess;
 

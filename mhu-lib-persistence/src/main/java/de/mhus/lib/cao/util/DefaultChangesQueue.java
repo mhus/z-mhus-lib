@@ -23,7 +23,7 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.aspect.Changes;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 
 public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Changes> {
 
@@ -37,7 +37,7 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 
 	private long firstBigChange = 0;
 
-	private long maxBigChangeWait = MTimeInterval.SECOUND_IN_MILLISECOUNDS * 30;
+	private long maxBigChangeWait = MPeriod.SECOUND_IN_MILLISECOUNDS * 30;
 	
 	public DefaultChangesQueue() {
 		this(30);
@@ -66,7 +66,7 @@ public class DefaultChangesQueue  extends MLog implements CaoAspectFactory<Chang
 				if (firstBigChange == 0) {
 					firstBigChange  = System.currentTimeMillis();
 				} else
-				if (MTimeInterval.isTimeOut(firstBigChange, maxBigChangeWait)) {
+				if (MPeriod.isTimeOut(firstBigChange, maxBigChangeWait)) {
 					firstBigChange  = 0;
 					Change[] out = queue.toArray(new Change[queue.size()]);
 					queue.clear();

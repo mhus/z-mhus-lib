@@ -25,15 +25,15 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class SoftTimeoutMap<K,V> implements Map<K,V> {
 
 	private Map<K,Container<V>> map = new HashMap<>();
-	private long timeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 	private long lastCheck = System.currentTimeMillis();
-	private long checkTimeout = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	private long checkTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 	private Invalidator<K,V> invalidator;
 	private boolean refreshOnAccess = true;
 
@@ -76,7 +76,7 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 	}
 	
 	public synchronized void doValidationCheck() {
-		if (MTimeInterval.isTimeOut(lastCheck, checkTimeout)) {
+		if (MPeriod.isTimeOut(lastCheck, checkTimeout)) {
 			map.entrySet().removeIf(e -> {
 				 return (invalidator != null && invalidator.isInvalid(e.getKey(), e.getValue().get(), e.getValue().time, e.getValue().accessed )
 						 ||
@@ -246,7 +246,7 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		}
 
 		boolean isTimeout() {
-			return MTimeInterval.isTimeOut(time, timeout) || super.get() == null;
+			return MPeriod.isTimeOut(time, timeout) || super.get() == null;
 		}
 	}
 	

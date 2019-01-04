@@ -40,7 +40,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
 
@@ -78,7 +78,7 @@ public class MBouncy {
 
 	private static LinkedList<KeyPair> keyPool = new LinkedList<>();
 	private static long keyPoolUpdate = 0;
-	private static CfgLong CFG_POOL_UPDATE_TIME = new CfgLong(MBouncy.class, "poolUpdateTime", MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10);
+	private static CfgLong CFG_POOL_UPDATE_TIME = new CfgLong(MBouncy.class, "poolUpdateTime", MPeriod.MINUTE_IN_MILLISECOUNDS * 10);
 	private static CfgInt CFG_POOL_SIZE = new CfgInt(MBouncy.class, "poolSize", 10);
 	
 
@@ -400,7 +400,7 @@ public class MBouncy {
 	 * @return A key from the pool
 	 */
 	public synchronized static KeyPair getRsaKeyFromPool() {
-		if (MTimeInterval.isTimeOut(keyPoolUpdate, CFG_POOL_UPDATE_TIME.value())) {
+		if (MPeriod.isTimeOut(keyPoolUpdate, CFG_POOL_UPDATE_TIME.value())) {
 			if (keyPool.size() > 0)
 				keyPool.removeFirst();
 			keyPoolUpdate = System.currentTimeMillis();

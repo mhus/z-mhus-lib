@@ -28,7 +28,7 @@ import org.apache.activemq.ActiveMQSession;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -40,7 +40,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 	private static long usedThreads = 0;
 	private static CfgLong maxThreadCount = new CfgLong(ServerJms.class, "maxThreadCount", -1);
 	private static CfgLong maxThreadCountTimeout = new CfgLong(ServerJms.class, "maxThreadCountTimeout", 10000 );
-	private static CfgLong inactivityTimeout = new CfgLong(ServerJms.class, "inactivityTimeout", MTimeInterval.HOUR_IN_MILLISECOUNDS );
+	private static CfgLong inactivityTimeout = new CfgLong(ServerJms.class, "inactivityTimeout", MPeriod.HOUR_IN_MILLISECOUNDS );
 	
     public ServerJms(JmsDestination dest) {
 		super(dest);
@@ -317,7 +317,7 @@ do not block jms driven threads !!! This will cause a deadlock
 			}
 			open(); // try to reopen and re-listen
 			
-			if (inactivityTimeout.value() > 0 && MTimeInterval.isTimeOut(lastActivity, inactivityTimeout.value() ))
+			if (inactivityTimeout.value() > 0 && MPeriod.isTimeOut(lastActivity, inactivityTimeout.value() ))
 				reset();
 			
 		} catch (JMSException e) {

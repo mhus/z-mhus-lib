@@ -11,14 +11,14 @@ import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.logging.Log;
 
 // https://developer.gemalto.com/faq/how-obtain-time-internet-java-rfc868
 public class AtomicClockUtil {
 
 	private static Log log = Log.getLog(AtomicClockUtil.class);
-	private static final long TIMEOUT_RELOAD = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 30;
+	private static final long TIMEOUT_RELOAD = MPeriod.MINUTE_IN_MILLISECOUNDS * 30;
 	private static long lastUpdate;
 	private static long now;
 
@@ -108,7 +108,7 @@ public class AtomicClockUtil {
 	 * @return actual time millies in UTC 
 	 */
 	public synchronized static long getCurrentTime() {
-		if (MTimeInterval.isTimeOut(lastUpdate, TIMEOUT_RELOAD)) {
+		if (MPeriod.isTimeOut(lastUpdate, TIMEOUT_RELOAD)) {
 			for (int i = 0; i < TIME_SERVERS.size(); i++) {
 				try {
 					now = getAtomicTime(TIME_SERVERS.get(currentServer) );

@@ -20,7 +20,7 @@ import java.util.Calendar;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.base.service.HolidayProviderIfc;
 
 /**
@@ -88,7 +88,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 	@Override
 	protected boolean isExecutionTimeReached() {
 		if (restrictive) {
-			if (getNextExecutionTime() > 0 && System.currentTimeMillis() + MTimeInterval.MINUTE_IN_MILLISECOUNDS <= getNextExecutionTime()) {
+			if (getNextExecutionTime() > 0 && System.currentTimeMillis() + MPeriod.MINUTE_IN_MILLISECOUNDS <= getNextExecutionTime()) {
 				log.d("cron restrictive over time, reschedule job",getName(),getTask());
 				doCaclulateNextExecution();
 			}

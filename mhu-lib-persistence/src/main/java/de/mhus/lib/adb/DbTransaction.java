@@ -19,7 +19,7 @@ import de.mhus.lib.adb.transaction.TransactionLock;
 import de.mhus.lib.adb.transaction.TransactionPool;
 import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.adb.TransactionConnection;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
@@ -36,7 +36,7 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 public class DbTransaction {
 
 	/** Constant <code>DEFAULT_TIMEOUT=MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10</code> */
-	public static final long DEFAULT_TIMEOUT = MTimeInterval.MINUTE_IN_MILLISECOUNDS * 10;
+	public static final long DEFAULT_TIMEOUT = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 
 	/**
 	 * <p>lock.</p>

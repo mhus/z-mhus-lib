@@ -30,7 +30,7 @@ import javax.mail.internet.MimeMessage;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
@@ -68,7 +68,7 @@ public class DefaultSendMail extends MLog implements MSendMail {
 		
 		synchronized (this) {
 	        if (transport != null) {
-	        	if (MTimeInterval.isTimeOut(lastMailTransport, CFG_CONNECTION_TIMEOUT.value()) ||  !transport.isConnected()) {
+	        	if (MPeriod.isTimeOut(lastMailTransport, CFG_CONNECTION_TIMEOUT.value()) ||  !transport.isConnected()) {
 	        		reset();
 	        	}
 	        }

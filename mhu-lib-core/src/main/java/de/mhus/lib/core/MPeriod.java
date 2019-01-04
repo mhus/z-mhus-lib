@@ -24,7 +24,7 @@ import java.util.Date;
  *         To change the template for this generated type comment go to
  *         Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class MTimeInterval {
+public class MPeriod {
 
 
 	public static final long MONTH_AVERAGE_MILLISECONDS = 2629746000l; // for 10.000 years
@@ -55,16 +55,16 @@ public class MTimeInterval {
 	private long seconds = 0;
 	private long millisec = 0;
 
-	public MTimeInterval() {
+	public MPeriod() {
 
 	}
 
-	public MTimeInterval(long millisec) {
+	public MPeriod(long millisec) {
 		this.millisec = millisec;
 		optimize();
 	}
 	
-	public MTimeInterval(String _interval) throws NumberFormatException {
+	public MPeriod(String _interval) throws NumberFormatException {
 		parse(_interval);
 	}
 
@@ -160,7 +160,7 @@ public class MTimeInterval {
 		optimize();
 	}
 
-	public void add(MTimeInterval interval) {
+	public void add(MPeriod interval) {
 		if (interval == null) return;
 		parse(interval.toString());
 	}

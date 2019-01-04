@@ -20,7 +20,7 @@ import java.sql.DriverManager;
 
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 
 /**
  * Database provider for the jdbc database access variant.
@@ -74,8 +74,8 @@ public class JdbcProvider extends DbProvider {
 		Connection con = DriverManager.getConnection(url,user,MPassword.decode(pass));
 		getDialect().prepareConnection(con);
 		JdbcConnection dbCon = new JdbcConnection(this,con);
-		long timeoutUnused = MTimeInterval.toMilliseconds( config.getExtracted("timeout_unused"), 0 );
-		long timeoutLifetime = MTimeInterval.toMilliseconds( config.getExtracted("timeout_lifetime"), 0 );
+		long timeoutUnused = MPeriod.toMilliseconds( config.getExtracted("timeout_unused"), 0 );
+		long timeoutLifetime = MPeriod.toMilliseconds( config.getExtracted("timeout_lifetime"), 0 );
 		if (timeoutUnused  > 0) dbCon.setTimeoutUnused(timeoutUnused);
 		if (timeoutLifetime > 0) dbCon.setTimeoutLifetime(timeoutLifetime);
 		return dbCon;

@@ -20,7 +20,7 @@ import java.util.UUID;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MTimeInterval;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -283,7 +283,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 			return;
 		}
 		if (getNextExecutionTime() == DISABLED_TIME) {
-			setScheduledTime(System.currentTimeMillis() + MTimeInterval.DAY_IN_MILLISECOUNDS); // schedule tomorrow
+			setScheduledTime(System.currentTimeMillis() + MPeriod.DAY_IN_MILLISECOUNDS); // schedule tomorrow
 			scheduler.getQueue().removeJob(this);
 			scheduler.getQueue().doSchedule(this);
 			return;
