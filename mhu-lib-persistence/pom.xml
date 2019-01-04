@@ -41,7 +41,6 @@
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
 	            de.mhus.lib.adb.*;version=${project.version},
-	            de.mhus.lib.adb.util.*;version=${project.version},
 	            de.mhus.lib.xdb.*;version=${project.version},
 	            de.mhus.lib.cao.*;version=${project.version},
 	            de.mhus.lib.jpa.*;version=${project.version},

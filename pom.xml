@@ -51,16 +51,13 @@
 	</developers>
 	<properties>
 		<scr.packages>*</scr.packages>
-		<felix.scr.version>1.6.0</felix.scr.version>
-		<karaf.version>4.0.10</karaf.version>
-		<karaf.tool.version>4.0.10</karaf.tool.version>
-		<bndlib.version>1.50.0</bndlib.version>
-		<felix.metatype.version>1.0.10</felix.metatype.version>
+		<bndlib.version>2.4.0</bndlib.version>
+		<felix.metatype.version>1.2.2</felix.metatype.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compileSource>1.8</compileSource>
 		<osgi.version>5.0.0</osgi.version>
-		<activemq.version>5.7.0</activemq.version>
-		<bundle.plugin.version>3.5.1</bundle.plugin.version>
+		<activemq.version>5.15.8</activemq.version>
+		<bundle.plugin.version>4.1.0</bundle.plugin.version>
 		<vaadin.version>8.6.1</vaadin.version>
 		<servlet.version>3.1.0</servlet.version>
 		<portlet.version>2.0</portlet.version>
