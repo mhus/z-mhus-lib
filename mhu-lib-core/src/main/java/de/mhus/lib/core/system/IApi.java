@@ -18,6 +18,8 @@ package de.mhus.lib.core.system;
 import java.io.File;
 
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.lang.BaseControl;
 import de.mhus.lib.core.logging.Log;
@@ -54,4 +56,14 @@ public interface IApi {
 	Log lookupLog(Object owner);
 
 	void updateLog();
+
+	default String getCfgString(Class<?> owner, String path, String def) {
+		int p = path.indexOf('@');
+		if (p < 0) 
+			return MApi.getCfg(owner).getString(path, def);
+		ResourceNode<?> node = MApi.getCfg(owner).getNodeByPath(path.substring(0, p));
+		if (node == null) return def;
+		return node.getString(path.substring(p+1), def);		
+	}
+		
 }

@@ -435,6 +435,15 @@ public class MPeriod {
 		
 		if (in.endsWith("d") || in.endsWith("day") || in.endsWith("days")) 
 			return MCast.tolong( MString.integerPart(in) , 0) * DAY_IN_MILLISECOUNDS;
+
+		if (in.endsWith("w") || in.endsWith("week") || in.endsWith("weeks") ) 
+			return MCast.tolong( MString.integerPart(in) , 0) * DAY_IN_MILLISECOUNDS * 7;
+		
+		if (in.endsWith("m") || in.endsWith("mon") || in.endsWith("month") || in.endsWith("months")) 
+			return MCast.tolong( MString.integerPart(in) , 0) * MONTH_AVERAGE_MILLISECONDS;
+		
+		if (in.endsWith("y") || in.endsWith("year") || in.endsWith("years")) 
+			return MCast.tolong( MString.integerPart(in) , 0) * YEAR_AVERAGE_MILLISECONDS;
 		
 		return MCast.tolong(in, def);
 	}
