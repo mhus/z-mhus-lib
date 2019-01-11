@@ -20,7 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.jws.Oneway;
 import javax.jws.WebMethod;
-import javax.jws.WebService;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
@@ -54,10 +53,10 @@ public class WebServiceDescriptor extends ServiceDescriptor {
 	private static Class<?> findIfc(Object service) {
 		// TODO traverse thru all ifcs
 		Class<?> c = service instanceof Class ? (Class<?>)service : service.getClass();
-		if (c.isAnnotationPresent(WebService.class)) return c;
-		for (Class<?> i : c.getInterfaces()) {
-			if (i.isAnnotationPresent(WebService.class)) return i;
-		}
+//		if (c.isAnnotationPresent(WebService.class)) return c;
+//		for (Class<?> i : c.getInterfaces()) {
+//			if (i.isAnnotationPresent(WebService.class)) return i;
+//		}
 		return c;
 	}
 
