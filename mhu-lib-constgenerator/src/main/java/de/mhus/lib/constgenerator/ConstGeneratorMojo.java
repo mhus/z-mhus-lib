@@ -71,6 +71,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
 		ignoreList.add("WRITE_EXTERNAL");
 		ignoreList.add("READ_EXTERNAL");
 		ignoreList.add("TO_STRING");
+        ignoreList.add("");
 	}
 	
 	@Parameter(defaultValue = "${project}")
