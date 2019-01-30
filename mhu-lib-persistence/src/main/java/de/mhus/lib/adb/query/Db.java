@@ -90,23 +90,6 @@ public class Db {
 	}
 
 	/**
-	 * <p>like</p>
-	 *
-	 * @param attr a {@link java.lang.String} object.
-	 * @param value a {@link java.lang.Object} object.
-	 * @return like
-	 * @since 3.3.0
-	 */
-	public static APart like(String attr, Object value) {
-		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(null, attr, value));
-	}
-
-	public static APart like(Identifier left, Object value) {
-		String attr = MPojo.toAttributeName(left);
-		return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(left.getClazz(), attr, value));
-	}
-
-	/**
 	 * <p>ne.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
@@ -117,6 +100,11 @@ public class Db {
 		return new ACompare(ACompare.TYPE.NE,left,right);
 	}
 
+    public static APart ne(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.NE,attr(name),value(attr.getClazz(), name, value));
+    }
+    
 	/**
 	 * <p>lt.</p>
 	 *
@@ -132,6 +120,11 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LT,attr(attr),value(null, attr, value));
 	}
 	
+    public static APart lt(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.LT,attr(name),value(attr.getClazz(), name, value));
+    }
+    
 	/**
 	 * <p>le.</p>
 	 *
@@ -143,6 +136,15 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LE,left,right);
 	}
 	
+    public static APart le(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.LE,attr(attr),value(null, attr, value));
+    }
+    
+    public static APart le(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.LE,attr(name),value(attr.getClazz(), name, value));
+    }
+    
 	/**
 	 * <p>gt.</p>
 	 *
@@ -154,6 +156,15 @@ public class Db {
 		return new ACompare(ACompare.TYPE.GT,left,right);
 	}
 
+    public static APart gt(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.GT,attr(attr),value(null, attr, value));
+    }
+    
+    public static APart gt(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.GT,attr(name),value(attr.getClazz(), name, value));
+    }
+    
 	/**
 	 * <p>ge.</p>
 	 *
@@ -165,7 +176,16 @@ public class Db {
 		return new ACompare(ACompare.TYPE.GE,left,right);
 	}
 	
-	/**
+    public static APart ge(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.GE,attr(attr),value(null, attr, value));
+    }
+
+    public static APart ge(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.GE,attr(name),value(attr.getClazz(), name, value));
+    }
+
+    /**
 	 * <p>el.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
@@ -176,7 +196,16 @@ public class Db {
 		return new ACompare(ACompare.TYPE.EL,left,right);
 	}
 
-	/**
+    public static APart el(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.EL,attr(attr),value(null, attr, value));
+    }
+
+    public static APart el(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.EL,attr(name),value(attr.getClazz(), name, value));
+    }
+
+    /**
 	 * <p>eg.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
@@ -187,7 +216,16 @@ public class Db {
 		return new ACompare(ACompare.TYPE.EG,left,right);
 	}
 
-	/**
+    public static APart eg(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.EG,attr(attr),value(null, attr, value));
+    }
+
+    public static APart eg(Identifier attr, Object value) {
+        String name = MPojo.toAttributeName(attr);
+        return new ACompare(ACompare.TYPE.EG,attr(name),value(attr.getClazz(), name, value));
+    }
+
+    /**
 	 * <p>like.</p>
 	 *
 	 * @param left a {@link de.mhus.lib.adb.query.AAttribute} object.
@@ -198,6 +236,23 @@ public class Db {
 		return new ACompare(ACompare.TYPE.LIKE,left,right);
 	}
 
+    /**
+     * <p>like</p>
+     *
+     * @param attr a {@link java.lang.String} object.
+     * @param value a {@link java.lang.Object} object.
+     * @return like
+     * @since 3.3.0
+     */
+    public static APart like(String attr, Object value) {
+        return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(null, attr, value));
+    }
+
+    public static APart like(Identifier left, Object value) {
+        String attr = MPojo.toAttributeName(left);
+        return new ACompare(ACompare.TYPE.LIKE,attr(attr),value(left.getClazz(), attr, value));
+    }
+    
 	/**
 	 * <p>contains.</p>
 	 *
@@ -315,6 +370,17 @@ public class Db {
 	public static AAttribute value(Class<?> type, String attr, Object value) {
 		return new ADynValue(type, attr, null,value);
 	}
+
+    /**
+     * A dynamic value.
+     * @param getter 
+     * @param value a {@link java.lang.Object} object.
+     * @return a {@link de.mhus.lib.adb.query.AAttribute} object.
+     */
+    public static AAttribute value(Identifier getter, Object value) {
+        String name = MPojo.toAttributeName(getter);
+        return new ADynValue(getter.getClazz(), name, null,value);
+    }
 
 	/**
 	 * A dynamic value
