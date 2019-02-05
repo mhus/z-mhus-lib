@@ -143,6 +143,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         detailsPanel.setWidth("100%");
         detailsPanelContent = new VerticalLayout();
         detailsPanel.setContent(detailsPanelContent);
+        detailsPanelContent.setMargin(false);
+        detailsPanelContent.setSpacing(false);
     	if (fullSize) detailsPanel.setSizeFull();
     	// detailsPanel.setScrollable(false);
         
