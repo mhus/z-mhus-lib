@@ -29,65 +29,66 @@ import com.vaadin.ui.VerticalLayout;
 
 public abstract class ModalDialog extends Window {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public final static Action CLOSE = new CloseAction("close", "Close");
-	public final static Action OK = new Action("ok", "OK");
-	
-	protected Action[] actions = new Action[] {OK,CLOSE};
-	protected HorizontalLayout buttonBar;
+    public final static Action CLOSE = new CloseAction("close", "Close");
+    public final static Action OK = new Action("ok", "OK");
+    
+    protected Action[] actions = new Action[] {OK,CLOSE};
+    protected HorizontalLayout buttonBar;
 
-	protected boolean pack;
+    protected boolean pack;
 
-	protected String dialogWidth = "650px";
-	
-	/**
-	 * Set to pack if you want the dialog as small ass possible. This will pack
-	 * the content. Otherwise the content is full size and the dialog is 90% of the
-	 * screen. Will be set in initUI().
-	 * 
-	 * @param pack
-	 */
-	public void setPack(boolean pack) {
-		this.pack = pack;
-	}
-	
-	/**
-	 * Set the width of the dialog. The default width is 650px and will be set in initUI().
-	 * You can change the setWidth() after initUI() by yourself.
-	 * 
-	 * @param w
-	 */
-	public void setDialogWidth(String w) {
-		this.dialogWidth = w;
-	}
-	
-	public void show(UI ui) throws Exception {
-		ui.addWindow(this);
-	}
+    protected String dialogWidth = "650px";
+    
+    /**
+     * Set to pack if you want the dialog as small ass possible. This will pack
+     * the content. Otherwise the content is full size and the dialog is 90% of the
+     * screen. Will be set in initUI().
+     * 
+     * @param pack
+     */
+    public void setPack(boolean pack) {
+        this.pack = pack;
+    }
+    
+    /**
+     * Set the width of the dialog. The default width is 650px and will be set in initUI().
+     * You can change the setWidth() after initUI() by yourself.
+     * 
+     * @param w
+     */
+    public void setDialogWidth(String w) {
+        this.dialogWidth = w;
+    }
+    
+    public void show(UI ui) throws Exception {
+        ui.addWindow(this);
+    }
 
-	protected void initUI() throws Exception {
-		setModal(true);
-		VerticalLayout layout = new VerticalLayout();
-		VerticalLayout layout2 = new VerticalLayout();
-		setContent(layout);
-		
+    protected void initUI() throws Exception {
+        setModal(true);
+        VerticalLayout layout = new VerticalLayout();
+        VerticalLayout layout2 = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
+        setContent(layout);
+        
         if (pack)
-        	layout.setWidth("100%");
+            layout.setWidth("100%");
         else
-        	layout.setSizeFull();
+            layout.setSizeFull();
         
 
         setWidth(dialogWidth);
         if (!pack)
-        	setHeight("90%");
+            setHeight("90%");
         
         initContent(layout2);
         
         buttonBar = new HorizontalLayout();
         buttonBar.setSpacing(true);
+        buttonBar.setMargin(false);
         updateButtons();
         
         layout.addComponent(layout2);
@@ -99,22 +100,22 @@ public abstract class ModalDialog extends Window {
         
         final ShortcutListener enter = new ShortcutListener("Enter",
                 KeyCode.ENTER, null) {
-					private static final long serialVersionUID = 1L;
+                    private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public void handleAction(Object sender, Object target) {
-            	for (Component c : buttonBar) {
-            		if (
-        				c instanceof Button 
-        				&& 
-        				((Button)c).getData() != null 
-        				&&
-        				((Action) ((Button)c).getData() ).isDefaultAction()
-        				) {
-	            			((Button)c).click();
-	            			return;
-            		}
-            	}
+                for (Component c : buttonBar) {
+                    if (
+                        c instanceof Button 
+                        && 
+                        ((Button)c).getData() != null 
+                        &&
+                        ((Action) ((Button)c).getData() ).isDefaultAction()
+                        ) {
+                            ((Button)c).click();
+                            return;
+                    }
+                }
             }
             
         };
@@ -122,104 +123,104 @@ public abstract class ModalDialog extends Window {
         layout.addShortcutListener(enter);
 
         
-	}
+    }
 
-	
-	protected abstract void initContent(VerticalLayout layout) throws Exception;
+    
+    protected abstract void initContent(VerticalLayout layout) throws Exception;
 
-	protected void updateButtons() {
-		buttonBar.removeAllComponents();
-		for (final Action a : actions) {
-			Button b = new Button();
-			b.setData(a);
-			b.setCaption(a.title);
-			b.addClickListener(new ClickListener() {
-				
-				private static final long serialVersionUID = 1L;
+    protected void updateButtons() {
+        buttonBar.removeAllComponents();
+        for (final Action a : actions) {
+            Button b = new Button();
+            b.setData(a);
+            b.setCaption(a.title);
+            b.addClickListener(new ClickListener() {
+                
+                private static final long serialVersionUID = 1L;
 
-				@Override
-				public void buttonClick(ClickEvent event) {
-					a.doAction(ModalDialog.this);
-				}
-			});
-			buttonBar.addComponent(b);
-			a.setButton(b);
-		}
-	}
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    a.doAction(ModalDialog.this);
+                }
+            });
+            buttonBar.addComponent(b);
+            a.setButton(b);
+        }
+    }
 
 
-	/**
-	 * 
-	 * @param action
-	 * @return true if the dialog should close
-	 */
-	protected abstract boolean doAction(Action action);
+    /**
+     * 
+     * @param action
+     * @return true if the dialog should close
+     */
+    protected abstract boolean doAction(Action action);
 
-	public static class Action {
+    public static class Action {
 
-		private String id;
-		private String title;
-		private boolean defaultAction;
-		private Button button;
+        private String id;
+        private String title;
+        private boolean defaultAction;
+        private Button button;
 
-		public Action(String id, String title) {
-			this.id = id;
-			this.title = title;
-		}
+        public Action(String id, String title) {
+            this.id = id;
+            this.title = title;
+        }
 
-		public void setButton(Button b) {
-			button = b;
-		}
+        public void setButton(Button b) {
+            button = b;
+        }
 
-		public void setEnabled(boolean enabled) {
-			if (button != null)
-				button.setEnabled(enabled);
-		}
-		
-		public String getTitle() {
-			return title;
-		}
-		
-		@Override
-		public boolean equals(Object in) {
-			if (in == null) return false;
-			if (in instanceof Action) {
-				return ((Action)in).id.equals(id);
-			}
-			return super.equals(in);
-		}
-		
-		@Override
-		public String toString() {
-			return id;
-		}
-		
-		public void doAction(ModalDialog dialog) {
-			if (dialog.doAction(this))
-				dialog.close();
-		}
+        public void setEnabled(boolean enabled) {
+            if (button != null)
+                button.setEnabled(enabled);
+        }
+        
+        public String getTitle() {
+            return title;
+        }
+        
+        @Override
+        public boolean equals(Object in) {
+            if (in == null) return false;
+            if (in instanceof Action) {
+                return ((Action)in).id.equals(id);
+            }
+            return super.equals(in);
+        }
+        
+        @Override
+        public String toString() {
+            return id;
+        }
+        
+        public void doAction(ModalDialog dialog) {
+            if (dialog.doAction(this))
+                dialog.close();
+        }
 
-		public boolean isDefaultAction() {
-			return defaultAction;
-		}
+        public boolean isDefaultAction() {
+            return defaultAction;
+        }
 
-		public void setDefaultAction(boolean defaultAction) {
-			this.defaultAction = defaultAction;
-		}
-		
-	}
-	
-	public static class CloseAction extends Action {
+        public void setDefaultAction(boolean defaultAction) {
+            this.defaultAction = defaultAction;
+        }
+        
+    }
+    
+    public static class CloseAction extends Action {
 
-		public CloseAction(String id, String title) {
-			super(id, title);
-		}
-		
-		@Override
-		public void doAction(ModalDialog dialog) {
-				dialog.close();
-		}
-		
-	}
-	
+        public CloseAction(String id, String title) {
+            super(id, title);
+        }
+        
+        @Override
+        public void doAction(ModalDialog dialog) {
+                dialog.close();
+        }
+        
+    }
+    
 }
