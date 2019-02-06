@@ -70,10 +70,10 @@ public abstract class ModalDialog extends Window {
 		setModal(true);
 		VerticalLayout layout = new VerticalLayout();
 		VerticalLayout layout2 = new VerticalLayout();
+		layout.setMargin(true);
+		layout.setSpacing(true);
 		setContent(layout);
 		
-        layout.setMargin(true);
-        layout.setSpacing(true);
         if (pack)
         	layout.setWidth("100%");
         else
@@ -88,6 +88,7 @@ public abstract class ModalDialog extends Window {
         
         buttonBar = new HorizontalLayout();
         buttonBar.setSpacing(true);
+        buttonBar.setMargin(false);
         updateButtons();
         
         layout.addComponent(layout2);

@@ -88,10 +88,12 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		setInitialized(true);
 		
     	if (fullSize) setSizeFull();
-		setSpacing(true);
-		setMargin(true);
+		setSpacing(false);
+		setMargin(false);
 		
 		filter = new SearchField(this);
+		filter.setMargin(false);
+		filter.setSpacing(false);
 		filter.setListener(new SearchField.Listener() {
 			
 			@Override
@@ -156,6 +158,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 //	        model.doBuild(getActivator());
 	        model.doBuild();
 	        detailsPanelContent.addComponent(model);
+	        model.setMargin(false);
+	        model.setSpacing(false);
         } catch (Exception e) {
         	e.printStackTrace();
         }   
@@ -163,6 +167,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
         
 
         HorizontalLayout buttonBar = new HorizontalLayout();
+        buttonBar.setMargin(false);
+        buttonBar.setSpacing(false);
         
         bNew = new Button(MNls.find(this, "button.create=Create"));
         buttonBar.addComponent(bNew);
