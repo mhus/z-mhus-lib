@@ -246,6 +246,8 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
 		addComponent(split);
 		setExpandRatio(split, 1.0f);
 		addComponent(buttonBar);
+		setMargin(false);
+		setSpacing(false);
 		setSizeFull();
 	}
 
