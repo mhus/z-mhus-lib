@@ -114,7 +114,6 @@
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-osgi</artifactId>
         <version>${activemq.version}</version>
-    	<type>bundle</type>
     </dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.geronimo.specs/geronimo-ws-metadata_2.0_spec -->
 	<dependency>
