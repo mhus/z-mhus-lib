@@ -38,12 +38,16 @@ import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.core.cfg.CfgProperties;
@@ -71,6 +75,39 @@ public class MFile {
 		fileChecker.put(TYPE_PDF, new PdfFileChecker());
 	}
 
+	/**
+	 * Set unix like permissions to a file. Only possible in unix like systems. Check MSystem.isWindows
+	 * 
+	 * @param file The file
+	 * @param permissionsStr The posix string "rwxrwxrwx"
+	 * @return true if the action was successful
+	 */
+	public static boolean setUnixPermissions(File file, String permissionsStr) {
+        Set<PosixFilePermission> permissions = PosixFilePermissions.fromString(permissionsStr);
+        try {
+            Files.setPosixFilePermissions(file.toPath(), permissions);
+        } catch (IOException e) {
+            log.d(file,permissionsStr,e);
+            return false;
+        }
+        return true;
+	}
+	
+	/**
+	 * Return a posix permission string. Only possible in unix like systems. Check MSystem.isWindows
+	 * @param file The file
+	 * @return The posix string like "rwxrwxrwx" or "rw-r--r--" or null if not possible
+	 */
+	public static String getUnixPermissions(File file) {
+	    try {
+	        Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
+	        return PosixFilePermissions.toString(permissions);
+        } catch (IOException e) {
+            log.d(file,e);
+        }
+	    return null;
+	}
+	
 	/**
 	 * Return the Suffix of a file. Its the string after the last dot.
 	 * @param _file 
