@@ -283,7 +283,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
     		for (Field field : findFields(clazz)) {
     			
     			String name = field.getName();
-    			if (name.contains("$")) continue;
+    			if (name.contains("$") || name.equals("")) continue;
     			String orgName = name;
     			name = toName(field.getName());
     			
@@ -343,6 +343,7 @@ public class ConstGeneratorMojo extends AbstractMojo {
 	}
 
 	private boolean ignore(GenerateConst config, String name) {
+	    if (name.length() == 0) return true;
 		name = name.toUpperCase();
 		if ( ignoreList.contains(name) ) return true;
 		for (String item : config.ignore())
