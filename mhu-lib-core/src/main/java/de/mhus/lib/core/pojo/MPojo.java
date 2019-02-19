@@ -192,6 +192,15 @@ public class MPojo {
 			if (value instanceof Float)
 				to.put(name, (Float)value);
 			else
+            if (value instanceof Double)
+                to.put(name, (Double)value);
+            else
+            if (value instanceof Short)
+                to.put(name, (Short)value);
+            else
+            if (value instanceof Character)
+                to.put(name, Character.toString( (Character)value ) );
+            else
 			if (value instanceof Date) {
 				to.put(name, ((Date)value).getTime() );
 				to.put(name + "_", MDate.toIso8601((Date)value) );
