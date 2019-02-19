@@ -184,19 +184,19 @@ public class MPojo {
 				to.put(name, (String)value);
 			else
 			if (value instanceof Long)
-				to.put(name, (Long)value);
+				to.put(name, (long)value);
 			else
 			if (value instanceof byte[])
 				to.put(name, (byte[])value);
 			else
 			if (value instanceof Float)
-				to.put(name, (Float)value);
+				to.put(name, (float)value);
 			else
             if (value instanceof Double)
-                to.put(name, (Double)value);
+                to.put(name, (double)value);
             else
             if (value instanceof Short)
-                to.put(name, (Short)value);
+                to.put(name, (short)value);
             else
             if (value instanceof Character)
                 to.put(name, Character.toString( (Character)value ) );
