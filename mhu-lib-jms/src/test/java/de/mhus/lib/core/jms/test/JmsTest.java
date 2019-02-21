@@ -19,6 +19,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -26,10 +28,11 @@ import de.mhus.lib.core.util.ObjectContainer;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerJms;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JmsTest extends TestCase {
+public class JmsTest {
 
+    @Test
 	public void testCommunication() throws JMSException {
 		
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);

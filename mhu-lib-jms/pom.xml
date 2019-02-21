@@ -81,13 +81,6 @@
   
   <dependencies>
     <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
-    	<version>4.7</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
-    </dependency>
-    <dependency>
     	<groupId>org.codehaus.jackson</groupId>
     	<artifactId>jackson-mapper-asl</artifactId>
     	<version>${jackson.version}</version>

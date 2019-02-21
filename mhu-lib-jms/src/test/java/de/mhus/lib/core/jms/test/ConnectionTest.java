@@ -17,13 +17,16 @@ package de.mhus.lib.core.jms.test;
 
 import javax.jms.JMSException;
 
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.jms.JmsConnection;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ConnectionTest extends TestCase {
+public class ConnectionTest {
 
+    @Test
 	public void testLifecycle() throws JMSException {
 //		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
 

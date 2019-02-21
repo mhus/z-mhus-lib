@@ -18,6 +18,9 @@ package de.mhus.lib.test.cao;
 import java.io.File;
 import java.util.concurrent.TimeoutException;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.aspect.StructureControl;
@@ -26,32 +29,21 @@ import de.mhus.lib.cao.util.DefaultStructureControl;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FdbTest extends TestCase {
+public class FdbTest {
 
 	private FdbCore core;
 	private File to;
 	private CaoConnection con;
 
-	public FdbTest(String name) {
-		super(name);
+	@BeforeAll
+	public static void begin() {
 		try {
 			MApi.get().getLogFactory().setDefaultLevel(LEVEL.DEBUG);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * @return the suite of tests being tested
-	 */
-	public static Test suite()
-	{
-		//    	new StaticBase().log().setTrace(true);
-		return new TestSuite( FdbTest.class );
 	}
 
 	private void createEnvironment(boolean useCache) throws Exception {
@@ -63,6 +55,7 @@ public class FdbTest extends TestCase {
 		con = core.getConnection();
 	}
 	
+	@Test
 	public void testGeneral() throws Exception {
 		createEnvironment(false);
 		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
@@ -98,6 +91,7 @@ public class FdbTest extends TestCase {
 		
 	}
 
+    @Test
 	public void testMove() throws Exception {
 		createEnvironment(false);
 		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
@@ -126,6 +120,7 @@ public class FdbTest extends TestCase {
 		
 	}
 	
+    @Test
 	public void testCopy() throws Exception {
 		createEnvironment(false);
 		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));
@@ -159,6 +154,7 @@ public class FdbTest extends TestCase {
 		
 	}
 		
+    @Test
 	public void testLock() throws Exception {
 		createEnvironment(false);
 		
@@ -191,6 +187,7 @@ public class FdbTest extends TestCase {
 		
 	}
 	
+    @Test
 	public void testReorder() throws Exception {
 		createEnvironment(false);
 		core.registerAspectFactory(StructureControl.class, new DefaultStructureControl("sort"));

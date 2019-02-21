@@ -27,9 +27,11 @@ import de.mhus.lib.sql.DbPool;
 import de.mhus.lib.sql.DbPoolBundle;
 import de.mhus.lib.test.adb.model.TransactionDummy;
 import de.mhus.lib.test.adb.model.TransactionSchema;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TransactionTest extends TestCase {
+import org.junit.jupiter.api.Test;
+
+public class TransactionTest {
 
 	public DbPoolBundle createPool(String name) {
 		NodeConfig cdb = new NodeConfig();
@@ -50,6 +52,7 @@ public class TransactionTest extends TestCase {
 		return manager;
 	}
 
+	@Test
 	public void testLock() throws Exception {
 		
 		DbManager manager = createManager();

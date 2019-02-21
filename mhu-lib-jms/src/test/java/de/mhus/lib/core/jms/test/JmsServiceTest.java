@@ -25,7 +25,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
@@ -35,11 +35,11 @@ import de.mhus.lib.jms.ClientObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerObjectProxy;
 import de.mhus.lib.jms.WebServiceDescriptor;
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JmsServiceTest extends TestCase {
+public class JmsServiceTest {
 
-	@Test(timeout=120000)
+	@Test() // timeout=120000
 	public void testCommunication() throws JMSException {
 		
 		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
@@ -148,7 +148,7 @@ public class JmsServiceTest extends TestCase {
 		
 	}
 	
-	@Test(timeout=120000)
+	@Test() //timeout=120000
 	public void testBroadcast() throws JMSException {
 			
 			MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
