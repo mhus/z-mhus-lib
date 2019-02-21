@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.adb.query;
 
-import javax.transaction.NotSupportedException;
+import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class APart extends AOperation {
 

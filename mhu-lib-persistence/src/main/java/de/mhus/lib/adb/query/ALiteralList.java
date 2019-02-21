@@ -15,9 +15,8 @@
  */
 package de.mhus.lib.adb.query;
 
-import javax.transaction.NotSupportedException;
-
 import de.mhus.lib.core.parser.AttributeMap;
+import de.mhus.lib.errors.NotSupportedException;
 
 /**
  * <p>ALiteralList class.</p>

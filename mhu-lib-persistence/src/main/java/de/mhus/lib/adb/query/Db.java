@@ -18,13 +18,12 @@ package de.mhus.lib.adb.query;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
-import javax.transaction.NotSupportedException;
-
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.AttributeMap;
 import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.errors.NotSupportedException;
 
 /**
  * <p>Db class.</p>
