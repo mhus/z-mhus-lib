@@ -63,9 +63,11 @@ public class AdbTest {
 		}
 	}
 
+    private static int poolCnt = 0;
+    
 	public DbPoolBundle createPool(String name) throws Exception {
 		
-		name = name.toLowerCase().trim();
+		name = name.toLowerCase().trim() + (poolCnt++);
 		
 		String jdbcDriver = "";
 		String jdbcAdminUrl = "";
@@ -483,7 +485,7 @@ public class AdbTest {
 	@Test
 	public void testDbQuery() throws Exception {
 		
-		DbPool pool = createPool("testModel2").getPool("test");
+		DbPool pool = createPool("testDbQuery").getPool("test");
 
 		BookStoreSchema schema = new BookStoreSchema();
 
@@ -677,10 +679,17 @@ public class AdbTest {
 
 	@Test
 	public void testTextType() throws Exception {
-		DbPool pool = createPool("testDataTypes").getPool("test");
+		DbPool pool = createPool("testTextType").getPool("test");
 		
 		BookStoreSchema schema = new BookStoreSchema();
 		DbManager manager = new DbManagerJdbc("",pool, schema);
+
+//	      // print all
+//        {
+//            System.out.println(">>> ALL");
+//            List<Store> res = manager.getAll(Store.class).toCacheAndClose();
+//            res.forEach(o -> System.out.println("--- All: " + o.getName()));
+//        }
 
 		for (int i = 1; i < 10; i++) {
 			Store store = manager.inject(new Store());
@@ -700,13 +709,13 @@ public class AdbTest {
 		{
 			System.out.println(">>> test query with text");
 			List<Store> res = manager.getByQualification(Db.query(Store.class).eq("name", "5") ).toCacheAndClose();
-			res.forEach(o -> System.out.println(o.getName()));
+			res.forEach(o -> System.out.println("--- Found: " + o.getName()));
 			assertEquals(1, res.size());
 		}
 		{
 			System.out.println(">>> test query with number");
 			List<Store> res = manager.getByQualification(Db.query(Store.class).eq("name", 5) ).toCacheAndClose();
-			res.forEach(o -> System.out.println(o.getName()));
+			res.forEach(o -> System.out.println("--- Found: " + o.getName()));
 			assertEquals(1, res.size());
 		}
 		
@@ -714,7 +723,7 @@ public class AdbTest {
 
 	@Test
 	public void testNumberType() throws Exception {
-		DbPool pool = createPool("testDataTypes").getPool("test");
+		DbPool pool = createPool("testNumberType").getPool("test");
 		
 		BookStoreSchema schema = new BookStoreSchema();
 		DbManager manager = new DbManagerJdbc("",pool, schema);
