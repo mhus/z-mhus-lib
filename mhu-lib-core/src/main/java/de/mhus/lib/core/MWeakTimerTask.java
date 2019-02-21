@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Mike Hummel
+w * Copyright 2018 Mike Hummel
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,11 @@
 package de.mhus.lib.core;
 
 import java.lang.ref.WeakReference;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
 
-public class MWeakTimerTask extends TimerTask implements Observer, Named {
+public class MWeakTimerTask extends TimerTask implements Named {
 
 	private boolean canceled = false;
 	private String name;
@@ -72,11 +70,6 @@ public class MWeakTimerTask extends TimerTask implements Observer, Named {
 		taskTask.run();
 	}
 	
-    @Override
-	public void update(Observable o, Object arg) {
-    	run();
-    }
-
     @Override
     public boolean cancel() {
     	setCanceled(true);

@@ -110,7 +110,8 @@ public class JdbcConnection extends InternalDbConnection {
 	}
 
 	/** {@inheritDoc} */
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void finalize() throws Throwable {
 		close();
 		super.finalize();

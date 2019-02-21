@@ -70,7 +70,7 @@ public class FieldRelation extends MObject {
 		try {
 			IRelationObject rel = (IRelationObject)attribute.get(obj);
 			if (rel == null && attribute.canWrite()) {
-				rel = (IRelationObject) attribute.getType().newInstance();
+				rel = (IRelationObject) attribute.getType().getDeclaredConstructor().newInstance();
 				attribute.set(obj, rel);
 			}
 			if (rel != null)

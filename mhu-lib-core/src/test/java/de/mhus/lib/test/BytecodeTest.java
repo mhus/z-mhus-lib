@@ -16,6 +16,7 @@
 package de.mhus.lib.test;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.junit.jupiter.api.Test;
 
@@ -156,7 +157,7 @@ public class BytecodeTest {
 	}
 	
 	@Test
-	public void testClassTransfer() throws IOException, AlreadyBoundException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void testClassTransfer() throws IOException, AlreadyBoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		
 		String name = TransferImpl.class.getCanonicalName();
 		byte[] code = MSystem.getBytes(TransferImpl.class);
@@ -166,7 +167,7 @@ public class BytecodeTest {
 		Class<?> clazz = cl.loadClass(name);
 		assertNotSame(TransferImpl.class, clazz);
 		
-		TransferIfc obj = (TransferIfc) clazz.newInstance();
+		TransferIfc obj = (TransferIfc) clazz.getDeclaredConstructor().newInstance();
 		int res = obj.hello();
 		assertEquals(1, res);
 	}

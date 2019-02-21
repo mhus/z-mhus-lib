@@ -56,7 +56,7 @@ public class LinkedListEditor<E> extends AbstractBeanListEditor<E> {
 	@Override
 	protected E createTarget() {
 		try {
-			E out = beanClass.newInstance();
+			E out = beanClass.getDeclaredConstructor().newInstance();
 			if (out instanceof ManagedListEntity)
 				((ManagedListEntity)out).doPostCreate(this);
 			return out;

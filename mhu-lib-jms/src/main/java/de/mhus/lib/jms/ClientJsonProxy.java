@@ -112,7 +112,7 @@ public class ClientJsonProxy<T> extends ClientJsonObject implements JmsObjectPro
 							Constructor<?> constructor = exceptionClass.getConstructor(String.class);
 							exception = (Throwable) constructor.newInstance(p.getString("exceptionMessage") + " [" + p.getString("exceptionClass") + "." + p.getString("exceptionMethod") + "]" );
 						} catch (Throwable t) {
-							exception = (Throwable) exceptionClass.newInstance();
+							exception = (Throwable) exceptionClass.getDeclaredConstructor().newInstance();
 						}
 						throw exception;
 					}

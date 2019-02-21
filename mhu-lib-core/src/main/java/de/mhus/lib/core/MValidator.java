@@ -21,9 +21,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
 
+import de.mhus.lib.core.lang.IObserver;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.NotSupportedException;
 
@@ -129,10 +128,10 @@ public class MValidator {
 			URL res = MSystem.locateResource(MValidator.class, "10-million-password-list-top-100000.txt");
 			InputStream is = res.openStream();
 			final LinkedList<String> list = new LinkedList<>();
-			MFile.readLines(is, new Observer() {
+			MFile.readLines(is, new IObserver<String>() {
 				
 				@Override
-				public void update(Observable o, Object arg) {
+				public void update(Object o, Object reason, String arg) {
 					String v = (String)arg;
 					// to lower case and trimm
 					v = v.trim().toLowerCase();

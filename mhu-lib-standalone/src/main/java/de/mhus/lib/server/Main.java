@@ -225,7 +225,7 @@ public class Main extends MJmx {
 
 	private Task create(TaskConfig initializer, Class<?> clazz) throws Exception {
 //		Task p = (Task) base(clazz); // TODO new Instance !!
-		Task p = (Task) clazz.newInstance();
+		Task p = (Task) clazz.getDeclaredConstructor().newInstance();
 		p.init(initializer);
 		return p;
 	}

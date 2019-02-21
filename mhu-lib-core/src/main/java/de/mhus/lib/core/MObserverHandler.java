@@ -15,17 +15,18 @@
  */
 package de.mhus.lib.core;
 
-import java.util.Observer;
+import de.mhus.lib.core.lang.IObserver;
 
-public class MObserverHandler extends MEventHandler<Observer> {
+public class MObserverHandler<T> extends MEventHandler<IObserver<T>> {
 
 	public void fireChanged(Object event) {
 		fire(event);
 	}
 
-	@Override
-	public void onFire(Observer listener, Object event, Object... values) {
-		listener.update(null, event);
+	@SuppressWarnings("unchecked")
+    @Override
+	public void onFire(IObserver<T> listener, Object event, Object... values) {
+		listener.update(null, null, (T)event);
 	}
 
 	

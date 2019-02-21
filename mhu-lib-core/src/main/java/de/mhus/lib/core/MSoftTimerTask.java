@@ -16,13 +16,11 @@
 package de.mhus.lib.core;
 
 import java.lang.ref.SoftReference;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.TimerTask;
 
 import de.mhus.lib.basics.Named;
 
-public class MSoftTimerTask extends TimerTask implements Observer, Named {
+public class MSoftTimerTask extends TimerTask implements Named {
 
 	private boolean canceled = false;
 	private String name;
@@ -72,11 +70,6 @@ public class MSoftTimerTask extends TimerTask implements Observer, Named {
 		taskTask.run();
 	}
 	
-    @Override
-	public void update(Observable o, Object arg) {
-    	run();
-    }
-
     @Override
     public boolean cancel() {
     	setCanceled(true);

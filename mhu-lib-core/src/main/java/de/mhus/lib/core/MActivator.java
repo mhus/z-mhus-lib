@@ -95,7 +95,7 @@ public abstract class MActivator extends ClassLoader  {
 		}
 		if (out == null) {
 			if (classes == null || objects == null)
-				out =  clazz.newInstance();
+				out =  clazz.getDeclaredConstructor().newInstance();
 			else
 				out = clazz.getConstructor(classes).newInstance(objects);
 		}				
@@ -112,7 +112,7 @@ public abstract class MActivator extends ClassLoader  {
 		if (obj instanceof InputStream)
 			return (InputStream)obj;
 		if (obj instanceof Class)
-			return (InputStream) ((Class<?>)obj).newInstance();
+			return (InputStream) ((Class<?>)obj).getDeclaredConstructor().newInstance();
 		return null;
 	}
 
@@ -151,7 +151,7 @@ public abstract class MActivator extends ClassLoader  {
 		}
 
 		if (clazz.isInterface()) return null;
-		Object obj = clazz.newInstance();
+		Object obj = clazz.getDeclaredConstructor().newInstance();
 		if (injector != null) injector.doInject(obj);
 		
 		if (clazz.getAnnotation(Prototype.class) == null && orgClazz.getAnnotation(Prototype.class) == null)

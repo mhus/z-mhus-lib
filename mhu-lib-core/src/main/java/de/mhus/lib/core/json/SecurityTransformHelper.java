@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.json;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -46,7 +47,7 @@ public class SecurityTransformHelper extends TransformHelper {
 	}
 	
 	@Override
-	public Object createObject(Class<?> type) throws InstantiationException, IllegalAccessException {
+	public Object createObject(Class<?> type) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (!checkSecurityForClass(type.getCanonicalName()))
 				throw new IllegalAccessException(type.getCanonicalName());
 		return super.createObject(type);

@@ -107,9 +107,11 @@ public class MObjectInputStream extends ObjectInputStream {
             classObjs[i] = cl;
         }
         try {
-            return Proxy.getProxyClass(
+            @SuppressWarnings("deprecation")
+            Class<?> proxyClass = Proxy.getProxyClass(
                 hasNonPublicInterface ? nonPublicLoader : latestLoader,
                 classObjs);
+            return proxyClass;
         } catch (IllegalArgumentException e) {
             throw new ClassNotFoundException(null, e);
         }

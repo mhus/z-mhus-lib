@@ -162,7 +162,7 @@ public class ClientService<T> extends ClientJms {
 								res.getStringProperty(PROP_EXCEPION_CLASS) + "." + 
 								res.getStringProperty(PROP_EXCEPTION_METHOD) + "]" );
 					} catch (Throwable t) {
-						exception = (Throwable) exceptionClass.newInstance();
+						exception = (Throwable) exceptionClass.getDeclaredConstructor().newInstance();
 					}
 					throw exception;
 				}

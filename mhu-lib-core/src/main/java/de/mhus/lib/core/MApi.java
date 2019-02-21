@@ -52,7 +52,7 @@ public class MApi {
 				String path = "de.mhus.lib.mutable.MApiFactory";
 				if (System.getProperty("mhu.lib.api.factory") != null) path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
 				dirtyLog("MApiFactory", path);
-				IApiFactory factory = (IApiFactory)Class.forName(path).newInstance();
+				IApiFactory factory = (IApiFactory)Class.forName(path).getDeclaredConstructor().newInstance();
 				if (factory != null) {
 					obj = factory.createApi();
 				}

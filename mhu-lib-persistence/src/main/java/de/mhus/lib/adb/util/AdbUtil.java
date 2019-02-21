@@ -137,7 +137,7 @@ public class AdbUtil {
 		if (entry == null) return;
 		try {
 			Field field = DbMetadata.class.getDeclaredField("id");
-			if (!field.isAccessible())
+			if (!field.canAccess(entry))
 				field.setAccessible(true);
 			field.set(entry, id);
 		} catch (Exception e) {

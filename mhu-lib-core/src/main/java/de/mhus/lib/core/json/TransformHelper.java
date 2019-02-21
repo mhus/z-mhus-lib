@@ -16,6 +16,7 @@
 package de.mhus.lib.core.json;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -74,8 +75,8 @@ public class TransformHelper {
 		return this;
 	}
 
-	public Object createObject(Class<?> type) throws InstantiationException, IllegalAccessException {
-		return type.newInstance();
+	public Object createObject(Class<?> type) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		return type.getDeclaredConstructor().newInstance();
 	}
 	
 	public void log(String string, Throwable t) {

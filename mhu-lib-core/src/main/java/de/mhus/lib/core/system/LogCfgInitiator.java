@@ -63,7 +63,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
-				mlogFactory = (MLogFactory) Class.forName(name.trim()).newInstance();
+				mlogFactory = (MLogFactory) Class.forName(name.trim()).getDeclaredConstructor().newInstance();
 			}
 		} catch (Throwable t) {MApi.dirtyLog(t);}	
 		if (mlogFactory != null)
@@ -75,7 +75,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
-				logFactory = (LogFactory) Class.forName(name.trim()).newInstance();
+				logFactory = (LogFactory) Class.forName(name.trim()).getDeclaredConstructor().newInstance();
 			}
 		} catch (Throwable t) {MApi.dirtyLog(t);}	
 		if (logFactory == null)
@@ -86,7 +86,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
-				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).newInstance() );
+				logFactory.setLevelMapper( (LevelMapper) Class.forName(name.trim()).getDeclaredConstructor().newInstance() );
 			}
 		} catch (Throwable t) {MApi.dirtyLog(t);}
 		
@@ -103,7 +103,7 @@ public class LogCfgInitiator implements CfgInitiator {
 			String name = system.getString(key);
 			if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
 			if (MString.isSet(name)) {
-				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).newInstance() );
+				logFactory.setParameterMapper( (ParameterMapper) Class.forName(name.trim()).getDeclaredConstructor().newInstance() );
 			}
 		} catch (Throwable t) {MApi.dirtyLog(t);}
 		
@@ -115,7 +115,7 @@ public class LogCfgInitiator implements CfgInitiator {
 					String name = mapper.getString("name");
 					String clazz = mapper.getString("class");
 					if (MString.isSet(name) && MString.isSet(clazz))
-						((MutableParameterMapper)logFactory.getParameterMapper()).put(name, (ParameterEntryMapper) Class.forName(clazz.trim()).newInstance() );
+						((MutableParameterMapper)logFactory.getParameterMapper()).put(name, (ParameterEntryMapper) Class.forName(clazz.trim()).getDeclaredConstructor().newInstance() );
 				}
 			} catch (Throwable t) {MApi.dirtyLog(t);}
 		}

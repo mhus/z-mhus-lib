@@ -97,7 +97,8 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 			pool.getStackTraces().remove(MSystem.getObjectId(this));
 	}
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void finalize() throws Throwable {
 		log().t(id,"finalized",instance.getInstanceId());
 		if (instance != null) {

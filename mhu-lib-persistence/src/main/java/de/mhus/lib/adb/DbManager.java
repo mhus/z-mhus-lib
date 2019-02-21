@@ -491,7 +491,7 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 		@Override
 		public T newInstance() throws Exception {
 			@SuppressWarnings("unchecked")
-			T out = (T) table.getClazz().newInstance();
+			T out = (T) table.getClazz().getDeclaredConstructor().newInstance();
 			service.inject((Persistable) out);
 			return out;
 		}

@@ -44,8 +44,6 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
@@ -53,6 +51,7 @@ import java.util.concurrent.TimeoutException;
 import de.mhus.lib.core.cfg.CfgProperties;
 import de.mhus.lib.core.io.FileChecker;
 import de.mhus.lib.core.io.PdfFileChecker;
+import de.mhus.lib.core.lang.IObserver;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 
@@ -797,10 +796,10 @@ public class MFile {
 		if (file == null) return null;
 		
 		final LinkedList<String> out = new LinkedList<>();
-		readLines(file, new Observer() {
+		readLines(file, new IObserver<String>() {
 			
 			@Override
-			public void update(Observable o, Object arg) {
+			public void update(Object o, Object reason, String arg) {
 				out.add((String)arg);
 			}
 		});
@@ -823,10 +822,10 @@ public class MFile {
 		if (is == null) return null;
 		
 		final LinkedList<String> out = new LinkedList<>();
-		readLines(is, new Observer() {
+		readLines(is, new IObserver<String>() {
 			
 			@Override
-			public void update(Observable o, Object arg) {
+			public void update(Object o, Object reason, String arg) {
 				out.add((String)arg);
 			}
 		});
@@ -837,7 +836,7 @@ public class MFile {
 		return out;
 	}
 	
-	public static void readLines(File file, Observer lineObserver) throws IOException {
+	public static void readLines(File file, IObserver<String> lineObserver) throws IOException {
 		if (file == null || lineObserver == null) return;
 		FileReader r = new FileReader(file);
 		readLines(r,lineObserver);
@@ -851,20 +850,20 @@ public class MFile {
 	 * @param lineObserver
 	 * @throws IOException
 	 */
-	public static void readLines(InputStream is, Observer lineObserver) throws IOException {
+	public static void readLines(InputStream is, IObserver<String> lineObserver) throws IOException {
 		if (is == null || lineObserver == null) return;
 		InputStreamReader r = new InputStreamReader(is, MString.CHARSET_CHARSET_UTF_8); // default charset is UTF-8
 		readLines(r,lineObserver);
 	}
 	
-	public static void readLines(Reader r, Observer lineObserver) throws IOException {
+	public static void readLines(Reader r, IObserver<String> lineObserver) throws IOException {
 		if (r == null || lineObserver == null) return;
 		BufferedReader br = new BufferedReader(r);
 		String line = null;
 		do {
 			line = br.readLine();
 			if (line != null)
-				lineObserver.update(null, line);
+				lineObserver.update(null, null, line);
 		} while(line != null);
 	}
 

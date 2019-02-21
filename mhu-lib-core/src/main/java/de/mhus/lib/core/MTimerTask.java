@@ -102,7 +102,7 @@ public abstract class MTimerTask extends TimerTask implements ITimerTask {
 			Class<? extends TimerTask> clazz = task.getClass();
 			Field field = MSystem.getDeclaredField(clazz,"state");
 			if (field != null) {
-				if (!field.isAccessible())
+				if (!field.canAccess(task))
 					field.setAccessible(true);
 				return field.getInt(task);
 			}

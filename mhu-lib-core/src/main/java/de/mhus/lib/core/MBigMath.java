@@ -198,7 +198,7 @@ public class MBigMath {
 		BigDecimal T = null;
 		do {
 			D = D.add(Z);
-			T = D.divide(E, 100, BigDecimal.ROUND_UP).stripTrailingZeros();
+			T = D.divide(E, 100, RoundingMode.UP).stripTrailingZeros();
 		} while ( T.scale() > 0);
 		return T.toBigInteger();
 	}
@@ -241,7 +241,7 @@ public class MBigMath {
 	private static BigDecimal sqrtNewtonRaphson  (BigDecimal c, BigDecimal xn, BigDecimal precision){
 	    BigDecimal fx = xn.pow(2).add(c.negate());
 	    BigDecimal fpx = xn.multiply(new BigDecimal(2));
-	    BigDecimal xn1 = fx.divide(fpx,2*SQRT_DIG.intValue(),BigDecimal.ROUND_DOWN);
+	    BigDecimal xn1 = fx.divide(fpx,2*SQRT_DIG.intValue(),RoundingMode.DOWN);
 	    xn1 = xn.add(xn1.negate());
 	    BigDecimal currentSquare = xn1.pow(2);
 	    BigDecimal currentPrecision = currentSquare.subtract(c);

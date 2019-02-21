@@ -17,6 +17,7 @@ package de.mhus.lib.adb.model;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 
 import de.mhus.lib.adb.DbDynamic;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -30,10 +31,14 @@ import de.mhus.lib.errors.MException;
  */
 public class TableDynamic extends Table {
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException */
 	@Override
-	protected void parseFields() throws InstantiationException, IllegalAccessException, MException {
-		DbDynamic.Field[] fa = ((DbDynamic)clazz.newInstance()).getFieldDefinitions();
+	protected void parseFields() throws InstantiationException, IllegalAccessException, MException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		DbDynamic.Field[] fa = ((DbDynamic)clazz.getDeclaredConstructor().newInstance()).getFieldDefinitions();
 		for (DbDynamic.Field f : fa) {
 
 			PojoAttribute<?> attr = new DynamicAttribute(f);

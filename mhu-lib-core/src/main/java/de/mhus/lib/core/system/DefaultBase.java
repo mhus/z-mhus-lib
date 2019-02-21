@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.system;
 
+import java.lang.reflect.InvocationTargetException;
+
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.MutableActivator;
@@ -71,8 +73,8 @@ public class DefaultBase extends Base {
 		if (def == null) return null;
 		
 		try {
-			return def.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			return def.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 			MApi.dirtyLog(ifc,e);
 		}
 		return null;

@@ -210,7 +210,8 @@ public abstract class DbPool extends MJmx implements DbTransactionable {
 	 */
 	public abstract void close();
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	protected void finalize() throws Throwable {
 		close();
 		housekeeperTask = null;

@@ -17,6 +17,7 @@ package de.mhus.lib.core.pojo;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Usage new Parser().parse(object).filter(new DefautFilter()).getModel()
@@ -70,9 +71,9 @@ public class PojoParser {
 			out = parent.get(pojo);
 			if (out == null) {
 				try {
-					out = parent.getType().newInstance();
+					out = parent.getType().getDeclaredConstructor().newInstance();
 					parent.set(pojo, out);
-				} catch (InstantiationException | IllegalAccessException e) {
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throw new IOException("can't create parent: " + parent.getName(), e);
 				}
 			}

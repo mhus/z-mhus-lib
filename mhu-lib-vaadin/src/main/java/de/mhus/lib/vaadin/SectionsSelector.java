@@ -36,7 +36,7 @@ public class SectionsSelector extends VerticalLayout {
 	private String bSelectedColor = "#AAA";
 	private String bNotSelectedColor = "#999";
 	private String bDisabledColor = "#555";
-	private MObserverHandler eventHandler = new MObserverHandler();
+	private MObserverHandler<Event> eventHandler = new MObserverHandler<>();
 	private boolean autoSelect = true; 
 	
 	public SectionsSelector() {
@@ -231,7 +231,7 @@ public class SectionsSelector extends VerticalLayout {
 		return sel;
 	}
 		
-	public MObserverHandler eventHandler() {
+	public MObserverHandler<Event> eventHandler() {
 		return eventHandler;
 	}
 
