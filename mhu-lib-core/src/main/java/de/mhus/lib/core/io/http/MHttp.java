@@ -15,10 +15,22 @@
  */
 package de.mhus.lib.core.io.http;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.Consts;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
+
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
 
 public class MHttp {
@@ -84,7 +96,9 @@ public class MHttp {
 		OPTIONS,
 		TRACE,
 		PATCH
-	};
+	}
+
+	private static MHttpClientBuilder client;
 	
 	public static METHOD toMethod(String in) {
 		return METHOD.valueOf(in.trim().toUpperCase());
@@ -94,4 +108,45 @@ public class MHttp {
 		return MFile.getMimeType(extension);
 	}
 
+	/**
+	 * Provide a central http client for common use. It will be configured with
+	 * system proxy and usual parameters
+	 * @return
+	 */
+	public static synchronized MHttpClientBuilder getSharedClient() {
+		if (client == null) {
+			client = new MHttpClientBuilder() {
+				protected void configureConnectionManager(HttpClientBuilder build) {
+					super.configureConnectionManager(build);
+					((PoolingHttpClientConnectionManager)connManager).setMaxTotal(10000);
+					((PoolingHttpClientConnectionManager)connManager).setDefaultMaxPerRoute(10000);
+				}
+			};
+			// TODO use als mhus-config configuration for proxy and other configurations
+			client.setUseSystemProperties(true);
+		}
+		client.cleanup();
+		return client;
+	}
+
+	public static void setFormParameters(HttpPost action, String ... values ) {
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		for (int i = 0; i < values.length; i=i+2) {
+			formparams.add(new BasicNameValuePair(values[i], values[i+1]));
+		}
+		
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+		action.setEntity(entity);
+	}
+	
+	public static void setFormParameters(HttpPost action, IProperties params ) {
+		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+		params.forEach(
+				e -> formparams.add(new BasicNameValuePair(e.getKey(), MCast.toString(e.getValue())))
+		);
+		
+		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+		action.setEntity(entity);
+	}
+	
 }
