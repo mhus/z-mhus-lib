@@ -5,10 +5,13 @@
 * Calendar for christian holidays (moon phase calculation), link https://github.com/flightonary/jholiday
 * Link https://github.com/apilayer/restcountries to get Country and Language information
 * Link https://github.com/googlei18n/libphonenumber to work with phone numbers
+* Reimplement cron scheduling
+* Add central maven parent pom for all mhu projects and reorg maven poms
 
 ## 3.5.0
 
 * dependencies for karaf 4.2.*
+* Java 11 compatibility
 
 ## 3.4.0
 

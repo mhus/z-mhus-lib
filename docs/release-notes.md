@@ -1,7 +1,9 @@
 
 ## 3.5.0
 
-* update dependencies for karaf 4.2.1 (needed if running as bundle)
+* update dependencies for karaf 4.2.3 (needed if running as bundle)
+* update source for jdk 11
+* remove mongo support for the moment
 
 ## 3.4.0
 
