@@ -41,7 +41,6 @@ public interface IApi {
 	
 	Base base();
 
-	enum SCOPE {LOG,TMP,ETC,DEPLOY,DATA}
 	/**
 	 * Return a File inside the current application context.
 	 * 
@@ -49,7 +48,7 @@ public interface IApi {
 	 * @param name The name / path of the file or directory inside the scope
 	 * @return file The file.
 	 */
-	File getFile(SCOPE scope, String name);
+	File getFile(MApi.SCOPE scope, String name);
 
 	String getSystemProperty(String name, String def);
 

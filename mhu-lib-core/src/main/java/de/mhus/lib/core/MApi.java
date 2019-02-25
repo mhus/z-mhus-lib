@@ -34,6 +34,8 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MApi {
 
+    public enum SCOPE {LOG,TMP,ETC,DEPLOY,DATA}
+
 	private static IApi api;
 	protected static Boolean trace;
 //	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
@@ -144,7 +146,7 @@ public class MApi {
 		return configUpdater;
 	}
 	
-	public static File getFile(IApi.SCOPE scope, String path) {
+	public static File getFile(SCOPE scope, String path) {
 		return get().getFile(scope, path);
 	}
 

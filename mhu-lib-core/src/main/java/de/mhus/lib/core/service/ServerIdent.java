@@ -22,14 +22,13 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cfg.CfgString;
-import de.mhus.lib.core.system.IApi.SCOPE;
 
 public class ServerIdent {
 
 	private CfgString ident;
 	
 	public ServerIdent() {
-		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".txt").getAbsolutePath() );
+		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(MApi.SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".txt").getAbsolutePath() );
 		File file = new File(persistence);
 		String def = "";
 		if (file.exists() && file.isFile())

@@ -216,7 +216,7 @@ public class MMaven {
 
 				String download = url + '/' + artifact.toLocation();
 				HttpGet action = new HttpGet(download);
-				HttpResponse response = client.execute(action);
+				HttpResponse response = client.getHttpClient().execute(action);
 				
 				if (response.getStatusLine().getStatusCode() == 200) {
 					log.d("download artifact:",artifact,"source:",id,useProxyId,useMirrorId);
@@ -236,7 +236,7 @@ public class MMaven {
 						download = url + '/' + pomArtifact.toLocation();
 						
 						action = new HttpGet(download);
-						response = client.execute(action);
+						response = client.getHttpClient().execute(action);
 						
 						if (response.getStatusLine().getStatusCode() == 200) {
 							log.t("download pom:",artifact,"pom","source:",id,useProxyId,useMirrorId);

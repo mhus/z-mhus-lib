@@ -21,13 +21,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -158,21 +153,21 @@ public class MHttpClientBuilder extends MObject {
 	}
 	
 
-	public HttpResponse execute(HttpGet action) throws ClientProtocolException, IOException {
-		return getHttpClient().execute(action);
-	}
-
-	public HttpResponse execute(HttpPost action) throws ClientProtocolException, IOException {
-		return getHttpClient().execute(action);
-	}
-
-	public HttpResponse execute(HttpPut action) throws ClientProtocolException, IOException {
-		return getHttpClient().execute(action);
-	}
-
-	public HttpResponse execute(HttpDelete action) throws ClientProtocolException, IOException {
-		return getHttpClient().execute(action);
-	}
+//	public HttpResponse execute(HttpGet action) throws ClientProtocolException, IOException {
+//		return getHttpClient().execute(action);
+//	}
+//
+//	public HttpResponse execute(HttpPost action) throws ClientProtocolException, IOException {
+//		return getHttpClient().execute(action);
+//	}
+//
+//	public HttpResponse execute(HttpPut action) throws ClientProtocolException, IOException {
+//		return getHttpClient().execute(action);
+//	}
+//
+//	public HttpResponse execute(HttpDelete action) throws ClientProtocolException, IOException {
+//		return getHttpClient().execute(action);
+//	}
 
 	public void cleanup() {
 		synchronized (this) {

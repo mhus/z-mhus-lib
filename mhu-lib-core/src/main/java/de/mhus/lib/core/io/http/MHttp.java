@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -111,12 +112,13 @@ public class MHttp {
 	/**
 	 * Provide a central http client for common use. It will be configured with
 	 * system proxy and usual parameters
-	 * @return
+	 * @return the shared configured http client
 	 */
-	public static synchronized MHttpClientBuilder getSharedClient() {
+	public static synchronized HttpClient getSharedClient() {
 		if (client == null) {
 			client = new MHttpClientBuilder() {
-				protected void configureConnectionManager(HttpClientBuilder build) {
+				@Override
+                protected void configureConnectionManager(HttpClientBuilder build) {
 					super.configureConnectionManager(build);
 					((PoolingHttpClientConnectionManager)connManager).setMaxTotal(10000);
 					((PoolingHttpClientConnectionManager)connManager).setDefaultMaxPerRoute(10000);
@@ -126,7 +128,7 @@ public class MHttp {
 			client.setUseSystemProperties(true);
 		}
 		client.cleanup();
-		return client;
+		return client.getHttpClient();
 	}
 
 	public static void setFormParameters(HttpPost action, String ... values ) {

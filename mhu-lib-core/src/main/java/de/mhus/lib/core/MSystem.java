@@ -45,7 +45,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.system.IApi;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
@@ -171,7 +170,7 @@ public class MSystem {
 		// }
 
 		{
-			File f = MApi.getFile(IApi.SCOPE.ETC, qName);
+			File f = MApi.getFile(MApi.SCOPE.ETC, qName);
 			if (f.exists() && f.isFile())
 				return f.toURL();
 		}
