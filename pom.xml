@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2018 Mike Hummel
+    Copyright 2019 Mike Hummel
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>de.mhus.lib</groupId>
+    <parent>
+		<groupId>de.mhus.lib</groupId>
+		<version>3.6.0-SNAPSHOT</version>
+	    <artifactId>mhus-oss</artifactId>
+    </parent>
 	<artifactId>mhus-lib</artifactId>
-	<version>3.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
 	<url>http://www.mhus.org</url>
@@ -49,172 +51,44 @@
 			<url>http://www.mhus.org</url>
 		</developer>
 	</developers>
-	<properties>
-		<scr.packages>*</scr.packages>
-		<bndlib.version>2.4.0</bndlib.version>
-		<felix.metatype.version>1.2.2</felix.metatype.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<compileSource>11</compileSource>
-		<osgi.version>5.0.0</osgi.version>
-		<activemq.version>5.15.8</activemq.version>
-		<bundle.plugin.version>4.1.0</bundle.plugin.version>
-		<vaadin.version>8.6.1</vaadin.version>
-		<servlet.version>3.1.0</servlet.version>
-		<portlet.version>2.0</portlet.version>
-		<javax.mail.version>1.4.1</javax.mail.version>
-
-		<felix.plugin.version>3.0.1</felix.plugin.version>
-		<maven.version>3.5.0</maven.version>
-		<jackson.version>1.9.5</jackson.version>
-
-		<javax.mail.version>1.4.1</javax.mail.version>
-		<jline.version>2.14.1</jline.version>
-
-	</properties>
-
 	<build>
-		<defaultGoal>install</defaultGoal>
-
 		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>${compileSource}</source>
-					<target>${compileSource}</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-                 <version>2.22.1</version>
-				<configuration>
-					<trimStackTrace>false</trimStackTrace>
-			        <useSystemClassLoader>false</useSystemClassLoader>
-				</configuration>
 			</plugin>
 			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<finalName>doc</finalName>
-					<descriptors>
-						<descriptor>descriptor.xml</descriptor>
-					</descriptors>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
-				<configuration>
-					<failOnError>false</failOnError>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.4.1</version>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>[3,4)</version>
-								</requireMavenVersion>
-								<!-- 
-								<requireJavaVersion>
-									<version>[1.8,1.9)</version>
-								</requireJavaVersion>
-								 -->
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<header>LICENSE_HEADER</header>
-					<properties>
-						<owner>Mike Hummel</owner>
-						<email>mh@mhus.de</email>
-					</properties>
-					<excludes>
-						<exclude>README.md</exclude>
-						<exclude>LICENSE</exclude>
-						<exclude>LICENSE_HEADER</exclude>
-						<exclude>src/test/resources/**</exclude>
-						<exclude>src/main/resources/**</exclude>
-						<exclude>mhu-liferay-theme/src/main/webapp/**</exclude>
-						<exclude>docs/**</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 
 	</build>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 
 	<profiles>
 		<profile>
@@ -224,16 +98,14 @@
 			</activation>
 			<modules>
 				<module>mhu-lib-annotations</module>
-				<module>mhu-lib-constgenerator</module>
 				<module>mhu-lib-core</module>
 				<module>mhu-lib-j2ee</module>
 				<module>mhu-lib-persistence</module>
+                <module>mhu-lib-jpa</module>
+                <module>mhu-lib-mongo</module>
 				<module>mhu-lib-vaadin</module>
 				<module>mhu-lib-standalone</module>
 				<module>mhu-lib-jms</module>
-      <!-- not changed! need to create a separate project for it
-      <module>mhu-lib-liferay</module>
-       -->
 			</modules>
 
 		</profile>
@@ -247,57 +119,21 @@
 			</activation>
 			<modules>
 				<module>mhu-lib-annotations</module>
-				<module>mhu-lib-constgenerator</module>
 				<module>mhu-lib-core</module>
 				<module>mhu-lib-persistence</module>
 				<module>mhu-lib-j2ee</module>
 				<module>mhu-lib-vaadin</module>
 		      <!-- currently no release wanted
-		      <module>mhu-lib-liferay</module>
-		      <module>mhu-lib-standalone</module>
+                <module>mhu-lib-jpa</module>
+                <module>mhu-lib-mongo</module>
+		        <module>mhu-lib-standalone</module>
 		       -->
 				<module>mhu-lib-jms</module>
 			</modules>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
-						<configuration>
-							<passphrase>${gpg.passphrase}</passphrase>
-						</configuration>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 	</profiles>
 
     <dependencies>
-        <!-- junit 5, unit test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.3.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-           <groupId>org.junit.platform</groupId>
-           <artifactId>junit-platform-launcher</artifactId>
-           <version>1.1.1</version>
-           <scope>test</scope>
-        </dependency>
-	    
 	    <dependency>
 	        <groupId>org.codehaus.jackson</groupId>
 	        <artifactId>jackson-mapper-asl</artifactId>
