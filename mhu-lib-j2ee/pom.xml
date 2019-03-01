@@ -51,32 +51,6 @@
 	          </instructions>
 	        </configuration>
 	      </plugin>
-		  
-	    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-	      
-      <plugin>
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-release-plugin</artifactId>
-		  <version>2.2.2</version>
-		  <configuration>
-		    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-		    
-		  </configuration>
-		</plugin>
-
     </plugins>
   </build>
 
@@ -84,17 +58,14 @@
   	<dependency>
   		<groupId>javax.portlet</groupId>
   		<artifactId>portlet-api</artifactId>
-  		<version>${portlet.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>javax.servlet</groupId>
   		<artifactId>javax.servlet-api</artifactId>
-  		<version>${servlet.version}</version>
   	</dependency>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
   		<artifactId>mhu-lib-core</artifactId>
-  		<version>${project.version}</version>
   	</dependency>
   </dependencies>
 </project>
