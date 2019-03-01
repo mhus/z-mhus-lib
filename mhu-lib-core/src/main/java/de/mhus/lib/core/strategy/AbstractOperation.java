@@ -18,6 +18,7 @@ package de.mhus.lib.core.strategy;
 import java.util.UUID;
 
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.logging.LogProperties;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
@@ -36,7 +37,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 
 	@Override
 	public final OperationResult doExecute(TaskContext context) throws Exception {
-		log().d("execute",context.getParameters());
+		log().d("execute",new LogProperties(context.getParameters()));
 		if (!hasAccess()) {
 			log().d("access denied",context,context.getErrorMessage());
 			return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
