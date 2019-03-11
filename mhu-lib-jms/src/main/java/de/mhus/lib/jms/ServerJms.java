@@ -234,7 +234,7 @@ do not block jms driven threads !!! This will cause a deadlock
 					String logMapper = message.getStringProperty(MConstants.LOG_MAPPER);
 					if (logMapper != null) {
 						releaseLog = true;
-						MLogUtil.setTrailConfig(logMapper);
+						MLogUtil.setTrailConfig(MLogUtil.TRAIL_SOURCE_JMS, logMapper);
 					}
 				} catch (Throwable t) {}
 			}

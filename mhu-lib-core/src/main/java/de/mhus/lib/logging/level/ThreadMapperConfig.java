@@ -16,17 +16,14 @@
 package de.mhus.lib.logging.level;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MMath;
-import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public class ThreadMapperConfig implements LevelMapper {
 
-	private static CfgString DEFAULT_TRAIL_CONFIG = new CfgString(Log.class, "defaultTrailConfig", "T,I,I,W,E,F,G,0");
 	public static final String MAP_LABEL = "MAP";
-	private static long nextId = 0;
 
 	private LEVEL debug = LEVEL.INFO;
 	private LEVEL error = LEVEL.ERROR;
@@ -67,15 +64,15 @@ public class ThreadMapperConfig implements LevelMapper {
 
 	public void doConfigure(String config) {
 		if (config == null) return;
-		if (config.length() >= 4)
+		if (config.length() >= 4) // remove MAP,
 			config = config.substring(4);
 		else
 			config = "";
 		if (config.length() == 0 || config.equals("-")) {
-			config = DEFAULT_TRAIL_CONFIG.value();
+			config = MLogUtil.DEFAULT_TRAIL_CONFIG.value();
 		} else
 		if (config.indexOf(',') < 0) {
-			config = DEFAULT_TRAIL_CONFIG.value() + "," + config;
+			config = MLogUtil.DEFAULT_TRAIL_CONFIG.value() + "," + config;
 		}
 		String[] parts = config.toUpperCase().split(",");
 
@@ -99,7 +96,7 @@ public class ThreadMapperConfig implements LevelMapper {
 			id = parts[8];
 
 		if (id == null)
-			id = MMath.toBasis36WithIdent( (long) (Math.random() * 36 * 36 * 36 * 36), ++nextId, 8 );
+			id = MLogUtil.createTrailIdent();
 
 		if (id.length() > 10) id = id.substring(0,10);
 		

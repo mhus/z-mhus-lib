@@ -16,11 +16,26 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MMath;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.system.IApi;
+import de.mhus.lib.logging.level.ThreadMapperConfig;
 
 public class MLogUtil {
 
-	private static Log log = null;
+    public static CfgString DEFAULT_TRAIL_REST = new CfgString(Log.class, "restTrailConfig", "T,I,I,W,E,F,G,0");
+    public static CfgString DEFAULT_TRAIL_CONFIG = new CfgString(Log.class, "defaultTrailConfig", "T,I,I,W,E,F,G,0");
+
+	public static final String TRAIL_SOURCE_SHELL = "s";
+    public static final String TRAIL_SOURCE_REST = "r";
+    public static final String TRAIL_SOURCE_JMS = "j";
+    public static final String TRAIL_SOURCE_OTHER = "o";
+    public static final String TRAIL_SOURCE_UI = "u";
+    
+    private static long nextId = 0;
+
+    private static Log log = null;
 	
 	public synchronized static Log log() {
 		if (log == null) {
@@ -37,6 +52,10 @@ public class MLogUtil {
 		setTrailConfig(null);
 	}
 	
+    public static void setTrailConfig(String source, String parameters) {
+        setTrailConfig(createTrailConfig(source, parameters));
+    }
+    
 	public static void setTrailConfig(String parameters) {
 		IApi api = MApi.get();
 		LevelMapper mapper = api.getLogFactory().getLevelMapper();
@@ -90,5 +109,31 @@ public class MLogUtil {
 		}
 		
 	}
+
+    public static String createTrailConfig(String source, String parameters) {
+        if (parameters == null || parameters.length() == 0)
+            return null;
+        if (source == null || source.length() == 0) source = TRAIL_SOURCE_OTHER;
+        String[] parts = parameters.split(",");
+        if (parts.length < 2) return null;
+        if (parts[1].length() == 0 || parts[1].equals("?"))
+            parts[1] = source.substring(0,1) + createTrailIdent();
+        else if (!source.equals(TRAIL_SOURCE_REST))
+            return parameters; // use the same
+        String config = null;
+        if (source.equals(TRAIL_SOURCE_REST))
+            config = DEFAULT_TRAIL_REST.value();
+        else
+        if (parts.length > 2)
+            config = MString.join(parts,2,parts.length,",");
+        else
+            config = DEFAULT_TRAIL_CONFIG.value();
+
+        return ThreadMapperConfig.MAP_LABEL + "," + parts[1] + config;
+    }
+
+    public static String createTrailIdent() {
+        return MMath.toBasis36WithIdent( (long) (Math.random() * 36 * 36 * 36 * 36), ++nextId, 8 );
+    }
 
 }

@@ -1029,6 +1029,23 @@ public class MString {
 		return sb.toString();
 	}
 
+    public static String join(String[] src, int from, int to, String glue) {
+        if (src == null)
+            return null;
+        if (src.length == 0)
+            return "";
+        if (src.length == 1)
+            return src[0];
+        StringBuilder sb = new StringBuilder();
+        if (to >= src.length) to = src.length-1;
+        for (int i = from; i <= to; i++) {
+            if (i != from)
+                sb.append(glue);
+            sb.append(src[i]);
+        }
+        return sb.toString();
+    }
+    
 	public static String join(long[] src, char glue) {
 		if (src == null)
 			return null;
