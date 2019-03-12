@@ -24,6 +24,7 @@ import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.system.ApiInitialize;
 import de.mhus.lib.core.system.DefaultMApi;
@@ -88,10 +89,10 @@ public class MApi {
 		return get().isTrace(name);
 	}
 		
-	public static void doStartTrailLog() {
+	public static void doStartTrailLog(String source) {
 		LevelMapper mapper = get().getLogFactory().getLevelMapper();
 		if (mapper != null && mapper instanceof TrailLevelMapper)
-			((TrailLevelMapper)mapper).doConfigureTrail("MAP");
+			((TrailLevelMapper)mapper).doConfigureTrail(source, MLogUtil.MAP_LABEL);
 	}
 	
 	public static void doStopTrailLog() {

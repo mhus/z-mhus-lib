@@ -160,7 +160,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 				if (log != null) {
 					LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
 					if (lm != null && lm instanceof TrailLevelMapper)
-						((TrailLevelMapper)lm).doConfigureTrail(log);
+						((TrailLevelMapper)lm).doConfigureTrail(null, log);
 				}
 				
 				log().t("run",name,task);

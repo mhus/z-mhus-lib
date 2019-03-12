@@ -19,6 +19,7 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
 
 public class ThreadBasedMapper implements TrailLevelMapper {
@@ -29,10 +30,10 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 		map.set(config);
 	}
 
-	public void set(String config) {
-		if (config == null || !config.startsWith(ThreadMapperConfig.MAP_LABEL)) return;
+	public void set(String source, String config) {
+		if (config == null || !config.startsWith(MLogUtil.MAP_LABEL)) return;
 		ThreadMapperConfig c = new ThreadMapperConfig();
-		c.doConfigure(config);
+		c.doConfigure(source, config);
 		set(c);
 	}
 	
@@ -64,10 +65,10 @@ public class ThreadBasedMapper implements TrailLevelMapper {
 	}
 
 	@Override
-	public void doConfigureTrail(String config) {
+	public void doConfigureTrail(String source, String config) {
 		//if (backup == null) return;
-		if (MString.isEmpty(config)) config = ThreadMapperConfig.MAP_LABEL;
-		set(config);
+		if (MString.isEmpty(config)) config = MLogUtil.MAP_LABEL;
+		set(source, config);
 	}
 
 	@Override

@@ -23,9 +23,7 @@ import de.mhus.lib.core.logging.MLogUtil;
 
 public class ThreadMapperConfig implements LevelMapper {
 
-	public static final String MAP_LABEL = "MAP";
-
-	private LEVEL debug = LEVEL.INFO;
+	private LEVEL debug = LEVEL.DEBUG;
 	private LEVEL error = LEVEL.ERROR;
 	private LEVEL fatal = LEVEL.FATAL;
 	private LEVEL info = LEVEL.INFO;
@@ -62,19 +60,42 @@ public class ThreadMapperConfig implements LevelMapper {
 		return level;
 	}
 
-	public void doConfigure(String config) {
+	public void doConfigure(String source, String config) {
 		if (config == null) return;
-		if (config.length() >= 4) // remove MAP,
+		config = config.trim().toUpperCase();
+		
+		if (config.equals(MLogUtil.MAP_LABEL)) {
+			config = "";
+		} else
+		if (config.startsWith("MAP,")) // remove 'MAP,'
 			config = config.substring(4);
 		else
 			config = "";
-		if (config.length() == 0 || config.equals("-")) {
-			config = MLogUtil.DEFAULT_TRAIL_CONFIG.value();
-		} else
-		if (config.indexOf(',') < 0) {
-			config = MLogUtil.DEFAULT_TRAIL_CONFIG.value() + "," + config;
+		
+		// ident only
+		if (config.length() > 0) {
+			int pos = config.indexOf(',');
+			if (pos < 0) {
+				id = config;
+				config = "";
+			}
 		}
-		String[] parts = config.toUpperCase().split(",");
+		
+		if (source == null) 
+			source = MLogUtil.TRAIL_SOURCE_OTHER;
+		source = source.toUpperCase();
+		
+        if (source.equals(MLogUtil.TRAIL_SOURCE_REST))
+            config = MLogUtil.DEFAULT_TRAIL_REST.value();
+        else
+		if (config.length() == 0) {
+			if (source.equals(MLogUtil.TRAIL_SOURCE_SHELL))
+				config = MLogUtil.DEFAULT_TRAIL_SHELL.value();
+			else
+				config = MLogUtil.DEFAULT_TRAIL_CONFIG.value();
+		}
+
+        String[] parts = config.toUpperCase().split(",");
 
 		if (parts.length > 0)
 			trace = toLevel(parts[0]);
@@ -96,9 +117,10 @@ public class ThreadMapperConfig implements LevelMapper {
 			id = parts[8];
 
 		if (id == null)
-			id = MLogUtil.createTrailIdent();
+			id = source.substring(0,1) + MLogUtil.createTrailIdent();
 
-		if (id.length() > 10) id = id.substring(0,10);
+		if (id.length() > 10) // max 10 characters
+			id = id.substring(0,10);
 		
 	}
 
@@ -115,7 +137,7 @@ public class ThreadMapperConfig implements LevelMapper {
 	}
 
 	public String doSerialize() {
-		return MAP_LABEL + "," + 
+		return MLogUtil.MAP_LABEL + "," + 
 				trace.name().substring(0, 1) + "," + 
 				debug.name().substring(0, 1) + "," + 
 				info.name().substring(0, 1) + "," + 
