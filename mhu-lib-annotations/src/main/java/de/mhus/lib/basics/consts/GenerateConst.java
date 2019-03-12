@@ -23,6 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 public @interface GenerateConst {
 	Class<? extends Annotation>[] annotation() default {}; 
 	String[] ignore() default {};
+	Identifier.TYPE[] export() default {};
+	Identifier.TYPE[] shortcuts() default {};
 	boolean restricted() default false;
 	
 }

@@ -22,9 +22,12 @@ package de.mhus.lib.basics.consts;
  *
  */
 public class Identifier {
-
+    
+    public enum TYPE {NONE,ACTION,GETTER,SETTER, CLASS, MAVEN, FIELD}
+    
 	private String id;
 	private Class<?> clazz;
+    private TYPE type;
 
 	public Identifier(String id) {
 		this.id = id;
@@ -35,9 +38,15 @@ public class Identifier {
 		this.clazz = clazz;
 	}
 	
+    public Identifier(TYPE type, Class<?> clazz, String id) {
+        this.type = type;
+        this.id = id;
+        this.clazz = clazz;
+    }
+    
 	@Override
 	public String toString() {
-		return id;
+		return type + " " + id;
 	}
 	
 	public String getPojoName() {
@@ -51,6 +60,14 @@ public class Identifier {
 
 	public Class<?> getClazz() {
 		return clazz;
+	}
+	
+	public TYPE getType() {
+	    return type;
+	}
+	
+	public String getId() {
+	    return id;
 	}
 	
 }
