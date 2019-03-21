@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.ReadOnlyList;
+import de.mhus.lib.errors.MRuntimeException;
 
 public class MCollection {
 
@@ -534,5 +535,38 @@ public class MCollection {
 			
 		};
 	}
+
+	/**
+	 * Cut a part from an array and create a new array with the values.
+	 * 
+	 * @param from
+	 * @param start
+	 * @param stop
+	 * @return new cropped array
+	 */
+    public static <T> T[] cropArray(T[] from, int start, int stop) {
+        int length = stop - start;
+        if (length < 0) throw new MRuntimeException("malformed indexes",start,stop,length);
+        @SuppressWarnings("unchecked")
+        T[] out = (T[]) Array.newInstance(from.getClass().getComponentType(), length);
+        System.arraycopy(from, start, out, 0, length);
+        return out;
+    }
+
+    /**
+     * 
+     * @param from
+     * @param left
+     * @param right
+     * @return new extended array
+     */
+    public static <T> T[] extendArray(T[] from, int left, int right) {
+        if (left < 0 || right < 0) throw new MRuntimeException("malformed extensions",left, right);
+        int length = from.length + left + right;
+        @SuppressWarnings("unchecked")
+        T[] out = (T[]) Array.newInstance(from.getClass().getComponentType(), length);
+        System.arraycopy(from, 0, out, left, from.length);
+        return out;
+    }
 
 }
