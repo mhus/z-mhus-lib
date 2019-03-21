@@ -2146,6 +2146,7 @@ public class MString {
 
 	public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
 		Throwable error = null;
+		if (msg == null) return null;
     	for (Object o : msg) {
 			error = serialize(sb,o, error);
 			if (maxMsgSize > 0 && sb.length() > maxMsgSize) {

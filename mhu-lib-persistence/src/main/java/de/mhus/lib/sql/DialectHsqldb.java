@@ -70,11 +70,41 @@ public class DialectHsqldb extends DialectDefault {
 			String type = getDbType(f);
 			String ret = normalizeColumnName(f.getString("name")) + " " + type;
 
-			//		String def = f.getExtracted("default");
-			//		if (def != null) {
-			//			def = getDbDef(def);
-			//			ret = ret + " DEFAULT " + def;
-			//		}
+//					String def = f.getExtracted("default");
+//					if (def != null) {
+//						def = getDbDef(def);
+//						ret = ret + " DEFAULT " + def;
+//					} else {
+//					    switch(getCaoType(f)) {
+//                        case BINARY:
+//                            break;
+//                        case BOOLEAN:
+//                            ret = ret + " DEFAULT FALSE";
+//                            break;
+//                        case DATETIME:
+//                            break;
+//                        case DOUBLE:
+//                            ret = ret + " DEFAULT 0";
+//                            break;
+//                        case ELEMENT:
+//                            break;
+//                        case LIST:
+//                            break;
+//                        case LONG:
+//                            ret = ret + " DEFAULT 0";
+//                            break;
+//                        case OBJECT:
+//                            break;
+//                        case STRING:
+//                            ret = ret + " DEFAULT ''";
+//                            break;
+//                        case TEXT:
+//                            ret = ret + " DEFAULT ''";
+//                            break;
+//                        default:
+//                            break;
+//					    }
+//					}
 			//		boolean notNull = f.getBoolean("notnull", false);
 			//		if (notNull)
 			//			ret = ret + " NOT NULL";
