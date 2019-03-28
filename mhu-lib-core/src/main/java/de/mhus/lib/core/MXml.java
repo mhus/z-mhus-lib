@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.io.StringBufferInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -57,9 +58,13 @@ import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import de.mhus.lib.core.logging.MLogUtil;
+
+@SuppressWarnings("deprecation")
 public class MXml {
 
 	//private static Log log = Log.getLog(MXml.class);
@@ -399,12 +404,59 @@ public class MXml {
 	public static Document loadXml(String xml, String charset) throws ParserConfigurationException, UnsupportedEncodingException, SAXException, IOException {
 		if (xml == null) return null;
 		if (!xml.startsWith("<?xml")) xml = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + xml;
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbf.newDocumentBuilder();
+		DocumentBuilder builder = newBuilder(); 
+        builder.setEntityResolver(new NoOpEntityResolver());
 		return builder.parse(new ByteArrayInputStream(xml.getBytes(charset)));
 	}
 	
-	/**
+	public static DocumentBuilder newBuilder() throws ParserConfigurationException {
+	    // https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.md
+        // System.setProperty("jdk.xml.entityExpansionLimit", "1");
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        String FEATURE = null;
+        try {
+            // This is the PRIMARY defense. If DTDs (doctypes) are disallowed, almost all 
+            // XML entity attacks are prevented
+            // Xerces 2 only - http://xerces.apache.org/xerces2-j/features.html#disallow-doctype-decl
+            FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+            dbf.setFeature(FEATURE, true);
+
+            // If you can't completely disable DTDs, then at least do the following:
+            // Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-general-entities
+            // Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-general-entities
+            // JDK7+ - http://xml.org/sax/features/external-general-entities
+            FEATURE = "http://xml.org/sax/features/external-general-entities";
+            dbf.setFeature(FEATURE, false);
+
+            // Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-parameter-entities
+            // Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-parameter-entities
+            // JDK7+ - http://xml.org/sax/features/external-parameter-entities
+            FEATURE = "http://xml.org/sax/features/external-parameter-entities";
+            dbf.setFeature(FEATURE, false);
+
+            // Disable external DTDs as well
+            FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+            dbf.setFeature(FEATURE, false);
+
+            // and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity Attacks"
+            dbf.setXIncludeAware(false);
+            dbf.setExpandEntityReferences(false);
+
+            // And, per Timothy Morgan: "If for some reason support for inline DOCTYPEs are a requirement, then
+            // ensure the entity settings are disabled (as shown above) and beware that SSRF attacks
+            // (http://cwe.mitre.org/data/definitions/918.html) and denial
+            // of service attacks (such as billion laughs or decompression bombs via "jar:") are a risk."
+
+            // remaining parser logic
+        } catch (ParserConfigurationException e) {
+            // This should catch a failed setFeature feature
+            MLogUtil.log().i("ParserConfigurationException was thrown. The feature '" + FEATURE 
+            + "' is probably not supported by your XML processor.");
+        }
+        return dbf.newDocumentBuilder();
+    }
+
+    /**
 	 * Create a XML Document from a string.
 	 * 
 	 * @param xml
@@ -429,25 +481,29 @@ public class MXml {
 	 */
 	public static Document loadXml(InputStream is)
 			throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbf.newDocumentBuilder();
+        DocumentBuilder builder = newBuilder(); 
+        System.setProperty("jdk.xml.entityExpansionLimit", "1");
 		return builder.parse(is);
 	}
 
 	public static Document loadXml(Reader file)
 		throws ParserConfigurationException, SAXException, IOException {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = dbf.newDocumentBuilder();
-			return builder.parse(new InputSource(file));
+        DocumentBuilder builder = newBuilder(); 
+		return builder.parse(new InputSource(file));
 	}
 
 	public static Document loadXml(File f)
 			throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbf.newDocumentBuilder();
+        DocumentBuilder builder = newBuilder(); 
 		return builder.parse(f);
 	}
 
+	static class NoOpEntityResolver implements EntityResolver {
+        @Override
+        public InputSource resolveEntity(String publicId, String systemId) {
+	      return new InputSource(new StringBufferInputStream(""));
+	    }
+	  }
 	/**
 	 * Write the element into the stream.
 	 * 
@@ -496,8 +552,7 @@ public class MXml {
 	 * @throws Exception
 	 */
 	public static Document createDocument() throws Exception {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbf.newDocumentBuilder();
+        DocumentBuilder builder = newBuilder(); 
 		return builder.newDocument();
 	}
 
@@ -950,6 +1005,18 @@ public class MXml {
 		if (ele == null) return def;
 		return getValue(ele, false);
 	}
+
+    public static String getAttributeValue(Element root, String path, String def) {
+        int pos = path.lastIndexOf('@');
+        if (pos < 0) return def;
+        String name = path.substring(pos+1);
+        if (name.length() == 0) return def;
+        path = path.substring(0,pos);
+        Element ele = getElementByPath(root, path);
+        if (ele == null) return def;
+        if (!ele.hasAttribute(name)) return def;
+        return ele.getAttribute(name);
+     }
 
 	public static CDATASection findCDataSection(Element a) {
 		NodeList list = a.getChildNodes();
