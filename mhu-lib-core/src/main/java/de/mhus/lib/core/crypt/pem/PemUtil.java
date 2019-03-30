@@ -21,6 +21,7 @@ import java.util.UUID;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.vault.MVault;
 import de.mhus.lib.core.vault.MVaultUtil;
 import de.mhus.lib.core.vault.VaultEntry;
@@ -149,6 +150,10 @@ public class PemUtil {
 		return new PemKey(new PemBlockModel().parse(key));
 	}
 
+    public static PemKey toKey(SecureString key) throws ParseException {
+        return new PemKey(new PemBlockModel().parse(key.value()));
+    }
+    
 	public static PemBlock parse(String entry) throws ParseException {
 		return new PemBlockModel().parse(entry);
 	}

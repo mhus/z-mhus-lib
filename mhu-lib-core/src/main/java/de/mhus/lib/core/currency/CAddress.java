@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.SecureString;
 
 public class CAddress implements Externalizable {
@@ -28,48 +29,57 @@ public class CAddress implements Externalizable {
 	protected String currency;
 	protected String address;
 	protected SecureString privKey;
+	protected String scheme;
 
 	public CAddress() {
 	}
 	
 	public CAddress(CCurrency currency, String addr) {
 		this.address = addr;
-		this.currency = currency.toString();
+		this.currency = currency.getName();
+		this.scheme = currency.getScheme();
 	}
 	
 	public CAddress(CCurrency currency, String addr, SecureString privKey) {
 		this.address = addr;
 		this.privKey = privKey;
-		this.currency = currency.toString();
+		this.currency = currency.getName();
+        this.scheme = currency.getScheme();
 	}
 
 	public CAddress(CCurrency currency, String addr, String privKey) {
 		this.address = addr;
 		this.privKey = new SecureString(privKey);
-		this.currency = currency.toString();
+		this.currency = currency.getName();
+        this.scheme = currency.getScheme();
 	}
 	
 	public CAddress(String currency, String addr) {
 		this.address = addr;
 		this.currency = currency.toUpperCase();
+		this.scheme = CCurrency.getSchemeForCurrency(this.currency);
 	}
 
 	public CAddress(String currency, String addr, SecureString privKey) {
 		this.address = addr;
 		this.privKey = privKey;
 		this.currency = currency.trim().toUpperCase();
+        this.scheme = CCurrency.getSchemeForCurrency(this.currency);
 	}
 
 	public CAddress(String currency, String addr, String privKey) {
 		this.address = addr;
 		this.privKey = new SecureString(privKey);
 		this.currency = currency.trim().toUpperCase();
+        this.scheme = CCurrency.getSchemeForCurrency(this.currency);
 	}
 
 	public CAddress(String curAddr) {
 		int p = curAddr.indexOf(':');
 		this.address = curAddr.substring(p+1);
-		this.currency = curAddr.substring(0, p).toUpperCase();
+		CCurrency c = CCurrency.getCurrenctyForName(curAddr.substring(0, p));
+		this.currency = c.getName();
+        this.scheme = c.getScheme();
 	}
 
 	/**
@@ -108,7 +118,7 @@ public class CAddress implements Externalizable {
 	
 	@Override
 	public String toString() {
-		return currency + ":" + address;
+		return (MString.isSet(scheme) ? scheme : currency) + ":" + address;
 	}
 	
 	@Override
@@ -122,6 +132,7 @@ public class CAddress implements Externalizable {
 		out.writeObject(currency);
 		out.writeObject(address);
 		out.writeObject(privKey);
+		out.writeObject(scheme);
 	}
 
 	@Override
@@ -129,10 +140,18 @@ public class CAddress implements Externalizable {
 		currency = (String) in.readObject();
 		address = (String) in.readObject();
 		privKey = (SecureString)in.readObject();
+		scheme = (String)in.readObject();
 	}
 
 	public String getCurrency() {
 		return currency;
 	}
 	
+	public String getScheme() {
+	    return scheme;
+	}
+	
+	public String getAddressWithSchema() {
+	    return (MString.isSet(scheme) ? scheme + ":" : "") + address;
+	}
 }
