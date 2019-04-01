@@ -25,7 +25,7 @@
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1-SNAPSHOT</version>
   </parent>
   
    <build>
