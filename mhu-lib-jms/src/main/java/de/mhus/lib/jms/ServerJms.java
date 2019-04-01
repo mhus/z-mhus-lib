@@ -148,16 +148,16 @@ do not block jms driven threads !!! This will cause a deadlock
 				 */
 				for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
 					if (element.getClassName().equals(ServerJms.class.getCanonicalName())) {
-						log().i("Too many JMS Threads ... ignore, it's a 'JMS to JMS' call",getUsedThreads());
+						log().w("Too many JMS Threads ... ignore, it's a 'JMS to JMS' call",getUsedThreads());
 						break;
 					}
 				}
 				
-				log().i("Too many JMS Threads ... wait!",getUsedThreads());
+				log().w("Too many JMS Threads ... wait!",getUsedThreads());
 				MThread.sleep(100);
 				timeout-=100;
 				if (timeout < 0) {
-					log().i("Too many JMS Threads ... timeout",getUsedThreads());
+					log().w("Too many JMS Threads ... timeout",getUsedThreads());
 					break;
 				}
 			}
@@ -266,7 +266,7 @@ do not block jms driven threads !!! This will cause a deadlock
 					} catch (JMSException t) {
 						throw t;
 					} catch(Throwable t) {
-						log().i(t);
+						log().w(t);
 						answer = createErrorAnswer(t);
 					}
 					log().d("receivedAnswer",dest,answer);
@@ -312,7 +312,7 @@ do not block jms driven threads !!! This will cause a deadlock
 		try {
 			Session session = getSession();
 			if ( session instanceof ActiveMQSession && ((ActiveMQSession)getSession()).isClosed() ) {
-				log().i("reconnect because session is closed",getName());
+				log().w("reconnect because session is closed",getName());
 				consumer = null;
 			}
 			open(); // try to reopen and re-listen

@@ -140,9 +140,9 @@ public class LoginScreen extends CssLayout implements MNlsProvider {
         	
         	Subject subject = (Subject)UI.getCurrent().getSession().getAttribute(VaadinAccessControl.SUBJECT_ATTR);
         	if (subject == null)
-        		MLogUtil.log().i("no subject");
+        		MLogUtil.log().d("no subject for login");
         	else
-        		MLogUtil.log().i("Login",subject);
+        		MLogUtil.log().d("Login",subject);
         	
 //        	if (MSecurity.hasRole(subject,MAIN_USER_ROLE)) {
         		loginListener.loginSuccessful();

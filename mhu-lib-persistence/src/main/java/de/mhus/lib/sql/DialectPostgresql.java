@@ -171,7 +171,7 @@ public class DialectPostgresql extends DialectDefault {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}

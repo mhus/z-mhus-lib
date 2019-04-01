@@ -40,7 +40,7 @@ public class HeartbeatSender extends ClientJms {
 	public void sendHeartbeat(String cmd) {
 
 		if (getSession() == null) {
-			log().i("heartbeat has no session");
+			log().d("heartbeat has no session");
 			reset();
 			return;
 		}

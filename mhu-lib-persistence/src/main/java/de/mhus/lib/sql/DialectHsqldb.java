@@ -139,7 +139,7 @@ public class DialectHsqldb extends DialectDefault {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}
@@ -163,14 +163,14 @@ public class DialectHsqldb extends DialectDefault {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 		sql = "CREATE " + (unique ? "UNIQUE" : "" ) + " INDEX " + iName + (btree ? " USING BTREE" : "") +" ON "+table+ "("+columns+")";
 		log().t(sql);
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class DialectHsqldb extends DialectDefault {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}

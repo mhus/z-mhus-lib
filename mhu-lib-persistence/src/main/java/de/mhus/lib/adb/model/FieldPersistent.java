@@ -152,7 +152,7 @@ public class FieldPersistent extends Field {
 			if (attribute.getType() == long.class || attribute.getType() == int.class) {
 				manager.getSchema().doCreateUniqueIdFor(table,this,obj,name,manager);
 			} else
-				log().i("can't set auto_id to object",name);
+				log().w("can't set auto_id to object",name);
 		}
 	}
 

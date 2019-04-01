@@ -307,7 +307,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -321,7 +321,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -332,7 +332,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -342,7 +342,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -353,7 +353,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -365,7 +365,7 @@ public class DialectDefault extends Dialect {
 			log().d("alter table",sql);
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -375,7 +375,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -385,7 +385,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}
@@ -396,7 +396,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql);
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}
@@ -508,7 +508,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 		sql = "CREATE " + (unique ? "UNIQUE" : "" ) + 
 			  " INDEX " + iName + (btree ? " USING BTREE" : "") +
@@ -517,7 +517,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 	}
 
@@ -530,7 +530,7 @@ public class DialectDefault extends Dialect {
 		try {
 			sth.execute(sql.toString());
 		} catch (Exception e) {
-			log().i(sql,e);
+			log().e(sql,e);
 		}
 
 	}
@@ -572,7 +572,7 @@ public class DialectDefault extends Dialect {
 					}
 					res.close();
 				} catch (Exception e) {
-					log().i(select,e);
+					log().e(select,e);
 					foundError = true;
 				}
 			}
@@ -592,7 +592,7 @@ public class DialectDefault extends Dialect {
 						try {
 							sth.execute(sql.toString());
 						} catch (Exception e) {
-							log().i(sql,e);
+							log().e(sql,e);
 						}
 					}
 				}

@@ -70,7 +70,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 		try {
 			producer.send(msg);
 		} catch (IllegalStateException ise) {
-			log().i("reconnect",getName(),ise.getMessage());
+			log().d("reconnect",getName(),ise.getMessage());
 			producer = null;
 			open();
 			producer.send(msg);
@@ -102,7 +102,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			try {
 				producer.send(msg);
 			} catch (IllegalStateException ise) {
-				log().i("reconnect",getName(),ise.getMessage());
+				log().d("reconnect",getName(),ise.getMessage());
 				producer = null;
 				open();
 				openAnswerQueue();
@@ -169,7 +169,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
 			try {
 				producer.send(msg, deliveryMode, getPriority(), getTimeToLive());
 			} catch (IllegalStateException ise) {
-				log().i("reconnect",getName(),ise.getMessage());
+				log().d("reconnect",getName(),ise.getMessage());
 				producer = null;
 				open();
 				openAnswerQueue();

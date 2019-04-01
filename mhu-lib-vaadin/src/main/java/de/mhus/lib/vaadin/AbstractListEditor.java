@@ -310,7 +310,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
                                 doDelete(selectedObj);
                                 showInformation(MNls.find(AbstractListEditor.this, LABEL_DELETED));
                             } catch (Throwable e) {
-                                log().i(e);
+                                log().d(e);
                                 showError(e);
                             }
                             model.setPojo(createTarget());
@@ -332,7 +332,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
                 showInformation(MNls.find(AbstractListEditor.this,LABEL_CANELED));
             }
         } catch (Throwable t) {
-            log().i(t);
+            log().d(t);
             showError(t);
         }
         editMode = null;
@@ -351,7 +351,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
             try {
                 doUpdate(selectedId);
             } catch (Exception e) {
-                log().i(e);
+                log().d(e);
             }
             
             // fill 
@@ -383,7 +383,7 @@ public abstract class AbstractListEditor<E> extends VerticalLayout implements MN
                     editMode = null;
                 
             } catch (Throwable e) {
-                log().i(e);
+                log().d(e);
                 showError(e);
             }
         }

@@ -23,7 +23,7 @@ public class GarbageCollectionTrigger extends Task {
 
 	@Override
 	public void pass() throws Exception {
-		log().i("Garbage Collection");
+		log().d("Garbage Collection");
 		System.gc();
 	}
 
