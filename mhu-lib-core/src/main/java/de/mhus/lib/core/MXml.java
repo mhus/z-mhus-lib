@@ -450,7 +450,7 @@ public class MXml {
             // remaining parser logic
         } catch (ParserConfigurationException e) {
             // This should catch a failed setFeature feature
-            MLogUtil.log().i("ParserConfigurationException was thrown. The feature '" + FEATURE 
+            MLogUtil.log().e("ParserConfigurationException was thrown. The feature '" + FEATURE 
             + "' is probably not supported by your XML processor.");
         }
         return dbf.newDocumentBuilder();

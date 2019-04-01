@@ -131,7 +131,7 @@ public class MNlsFactory extends MNlsBundle {
 			}
 			
 		} catch (Throwable e) {
-			log().i(e);
+			log().e(e);
 		}
 
 		return new MNls();
@@ -157,7 +157,7 @@ public class MNlsFactory extends MNlsBundle {
 		try {
 			properties.load(is);
 		} catch (IOException e) {
-			log().i(e);
+			log().e(e);
 		}
 		return new MNls(properties,"");
 	}

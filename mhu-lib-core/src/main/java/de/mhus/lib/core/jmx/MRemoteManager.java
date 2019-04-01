@@ -90,7 +90,7 @@ public class MRemoteManager extends MObject implements IBase {
 		synchronized (this) {
 			if (mbs != null)
 				try {
-					log().i("register",name);
+					log().d("register",name);
 					mbs.registerMBean(proxy, name);
 				} catch (InstanceAlreadyExistsException e) {
 					if (object instanceof JmxObject) {
@@ -133,7 +133,7 @@ public class MRemoteManager extends MObject implements IBase {
 					log().t("unregister",name);
 					mbs.unregisterMBean(name);
 				} catch (Exception e) {
-					log().i(name,e);
+					log().e(name,e);
 				}
 		}
 		
@@ -148,7 +148,7 @@ public class MRemoteManager extends MObject implements IBase {
 					log().t("register",item.getKey());
 					mbs.registerMBean(item.getValue(), item.getKey());
 				} catch (Exception e) {
-					log().i(item.getKey(),e);
+					log().e(item.getKey(),e);
 				}
 			}
 		}
@@ -162,7 +162,7 @@ public class MRemoteManager extends MObject implements IBase {
 					log().t("unregister",item.getKey());
 					mbs.unregisterMBean(item.getKey());
 				} catch (Exception e) {
-					log().i(item.getKey(),e);
+					log().e(item.getKey(),e);
 				}
 			}			
 			mbs = null;

@@ -143,7 +143,7 @@ public class MValidator {
 			
 			passwordList = Collections.unmodifiableList(list);
 		} catch (Throwable t) {
-			MLogUtil.log().i(MValidator.class,t);
+			MLogUtil.log().e(MValidator.class,t);
 		}
 		return passwordList;
 	}

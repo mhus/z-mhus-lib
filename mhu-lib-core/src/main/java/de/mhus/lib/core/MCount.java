@@ -86,7 +86,7 @@ public class MCount extends MJmx {
 	public void close() {
 		if (isClosed) return;
 		isClosed = true;
-		log().i("close",name,cnt,getHitsPerSecond());
+		log().d("close",name,cnt,getHitsPerSecond());
 	}
 	
 	@Override

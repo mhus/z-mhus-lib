@@ -42,7 +42,7 @@ public class ConfigBuilder extends MLog {
 				try {
 					tar.setProperty(key, mapProperty(src,key,src.getString(key,null) ));
 				} catch (Throwable e) {
-					log().i("property",key,e);
+					log().e("property",key,e);
 				}
 			}
 		}

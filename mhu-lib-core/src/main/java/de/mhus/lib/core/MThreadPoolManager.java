@@ -40,7 +40,7 @@ public class MThreadPoolManager extends MObject implements IBase {
 				MThreadPoolDaemon.poolClean(CFG_PENDING_TIME.value());
 			} catch (NoClassDefFoundError e) {
 				// this only happens in OSGi if the bundle was uninstalled
-				log().i("Close stale ThreadHousekeeper", e.toString() );
+				log().d("Close stale ThreadHousekeeper", e.toString() );
 				cancel();
 			}
 		}

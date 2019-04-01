@@ -206,8 +206,9 @@ public class Scheduler extends MLog implements Named {
 					job.doTick(forced);
 					log().d("<<< Tick",job.getName());
 				} else
-					log().i("Job canceled",job.getName());
+					log().d("Job canceled",job.getName());
 			} catch (Throwable t) {
+			    log().d(job.getName(),t);
 				try {
 					job.doError(t);
 				} catch (Throwable t2) {
@@ -284,7 +285,7 @@ public class Scheduler extends MLog implements Named {
 				}
 			}, 10000, false);
 		} catch (TimeoutRuntimeException e) {
-			log().i("Can't stop running jobs");
+			log().w("Can't stop running jobs");
 		}
 		jobs.clear();
 		queue.clear();

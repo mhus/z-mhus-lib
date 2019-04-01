@@ -57,7 +57,7 @@ public class MCountWithDelay extends MCount {
 		}
 		if (isClosed) return;
 		if (sleepInterval > 0 && sleepSeconds > 0 && cnt % sleepInterval == 0) {
-			log().i(getName(),"Sleep", sleepSeconds);
+			log().d(getName(),"Sleep", sleepSeconds);
 			MThread.sleep(sleepSeconds * 1000);
 		}
 	}

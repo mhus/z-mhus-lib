@@ -100,7 +100,7 @@ public class SerializerTransformer extends TransformStrategy {
 				}
 			
 			} catch (IOException e) {
-				log().i(e);
+				log().d(e);
 				throw new NotSupportedException("exception",e);
 			}
 		}
@@ -154,7 +154,7 @@ public class SerializerTransformer extends TransformStrategy {
 				}
 				return to;
 			} catch (Throwable t) {
-				log().i(t);
+				log().d(t);
 				throw new NotSupportedException("exception", t);
 			}
 		}

@@ -166,7 +166,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 				log().t("run",name,task);
 				task.run();
 			} catch (Throwable t) {
-				log().i("error",task.getClass().getCanonicalName(), t);
+				log().e("error",task.getClass().getCanonicalName(), t);
 				if (task instanceof TimerTaskSelfControl) {
 					if ( ((TimerTaskSelfControl)task).isCancelOnError() )
 							cancel();
