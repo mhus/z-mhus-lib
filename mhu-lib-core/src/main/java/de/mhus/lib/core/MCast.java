@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -830,6 +831,10 @@ public final class MCast {
 			if (float.class.isAssignableFrom(type))
 				return tofloat(in,def == null ? 0 : tofloat(def, (short) 0) );
 
+			if (type == Map.class)
+			    return toMap(in, def);
+			if (type == List.class)
+			    return toList(in, def);
 			// if not found find a default caster (from = Object)
 			
 			caster = casters.get(Object.class, type);
@@ -843,7 +848,34 @@ public final class MCast {
 		return ((Caster<Object,Object>)caster).cast(in, def);
 	}
 
-	/**
+	public static Object toList(Object in, Object def) {
+	    if (in == null) return def;
+	    String s = String.valueOf(in);
+	    if (!s.startsWith("[") || !s.endsWith("]")) return def;
+	    s = s.substring(1, s.length()-1);
+	    String[] parts = s.split(",");
+	    LinkedList<String> out = new LinkedList<>();
+	    for (String item : parts)
+	        out.add(item.trim());
+        return out;
+    }
+
+	public static Object toMap(Object in, Object def) {
+        if (in == null) return def;
+        String s = String.valueOf(in);
+        if (!s.startsWith("{") || !s.endsWith("}")) return def;
+        s = s.substring(1, s.length()-1);
+        String[] parts = s.split(",");
+        MProperties out = new MProperties();
+        for (String item : parts) {
+            int pos = item.indexOf('=');
+            if (pos >= 0)
+                out.put(item.substring(0, pos), item.substring(pos+1));
+        }
+        return out;
+    }
+
+    /**
 	 * Return 0 in 7 flavors or null
 	 * 
 	 * @param type

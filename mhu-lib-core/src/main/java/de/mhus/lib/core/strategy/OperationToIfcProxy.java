@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.util.Version;
 import de.mhus.lib.errors.MException;
@@ -109,7 +110,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		if (type != null && type.equals(SERIALISED)) {
 			return MCast.unserializeFromString(String.valueOf(value), cl);
 		}
-		Class<?> t = cl.loadClass(type);
+		Class<?> t = MSystem.getClass(cl,type);
 		return MCast.toType(value, t, null);
 	}
 
@@ -132,6 +133,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 		
 		OperationDescription out = new OperationDescription(getUuid(), clazz.getPackage().getName(), clazz.getSimpleName() ,getInterfaceVersion(), this, this.getClass().getCanonicalName(), form );
 		out.setParameters(new HashMap<>());
+		out.getParameters().put(OperationDescription.TAG_TECH, OperationDescription.TECH_JAVA );
 		initOperationDescription(out.getParameters());
 		return out;
 	}

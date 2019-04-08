@@ -27,6 +27,8 @@ import java.util.TimeZone;
 public class MDate extends Date {
 
 	private static final long serialVersionUID = 1L;
+
+    public static final Date NULL_DATE = new Date(0);
 	
 	private static SimpleDateFormat iso8601DateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss");

@@ -31,6 +31,9 @@ import de.mhus.lib.core.util.Version;
 public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
 	public static final String TAGS = "tags";
+	
+    public static final String TAG_TECH = "tech";
+    public static final String TECH_JAVA = "java";
 
 	private static Log log = Log.getLog(OperationDescription.class);
 	

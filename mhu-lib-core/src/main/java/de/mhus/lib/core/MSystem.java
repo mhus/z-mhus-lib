@@ -927,5 +927,22 @@ public class MSystem {
 		return out;
 	}
 
+    public static Class<?> getClass(ClassLoader cl, String type) throws ClassNotFoundException {
+        if (type == null) return null;
+        if (type.equals("int") || type.equals("integer")) return int.class;
+        if (type.equals("bool") || type.equals("boolean")) return boolean.class;
+        if (type.equals("long")) return long.class;
+        if (type.equals("double")) return double.class;
+        if (type.equals("float")) return float.class;
+        if (type.equals("char") || type.equals("character")) return char.class;
+        if (type.equals("short")) return short.class;
+        if (type.equals("byte")) return byte.class;
+        if (type.equals("string") || type.equals("text")) return String.class;
+        if (type.equals("date")) return Date.class;
+        if (type.equals("map")) return Map.class;
+        if (type.equals("list")) return List.class;
+        return cl.loadClass(type);
+    }
+
 	
 }
