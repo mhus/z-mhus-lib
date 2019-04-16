@@ -16,12 +16,15 @@
 package de.mhus.lib.test;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MMath;
+import de.mhus.lib.core.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MMathTest {
@@ -106,5 +109,16 @@ public class MMathTest {
 		assertEquals(b, MBigMath.max(a, b));
 		
 	}
-	
+
+   @Test
+    public void testBase64Uuid() {
+       for (int i = 0; i < 10; i++) {
+           UUID id = UUID.randomUUID();
+           String base = Base64.uuidToBase64(id);
+           System.out.println("UUID Compress: " + id + " to " + base + " " + base.length());
+           UUID id2 = Base64.base64ToUuid(base);
+           assertEquals(id, id2);
+       }
+   }
+
 }

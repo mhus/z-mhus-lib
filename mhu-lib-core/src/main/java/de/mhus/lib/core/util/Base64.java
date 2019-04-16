@@ -18,6 +18,8 @@ package de.mhus.lib.core.util;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
@@ -189,5 +191,19 @@ public class Base64 {
 			throw new MRuntimeException(encoded,e);
 		}
 	}
+
+   public static String uuidToBase64(UUID uuid) {
+        ByteBuffer bb = ByteBuffer.allocate(Long.BYTES * 2);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        byte[] array = bb.array();
+        return encode(array).substring(0, 22);
+    }
+
+    public static UUID base64ToUuid(String uuidAsBase) {
+        if (uuidAsBase.length() == 22) uuidAsBase = uuidAsBase + "==";
+        ByteBuffer byteBuffer = ByteBuffer.wrap(decode(uuidAsBase));
+        return new UUID(byteBuffer.getLong(), byteBuffer.getLong());
+    }
 
 }
