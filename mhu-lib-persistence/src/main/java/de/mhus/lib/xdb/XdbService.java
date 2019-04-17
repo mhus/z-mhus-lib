@@ -52,6 +52,11 @@ public interface XdbService {
 		return type.getByQualification(query);
 	}
 
+   default <T> DbCollection<T> getAll(Class<T> type) throws MException {
+        XdbType<T> xType = (XdbType<T>) getType(type);
+        return xType.getAll();
+    }
+
 	default <T> long count(AQuery<T> query) throws MException {
 		@SuppressWarnings("unchecked")
 		XdbType<T> type = (XdbType<T>) getType(query.getType());
