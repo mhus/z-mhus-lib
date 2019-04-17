@@ -52,7 +52,7 @@ public interface XdbService {
 		return type.getByQualification(query);
 	}
 
-   default <T> DbCollection<T> getAll(Class<T> type) throws MException {
+   default <T extends Persistable> DbCollection<T> getAll(Class<T> type) throws MException {
         XdbType<T> xType = (XdbType<T>) getType(type);
         return xType.getAll();
     }

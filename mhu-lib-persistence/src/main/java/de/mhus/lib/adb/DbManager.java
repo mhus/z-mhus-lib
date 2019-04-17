@@ -342,7 +342,8 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 	@Override
 	public abstract <T extends Persistable> T inject(T object);
 
-	public abstract <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException;
+	@Override
+    public abstract <T extends Persistable> DbCollection<T> getAll(Class<T> clazz) throws MException;
 
 	public abstract <T> String toQualification(AQuery<T> qualification);
 	
