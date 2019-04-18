@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.form.definition;
 
+import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.IDefAttribute;
 
@@ -26,6 +28,10 @@ public class FmDate extends IFmElement {
 	
 	public static final String FORMAT = "format";
 	public static final String CUSTOM_FORMAT = "customformat";
+
+    public FmDate(Identifier ident, FORMATS format, String title, String description, IDefAttribute ... definitions) {
+        this(M.n(ident), format, title, description, definitions);
+    }
 
 	public FmDate(String name, FORMATS format, String title, String description, IDefAttribute ... definitions) {
 		this(name, new DefAttribute(FORMAT, format.name()), new FaNls(title, description));

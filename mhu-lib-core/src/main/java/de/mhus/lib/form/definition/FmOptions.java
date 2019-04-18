@@ -15,11 +15,17 @@
  */
 package de.mhus.lib.form.definition;
 
+import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.definition.IDefAttribute;
 
 public class FmOptions extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
+
+    public FmOptions(Identifier ident, String title, String description, IDefAttribute ... definitions) {
+        this(M.n(ident), title, description, definitions);
+    }
 
 	public FmOptions(String name, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FaNls(title, description));

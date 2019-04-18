@@ -15,12 +15,18 @@
  */
 package de.mhus.lib.form.definition;
 
+import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.definition.IDefAttribute;
 
 public class FmAction extends IFmElement {
 
 	private static final long serialVersionUID = 1L;
 
+    public FmAction(Identifier ident, String action, String title, String description, IDefAttribute ... definitions) {
+        this(M.n(ident), action, title, description, definitions);
+    }
+    
 	public FmAction(String name, String action, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FaNls(name + ".title=" + title, name + ".description=" + description));
 		setString("action", action);

@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.form.definition;
 
+import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
@@ -32,6 +34,10 @@ public class FmNumber extends IFmElement {
 	public static final String FORMAT = "format";
 	public static final String NUMBER_TYPE = "number";
 
+    public FmNumber(Identifier ident, TYPES type, String title, String description, IDefAttribute ... definitions) {
+        this(M.n(ident), type, title, description, definitions);
+    }
+    
 	public FmNumber(String name, TYPES type, String title, String description, IDefAttribute ... definitions) {
 		this(name, type, new FaNls(title, description));
 		addDefinition(definitions);

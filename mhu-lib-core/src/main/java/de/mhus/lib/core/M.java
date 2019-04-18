@@ -68,14 +68,26 @@ public class M {
 		return MCast.toint(in, def);
 	}
 	
+    public static int cint(Object in, int def) {
+        return MCast.toint(in, def);
+    }
+    
 	public static long c(Object in, long def) {
 		return MCast.tolong(in, def);
 	}
 
+    public static long clong(Object in, long def) {
+        return MCast.tolong(in, def);
+    }
+    
 	public static double c(Object in, double def) {
 		return MCast.todouble(in, def);
 	}
 
+    public static double cdouble(Object in, double def) {
+        return MCast.todouble(in, def);
+    }
+    
 	public static boolean c(Object in, boolean def) {
 		return MCast.toboolean(in, def);
 	}
@@ -84,4 +96,29 @@ public class M {
 		return MCast.toDate(in, def);
 	}
 
+    public static Date cdate(Object in, Date def) {
+        return MCast.toDate(in, def);
+    }
+
+    /**
+     * MApi.lookup()
+     * 
+     * @param class1
+     * @return the service
+     */
+    public static <T> T l(Class<T> class1) {
+        return MApi.lookup(class1);
+    }
+    
+    /**
+     * MApi.lookup()
+     * 
+     * @param class1
+     * @param def 
+     * @return the service
+     */
+    public static <T,D extends T> T l(Class<T> class1, Class<D> def) {
+        return MApi.lookup(class1, def);
+    }
+    
 }

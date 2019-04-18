@@ -15,12 +15,18 @@
  */
 package de.mhus.lib.form.definition;
 
+import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.definition.IDefAttribute;
 
 public class FmLink extends IFmElement {
 	
 	private static final long serialVersionUID = 1L;
 
+    public FmLink(Identifier ident, String label, String title, String description, IDefAttribute ... definitions) {
+        this(M.n(ident), label, title, description, definitions);
+    }
+    
 	public FmLink(String name, String label, String title, String description, IDefAttribute ... definitions) {
 		this(name, new FaNls(title, description));
 		setString("label", label);
