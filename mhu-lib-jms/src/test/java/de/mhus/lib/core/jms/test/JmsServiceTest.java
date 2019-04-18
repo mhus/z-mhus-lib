@@ -15,6 +15,9 @@
  */
 package de.mhus.lib.core.jms.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,7 +38,6 @@ import de.mhus.lib.jms.ClientObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerObjectProxy;
 import de.mhus.lib.jms.WebServiceDescriptor;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JmsServiceTest {
 

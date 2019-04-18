@@ -15,6 +15,11 @@
  */
 package de.mhus.lib.test.cao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.util.concurrent.TimeoutException;
 
@@ -29,7 +34,6 @@ import de.mhus.lib.cao.util.DefaultStructureControl;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FdbTest {
 

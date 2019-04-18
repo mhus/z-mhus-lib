@@ -27,8 +27,8 @@ import org.apache.activemq.ActiveMQSession;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.MLogUtil;

@@ -1255,7 +1255,7 @@ public final class MCast {
 			break;
 		default:
 			try {
-				t = MApi.lookup(MActivator.class).findClass(type);
+				t = M.l(MActivator.class).findClass(type);
 			} catch (ClassNotFoundException e) {
 				return def;
 			}

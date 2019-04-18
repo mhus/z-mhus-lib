@@ -18,7 +18,7 @@ package de.mhus.lib.core.logging;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -47,7 +47,7 @@ public abstract class LogFactory implements IBase {
     public abstract void init(ResourceNode<?> config) throws Exception;
 
 	public void init() throws Exception {
-		ResourceNode<?> config = MApi.lookup(CfgManager.class).getCfg(this, null);
+		ResourceNode<?> config = M.l(CfgManager.class).getCfg(this, null);
 		init(config);
 	}
 	

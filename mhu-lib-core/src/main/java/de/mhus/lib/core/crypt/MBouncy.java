@@ -37,7 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MPeriod;
@@ -316,7 +316,7 @@ public class MBouncy {
      */
 	public static byte[] createRandom(int size) {
 		byte[] out = new byte[size];
-		MRandom rnd = MApi.lookup(MRandom.class);
+		MRandom rnd = M.l(MRandom.class);
 		for (int i = 0; i < out.length; i++)
 			out[i] = rnd.getByte();
 		return out;

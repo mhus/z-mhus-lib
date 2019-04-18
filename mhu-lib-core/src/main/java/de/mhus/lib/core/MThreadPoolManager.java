@@ -53,7 +53,7 @@ public class MThreadPoolManager extends MObject implements IBase {
 		synchronized (pool) {
 			if (housekeeper == null) {
 				housekeeper = new ThreadHousekeeper();
-				MApi.lookup(MHousekeeper.class).register(housekeeper, CFG_SLEEP_TIME.value());
+				M.l(MHousekeeper.class).register(housekeeper, CFG_SLEEP_TIME.value());
 			}
 			// search free thread
 

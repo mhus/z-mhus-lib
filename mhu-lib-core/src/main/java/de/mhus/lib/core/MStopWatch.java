@@ -31,7 +31,7 @@ public class MStopWatch extends MJmx {
 	private String name;
 	
 	public MStopWatch() {
-		name = "StopWatch " + MApi.lookup(UniqueId.class).nextUniqueId();
+		name = "StopWatch " + M.l(UniqueId.class).nextUniqueId();
 	}
 	
 	public MStopWatch(String name) {

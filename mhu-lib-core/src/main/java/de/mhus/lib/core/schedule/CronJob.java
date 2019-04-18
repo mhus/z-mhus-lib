@@ -18,7 +18,7 @@ package de.mhus.lib.core.schedule;
 import java.util.Calendar;
 
 import de.mhus.lib.core.ITimerTask;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.base.service.HolidayProviderIfc;
@@ -230,7 +230,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
 				}
 				
 				if (onlyWorkingDays) {
-					HolidayProviderIfc holidayProvider = MApi.lookup(HolidayProviderIfc.class);
+					HolidayProviderIfc holidayProvider = M.l(HolidayProviderIfc.class);
 					if (holidayProvider != null) {
 						while (!holidayProvider.isWorkingDay(null, next.getTime())) {
 							next.add(Calendar.DAY_OF_MONTH, 1);

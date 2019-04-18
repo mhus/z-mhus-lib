@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.jms.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
@@ -28,7 +30,6 @@ import de.mhus.lib.core.util.ObjectContainer;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerJms;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JmsTest {
 

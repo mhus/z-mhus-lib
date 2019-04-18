@@ -27,7 +27,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
@@ -134,7 +134,7 @@ public class MCrypt {
 	public static String encodeWithSalt(AsyncKey key, String in) throws IOException {
 		byte[] org = MString.toBytes(in);
 		byte[] org2 = new byte[org.length+1];
-		byte salt = MApi.lookup(MRandom.class).getByte();
+		byte salt = M.l(MRandom.class).getByte();
 		org2[0] = salt;
 		for (int i = 0; i < org.length; i++)
 			org2[i+1] = MMath.addRotate(org[i], salt);
@@ -167,7 +167,7 @@ public class MCrypt {
 	 * @throws IOException
 	 */
 	public static BigInteger[] encodeBytes(AsyncKey key, byte[] in) throws IOException {
-		CipherEncodeAsync encoder = new CipherEncodeAsync(key,MApi.lookup(MRandom.class));
+		CipherEncodeAsync encoder = new CipherEncodeAsync(key,M.l(MRandom.class));
 		for (int i = 0; i < in.length; i++)
 			encoder.write(in[i]);
 		encoder.close();
@@ -284,7 +284,7 @@ public class MCrypt {
 		CipherBlockRotate out = new CipherBlockRotate(size);
 		byte[] b = out.getBlock();
 		for (int i = 0; i < b.length; i++)
-			b[i] = MApi.lookup(MRandom.class).getByte();
+			b[i] = M.l(MRandom.class).getByte();
 		return out;
 	}
 	
@@ -314,7 +314,7 @@ public class MCrypt {
 		parent.write('S');
 		parent.write(version); // version
 		
-		MRandom random = MApi.lookup(MRandom.class);
+		MRandom random = M.l(MRandom.class);
 		if (version == 2) {
 			CipherBlockAdd cipher = new CipherBlockAdd(p);
 			return new SaltOutputStream(new CipherOutputStream(parent, cipher), random, p.length-(random.getInt() % (p.length / 2)), true) ;
@@ -388,7 +388,7 @@ public class MCrypt {
 		if (in == null) return null;
 		if (in.length < 1) return in;
 		byte[] out = new byte[in.length+1];
-		byte salt = MApi.lookup(MRandom.class).getByte();
+		byte salt = M.l(MRandom.class).getByte();
 		out[0] = salt;
 		for (int i = 0; i < in.length; i++)
 			out[i+1] = MMath.addRotate(in[i], salt);
@@ -454,7 +454,7 @@ public class MCrypt {
 	public static String md5WithSalt(String real) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			MRandom rand = MApi.lookup(MRandom.class);
+			MRandom rand = M.l(MRandom.class);
 			byte[] salt = new byte[2];
 			salt[0] = rand.getByte();
 			salt[1] = rand.getByte();
@@ -507,7 +507,7 @@ public class MCrypt {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		byte[] pp = passphrase.getBytes();
 		int ppPos = 0;
-		MRandom random = MApi.lookup(MRandom.class);
+		MRandom random = M.l(MRandom.class);
 		byte salt = random.getByte();
 		
 		// save salt
@@ -597,7 +597,7 @@ public class MCrypt {
 	 * @return pepper and content
 	 */
 	public static String addPepper(String content) {
-		MRandom rnd = MApi.lookup(MRandom.class);
+		MRandom rnd = M.l(MRandom.class);
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < PEPPER_SIZE; i++) {
 			char c = rnd.getChar();
@@ -626,7 +626,7 @@ public class MCrypt {
 	 * @return pepper and content as new array
 	 */
 	public static byte[] addPepper(byte[] content) {
-		MRandom rnd = MApi.lookup(MRandom.class);
+		MRandom rnd = M.l(MRandom.class);
 		byte[] out = new byte[content.length + 1 + PEPPER_SIZE];
 		for (int i = 0; i < PEPPER_SIZE; i++) {
 			byte b = rnd.getByte();

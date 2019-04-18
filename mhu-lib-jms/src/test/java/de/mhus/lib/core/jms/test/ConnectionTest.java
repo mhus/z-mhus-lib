@@ -15,6 +15,9 @@
  */
 package de.mhus.lib.core.jms.test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.jms.JMSException;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.jms.JmsConnection;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ConnectionTest {
 

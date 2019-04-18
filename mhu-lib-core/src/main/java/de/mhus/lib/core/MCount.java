@@ -30,7 +30,7 @@ public class MCount extends MJmx {
 	
 	public MCount() {
 		cnt = 0;
-		name = "Counter " + MApi.lookup(UniqueId.class).nextUniqueId();
+		name = "Counter " + M.l(UniqueId.class).nextUniqueId();
 	}
 	
 	public MCount(String name) {

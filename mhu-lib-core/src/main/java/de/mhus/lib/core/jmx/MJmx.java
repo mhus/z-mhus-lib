@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.jmx;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MSystem;
 
 public class MJmx extends JmxObject {
@@ -32,7 +32,7 @@ public class MJmx extends JmxObject {
 		if (!isJmxRegistered()) {
 			try {
 				setJmxName(name);
-				MApi.lookup(MRemoteManager.class).register(this,weak);
+				M.l(MRemoteManager.class).register(this,weak);
 			} catch (Throwable e) {
 				log().t(e);
 			}

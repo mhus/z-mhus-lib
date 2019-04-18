@@ -61,7 +61,7 @@ public class MThreadPool extends MObject implements Runnable {
 	}
 
 	public MThreadPool start() {
-		tc = MApi.lookup(MThreadPoolManager.class).start(this, name);
+		tc = M.l(MThreadPoolManager.class).start(this, name);
 		return this;
 	}
 

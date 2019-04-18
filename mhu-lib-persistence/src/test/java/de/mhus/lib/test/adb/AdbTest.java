@@ -15,6 +15,11 @@
  */
 package de.mhus.lib.test.adb;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
@@ -49,7 +54,6 @@ import de.mhus.lib.test.adb.model.Person;
 import de.mhus.lib.test.adb.model.Person2;
 import de.mhus.lib.test.adb.model.Regal;
 import de.mhus.lib.test.adb.model.Store;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AdbTest {
 		

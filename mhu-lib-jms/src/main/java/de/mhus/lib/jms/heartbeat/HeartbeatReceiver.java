@@ -19,7 +19,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.JmsDestination;
@@ -45,7 +45,7 @@ public class HeartbeatReceiver extends ServerJms {
 		String txt = "";
 		if (msg instanceof TextMessage) txt =((TextMessage)msg).getText();
 		log().d("received",txt);
-		HeartbeatListener listener = MApi.lookup(HeartbeatListener.class);
+		HeartbeatListener listener = M.l(HeartbeatListener.class);
 		if (listener != null)
 			listener.heartbeatReceived(txt);
 		TextMessage ret = getSession().createTextMessage(MSystem.getAppIdent());

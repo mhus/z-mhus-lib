@@ -19,7 +19,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.form.ActivatorAdapterProvider;
 import de.mhus.lib.form.MForm;
 import de.mhus.lib.form.MutableMForm;
@@ -53,7 +53,7 @@ public class VaadinForm extends VerticalLayout {
 	public void doBuild() throws Exception {
 
 		if (form.getAdapterProvider() == null)
-			form.setAdapterProvider(MApi.lookup(ActivatorAdapterProvider.class, DefaultAdapterProvider.class ) );
+			form.setAdapterProvider(M.l(ActivatorAdapterProvider.class, DefaultAdapterProvider.class ) );
 
 		if (isShowInformation()) {
 			informationPane = new VaadinUiInformation();

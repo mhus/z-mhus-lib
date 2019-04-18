@@ -22,6 +22,7 @@ import java.util.Map;
 
 import de.mhus.lib.annotations.adb.DbTransactionable;
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MHousekeeper;
@@ -88,7 +89,7 @@ public abstract class DbPool extends MJmx implements DbTransactionable {
 		this.config = config;
 
 		if (this.config == null) doCreateConfig();
-		if (activator == null) activator = MApi.lookup(MActivator.class);
+		if (activator == null) activator = M.l(MActivator.class);
 
 		DbProvider provider = (DbProvider) activator.createObject(this.config.getExtracted("provider",JdbcProvider.class.getCanonicalName()));
 		provider.doInitialize(this.config,activator);
@@ -124,7 +125,7 @@ public abstract class DbPool extends MJmx implements DbTransactionable {
 				if (isClosed()) cancel();
 			}
 		};
-		MHousekeeper housekeeper = MApi.lookup(MHousekeeper.class);
+		MHousekeeper housekeeper = M.l(MHousekeeper.class);
 		if (housekeeper != null) {
 			housekeeper.register(housekeeperTask, getConfig().getLong("autoCleanupSleep",300000));
 		} else {
@@ -157,7 +158,7 @@ public abstract class DbPool extends MJmx implements DbTransactionable {
 		this.provider = provider;
 		name = provider.getName();
 		if (name == null) name = "pool";
-		name = name + MApi.lookup(UniqueId.class).nextUniqueId();
+		name = name + M.l(UniqueId.class).nextUniqueId();
 	}
 
 	/**

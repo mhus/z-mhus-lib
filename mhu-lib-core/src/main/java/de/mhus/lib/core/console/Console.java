@@ -21,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.lang.IBase;
 
 @DefaultImplementation(SimpleConsole.class)
@@ -55,7 +55,7 @@ public abstract class Console extends PrintStream implements IBase {
 				
 		Console console = consoles.get();
 		if (console == null) {
-			ConsoleFactory factory = MApi.lookup(ConsoleFactory.class);
+			ConsoleFactory factory = M.l(ConsoleFactory.class);
 			console = factory.create();
 			consoles.set(console);
 		}

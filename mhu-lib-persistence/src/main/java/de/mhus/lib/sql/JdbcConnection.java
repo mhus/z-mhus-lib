@@ -18,7 +18,7 @@ package de.mhus.lib.sql;
 import java.io.IOException;
 import java.sql.Connection;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.parser.Parser;
 import de.mhus.lib.core.service.UniqueId;
 import de.mhus.lib.errors.MException;
@@ -76,7 +76,7 @@ public class JdbcConnection extends InternalDbConnection {
 	public JdbcConnection(DbProvider provider,Connection con) {
 		this.provider=provider;
 		this.connection = con;
-		id = MApi.lookup(UniqueId.class).nextUniqueId();
+		id = M.l(UniqueId.class).nextUniqueId();
 	}
 
 	/** {@inheritDoc} */

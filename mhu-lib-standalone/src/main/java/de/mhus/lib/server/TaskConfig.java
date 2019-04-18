@@ -19,7 +19,7 @@ package de.mhus.lib.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
@@ -31,7 +31,7 @@ public class TaskConfig extends MJmx {
 	private Map<String,Object> objects = new HashMap<String, Object>();
 	
 	public void init() throws Exception {
-		init( MApi.lookup(IConfig.class));
+		init( M.l(IConfig.class));
 	}
 
 	public void init(IConfig config) throws Exception {

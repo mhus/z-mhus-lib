@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.lang.MObject;
 
 @DefaultImplementation(MNlsFactory.class)
@@ -94,7 +94,7 @@ public abstract class MNlsBundle extends MObject {
 	}
 
 	public static MNlsBundle lookup(Object owner) {
-		MNlsBundleFactory factory = MApi.lookup(MNlsBundleFactory.class);
+		MNlsBundleFactory factory = M.l(MNlsBundleFactory.class);
 		MNlsBundle nlsBundle = factory.create(owner);
 		return nlsBundle;
 	}

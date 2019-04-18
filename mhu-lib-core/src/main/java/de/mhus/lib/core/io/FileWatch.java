@@ -17,7 +17,7 @@ package de.mhus.lib.core.io;
 
 import java.io.File;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 
@@ -65,7 +65,7 @@ public class FileWatch extends MHousekeeperTask {
 		if (startHook) checkFile(); // init
 
 		if (!registered) {
-			MHousekeeper housekeeper = MApi.lookup(MHousekeeper.class);
+			MHousekeeper housekeeper = M.l(MHousekeeper.class);
 			housekeeper.register(this, period);
 			registered = true;
 		}

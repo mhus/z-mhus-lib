@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
@@ -56,7 +57,7 @@ public class DbPoolBundle extends MObject {
 	public DbPoolBundle(IConfig config, MActivator activator) {
 
 		if (config == null) config = MApi.get().getCfgManager().getCfg(DbPoolBundle.class, null);
-		if (activator == null) activator = MApi.lookup(MActivator.class);
+		if (activator == null) activator = M.l(MActivator.class);
 
 		this.config = config;
 		this.activator = activator;

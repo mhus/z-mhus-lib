@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
@@ -163,7 +163,7 @@ public class MNlsFactory extends MNlsBundle {
 	}
 	
 	public static MNlsFactory lookup(Object owner) {
-		return MApi.lookup(MNlsFactory.class);
+		return M.l(MNlsFactory.class);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ package de.mhus.lib.form;
 
 import java.util.Locale;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.lang.MObject;
@@ -74,7 +74,7 @@ public class MForm extends MObject implements MNlsProvider {
 	}
 
 	public DataSource getDataSource() {
-		if (dataSource == null) dataSource = MApi.lookup(DataSource.class);
+		if (dataSource == null) dataSource = M.l(DataSource.class);
 		return dataSource;
 	}
 
@@ -88,7 +88,7 @@ public class MForm extends MObject implements MNlsProvider {
 	}
 	
 	public FormControl getControl() {
-		if (control == null) control = MApi.lookup(FormControl.class);
+		if (control == null) control = M.l(FormControl.class);
 		return control;
 	}
 	

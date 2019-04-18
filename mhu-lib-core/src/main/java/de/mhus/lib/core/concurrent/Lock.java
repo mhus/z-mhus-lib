@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.concurrent;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.base.service.LockManager;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -40,7 +40,7 @@ public class Lock {
 	}
 
 	protected void register() {
-		MApi.lookup(LockManager.class).register(this);
+		M.l(LockManager.class).register(this);
 	}
 
 	public void lock() {

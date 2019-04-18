@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.config.IConfig;
@@ -80,7 +81,7 @@ public class ConsoleFactory extends LogFactory {
 			out = new PrintStream(f,true);
 		} else
 		if ("console".equals(io)) {
-			out = MApi.lookup(Console.class);
+			out = M.l(Console.class);
 		} else
 		if ("err".equals(io))
 		{

@@ -21,6 +21,7 @@ import com.sun.jdmk.comm.AuthInfo;
 import com.sun.jdmk.comm.HtmlAdaptorServer;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.config.IConfig;
@@ -53,9 +54,9 @@ public class JmxHttpServer extends MJmx {
 		// TODO load user auth infos into server
 		//server.setMBeanServer(mbs);
 		try {
-			MApi.lookup(MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
+			M.l(MRemoteManager.class).register(new ObjectName("adaptor:proptocol=HTTP"),server,false,false);
 //			mbs.registerMBean(server, new ObjectName("adaptor:proptocol=HTTP"));
-			server.setMBeanServer(MApi.lookup(MRemoteManager.class).getMBeanServer());
+			server.setMBeanServer(M.l(MRemoteManager.class).getMBeanServer());
 		} catch (Exception e) {
 			log().w(e);
 			server = null;

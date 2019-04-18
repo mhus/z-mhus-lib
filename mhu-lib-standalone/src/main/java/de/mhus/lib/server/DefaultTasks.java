@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.server;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.server.service.Command;
 import de.mhus.lib.server.service.GarbageCollectionTrigger;
@@ -27,7 +27,7 @@ public class DefaultTasks extends MObject {
 
 	@SuppressWarnings("unchecked")
 	public DefaultTasks() {
-		Main main = MApi.lookup(Main.class);
+		Main main = M.l(Main.class);
 		main.appendList(new TaskListDefinition("q","Quit", new Class[] {
 				Quit.class
 		}));

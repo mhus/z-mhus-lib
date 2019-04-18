@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi.SCOPE;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
@@ -101,7 +101,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	@Override
 	public File getFile(SCOPE scope,String dir) {
 		dir = MFile.normalizePath(dir);
-		if (scope == MApi.SCOPE.TMP)
+		if (scope == SCOPE.TMP)
 			return new File(MSystem.getTmpDirectory() + File.pathSeparator + dir);
 		if (scope == SCOPE.LOG) {
 			File log = new File(baseDir,"logs");
@@ -119,7 +119,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 	@Override
 	public synchronized Log lookupLog(Object owner) {
 		if (mlogFactory == null)
-			mlogFactory = MApi.lookup(MLogFactory.class);
+			mlogFactory = M.l(MLogFactory.class);
 		return mlogFactory.lookup(owner);
 	}
 

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MStopWatch;
@@ -61,7 +62,7 @@ public class Main extends MJmx {
 		
 		new de.mhus.lib.framework.Initializer(new XmlConfigFile(new File("config.xml")), ((DefaultBase)MApi.get().getBaseControl().base()).getActivator() ).initialize();
 		
-		Console console = MApi.lookup(Console.class);
+		Console console = M.l(Console.class);
 		while (true) {
 			// menu 
 			//console.printLine();

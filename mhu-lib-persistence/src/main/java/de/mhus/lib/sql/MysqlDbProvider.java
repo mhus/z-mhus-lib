@@ -16,7 +16,7 @@
 package de.mhus.lib.sql;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.NodeConfig;
 
 public class MysqlDbProvider extends JdbcProvider {
@@ -32,7 +32,7 @@ public class MysqlDbProvider extends JdbcProvider {
 		config.setProperty("user", user);
 		config.setProperty("pass", pass);
 		config.setProperty("name", url);
-		activator = MApi.lookup(MActivator.class);
+		activator = M.l(MActivator.class);
 	}
 		
 }

@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MArgs;
 import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.parser.ParseException;
@@ -28,7 +28,7 @@ import de.mhus.lib.errors.NotSupportedException;
 public class MVaultUtil {
 	
 	public static MVault loadDefault() {
-		MVault vault = MApi.lookup(MVault.class);
+		MVault vault = M.l(MVault.class);
 		checkDefault(vault);
 		return vault;
 	}
@@ -37,8 +37,8 @@ public class MVaultUtil {
 		VaultSource def = vault.getSource(MVault.SOURCE_DEFAULT);
 		if (def == null) {
 			
-			VaultPassphrase vaultPassphrase = MApi.lookup(VaultPassphrase.class);
-			VaultSourceFactory factory = MApi.lookup(VaultSourceFactory.class);
+			VaultPassphrase vaultPassphrase = M.l(VaultPassphrase.class);
+			VaultSourceFactory factory = M.l(VaultSourceFactory.class);
 			
 			def = factory.create(MVault.SOURCE_DEFAULT, vaultPassphrase);
 			if (def != null)
@@ -94,7 +94,7 @@ public class MVaultUtil {
 	 */
 	public static <T> T adaptTo(VaultEntry entry, Class<? extends T> ifc) throws ParseException, NotSupportedException {
 		// delegate to service
-		return MApi.lookup(VaultMutator.class).adaptTo(entry, ifc);
+		return M.l(VaultMutator.class).adaptTo(entry, ifc);
 	}
 
 	/**

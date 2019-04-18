@@ -101,24 +101,24 @@ public class M {
     }
 
     /**
-     * MApi.lookup()
+     * M.l()
      * 
      * @param class1
      * @return the service
      */
     public static <T> T l(Class<T> class1) {
-        return MApi.lookup(class1);
+        return M.l(class1);
     }
     
     /**
-     * MApi.lookup()
+     * M.l()
      * 
      * @param class1
      * @param def 
      * @return the service
      */
     public static <T,D extends T> T l(Class<T> class1, Class<D> def) {
-        return MApi.lookup(class1, def);
+        return M.l(class1, def);
     }
     
 }

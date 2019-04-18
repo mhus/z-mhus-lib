@@ -24,7 +24,7 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
@@ -47,8 +47,8 @@ public class MRemoteManager extends MObject implements IBase {
 	public MRemoteManager() throws MException {
 		housekeeper = new Housekeeper(this);
 		@SuppressWarnings("rawtypes")
-		ResourceNode config = MApi.lookup(CfgManager.class).getCfg(this,new HashConfig());
-		MApi.lookup(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000));
+		ResourceNode config = M.l(CfgManager.class).getCfg(this,new HashConfig());
+		M.l(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep",30000));
 	}
 	
 	public void register(JmxObject object) throws Exception {
