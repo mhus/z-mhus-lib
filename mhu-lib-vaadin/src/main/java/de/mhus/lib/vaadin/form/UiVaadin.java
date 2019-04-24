@@ -21,7 +21,6 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 
 import de.mhus.lib.core.util.MNls;
@@ -192,14 +191,28 @@ public abstract class UiVaadin extends UiComponent {
 		getForm().getControl().focus(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void setListeners() {
 		Component e = getComponentEditor();
 		if (e == null) return;
-		
-		if (e instanceof AbstractField) {
+		System.out.println("A " + e.getClass());
+		if (e instanceof com.vaadin.v7.ui.AbstractField) {
+	        System.out.println("B " + e.getClass());
+          ((com.vaadin.v7.ui.AbstractField<Object>)e).setImmediate(true);
+          ((com.vaadin.v7.ui.AbstractField<Object>)e).addValueChangeListener(new com.vaadin.v7.data.Property.ValueChangeListener() {
+              
+              private static final long serialVersionUID = 1L;
+
+              @Override
+              public void valueChange(com.vaadin.v7.data.Property.ValueChangeEvent event) {
+                  fieldValueChangedEvent();
+              }
+          });
+		} else
+		if (e instanceof HasValue) {
+	        System.out.println("C " + e.getClass());
 //			((AbstractField)e).setImmediate(true);
-			((AbstractField<Object>)e).addValueChangeListener(new ValueChangeListener<Object>() {
+			((HasValue<Object>)e).addValueChangeListener(new ValueChangeListener<Object>() {
 				
 				private static final long serialVersionUID = 1L;
 
@@ -209,6 +222,7 @@ public abstract class UiVaadin extends UiComponent {
 				}
 			});
 		}
+        System.out.println("D " + e.getClass());
 		if (e instanceof FocusNotifier) {
 			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
 				private static final long serialVersionUID = 1L;
