@@ -149,7 +149,7 @@ public class TransactionLock extends LockBase {
 		if (keys != null) {
 			for (String key : keys) {
 				if (!orderedKeys.containsKey(key)) {
-					throw new TransactionNestedException("Nested Key Not Locked in MainLock: " + key);
+					throw new NestedTransactionException("Nested key not locked in MainLock, dead lock possible: " + key + ", actuall locked: " + orderedKeys);
 				}
 			}
 		}

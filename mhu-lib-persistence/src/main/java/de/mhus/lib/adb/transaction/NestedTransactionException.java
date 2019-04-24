@@ -15,11 +15,11 @@
  */
 package de.mhus.lib.adb.transaction;
 
-public class TransactionNestedException extends RuntimeException {
+public class NestedTransactionException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public TransactionNestedException(String msg) {
+	public NestedTransactionException(String msg) {
 		super(msg);
 	}
 

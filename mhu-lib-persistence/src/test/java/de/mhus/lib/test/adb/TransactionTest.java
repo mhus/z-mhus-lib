@@ -19,7 +19,7 @@ import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbManagerJdbc;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.adb.DbTransaction;
-import de.mhus.lib.adb.transaction.TransactionNestedException;
+import de.mhus.lib.adb.transaction.NestedTransactionException;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.config.NodeConfig;
 import de.mhus.lib.core.util.ObjectContainer;
@@ -74,7 +74,7 @@ public class TransactionTest {
 			DbTransaction.lock(obj3); // nested not locked should fail, can't lock two times - philosophers deadlock
 			DbTransaction.releaseLock();
 			fail("Nested Transaction Not Allowed");
-		} catch (TransactionNestedException e) {
+		} catch (NestedTransactionException e) {
 			System.out.println(e);
 		}
 		DbTransaction.releaseLock();
