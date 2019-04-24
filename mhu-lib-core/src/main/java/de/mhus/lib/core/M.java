@@ -107,7 +107,7 @@ public class M {
      * @return the service
      */
     public static <T> T l(Class<T> class1) {
-        return M.l(class1);
+        return MApi.lookup(class1);
     }
     
     /**
@@ -118,7 +118,7 @@ public class M {
      * @return the service
      */
     public static <T,D extends T> T l(Class<T> class1, Class<D> def) {
-        return M.l(class1, def);
+        return MApi.lookup(class1, def);
     }
     
 }
