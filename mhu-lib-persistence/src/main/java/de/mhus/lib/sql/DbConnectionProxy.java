@@ -32,7 +32,7 @@ import de.mhus.lib.errors.MException;
  */
 public class DbConnectionProxy extends MObject implements DbConnection {
 
-	private static CfgBoolean traceCaller = new CfgBoolean(DbConnection.class, "traceCallers", false);
+	private static final CfgBoolean CFG_TRACE_CALLER = new CfgBoolean(DbConnection.class, "traceCallers", false);
 	
 	private DbConnection instance;
 	private long id = M.l(UniqueId.class).nextUniqueId();
@@ -40,7 +40,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 	private DbPool pool;
 
 	public DbConnectionProxy(DbPool pool, DbConnection instance) {
-		if (traceCaller.value()) {
+		if (CFG_TRACE_CALLER.value()) {
 			this.pool = pool;
 			pool.getStackTraces().put(MSystem.getObjectId(this), new ConnectionTrace(this));
 //			instance.setUsedTrace(createStackTrace);
@@ -93,7 +93,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 		if (instance == null) return;
 		log().t(id,"close",instance.getInstanceId());
 		setUsed(false); // close of the proxy will free the connection
-		if (traceCaller.value())
+		if (CFG_TRACE_CALLER.value())
 			pool.getStackTraces().remove(MSystem.getObjectId(this));
 	}
 
@@ -110,7 +110,7 @@ public class DbConnectionProxy extends MObject implements DbConnection {
 				trace.log(log());
 			setUsed(false);
 		}
-		if (traceCaller.value())
+		if (CFG_TRACE_CALLER.value())
 			pool.getStackTraces().remove(MSystem.getObjectId(this));
 		super.finalize();
 	}

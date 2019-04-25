@@ -21,9 +21,12 @@ import java.util.TreeMap;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbObject;
+import de.mhus.lib.adb.DbTransaction;
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.model.Field;
 import de.mhus.lib.adb.model.Table;
+import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
@@ -35,11 +38,13 @@ import de.mhus.lib.errors.TimeoutRuntimeException;
  */
 public class TransactionLock extends LockBase {
 
+    private static final CfgBoolean CFG_TRACE_CALLER = new CfgBoolean(DbTransaction.class, "traceTransactionCallers", false);
 	private Persistable[] objects;
 	private DbManager manager;
 	private boolean locked;
 	private TreeMap<String, Persistable> orderedKeys;
-
+    private String stacktrace;
+	
 	/**
 	 * <p>Constructor for TransactionLock.</p>
 	 *
@@ -49,6 +54,8 @@ public class TransactionLock extends LockBase {
 	public TransactionLock(DbManager manager, Persistable ... objects) {
 		this.manager = manager;
 		this.objects = objects;
+		if (CFG_TRACE_CALLER.value())
+		    this.stacktrace = "\n" + MCast.toString("TransactionLock",Thread.currentThread().getStackTrace());
 	}
 	
 	/**
@@ -69,8 +76,8 @@ public class TransactionLock extends LockBase {
 	/** {@inheritDoc} */
 	@Override
 	public void lock(long timeout)  throws TimeoutRuntimeException {
-		if (objects == null) throw new NotSupportedException("Transaction already gone");
-		if (manager == null) throw new NotSupportedException("DbManager not found, need direct manager or DbObject implementation to grep the manager");
+		if (objects == null) throw new NotSupportedException("Transaction already gone" + stacktrace);
+		if (manager == null) throw new NotSupportedException("DbManager not found, need direct manager or DbObject implementation to grep the manager" + stacktrace);
 		LockStrategy strategy = manager.getSchema().getLockStrategy();
 		if (strategy == null) return;
 
@@ -149,7 +156,7 @@ public class TransactionLock extends LockBase {
 		if (keys != null) {
 			for (String key : keys) {
 				if (!orderedKeys.containsKey(key)) {
-					throw new NestedTransactionException("Nested key not locked in MainLock, dead lock possible: " + key + ", actuall locked: " + orderedKeys);
+					throw new NestedTransactionException("Nested key not locked in MainLock, dead lock possible: " + key + ", actuall locked: " + orderedKeys + stacktrace);
 				}
 			}
 		}
