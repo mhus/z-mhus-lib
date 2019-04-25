@@ -195,9 +195,7 @@ public abstract class UiVaadin extends UiComponent {
 	public void setListeners() {
 		Component e = getComponentEditor();
 		if (e == null) return;
-		System.out.println("A " + e.getClass());
 		if (e instanceof com.vaadin.v7.ui.AbstractField) {
-	        System.out.println("B " + e.getClass());
           ((com.vaadin.v7.ui.AbstractField<Object>)e).setImmediate(true);
           ((com.vaadin.v7.ui.AbstractField<Object>)e).addValueChangeListener(new com.vaadin.v7.data.Property.ValueChangeListener() {
               
@@ -210,7 +208,6 @@ public abstract class UiVaadin extends UiComponent {
           });
 		} else
 		if (e instanceof HasValue) {
-	        System.out.println("C " + e.getClass());
 //			((AbstractField)e).setImmediate(true);
 			((HasValue<Object>)e).addValueChangeListener(new ValueChangeListener<Object>() {
 				
@@ -222,7 +219,6 @@ public abstract class UiVaadin extends UiComponent {
 				}
 			});
 		}
-        System.out.println("D " + e.getClass());
 		if (e instanceof FocusNotifier) {
 			((FocusNotifier)e).addFocusListener(new FieldEvents.FocusListener() {
 				private static final long serialVersionUID = 1L;
