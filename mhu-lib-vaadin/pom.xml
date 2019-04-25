@@ -27,6 +27,7 @@
         <artifactId>mhus-lib</artifactId>
         <version>3.6.0</version>
   </parent>
+  <version>3.6.0.1</version>
   
   <build>
     <plugins>
