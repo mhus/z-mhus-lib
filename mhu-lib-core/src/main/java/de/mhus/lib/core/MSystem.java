@@ -705,26 +705,32 @@ public class MSystem {
 	 * @throws IOException
 	 */
 	public static String[] execute(String... command) throws IOException {
-
-		ProcessBuilder pb = new ProcessBuilder(command);
-		Process proc = pb.start();
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-		// read the output from the command
-		StringBuilder stdOut = new StringBuilder();
-		String s = null;
-		while ((s = stdInput.readLine()) != null)
-			stdOut.append(s);
-
-		// read any errors from the attempted command
-		StringBuilder stdErr = new StringBuilder();
-		while ((s = stdError.readLine()) != null)
-			stdErr.append(s);
-
-		return new String[] { stdOut.toString(), stdErr.toString() };
+		return execute(null, command);
 	}
 
+    public static String[] execute(MProperties env, String... command) throws IOException {
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+        if (env != null)
+            env.forEach((k,v) -> pb.environment().put(k, String.valueOf(v)));
+        Process proc = pb.start();
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+        // read the output from the command
+        StringBuilder stdOut = new StringBuilder();
+        String s = null;
+        while ((s = stdInput.readLine()) != null)
+            stdOut.append(s);
+
+        // read any errors from the attempted command
+        StringBuilder stdErr = new StringBuilder();
+        while ((s = stdError.readLine()) != null)
+            stdErr.append(s);
+
+        return new String[] { stdOut.toString(), stdErr.toString() };
+    }
+	
 	public static boolean isWindows() {
 		final String os = System.getProperty("os.name");
 		return os.contains("Windows");

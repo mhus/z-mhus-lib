@@ -67,7 +67,7 @@ public class UiNumber extends UiVaadin {
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected Object getValue() throws MException {
-		return ((SpinnerNumberField)getComponentEditor()).getValue();
+		return ((SpinnerNumberField)getComponentEditor()).getNumberValue();
 	}
 
 	public static class Adapter implements ComponentAdapter {
