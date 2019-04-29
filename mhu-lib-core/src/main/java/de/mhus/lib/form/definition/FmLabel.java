@@ -32,6 +32,11 @@ public class FmLabel extends IFmElement {
 		addDefinition(definitions);
 	}
 	
+    public FmLabel(String title, String description, IDefAttribute ... definitions) {
+        this(null, new FaNls(title, description));
+        addDefinition(definitions);
+    }
+    
 	public FmLabel(String name, IDefAttribute ... definitions) {
 		super(name, definitions);
 		setString("type", "label");
