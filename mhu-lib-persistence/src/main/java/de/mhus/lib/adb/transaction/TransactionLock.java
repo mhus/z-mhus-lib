@@ -64,8 +64,7 @@ public class TransactionLock extends LockBase {
 	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
 	 */
 	public TransactionLock(Persistable ... objects) {
-		this.objects = objects;
-		manager = null;
+	    this(null, objects);
 		for (Persistable o : objects)
 			if (o instanceof DbObject) {
 				manager = (DbManager) ((DbObject)o).getDbHandler();
