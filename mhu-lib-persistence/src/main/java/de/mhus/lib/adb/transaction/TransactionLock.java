@@ -44,27 +44,31 @@ public class TransactionLock extends LockBase {
 	private boolean locked;
 	private TreeMap<String, Persistable> orderedKeys;
     private String stacktrace;
+    private boolean relaxed;
 	
 	/**
 	 * <p>Constructor for TransactionLock.</p>
 	 *
 	 * @param manager a {@link de.mhus.lib.adb.DbManager} object.
+	 * @param relaxed 
 	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
 	 */
-	public TransactionLock(DbManager manager, Persistable ... objects) {
+	public TransactionLock(DbManager manager, boolean relaxed, Persistable ... objects) {
 		this.manager = manager;
 		this.objects = objects;
+		this.relaxed = relaxed;
 		if (CFG_TRACE_CALLER.value())
 		    this.stacktrace = "\n" + MCast.toString("TransactionLock",Thread.currentThread().getStackTrace());
 	}
 	
 	/**
 	 * <p>Constructor for TransactionLock.</p>
+	 * @param relaxed 
 	 *
 	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
 	 */
-	public TransactionLock(Persistable ... objects) {
-	    this(null, objects);
+	public TransactionLock(boolean relaxed, Persistable ... objects) {
+	    this(null, relaxed, objects);
 		for (Persistable o : objects)
 			if (o instanceof DbObject) {
 				manager = (DbManager) ((DbObject)o).getDbHandler();
@@ -150,6 +154,11 @@ public class TransactionLock extends LockBase {
 	@Override
 	public synchronized void pushNestedLock(LockBase transaction) {
 		// validate lock objects
+	    // this: current locked
+	    // transaction: request lock
+	    
+	    if (isRelaxed()) return; // I'm relaxed means I accept all nested locks
+	    
 		Set<String> keys = transaction.getLockKeys();
 		getLockKeys();
 		if (keys != null) {
@@ -190,4 +199,8 @@ public class TransactionLock extends LockBase {
 		return orderedKeys.keySet();
 	}
 
+	public boolean isRelaxed() {
+	    return relaxed;
+	}
+	
 }

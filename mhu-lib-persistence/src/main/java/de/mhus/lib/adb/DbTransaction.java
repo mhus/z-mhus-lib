@@ -39,7 +39,7 @@ public class DbTransaction {
 	public static final long DEFAULT_TIMEOUT = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
 
 	/**
-	 * <p>lock.</p>
+	 * <p>lock accept only nested locks with already locked objects.</p>
 	 *
 	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
 	 * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
@@ -48,17 +48,38 @@ public class DbTransaction {
 		lock(DEFAULT_TIMEOUT, objects);
 	}
 	
+    /**
+     * <p>lock and accept all nested locks.</p>
+     *
+     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
+     */
+    public static void relaxedLock(Persistable ... objects) throws TimeoutRuntimeException {
+        relaxedLock(DEFAULT_TIMEOUT, objects);
+    }
+    
 	/**
-	 * <p>lock.</p>
+	 * <p>lock accept only nested locks with already locked objects.</p>
 	 *
 	 * @param timeout a long.
 	 * @param objects a {@link de.mhus.lib.adb.Persistable} object.
 	 * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
 	 */
 	public static void lock(long timeout, Persistable ... objects) throws TimeoutRuntimeException {
-		TransactionPool.instance().lock(timeout, new TransactionLock(objects));
+		TransactionPool.instance().lock(timeout, new TransactionLock(false, objects));
 	}
 	
+    /**
+     * <p>lock and accept all nested locks.</p>
+     *
+     * @param timeout a long.
+     * @param objects a {@link de.mhus.lib.adb.Persistable} object.
+     * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
+     */
+    public static void relaxedLock(long timeout, Persistable ... objects) throws TimeoutRuntimeException {
+        TransactionPool.instance().lock(timeout, new TransactionLock(true, objects));
+    }
+    
 	/**
 	 * <p>lock.</p>
 	 *
@@ -79,7 +100,7 @@ public class DbTransaction {
 	 * @throws de.mhus.lib.errors.TimeoutRuntimeException if any.
 	 */
 	public static void lock(DbManager manager, long timeout, Persistable ... objects) throws TimeoutRuntimeException {
-		TransactionPool.instance().lock(timeout, new TransactionLock(manager, objects));
+		TransactionPool.instance().lock(timeout, new TransactionLock(manager, false, objects));
 	}
 	
 	/**
