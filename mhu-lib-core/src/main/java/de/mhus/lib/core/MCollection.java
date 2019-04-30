@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -567,6 +568,18 @@ public class MCollection {
         T[] out = (T[]) Array.newInstance(from.getClass().getComponentType(), length);
         System.arraycopy(from, 0, out, left, from.length);
         return out;
+    }
+    
+    /**
+     * Search for an entry and return it use the filter to find it. Will return the first entry or null.
+     * @param iter The list or iterable object
+     * @param filter The filter to find the entry
+     * @return The entry or null
+     */
+    public static <T> T search(Iterable<T> iter, Predicate<? super T> filter) {
+        for (T item : iter)
+            if (filter.test(item)) return item;
+        return null;
     }
 
 }
