@@ -97,14 +97,14 @@ isig icanon iexten echo echoe -echok -echonl -noflsh -xcase -tostop -echoprt ech
 238 29 xterm-color
 	 */
 	public String getRawSettings() throws IOException {
-		String ret = MSystem.execute("/bin/sh","-c","echo $COLUMNS $LINES $TERM")[0];
+		String ret = MSystem.execute("/bin/sh","-c","echo $COLUMNS $LINES $TERM").getOutput();
 		return ret;
 	}
 	
 	public static String getRawTTYSettings() {
 		try {
 			String ret;
-			ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty")[0];
+			ret = MSystem.execute("/bin/sh","-c","stty -a < /dev/tty").getOutput();
 			return ret;
 		} catch (IOException e) {
 			return e.toString();

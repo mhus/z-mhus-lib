@@ -37,6 +37,32 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 	private Invalidator<K,V> invalidator;
 	private boolean refreshOnAccess = true;
 
+	public SoftTimeoutMap() {}
+	
+	public SoftTimeoutMap(long timeout) {
+	    this.timeout = timeout;
+	    this.checkTimeout = timeout;
+	}
+	
+    public SoftTimeoutMap(long timeout, boolean refreshOnAccess) {
+        this.timeout = timeout;
+        this.checkTimeout = timeout;
+        this.refreshOnAccess = refreshOnAccess;
+    }
+    
+    public SoftTimeoutMap(long timeout, long checkTimeout, boolean refreshOnAccess) {
+        this.timeout = timeout;
+        this.checkTimeout = checkTimeout;
+        this.refreshOnAccess = refreshOnAccess;
+    }
+
+    public SoftTimeoutMap(long timeout, long checkTimeout, boolean refreshOnAccess, Invalidator<K,V> invalidator) {
+        this.timeout = timeout;
+        this.checkTimeout = checkTimeout;
+        this.refreshOnAccess = refreshOnAccess;
+        this.invalidator = invalidator;
+    }
+    
 	@Override
 	public int size() {
 		return map.size();
@@ -202,6 +228,10 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		return timeout;
 	}
 
+	/**
+	 * Set the maximal life time for every entry. After the timeout the entry will be removed.
+	 * @param timeout timeout in ms
+	 */
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
@@ -210,6 +240,12 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		return checkTimeout;
 	}
 
+	/**
+	 * Set the time after a full check should be done. If the map is accesses after timeout
+	 * a full check over all elements will be performed. Set to -1 to disable.
+	 * 
+	 * @param checkTimeout timeout in ms
+	 */
 	public void setCheckTimeout(long checkTimeout) {
 		this.checkTimeout = checkTimeout;
 	}
@@ -218,6 +254,11 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		return invalidator;
 	}
 
+	/**
+	 * Set a function which can decide if the entry is no more valid.
+	 * 
+	 * @param invalidator
+	 */
 	public void setInvalidator(Invalidator<K,V> invalidator) {
 		this.invalidator = invalidator;
 	}
@@ -226,6 +267,12 @@ public class SoftTimeoutMap<K,V> implements Map<K,V> {
 		return refreshOnAccess;
 	}
 
+	/**
+	 * Set to true if also get requests will reset the timeout. If set to false it will
+	 * timeout even it was read. Default is true.
+	 * 
+	 * @param refreshOnAccess
+	 */
 	public void setRefreshOnAccess(boolean refreshOnAccess) {
 		this.refreshOnAccess = refreshOnAccess;
 	}

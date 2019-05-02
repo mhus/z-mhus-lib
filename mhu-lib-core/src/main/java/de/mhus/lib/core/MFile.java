@@ -487,8 +487,12 @@ public class MFile {
 		int i = 0;
 
 		try {
-			while ((i = _is.read(buffer)) != -1)
-				_os.write(buffer, 0, i);
+			while ((i = _is.read(buffer)) != -1) {
+			    if (i == 0)
+			        MThread.sleep(100);
+			    else
+			        _os.write(buffer, 0, i);
+			}
 		} catch (Exception e) {
 			log.d( e );
 		}
@@ -513,7 +517,10 @@ public class MFile {
 
 		try {
 			while ((i = _is.read(buffer)) != -1)
-				_os.write(buffer, 0, i);
+			    if (i == 0)
+			        MThread.sleep(100);
+			    else
+			        _os.write(buffer, 0, i);
 		} catch (Exception e) {
 			log.d( e );
 		}

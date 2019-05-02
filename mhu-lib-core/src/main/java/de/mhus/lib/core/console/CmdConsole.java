@@ -45,7 +45,7 @@ Code page: 437
  */
 	
 	public String[] getRawSettings() throws IOException {
-		return MSystem.execute("cmd.exe", "/c", "mode con");
+		return MSystem.execute("cmd.exe", "/c", "mode con").toArray();
 	}
 	
 	public void loadSettings() {

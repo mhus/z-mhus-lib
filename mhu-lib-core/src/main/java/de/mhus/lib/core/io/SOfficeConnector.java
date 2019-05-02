@@ -51,8 +51,7 @@ public class SOfficeConnector {
 		version = null;
 		if (binary == null || binary.indexOf("soffice") < 0) return;
 		try {
-			String[] res = MSystem.execute(binary,"--version");
-			version = res[0];
+			version = MSystem.execute(binary,"--version").getOutput();
 			valid = MString.isSet(version) && version.startsWith("LibreOffice ");
 		} catch (IOException e) {
 			if (MSystem.isUnix()) {
@@ -61,8 +60,7 @@ public class SOfficeConnector {
 				if (f.exists() && f.canExecute()) {
 					binary = f.getPath();
 					try {
-						String[] res = MSystem.execute(binary,"--version");
-						version = res[0];
+						version = MSystem.execute(binary,"--version").getOutput();
 						valid = MString.isSet(version) && version.startsWith("LibreOffice ");
 					} catch (IOException e2) {
 					}
@@ -124,9 +122,9 @@ public class SOfficeConnector {
 		
 		String[] res = null;
 		if (outDir == null)
-			res = MSystem.execute(binary,"--headless","-convert-to",format,in);
+			res = MSystem.execute(binary,"--headless","-convert-to",format,in).toArray();
 		else
-			res = MSystem.execute(binary,"--headless","-convert-to",format,"-outdir",outDir,in);
+			res = MSystem.execute(binary,"--headless","-convert-to",format,"-outdir",outDir,in).toArray();
 			
 		for (String line : res[0].split("\n")) {
 			line = line.trim();

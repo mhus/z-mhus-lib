@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -312,13 +313,14 @@ public class MSystem {
 	}
 
 	/**
-	 * Start a script and return the result as struct.
+	 * Start a script and return the result as struct. Deprecated use execute() instead
 	 * 
 	 * @param dir
 	 * @param script
 	 * @param timeout
 	 * @return The result of execution
 	 */
+	@Deprecated
 	public static ScriptResult startScript(File dir, String script, long timeout) {
 		log.d("script", dir, script);
 		ProcessBuilder pb = new ProcessBuilder(new File(dir, script).getAbsolutePath());
@@ -329,12 +331,14 @@ public class MSystem {
 		try {
 			Process p = pb.start();
 
-			out.output = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			out.error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			BufferedReader os = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader es = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
 			p.waitFor();
 			p.destroy();
 
+			out.output = MFile.readFile(os);
+			out.error = MFile.readFile(es);
 			out.rc = p.exitValue();
 
 		} catch (Throwable t) {
@@ -345,11 +349,36 @@ public class MSystem {
 
 	public static class ScriptResult {
 
-		public Throwable exception;
-		public int rc;
-		public BufferedReader error;
-		public BufferedReader output;
+	    private Throwable exception;
+	    
+	    private int rc;
+		private String error;
+		private String output;
 
+		@Override
+        public String toString() {
+		    return "[" + output + (error != null ? "," + error : "") + "] " + rc;
+		}
+
+        public String[] toArray() {
+            return new String[] {output, error};
+        }
+
+        public Throwable getException() {
+            return exception;
+        }
+
+        public int getRc() {
+            return rc;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public String getOutput() {
+            return output;
+        }
 	}
 
 	/**
@@ -704,26 +733,51 @@ public class MSystem {
 	 * @return 0 = strOut, 1 = stdErr
 	 * @throws IOException
 	 */
-	public static String[] execute(String... command) throws IOException {
-
-		ProcessBuilder pb = new ProcessBuilder(command);
-		Process proc = pb.start();
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-
-		// read the output from the command
-		StringBuilder stdOut = new StringBuilder();
-		String s = null;
-		while ((s = stdInput.readLine()) != null)
-			stdOut.append(s);
-
-		// read any errors from the attempted command
-		StringBuilder stdErr = new StringBuilder();
-		while ((s = stdError.readLine()) != null)
-			stdErr.append(s);
-
-		return new String[] { stdOut.toString(), stdErr.toString() };
+	public static ScriptResult execute(String... command) throws IOException {
+	    return execute(null, null, null, false, command);
 	}
+
+
+    /**
+     * Executes a command and returns an array of 0 = strOut, 1 = stdErr
+     * @param env Environment variables or null if not needed
+     * @param workingDirectory pwd for the process or null if not needed
+     * @param stdin Set StdIn stream or null if not needed
+     * @param redirectErrorStream Set true if error should be redirected to input (error String will be null)
+     * @param command
+     * @return 0 = strOut, 1 = stdErr
+     * @throws IOException
+     */
+    public static ScriptResult execute(IProperties env, File workingDirectory, InputStream stdin, boolean redirectErrorStream, String... command) throws IOException {
+
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.redirectErrorStream(redirectErrorStream);
+        if (env != null)
+            env.forEach((k,v) -> pb.environment().put(k, String.valueOf(v)));
+        if (workingDirectory != null)
+            pb.directory(workingDirectory);
+        Process proc = pb.start();
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        BufferedReader stdError = redirectErrorStream ? null : new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+        if (stdin != null) {
+            BufferedOutputStream bo = new BufferedOutputStream(proc.getOutputStream());
+            MFile.copyFile(stdin, bo);
+        }
+        
+        ScriptResult out = new ScriptResult();
+        try {
+            proc.waitFor();
+        } catch (InterruptedException ie) {
+            out.exception = ie;
+        }
+        
+        out.output = MFile.readFile(stdInput);
+        if (!redirectErrorStream)
+            out.error  = MFile.readFile(stdError);
+        out.rc = proc.exitValue();
+        return out;
+    }
 
 	public static boolean isWindows() {
 		final String os = System.getProperty("os.name");
