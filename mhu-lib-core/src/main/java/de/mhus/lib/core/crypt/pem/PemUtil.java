@@ -158,4 +158,12 @@ public class PemUtil {
 		return new PemBlockModel().parse(entry);
 	}
 
+    public static String getBlockAsString(String entry) throws ParseException {
+        return new PemBlockModel().parse(entry).getBlock();
+    }
+
+    public static byte[] getBlockAsBytes(String entry) throws ParseException {
+        return new PemBlockModel().parse(entry).getBytesBlock();
+    }
+    
 }

@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +42,8 @@ import de.mhus.lib.core.crypt.CipherOutputStream;
 import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.Twofish;
+import de.mhus.lib.core.crypt.pem.PemUtil;
+import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -82,7 +86,91 @@ public class CryptTest {
 			"yi5qv/qyAZtnn9SgaQIRAJNnH1i7zc7VZ4Zk0udBLLY=\n"+
 			"-----END RSA PRIVATE KEY-----";
 	
-	@Test
+    String t1PublicKey = "-----BEGIN PUBLIC KEY-----\n" +
+            "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKp+9XIfeKAB\n" +
+            "s4JTfsduqba+8U9MZUAWdakYEeI8AJ95TPcMnjku5E8xLOh5s8\n" +
+            "soaS99H+1GffaI4nin3okBVuO4a0mYR8O7JpDbWCOc0G3UEkQQ\n" +
+            "R+LEjS5bCqKwg41W+sLIeFDaLirZDkVKg5zsjy/s/BufjtVI4U\n" +
+            "Bqv/PIl0kQIDAQAB" +
+            "\n" +
+            "-----END PUBLIC KEY-----";
+    String t1PrivateKey = "-----BEGIN PRIVATE KEY-----\n" +
+            "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAI\n" +
+            "qn71ch94oAGzglN+x26ptr7xT0xlQBZ1qRgR4jwAn3lM9wyeOS\n" +
+            "7kTzEs6HmzyyhpL30f7UZ99ojieKfeiQFW47hrSZhHw7smkNtY\n" +
+            "I5zQbdQSRBBH4sSNLlsKorCDjVb6wsh4UNouKtkORUqDnOyPL+\n" +
+            "z8G5+O1UjhQGq/88iXSRAgMBAAECgYBnFtD2QYTgD5AtQE7B+v\n" +
+            "AXOjp5pDvIvXpwdfo/xGjFgFQdn0gbcWTB0s/Kyjv69ujjYGm7\n" +
+            "Q4UvL3dxoqBWRroHKkKveqt8tmSZO37fOLQeHvaFZw5s5UN+wJ\n" +
+            "7r3FpsG350gjyNVUXtukNxHSHZdc4n+WvYkavtxNtLux4hGqmd\n" +
+            "oQJBAOqcSkiwuFyoYecywfWjkpnEHZq3aZriMjEEjLZ3gC2koz\n" +
+            "MPuFo+96Tlz3VQe6KT9TLAw2ktko9BgAt7SEIbCp0CQQCXTBtq\n" +
+            "oQ7a5xoojygrQxa1Iv5nPAwshkmYk4uh/SCRH/13AkMnxyMs+h\n" +
+            "T8KRB7Sk1f2dBWFm9vb1BEZf+ScWWFAkEA45np6ukegi2MhTnV\n" +
+            "txMQFwKOYdlLp0mHvcwXIrF99UnCVbgLdemeYCfegoYo20lE2A\n" +
+            "7vxGrEwxudOAZKzG7ldQJBAJcLsENfz4jTN9ZONXgbXkwwR3Oh\n" +
+            "CzZYSpk8lCaAo0a/fTiW1Zycvo1kjhbAmGe94klTFx8a/t1tb+\n" +
+            "EZQ3FcLFECQQCpI9sVRmPGZqJlwiU8ozKyqnW5KyC9Z44w9aPK\n" +
+            "W8WugXXci5tEbicnibZKp7lJc1KfA1M0naCwUdiroWW6QfFM" +
+            "\n" +
+            "-----END PRIVATE KEY-----";
+
+    String t1Secret = "Vom Eise befreit sind Strom und Bäche\n" + 
+            "Durch des Frühlings holden, belebenden Blick,\n" + 
+            "Im Tale grünet Hoffnungsglück;\n" + 
+            "Der alte Winter, in seiner Schwäche,\n" + 
+            "Zog sich in rauhe Berge zurück.\n" + 
+            "Von dort her sendet er, fliehend, nur\n" + 
+            "Ohnmächtige Schauer körnigen Eises\n" + 
+            "In Streifen über die grünende Flur.\n" + 
+            "Aber die Sonne duldet kein Weißes,\n" + 
+            "Überall regt sich Bildung und Streben,\n" + 
+            "Alles will sie mit Farben beleben;\n" + 
+            "Doch an Blumen fehlts im Revier,\n" + 
+            "Sie nimmt geputzte Menschen dafür.\n" + 
+            "Kehre dich um, von diesen Höhen\n" + 
+            "Nach der Stadt zurück zu sehen!\n" + 
+            "Aus dem hohlen finstern Tor\n" + 
+            "Dringt ein buntes Gewimmel hervor.\n" + 
+            "Jeder sonnt sich heute so gern.\n" + 
+            "Sie feiern die Auferstehung des Herrn,\n" + 
+            "Denn sie sind selber auferstanden:\n" + 
+            "Aus niedriger Häuser dumpfen Gemächern,\n" + 
+            "Aus Handwerks- und Gewerbesbanden,\n" + 
+            "Aus dem Druck von Giebeln und Dächern,\n" + 
+            "Aus der Straßen quetschender Enge,\n" + 
+            "Aus der Kirchen ehrwürdiger Nacht\n" + 
+            "Sind sie alle ans Licht gebracht.\n" + 
+            "Sieh nur, sieh! wie behend sich die Menge\n" + 
+            "Durch die Gärten und Felder zerschlägt,\n" + 
+            "Wie der Fluß in Breit und Länge\n" + 
+            "So manchen lustigen Nachen bewegt,\n" + 
+            "Und, bis zum Sinken überladen,\n" + 
+            "Entfernt sich dieser letzte Kahn.\n" + 
+            "Selbst von des Berges fernen Pfaden\n" + 
+            "Blinken uns farbige Kleider an.\n" + 
+            "Ich höre schon des Dorfs Getümmel,\n" + 
+            "Hier ist des Volkes wahrer Himmel,\n" + 
+            "Zufrieden jauchzet groß und klein:\n" + 
+            "Hier bin ich Mensch, hier darf ichs sein!";
+    
+    @Test
+    public void testTest1BC() throws Exception {
+        // This is called test 1 because it's the first test with csharp
+        
+        PrivateKey privKey = MBouncy.getPrivateKey(PemUtil.getBlockAsString(t1PrivateKey));
+        PublicKey publKey = MBouncy.getPublicKey(PemUtil.getBlockAsString(t1PublicKey));
+        
+        byte[] secure = MBouncy.encryptRsa(MString.toBytes(t1Secret), publKey);
+        System.out.println(Base64.encode(secure));
+        
+        String secret = MString.byteToString(MBouncy.decryptRsa(secure, privKey));
+        
+        assertEquals(t1Secret, secret);
+        
+    }
+    
+    @Test
 	public void testPrivateKeyLoad() throws IOException {
 		AsyncKey pair256 = MCrypt.loadPrivateRsaKey(key256);
 		System.out.println(pair256);
