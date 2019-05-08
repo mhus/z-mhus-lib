@@ -25,12 +25,12 @@ public class JmsDestination extends JmsObject {
 
 	protected JmsConnection con;
 	private String destination;
-	private boolean destinantionTopic;
+	private boolean destinationTopic;
 	private Destination jmsDestination;
 
 	public JmsDestination(String destination, boolean destinationTopic) {
 		this.destination = destination;
-		this.destinantionTopic = destinationTopic;
+		this.destinationTopic = destinationTopic;
 	}
 	
 	public Destination getDestination() throws JMSException {
@@ -66,7 +66,7 @@ public class JmsDestination extends JmsObject {
 		if (jmsDestination == null || getSession() == null) {
 			con.open();
 			log().d("destination",destination);
-			if (destinantionTopic)
+			if (destinationTopic)
 	            jmsDestination = getSession().createTopic(destination);
 			else
 	            jmsDestination = getSession().createQueue(destination);
@@ -74,7 +74,7 @@ public class JmsDestination extends JmsObject {
 	}
 
 	public String getName() {
-		return (destinantionTopic ? "/topic/" : "/queue/") + destination;
+		return (destinationTopic ? "/topic/" : "/queue/") + destination;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class JmsDestination extends JmsObject {
 	}
 
 	public boolean isTopic() {
-		return destinantionTopic;
+		return destinationTopic;
 	}
 
 	@Override
