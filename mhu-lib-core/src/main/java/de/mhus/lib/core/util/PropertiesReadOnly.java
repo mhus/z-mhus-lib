@@ -58,6 +58,11 @@ public class PropertiesReadOnly implements IReadProperties, ReadOnly {
 		return parent.containsValue(value);
 	}
 
+    @Override
+    public boolean containsKey(Object key) {
+        return parent.containsKey(key);
+    }
+    
 	@Override
 	public Collection<Object> values() {
 		return parent.values();

@@ -25,7 +25,6 @@ import de.mhus.lib.core.lang.NullValue;
 
 public class NullableMap<K,V> implements Map<K, V> {
 	
-	private static final NullValue NULL_VALUE = new NullValue();
 	private HashMap<K, Object> impl = new HashMap<K, Object>();
 
 	@Override
@@ -61,7 +60,7 @@ public class NullableMap<K,V> implements Map<K, V> {
 	@SuppressWarnings("unchecked")
 	public V put(K key, V value) {
 		if (value == null) {
-			Object ret = impl.put(key, NULL_VALUE);
+			Object ret = impl.put(key, NullValue.VALUE);
 			if (ret instanceof NullValue)
 				return null;
 			return (V) ret;

@@ -23,6 +23,8 @@ package de.mhus.lib.core.lang;
  */
 public class NullValue {
 
+    public static final NullValue VALUE = new NullValue();
+    
 	@Override
 	public String toString() {
 		return "null";

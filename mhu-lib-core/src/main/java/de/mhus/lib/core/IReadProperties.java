@@ -57,6 +57,8 @@ public interface IReadProperties {
 
 	boolean containsValue(Object value);
 
+    boolean containsKey(Object key);
+    
 	Collection<Object> values();
 
 	Set<Entry<String, Object>> entrySet();
