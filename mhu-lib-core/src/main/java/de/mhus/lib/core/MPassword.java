@@ -17,11 +17,11 @@ package de.mhus.lib.core;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
 import java.util.UUID;
 
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
+import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
 import de.mhus.lib.core.util.SecureString;
@@ -50,7 +50,6 @@ import de.mhus.lib.errors.UsageException;
 
 public class MPassword {
 		
-	private static final Random random = new Random();
 	public enum METHOD {DUMMY,ROT13,RSA,HASH_MD5}
 
 	public static final String PREFIX_DUMMY = "`X";
@@ -59,6 +58,7 @@ public class MPassword {
 	public static final String PREFIX_HASH_MD5 = "`ZMD5:";
 	public static final String PREFIX_SPECIAL1 = "`A";
 	public static final String PREFIX = "`";
+    private static MRandom random;
 
 //	private static Log log = Log.getLog(MPassword.class);
 		
@@ -235,24 +235,34 @@ public class MPassword {
 				symbols[i++] = '#';
 				symbols[i++] = ';';
 		}
-		return generate(max == min ? min : (random.nextInt(max-min)+max), symbols, i);
+		return generate(max == min ? min : (getRandomInt(max-min)+max), symbols, i);
 	}
 	
 	public static String generate(int length, char[] symbols, int symbolLength) {
 		char[] buf = new char[length];
 		for (int idx = 0; idx < buf.length; ++idx) 
-		      buf[idx] = symbols[random.nextInt(symbolLength)];
+		      buf[idx] = symbols[getRandomInt(symbolLength)];
 		    return new String(buf);
 	}
 	
 	public static String generate(int length, String symbols) {
 		char[] buf = new char[length];
 		for (int idx = 0; idx < buf.length; ++idx) 
-		      buf[idx] = symbols.charAt(random.nextInt(symbols.length()));
+		      buf[idx] = symbols.charAt(getRandomInt(symbols.length()));
 		    return new String(buf);
 	}
 
-	/**
+	private synchronized static MRandom getRandom() {
+	    if (random == null)
+	        random = M.l(MRandom.class);
+        return random;
+    }
+
+    private static int getRandomInt(int max) {
+        return getRandom().getInt() % max;
+    }
+    
+    /**
 	 * Check if the passwords are equals. The password could also be hashes.
 	 * 
 	 * @param storedPass
