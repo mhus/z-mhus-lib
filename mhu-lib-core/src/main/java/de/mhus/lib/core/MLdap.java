@@ -24,7 +24,7 @@ public class MLdap {
     @SuppressWarnings("unused")
     private static final Log log = Log.getLog(MLdap.class);
     public static final String KEY_NAME = ".name";
-    public static final String KEY_NAME_NAMESPACE = ".nameNamespace";
+    public static final String KEY_FQDN = ".fqdn";
     public static final String KEY_CLASS = ".class";
     public static final String FILTER_ALL_CLASSES = "(objectclass=*)";
     
@@ -51,7 +51,7 @@ public class MLdap {
     }
 
     public static Map<String, Object> resultToMap(SearchResult result) throws NamingException {
-        Map<String, Object> pa = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         NamingEnumeration<? extends Attribute> attrs = result.getAttributes().getAll();
         while (attrs.hasMore()) {
             Attribute attr = attrs.next();
@@ -62,13 +62,18 @@ public class MLdap {
                     String attrValue = String.valueOf(attr.get(i));
                     list.add(attrValue);
                 }
-                pa.put(attrId, list);
+                map.put(attrId, list);
             } else {
                 String attrValue = String.valueOf(attr.get());
-                pa.put(attrId, attrValue);
+                map.put(attrId, attrValue);
             }
         }
-        return pa;
+        
+        map.put(KEY_NAME, result.getName());
+        map.put(KEY_FQDN, result.getNameInNamespace());
+        map.put(KEY_CLASS, result.getClassName());
+        
+        return map;
     }
     
     
@@ -113,9 +118,6 @@ public class MLdap {
                         try {
                             SearchResult result = (SearchResult) res.next();
                             Map<String, Object> map = resultToMap(result);
-                            map.put(KEY_NAME, result.getName());
-                            map.put(KEY_NAME_NAMESPACE, result.getNameInNamespace());
-                            map.put(KEY_CLASS, result.getClassName());
                             return map;
                         } catch (Exception t) {
                             throw new MRuntimeException(t);

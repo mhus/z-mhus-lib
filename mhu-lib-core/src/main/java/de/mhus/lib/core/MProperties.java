@@ -752,7 +752,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		if (para == null) return;
 		int pos = para.indexOf(keySeparator);
 		if (pos < 0) return;
-		String k = para.substring(0, pos);
+		String k = para.substring(0, pos).trim();
 		String v = para.substring(pos+1);
 		String t = "text";
 		if (typeSeparator != 0) {
