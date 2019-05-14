@@ -222,4 +222,40 @@ public class MValidator {
 		if (in == null) return false;
 		return in.matches("^[0-9|a-z|A-Z]*$");
 	}
+	
+	/**
+	 * Checks if the file only contains Posix characters. Path separators are not allowed.
+	 * Only - _ . A-Z a-z 0-9 are allowed.
+	 * @param in
+	 * @return true if it's posix
+	 */
+	public static boolean isPosixFileName(String in) {
+	    if (in == null) return false;
+	    return in.matches("^[-_.A-Za-z0-9]*$");
+	}
+	
+	/**
+	 * Checks if the path is a posix compatible path. The home tilde is not allowed.
+     * Only - _ . A-Z a-z 0-9 and slash for path separation are allowed.
+	 * 
+	 * @param in
+	 * @return true fi it's posix
+	 */
+	public static boolean isPosixFilePath(String in) {
+        if (in == null) return false;
+        return in.matches("^[-_.A-Za-z0-9/]*$");
+    }
+
+	/**
+	 * Checks if the path is a posix but also for windows systems.
+     * Only - _ . A-Z a-z 0-9 and slash, back slash and : for path separation are allowed.
+	 * 
+	 * @param in
+	 * @return true if the path is valid
+	 */
+    public static boolean isFilePath(String in) {
+        if (in == null) return false;
+        return in.matches("^[-_.A-Za-z0-9/:\\\\]*$");
+    }
+    
 }

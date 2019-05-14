@@ -26,6 +26,34 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MValidatorTest {
 
+    @Test
+    public void testFileName() {
+        assertEquals(true, MValidator.isPosixFileName("test123"));
+        assertEquals(true, MValidator.isPosixFileName("test123_test-543.dotsep"));
+        assertEquals(true, MValidator.isPosixFileName("test"));
+        
+        assertEquals(false, MValidator.isPosixFileName("test|it"));
+        assertEquals(false, MValidator.isPosixFileName("test it"));
+        assertEquals(false, MValidator.isPosixFileName("test&it"));
+        assertEquals(false, MValidator.isPosixFileName("test/it"));
+        
+        assertEquals(true, MValidator.isPosixFilePath("/path/test123"));
+        assertEquals(true, MValidator.isPosixFilePath("/path/test123_test-543.dotsep"));
+        assertEquals(true, MValidator.isPosixFilePath("/path/test"));
+        
+        assertEquals(true, MValidator.isFilePath("C:/path/test"));
+        assertEquals(true, MValidator.isFilePath("C:\\path\\test"));
+        
+        assertEquals(false, MValidator.isPosixFilePath("/path/test|it"));
+        assertEquals(false, MValidator.isPosixFilePath("/path/test it"));
+        assertEquals(false, MValidator.isPosixFilePath("/path/test&it"));
+        assertEquals(false, MValidator.isPosixFilePath("~/path/test&it"));
+        
+        assertEquals(false, MValidator.isPosixFilePath("C:/path/test"));
+        assertEquals(false, MValidator.isPosixFilePath("C:\\path\\test"));
+
+    }
+    
 	@Test
 	public void testEMail() {
 		assertEquals(false, MValidator.isEmailAddress(null));
