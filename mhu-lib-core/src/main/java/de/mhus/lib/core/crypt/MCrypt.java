@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.UUID;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MBigMath;
@@ -34,6 +35,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.errors.MRuntimeException;
 
 /**
  * This tool is implementing functions to work with encryption and obfuscation to protect data.
@@ -657,5 +659,20 @@ public class MCrypt {
 		System.arraycopy(withPepper, 0, out, 0, withPepper.length);
 		return withPepper;
 	}
+
+    public static UUID toUuidHash(String in) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(in.getBytes());
+            byte[] md5 = md.digest();
+    
+            long a = md5[0] * 256 * md5[1] + 256 * 256 * md5[2] + 256 * 256 * 256 * md5[3];
+            long b = md5[4] * 256 * md5[5] + 256 * 256 * md5[6] + 256 * 256 * 256 * md5[7];
+            
+            return new UUID(a,b);
+        } catch (Exception t) {
+            throw new MRuntimeException(in,t);
+        }
+    }
 	
 }
