@@ -17,6 +17,7 @@ package de.mhus.lib.jms;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.jms.JMSException;
@@ -85,13 +86,13 @@ public class MJms {
 		return out;
 	}
 	
-	public static void setMapProperties(IProperties prop, MapMessage msg) throws JMSException {
+	public static void setMapProperties(Map<?, ?> prop, MapMessage msg) throws JMSException {
 		setMapProperties("", prop, msg);
 	}
 	
-	public static void setMapProperties(String prefix, IProperties prop, MapMessage msg) throws JMSException {
+	public static void setMapProperties(String prefix, Map<?, ?> prop, MapMessage msg) throws JMSException {
 		if (prop == null || msg == null) return;
-		for (Entry<String, Object> item : prop) {
+		for (Entry<?, ?> item : prop.entrySet()) {
 			setMapProperty(prefix + item.getKey(),item.getValue(),msg);
 		}
 	}
