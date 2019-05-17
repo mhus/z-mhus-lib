@@ -26,6 +26,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 
 public class Item implements Externalizable {
 
+    private static final long serialVersionUID = 1L;
 	private String key;
 	private String caption;
 	private MNlsProvider provider;

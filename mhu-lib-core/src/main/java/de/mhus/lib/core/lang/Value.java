@@ -15,12 +15,18 @@
  */
 package de.mhus.lib.core.lang;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.Serializable;
+
 import de.mhus.lib.basics.Valueable;
 import de.mhus.lib.core.MSystem;
 
-public class Value<T> implements Valueable<T> {
+public class Value<T> implements Valueable<T>, Serializable {
 
-	public Value() {}
+    private static final long serialVersionUID = 1L;
+
+    public Value() {}
 	
 	public Value(T initial) {
 		value = initial;
@@ -45,4 +51,26 @@ public class Value<T> implements Valueable<T> {
 		return value;
 	}
 	
+	private void writeObject(java.io.ObjectOutputStream out)
+	        throws IOException {
+	    if (value == null) {
+	        out.writeInt(0);
+	        return;
+	    }
+	    if (value instanceof Serializable) {
+            out.writeInt(1);
+            out.writeObject(value);
+            return;
+	    }
+	    
+	    throw new NotSerializableException();
+	}
+	
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream in)
+	        throws IOException, ClassNotFoundException {
+        int type = in.readInt();
+        if (type == 1)
+            value = (T) in.readObject();
+    }
 }
