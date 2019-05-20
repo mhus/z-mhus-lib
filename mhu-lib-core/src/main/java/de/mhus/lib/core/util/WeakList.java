@@ -50,7 +50,14 @@ public class WeakList<E> extends AbstractList<E>{
 	}
 
 	public void cleanupWeak() {
-		items.removeIf(i -> i.get() == null);
+	    try { 
+	        // java bug? 
+	        // Caused by: java.lang.NullPointerException
+	        // at java.util.LinkedList$ListItr.next(LinkedList.java:897) ~[?:?]
+	        // at java.util.Collection.removeIf(Collection.java:544) ~[?:?]
+	        items.removeIf(i -> i.get() == null);
+	    } catch (Throwable t) {
+	    }
 	}
 
 	@Override
