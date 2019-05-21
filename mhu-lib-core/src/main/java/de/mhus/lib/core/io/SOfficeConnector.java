@@ -27,13 +27,14 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.parser.StringPropertyReplacer;
 import de.mhus.lib.errors.NotFoundException;
 
-public class SOfficeConnector {
+public class SOfficeConnector extends MLog {
 
 	public static final String SOFFICE_CONTENT = "content.xml";
 	public static final String WORD_CONTENT = "word/document.xml";
@@ -135,6 +136,9 @@ public class SOfficeConnector {
 					return line.substring(p1+4, p2);
 			}
 		}
+		
+		log().d("convert-to failed",binary,format,outDir,in,res[1],res[0]);
+		
 		return null;
 	}
 	
