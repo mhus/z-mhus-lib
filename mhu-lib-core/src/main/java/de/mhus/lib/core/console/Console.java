@@ -179,4 +179,32 @@ public abstract class Console extends PrintStream implements IBase {
 	public void setHeight(int h) {
 	}
 
+    public static char askQuestion(String question, char[] answers, boolean toLower, boolean acceptEnter) {
+        if (answers == null || answers.length == 0) return '\0';
+        while (true) {
+            get().print(question);
+            get().print(" (");
+            boolean first = true;
+            for (char x : answers) {
+                if (!first)
+                    get().print('/');
+                get().print(x);
+                first = false;
+            }
+            get().print(") ");
+            get().flush();
+            ConsoleKey key = get().readKey();
+            get().printLine();
+            char c = key.getKey();
+            if (acceptEnter && c == '\n') return c;
+            if (toLower)
+                c = Character.toLowerCase(c);
+           for (char x : answers) {
+                if (toLower)
+                    x = Character.toLowerCase(x);
+                if (c == x) return c;
+            }
+        }
+    }
+
 }
