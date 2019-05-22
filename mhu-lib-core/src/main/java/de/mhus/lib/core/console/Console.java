@@ -195,6 +195,7 @@ public abstract class Console extends PrintStream implements IBase {
             get().flush();
             int key = System.in.read(); //TODO use console impl
             get().printLine();
+            System.out.println(key);
             if (key < 0) throw new IOException("Can't read from console");
             char c = (char)key;
             if (acceptEnter && c == '\n') return c;
