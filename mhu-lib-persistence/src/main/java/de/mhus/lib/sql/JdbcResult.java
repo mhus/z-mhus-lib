@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.logging.MLogUtil;
 
 /**
  * This proxy is used to hold a instance of the connection while the ResultSet is used. That's
@@ -74,8 +75,12 @@ public class JdbcResult extends DbResult {
 	}
 
 	@Override
-	public void close() throws SQLException {
-		instance.close();
+	public void close() {
+		try {
+            instance.close();
+        } catch (SQLException e) {
+            MLogUtil.log().d(this,e);
+        }
 	}
 
 	public boolean wasNull() throws SQLException {

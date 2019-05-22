@@ -22,6 +22,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
+import de.mhus.lib.basics.MCloseable;
 import de.mhus.lib.core.MDate;
 
 
@@ -31,14 +32,7 @@ import de.mhus.lib.core.MDate;
  * @author mikehummel
  * @version $Id: $Id
  */
-public abstract class DbResult {
-
-	/**
-	 * <p>close.</p>
-	 *
-	 * @throws java.lang.Exception if any.
-	 */
-	public abstract void close() throws Exception;
+public abstract class DbResult implements MCloseable {
 
 	/**
 	 * <p>getString.</p>

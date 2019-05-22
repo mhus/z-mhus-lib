@@ -83,6 +83,9 @@ public class JmsTest {
 		con1.close();
 		con2.close();
 		
+		client.close();
+		server.close();
+		
 	}
 	
 }

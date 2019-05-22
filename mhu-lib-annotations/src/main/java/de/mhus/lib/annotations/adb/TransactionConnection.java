@@ -15,12 +15,15 @@
  */
 package de.mhus.lib.annotations.adb;
 
-public interface TransactionConnection {
+import java.io.Closeable;
+
+public interface TransactionConnection extends Closeable {
 
 	void commit() throws Exception;
 
 	void rollback() throws Exception;
 
-	void close();
+	@Override
+    void close();
 
 }

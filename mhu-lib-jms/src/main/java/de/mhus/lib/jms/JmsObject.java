@@ -26,9 +26,10 @@ import javax.jms.Session;
 import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 
+import de.mhus.lib.basics.MCloseable;
 import de.mhus.lib.core.MLog;
 
-public abstract class JmsObject extends MLog {
+public abstract class JmsObject extends MLog implements MCloseable {
 
 	protected boolean closed = false;
 
@@ -43,7 +44,8 @@ public abstract class JmsObject extends MLog {
 		return closed;
 	}
 	
-	public void close() {
+	@Override
+    public void close() {
 		log().d("close");
 		reset();
 		setClosed();

@@ -148,6 +148,8 @@ public class JmsServiceTest {
 		con1.close();
 		con2.close();
 		
+		client.close();
+		server.close();
 	}
 	
 	@Test() //timeout=120000
@@ -219,6 +221,10 @@ public class JmsServiceTest {
 			con1.close();
 			con2.close();
 			con3.close();
+			
+			client.close();
+			server2.close();
+			server3.close();
 			
 	}
 	

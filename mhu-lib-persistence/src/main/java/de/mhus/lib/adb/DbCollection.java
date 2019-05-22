@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.mhus.lib.basics.MCloseable;
 import de.mhus.lib.core.util.Table;
 import de.mhus.lib.errors.MException;
 
@@ -29,10 +30,8 @@ import de.mhus.lib.errors.MException;
  *
  * @param <O>
  */
-public interface DbCollection<O> extends Iterable<O>, Iterator<O> {
+public interface DbCollection<O> extends Iterable<O>, Iterator<O>, MCloseable {
 
-	void close();
-	
 	/**
 	 * If recycle is on the original container object will be used for every iteration. If it's off then every time a new object will be created.
 	 * Default is off.

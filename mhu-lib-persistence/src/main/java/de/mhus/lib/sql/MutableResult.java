@@ -50,7 +50,7 @@ public class MutableResult extends DbResult {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		list = null;
 	}
 

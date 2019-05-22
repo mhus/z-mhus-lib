@@ -61,11 +61,13 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 		}
 	}
 	
-	public JmsDestination createTopic(String name) throws JMSException {
+	@SuppressWarnings("resource")
+    public JmsDestination createTopic(String name) throws JMSException {
         return new JmsDestination(name, true).setConnection(this);
 	}
 
-	public JmsDestination createQueue(String name) throws JMSException {
+	@SuppressWarnings("resource")
+    public JmsDestination createQueue(String name) throws JMSException {
         return new JmsDestination(name, false).setConnection(this);
 	}
 	
