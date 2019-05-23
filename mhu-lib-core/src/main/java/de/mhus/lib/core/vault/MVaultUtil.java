@@ -97,6 +97,28 @@ public class MVaultUtil {
 		return M.l(VaultMutator.class).adaptTo(entry, ifc);
 	}
 
+    public static String getType(String content) {
+        if (content.contains("-----BEGIN RSA PRIVATE KEY-----"))
+            return MVault.TYPE_RSA_PRIVATE_KEY;
+        else
+        if (content.contains("-----BEGIN RSA PUBLIC KEY-----"))
+            return MVault.TYPE_RSA_PUBLIC_KEY;
+        else
+        if (content.contains("-----BEGIN DSA PRIVATE KEY-----"))
+            return MVault.TYPE_DSA_PRIVATE_KEY;
+        else
+        if (content.contains("-----BEGIN DSA PUBLIC KEY-----"))
+            return MVault.TYPE_DSA_PUBLIC_KEY;
+        else
+        if (content.contains("-----BEGIN ECC PRIVATE KEY-----"))
+            return MVault.TYPE_ECC_PRIVATE_KEY;
+        else
+        if (content.contains("-----BEGIN ECC PUBLIC KEY-----"))
+            return MVault.TYPE_ECC_PUBLIC_KEY;
+        else
+            return MVault.TYPE_TEXT;
+    }
+
 	/**
 	 * Try to adapt the source to the given class or interface.
 	 * @param source 
