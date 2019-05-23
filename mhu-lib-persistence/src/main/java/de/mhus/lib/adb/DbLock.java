@@ -1,16 +1,15 @@
 package de.mhus.lib.adb;
 
-import java.io.Closeable;
-import java.io.IOException;
+import de.mhus.lib.basics.MCloseable;
 
-public class DbLock implements Closeable {
+public class DbLock implements MCloseable {
 
     public DbLock(Persistable ... objects) {
         // TODO
     }
     
     @Override
-    public void close() throws IOException {
+    public void close() {
         DbTransaction.releaseLock();
     }
 
