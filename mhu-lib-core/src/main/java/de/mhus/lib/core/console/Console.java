@@ -16,6 +16,8 @@
 package de.mhus.lib.core.console;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
@@ -23,6 +25,7 @@ import java.util.LinkedList;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.lang.IBase;
+import de.mhus.lib.errors.NotSupportedException;
 
 @DefaultImplementation(SimpleConsole.class)
 public abstract class Console extends PrintStream implements IBase {
@@ -138,6 +141,18 @@ public abstract class Console extends PrintStream implements IBase {
 		printLine('-');
 	}
 	
+	@SuppressWarnings("unchecked")
+    public <T> T adaptTo(Class<? extends T> clazz) {
+	    if (clazz == OutputStream.class) return (T)this;
+	    if (clazz == InputStream.class) return (T)new InputStream() {
+            @Override
+            public int read() throws IOException {
+                return Console.this.read();
+            }
+	    };
+	    throw new NotSupportedException("Can't adapt to",clazz);
+	}
+	
 	public void printLine(char c) {
 		for (int i = 0; i < getWidth(); i++)
 			print(c);
@@ -193,16 +208,24 @@ public abstract class Console extends PrintStream implements IBase {
             }
             get().print(") ");
             get().flush();
-            String line = get().readLine();
-            if (line == null) throw new IOException("Can't read from console");
-            if (line.length() == 0) {
-                if (acceptEnter) return '\n';
+//            String line = get().readLine();
+//            if (line == null) throw new IOException("Can't read from console");
+//            if (line.length() == 0) {
+//                if (acceptEnter) return '\n';
+//                continue;
+//            }
+//            char c = line.charAt(0);
+            int key = get().read();
+            if (key < 0) throw new IOException("Can't read from console");
+            get().println((char)key);
+            if (key == '\r') {
+                if (acceptEnter) return '\r';
                 continue;
             }
-            char c = line.charAt(0);
+            char c = (char)key;
             if (toLower)
                 c = Character.toLowerCase(c);
-           for (char x : answers) {
+            for (char x : answers) {
                 if (toLower)
                     x = Character.toLowerCase(x);
                 if (c == x) return c;

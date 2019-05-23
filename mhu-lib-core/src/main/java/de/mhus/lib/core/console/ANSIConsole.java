@@ -20,8 +20,12 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
+import org.jline.reader.LineReader;
+import org.jline.reader.impl.LineReaderImpl;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import de.mhus.lib.core.logging.MLogUtil;
-import jline.console.ConsoleReader;
 
 // http://ascii-table.com/ansi-escape-sequences.php
 
@@ -65,19 +69,30 @@ public class ANSIConsole extends Console {
 	protected boolean bold;
 //	protected int width = DEFAULT_WIDTH;
 //	protected int height = DEFAULT_HEIGHT;
-	protected ConsoleReader reader;
+	protected LineReaderImpl reader;
 	
 	protected int width = 0;
 	protected int height = 0;
 	protected boolean supportSize;
 	
 	public ANSIConsole() throws IOException {
-		super();
-        reader = new ConsoleReader();
-		loadSettings();
+		this(new LineReaderImpl(TerminalBuilder.builder().build()));
 	}
 
-	protected void loadSettings() {
+   public ANSIConsole(LineReaderImpl reader) throws IOException {
+        super();
+        this.reader = reader;
+        loadSettings();
+   }
+
+   @Override
+   @SuppressWarnings("unchecked")
+   public <T> T adaptTo(Class<? extends T> clazz) {
+       if (clazz == LineReader.class || clazz == LineReaderImpl.class) return (T)reader;
+       return super.adaptTo(clazz);
+   }
+   
+   protected void loadSettings() {
 		int w = reader.getTerminal().getWidth();
 		int h = reader.getTerminal().getHeight();
 		if (w == 80 && h == 24) { // default size if size can't be recognized
@@ -94,13 +109,13 @@ public class ANSIConsole extends Console {
 	public ANSIConsole(InputStream in, PrintStream out, boolean flush, String charset)
 			throws IOException {
 		super(out, flush, charset);
-        reader = new ConsoleReader();
+        reader = new LineReaderImpl(TerminalBuilder.builder().streams(in, out).build());
         loadSettings();
 	}
 
 	public ANSIConsole(InputStream in, PrintStream out) throws IOException {
 		super(out);
-        reader = new ConsoleReader();
+        reader = new LineReaderImpl(TerminalBuilder.builder().streams(in, out).build());
         loadSettings();
 	}
 
@@ -113,7 +128,7 @@ public class ANSIConsole extends Console {
 	public String readLine(LinkedList<String> history) {
 		try {
 			return reader.readLine();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			MLogUtil.log().t(e);
 		}
 		return null;
@@ -124,8 +139,8 @@ public class ANSIConsole extends Console {
 	@Override
 	public int read() {
 		try {
-			return reader.readCharacter(true);
-		} catch (IOException e) {
+			return reader.readCharacter();
+		} catch (Exception e) {
 			MLogUtil.log().t(e);
 		}
 		return -1;
@@ -202,7 +217,8 @@ public class ANSIConsole extends Console {
 
 	@Override
 	public boolean isSupportColor() {
-		return reader.getTerminal().isAnsiSupported();
+		// method not found return reader.getTerminal().getAnsiSupport();
+	    return reader.getTerminal().getType().equals("ansi");
 	}
 
 	@Override
@@ -332,13 +348,12 @@ public class ANSIConsole extends Console {
 	}
 
 	public static String[] getRawAnsiSettings() throws IOException {
-		ConsoleReader reader = new ConsoleReader();
+	    Terminal terminal = TerminalBuilder.terminal();
 		return new String[] {
-				"Width: " + reader.getTerminal().getWidth(),
-				"Height: " + reader.getTerminal().getHeight(),
-				"Ansi: " + reader.getTerminal().isAnsiSupported(),
-				"Echo: " + reader.getTerminal().isEchoEnabled(),
-				"Supported: " + reader.getTerminal().isSupported()
+				"Width: " + terminal.getWidth(),
+				"Height: " + terminal.getHeight(),
+				"Ansi: " + terminal.getType().equals("ansi"),
+				"Echo: " + terminal.echo()
 		};
 	}
 	

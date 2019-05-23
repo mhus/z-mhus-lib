@@ -52,6 +52,7 @@
 		            org.apache.http.*;resolution:=optional,
 		            org.newsclub.net.unix.*;resolution:=optional,
 		            javax.mail.*;resolution:=optional,
+                    jline.console*;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <Private-Package>
@@ -59,7 +60,7 @@
 	            </Private-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
-				<Embed-Dependency>byte-buddy,byte-buddy-agent,jline</Embed-Dependency>
+				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
 
 	          </instructions>
 	        </configuration>
@@ -98,7 +99,7 @@
 		<artifactId>mail</artifactId>
 	</dependency>
 	<dependency>
-	    <groupId>jline</groupId>
+	    <groupId>org.jline</groupId>
 	    <artifactId>jline</artifactId>
 	</dependency>
   </dependencies>
