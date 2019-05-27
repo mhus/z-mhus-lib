@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -57,18 +59,21 @@ public class MString {
 	};
 
 	// TODO enhance mapping
-	public static final String[] ASCII127_MAPPING = {
-	        "aäàâæá",
-	        "cĉć",
-	        "eèêéę",
-	        "iì",
-	        "lĺł",
-	        "nñń",
-	        "oöôòơó",
-	        "uü",
-	        "sś",
-	        "zżź"
-	};
+	public static final Map<String,String> ASCII127_MAPPING = new TreeMap<>();
+	static {
+	    ASCII127_MAPPING.put("a", "\u00e4\u00e0\u00e2\u00e1\u0105\u00e3"); // äàâáąã
+        ASCII127_MAPPING.put("c", "\u0109\u0107\u00e7"); // ĉćç
+        ASCII127_MAPPING.put("e", "\u00e8\u00ea\u00e9\u0119\u0229\u011b\u1ebd"); // èêéęȩěẽ
+        ASCII127_MAPPING.put("i", "\u00ec\u00ed\u00ee\u01d0\u0129"); // ìíîǐĩ
+        ASCII127_MAPPING.put("l", "\u013a\u0142\u013c\u013e"); // ĺłļľ
+        ASCII127_MAPPING.put("n", "\u00f1\u0144\u0146\u0148"); // ñńņň
+        ASCII127_MAPPING.put("o", "\u00f6\u00f4\u00f2\u01a1\u00f3\u01d2\u014f"); // öôòơóǒŏ
+        ASCII127_MAPPING.put("u", "\u00fc\u00f9\u00fb\u01b0\u00fa\u01d4\u016d"); // üùûưúǔŭ
+        ASCII127_MAPPING.put("s", "\u015b\u015f\u0161\u015d"); // śşšŝ
+        ASCII127_MAPPING.put("z", "\u017c\u017a\u017e\u1e91"); // 
+        ASCII127_MAPPING.put("ae", "\u00e6"); // æ
+        ASCII127_MAPPING.put("ss", "\u00df"); // ß
+	}
 	
 	/**
 	 * A pair (index 0 and 1) with empty strings
@@ -2217,8 +2222,8 @@ public class MString {
 	                out = new StringBuilder();
 	                out.append(in.substring(0, i));
 	            }
-	            c = toAscii127(c);
-                out.append(c);
+	            String s = toAscii127(c);
+                out.append(s);
 	        } else
 	        if (out != null)
 	            out.append(c);
@@ -2226,20 +2231,24 @@ public class MString {
 	    return out == null ? in : out.toString();
 	}
 
-    public static char toAscii127(char c) {
-        if (c <= 127) return c;
+    public static String toAscii127(char c) {
+        if (c <= 127) return String.valueOf(c);
         boolean isUpper = Character.isUpperCase(c);
         if (isUpper)
             c = Character.toLowerCase(c);
-        for (String map : ASCII127_MAPPING) {
-            if (map.indexOf(c) > 0) {
-                c = map.charAt(0);
-                break;
+        for (Map.Entry<String,String> map : ASCII127_MAPPING.entrySet()) {
+            if (map.getValue().indexOf(c) > -1) {
+                String out = map.getKey();
+                if (isUpper) {
+                    if (out.length() == 1)
+                        out = out.toUpperCase();
+                    else
+                        out = out.substring(0, 1).toUpperCase() + out.substring(1);
+                }
+                return out;
             }
         }
-        if (isUpper)
-            c = Character.toUpperCase(c);
-        return c;
+        return String.valueOf(c);
     }
 	
 }
