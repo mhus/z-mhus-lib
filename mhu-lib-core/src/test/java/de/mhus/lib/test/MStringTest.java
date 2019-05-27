@@ -48,7 +48,8 @@ public class MStringTest {
                 MString.toAscii127("a \u00e1 \u00e4 b c \u010d d \u010f dz d\u017e e \u00e9 f g h ch i \u00ed j k l \u013a \u013e m n \u0148 o \u00f3 \u00f4 p q r \u0155 s \u0161 t \u0165 u \u00fa v w x y \u00fd z \u017e"));
         assertEquals("There is nothing to change.", 
                 MString.toAscii127("There is nothing to change."));
-        assertEquals("Wodka rano i wieczorem dla kazdego ojca jest lepiej niz zajac sie bachorem.", "W\u00f3dka rano i wieczorem dla ka\u017cdego ojca jest lepiej ni\u017c zaj\u0105c si\u0119 bachorem.");
+        assertEquals("Wodka rano i wieczorem dla kazdego ojca jest lepiej niz zajac sie bachorem.", 
+                MString.toAscii127("W\u00f3dka rano i wieczorem dla ka\u017cdego ojca jest lepiej ni\u017c zaj\u0105c si\u0119 bachorem."));
         
     }
     
