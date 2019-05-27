@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,20 +60,37 @@ public class MString {
 	};
 
 	// TODO enhance mapping
-	public static final Map<String,String> ASCII127_MAPPING = new TreeMap<>();
+    private static final Map<String,String> ASCII127_M = new TreeMap<>();
+	public static final Map<String,String> ASCII127_MAPPING = Collections.unmodifiableMap(ASCII127_M);
 	static {
-	    ASCII127_MAPPING.put("a", "\u00e4\u00e0\u00e2\u00e1\u0105\u00e3"); // äàâáąã
-        ASCII127_MAPPING.put("c", "\u0109\u0107\u00e7"); // ĉćç
-        ASCII127_MAPPING.put("e", "\u00e8\u00ea\u00e9\u0119\u0229\u011b\u1ebd"); // èêéęȩěẽ
-        ASCII127_MAPPING.put("i", "\u00ec\u00ed\u00ee\u01d0\u0129"); // ìíîǐĩ
-        ASCII127_MAPPING.put("l", "\u013a\u0142\u013c\u013e"); // ĺłļľ
-        ASCII127_MAPPING.put("n", "\u00f1\u0144\u0146\u0148"); // ñńņň
-        ASCII127_MAPPING.put("o", "\u00f6\u00f4\u00f2\u01a1\u00f3\u01d2\u014f"); // öôòơóǒŏ
-        ASCII127_MAPPING.put("u", "\u00fc\u00f9\u00fb\u01b0\u00fa\u01d4\u016d"); // üùûưúǔŭ
-        ASCII127_MAPPING.put("s", "\u015b\u015f\u0161\u015d"); // śşšŝ
-        ASCII127_MAPPING.put("z", "\u017c\u017a\u017e\u1e91"); // 
-        ASCII127_MAPPING.put("ae", "\u00e6"); // æ
-        ASCII127_MAPPING.put("ss", "\u00df"); // ß
+	    ASCII127_M.put("a", "\u00e4\u00e0\u00e2\u00e1\u0105\u00e3\u1ea3\u1ea1\u0227"); // äàâáąãảạȧ
+	    ASCII127_M.put("b", "\u1e05\u1e03"); // ḅḃ
+        ASCII127_M.put("c", "\u0109\u0107\u00e7\u010b\u010d"); // ĉćçċč
+        ASCII127_M.put("d", "\u1e0d\u1e0b\u010f"); // ḍḋď
+        ASCII127_M.put("e", "\u00e8\u00ea\u00e9\u0119\u0229\u011b\u1ebd\u1eb9\u1ebb\u0117"); // èêéęȩěẽẹẻė
+        ASCII127_M.put("f", "\u1e1f"); // ḟ
+        ASCII127_M.put("g", "\u0121"); // ġ
+        ASCII127_M.put("h", "\u1e25\u1e23"); // ḥḣ
+        ASCII127_M.put("i", "\u00ec\u00ed\u00ee\u01d0\u0129\u1ec9\u1ecb\u0131"); // ìíîǐĩỉịı
+//        ASCII127_M.put("j", ""); // 
+        ASCII127_M.put("k", "\u1e33"); // ḳ
+        ASCII127_M.put("l", "\u013a\u0142\u013c\u013e\u1e37"); // ĺłļľḷ
+        ASCII127_M.put("m", "\u1e43\u1e41"); // ṃṁ
+        ASCII127_M.put("n", "\u00f1\u0144\u0146\u0148\u1e47\u1e45"); // ñńņňṇṅ
+        ASCII127_M.put("o", "\u00f6\u00f4\u00f2\u01a1\u00f3\u01d2\u014f\u1ecf\u1ecd\u022f"); // öôòơóǒŏỏọȯ
+        ASCII127_M.put("p", "\u1e57"); // ṗ
+//        ASCII127_M.put("q", ""); // 
+        ASCII127_M.put("r", "\u1e5b\u1e59\u0155"); // ṛṙŕ
+        ASCII127_M.put("s", "\u015b\u015f\u0161\u015d\u1e63\u1e61"); // śşšŝṣṡ
+        ASCII127_M.put("t", "\u1e6d\u1e6b\u0165"); // ṭṫť
+        ASCII127_M.put("u", "\u00fc\u00f9\u00fb\u01b0\u00fa\u01d4\u016d\u1ee7\u1ee5"); // üùûưúǔŭủụ
+        ASCII127_M.put("v", "\u1e7f"); // ṿ
+        ASCII127_M.put("w", "\u1e89\u1e87"); // ẉẇ
+        ASCII127_M.put("x", "\u1e8b"); // ẋ
+        ASCII127_M.put("y", "\u1ef5\u1e8f\u00fd"); // ỵẏý
+        ASCII127_M.put("z", "\u017c\u017a\u017e\u1e91\u017c"); // zżźẓż
+        ASCII127_M.put("ae", "\u00e6"); // æ
+        ASCII127_M.put("ss", "\u00df"); // ß
 	}
 	
 	/**
