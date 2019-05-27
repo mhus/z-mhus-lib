@@ -56,6 +56,20 @@ public class MString {
 			'0','1','2','3','4','5','6','7','8','9'
 	};
 
+	// TODO enhance mapping
+	public static final String[] ASCII127_MAPPING = {
+	        "aäàâæá",
+	        "cĉć",
+	        "eèêéę",
+	        "iì",
+	        "lĺł",
+	        "nñń",
+	        "oöôòơó",
+	        "uü",
+	        "sś",
+	        "zżź"
+	};
+	
 	/**
 	 * A pair (index 0 and 1) with empty strings
 	 */
@@ -2192,5 +2206,40 @@ public class MString {
 		}
 		return in.substring(0, p);
 	}
+	
+	public static String toAscii127(String in) {
+	    if (in == null) return null;
+	    StringBuilder out = null;
+	    for (int i = 0; i < in.length(); i++) {
+	        char c = in.charAt(i);
+	        if (c > 127) {
+	            if (out == null) {
+	                out = new StringBuilder();
+	                out.append(in.substring(0, i));
+	            }
+	            c = toAscii127(c);
+                out.append(c);
+	        } else
+	        if (out != null)
+	            out.append(c);
+	    }
+	    return out == null ? in : out.toString();
+	}
+
+    public static char toAscii127(char c) {
+        if (c <= 127) return c;
+        boolean isUpper = Character.isUpperCase(c);
+        if (isUpper)
+            c = Character.toLowerCase(c);
+        for (String map : ASCII127_MAPPING) {
+            if (map.indexOf(c) > 0) {
+                c = map.charAt(0);
+                break;
+            }
+        }
+        if (isUpper)
+            c = Character.toUpperCase(c);
+        return c;
+    }
 	
 }
