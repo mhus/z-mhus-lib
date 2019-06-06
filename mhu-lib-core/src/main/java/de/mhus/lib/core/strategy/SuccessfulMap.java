@@ -15,47 +15,49 @@
  */
 package de.mhus.lib.core.strategy;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import de.mhus.lib.core.MProperties;
 
 public class SuccessfulMap extends Successful {
 
 	public SuccessfulMap(Operation operation, String msg) {
 		super(operation, msg);
-		setResult(new HashMap<>());
+		setResult(new MProperties());
 	}
 
 	public SuccessfulMap(String path, String msg, long rc) {
-		super(path, msg, rc, new HashMap<>());
+		super(path, msg, rc, new MProperties());
 	}
-
+	
 	public SuccessfulMap(String path, String msg, long rc, String... keyValues) {
 		super(path, msg, rc, keyValues);
 	}
 
 	@SuppressWarnings("unchecked")
+    public Map<String,Object> getMap() {
+	    return ((Map<String,Object>)getResult());
+	}
+	
 	public void put(String key, Object value) {
-		((HashMap<String,Object>)getResult()).put(key, value);
+		getMap().put(key, value);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Object get(String key) {
-		return ((HashMap<String,Object>)getResult()).get(key);
+		return getMap().get(key);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void remove(String key) {
-		((HashMap<String,Object>)getResult()).remove(key);
+		getMap().remove(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Set<String> keySet() {
-		return ((HashMap<String,String>)getResult()).keySet();
+		return getMap().keySet();
 	}
 
-	@SuppressWarnings("unchecked")
 	public int size() {
-		return ((HashMap<String,String>)getResult()).size();
+		return getMap().size();
 	}
 	
 }

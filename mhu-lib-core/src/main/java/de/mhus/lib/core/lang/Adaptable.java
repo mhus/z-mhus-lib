@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.lang;
 
-public interface Adaptable<T> {
+public interface Adaptable {
 
-	<I extends T> I adaptTo(Class<? extends T> ifc);
+	<I> I adaptTo(Class<? extends I> ifc);
 }

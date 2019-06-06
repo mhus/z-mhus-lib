@@ -69,6 +69,7 @@ public class Value<T> implements Valueable<T>, Serializable {
     @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream in)
 	        throws IOException, ClassNotFoundException {
+        value = null;
         int type = in.readInt();
         if (type == 1)
             value = (T) in.readObject();

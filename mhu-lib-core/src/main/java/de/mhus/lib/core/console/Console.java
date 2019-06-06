@@ -24,11 +24,12 @@ import java.util.LinkedList;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.errors.NotSupportedException;
 
 @DefaultImplementation(SimpleConsole.class)
-public abstract class Console extends PrintStream implements IBase {
+public abstract class Console extends PrintStream implements IBase, Adaptable {
 
 	public enum COLOR {UNKNOWN,WHITE,BLACK,RED,GREEN,BLUE,YELLOW,MAGENTA,CYAN};
 	
@@ -141,7 +142,8 @@ public abstract class Console extends PrintStream implements IBase {
 		printLine('-');
 	}
 	
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
     public <T> T adaptTo(Class<? extends T> clazz) {
 	    if (clazz == OutputStream.class) return (T)this;
 	    if (clazz == InputStream.class) return (T)new InputStream() {

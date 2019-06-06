@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -26,6 +27,7 @@ import javax.jms.Message;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.config.EmptyConfig;
 import de.mhus.lib.core.config.IConfig;
@@ -71,7 +73,10 @@ public class MJms {
 		if (value instanceof Short)
 			msg.setShortProperty(name, (Short)value);
 		else
-			msg.setObjectProperty(name, value);
+        if (value instanceof Date)
+            msg.setStringProperty(name, MDate.toIso8601((Date)value));
+		else
+            msg.setStringProperty(name, String.valueOf(value));
 	}
 
 	public static IProperties getProperties(Message msg) throws JMSException {
@@ -98,7 +103,11 @@ public class MJms {
 	}
 
 	public static void setMapProperty(String name, Object value, MapMessage msg) throws JMSException {
-		if (value == null || msg == null || name == null) return;
+		if (msg == null || name == null) return;
+		
+		if (value == null) 
+		    msg.setObject(name, null);
+		else
 		if (value instanceof String)
 			msg.setString(name, (String)value);
 		else
@@ -123,7 +132,10 @@ public class MJms {
 		if (value instanceof Short)
 			msg.setShort(name, (Short)value);
 		else
-			msg.setObject(name, value);
+        if (value instanceof Date)
+            msg.setString(name, MDate.toIso8601((Date)value));
+        else
+            msg.setString(name, String.valueOf(value));
 	}
 
 	public static IProperties getMapProperties(MapMessage msg) throws JMSException {
@@ -150,5 +162,34 @@ public class MJms {
 			config = MApi.get().getCfgManager().getCfg("jms", new EmptyConfig());
 		 return config;
 	}
+
+    public static boolean isMapProperty(Object value) {
+        return value == null 
+               ||
+               value.getClass().isPrimitive()
+               ||
+               value instanceof String 
+               ||
+               value instanceof Boolean 
+               ||
+               value instanceof Integer 
+               ||
+               value instanceof Long 
+               ||
+               value instanceof Double 
+               ||
+               value instanceof String 
+               ||
+               value instanceof Byte 
+               ||
+               value instanceof Float 
+               ||
+               value instanceof Short 
+               ||
+               value instanceof Date // use MDate
+               ||
+               value instanceof UUID // to String 
+               ;
+    }
 	
 }
