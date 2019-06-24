@@ -998,5 +998,8 @@ public class MSystem {
         return cl.loadClass(type);
     }
 
+    public static String getUsername() {
+        return System.getProperty("user.name");
+    }
 	
 }

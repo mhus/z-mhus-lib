@@ -19,6 +19,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.errors.MException;
 
 public class StringCompiler implements Parser {
 
@@ -60,6 +62,12 @@ public class StringCompiler implements Parser {
 			return new EnvironmentPart(part);
 		if (part.startsWith("#system."))
 			return new SystemPart(part);
+		if (part.equals("#hostname"))
+		    return new StaticPart(MSystem.getHostname());
+		if (part.equals("#username"))
+		    return new StaticPart(MSystem.getUsername());
+        if (part.equals("#userhome"))
+            return new StaticPart(MSystem.getUserHome().getAbsolutePath());
 		return createDefaultAttributePart(part);
 	}
 
@@ -122,6 +130,26 @@ public class StringCompiler implements Parser {
 
 	}
 	
+    public class StaticPart implements StringPart {
+
+        private String value;
+        
+        public StaticPart(String value) {
+            this.value = value;
+        }
+        
+        @Override
+        public void execute(StringBuilder out, Map<String, Object> attributes) throws MException {
+            out.append(value);
+        }
+
+        @Override
+        public void dump(int level, StringBuilder out) {
+            MString.appendRepeating(level, ' ', out);
+            out.append(getClass().getCanonicalName()).append(" '").append(value).append("'\n");
+        }
+        
+    }
 	public class SystemPart implements StringPart {
 
 		private String name;
