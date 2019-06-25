@@ -22,6 +22,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.StringCompiler;
@@ -44,8 +45,10 @@ public class ServerIdent extends MObject {
            update();
         }
     };
+    
+    private CfgBoolean CFG_PERSISTENT = new CfgBoolean(ServerIdent.class, "persistent", true);
 
-    public static MProperties ATTRIBUTES = new MProperties();
+    private static MProperties ATTRIBUTES = new MProperties();
     static {
         ATTRIBUTES.setString("random", String.valueOf(MMath.toBasis36((long)(Math.random()*36*36*36*36), 4)) );
         ATTRIBUTES.setString("time",   String.valueOf(MMath.toBasis36(System.currentTimeMillis(), 4)) );
@@ -57,15 +60,21 @@ public class ServerIdent extends MObject {
 	    update();
 	}
 	
+	public static MProperties getAttributes() {
+	    return ATTRIBUTES;
+	}
+	
     private synchronized void update() {
 
+        if (CFG_IDENT == null || CFG_PATTERN == null || CFG_PERSISTENT == null) return; // do not update in init time
+        
         ident = CFG_IDENT.value();
 
 	    if (ident == null) {
     		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(MApi.SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".properties").getAbsolutePath() );
     		File file = new File(persistence);
     		String def = null;
-    		if (file.exists() && file.isFile()) {
+    		if (CFG_PERSISTENT.value() && file.exists() && file.isFile()) {
     			ATTRIBUTES = MProperties.load(file);
     			def = ATTRIBUTES.getString("default", null);
     		}
@@ -73,7 +82,8 @@ public class ServerIdent extends MObject {
     			try {
                     def = create();
                     ATTRIBUTES.setString("default", def);
-                    ATTRIBUTES.save(file);
+                    if (CFG_PERSISTENT.value())
+                        ATTRIBUTES.save(file);
                 } catch (Exception e) {
                     log().e(e);
                 }

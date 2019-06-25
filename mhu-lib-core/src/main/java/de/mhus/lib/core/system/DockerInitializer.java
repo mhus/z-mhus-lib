@@ -35,7 +35,11 @@ public class DockerInitializer implements CfgInitiator {
         }
         
         if (containerId != null) {
-            ServerIdent.ATTRIBUTES.setString("containerId", containerId);
+            System.out.println("Container: " + containerId);
+            ServerIdent.getAttributes().setString("containerId", containerId);
+            ServerIdent.getAttributes().setString("containerShortId", containerId.substring(0, 12));
+        } else {
+            System.out.println("WARNING: docker environment not found");
         }
     }
 

@@ -43,6 +43,7 @@ public class MApi {
 	private static IConfig emptyConfig = null;
 	private static UpdaterCfg configUpdater;
 	public static PrintStream out = System.out; // catch default system out while startup (gogo shell will change stdout)
+    public static PrintStream err = System.err; // catch default system out while startup (gogo shell will change stdout)
 	
 //	private static DummyClass dummy = new DummyClass(); // the class is inside this bundle and has the correct class loader
 	
@@ -182,4 +183,20 @@ public class MApi {
 				((Throwable)s).printStackTrace(out);
 	}
 		
+    public static void dirtyLogInfo(Object ... string) {
+        if (string == null) return;
+        out .println("--- " + Arrays.toString(string));
+        for (Object s : string)
+            if (s instanceof Throwable)
+                ((Throwable)s).printStackTrace(out);
+    }
+    
+    public static void dirtyLogError(Object ... string) {
+        if (string == null) return;
+        err .println("*** " + Arrays.toString(string));
+        for (Object s : string)
+            if (s instanceof Throwable)
+                ((Throwable)s).printStackTrace(err);
+    }
+    
 }
