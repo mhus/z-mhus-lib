@@ -291,13 +291,14 @@ public class AuthNode extends CaoNode {
 	public void setBoolean(String name, boolean value) {
 	}
 
-	@Override
-	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
+	@SuppressWarnings("unchecked")
+    @Override
+    public <T> T adaptTo(Class<? extends T> ifc) {
 		// overlay local aspects - these are allowed
 		T ret = super.adaptTo(ifc);
 		if (ret != null) return ret;
 		// use original if access is granted
-		if ( !((AuthCore)core).hasAspectAccess(instance, ifc)) return null;
+		if ( !((AuthCore)core).hasAspectAccess(instance, (Class<? extends CaoAspect>)ifc)) return null;
 		return instance.adaptTo(ifc);
 	}
 

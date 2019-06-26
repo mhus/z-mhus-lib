@@ -30,7 +30,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import de.mhus.lib.cao.CaoActionStarter;
-import de.mhus.lib.cao.CaoAspect;
 import de.mhus.lib.cao.CaoConnection;
 import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.CaoWritableElement;
@@ -307,7 +306,7 @@ public class WritableNode extends CaoWritableElement {
 	}
 
 	@Override
-	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
+    public <T> T adaptTo(Class<? extends T> ifc) {
 		return current.adaptTo(ifc);
 	}
 

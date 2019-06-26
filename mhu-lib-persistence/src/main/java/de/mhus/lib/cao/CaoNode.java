@@ -22,7 +22,7 @@ import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.lang.Adaptable;
 import de.mhus.lib.errors.MException;
 
-public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable<CaoAspect>, Named {
+public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable, Named {
 
 	private static final long serialVersionUID = 1L;
 	protected CaoCore core;
@@ -154,8 +154,8 @@ public abstract class CaoNode extends ResourceNode<CaoNode> implements Adaptable
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends CaoAspect> T adaptTo(Class<? extends CaoAspect> ifc) {
-		CaoAspectFactory<? extends CaoAspect> factory = getConnection().getAspectFactory(ifc);
+	public <T> T adaptTo(Class<? extends T> ifc) {
+		CaoAspectFactory<? extends CaoAspect> factory = getConnection().getAspectFactory((Class<? extends CaoAspect>)ifc);
 		if (factory == null) return null;
 		return (T) factory.getAspectFor(this);
 	}
