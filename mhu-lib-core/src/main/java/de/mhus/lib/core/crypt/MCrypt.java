@@ -36,6 +36,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -448,6 +449,26 @@ public class MCrypt {
 		return null;
 	}
 
+    public static String sha256(InputStream is) throws IOException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] buffer = new byte[1024 * 10];
+            while (true) {
+                int len = is.read(buffer);
+                if (len < 0) break;
+                if (len == 0)
+                    MThread.sleep(200);
+                else 
+                    digest.update(buffer, 0, len);
+            }
+            byte[] hash = digest.digest();
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            log.w(e);
+        }
+        return null;
+    }
+    
 	/**
 	 * Create a salt and create a md5 using the salt. The first 4
 	 * characters represent the salt.

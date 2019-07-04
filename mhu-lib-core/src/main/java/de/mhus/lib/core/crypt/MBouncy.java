@@ -16,6 +16,7 @@
 package de.mhus.lib.core.crypt;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -26,6 +27,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.Signature;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -39,10 +41,14 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
+import de.mhus.lib.core.crypt.pem.PemBlock;
+import de.mhus.lib.core.crypt.pem.PemBlockModel;
+import de.mhus.lib.core.crypt.pem.PemUtil;
 
 /**
  * This utility uses explicit bouncy castle methods for cryptography.
@@ -75,6 +81,8 @@ public class MBouncy {
 	protected static final String ALGORITHM_AES = "AES";
 	private static final Charset STRING_ENCODING = MString.CHARSET_CHARSET_UTF_8;
 	public static final RSA_KEY_SIZE RSA_KEY_SIZE_DEFAULT = RSA_KEY_SIZE.B1024;
+    private static final String TRANSFORMATION_ECC = "SHA512WITHECDSA";
+    private static final String ALGORITHM_ECC = "ECDSA";
 
 	private static LinkedList<KeyPair> keyPool = new LinkedList<>();
 	private static long keyPoolUpdate = 0;
@@ -416,6 +424,56 @@ public class MBouncy {
 		}
 		int pos = (int)(Math.random() * keyPool.size()); // use a simple random function
 		return keyPool.get( pos );
+	}
+	
+	public static boolean validateSignature(PublicKey key, InputStream is, String sign) {
+	    try {
+            byte[] encKey = key.getEncoded();
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
+            PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+
+	        Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
+            sig.initVerify(pubKey);
+            
+            byte[] buffer = new byte[1024 * 10];
+            while (true) {
+                int len = is.read(buffer);
+                if (len < 0) break;
+                if (len == 0)
+                    MThread.sleep(200);
+                else 
+                    sig.update(buffer, 0, len);
+            }
+            PemBlock signBlock = PemUtil.parse(sign);
+           return sig.verify(signBlock.getBytesBlock());
+	    } catch (Throwable t) {
+	        throw new RuntimeException(t);
+	    }
+	}
+	
+	public static String createSignature(PrivateKey key, InputStream is) {
+        try {
+            byte[] encKey = key.getEncoded();
+            PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(encKey);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_ECC, PROVIDER);
+            PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
+
+            Signature sig = Signature.getInstance(TRANSFORMATION_ECC, PROVIDER);
+            sig.initSign(privKey);
+            byte[] buffer = new byte[1024 * 10];
+            while (true) {
+                int len = is.read(buffer);
+                if (len < 0) break;
+                if (len == 0)
+                    MThread.sleep(200);
+                else 
+                    sig.update(buffer, 0, len);
+            }
+           return new PemBlockModel(PemBlock.BLOCK_SIGN,sig.sign()).toString();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
 	}
 	
 }
