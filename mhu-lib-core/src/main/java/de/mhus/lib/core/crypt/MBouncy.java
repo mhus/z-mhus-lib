@@ -447,7 +447,7 @@ public class MBouncy {
             }
             PemBlock signBlock = PemUtil.parse(sign);
            return sig.verify(signBlock.getBytesBlock());
-	    } catch (Throwable t) {
+	    } catch (Exception t) {
 	        throw new RuntimeException(t);
 	    }
 	}
@@ -471,7 +471,7 @@ public class MBouncy {
                     sig.update(buffer, 0, len);
             }
            return new PemBlockModel(PemBlock.BLOCK_SIGN,sig.sign()).toString();
-        } catch (Throwable t) {
+        } catch (Exception t) {
             throw new RuntimeException(t);
         }
 	}

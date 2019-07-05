@@ -16,10 +16,13 @@
 package de.mhus.lib.core.crypt.pem;
 
 import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.UUID;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MValidator;
+import de.mhus.lib.core.crypt.Blowfish;
 import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.vault.MVault;
@@ -164,6 +167,31 @@ public class PemUtil {
 
     public static byte[] getBlockAsBytes(String entry) throws ParseException {
         return new PemBlockModel().parse(entry).getBytesBlock();
+    }
+
+    public static PublicKey toPublicKey(PemBlock pem) {
+        return new SecurityPublicKey(pem);
+    }
+    
+    public static PrivateKey toPrivateKey(PemBlock pem, SecureString passphrase) {
+        try {
+            return new SecurityPrivateKey(pem, passphrase);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] decrypt(PemBlock block, SecureString passphrase) throws Exception {
+        return decrypt(block.getBytesBlock(), block.getString(PemBlock.ENCRYPTED, null), passphrase);
+    }
+    
+    public static byte[] decrypt(byte[] encoded, String algorithm, SecureString passphrase) throws Exception {
+        if (encoded == null || MString.isEmpty(algorithm) || passphrase == null) return encoded;
+        algorithm = algorithm.toLowerCase();
+        if (algorithm.equals(PemBlock.ENC_BLOWFISH)) {
+            return Blowfish.decrypt(encoded, passphrase.value());
+        }
+        throw new SecurityException("Unknown algorithm: " + algorithm);
     }
     
 }
