@@ -792,4 +792,23 @@ public class CryptTest {
 		}
 	}
 
+	   @Test
+	    public void testBountySigner() {
+	       System.out.println(">>> testBountySigner");
+
+	       KeyPair keys = MBouncy.generateEccKey(MBouncy.ECC_SPEC.PRIME192V1);
+	       String signature = MBouncy.createSignature(keys.getPrivate(), t1Secret);
+	       System.out.println("Private Key");
+	       System.out.println(MBouncy.getPrivateKey(keys));
+           System.out.println(MBouncy.getPrivatePem(keys));
+           System.out.println("Public Key");
+           System.out.println(MBouncy.getPublicKey(keys));
+           System.out.println(MBouncy.getPublicPem(keys));
+           System.out.println("Signature");
+           System.out.println(signature);
+           
+           boolean valid = MBouncy.validateSignature(keys.getPublic(), t1Secret, signature);
+           assertTrue(valid);
+	   }
+
 }

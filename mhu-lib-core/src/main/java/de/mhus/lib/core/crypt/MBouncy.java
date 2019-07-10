@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.crypt;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -28,6 +29,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.Signature;
+import java.security.spec.ECGenParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -69,6 +71,10 @@ public class MBouncy {
 			return bits;
 		}
 	}
+	
+	public enum ECC_SPEC {
+	    PRIME192V1,PRIME192V2,PRIME192V3,PRIME239V1,PRIME239V2,PRIME239V3,PRIME256V1,
+	    SECP192K1,SECP192R1,SECP244K1,SECP244R1,SECP256K1,SECP256R1,SECP384R1,SECP521R1};
 	
 	public static void init() {
 		if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null)
@@ -161,7 +167,33 @@ public class MBouncy {
 	public static String getPrivateKey(KeyPair key) {
 		return encodeBase64(new PKCS8EncodedKeySpec(key.getPrivate().getEncoded()).getEncoded());
 	}
+	
+	public static PemBlock getPrivatePem(KeyPair pair) {
+	    PrivateKey key = pair.getPrivate();
+	    return getPrivatePem(key);
+	}
+	
+    public static PemBlock getPrivatePem(PrivateKey key) {
+	    PemBlockModel pem = new PemBlockModel(PemBlock.BLOCK_PRIV);
+	    pem.setString(PemBlock.METHOD, key.getAlgorithm());
+	    pem.setString(PemBlock.FORMAT, key.getFormat());
+	    pem.setBlock(key.getEncoded());
+	    return pem;
+	}
 
+    public static PemBlock getPublicPem(KeyPair pair) {
+        PublicKey key = pair.getPublic();
+        return getPublicPem(key);
+    }
+    
+    public static PemBlock getPublicPem(PublicKey key) {
+        PemBlockModel pem = new PemBlockModel(PemBlock.BLOCK_PUB);
+        pem.setString(PemBlock.METHOD, key.getAlgorithm());
+        pem.setString(PemBlock.FORMAT, key.getFormat());
+        pem.setBlock(key.getEncoded());
+        return pem;
+    }
+    
 	/**
 	 * Encrypt one block with maximal 117 bytes (max block size). Optimized for one block step.
 	 * 
@@ -426,6 +458,28 @@ public class MBouncy {
 		return keyPool.get( pos );
 	}
 	
+	public static KeyPair generateEccKey(ECC_SPEC spec) {
+        init();
+        try {
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM_ECC, PROVIDER);
+            MRandom random = M.l(MRandom.class);
+            ECGenParameterSpec     ecGenSpec = new ECGenParameterSpec(spec.name().toLowerCase());
+            keyGen.initialize(ecGenSpec, random.getSecureRandom());
+            KeyPair key = keyGen.generateKeyPair();
+            return key;
+        } catch (Exception t) {
+            throw new RuntimeException(t);
+        }
+	}
+	
+    public static boolean validateSignature(PublicKey key, String in, String sign) {
+        try {
+            return validateSignature(key, new ByteArrayInputStream(in.getBytes(MString.CHARSET_CHARSET_UTF_8)), sign);
+        } catch (Exception t) {
+            throw new RuntimeException(t);
+        }
+    }
+    
 	public static boolean validateSignature(PublicKey key, InputStream is, String sign) {
 	    try {
             byte[] encKey = key.getEncoded();
@@ -452,6 +506,14 @@ public class MBouncy {
 	    }
 	}
 	
+    public static String createSignature(PrivateKey key, String in) {
+        try {
+            return createSignature(key, new ByteArrayInputStream(in.getBytes(MString.CHARSET_UTF_8)));
+        } catch (Exception t) {
+            throw new RuntimeException(t);
+        }
+    }
+    
 	public static String createSignature(PrivateKey key, InputStream is) {
         try {
             byte[] encKey = key.getEncoded();
@@ -470,7 +532,9 @@ public class MBouncy {
                 else 
                     sig.update(buffer, 0, len);
             }
-           return new PemBlockModel(PemBlock.BLOCK_SIGN,sig.sign()).toString();
+            PemBlockModel pem = new PemBlockModel(PemBlock.BLOCK_SIGN,sig.sign());
+            pem.setString(PemBlock.METHOD, key.getAlgorithm());
+            return pem.toString();
         } catch (Exception t) {
             throw new RuntimeException(t);
         }

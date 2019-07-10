@@ -18,11 +18,10 @@ package de.mhus.lib.core.logging;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Date;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.directory.ResourceNode;
@@ -53,7 +52,7 @@ public class ConsoleFactory extends LogFactory {
 	
 	public String printTime() {
 		if (printTime) {
-			return MCast.toString(new Date()) + " "; // TODO maybe more efficient
+			return MDate.toIso8601(System.currentTimeMillis()) + " ";
 		}
 		return "";
 	}
