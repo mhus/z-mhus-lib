@@ -62,11 +62,18 @@ public class ConsoleTable {
     
     public ConsoleTable(String options) {
     	if (options != null) {
-    		options = options.trim();
-    		MProperties o = MProperties.explodeToMProperties(options);
-    		setFull(o.getBoolean("full", false));
-    		
-    		//TODO more options ...
+    	    if (options.equals("f")) {
+    	        setFull(true);
+    	    } else
+            if (options.equals("o")) {
+                fitToConsole();
+//                setFull(false);
+            } else {
+        		options = options.trim();
+        		MProperties o = MProperties.explodeToMProperties(options);
+        		setFull(o.getBoolean("full", false));
+        		//TODO more options ...
+            }
     	} else {
 			fitToConsole();
     	}

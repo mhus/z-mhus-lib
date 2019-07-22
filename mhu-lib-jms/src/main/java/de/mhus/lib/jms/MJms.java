@@ -15,12 +15,16 @@
  */
 package de.mhus.lib.jms;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
@@ -29,6 +33,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.config.EmptyConfig;
 import de.mhus.lib.core.config.IConfig;
 
@@ -191,5 +196,36 @@ public class MJms {
                value instanceof UUID // to String 
                ;
     }
-	
+
+    public static byte[] read(BytesMessage msg) throws JMSException {
+        long len = msg.getBodyLength();
+        byte[] bytes = new byte[(int) len];
+        msg.readBytes(bytes);
+        return bytes;
+    }
+
+    public static void read(BytesMessage msg, OutputStream os) throws JMSException, IOException {
+        byte[] bytes = new byte[1024];
+        while (true) {
+            int i = msg.readBytes(bytes);
+            if (i < 0) return;
+            if (i == 0)
+                MThread.sleep(200);
+            else
+                os.write(bytes, 0, i);
+        }
+    }
+    
+    public static void write(InputStream is, BytesMessage msg) throws JMSException, IOException {
+        byte[] bytes = new byte[1024];
+        while (true) {
+            int i = is.read(bytes);
+            if (i < 0) return;
+            if (i == 0)
+                MThread.sleep(200);
+            else
+                msg.writeBytes(bytes, 0, i);
+        }
+    }
+
 }

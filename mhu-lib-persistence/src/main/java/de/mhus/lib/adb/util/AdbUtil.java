@@ -133,6 +133,7 @@ public class AdbUtil {
 		return out;
 	}
 
+	@Deprecated
 	public static void setId(DbMetadata entry, UUID id) {
 		if (entry == null) return;
 		try {
@@ -145,6 +146,45 @@ public class AdbUtil {
 		}
 	}
 
+    @Deprecated
+    public static void setCreationDate(DbMetadata entry, Date creationDate) {
+        if (entry == null) return;
+        try {
+            Field field = DbMetadata.class.getDeclaredField("creationDate");
+            if (!field.canAccess(entry))
+                field.setAccessible(true);
+            field.set(entry, creationDate);
+        } catch (Exception e) {
+            throw new RuntimeException("Entry " + entry.getClass(), e);
+        }
+    }
+
+    @Deprecated
+    public static void setModifyDate(DbMetadata entry, Date modifyDate) {
+        if (entry == null) return;
+        try {
+            Field field = DbMetadata.class.getDeclaredField("modifyDate");
+            if (!field.canAccess(entry))
+                field.setAccessible(true);
+            field.set(entry, modifyDate);
+        } catch (Exception e) {
+            throw new RuntimeException("Entry " + entry.getClass(), e);
+        }
+    }
+
+    @Deprecated
+    public static void setVstamp(DbMetadata entry, long vstamp) {
+        if (entry == null) return;
+        try {
+            Field field = DbMetadata.class.getDeclaredField("vstamp");
+            if (!field.canAccess(entry))
+                field.setAccessible(true);
+            field.set(entry, vstamp);
+        } catch (Exception e) {
+            throw new RuntimeException("Entry " + entry.getClass(), e);
+        }
+    }
+    
 	@SuppressWarnings("unchecked")
 	public static PojoModel createDefaultPojoModel(Class<?> clazz) {
 		return new PojoParser().parse(clazz, "_", false, new Class[] { DbPersistent.class, DbPrimaryKey.class, DbRelation.class }).filter(true,false,true,false,true).getModel();
