@@ -60,31 +60,23 @@ public class ConsoleTable {
     public ConsoleTable() {
     }
     
-    public ConsoleTable(String options) {
+    public ConsoleTable(boolean showAll, String options) {
     	if (options != null) {
-    	    if (options.equals("f")) {
-    	        setFull(true);
-    	    } else
-            if (options.equals("o")) {
-                fitToConsole();
-//                setFull(false);
-            } else {
-        		options = options.trim();
-        		MProperties o = MProperties.explodeToMProperties(options);
-        		setFull(o.getBoolean("full", false));
-        		//TODO more options ...
-            }
+    		options = options.trim();
+    		MProperties o = MProperties.explodeToMProperties(options);
+    		setFull(o.getBoolean("all", false));
+    		//TODO more options ...
     	} else {
 			fitToConsole();
     	}
     }
     
-    public ConsoleTable(boolean full) {
-    	setFull(full);
+    public ConsoleTable(boolean showAll) {
+    	setFull(showAll);
 	}
     
-    public void setFull(boolean full) {
-		if (full)
+    public void setFull(boolean showAll) {
+		if (showAll)
 			setMaxColSize(0);
 		else
 			fitToConsole();
@@ -425,9 +417,9 @@ public class ConsoleTable {
 		return sw.toString();
 	}
 	
-	public static ConsoleTable fromJdbcResult(ResultSet res) throws SQLException {
+	public static ConsoleTable fromJdbcResult(ResultSet res, boolean tableAll, String tblOpt) throws SQLException {
 		ResultSetMetaData resMeta = res.getMetaData();
-		ConsoleTable out = new ConsoleTable();
+		ConsoleTable out = new ConsoleTable(tableAll,tblOpt);
 		String[] h = new String[resMeta.getColumnCount()];
 		for (int i = 0; i < resMeta.getColumnCount(); i++)
 			h[i] = resMeta.getColumnName(i+1);

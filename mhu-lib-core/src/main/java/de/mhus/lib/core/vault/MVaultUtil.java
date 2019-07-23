@@ -69,7 +69,7 @@ public class MVaultUtil {
 			System.out.println("list - list all keys");
 		} break;
 		case "list": {
-			ConsoleTable out = new ConsoleTable();
+		    ConsoleTable out = new ConsoleTable();
 			out.setHeaderValues("Source","Id","Type","Description");
 			for (String sourceName : vault.getSourceNames()) {
 				source = vault.getSource(sourceName);
