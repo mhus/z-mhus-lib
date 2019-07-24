@@ -60,7 +60,7 @@ public class ConsoleTable {
     public ConsoleTable() {
     }
     
-    public ConsoleTable(boolean showAll, String options) {
+    public ConsoleTable(String options) {
     	if (options != null) {
     		options = options.trim();
     		MProperties o = MProperties.explodeToMProperties(options);
@@ -417,9 +417,9 @@ public class ConsoleTable {
 		return sw.toString();
 	}
 	
-	public static ConsoleTable fromJdbcResult(ResultSet res, boolean tableAll, String tblOpt) throws SQLException {
+	public static ConsoleTable fromJdbcResult(ResultSet res, String tblOpt) throws SQLException {
 		ResultSetMetaData resMeta = res.getMetaData();
-		ConsoleTable out = new ConsoleTable(tableAll,tblOpt);
+		ConsoleTable out = new ConsoleTable(tblOpt);
 		String[] h = new String[resMeta.getColumnCount()];
 		for (int i = 0; i < resMeta.getColumnCount(); i++)
 			h[i] = resMeta.getColumnName(i+1);
