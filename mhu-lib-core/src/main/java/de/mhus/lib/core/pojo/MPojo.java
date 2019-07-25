@@ -35,6 +35,7 @@ import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -47,6 +48,8 @@ import de.mhus.lib.core.util.Base64;
 
 public class MPojo {
 
+    public static final String DEEP = "deep";
+    
 	private static final int MAX_LEVEL = 10;
 	private static Log log = Log.getLog(MPojo.class);
 	private static PojoModelFactory defaultModelFactory;
@@ -93,15 +96,20 @@ public class MPojo {
 		if (level > MAX_LEVEL) return;
 		PojoModel model = factory.createPojoModel(from.getClass());
 		for (PojoAttribute<?> attr : model) {
-			
+			boolean deep = false;
 			if (!attr.canRead()) continue;
 			if (usePublic) {
 				Public pub = attr.getAnnotation(Public.class);
-				if (pub != null && !pub.readable()) continue;
+				if (pub != null) {
+				    if (!pub.readable()) 
+				        continue;
+				    if (MCollection.contains(pub.hints(), MPojo.DEEP))
+				        deep = true;
+				}
 			}
 			Object value = attr.get(from);
 			String name = attr.getName();
-			setJsonValue(to, name, value, factory, usePublic, false, level+1);
+			setJsonValue(to, name, value, factory, usePublic, deep, level+1);
 		}
 	}
 	

@@ -312,4 +312,13 @@ public class Address implements Externalizable {
 		attributes = (IProperties) in.readObject();
 	}
 
+    public static String[] separateStreetFromNumber(String street) {
+        if (street == null) return new String[] {null,null};
+        int p = street.lastIndexOf(' ');
+        if (p < 0) return new String[] {street,null};
+        String xstreet = street.substring(0, p).trim();
+        String xnr = street.substring(p).trim();
+        return new String[] {xstreet,xnr};
+    }
+
 }
