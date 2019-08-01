@@ -164,7 +164,7 @@ public class CryptTest {
         byte[] secure = MBouncy.encryptRsa(MString.toBytes(t1Secret), publKey);
         System.out.println(Base64.encode(secure));
         
-        String secret = MString.byteToString(MBouncy.decryptRsa(secure, privKey));
+        String secret = MString.byteToString(MBouncy.decryptRsa(secure, privKey, MBouncy.RSA_KEY_SIZE.B1024));
         
         assertEquals(t1Secret, secret);
         
@@ -690,7 +690,7 @@ public class CryptTest {
 		byte[] block = text.getBytes();
 		KeyPair key = MBouncy.generateRsaKey(MBouncy.RSA_KEY_SIZE_DEFAULT);
 		byte[] enc = MBouncy.encryptRsa(block, key.getPublic());
-		byte[] dec = MBouncy.decryptRsa(enc, key.getPrivate());
+		byte[] dec = MBouncy.decryptRsa(enc, key.getPrivate(), MBouncy.RSA_KEY_SIZE_DEFAULT);
 		String text2 = new String(dec);
 		assertEquals(text, text2);
 	}

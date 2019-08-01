@@ -70,6 +70,10 @@ public class MBouncy {
 		public int getBits() {
 			return bits;
 		}
+		
+		public int getBlockSize() {
+	          return Math.max(getBits() / 1024 * 128, 64);
+		}
 	}
 	
 	public enum ECC_SPEC {
@@ -195,11 +199,11 @@ public class MBouncy {
     }
     
 	/**
-	 * Encrypt one block with maximal 117 bytes (max block size). Optimized for one block step.
+	 * Encrypt one block with maximal 117 bytes (block size for 1024). Optimized for one block step.
 	 * 
 	 * @param text
 	 * @param key
-	 * @return The encrypted block (128 bytes)
+	 * @return The encrypted block (128 bytes for 1024 bits, 256 bytes for 2048 bits ...)
 	 * @throws Exception
 	 */
 	public static byte[] encryptRsa117(byte[] text, PublicKey key) throws Exception
@@ -253,20 +257,22 @@ public class MBouncy {
 	 * 
 	 * @param text
 	 * @param key
+	 * @param size 
 	 * @return decrypted data
 	 * @throws Exception
 	 */
-    public static byte[] decryptRsa(byte[] text, PrivateKey key) throws Exception
+    public static byte[] decryptRsa(byte[] text, PrivateKey key, RSA_KEY_SIZE size) throws Exception
     {
     		init();
         Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, key);
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
+        int blockSize = size.getBlockSize();
         int start = 0;
         while(true) {
         		int len = text.length - start;
-        		if (len > 128) len = 128;
+        		if (len > blockSize) len = blockSize;
         		byte[] out = cipher.doFinal(text, start, len);
         		os.write(out);
         		if (start + len >= text.length) {
@@ -296,7 +302,9 @@ public class MBouncy {
     }
 
     /**
-     * Decrypt a single rsa block (128 bytes) with a result of maximal 117 bytes. Optimized for a single block step.
+     * Decrypt a single rsa block (128 bytes for 1024 bits, 256 for 2048 bits ...) with a result of maximal 117 bytes. 
+     * Optimized for a single block step.
+     * 
      * @param text
      * @param key
      * @return decrypted string
@@ -322,13 +330,16 @@ public class MBouncy {
      */
     public static String decryptRsa117(String text, PrivateKey key) throws Exception
     {
-        String result;
-        byte[] dectyptedText = decryptRsa(decodeBase64(text),key);
-        result = new String(dectyptedText, STRING_ENCODING);
+        init();
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION, PROVIDER);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] enc = decodeBase64(text);
+        byte[] dectyptedText = cipher.doFinal(enc);
+        // byte[] dectyptedText = decryptRsa(decodeBase64(text),key, size);
+        String result = new String(dectyptedText, STRING_ENCODING);
         return result;
-
     }
-    
+
     /**
      * encode bytes with base64 algorithm.
      * @param bytes
