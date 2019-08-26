@@ -1001,5 +1001,10 @@ public class MSystem {
     public static String getUsername() {
         return System.getProperty("user.name");
     }
+
+    public static boolean isPasswordName(String key) {
+        if (key == null) return false;
+        return key.toLowerCase().contains("pass"); // password, ? secret ?
+    }
 	
 }

@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
@@ -132,11 +133,6 @@ public class MProperties extends AbstractProperties implements Externalizable {
 	@Override
 	public Set<String> keys() {
 		return new SetCast<Object, String>(properties.keySet());
-	}
-	
-	@Override
-	public String toString() {
-		return MSystem.toString(this, properties);
 	}
 	
 	@Override
@@ -766,5 +762,30 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		if (obj != null)
 			((Map<Object,Object>)p).put(k, obj);
 	}
-	
+
+    @Override
+    public synchronized String toString() {
+        int max = properties.size() - 1;
+        if (max == -1)
+            return "{}";
+
+        StringBuilder sb = new StringBuilder();
+        Iterator<Map.Entry<Object,Object>> it = properties.entrySet().iterator();
+
+        sb.append('{');
+        for (int i = 0; ; i++) {
+            Map.Entry<Object,Object> e = it.next();
+            Object key = e.getKey();
+            Object value = e.getValue();
+            String keyStr = key.toString();
+            sb.append(keyStr);
+            sb.append('=');
+            sb.append(MSystem.isPasswordName(keyStr) ? "[***]" : ( value == this ? "(this Map)" : value.toString() ) );
+
+            if (i == max)
+                return sb.append('}').toString();
+            sb.append(", ");
+        }
+    }
+
 }
