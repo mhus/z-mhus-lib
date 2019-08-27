@@ -1,17 +1,16 @@
-Configurations for SQL Statements:
+This project includes a fork from https://github.com/MorphiaOrg/morphia. It's under Apache 2.0 Licence and compatible with the
+licence of this project.
 
-traceCallers : boolean
-	Enable trace of callers stacktrace, creating connections, The trace will be printed to the log if
-	a connection was not closed and is closed by finalizer or if a 'too many connections' exceptions
-	are thrown.
-	
-traceCallersWait : long
-	How long to wait before printing the ful stacktrace again. This will prevent for filling the log with
-	waste.
-	
-traceRuntime : boolean
-	Enable tracing of long running SQL queries. The query and the stacktrace will be written to the log.
-	
-traceMaxRuntime : long
-	Maximum runtime time thats ok, if the query need more time it will be written.
-	
+Reason of the fork is the enclosed dependencies and the morphia project and that the project is unable to let other annotations overwrite
+the actual functionality.
+
+The fork is accessible via https://github.com/mhus/morphia and parts will be synchronized with this project.
+
+fork -> mhu-lib-mongo
+
+cp -r morphia/morphia/src/main/java/dev mhus-lib/mhu-lib-mongo/src/main/java/
+cp -r morphia/morphia/src/main/java/relocated mhus-lib/mhu-lib-mongo/src/main/java/
+
+mhu-lib-mongo -> fork
+
+cp -r mhus-lib/mhu-lib-mongo/src/main/java/dev morphia/morphia/src/main/java/

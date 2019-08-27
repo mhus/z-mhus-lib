@@ -18,10 +18,9 @@ package de.mhus.lib.mongo;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.mongodb.morphia.mapping.Mapper;
-
 import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.transaction.LockStrategy;
+import dev.morphia.mapping.Mapper;
 
 public abstract class MoSchema {
 

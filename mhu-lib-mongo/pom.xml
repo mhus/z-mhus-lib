@@ -38,7 +38,9 @@
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            de.mhus.lib.mongo.*;version=${project.version},
+	               de.mhus.lib.mongo.*;version=${project.version},
+	               dev.morphia.*;version=${mongo.morphia.version},
+	               relocated.morphia.*;version=${mongo.morphia.version},
 	            </Export-Package>
 	            <Import-Package>
 		            javax.persistence.*;resolution:=optional,
@@ -70,15 +72,23 @@
         <groupId>org.mongodb</groupId>
         <artifactId>mongo-java-driver</artifactId>
     </dependency> 
+    <!-- 
     <dependency>
-     <groupId>org.mongodb.morphia</groupId>
-     <artifactId>morphia</artifactId>
- </dependency>      
+        <groupId>dev.morphia.morphia</groupId>
+        <artifactId>core</artifactId>
+    </dependency>
+     -->
+    <dependency>
+       <groupId>com.thoughtworks.proxytoys</groupId>
+       <artifactId>proxytoys</artifactId>
+       <version>1.0</version>
+    </dependency>
+
     <dependency>
         <groupId>de.bwaldvogel</groupId>
         <artifactId>mongo-java-server</artifactId>
         <scope>test</scope>
     </dependency>
-    		
+
   </dependencies>
 </project>

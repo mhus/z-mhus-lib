@@ -22,10 +22,8 @@ import org.bson.types.ObjectId;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.util.JSON;
 
 
-@SuppressWarnings("deprecation")
 public class MoUtil {
 
 	static ObjectMapper jsonMapper = new ObjectMapper();
@@ -34,7 +32,7 @@ public class MoUtil {
 //	    Writer writer = new StringWriter();
 //	    jsonMapper.writer().writeValue(writer, obj);
 //	    return (BasicDBObject) BasicDBObject.parse(writer.toString());
-		return (BasicDBObject) JSON.parse(jsonString);
+		return BasicDBObject.parse(jsonString);
 	}
 
 	public static UUID toUUID(ObjectId id) {

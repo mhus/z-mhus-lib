@@ -19,12 +19,12 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.PrePersist;
-import org.mongodb.morphia.annotations.Property;
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.basics.UuidIdentificable;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.Property;
 
 public class MoMetadata extends DbComfortableObject implements UuidIdentificable {
 

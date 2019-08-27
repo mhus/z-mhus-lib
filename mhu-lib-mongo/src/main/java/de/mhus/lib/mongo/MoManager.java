@@ -27,28 +27,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.FindAndModifyOptions;
-import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.annotations.Embedded;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.NotSaved;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.annotations.Serialized;
-import org.mongodb.morphia.mapping.CustomMapper;
-import org.mongodb.morphia.mapping.MappedField;
-import org.mongodb.morphia.mapping.Mapper;
-import org.mongodb.morphia.mapping.cache.EntityCache;
-import org.mongodb.morphia.query.Query;
-import org.mongodb.morphia.query.UpdateOperations;
-import org.mongodb.morphia.query.UpdateResults;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.lang.MObject;
@@ -61,6 +46,21 @@ import de.mhus.lib.core.pojo.PojoParser;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.sql.DbConnection;
+import dev.morphia.Datastore;
+import dev.morphia.FindAndModifyOptions;
+import dev.morphia.Morphia;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.NotSaved;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Serialized;
+import dev.morphia.mapping.CustomMapper;
+import dev.morphia.mapping.MappedField;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.cache.EntityCache;
+import dev.morphia.query.Query;
+import dev.morphia.query.UpdateOperations;
+import dev.morphia.query.UpdateResults;
 
 public class MoManager extends MJmx implements MoHandler {
 
