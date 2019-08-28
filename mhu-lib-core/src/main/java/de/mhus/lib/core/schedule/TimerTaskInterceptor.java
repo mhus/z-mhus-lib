@@ -17,7 +17,7 @@ package de.mhus.lib.core.schedule;
 
 import de.mhus.lib.core.strategy.DefaultTaskContext;
 
-public interface TimerTaskIntercepter {
+public interface TimerTaskInterceptor {
 
 	void initialize(SchedulerJob job);
 	boolean beforeExecution(SchedulerJob job, DefaultTaskContext context, boolean forced);

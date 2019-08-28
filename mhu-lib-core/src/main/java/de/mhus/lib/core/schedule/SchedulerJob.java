@@ -51,7 +51,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 	private Thread thread;
 	private MNls nls;
 	private String info;
-	private TimerTaskIntercepter intercepter;
+	private TimerTaskInterceptor intercepter;
 	private String logTrailConfig;
 	private UUID uuid = UUID.randomUUID();
 	
@@ -367,11 +367,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 		this.info = info;
 	}
 
-	public TimerTaskIntercepter getIntercepter() {
+	public TimerTaskInterceptor getInterceptor() {
 		return intercepter;
 	}
 
-	public void setIntercepter(TimerTaskIntercepter intercepter) {
+	public void setIntercepter(TimerTaskInterceptor intercepter) {
 		this.intercepter = intercepter;
 		if (intercepter != null)
 			intercepter.initialize(this);
