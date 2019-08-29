@@ -18,6 +18,11 @@ package dev.morphia.mapping;
 
 
 import com.mongodb.DBObject;
+
+import de.mhus.lib.annotations.adb.DbIndex;
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.EntityInterceptor;
@@ -91,6 +96,9 @@ public class MappedClass {
         INTERESTING_ANNOTATIONS.add(Validation.class);
         INTERESTING_ANNOTATIONS.add(Field.class);
         INTERESTING_ANNOTATIONS.add(IndexOptions.class);
+        INTERESTING_ANNOTATIONS.add(DbPrimaryKey.class);
+        INTERESTING_ANNOTATIONS.add(DbPersistent.class);
+        INTERESTING_ANNOTATIONS.add(DbIndex.class);
     }
 
     /**
@@ -437,7 +445,7 @@ public class MappedClass {
      * @return the ID field for the class
      */
     public MappedField getMappedIdField() {
-        List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
+        List<MappedField> fields = getFieldsAnnotatedWith(DbPrimaryKey.class);
         return fields.isEmpty() ? null : fields.get(0);
     }
 
@@ -500,7 +508,7 @@ public class MappedClass {
         embeddedAn = (Embedded) getAnnotation(Embedded.class);
         entityAn = (Entity) getFirstAnnotation(Entity.class);
         // polymorphicAn = (Polymorphic) getAnnotation(Polymorphic.class);
-        final List<MappedField> fields = getFieldsAnnotatedWith(Id.class);
+        final List<MappedField> fields = getFieldsAnnotatedWith(DbPrimaryKey.class);
         if (fields != null && !fields.isEmpty()) {
             idField = fields.get(0).getField();
         }
@@ -562,7 +570,7 @@ public class MappedClass {
             field.setAccessible(true);
             final int fieldMods = field.getModifiers();
             if (!isIgnorable(field, fieldMods, mapper)) {
-                if (field.isAnnotationPresent(Id.class)) {
+                if (field.isAnnotationPresent(DbPrimaryKey.class)) {
                     persistenceFields.add(new MappedField(field, clazz, mapper));
                     update();
                 } else if (field.isAnnotationPresent(Property.class)

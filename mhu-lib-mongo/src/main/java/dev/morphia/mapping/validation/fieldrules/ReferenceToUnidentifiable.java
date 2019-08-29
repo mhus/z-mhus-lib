@@ -12,6 +12,8 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 
 import java.util.Set;
 
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -31,7 +33,7 @@ public class ReferenceToUnidentifiable extends FieldConstraint {
                 ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                                mf.getFullName() + " is annotated as a @" + Reference.class.getSimpleName() + " but the "
                                                + mf.getType().getName()
-                                               + " class is missing the @" + Id.class.getSimpleName() + " annotation"));
+                                               + " class is missing the @" + DbPrimaryKey.class.getSimpleName() + " annotation"));
             }
         }
     }

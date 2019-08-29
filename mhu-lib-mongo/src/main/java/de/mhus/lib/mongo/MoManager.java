@@ -28,11 +28,12 @@ import java.util.Set;
 
 import org.bson.types.ObjectId;
 
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
@@ -54,14 +55,12 @@ import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Serialized;
-import dev.morphia.mapping.CustomMapper;
-import dev.morphia.mapping.MappedField;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.cache.EntityCache;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateResults;
 
+@SuppressWarnings("deprecation")
 public class MoManager extends MJmx implements MoHandler {
 
 	private MongoClient client;
@@ -90,60 +89,11 @@ public class MoManager extends MJmx implements MoHandler {
 	}
 	
 	protected Mapper createMapper() {
-        Mapper mapper = new Mapper();
-
-        mapper.getOptions().setValueMapper(createValueMapper(mapper));
-        mapper.getOptions().setReferenceMapper(createReferenceMapper(mapper));
-        mapper.getOptions().setEmbeddedMapper(createEmbeddedMapper(mapper));
-        mapper.getOptions().setDefaultMapper(createCustomMapper(mapper));
+        Mapper mapper = new MoMapper(this);
         
         schema.initMapper(mapper);
         return mapper;
     }
-	
-	private CustomMapper createEmbeddedMapper(Mapper mapper) {
-        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getEmbeddedMapper());
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
-        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
-        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
-        return m;
-	}
-
-	private CustomMapper createReferenceMapper(Mapper mapper) {
-        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getReferenceMapper());
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
-        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
-        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
-        return m;
-	}
-
-	protected CustomMapper createValueMapper(Mapper mapper) {
-        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getValueMapper());
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
-        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
-        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
-        return m;
-	}
-
-	protected CustomMapper createCustomMapper(Mapper mapper) {
-        MoCustomMapper m = new MoCustomMapper(mapper.getOptions().getDefaultMapper());
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.persistent");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.manager");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.con");
-        m.getIgnoreName().add("de.mhus.lib.adb.DbComfortableObject.registryName");
-        m.getIgnoreName().add("de.mhus.lib.core.lang.MObject.nls");
-        m.getIgnoreName().add("de.mhus.lib.core.MLog.log");
-        return m;
-	}
 
 	public void save(Object obj) {
 		datastore.save(obj);
@@ -215,7 +165,7 @@ public class MoManager extends MJmx implements MoHandler {
 	public void createObject(DbConnection con, Object obj) throws MException {
 		PojoModel model = getModelFor(obj.getClass());
 		for ( PojoAttribute<?> f : model)
-			if (f.getAnnotation(Id.class) != null) {
+			if (f.getAnnotation(DbPrimaryKey.class) != null) {
 				try {
 					f.set(obj, null);
 				} catch (IOException e) {
@@ -340,14 +290,15 @@ public class MoManager extends MJmx implements MoHandler {
 						&&
 						attr.getAnnotation(Property.class) == null 
 						&& 
-						attr.getAnnotation(Id.class) == null
-						&&
 						attr.getAnnotation(Serialized.class) == null
 						&&
 						attr.getAnnotation(Reference.class) == null
 						&&
 						attr.getAnnotation(Embedded.class) == null
-						
+						&&
+                        attr.getAnnotation(DbPrimaryKey.class) == null
+                        &&
+                        attr.getAnnotation(DbPersistent.class) == null
 						) {
 					model.removeAttribute(name);
 				}
@@ -360,42 +311,5 @@ public class MoManager extends MJmx implements MoHandler {
 		}
 		
 	}
-	
-	public class MoCustomMapper implements CustomMapper {
-
-		private HashSet<String> ignoreName = new HashSet<>();
-		private CustomMapper defaultMapper;
-
-		public MoCustomMapper(CustomMapper defaultMapper) {
-			this.defaultMapper = defaultMapper;
-		}
-
-		@Override
-		public void fromDBObject(Datastore datastore, DBObject dbObject, MappedField mf, Object entity,
-		        EntityCache cache, Mapper mapper) {
-
-			// inject momanager
-			if (entity instanceof DbComfortableObject)
-				((DbComfortableObject)entity).doInit(MoManager.this, null, true);
-			
-			if (ignoreName.contains(mf.getFullName())) return;
-
-			defaultMapper.fromDBObject(datastore, dbObject, mf, entity, cache, mapper);
-		}
-
-		@Override
-		public void toDBObject(Object entity, MappedField mf, DBObject dbObject, Map<Object, DBObject> involvedObjects,
-		        Mapper mapper) {
-			
-			if (ignoreName.contains(mf.getFullName())) return;
-			
-			defaultMapper.toDBObject(entity, mf, dbObject, involvedObjects, mapper);
-		}
-
-		public HashSet<String> getIgnoreName() {
-			return ignoreName;
-		}
 		
-	}
-	
 }

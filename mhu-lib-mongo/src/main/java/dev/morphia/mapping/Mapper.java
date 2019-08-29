@@ -97,12 +97,12 @@ public class Mapper {
     @Deprecated
     public static final String CLASS_NAME_FIELDNAME = "className";
 
-    private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
     /**
      * Set of classes that registered by this mapper
      */
-    private final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
-    private final ConcurrentHashMap<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
+    protected final Map<String, MappedClass> mappedClasses = new ConcurrentHashMap<String, MappedClass>();
+    protected final ConcurrentHashMap<String, Set<MappedClass>> mappedClassesByCollection = new ConcurrentHashMap<String, Set<MappedClass>>();
 
     //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
     private final List<EntityInterceptor> interceptors = new LinkedList<EntityInterceptor>();
@@ -112,7 +112,7 @@ public class Mapper {
     // TODO: make these configurable
     private final LazyProxyFactory proxyFactory = LazyFeatureDependencies.createDefaultProxyFactory();
     private final dev.morphia.converters.Converters converters;
-    private MapperOptions opts = MapperOptions.builder().build();
+    protected MapperOptions opts = MapperOptions.builder().build();
 
     /**
      * Creates a Mapper with the given options.
@@ -806,7 +806,7 @@ public class Mapper {
     /**
      * Add MappedClass to internal cache, possibly validating first.
      */
-    private MappedClass addMappedClass(final MappedClass mc, final boolean validate) {
+    protected MappedClass addMappedClass(final MappedClass mc, final boolean validate) {
         addConverters(mc);
 
         if (validate && !mc.isInterface()) {
@@ -833,7 +833,7 @@ public class Mapper {
         return value.getClass().isArray() ? Array.get(value, 0) : ((Iterable) value).iterator().next();
     }
 
-    private Object getDBRefs(final MappedField field, final Iterable value) {
+    protected Object getDBRefs(final MappedField field, final Iterable value) {
         final List<Object> refs = new ArrayList<Object>();
         Reference annotation = field.getAnnotation(Reference.class);
         boolean idOnly = annotation != null && annotation.idOnly();
@@ -844,7 +844,7 @@ public class Mapper {
         return refs;
     }
 
-    private Class<? extends Annotation> getFieldAnnotation(final MappedField mf) {
+    protected Class<? extends Annotation> getFieldAnnotation(final MappedField mf) {
         Class<? extends Annotation> annType = null;
         for (final Class<? extends Annotation> testType : new Class[]{Property.class, Embedded.class, Serialized.class, Reference.class}) {
             if (mf.hasAnnotation(testType)) {
@@ -855,14 +855,14 @@ public class Mapper {
         return annType;
     }
 
-    private boolean isAssignable(final MappedField mf, final Object value) {
+    protected boolean isAssignable(final MappedField mf, final Object value) {
         return mf != null
                && (mf.hasAnnotation(Reference.class) || Key.class.isAssignableFrom(mf.getType())
                    || DBRef.class.isAssignableFrom(mf.getType()) || isMultiValued(mf, value));
 
     }
 
-    private boolean isEntity(final MappedClass mc) {
+    protected boolean isEntity(final MappedClass mc) {
         return (mc != null && mc.getEntityAnnotation() != null);
     }
 
@@ -873,7 +873,7 @@ public class Mapper {
                && (Key.class.isAssignableFrom(subClass) || DBRef.class.isAssignableFrom(subClass));
     }
 
-    private void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
+    protected void readMappedField(final Datastore datastore, final MappedField mf, final Object entity, final EntityCache cache,
                                  final DBObject dbObject) {
         CustomMapper mapper;
         if (mf.hasAnnotation(Property.class) || mf.hasAnnotation(Serialized.class)
@@ -889,7 +889,7 @@ public class Mapper {
         mapper.fromDBObject(datastore, dbObject, mf, entity, cache, this);
     }
 
-    private void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,
+    protected void writeMappedField(final DBObject dbObject, final MappedField mf, final Object entity,
                                   final Map<Object, DBObject> involvedObjects) {
 
         //skip not saved fields.

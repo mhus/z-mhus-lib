@@ -3,16 +3,15 @@ package de.mhus.lib.mongo.test;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import org.bson.types.ObjectId;
+import java.util.UUID;
 
 import de.mhus.lib.adb.Persistable;
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
-import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 
 @Entity("employees")
@@ -27,7 +26,7 @@ public class Employee implements Persistable {
         this.setName(name);
         this.setSalary(d);
     }
-    public ObjectId getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -63,14 +62,14 @@ public class Employee implements Persistable {
         this.salary = salary;
     }
 
-    @Id
-    private ObjectId id;
+    @DbPrimaryKey
+    private UUID id;
     private String name;
     @Reference
     private Employee manager;
     @Reference
     private List<Employee> directReports = new LinkedList<Employee>();
-    @Property("wage")
+    @DbPersistent
     private Double salary;
     
 }

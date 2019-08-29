@@ -16,6 +16,8 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+
 
 /**
  * @author josephpachod
@@ -26,7 +28,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint {
     public void check(final Mapper mapper, final MappedClass mc, final Set<ConstraintViolation> ve) {
         final Set<Class<?>> classesToInspect = new HashSet<Class<?>>();
         for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(mc.getClazz(), true)) {
-            if (isFieldToInspect(field) && !field.isAnnotationPresent(Id.class)) {
+            if (isFieldToInspect(field) && !field.isAnnotationPresent(DbPrimaryKey.class)) {
                 classesToInspect.add(field.getType());
             }
         }
@@ -40,7 +42,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint {
             if (alreadyInspectedClasses.contains(clazz)) {
                 continue;
             }
-            if (hasTypeFieldAnnotation(clazz, Id.class)) {
+            if (hasTypeFieldAnnotation(clazz, DbPrimaryKey.class)) {
                 ve.add(new ConstraintViolation(Level.FATAL,
                                                mc,
                                                getClass(),
@@ -57,7 +59,7 @@ public class ContainsEmbeddedWithId implements ClassConstraint {
         }
     }
 
-    private boolean hasTypeFieldAnnotation(final Class<?> type, final Class<Id> class1) {
+    private boolean hasTypeFieldAnnotation(final Class<?> type, final Class<DbPrimaryKey> class1) {
         for (final Field field : ReflectionUtils.getDeclaredAndInheritedFields(type, true)) {
             if (field.getAnnotation(class1) != null) {
                 return true;

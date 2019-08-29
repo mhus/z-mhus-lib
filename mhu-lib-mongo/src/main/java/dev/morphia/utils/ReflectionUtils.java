@@ -381,7 +381,7 @@ public final class ReflectionUtils {
      */
     public static boolean isPropertyType(final Class type) {
         return type != null && (isPrimitiveLike(type) || type == DBRef.class || type == Pattern.class
-                                || type == CodeWScope.class || type == ObjectId.class || type == Key.class
+                                || type == CodeWScope.class || type == UUID.class || type == Key.class
                                 || type == DBObject.class || type == BasicDBObject.class);
 
     }

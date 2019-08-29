@@ -19,6 +19,10 @@ package dev.morphia.mapping;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+
+import de.mhus.lib.annotations.adb.DbPersistent;
+import de.mhus.lib.annotations.adb.DbPrimaryKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import dev.morphia.Key;
@@ -76,7 +80,8 @@ public class MappedField {
         INTERESTING.add(Property.class);
         INTERESTING.add(Reference.class);
         INTERESTING.add(Embedded.class);
-        INTERESTING.add(Id.class);
+        INTERESTING.add(DbPrimaryKey.class);
+        INTERESTING.add(DbPersistent.class);
         INTERESTING.add(Version.class);
         INTERESTING.add(ConstructorArgs.class);
         INTERESTING.add(AlsoLoad.class);
@@ -596,7 +601,7 @@ public class MappedField {
      * @morphia.internal
      */
     public String getMappedFieldName() {
-        if (hasAnnotation(Id.class)) {
+        if (hasAnnotation(DbPrimaryKey.class)) {
             return "_id";
         } else if (hasAnnotation(Property.class)) {
             final Property mv = (Property) foundAnnotations.get(Property.class);

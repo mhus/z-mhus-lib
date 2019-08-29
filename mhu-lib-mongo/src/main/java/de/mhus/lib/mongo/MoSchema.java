@@ -22,6 +22,7 @@ import de.mhus.lib.adb.Persistable;
 import de.mhus.lib.adb.transaction.LockStrategy;
 import dev.morphia.mapping.Mapper;
 
+@SuppressWarnings("deprecation")
 public abstract class MoSchema {
 
 	@SuppressWarnings("unused")

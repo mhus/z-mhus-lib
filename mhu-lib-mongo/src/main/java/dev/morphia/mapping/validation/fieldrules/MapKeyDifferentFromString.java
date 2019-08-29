@@ -11,6 +11,7 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.utils.ReflectionUtils;
 
 import java.util.Set;
+import java.util.UUID;
 
 
 /**
@@ -28,7 +29,7 @@ public class MapKeyDifferentFromString extends FieldConstraint {
                 ve.add(new ConstraintViolation(Level.WARNING, mc, mf, getClass(),
                                                "Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported "
                                                + SUPPORTED));
-            } else if (!aClass.equals(String.class) && !aClass.equals(ObjectId.class) && !ReflectionUtils.isPrimitiveLike(
+            } else if (!aClass.equals(String.class) && !aClass.equals(UUID.class) && !ReflectionUtils.isPrimitiveLike(
                                                                                                                              aClass)) {
                 ve.add(new ConstraintViolation(Level.FATAL, mc, mf, getClass(),
                                                "Maps must be keyed by a simple type " + SUPPORTED + "; " + aClass

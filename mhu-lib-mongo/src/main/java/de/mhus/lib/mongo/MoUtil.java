@@ -24,6 +24,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.mongodb.BasicDBObject;
 
 
+@SuppressWarnings("deprecation")
 public class MoUtil {
 
 	static ObjectMapper jsonMapper = new ObjectMapper();
