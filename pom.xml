@@ -103,7 +103,6 @@
 				<module>mhu-lib-j2ee</module>
 				<module>mhu-lib-persistence</module>
                 <module>mhu-lib-jpa</module>
-				<module>mhu-lib-vaadin</module>
 				<module>mhu-lib-standalone</module>
 				<module>mhu-lib-jms</module>
 			</modules>
@@ -122,7 +121,6 @@
 				<module>mhu-lib-core</module>
 				<module>mhu-lib-persistence</module>
 				<module>mhu-lib-j2ee</module>
-				<module>mhu-lib-vaadin</module>
 		      <!-- currently no release wanted
                 <module>mhu-lib-jpa</module>
 		        <module>mhu-lib-standalone</module>
