@@ -178,10 +178,13 @@ public abstract class Console extends PrintStream implements IBase, Adaptable {
 	}
 
 	public synchronized static void set(Console console) {
-		consoles.set(console);
+	    if (console == null)
+	        consoles.remove();
+	    else
+	        consoles.set(console);
 	}
 
-	public boolean isInitialized() {
+	public static boolean isInitialized() {
 		Console console = consoles.get();
 		return console != null;
 	}
