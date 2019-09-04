@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.jms;
 
+import javax.jms.InvalidDestinationException;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -276,13 +277,15 @@ do not block jms driven threads !!! This will cause a deadlock
 					receivedOneWay(message);
 				}
 			} catch (SendNoAnswerException e) {
-				log().d("Suppress send of an answer",dest);
+				log().d("0","Suppress send of an answer",dest);
 				log().t(e);
+			} catch (InvalidDestinationException t) {
+                log().w("1",Thread.currentThread().getName(),t);
 			} catch (JMSException t) {
 				reset();
-				log().w(Thread.currentThread().getName(),t);
+				log().w("2",Thread.currentThread().getName(),t);
 			} catch (Throwable t) {
-				log().w(Thread.currentThread().getName(),t);
+				log().w("3",Thread.currentThread().getName(),t);
 			} finally {
 				if (interceptorIn != null) {
 					interceptorIn.end(message);

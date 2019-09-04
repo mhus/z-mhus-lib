@@ -94,6 +94,10 @@ public class JmsConnection extends JmsObject implements ExceptionListener {
 	@Override
 	public void onException(JMSException exception) {
 		log().w("kill connection",connection,exception);
+		if (exception != null && exception.getMessage() != null) {
+    		if (exception.getMessage().contains("Cannot remove a consumer that had not been registered"))
+    		    return;
+		}
 		reset();
 	}
 		
