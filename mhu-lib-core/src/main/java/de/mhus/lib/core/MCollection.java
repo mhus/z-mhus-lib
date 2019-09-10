@@ -236,7 +236,7 @@ public class MCollection {
 		return out;
 	}
 	
-	public static <T> List<T> toList(T[] array) {
+	public static <T> List<T> toList(@SuppressWarnings("unchecked") T ... array) {
 		LinkedList<T> out = new LinkedList<>();
 		for (T item : array)
 			out.add(item);
