@@ -44,6 +44,18 @@ public class Db {
 		return new AQuery<T>(type);
 	}
 
+//    public static <T> AQuery<T> parse(Class<T> type, String query) {
+//        AQuery<T> out = new AQuery<T>(type);
+//        try {
+//            CCJSqlParserManager pm = new CCJSqlParserManager();
+//            net.sf.jsqlparser.statement.Statement statement = pm.parse(new StringReader(query));
+//            
+//        } catch (JSQLParserException e) {
+//            
+//        }
+//        return out;
+//    }
+    
 	/**
 	 * 
 	 * @param mask Masquerading Base Type

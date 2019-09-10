@@ -50,6 +50,9 @@
 		            *
 	            </Import-Package>
 				<DynamicImport-Package>*</DynamicImport-Package>
+				<!-- 
+                <Embed-Dependency>jsqlparser</Embed-Dependency>
+				 -->
 	          </instructions>
 	        </configuration>
 	      </plugin>
@@ -65,6 +68,14 @@
   		<groupId>de.mhus.lib</groupId>
   		<artifactId>mhu-lib-annotations</artifactId>
   	</dependency>
+	<!-- https://mvnrepository.com/artifact/com.github.jsqlparser/jsqlparser -->
+	<!-- 
+	<dependency>
+	    <groupId>com.github.jsqlparser</groupId>
+	    <artifactId>jsqlparser</artifactId>
+	    <version>3.0</version>
+	</dependency>
+	 -->
   	
   	<dependency>
     	<groupId>org.hsqldb</groupId>
