@@ -1,35 +1,52 @@
 package de.mhus.lib.core.strategy.util;
 
-import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.lang.SerializedValue;
 import de.mhus.lib.core.strategy.Operation;
-import de.mhus.lib.core.strategy.SuccessfulMap;
+import de.mhus.lib.core.strategy.Successful;
 
-public class SuccessfulSerializedMap extends SuccessfulMap {
-
+// TODO use de.mhus.lib.core.strategy.SuccessfulSerializedMap in mhu-lib 3.6.2
+public class SuccessfulSerializedMap extends Successful {
 
     public SuccessfulSerializedMap(Operation operation, String msg) {
         super(operation, msg);
+        setResult(new SerializedValue(new MProperties()));
+    }
+
+    public SuccessfulSerializedMap(String path, String msg, long rc) {
+        super(path, msg, rc, new MProperties());
     }
 
     public SuccessfulSerializedMap(String path, String msg, long rc, String... keyValues) {
         super(path, msg, rc, keyValues);
     }
 
-    public SuccessfulSerializedMap(String path, String msg, long rc) {
-        super(path, msg, rc);
+    @SuppressWarnings("unchecked")
+    public Map<String,Object> getMap() {
+        return (Map<String,Object>)((SerializedValue)getResult()).getValue();
     }
 
-    @Override
-    public void setResult(Object result) {
-        super.setResult(new SerializedValue((Serializable)result));
+    public void put(String key, Object value) {
+       getMap().put(key, value);
+    }
+    
+    public Object get(String key) {
+        return getMap().get(key);
+    }
+    
+    public void remove(String key) {
+        getMap().remove(key);
     }
 
-    @Override
-    public IProperties getMap() {
-        return (IProperties)((SerializedValue)getResult()).getValue();
+    public Set<String> keySet() {
+        return getMap().keySet();
     }
 
+    public int size() {
+        return getMap().size();
+    }
+    
 }

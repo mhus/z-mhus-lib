@@ -1,12 +1,12 @@
 package de.mhus.lib.core.strategy.util;
 
 import java.util.Map;
+import java.util.Set;
 
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.strategy.Operation;
-import de.mhus.lib.core.strategy.SuccessfulMap;
+import de.mhus.lib.core.strategy.Successful;
 
-public class SuccessfulForceMap extends SuccessfulMap {
+public class SuccessfulForceMap extends Successful {
 
 
     public SuccessfulForceMap(Operation operation, String msg) {
@@ -26,9 +26,29 @@ public class SuccessfulForceMap extends SuccessfulMap {
         super.setResult(new MapValue((Map<?,?>)result));
     }
 
-    @Override
-    public IProperties getMap() {
-        return (IProperties)((MapValue)getResult()).getValue();
+    @SuppressWarnings("unchecked")
+    public Map<String,Object> getMap() {
+        return (Map<String,Object>)((MapValue)getResult()).getValue();
     }
+
+    public void put(String key, Object value) {
+        getMap().put(key, value);
+     }
+     
+     public Object get(String key) {
+         return getMap().get(key);
+     }
+     
+     public void remove(String key) {
+         getMap().remove(key);
+     }
+
+     public Set<String> keySet() {
+         return getMap().keySet();
+     }
+
+     public int size() {
+         return getMap().size();
+     }
 
 }
