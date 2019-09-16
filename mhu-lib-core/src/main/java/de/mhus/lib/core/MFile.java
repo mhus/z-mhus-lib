@@ -134,7 +134,11 @@ public class MFile {
 
 	/**
 	 * Returns the name of the file in a path name. Using the OS specific
-	 * separator.
+	 * separator. '/dir/subdir/file.ext' will return 'file.ext'. This function 
+     * use the system separator slash or backslash for windows.
+     * If you always have a slash as directory separator
+     * use MUri.getFileName()
+     * 
 	 * @param path 
 	 * @return the file name
 	 */
@@ -150,7 +154,11 @@ public class MFile {
 
 	/**
 	 * Returns the directory without file name or current directory.
-	 * /dir/subdir/file will return /dir/subdir
+	 * '/dir/subdir/file' will return '/dir/subdir'. This function 
+	 * use the system separator slash or backslash for windows.
+	 * If you always have a slash as directory separator
+	 * use MUri.getFileDirectory()
+	 * 
 	 * @param path
 	 * @return The previous directory name or null
 	 */

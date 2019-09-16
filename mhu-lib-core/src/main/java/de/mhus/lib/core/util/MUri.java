@@ -486,6 +486,16 @@ public abstract class MUri implements Serializable {
 		
 	}
 	
+    /**
+     * Returns the name of the file in a path name. Using the OS specific
+     * separator. '/dir/subdir/file.ext' will return 'file.ext'. This function 
+     * use only slash as directory separator.
+     * If you have a real os filepath and need to use the system directory separator
+     * use MFile.getFileName()
+     * 
+     * @param path 
+     * @return the file name
+     */
 	public static String getFileName(String path) {
 		if (path == null) return null;
 		
@@ -496,6 +506,16 @@ public abstract class MUri implements Serializable {
 
 	}
 
+    /**
+     * Returns the directory without file name or current directory.
+     * '/dir/subdir/file' will return '/dir/subdir'. This function 
+     * use only slash as directory separator.
+     * If you have a real os filepath and need to use the system directory separator
+     * use MFile.getFileDirectory()
+     * 
+     * @param path
+     * @return The previous directory name or null
+     */
 	public static String getFileDirectory(String path) {
 		if (path == null) return null;
 		
