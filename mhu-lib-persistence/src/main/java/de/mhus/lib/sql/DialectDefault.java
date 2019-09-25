@@ -501,24 +501,20 @@ public class DialectDefault extends Dialect {
 		return iName2.equals(iName);
 	}
 
+	protected void dropIndex(Statement sth, String iName, String table) {
+        String sql = "DROP INDEX " + iName + " ON " + table;
+        log().t(sql);
+        try {
+            sth.execute(sql.toString());
+        } catch (Exception e) {
+            log().e(sql,e);
+        }
+	}
+	
 	protected void recreateIndex(Statement sth, boolean unique, boolean btree,
 			String iName, String table, String columns) {
-		String sql = "DROP INDEX " + iName + " ON " + table;
-		log().t(sql);
-		try {
-			sth.execute(sql.toString());
-		} catch (Exception e) {
-			log().e(sql,e);
-		}
-		sql = "CREATE " + (unique ? "UNIQUE" : "" ) + 
-			  " INDEX " + iName + (btree ? " USING BTREE" : "") +
-			  " ON "+table+ "("+columns+")";
-		log().t(sql);
-		try {
-			sth.execute(sql.toString());
-		} catch (Exception e) {
-			log().e(sql,e);
-		}
+	    dropIndex(sth, iName, table);
+	    createIndex(sth, unique, btree, iName, table, columns);
 	}
 
 	protected void createIndex(Statement sth, boolean unique, boolean btree,

@@ -176,5 +176,15 @@ public class DialectPostgresql extends DialectDefault {
 
 	}
 
+    @Override
+    protected void dropIndex(Statement sth, String iName, String table) {
+        String sql = "DROP INDEX " + iName;
+        log().t(sql);
+        try {
+            sth.execute(sql.toString());
+        } catch (Exception e) {
+            log().e(sql,e);
+        }
+    }
 	
 }
