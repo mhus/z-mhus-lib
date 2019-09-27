@@ -94,6 +94,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 			
 			return new Successful(this, "", ret);
 		} catch (InvocationTargetException e) {
+		    log().d(clazz,obj.getClass(),e);
 			Throwable t = e;
 			if (e.getCause() != null) t = e.getCause();
 			if (t instanceof Exception) throw (Exception)t;
