@@ -23,18 +23,18 @@ import de.mhus.lib.core.util.MUri;
 
 public class OperationResult {
 
-	public static final long OK = 0;
-	public static final long EMPTY = -10;
-	public static final long BUSY = -11;
-	public static final long NOT_EXECUTABLE = -12;
-	public static final long SYNTAX_ERROR = -13;
-	public static final long USAGE = -14;
+	public static final int OK = 0;
+	public static final int EMPTY = -10;
+	public static final int BUSY = -11;
+	public static final int NOT_EXECUTABLE = -12;
+	public static final int SYNTAX_ERROR = -13;
+	public static final int USAGE = -14;
 
-	public static final long INTERNAL_ERROR = -500;
-	public static final long ACCESS_DENIED = -401;
-	public static final long NOT_FOUND = -404;
-	public static final long NOT_SUPPORTED = -505;
-	public static final long WRONG_STATUS = -506;
+	public static final int INTERNAL_ERROR = -500;
+	public static final int ACCESS_DENIED = -401;
+	public static final int NOT_FOUND = -404;
+	public static final int NOT_SUPPORTED = -505;
+	public static final int WRONG_STATUS = -506;
 
 	private String operationPath;
 	private String caption;
