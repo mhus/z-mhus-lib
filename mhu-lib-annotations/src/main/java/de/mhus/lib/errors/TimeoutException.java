@@ -15,11 +15,11 @@
  */
 package de.mhus.lib.errors;
 
-public class WrongStateEception extends MRuntimeException {
+public class TimeoutException extends MException {
 
 	private static final long serialVersionUID = 1L;
 
-	public WrongStateEception(Object... in) {
+	public TimeoutException(Object... in) {
 		super(in);
 	}
 

@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.concurrent;
+package de.mhus.lib.errors;
 
-public class ThreadLock extends LocalLock {
+public class WrongStateException extends MRuntimeException {
 
-	public ThreadLock() {
-		super();
-	}
+	private static final long serialVersionUID = 1L;
 
-	public ThreadLock(String name) {
-		super(name);
-	}
-
-	public ThreadLock(String name, boolean privacy) {
-		super(name, privacy);
-	}
-
-	@Override
-	public boolean isLocked() {
-		return lock != null && lock != Thread.currentThread();
+	public WrongStateException(Object... in) {
+		super(in);
 	}
 
 }

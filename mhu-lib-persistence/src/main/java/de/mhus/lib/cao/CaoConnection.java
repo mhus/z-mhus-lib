@@ -21,7 +21,7 @@ import de.mhus.lib.adb.query.AQuery;
 import de.mhus.lib.basics.Named;
 import de.mhus.lib.core.directory.MResourceProvider;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.WrongStateEception;
+import de.mhus.lib.errors.WrongStateException;
 
 public abstract class CaoConnection extends MResourceProvider<CaoNode> implements Named {
 
@@ -88,7 +88,7 @@ public abstract class CaoConnection extends MResourceProvider<CaoNode> implement
 	}
 	
 	protected void checkState() {
-		if (isClosed()) throw new WrongStateEception(getName(),"already closed");
+		if (isClosed()) throw new WrongStateException(getName(),"already closed");
 	}
 
 	public boolean containsNodes(List<CaoNode> list) {

@@ -15,152 +15,72 @@
  */
 package de.mhus.lib.core.concurrent;
 
-import de.mhus.lib.core.M;
-import de.mhus.lib.core.base.service.LockManager;
+import java.io.Closeable;
+
+import de.mhus.lib.errors.TimeoutException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
-public class Lock {
+public interface Lock extends Closeable {
 
-	protected Thread lock = null;
-	protected String name;
-	protected boolean privacy = false;
-	protected long lockTime = 0;
+    Lock lock();
 
-	public Lock() {
-	}
+    default Lock lockWithException(long timeout) throws TimeoutException {
+        if (lock(timeout))
+            return this;
+        throw new TimeoutException(getName());
+    }
 
-	public Lock(String name, boolean privacy) {
-		this(name);
-		this.privacy = privacy;
-	}
+    boolean lock(long timeout);
 
-	public Lock(String name) {
-		setName(name);
-		register();
-	}
-
-	protected void register() {
-		M.l(LockManager.class).register(this);
-	}
-
-	public void lock() {
-		synchronized (this) {
-
-			while (isLocked()) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-
-				}
-			}
-			lock = Thread.currentThread();
-			lockTime = System.currentTimeMillis();
-			lockEvent(true);
-		}
-	}
-
-	/**
-	 * Overwrite this to get the lock events.
-	 * 
-	 * @param locked
-	 */
-    protected void lockEvent(boolean locked) {
-	
-	}
-
-	public void lockWithException(long timeout) {
-		  if (lock(timeout)) return;
-		  throw new TimeoutRuntimeException(name);
-	  }
-
-	  public boolean lock(long timeout) {
-		  synchronized (this) {
-			
-		    while(isLocked()){
-		    	long start = System.currentTimeMillis();
-		      try {
-				wait(timeout);
-			} catch (InterruptedException e) {
-			}
-		      if (System.currentTimeMillis() - start >= timeout ) return false;
-		    }
-		    lock = Thread.currentThread();
-			lockTime = System.currentTimeMillis();
-			lockEvent(true);
-		    return true;
-		  }
-	  }
-	
-	  /**
+    /**
 	   * Run the given task in a locked environment.
 	   * @param task
 	   */
-	  public void lock(Runnable task) {
-		  try {
-			  lock();
+	  default void lock(Runnable task) {
+		  try (Lock lock = lock()) {
 			  task.run();
-		  } finally {
-			  unlock();
 		  }
 	  }
-	  
-	  /**
+
+    /**
 	   * Run the given task in a locked environment.
 	   * @param task
 	   * @param timeout 
+	 * @throws TimeoutException 
 	   */
-	  public void lock(Runnable task, long timeout) {
-		  try {
-			  lockWithException(timeout);
+	  default void lock(Runnable task, long timeout) throws TimeoutException {
+		  try (Lock lock = lockWithException(timeout)){
 			  task.run();
-		  } finally {
-			  unlock();
 		  }
 	  }
-	  
-	  /**
+
+    /**
 	   * Unlock if the current thread is also the owner.
 	   * 
 	   * @return true if unlock was successful
 	   */
-	  public boolean unlock(){
-		  synchronized (this) {
-			if (lock != Thread.currentThread()) return false;
-			lockEvent(false);
-		    lock = null;
-			lockTime = 0;
-		    notify();
-		    return true;
-		  }
-	  }
+	  boolean unlock();
 
-	  /**
+    /**
 	   * A synonym to unlock()
 	   * 
 	   * @return true if unlock was successful
 	   */
-	  public boolean release() {
+	  default boolean release() {
 		  return unlock();
 	  }
 
-	  /**
+    /**
 	   * Unlock in every case !!! This can break a locked area.
 	   * 
 	   */
-	  public void unlockHard(){
-		  synchronized (this) {
-			lockEvent(false);
-		    lock = null;
-			lockTime = 0;
-		    notify();
-		  }
-	  }
-	  
-	  /**
+	  void unlockHard();
+
+    /**
 	   * Sleeps until the lock is released.
 	   * 
 	   */
-	  public void waitUntilUnlock() {
+	  default void waitUntilUnlock() {
 		  synchronized (this) {
 			    while(isLocked()){
 			      try {
@@ -171,13 +91,13 @@ public class Lock {
 			    }
 			  }
 	  }
-	  
-	  public void waitWithException(long timeout) {
+
+    default void waitWithException(long timeout) {
 		if (waitUntilUnlock(timeout)) return;  
-		throw new TimeoutRuntimeException(name);
+		throw new TimeoutRuntimeException(getName());
 	  }
-	  
-	  public boolean waitUntilUnlock(long timeout) {
+
+    default boolean waitUntilUnlock(long timeout) {
 		  synchronized (this) {
 			
 		    while(isLocked()){
@@ -192,34 +112,19 @@ public class Lock {
 		  }
 	  }
 
-	public boolean isLocked() {
-		return lock != null;
-	}
+    boolean isLocked();
 
-	public String getName() {
-		return name;
-	}
+    String getName();
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Thread getLocker() {
-		if (privacy) return null;
-		return lock;
-	}
-	
-	public boolean isPrivacy() {
-		return privacy;
-	}
-	
-	@Override
-	public String toString() {
-		return name + (lock != null ? " " + lock.getName() : "");
-	}
-	  
-	public long getLockTime() {
-		return lockTime;
-	}
-	
+    Thread getLocker();
+
+    boolean isPrivacy();
+
+    long getLockTime();
+
+    @Override
+    default void close() {
+        unlock();
+    }
+
 }

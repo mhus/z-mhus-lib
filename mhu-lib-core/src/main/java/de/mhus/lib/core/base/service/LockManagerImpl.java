@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.concurrent.LocalLock;
 import de.mhus.lib.core.concurrent.Lock;
 import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.core.util.WeakList;
@@ -53,7 +54,7 @@ public class LockManagerImpl extends MLog implements LockManager {
 		return lock;
 	}
 
-	class ManagedLock extends Lock {
+	class ManagedLock extends LocalLock {
 		public ManagedLock(String name, boolean b) {
 			super(name,b);
 		}
@@ -62,7 +63,7 @@ public class LockManagerImpl extends MLog implements LockManager {
 		protected void register() {
 		}
 	}
-	class ManagerLock extends Lock {
+	class ManagerLock extends LocalLock {
 	    @Override
 		protected void lockEvent(boolean locked) {
 	    		synchronized (cache) {
