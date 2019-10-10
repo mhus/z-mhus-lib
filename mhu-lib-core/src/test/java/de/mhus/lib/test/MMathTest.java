@@ -29,6 +29,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MMathTest {
 
+    @Test
+    public void testTrimDecimals() {
+        double in = 345.1234567;
+        
+        {
+            double out = MMath.truncateDecimals(in, 0);
+            assertEquals(345.0, out);
+        }
+        {
+            double out = MMath.truncateDecimals(in, 1);
+            assertEquals(345.1, out);
+        }
+        {
+            double out = MMath.truncateDecimals(in, 2);
+            assertEquals(345.12, out);
+        }
+        {
+            double out = MMath.truncateDecimals(in, 3);
+            assertEquals(345.123, out);
+        }
+        {
+            double out = MMath.truncateDecimals(in, 4);
+            assertEquals(345.1234, out);
+        }
+        {
+            double out = MMath.truncateDecimals(in, 5);
+            assertEquals(345.12345, out);
+        }
+    }
 	@Test
 	public void testByteAddRotate() {
 		for (byte d = Byte.MIN_VALUE; d < Byte.MAX_VALUE; d++) {

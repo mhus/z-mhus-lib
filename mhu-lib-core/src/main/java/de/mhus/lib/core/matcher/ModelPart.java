@@ -30,11 +30,11 @@ public abstract class ModelPart {
 		this.not = not;
 	}
 	
-	public boolean m(String str) {
+	public boolean m(Map<String,?> map, String str) {
 		if (not)
-			return !matches(str);
+			return !matches(this, null, str);
 		else
-			return matches(str);
+			return matches(this, null, str);
 	}
 
 	public boolean m(Map<String,?> map) {
@@ -55,10 +55,10 @@ public abstract class ModelPart {
 	protected boolean matches(Map<String,?> map) {
 		Object val = map.get(param);
 		if (val != null)
-			return matches(String.valueOf(val));
+			return matches(this, map, String.valueOf(val));
 		return false;
 	}
 	
-	protected abstract boolean matches(String str);
+	protected abstract boolean matches(ModelPart part, Map<String,?> map, String str);
 	
 }

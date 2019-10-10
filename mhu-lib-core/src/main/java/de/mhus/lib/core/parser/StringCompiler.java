@@ -16,6 +16,7 @@
 package de.mhus.lib.core.parser;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.core.MString;
@@ -39,7 +40,7 @@ public class StringCompiler implements Parser {
 	@Override
 	public CompiledString compileString(String in) {
 		LinkedList<StringPart> compiled = new LinkedList<StringPart>();
-		String[] parts = MString.split(in, separator);
+		List<String> parts = splitString(in);
 		boolean c = true;
 		for (String part : parts) {
 			if (c) {
@@ -57,7 +58,46 @@ public class StringCompiler implements Parser {
 		return new CompiledString(compiled);
 	}
 
-	protected StringPart createAttributePart(String part) {
+	// supports:
+	// $name$
+	// ${name}
+	protected List<String> splitString(String in) {
+	    LinkedList<String> parts = new LinkedList<>();
+	    while (true) {
+	        if (in.length() == 0) return parts;
+	        int nextPos = in.indexOf(separator);
+	        if (nextPos < 0) {
+	            parts.add(in);
+	            return parts;
+	        }
+	        if (nextPos > 0) {
+	            parts.add(in.substring(0,nextPos)); // add content part
+	        }
+	        if (nextPos == in.length()-separator.length()) { // at the end
+	            parts.add(separator);
+	            return parts;
+	        }
+	        if (in.charAt(nextPos+separator.length()) == '{') {
+	            int endPos = in.indexOf('}', nextPos);
+	            if (endPos < 0) { // not found
+	                parts.add(in.substring(nextPos));
+	                return parts;
+	            }
+	            parts.add(in.substring(nextPos+separator.length()+1, endPos));
+	            in = in.substring(endPos+1);
+	        } else {
+                int endPos = in.indexOf(separator, nextPos+separator.length());
+                if (endPos < 0) { // not found
+                    parts.add(in.substring(nextPos));
+                    return parts;
+                }
+                parts.add(in.substring(nextPos+separator.length(), endPos));
+                in = in.substring(endPos+separator.length());
+	        }
+	    }
+    }
+
+    protected StringPart createAttributePart(String part) {
 		if (part.startsWith("#env."))
 			return new EnvironmentPart(part);
 		if (part.startsWith("#system."))

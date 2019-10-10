@@ -18,6 +18,8 @@ package de.mhus.lib.core.matcher;
 import java.util.LinkedList;
 import java.util.Map;
 
+import de.mhus.lib.core.MString;
+
 public abstract class ModelComposit extends ModelPart {
 
 	protected LinkedList<ModelPart> components = new LinkedList<>();
@@ -35,7 +37,7 @@ public abstract class ModelComposit extends ModelPart {
 
 	@Override
 	public String toString() {
-		return getOperatorName() + (isNot() ? " not" : "") + components;
+		return (isNot() ? "!" : "") + "("+MString.join(components, " " + getOperatorName() + " ") + ")";
 	}
 	
 	public abstract String getOperatorName();

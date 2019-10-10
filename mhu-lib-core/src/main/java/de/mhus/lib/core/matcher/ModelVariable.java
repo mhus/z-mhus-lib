@@ -17,39 +17,55 @@ package de.mhus.lib.core.matcher;
 
 import java.util.Map;
 
-import de.mhus.lib.core.MString;
+import de.mhus.lib.errors.MRuntimeException;
 
-public class ModelSql extends ModelPattern {
+public class ModelVariable extends ModelPattern {
 
-	private String pattern;
+	private String name;
 
 	@Override
 	public void setPattern(String pattern) {
-        setCondition(CONDITION.NONE);
-		this.pattern = pattern;
+	    if (pattern.startsWith("${") && pattern.endsWith("}"))
+	        pattern = pattern.substring(2,pattern.length()-1);
+		this.name = pattern;
 	}
 
 	@Override
 	protected boolean matches(ModelPart model, Map<String,?> map, String str) {
-		return MString.compareSQLLikePattern(str, pattern);
+	    if (map == null) throw new MRuntimeException("variables not available, use condition not matcher");
+	    Object val = map.get(name);
+	    if (val == null) return false;
+	    int c = str.compareTo(val.toString());
+        switch (getCondition()) {
+        case EQ:
+            return c == 0;
+        case GE:
+            return c >= 0;
+        case GR:
+            return c > 0;
+        case LE:
+            return c <= 0;
+        case LT:
+            return c < 0;
+        default:
+            break;
+        }
+        return false;
 	}
 
 	@Override
 	public String getPattern() {
-		return pattern;
+		return name;
 	}
 
     @Override
     public String getPatternStr() {
-        return "'" + pattern.toString().replace("'", "\\'") + "'";
+        return "${" + name + "}";
     }
-    
+
 	@Override
 	public String getPatternTypeName() {
-		return "sql";
+		return "var";
 	}
 
-    @Override
-    public void setCondition(CONDITION cond) {
-    }
 }

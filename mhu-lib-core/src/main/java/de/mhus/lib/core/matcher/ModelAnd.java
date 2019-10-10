@@ -20,9 +20,9 @@ import java.util.Map;
 public class ModelAnd extends ModelComposit {
 
 	@Override
-	public boolean matches(String str) {
+	public boolean matches(ModelPart model, Map<String,?> map, String str) {
 		for (ModelPart part : components) {
-			if (!part.m(str)) return false;
+			if (!part.m(map, str)) return false;
 		}
 		return true;
 	}

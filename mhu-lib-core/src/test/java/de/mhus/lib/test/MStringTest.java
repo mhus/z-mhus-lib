@@ -15,7 +15,11 @@
  */
 package de.mhus.lib.test;
 
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.parser.StringCompiler;
+import de.mhus.lib.errors.MException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Map.Entry;
@@ -24,6 +28,37 @@ import org.junit.jupiter.api.Test;
 
 public class MStringTest {
 
+    @Test
+    public void testStringCompiler() throws MException {
+        MProperties attr = new MProperties();
+        attr.setString("name", "Mickey");
+        {
+            String pattern = "Name $name$ end";
+            String str = StringCompiler.compile(pattern).execute(attr);
+            assertEquals("Name Mickey end", str);
+        }
+        {
+            String pattern = "Name ${name} end";
+            String str = StringCompiler.compile(pattern).execute(attr);
+            assertEquals("Name Mickey end", str);
+        }
+        {
+            String pattern = "Name $none:Mickey$ end";
+            String str = StringCompiler.compile(pattern).execute(attr);
+            assertEquals("Name Mickey end", str);
+        }
+        {
+            String pattern = "Name ${none:Mickey} end";
+            String str = StringCompiler.compile(pattern).execute(attr);
+            assertEquals("Name Mickey end", str);
+        }
+        {
+            String pattern = "Name $name:Other$ end";
+            String str = StringCompiler.compile(pattern).execute(attr);
+            assertEquals("Name Mickey end", str);
+        }
+    }
+    
     @Test
     public void testAscii127() {
         for (Entry<String, String> map : MString.ASCII127_MAPPING.entrySet()) {
@@ -103,6 +138,6 @@ public class MStringTest {
 			String deco = MString.decodeUnicode(code);
 			assertEquals(test, deco);
 		}
-		
+
 	}
 }

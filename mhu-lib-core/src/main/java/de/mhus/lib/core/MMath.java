@@ -98,7 +98,16 @@ public class MMath {
 	}
 
 	public static double truncateDecimals(double d, int len) {
-		long p = pow(10, len);
+	    if (len <= 0) return (int)d;
+		long p = 1;
+		switch (len) {
+		case 1: p = 10;break;
+        case 2: p = 100;break;
+        case 3: p = 1000;break;
+        case 4: p = 10000;break;
+        default:
+            p = pow(10, len);
+		}
 		long l = (long)(d * p);
 		return (double)l / (double)p;
 	}
@@ -144,4 +153,5 @@ public class MMath {
 	public static byte subRotate(byte b, byte add) {
 		return (byte)((((b & 0xFF) * 256) - ((add & 0xFF) * 256) ) / 256 );
 	}	
+	
 }

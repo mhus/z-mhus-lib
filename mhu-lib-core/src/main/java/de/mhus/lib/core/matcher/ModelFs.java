@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.matcher;
 
+import java.util.Map;
+
 import de.mhus.lib.core.MString;
 
 public class ModelFs extends ModelPattern {
@@ -23,11 +25,12 @@ public class ModelFs extends ModelPattern {
 
 	@Override
 	public void setPattern(String pattern) {
+        setCondition(CONDITION.NONE);
 		this.pattern = pattern;
 	}
 
 	@Override
-	protected boolean matches(String str) {
+	protected boolean matches(ModelPart model, Map<String,?> map, String str) {
 		return MString.compareFsLikePattern(str, pattern);
 	}
 
@@ -36,9 +39,17 @@ public class ModelFs extends ModelPattern {
 		return pattern;
 	}
 
+    @Override
+    public String getPatternStr() {
+        return "'" + pattern.toString().replace("'", "\\'") + "'";
+    }
+    
 	@Override
 	public String getPatternTypeName() {
 		return "fs";
 	}
 
+    @Override
+    public void setCondition(CONDITION cond) {
+    }
 }

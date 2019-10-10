@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.matcher;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ModelRegex extends ModelPattern {
@@ -22,7 +23,8 @@ public class ModelRegex extends ModelPattern {
 	private Pattern pattern; 
 
 	@Override
-	public boolean matches(String str) {
+	public boolean matches(ModelPart model, Map<String,?> map, String str) {
+        setCondition(CONDITION.NONE);
 		return pattern.matcher(str).matches();
 	}
 
@@ -36,9 +38,18 @@ public class ModelRegex extends ModelPattern {
 		return pattern.toString();
 	}
 
+    @Override
+    public String getPatternStr() {
+        return "'" + pattern.toString().replace("'", "\\'") + "'";
+    }
+    
 	@Override
 	public String getPatternTypeName() {
 		return "regex";
 	}
 	
+    @Override
+    public void setCondition(CONDITION cond) {
+    }
+    
 }

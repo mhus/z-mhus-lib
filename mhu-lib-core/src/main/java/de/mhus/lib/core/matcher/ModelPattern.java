@@ -17,13 +17,28 @@ package de.mhus.lib.core.matcher;
 
 public abstract class ModelPattern extends ModelPart {
 
+    public enum CONDITION {NONE, LT, LE, EQ, GE, GR}
+    private CONDITION condition;
+
 	public abstract void setPattern(String pattern);
 	public abstract String getPattern();
+    public abstract String getPatternStr();
 	public abstract String getPatternTypeName();
 
 	@Override
 	public String toString() {
-		return (getParamName() != null ? "$" + getParamName() + "$ " : "" ) + (isNot() ? "not " : "") + getPatternTypeName() + " '" + getPattern() + "'";
+		return (getParamName() != null ? "${" + getParamName() + "} " : "" ) + 
+		        (isNot() ? "!" : "") + 
+		        (getCondition() == null || getCondition() == CONDITION.NONE ? "" : getCondition() + " ") + 
+		        getPatternTypeName() + 
+		        " " + getPatternStr();
 	}
+    public void setCondition(CONDITION cond) {
+        this.condition = cond;
+    }
+    
+    public CONDITION getCondition() {
+        return condition;
+    }
 
 }

@@ -26,11 +26,12 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 
 	private String part;
 	private String condition;
-	protected String breakableCharacters = "";
+	protected String breakableCharacters = "!=<>+-&|";
 	protected String enclosureCharacters = "\"'";
 	protected String whiteSpace = " \r\t";
 	protected String encapsulateCharacters = "\\";
 	protected String lineSeparator = "\n";
+    protected String startComment = "#";
 	protected char enclosure;
 	protected char encapsulated;
 	protected StringBuilder buffer;
@@ -38,11 +39,11 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 	private char current;
 	private String original;
 	private boolean wasEnclosured;
+    private int comment;
 	
 	public StringTokenizerParser(String condition) {
 		original = condition;
-		condition = condition.trim();
-		this.condition = condition;
+		this.condition = condition.trim();
 	}
 
 	public void parseToken() {
@@ -64,45 +65,72 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 		
 		enclosure = 0;
 		encapsulated = 0;
+		comment = 0;
 		buffer = new StringBuilder();
 		for (int i = 0; i < condition.length(); i++) {
 			current = condition.charAt(i);
 			
+			// comment mode
+			if (comment != 0) {
+			    if (isStartComment()) comment = 0;
+			    continue;
+			}
+			
+			// encapsulated - raw write char
 			if (encapsulated != 0) {
 				foundEncapsulated();
-			} else {
-				if (enclosure != 0 && current == enclosure) {
-					foundToken(i);
-					return;
-				} else
-				if (enclosure != 0) {
-					foundCharacter();
-				} else
-				if (isEnclosureCharacter()) {
-					enclosure = current;
-				} else
-				if (isWhiteSpace()) {
-					foundToken(i);
-					return;
-				} else
-				if (isEndOfLine()) {
-					line++;
-					foundToken(i);
-					return;
-				} else
-				if (isEncapsulateStarting())
-					encapsulated = current;
-				else
-				if (breakOnThisCharacter()) {
-					foundBreak(i);
-					return;
-				} else
-					foundCharacter();
+				continue;
+			} 
+			
+			// end of enclosure ?
+			if (enclosure != 0 && current == enclosure) {
+				foundToken(i);
+				return;
 			}
+			
+			// enclosure mode - raw write - wait for end of enclosure
+			if (enclosure != 0) {
+			    if (isEncapsulateStarting())
+	                encapsulated = current;
+			    else
+			        foundCharacter();
+			} else
+			// start of enclosure ?
+			if (isEnclosureCharacter()) {
+				enclosure = current;
+			} else
+			// white space means end of token
+			if (isWhiteSpace()) {
+				foundToken(i);
+				return;
+			} else
+			// end of line means end of token
+			if (isEndOfLine()) {
+				line++;
+				foundToken(i);
+				return;
+			} else
+			// if encapsulate character ?
+			if (isEncapsulateStarting())
+				encapsulated = current;
+			else
+		    // other breakable
+			if (breakOnThisCharacter()) {
+				foundBreak(i);
+				return;
+			} else
+			if (isStartComment()) {
+			    comment = current;
+			} else
+				foundCharacter();
+		
 		}
 		foundEnd();
 	}
 
+	protected boolean isStartComment() {
+	    return startComment.indexOf(current) >= 0;
+	}
 	protected void foundBreak(int i) {
 		if (i == 0) {
 			buffer.append(current);

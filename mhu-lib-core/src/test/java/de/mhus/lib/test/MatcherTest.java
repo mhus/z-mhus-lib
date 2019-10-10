@@ -35,7 +35,7 @@ public class MatcherTest {
 			assertEquals(true, filter.matches("blablaaabla"));
 			assertEquals(false, filter.matches("xyz"));
 		}
-/*		
+
 		{
 			Matcher filter = new Matcher("'.*aaa.*'");
 			System.out.println(filter);
@@ -43,7 +43,14 @@ public class MatcherTest {
 			assertEquals(true, filter.matches("blablaaabla"));
 			assertEquals(false, filter.matches("xyz"));
 		}
-*/		
+
+        {
+            Matcher filter = new Matcher("'.*a\\'aa.*'");
+            System.out.println(filter);
+            assertEquals(true, filter.matches("a'aa"));
+            assertEquals(false, filter.matches("xyz"));
+        }
+        
 		{
 			Matcher filter = new Matcher(".*aaa.* or .*bbb.*");
 			System.out.println(filter);
@@ -168,6 +175,10 @@ public class MatcherTest {
 		val.put("param1", "aloa");
 		val.put("param2", "nix");
 		val.put("param3", "round cube");
+        val.put("param4", "round cube");
+        val.put("param5", "5.123");
+        val.put("param6", "5.123");
+        val.put("param7", "4.123");
 
 		{
 			Condition cond = new Condition("$param1 aloa");
@@ -199,7 +210,78 @@ public class MatcherTest {
 			System.out.println(cond);
 			assertEquals(true, cond.matches(val));
 		}
+        {
+            Condition cond = new Condition("${param3} 'round cube'");
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
 		
+        {
+            Condition cond = new Condition("${param3} ${param4}") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        
+        {
+            Condition cond = new Condition("${param3} ${param4}") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        
+        {
+            Condition cond = new Condition("${param3} ${param2}") ;
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+        
+        {
+            Condition cond = new Condition("${param5} 5") ;
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+        
+        {
+            Condition cond = new Condition("${param5} < 5") ;
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param7} < 5") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param7} <= 4.123") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param7} > 3") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param7} > 5") ;
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+
+        {
+            Condition cond = new Condition("${param7} <= ${param6}") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param7} >= ${param6}") ;
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param5} == ${param6}") ;
+            System.out.println(cond);
+            assertEquals(true, cond.matches(val));
+        }
+
 	}
 	
 }

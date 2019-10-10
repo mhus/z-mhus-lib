@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.matcher;
 
+import de.mhus.lib.core.MValidator;
+import de.mhus.lib.core.matcher.ModelPattern.CONDITION;
 import de.mhus.lib.core.parser.StringTokenizerParser;
 import de.mhus.lib.core.parser.TechnicalStringParser;
 import de.mhus.lib.errors.MException;
@@ -65,7 +67,7 @@ public class Matcher {
 
 	public boolean matches(String str) {
 		if (str == null || root == null) return false;
-		return root.m(str);
+		return root.m(null, str);
 	}
 	
 	protected void parse(StringTokenizerParser condition) throws MException {
@@ -75,7 +77,7 @@ public class Matcher {
 		ModelPattern pattern = null;
 		
 		Context context = new Context();
-		
+        CONDITION cond = CONDITION.EQ;
 		
 		for (String part : condition) {
 			if (part == null) continue;
@@ -135,6 +137,10 @@ public class Matcher {
 					context.append(next);
 					
 				} break;
+                case "number":
+                    if (pattern != null) throw new SyntaxError("type before type");
+                    pattern = new ModelNumber();
+                    break;
 				case "fs":
 					if (pattern != null) throw new SyntaxError("type after pattern");
 					pattern = new ModelFs();
@@ -147,6 +153,30 @@ public class Matcher {
 					if (pattern != null) throw new SyntaxError("type after pattern");
 					pattern = new ModelRegex();
 					break;
+                case "var":
+                    if (pattern != null) throw new SyntaxError("type before type");
+                    pattern = new ModelVariable();
+                    break;
+                case "is":
+                case "==":
+                    cond = CONDITION.EQ;
+                    break;
+                case "lt":
+                case "<":
+                    cond = CONDITION.LT;
+                    break;
+                case "le":
+                case "<=":
+                    cond = CONDITION.LE;
+                    break;
+                case "ge":
+                case ">=":
+                    cond = CONDITION.GE;
+                    break;
+                case "gr":
+                case ">":
+                    cond = CONDITION.GR;
+                    break;
 					
 				default:
 					isPattern = true;
@@ -156,7 +186,16 @@ public class Matcher {
 			if (isPattern) {
 				
 				if (context.current == null && context.first != null) throw new SyntaxError("pattern after pattern without operation");
-				if (pattern == null) pattern = new ModelRegex();
+                if (pattern == null) {
+                    if (part.startsWith("${"))
+                        pattern = new ModelVariable();
+                    else
+                    if (MValidator.isNumber(part))
+                        pattern = new ModelNumber();
+                    else
+                        pattern =  new ModelRegex();
+                }
+                pattern.setCondition(cond);
 				pattern.setPattern(part);
 				pattern.setNot(context.not);
 				if (context.current == null)
@@ -165,6 +204,7 @@ public class Matcher {
 					context.current.add(pattern);
 				context.not = false;
 				pattern = null;
+                cond = CONDITION.EQ;
 			}
 			
 			

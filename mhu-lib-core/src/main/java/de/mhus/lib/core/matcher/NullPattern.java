@@ -29,13 +29,18 @@ public class NullPattern extends ModelPattern {
 		return "null";
 	}
 
+    @Override
+    public String getPatternStr() {
+        return "null";
+    }
+	
 	@Override
 	public String getPatternTypeName() {
 		return "null";
 	}
 
 	@Override
-	protected boolean matches(String str) {
+	protected boolean matches(ModelPart model, Map<String,?> map, String str) {
 		return str == null;
 	}
 
