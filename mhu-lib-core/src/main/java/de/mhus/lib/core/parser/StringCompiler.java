@@ -70,9 +70,9 @@ public class StringCompiler implements Parser {
 	            parts.add(in);
 	            return parts;
 	        }
-	        if (nextPos > 0) {
-	            parts.add(in.substring(0,nextPos)); // add content part
-	        }
+
+            parts.add(in.substring(0,nextPos)); // add content part
+
 	        if (nextPos == in.length()-separator.length()) { // at the end
 	            parts.add(separator);
 	            return parts;
