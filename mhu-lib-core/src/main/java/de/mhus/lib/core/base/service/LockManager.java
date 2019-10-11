@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.base.service;
 
+import java.util.function.Function;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.concurrent.Lock;
 
@@ -32,5 +34,14 @@ public interface LockManager {
 	void register(Lock lock);
 
 	Lock[] getRegisteredLocks();
+
+	/**
+	 * Returns the lock or will create it using the creator.
+	 * 
+	 * @param name
+	 * @param creator
+	 * @return The lock
+	 */
+    Lock getLock(String name, Function<String, Lock> creator);
 	
 }

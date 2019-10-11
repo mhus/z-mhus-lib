@@ -1,6 +1,7 @@
 package de.mhus.lib.core.concurrent;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.base.service.LockManager;
 
 public class LocalLock implements Lock {
@@ -56,10 +57,9 @@ public class LocalLock implements Lock {
 
       @Override
     public boolean lock(long timeout) {
-          synchronized (this) {
-            
+        synchronized (this) {
+            long start = System.currentTimeMillis();
             while(isLocked()){
-                long start = System.currentTimeMillis();
               try {
                 wait(timeout);
             } catch (InterruptedException e) {
@@ -70,8 +70,8 @@ public class LocalLock implements Lock {
             lockTime = System.currentTimeMillis();
             lockEvent(true);
             return true;
-          }
-      }
+        }
+    }
     
       /**
        * Unlock if the current thread is also the owner.
@@ -119,9 +119,9 @@ public class LocalLock implements Lock {
     }
     
     @Override
-    public Thread getLocker() {
+    public String getLocker() {
         if (privacy) return null;
-        return lock;
+        return lock == null ? null : MCast.toString(lock.toString(),lock.getStackTrace());
     }
     
     @Override

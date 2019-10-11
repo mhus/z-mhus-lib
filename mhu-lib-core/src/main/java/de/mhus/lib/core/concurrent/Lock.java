@@ -116,7 +116,7 @@ public interface Lock extends Closeable {
 
     String getName();
 
-    Thread getLocker();
+    String getLocker();
 
     boolean isPrivacy();
 

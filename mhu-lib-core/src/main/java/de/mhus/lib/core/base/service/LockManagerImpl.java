@@ -17,6 +17,7 @@ package de.mhus.lib.core.base.service;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.function.Function;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.concurrent.LocalLock;
@@ -54,6 +55,20 @@ public class LockManagerImpl extends MLog implements LockManager {
 		return lock;
 	}
 
+    @Override
+    public Lock getLock(String name, Function<String,Lock> creator) {
+        Lock lock = null;
+        synchronized (cache) {
+            lock = cache.get(name);
+            if (lock == null) {
+                lock = creator.apply(name);
+                if (lock != null)
+                    cache.put(name, lock);
+            }
+        }
+        return lock;
+    }
+    
 	class ManagedLock extends LocalLock {
 		public ManagedLock(String name, boolean b) {
 			super(name,b);
