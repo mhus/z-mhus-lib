@@ -127,4 +127,10 @@ public interface Lock extends Closeable {
         unlock();
     }
 
+    /**
+     * Some locks need to be refreshed.
+     * @return True if locked
+     */
+    boolean refresh();
+    
 }

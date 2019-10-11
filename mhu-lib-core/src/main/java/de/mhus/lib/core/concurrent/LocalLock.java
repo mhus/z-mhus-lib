@@ -139,4 +139,9 @@ public class LocalLock implements Lock {
         return lockTime;
     }
 
+    @Override
+    public boolean refresh() {
+        return isLocked();
+    }
+
 }
