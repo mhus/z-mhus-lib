@@ -48,7 +48,7 @@ public class LockManagerImpl extends MLog implements LockManager {
 		synchronized (cache) {
 			lock = cache.get(name);
 			if (lock == null) {
-				lock = new ManagedLock(name, false);
+				lock = new ManagedLock(name);
 				cache.put(name, lock);
 			}
 		}
@@ -70,8 +70,8 @@ public class LockManagerImpl extends MLog implements LockManager {
     }
     
 	class ManagedLock extends LocalLock {
-		public ManagedLock(String name, boolean b) {
-			super(name,b);
+		public ManagedLock(String name) {
+			super(name);
 		}
 
 		@Override

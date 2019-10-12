@@ -25,10 +25,6 @@ public class ThreadLock extends LocalLock {
 		super(name);
 	}
 
-	public ThreadLock(String name, boolean privacy) {
-		super(name, privacy);
-	}
-
 	@Override
 	public boolean isLocked() {
 		return lock != null && lock != Thread.currentThread();

@@ -8,15 +8,9 @@ public class LocalLock implements Lock {
 
     protected Thread lock = null;
     protected String name;
-    protected boolean privacy = false;
     protected long lockTime = 0;
 
     public LocalLock() {
-    }
-
-    public LocalLock(String name, boolean privacy) {
-        this(name);
-        this.privacy = privacy;
     }
 
     public LocalLock(String name) {
@@ -120,13 +114,7 @@ public class LocalLock implements Lock {
     
     @Override
     public String getLocker() {
-        if (privacy) return null;
         return lock == null ? null : MCast.toString(lock.toString(),lock.getStackTrace());
-    }
-    
-    @Override
-    public boolean isPrivacy() {
-        return privacy;
     }
     
     @Override

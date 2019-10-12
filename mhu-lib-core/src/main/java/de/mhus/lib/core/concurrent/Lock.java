@@ -118,8 +118,6 @@ public interface Lock extends Closeable {
 
     String getLocker();
 
-    boolean isPrivacy();
-
     long getLockTime();
 
     @Override
