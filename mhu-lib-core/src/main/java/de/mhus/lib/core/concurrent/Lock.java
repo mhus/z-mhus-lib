@@ -116,7 +116,7 @@ public interface Lock extends Closeable {
 
     String getName();
 
-    String getLocker();
+    String getOwner();
 
     long getLockTime();
 

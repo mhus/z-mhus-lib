@@ -113,7 +113,7 @@ public class LocalLock implements Lock {
     }
     
     @Override
-    public String getLocker() {
+    public String getOwner() {
         return lock == null ? null : MCast.toString(lock.toString(),lock.getStackTrace());
     }
     
