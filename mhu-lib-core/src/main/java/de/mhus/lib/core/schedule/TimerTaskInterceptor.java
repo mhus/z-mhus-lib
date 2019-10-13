@@ -20,7 +20,27 @@ import de.mhus.lib.core.strategy.DefaultTaskContext;
 public interface TimerTaskInterceptor {
 
 	void initialize(SchedulerJob job);
+	/**
+	 * Will be called before the execution.
+	 * @param job
+	 * @param context
+	 * @param forced
+	 * @return true if the task can be executed.
+	 */
 	boolean beforeExecution(SchedulerJob job, DefaultTaskContext context, boolean forced);
+	/**
+	 * Will be called after every execution even after errors.
+	 * 
+	 * @param job
+	 * @param context
+	 */
 	void afterExecution(SchedulerJob job, DefaultTaskContext context);
+	/**
+	 * Will be called on errors before afterExecution.
+	 * 
+	 * @param schedulerJob
+	 * @param context
+	 * @param e
+	 */
 	void onError(SchedulerJob schedulerJob, DefaultTaskContext context, Throwable e);
 }
