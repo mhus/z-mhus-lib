@@ -120,18 +120,20 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 					}
 					lastExecutionStop = System.currentTimeMillis();
 					
-					if (intercepter != null) {
-						log.d("Intercepter afterExecution",getName());
-						intercepter.afterExecution(this, context);
-					}
 					thread = null;
 				}
-				context.clear();
-				setDone(true);
 				synchronized (this) {
 					doCaclulateNextExecution();
 					log.d("Scheduled to",getName(),getNextExecutionTime());
 				}
+				if (doIt) {
+                    if (intercepter != null) {
+                        log.d("Intercepter afterExecution",getName());
+                        intercepter.afterExecution(this, context);
+                    }
+				}
+                context.clear();
+                setDone(true);
 			} finally {
 				if (logConfigReset)
 					MLogUtil.releaseTrailConfig();
