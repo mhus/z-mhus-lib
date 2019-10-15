@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-public class MEventHandler<L> extends MLog implements MRegistry<L> {
+public class MEventHandler<L> extends MLog implements IRegistry<L> {
 
 	private HashMap<L,String> listeners = new HashMap<L,String>();
 	private WeakHashMap<L, String> weak = new WeakHashMap<L, String>();
