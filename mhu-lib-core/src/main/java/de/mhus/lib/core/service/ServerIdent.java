@@ -26,7 +26,6 @@ import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.StringCompiler;
-import de.mhus.lib.errors.MException;
 
 public class ServerIdent extends MObject {
 
@@ -37,8 +36,23 @@ public class ServerIdent extends MObject {
 	       update();
 	    }
 	};
+    private CfgString CFG_SERVICE = new CfgString(ServerIdent.class, "service", null ) {
+        @Override
+        protected void onPostUpdate(String newValue) {
+            super.onPostUpdate(newValue);
+           update();
+        }
+    };
 	
     private CfgString CFG_PATTERN = new CfgString(ServerIdent.class, "pattern", "$#hostname$-$time$$random$" ) {
+        @Override
+        protected void onPostUpdate(String newValue) {
+            super.onPostUpdate(newValue);
+           update();
+        }
+    };
+    
+    private CfgString CFG_SERVICE_PATTERN = new CfgString(ServerIdent.class, "patternService", "$#hostname$" ) {
         @Override
         protected void onPostUpdate(String newValue) {
             super.onPostUpdate(newValue);
@@ -55,6 +69,7 @@ public class ServerIdent extends MObject {
         ATTRIBUTES.setString("uuid",   UUID.randomUUID().toString() );
     }
     private String ident = null;
+    private String service = null;
     
 	public ServerIdent() {
 	    update();
@@ -66,12 +81,12 @@ public class ServerIdent extends MObject {
 	
     private synchronized void update() {
 
-        if (CFG_IDENT == null || CFG_PATTERN == null || CFG_PERSISTENT == null) return; // do not update in init time
-        
+        if (CFG_IDENT == null || CFG_PATTERN == null || CFG_PERSISTENT == null || CFG_SERVICE == null || CFG_SERVICE_PATTERN == null) return; // do not update in init time
+
         ident = CFG_IDENT.value();
 
 	    if (ident == null) {
-    		String persistence = MApi.getCfg(ServerIdent.class).getString("persistence", MApi.getFile(MApi.SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".properties").getAbsolutePath() );
+    		String persistence = MApi.getCfg(ServerIdent.class).getString("ident", MApi.getFile(MApi.SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".properties").getAbsolutePath() );
     		File file = new File(persistence);
     		String def = null;
     		if (CFG_PERSISTENT.value() && file.exists() && file.isFile()) {
@@ -80,7 +95,7 @@ public class ServerIdent extends MObject {
     		}
     		if (def == null) {
     			try {
-                    def = create();
+    			    def = StringCompiler.compile(CFG_PATTERN.value()).execute(ATTRIBUTES);
                     ATTRIBUTES.setString("default", def);
                     if (CFG_PERSISTENT.value())
                         ATTRIBUTES.save(file);
@@ -91,15 +106,43 @@ public class ServerIdent extends MObject {
     		def = MFile.normalize(def);
     		ident = def;
 	    }
+	    
+	    service = CFG_SERVICE.value();
+	    
+	    if (service == null) {
+            String persistence = MApi.getCfg(ServerIdent.class).getString("service", MApi.getFile(MApi.SCOPE.ETC, ServerIdent.class.getCanonicalName() + ".properties").getAbsolutePath() );
+            File file = new File(persistence);
+            String def = null;
+            if (CFG_PERSISTENT.value() && file.exists() && file.isFile()) {
+                ATTRIBUTES = MProperties.load(file);
+                def = ATTRIBUTES.getString("default", null);
+            }
+            if (def == null) {
+                try {
+                    def = StringCompiler.compile(CFG_SERVICE_PATTERN.value()).execute(ATTRIBUTES);
+                    ATTRIBUTES.setString("default", def);
+                    if (CFG_PERSISTENT.value())
+                        ATTRIBUTES.save(file);
+                } catch (Exception e) {
+                    log().e(e);
+                }
+            }
+            def = MFile.normalize(def);
+            ident = def;
+	    }
 	}
 	
-	private String create() throws MException {
-        String created = StringCompiler.compile(CFG_PATTERN.value()).execute(ATTRIBUTES);
-        return created;
-    }
-
     @Override
 	public String toString() {
-		return ident;
+		return ident + "@" + service;
 	}
+    
+    public String getIdent() {
+        return ident;
+    }
+    
+    public String getService() {
+        return service;
+    }
+    
 }
