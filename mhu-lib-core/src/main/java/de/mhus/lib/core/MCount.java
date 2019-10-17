@@ -16,8 +16,8 @@
 package de.mhus.lib.core;
 
 import de.mhus.lib.annotations.jmx.JmxManaged;
+import de.mhus.lib.core.base.service.UniqueId;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.service.UniqueId;
 
 @JmxManaged(descrition = "Simple Counter")
 public class MCount extends MJmx {
