@@ -48,7 +48,7 @@ public class CfgManager {
 	private IApiInternal internal;
 	
 	private IConfig config;
-	private String configFile;
+	private File configFile;
 	private TreeMap<String,Object[]> initiators = new TreeMap<>(); // execute in an ordered way
 	
 	private long lastConfigUpdate;
@@ -85,7 +85,7 @@ public class CfgManager {
 	
 	@Override
 	public String toString() {
-		return configFile;
+		return configFile.getPath();
 	}
 	
 	public List<CfgProvider> getProviders() {
@@ -186,7 +186,7 @@ public class CfgManager {
 		provider.reConfigure();
 	}
 
-	class CentralMhusCfgProvider implements CfgProvider {
+	public class CentralMhusCfgProvider implements CfgProvider {
 
 	    private HashMap<File, Long> configFiles = new HashMap<>();
 	    private MHousekeeperTask fileWatch = new MHousekeeperTask("mhus-config-watch") {
@@ -203,15 +203,14 @@ public class CfgManager {
 	                }
 	            }
 	            if (!ok) {
-	                File f = new File(configFile);
-	                if (internalLoadConfig(f))
+	                if (internalLoadConfig())
 	                    reConfigure();
 	            }
 	        }
 	    };
 
 		public void doInitialize() {
-			configFile = MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE);
+			configFile = new File(MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE));
 
             MHousekeeper housekeeper = M.l(MHousekeeper.class);
             housekeeper.register(fileWatch, MPeriod.MINUTE_IN_MILLISECOUNDS);
@@ -269,14 +268,14 @@ public class CfgManager {
 			
 		}
 
-		private boolean internalLoadConfig(File file) {
-			if (file.exists() && file.isFile())
+		public boolean internalLoadConfig() {
+			if (configFile.exists() && configFile.isFile())
 				try {
 				    synchronized (configFiles) {
-    				    MApi.dirtyLogInfo("Load config file",file);
-    					XmlConfigFile c = new XmlConfigFile(file);
+    				    MApi.dirtyLogInfo("Load config file",configFile);
+    					XmlConfigFile c = new XmlConfigFile(configFile);
     					configFiles.clear();
-    					configFiles.put(file,file.lastModified());
+    					configFiles.put(configFile,configFile.lastModified());
     					IConfig systemNode = c.getNode("system");
     					if (systemNode != null) {
     					    String includePattern = systemNode.getString("include", null);
@@ -284,7 +283,7 @@ public class CfgManager {
     					        
     					        File i = new File(includePattern);
     					        if (!i.isAbsolute())
-    					            i = new File(file.getParentFile(), includePattern);
+    					            i = new File(configFile.getParentFile(), includePattern);
     					        for (File f : MFile.filter(i.getParentFile(), i.getName())) {
     					            if (f.getName().endsWith(".xml")) {
     				                    MApi.dirtyLogInfo("Load config file",f);
@@ -303,7 +302,7 @@ public class CfgManager {
 					MApi.dirtyLog(e);
 				}
 			
-			MApi.dirtyLog("*** MHUS Config file not found", file);
+			MApi.dirtyLog("*** MHUS Config file not found", configFile);
 			
 			return false;
 		}
@@ -311,29 +310,8 @@ public class CfgManager {
 		@Override
 		public synchronized IConfig getConfig() {
 			if (config == null) {
-				
 				config = new HashConfig();
-				
-				
-				File f = new File(configFile);
-				MApi.dirtyLog("--- Try to load mhus config from ", f.getAbsolutePath());
-				internalLoadConfig(f);
-				
-//				fileWatch = new FileWatch(f, new FileWatch.Listener() {
-//
-//					@Override
-//					public void onFileChanged(FileWatch fileWatch) {
-//						File file = fileWatch.getFile();
-//						if (internalLoadConfig(file))
-//							reConfigure();
-//					}
-//
-//					@Override
-//					public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-//						MApi.dirtyLog(t);
-//					}
-//					
-//				}).doStart();
+				internalLoadConfig();
 			}
 			return config;
 		}
