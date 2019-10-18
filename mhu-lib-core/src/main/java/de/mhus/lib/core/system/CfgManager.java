@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
@@ -325,6 +326,10 @@ public class CfgManager {
 		public void doStop() {
 			
 		}
+
+        public Set<File> files() {
+            return configFiles.keySet();
+        }
 			
 	}
 
