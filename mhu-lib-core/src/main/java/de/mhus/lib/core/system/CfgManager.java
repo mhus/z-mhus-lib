@@ -272,7 +272,7 @@ public class CfgManager {
 			
 		}
 
-		public boolean internalLoadConfig() {
+		public synchronized boolean internalLoadConfig() {
 			if (configFile.exists() && configFile.isFile())
 				try {
 				    synchronized (configFiles) {
