@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -963,5 +964,14 @@ public class MFile {
 			}
  		}
 	}
+
+    public static File[] filter(File dir, String pattern) {
+        return dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return MString.compareFsLikePattern(name, pattern);
+            }
+        });
+    }
 	
 }

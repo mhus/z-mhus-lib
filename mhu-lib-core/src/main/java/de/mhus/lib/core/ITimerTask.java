@@ -19,7 +19,7 @@ import de.mhus.lib.basics.Named;
 
 public interface ITimerTask extends Named {
 
-	void run(Object environment);
+	void run(Object environment) throws Exception;
 
 	void onError(Throwable t);
 

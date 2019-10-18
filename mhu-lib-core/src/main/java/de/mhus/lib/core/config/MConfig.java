@@ -26,6 +26,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
@@ -276,5 +277,16 @@ public class MConfig implements IBase {
 		}
 		throw new NotFoundException(fileName);
 	}
+
+    public static void merge(IConfig from, IConfig to) throws MException {
+        for (IConfig node : from.getNodes()) {
+            WritableResourceNode<IConfig> n = to.createConfig(node.getName());
+            for (String name : node.getPropertyKeys()) {
+                n.put(name, node.get(name));
+            }
+            merge(node, (IConfig) n);
+        }
+            
+    }
 
 }
