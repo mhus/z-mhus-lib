@@ -227,29 +227,32 @@ public class CfgManager {
 				if (system != null) {
 					MApi.setDirtyTrace(system.getBoolean("log.trace", false));
 					Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
-					MActivator activator = MApi.get().createActivator();
-					for (IConfig node : system.getNodes()) {
-					    try {
-    						if ("initiator".equals(node.getName())) {
-    							String clazzName = node.getString("class");
-    							String name = node.getString("name", clazzName);
-    							String level = node.getString("level", "100");
-    							name = level + "_" + name;
-    							
-    							if ("none".equals(clazzName)) {
-    								MApi.dirtyLog("remove initiator",name);
-    								initiators.remove(name);
-    							} else
-    							if (clazzName != null && !initiators.containsKey(name)) {
-    								MApi.dirtyLog("add initiator",name);
-    								CfgInitiator initiator = activator.createObject(CfgInitiator.class, clazzName);
-    								initiators.put(name, new Object[] {initiator, node });
-    							}
-    						}
-	                    } catch (Throwable t) {
-	                        MApi.dirtyLogError("Can't load initiator",node.dump()," Error: ",t);
-	                    }
-					}
+				}
+				for (String owner : MApi.get().getCfgManager().getOwners()) {
+				    IConfig cfg = MApi.get().getCfgManager().getCfg(owner);
+                    MActivator activator = MApi.get().createActivator();
+                    for (IConfig node : cfg.getNodes()) {
+                        try {
+                            if ("initiator".equals(node.getName())) {
+                                String clazzName = node.getString("class");
+                                String name = node.getString("name", clazzName);
+                                String level = node.getString("level", "100");
+                                name = level + "_" + name;
+                                
+                                if ("none".equals(clazzName)) {
+                                    MApi.dirtyLog("remove initiator",name);
+                                    initiators.remove(name);
+                                } else
+                                if (clazzName != null && !initiators.containsKey(name)) {
+                                    MApi.dirtyLog("add initiator",name);
+                                    CfgInitiator initiator = activator.createObject(CfgInitiator.class, clazzName);
+                                    initiators.put(name, new Object[] {initiator, node });
+                                }
+                            }
+                        } catch (Throwable t) {
+                            MApi.dirtyLogError("Can't load initiator",node.dump()," Error: ",t);
+                        }
+                    }
 				}
 				
 				for (Object[] initiator : initiators.values())
@@ -290,6 +293,7 @@ public class CfgManager {
     				                    MApi.dirtyLogInfo("Load config file",f);
     					                XmlConfigFile cc = new XmlConfigFile(f);
     					                configFiles.put(f,f.lastModified());
+    					                cc.setString("_source", f.getAbsolutePath());
     					                MConfig.merge(cc, c);
     					            }
     					        }
