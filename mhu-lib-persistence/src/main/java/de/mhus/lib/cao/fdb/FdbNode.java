@@ -31,6 +31,7 @@ import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.AccessDeniedException;
@@ -175,7 +176,9 @@ public class FdbNode extends PropertiesNode {
 
 	@Override
 	public String getPath() {
-		return MFile.normalizePath(file.getPath().substring(((FdbCore)core).getFilesDir().getPath().length()));
+		String out = MFile.normalizePath(file.getPath().substring(((FdbCore)core).getFilesDir().getPath().length()));
+		if (MSystem.isWindows()) out = out.replace('\\', '/');
+		return out;
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import de.mhus.lib.cao.CaoNode;
 import de.mhus.lib.cao.util.PropertiesNode;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.AccessDeniedException;
@@ -172,7 +173,9 @@ public class FsNode extends PropertiesNode {
 
 	@Override
 	public String getPath() {
-		return file.getPath().substring(((FsCore)core).getDir().getPath().length());
+		String out = file.getPath().substring(((FsCore)core).getDir().getPath().length());
+		if (MSystem.isWindows()) out = out.replace('\\', '/');
+		return out;
 	}
 
 	@Override
