@@ -28,6 +28,7 @@ import de.mhus.lib.adb.util.DbProperties;
 import de.mhus.lib.annotations.jmx.JmxManaged;
 import de.mhus.lib.cao.util.MetadataBundle;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.pojo.PojoModelFactory;
 import de.mhus.lib.errors.MException;
@@ -566,6 +567,10 @@ public abstract class DbManager extends MJmx implements DbObjectHandler, XdbServ
 			return (DbCollection<T>) service.getAll((Class<Persistable>) table.getClazz());
 		}
 		
+		@Override
+		public String toString() {
+		    return MSystem.toString(this, table == null ? "?" : table.getName());
+		}
 	}
 	
 }
