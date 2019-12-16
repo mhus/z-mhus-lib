@@ -211,8 +211,7 @@ public class CfgManager {
 	    };
 
 		public void doInitialize() {
-			configFile = new File(MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, MConstants.DEFAULT_MHUS_CONFIG_FILE));
-
+			configFile = new File(MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, null));
             MHousekeeper housekeeper = M.l(MHousekeeper.class);
             housekeeper.register(fileWatch, MPeriod.MINUTE_IN_MILLISECOUNDS);
 		}

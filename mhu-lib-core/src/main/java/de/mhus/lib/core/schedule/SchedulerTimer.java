@@ -126,7 +126,7 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 	}
 
 	private MProperties loadConfiguration() {
-		MProperties properties = MProperties.load(MApi.get().getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, MApi.getFile(MApi.SCOPE.ETC, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE).getAbsolutePath() )); // TODO configurable via mhu-config
+		MProperties properties = MProperties.load(MApi.get().getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, null));
 		return properties;
 	}
 
