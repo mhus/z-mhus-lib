@@ -19,8 +19,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi.SCOPE;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
@@ -109,11 +109,6 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 				return new File(log, dir);
 		}
 		return new File(baseDir, dir);
-	}
-
-	@Override
-	public String getSystemProperty(String name, String def) {
-		return System.getProperty(name, def);
 	}
 
 	@Override
