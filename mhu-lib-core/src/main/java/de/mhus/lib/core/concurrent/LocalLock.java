@@ -9,6 +9,7 @@ public class LocalLock implements Lock {
     protected Thread lock = null;
     protected String name;
     protected long lockTime = 0;
+    protected long cnt = 0;
 
     public LocalLock() {
     }
@@ -35,6 +36,7 @@ public class LocalLock implements Lock {
             }
             lock = Thread.currentThread();
             lockTime = System.currentTimeMillis();
+            cnt++;
             lockEvent(true);
         }
         return this;
@@ -130,6 +132,11 @@ public class LocalLock implements Lock {
     @Override
     public boolean refresh() {
         return isLocked();
+    }
+    
+    @Override
+    public long getCnt() {
+        return cnt;
     }
 
 }

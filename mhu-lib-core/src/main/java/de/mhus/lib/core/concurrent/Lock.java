@@ -130,5 +130,7 @@ public interface Lock extends Closeable {
      * @return True if locked
      */
     boolean refresh();
+
+    long getCnt();
     
 }
