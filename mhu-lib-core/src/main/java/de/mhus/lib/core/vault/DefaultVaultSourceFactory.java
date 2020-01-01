@@ -20,28 +20,40 @@ import java.io.IOException;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgFile;
 
 public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactory {
 
-	private static CfgFile defaultFile = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
-	private static CfgFile defaultFolder = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
+	private static CfgFile CFG_DEFAULT_FILE = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
+	private static CfgFile CFG_DEFAULT_FOLDER = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
+    private static CfgBoolean CFG_EDITABLE = new CfgBoolean(KubeVaultSource.class, "editable", false);
 
 	@Override
 	public VaultSource create(String name, VaultPassphrase vaultPassphrase) {
 		VaultSource def = null;
 		if (MVault.SOURCE_DEFAULT.equals(name)) {
-			if (defaultFile.value().exists()) {
-				// legacy
-				try {
-					def = new FileVaultSource(defaultFile.value(), vaultPassphrase.getPassphrase(),name);
-				} catch (IOException e) {
-					log().d(e);
-				}
+			if (CFG_DEFAULT_FILE.value().exists()) {
+			    
+			    if (CFG_DEFAULT_FILE.value().getName().endsWith(".properties")) {
+			        // for kubernetes vault files
+                    try {
+                        def = new KubeVaultSource(CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
+                    } catch (IOException e) {
+                        log().d(e);
+                    }
+			    } else {
+    				// legacy
+    				try {
+    					def = new FileVaultSource(CFG_DEFAULT_FILE.value(), vaultPassphrase.getPassphrase(),name);
+    				} catch (IOException e) {
+    					log().d(e);
+    				}
+			    }
 			} else {
 				// default
 				try {
-					def = new FolderVaultSource(defaultFolder.value(), vaultPassphrase.getPassphrase(),name);
+					def = new FolderVaultSource(CFG_DEFAULT_FOLDER.value(), vaultPassphrase.getPassphrase(),name);
 				} catch (IOException e) {
 					log().w(e);
 				}
