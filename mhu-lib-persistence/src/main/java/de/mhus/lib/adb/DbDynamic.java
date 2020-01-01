@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.adb;
 
-import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
