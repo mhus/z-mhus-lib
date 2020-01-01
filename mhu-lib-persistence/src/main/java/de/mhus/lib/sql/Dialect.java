@@ -63,6 +63,8 @@ public abstract class Dialect extends MObject implements ICompiler, AQueryCreato
 
 	public static final String I_FIELDS = "fields";
 
+    public static final String I_HINTS = "hints";
+	
 	public static final String K_PRIMARY_KEY = "primary_key";
 
 	public static final String K_NAME = "name";

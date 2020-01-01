@@ -15,8 +15,10 @@
  */
 package de.mhus.lib.annotations.adb;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * With this annotation you can overwrite the default behavior and define a 
@@ -26,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
 public @interface DbTable {
 
 	String tableName() default "";

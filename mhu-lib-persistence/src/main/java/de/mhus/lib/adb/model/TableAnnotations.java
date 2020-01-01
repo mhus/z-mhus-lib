@@ -15,10 +15,14 @@
  */
 package de.mhus.lib.adb.model;
 
+import java.util.List;
+
 import de.mhus.lib.annotations.adb.DbIndex;
+import de.mhus.lib.annotations.adb.DbIndexes;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbRelation;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.directory.WritableResourceNode;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -80,11 +84,25 @@ public class TableAnnotations extends Table {
 
 					// indexes
 					if (idx != null && field.isPersistent()) {
-						addToIndex(idx.value(),field);
+						addToIndex(idx.value(),idx.type(),idx.hints(),field);
 					}
 				}
 			}
 		}
+		
+        // parse global indexes
+        List<DbIndexes> aIndexesList = MSystem.findAnnotations(clazz, DbIndexes.class);
+        for (DbIndexes aIndexes : aIndexesList) {
+            for (DbIndex aIndex : aIndexes.values()) {
+                for (String fieldName : aIndex.fields()) {
+                    Field field = getField(fieldName);
+                    addToIndex(aIndex.value(), aIndex.type(), aIndex.hints(), field);
+                }
+                if (aIndex.fields().length == 0)
+                    addToIndex(aIndex.value(), aIndex.type(), aIndex.hints(), null);
+            }
+        }
+		
 	}
 
 }

@@ -30,8 +30,16 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbIndex {
 
+    enum TYPE {
+        AUTO,
+        INDEX,
+        UNIQUE
+    }
 	public static final String UNIQUE = "u";
 	
 	String[] value();
-
+	TYPE type() default TYPE.AUTO;
+	String hints() default "";
+    String[] fields() default {};
+    
 }

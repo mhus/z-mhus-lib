@@ -304,6 +304,17 @@ public class MSystem {
 		return null;
 	}
 
+    public static <A extends Annotation> List<A> findAnnotations(Class<?> clazz, Class<A> annotation) {
+        LinkedList<A> out = new LinkedList<>();
+        Class<?> current = clazz;
+        while (current != null) {
+            if (current.isAnnotationPresent(annotation))
+                out.addFirst(current.getAnnotation(annotation));
+            current = current.getSuperclass();
+        }
+        return out;
+    }
+    
 	public static boolean equals(Object a, Object b) {
 		if (a == null && b == null)
 			return true;

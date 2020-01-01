@@ -23,12 +23,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import de.mhus.lib.adb.DbManager;
 import de.mhus.lib.adb.DbSchema;
 import de.mhus.lib.annotations.adb.DbIndex;
+import de.mhus.lib.annotations.adb.DbIndex.TYPE;
 import de.mhus.lib.annotations.adb.DbPersistent;
 import de.mhus.lib.annotations.adb.DbPrimaryKey;
 import de.mhus.lib.annotations.adb.DbTable;
@@ -68,7 +68,7 @@ public abstract class Table extends MObject {
 	protected LinkedList<Field> fList = new LinkedList<Field>();
 	protected LinkedList<FieldRelation> relationList = new LinkedList<FieldRelation>();
 	protected HashMap<String,FieldRelation> relationIndex = new HashMap<String, FieldRelation>();
-	private HashMap<String, LinkedList<Field>> iIdx = new HashMap<String, LinkedList<Field>>();
+	private HashMap<String, IndexStruc> iIdx = new HashMap<String, IndexStruc>();
 	protected LinkedList<Field> pk = new LinkedList<Field>();
 	private DbPrepared sqlPrimary;
 	private DbPrepared sqlInsert;
@@ -138,7 +138,7 @@ public abstract class Table extends MObject {
 		postInit();
 	}
 
-	/**
+    /**
 	 * <p>parseFields.</p>
 	 *
 	 * @throws java.lang.Exception if any.
@@ -152,14 +152,18 @@ public abstract class Table extends MObject {
 	 * @param list an array of {@link java.lang.String} objects.
 	 * @param field a {@link de.mhus.lib.adb.model.Field} object.
 	 */
-	protected void addToIndex(String[] list, Field field) {
-		for (String nr : list) {
-			LinkedList<Field> list2 = iIdx.get(nr);
+	protected void addToIndex(String[] list, DbIndex.TYPE type, String hints, Field field) {
+		for (String name : list) {
+		    IndexStruc list2 = iIdx.get(name);
 			if (list2 == null) {
-				list2 = new LinkedList<Field>();
-				iIdx.put(nr, list2);
+				list2 = new IndexStruc();
+				iIdx.put(name, list2);
 			}
-			list2.add(field);
+			list2.name = name;
+			list2.hints = hints;
+			list2.type = type;
+			if (field != null)
+			    list2.add(field);
 		}
 	}
 
@@ -743,17 +747,18 @@ public abstract class Table extends MObject {
 		}
 
 		// create index entries
-		for (Entry<String, LinkedList<Field>> item : iIdx.entrySet()) {
+		for (IndexStruc item : iIdx.values()) {
 			ResourceNode<?> cindex = cstr.createConfig("index");
-			String n = item.getKey();
-			if (n.startsWith(DbIndex.UNIQUE)) {
+			String n = item.getName();
+			if (item.isUnique()) {
 				cindex.setString(Dialect.I_TYPE, Dialect.I_UNIQUE);
 				cindex.setBoolean(Dialect.I_UNIQUE, true);
 			}
+            cindex.setString(Dialect.I_HINTS, item.getHints());
 			cindex.setString(Dialect.I_NAME, "idx_" + n);
 			cindex.setString(Dialect.I_TABLE, tableNameOrg);
 			StringBuilder fields = new StringBuilder();
-			for (Field field : item.getValue()) {
+			for (Field field : item) {
 				if (fields.length() > 0) fields.append(",");
 				fields.append(field.createName);
 			}
@@ -957,4 +962,27 @@ public abstract class Table extends MObject {
 		return relationList.toArray(new FieldRelation[fList.size()]);
 	}
 
+	private class IndexStruc extends LinkedList<Field> {
+
+        private static final long serialVersionUID = 1L;
+        private String name;
+        private TYPE type;
+        private String hints;
+
+        public String getHints() {
+            return hints;
+        }
+
+        public boolean isUnique() {
+            if (type == null || type == TYPE.AUTO)
+                return name.startsWith(DbIndex.UNIQUE);
+            return type == TYPE.UNIQUE;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+	    
+	}
 }

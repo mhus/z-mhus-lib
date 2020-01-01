@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 
 import de.mhus.lib.adb.DbDynamic;
+import de.mhus.lib.annotations.adb.DbIndex;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.errors.MException;
 
@@ -49,7 +50,7 @@ public class TableDynamic extends Table {
 			// indexes
 			String[] indexes = f.getIndexes();
 			if (indexes != null) {
-				addToIndex(indexes,field);
+				addToIndex(indexes,DbIndex.TYPE.AUTO, "", field);
 			}
 
 		}
