@@ -10,6 +10,7 @@ public class LocalLock implements Lock {
     protected String name;
     protected long lockTime = 0;
     protected long cnt = 0;
+    protected String stacktrace;
 
     public LocalLock() {
     }
@@ -35,6 +36,7 @@ public class LocalLock implements Lock {
                 }
             }
             lock = Thread.currentThread();
+            stacktrace = MCast.toString("", lock.getStackTrace());
             lockTime = System.currentTimeMillis();
             cnt++;
             lockEvent(true);
@@ -80,6 +82,7 @@ public class LocalLock implements Lock {
             if (lock != Thread.currentThread()) return false;
             lockEvent(false);
             lock = null;
+            stacktrace = null;
             lockTime = 0;
             notify();
             return true;
@@ -116,7 +119,7 @@ public class LocalLock implements Lock {
     
     @Override
     public String getOwner() {
-        return lock == null ? null : MCast.toString(lock.toString(),lock.getStackTrace());
+        return lock == null ? null : lock.getId() + " " + lock.toString();
     }
     
     @Override
@@ -137,6 +140,11 @@ public class LocalLock implements Lock {
     @Override
     public long getCnt() {
         return cnt;
+    }
+    
+    @Override
+    public String getStartStackTrace() {
+        return stacktrace;
     }
 
 }

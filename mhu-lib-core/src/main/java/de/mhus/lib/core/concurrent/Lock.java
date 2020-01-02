@@ -132,5 +132,7 @@ public interface Lock extends Closeable {
     boolean refresh();
 
     long getCnt();
+
+    String getStartStackTrace();
     
 }
