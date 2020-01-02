@@ -65,6 +65,7 @@ public class LocalLock implements Lock {
               if (System.currentTimeMillis() - start >= timeout ) return false;
             }
             lock = Thread.currentThread();
+            stacktrace = MCast.toString("", lock.getStackTrace());
             lockTime = System.currentTimeMillis();
             lockEvent(true);
             return true;
@@ -98,6 +99,7 @@ public class LocalLock implements Lock {
           synchronized (this) {
             lockEvent(false);
             lock = null;
+            stacktrace = null;
             lockTime = 0;
             notify();
           }
