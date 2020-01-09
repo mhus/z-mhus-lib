@@ -33,17 +33,17 @@ import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 
-public class FolderVaultSource extends MapMutableVaultSource {
+public class VaultSourceFromSecFolder extends MapMutableVaultSource {
 
 	private SecureString passphrase;
 	private File folder;
 	private int version;
 
-	public FolderVaultSource(File folder, String passphrase, String name) throws IOException {
+	public VaultSourceFromSecFolder(File folder, String passphrase, String name) throws IOException {
 		this(folder,passphrase);
 		this.name = name;
 	}
-	public FolderVaultSource(File folder, String passphrase) throws IOException {
+	public VaultSourceFromSecFolder(File folder, String passphrase) throws IOException {
 		this.passphrase = new SecureString(passphrase);
 		this.folder = folder;
 		if (folder.exists())
@@ -164,6 +164,9 @@ public class FolderVaultSource extends MapMutableVaultSource {
 	public MutableVaultSource getEditable() {
 		return this;
 	}
+    @Override
+    protected void doCheckSource() {
+    }
 
 
 }

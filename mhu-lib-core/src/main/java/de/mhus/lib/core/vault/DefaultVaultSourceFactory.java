@@ -27,7 +27,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
 
 	private static CfgFile CFG_DEFAULT_FILE = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
 	private static CfgFile CFG_DEFAULT_FOLDER = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
-    private static CfgBoolean CFG_EDITABLE = new CfgBoolean(KubeVaultSource.class, "editable", false);
+    private static CfgBoolean CFG_EDITABLE = new CfgBoolean(VaultSourceFromPlainProperties.class, "editable", false);
 
 	@Override
 	public VaultSource create(String name, VaultPassphrase vaultPassphrase) {
@@ -35,17 +35,23 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
 		if (MVault.SOURCE_DEFAULT.equals(name)) {
 			if (CFG_DEFAULT_FILE.value().exists()) {
 			    
-			    if (CFG_DEFAULT_FILE.value().getName().endsWith(".properties")) {
-			        // for kubernetes vault files
+                if (CFG_DEFAULT_FILE.value().getName().endsWith(".json")) {
                     try {
-                        def = new KubeVaultSource(CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
+                        def = new VaultSourceFromPlainJson(CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
+                    } catch (IOException e) {
+                        log().d(e);
+                    }
+                } else 
+			    if (CFG_DEFAULT_FILE.value().getName().endsWith(".properties")) {
+                    try {
+                        def = new VaultSourceFromPlainProperties(CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
                     } catch (IOException e) {
                         log().d(e);
                     }
 			    } else {
     				// legacy
     				try {
-    					def = new FileVaultSource(CFG_DEFAULT_FILE.value(), vaultPassphrase.getPassphrase(),name);
+    					def = new VaultSourceFromSecFile(CFG_DEFAULT_FILE.value(), vaultPassphrase.getPassphrase(),name);
     				} catch (IOException e) {
     					log().d(e);
     				}
@@ -53,7 +59,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
 			} else {
 				// default
 				try {
-					def = new FolderVaultSource(CFG_DEFAULT_FOLDER.value(), vaultPassphrase.getPassphrase(),name);
+					def = new VaultSourceFromSecFolder(CFG_DEFAULT_FOLDER.value(), vaultPassphrase.getPassphrase(),name);
 				} catch (IOException e) {
 					log().w(e);
 				}
@@ -62,13 +68,13 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
 			File file = new File(name);
 			if (file.exists() && file.isFile()) {
 				try {
-					def = new FileVaultSource(file, vaultPassphrase.getPassphrase(),file.getName());
+					def = new VaultSourceFromSecFile(file, vaultPassphrase.getPassphrase(),file.getName());
 				} catch (IOException e) {
 					log().d(e);
 				}
 			} else {
 				try {
-					def = new FolderVaultSource(file, vaultPassphrase.getPassphrase(),file.getName());
+					def = new VaultSourceFromSecFolder(file, vaultPassphrase.getPassphrase(),file.getName());
 				} catch (IOException e) {
 					log().w(e);
 				}

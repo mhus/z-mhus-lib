@@ -9,12 +9,14 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.util.SecureString;
 
-public class KubeVaultSource extends MapMutableVaultSource {
+public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
 
     private boolean editable;
     private File file;
+    private long fileModified;
+    private boolean fileCanWrite;
 
-    public KubeVaultSource(File file, boolean editable, String name) throws IOException {
+    public VaultSourceFromPlainProperties(File file, boolean editable, String name) throws IOException {
         this.file = file;
         this.name = name;
         this.editable = editable;
@@ -32,6 +34,8 @@ public class KubeVaultSource extends MapMutableVaultSource {
                 entries.put(UUID.fromString(name), entry);
             }
         }
+        fileModified = file.lastModified();
+        fileCanWrite = file.canWrite();
     }
 
     @Override
@@ -43,6 +47,7 @@ public class KubeVaultSource extends MapMutableVaultSource {
             out.setString(entry.getId() + ".desc", entry.getDescription());
         }
         out.save(file);
+        fileModified = file.lastModified();
     }
 
     @Override
@@ -52,7 +57,7 @@ public class KubeVaultSource extends MapMutableVaultSource {
 
     @Override
     public MutableVaultSource getEditable() {
-        if (!editable) return null;
+        if (!editable || !fileCanWrite) return null;
         return this;
     }
 
@@ -95,5 +100,15 @@ public class KubeVaultSource extends MapMutableVaultSource {
             return value;
         }
         
+    }
+
+    @Override
+    protected void doCheckSource() {
+        if (file.lastModified() != fileModified)
+            try {
+                doLoad();
+            } catch (IOException e) {
+                log().e(file,e);
+            }
     }
 }

@@ -29,16 +29,16 @@ import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
-public class FileVaultSource extends MapMutableVaultSource {
+public class VaultSourceFromSecFile extends MapMutableVaultSource {
 
 	private SecureString passphrase;
 	private File file;
 
-	public FileVaultSource(File file, String passphrase, String name) throws IOException {
+	public VaultSourceFromSecFile(File file, String passphrase, String name) throws IOException {
 		this(file,passphrase);
 		this.name = name;
 	}
-	public FileVaultSource(File file, String passphrase) throws IOException {
+	public VaultSourceFromSecFile(File file, String passphrase) throws IOException {
 		this.passphrase = new SecureString(passphrase);
 		this.file = file;
 		if (file.exists())
@@ -112,6 +112,9 @@ public class FileVaultSource extends MapMutableVaultSource {
 	public MutableVaultSource getEditable() {
 		return this;
 	}
+    @Override
+    protected void doCheckSource() {
+    }
 
 
 }

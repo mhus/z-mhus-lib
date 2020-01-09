@@ -56,7 +56,7 @@ public class MVaultUtil {
 		if (args.contains("file")) {
 			String vp = args.getValue("passphrase", "setit", 0);
 			File f = new File(args.getValue("file", 0));
-			source = new FileVaultSource(f, vp);
+			source = new VaultSourceFromSecFile(f, vp);
 			vault.registerSource(source);
 		}
 		if (source == null) source = vault.getSource(MVault.SOURCE_DEFAULT);

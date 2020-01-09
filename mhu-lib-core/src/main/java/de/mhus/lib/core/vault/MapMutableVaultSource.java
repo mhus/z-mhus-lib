@@ -31,6 +31,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 	
 	@Override
 	public VaultEntry getEntry(UUID id) {
+	    doCheckSource();
 		synchronized (entries) {
 			return entries.get(id);
 		}
@@ -38,6 +39,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 
 	@Override
 	public Set<UUID> getEntryIds() {
+        doCheckSource();
 		synchronized (entries) {
 			return Collections.unmodifiableSet(entries.keySet());
 		}
@@ -50,6 +52,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 
 	@Override
 	public void addEntry(VaultEntry entry) throws MException {
+        doCheckSource();
 		synchronized (entries) {
 			entries.put(entry.getId(), entry);
 		}
@@ -57,12 +60,15 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 	
 	@Override
 	public void removeEntry(UUID id) throws MException {
+        doCheckSource();
 		synchronized (entries) {
 			entries.remove(id);
 		}
 	}
 		
-	@Override
+	protected abstract void doCheckSource();
+
+    @Override
 	public String toString() {
 		return MSystem.toString(this, name, entries.size());
 	}
