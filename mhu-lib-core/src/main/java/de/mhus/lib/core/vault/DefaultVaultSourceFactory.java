@@ -26,7 +26,7 @@ import de.mhus.lib.core.cfg.CfgFile;
 public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactory {
 
 	private static CfgFile CFG_DEFAULT_FILE = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.ETC,"de.mhus.lib.core.vault.FileVaultSource.dat") );
-	private static CfgFile CFG_DEFAULT_FOLDER = new CfgFile(MVault.class, "file", MApi.getFile(MApi.SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
+	private static CfgFile CFG_DEFAULT_FOLDER = new CfgFile(MVault.class, "folder", MApi.getFile(MApi.SCOPE.DATA,"de.mhus.lib.core.vault.FolderVaultSource") );
     private static CfgBoolean CFG_EDITABLE = new CfgBoolean(VaultSourceFromPlainProperties.class, "editable", false);
 
 	@Override
