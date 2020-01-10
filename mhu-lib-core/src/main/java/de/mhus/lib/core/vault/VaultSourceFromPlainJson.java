@@ -8,6 +8,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
@@ -82,8 +83,8 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         public PlainEntry(JsonNode node) {
             id = UUID.fromString(node.get("id").asText());
             value = new SecureString(node.get("value").asText());
-            type = node.get("type").asText();
-            desc = node.get("desc").asText();
+            type = M.get(node, "type", null);
+            desc = M.get(node, "desc", null);
         }
 
         @Override

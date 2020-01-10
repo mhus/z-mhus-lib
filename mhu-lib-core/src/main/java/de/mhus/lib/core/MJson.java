@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -420,10 +421,37 @@ public class MJson {
 	public static String getText(JsonNode parent, String path, String def ) {
 		JsonNode node = getByPath(parent, path);
 		if (node == null) return def;
-		String out = null;
-		out = node.getTextValue();
-		if (out == null) out = def;
-		return out;
+		if (node.isTextual()) {
+		    String out = null;
+    		out = node.getTextValue();
+    		if (out == null) out = def;
+    		return out;
+		}
+		if (node.isBoolean()) {
+		    boolean out = node.getBooleanValue();
+		    return MCast.toString(out);
+		}
+		if (node.isInt()) {
+		    int out = node.getIntValue();
+            return MCast.toString(out);
+		}
+        if (node.isDouble()) {
+            double out = node.getDoubleValue();
+            return MCast.toString(out);
+        }
+        if (node.isLong()) {
+            long out = node.getLongValue();
+            return MCast.toString(out);
+        }
+        if (node.isBigInteger()) {
+            BigInteger out = node.getBigIntegerValue();
+            return MCast.toString(out);
+        }
+        if (node.isBigDecimal()) {
+            BigDecimal out = node.getDecimalValue();
+            return MCast.toString(out);
+        }
+        return node.toString();
 	}
 	
 	/*

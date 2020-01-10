@@ -17,6 +17,8 @@ package de.mhus.lib.core;
 
 import java.util.Date;
 
+import org.codehaus.jackson.JsonNode;
+
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.pojo.MPojo;
 
@@ -119,6 +121,18 @@ public class M {
      */
     public static <T,D extends T> T l(Class<T> class1, Class<D> def) {
         return MApi.lookup(class1, def);
+    }
+    
+    /**
+     * Return the node value as string or default.
+     * 
+     * @param node
+     * @param path
+     * @param def
+     * @return
+     */
+    public static String get(JsonNode node, String path, String def) {
+        return MJson.getText(node, path, def);
     }
     
 }
