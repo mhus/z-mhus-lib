@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public abstract class CfgValue<T> {
 
@@ -70,7 +71,11 @@ public abstract class CfgValue<T> {
 		onPreUpdate(newValue);
 		this.value = newValue;
 		this.updated = System.currentTimeMillis();
-		onPostUpdate(value);
+		try {
+		    onPostUpdate(value);
+		} catch (Throwable t) {
+		    MLogUtil.log().d(this,t);
+		}
 	}
 
 	protected abstract T loadValue();
