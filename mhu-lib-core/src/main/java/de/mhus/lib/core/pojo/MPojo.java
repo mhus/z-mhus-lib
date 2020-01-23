@@ -15,7 +15,11 @@
  */
 package de.mhus.lib.core.pojo;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -282,7 +286,25 @@ public class MPojo {
 				if (type == Integer.class || type == int.class)
 					attr.set(to, json.asInt(0));
 				else
-				if (type == String.class)
+                if (type == Long.class || type == long.class)
+                    attr.set(to, json.asLong(0));
+                else
+                if (type == Double.class || type == double.class)
+                    attr.set(to, json.asDouble(0));
+                else
+                if (type == Float.class || type == float.class)
+                    attr.set(to, (float)json.asDouble(0));
+                else
+                if (type == Byte.class || type == byte.class)
+                    attr.set(to, (byte)json.asInt(0));
+                else
+                if (type == Short.class || type == short.class)
+                    attr.set(to, (short)json.asInt(0));
+                else
+                if (type == Character.class || type == char.class)
+                    attr.set(to, (char)json.asInt(0));
+                else
+                if (type == String.class)
 					attr.set(to, json.asText());
 				else
 				if (type == UUID.class)
@@ -667,5 +689,52 @@ public class MPojo {
 			}
 		}
 	}
+	
+    public static void pojoToObjectStream(Object from, ObjectOutputStream to) throws IOException {
+        pojoToObjectStream(from, to, getDefaultModelFactory());
+    }
+    
+	public static void pojoToObjectStream(Object from, ObjectOutputStream to, PojoModelFactory factory) throws IOException {
+       PojoModel model = factory.createPojoModel(from.getClass());
+        for (PojoAttribute<?> attr : model) {
+            String name = attr.getName();
+            Object value = attr.get(from);
+            to.writeObject(name);
+            to.writeObject(value);
+        }
+        to.writeObject(" ");
+	}
+	
+    public static void objectStreamToPojo(ObjectInputStream from, Object to) throws IOException, ClassNotFoundException {
+        objectStreamToPojo(from, to, getDefaultModelFactory());
+    }
+    
+	@SuppressWarnings("unchecked")
+    public static void objectStreamToPojo(ObjectInputStream from, Object to, PojoModelFactory factory) throws IOException, ClassNotFoundException {
+	    PojoModel model = factory.createPojoModel(to.getClass());
+	    while (true) {
+	        String name = (String) from.readObject();
+	        if (name.equals(" ")) break;
+	        Object value = from.readObject();
+	        @SuppressWarnings("rawtypes")
+            PojoAttribute attr = model.getAttribute(name);
+	        if (attr != null)
+	            attr.set(to, value);
+	    }
+	}
+
+    public static void base64ToObject(String content, Object obj, PojoModelFactory factory) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(content));
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        MPojo.objectStreamToPojo(ois, obj, factory);
+    }
+
+    public static String objectToBase64(Object obj, PojoModelFactory factory) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        MPojo.pojoToObjectStream(obj, oos, factory);
+        
+        return Base64.encode(baos.toByteArray());
+    }
 
 }
