@@ -27,6 +27,8 @@ import java.io.ObjectOutput;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Dictionary;
@@ -329,6 +331,12 @@ public class MProperties extends AbstractProperties implements Externalizable {
         out.load0(new LineReader(inStream));
         return out;
     }
+    
+    public static MProperties loadFromString(String content) {
+        StringReader reader = new StringReader(content);
+        return load(reader);
+    }
+    
 
     private void load0 (LineReader lr) throws IOException {
         char[] convtBuf = new char[1024];
@@ -609,6 +617,16 @@ public class MProperties extends AbstractProperties implements Externalizable {
 		fos.close();
 		return ret;
 	}
+
+    public String saveToString() {
+        StringWriter out = new StringWriter();
+        try {
+            store(new BufferedWriter(out), true);
+        } catch (IOException e) {
+            log().e(e);
+        }
+        return out.toString();
+    }
 
 	public boolean save(OutputStream out) throws IOException {
 		store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)),true);
