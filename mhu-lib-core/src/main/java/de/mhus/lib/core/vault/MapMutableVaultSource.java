@@ -66,10 +66,18 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 	public void addEntry(VaultEntry entry) throws MException {
         doCheckSource();
 		synchronized (entries) {
-			entries.put(entry.getId(), entry);
+			entries.put(entry.getId(), new DefaultEntry(entry));
 		}
 	}
 	
+    @Override
+    public void updateEntry(VaultEntry entry) throws MException {
+        doCheckSource();
+        synchronized (entries) {
+            entries.put(entry.getId(), new DefaultEntry(entry));
+        }
+    }
+    
 	@Override
 	public void removeEntry(UUID id) throws MException {
         doCheckSource();

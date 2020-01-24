@@ -54,6 +54,16 @@ public class DefaultEntry implements VaultEntry {
 		this.value = value;
 	}
 	
+    public DefaultEntry(VaultEntry clone) {
+        this(
+                clone.getId(),
+                clone.getType(),
+                clone.getName(),
+                clone.getDescription(),
+                clone.getValue()
+            );
+    }
+    
 	@Override
 	public UUID getId() {
 		return id;

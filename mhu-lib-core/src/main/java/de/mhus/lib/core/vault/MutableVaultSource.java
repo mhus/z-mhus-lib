@@ -36,5 +36,7 @@ public interface MutableVaultSource extends VaultSource {
 	 * @return true if storage is in memory
 	 */
 	boolean isMemoryBased();
+
+    void updateEntry(VaultEntry entry) throws MException;
 	
 }
