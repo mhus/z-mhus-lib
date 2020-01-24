@@ -46,5 +46,14 @@ public interface VaultSource {
 	 * @return editable vault source
 	 */
 	MutableVaultSource getEditable();
+
+    /**
+     * Return a entry by name or null if not found.
+     * Return the first entry found.
+     * 
+     * @param name
+     * @return The id or null
+     */
+    VaultEntry getEntry(String name);
 	
 }

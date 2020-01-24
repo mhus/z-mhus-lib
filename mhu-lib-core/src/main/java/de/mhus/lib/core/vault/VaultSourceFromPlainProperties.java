@@ -43,6 +43,7 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
         MProperties out = new MProperties();
         for (VaultEntry entry : entries.values()) {
             out.setString(entry.getId().toString(), entry.getValue().value());
+            out.setString(entry.getId() + ".name", entry.getName());
             out.setString(entry.getId() + ".type", entry.getType());
             out.setString(entry.getId() + ".desc", entry.getDescription());
         }
@@ -70,12 +71,14 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
 
         private UUID id;
         private SecureString value;
+        private String name;
         private String type;
         private String desc;
 
         public PlainEntry(MProperties prop, String name) {
             id = UUID.fromString(name);
             value = new SecureString(prop.getString(name, null));
+            name = prop.getString(name + ".name", "");
             type = prop.getString(name + ".type", "");
             desc = prop.getString(name + ".desc", "");
         }
@@ -98,6 +101,11 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
         @Override
         public SecureString getValue() {
             return value;
+        }
+
+        @Override
+        public String getName() {
+            return name;
         }
         
     }

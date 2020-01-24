@@ -73,6 +73,7 @@ public class DefaultVault extends MObject implements MVault {
 
 	@Override
 	public VaultSource getSource(String name) {
+        if (name == null) return null;
 		synchronized (sources) {
 			VaultSource ret = sources.get(name);
 			if (ret == null && parent != null)
@@ -84,6 +85,7 @@ public class DefaultVault extends MObject implements MVault {
 
 	@Override
 	public VaultEntry getEntry(UUID id) {
+        if (id == null) return null;
 		synchronized (sources) {
 			for (VaultSource source : sources.values()) {
 				VaultEntry res = source.getEntry(id);
@@ -94,5 +96,19 @@ public class DefaultVault extends MObject implements MVault {
 			return parent.getEntry(id);
 		return null;
 	}
+
+    @Override
+    public VaultEntry getEntry(String name) {
+        if (name == null) return null;
+        synchronized (sources) {
+            for (VaultSource source : sources.values()) {
+                VaultEntry res = source.getEntry(name);
+                if (res != null) return res;
+            }
+        }
+        if (parent != null)
+            return parent.getEntry(name);
+        return null;
+    }
 
 }

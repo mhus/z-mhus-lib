@@ -37,6 +37,18 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
 		}
 	}
 
+    @Override
+    public VaultEntry getEntry(String name) {
+        doCheckSource();
+        synchronized (entries) {
+            // TODO optimize !!!
+            for (VaultEntry entry : entries.values())
+                if (name.equals(entry.getName()))
+                    return entry;
+        }
+        return null;
+    }
+    
 	@Override
 	public Set<UUID> getEntryIds() {
         doCheckSource();

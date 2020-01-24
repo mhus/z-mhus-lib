@@ -10,9 +10,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.util.SecureString;
 
 public class VaultSourceFromPlainJson extends MapMutableVaultSource {
@@ -50,6 +48,7 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
             json.add(jEntry);
             jEntry.put("id", entry.getId().toString());
             jEntry.put("value", entry.getValue().value());
+            jEntry.put("name", entry.getName());
             jEntry.put("type", entry.getType());
             jEntry.put("desc", entry.getDescription());
         }
@@ -78,11 +77,13 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         private UUID id;
         private SecureString value;
         private String type;
+        private String name;
         private String desc;
 
         public PlainEntry(JsonNode node) {
             id = UUID.fromString(node.get("id").asText());
             value = new SecureString(node.get("value").asText());
+            name = M.get(node, "name", null);
             type = M.get(node, "type", null);
             desc = M.get(node, "desc", null);
         }
@@ -105,6 +106,11 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         @Override
         public SecureString getValue() {
             return value;
+        }
+
+        @Override
+        public String getName() {
+            return name;
         }
         
     }

@@ -71,4 +71,13 @@ public interface MVault {
 	 */
 	VaultEntry getEntry(UUID id);
 	
+    /**
+     * Return a entry by name or null if not found.
+     * The method will return the first entry found.
+     * 
+     * @param name
+     * @return The entry or null.
+     */
+    VaultEntry getEntry(String name);
+    
 }

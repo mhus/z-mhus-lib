@@ -26,27 +26,30 @@ public class DefaultEntry implements VaultEntry {
 	protected String type;
 	protected String description;
 	protected SecureString value;
+	private String name;
 	
 	public DefaultEntry() {}
 	
-	public DefaultEntry(UUID id, String type, String description, String value) {
-		this(type,description,value);
+	public DefaultEntry(UUID id, String type, String name, String description, String value) {
+		this(type, name, description,value);
 		this.id = id;
 	}
 	
-	public DefaultEntry(UUID id, String type, String description, SecureString value) {
-		this(type,description,value);
+	public DefaultEntry(UUID id, String type, String name, String description, SecureString value) {
+		this(type,name,description,value);
 		this.id = id;
 	}
 
-	public DefaultEntry(String type, String description, String value) {
+	public DefaultEntry(String type, String name, String description, String value) {
 		this.type = type;
+		this.name = name;
 		this.description = description;
 		this.value = new SecureString(value);
 	}
 	
-	public DefaultEntry(String type, String description, SecureString value) {
+	public DefaultEntry(String type, String name, String description, SecureString value) {
 		this.type = type;
+        this.name = name;
 		this.description = description;
 		this.value = value;
 	}
@@ -75,5 +78,10 @@ public class DefaultEntry implements VaultEntry {
 	public String getDescription() {
 		return description;
 	}
+
+    @Override
+    public String getName() {
+        return name;
+    }
 
 }

@@ -48,4 +48,9 @@ public interface VaultEntry {
 	 */
 	SecureString getValue();
 	
+	/**
+	 * Return a technical name of the entry.
+	 * @return The name
+	 */
+	String getName();
 }
