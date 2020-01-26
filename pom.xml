@@ -22,16 +22,20 @@
 	<modelVersion>4.0.0</modelVersion>
     <parent>
 		<groupId>de.mhus.lib</groupId>
-		<version>6.4.0</version>
+		<version>6.4.1-SNAPSHOT</version>
 	    <artifactId>mhus-oss</artifactId>
     </parent>
-    <version>6.3.0</version>
+    <version>6.3.1-SNAPSHOT</version>
 	<artifactId>mhus-lib</artifactId>
 	<packaging>pom</packaging>
 	<description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
 	<url>http://www.mhus.org</url>
 	<name>mhus-lib</name>
-
+    
+    <properties>
+        <mhus-lib.version>${project.version}</mhus-lib.version>
+    </properties>
+    
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
