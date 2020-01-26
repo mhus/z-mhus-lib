@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.xdb;
@@ -26,54 +24,54 @@ import de.mhus.lib.errors.NotFoundException;
 
 public interface XdbService {
 
-	boolean isConnected();
+    boolean isConnected();
 
-	List<String> getTypeNames();
-	
-	<T> XdbType<T> getType(String name) throws NotFoundException;
+    List<String> getTypeNames();
 
-	String getSchemaName();
+    <T> XdbType<T> getType(String name) throws NotFoundException;
 
-//	String getDataSourceName();
+    String getSchemaName();
 
-	void updateSchema(boolean cleanup) throws MException;
+    //	String getDataSourceName();
 
-	void connect() throws Exception;
+    void updateSchema(boolean cleanup) throws MException;
 
-	default <T> T getObjectByQualification(AQuery<T> query) throws MException {
-		@SuppressWarnings("unchecked")
-		XdbType<T> type = (XdbType<T>) getType(query.getType());
-		return type.getObjectByQualification(query);
-	}
+    void connect() throws Exception;
 
-	default <T> DbCollection<T> getByQualification(AQuery<T> query) throws MException {
-		@SuppressWarnings("unchecked")
-		XdbType<T> type = (XdbType<T>) getType(query.getType());
-		return type.getByQualification(query);
-	}
+    default <T> T getObjectByQualification(AQuery<T> query) throws MException {
+        @SuppressWarnings("unchecked")
+        XdbType<T> type = (XdbType<T>) getType(query.getType());
+        return type.getObjectByQualification(query);
+    }
 
-   default <T extends Persistable> DbCollection<T> getAll(Class<T> type) throws MException {
+    default <T> DbCollection<T> getByQualification(AQuery<T> query) throws MException {
+        @SuppressWarnings("unchecked")
+        XdbType<T> type = (XdbType<T>) getType(query.getType());
+        return type.getByQualification(query);
+    }
+
+    default <T extends Persistable> DbCollection<T> getAll(Class<T> type) throws MException {
         XdbType<T> xType = (XdbType<T>) getType(type);
         return xType.getAll();
     }
 
-	default <T> long count(AQuery<T> query) throws MException {
-		@SuppressWarnings("unchecked")
-		XdbType<T> type = (XdbType<T>) getType(query.getType());
-		return type.count(query);
-	}
-	
-	<T> XdbType<T> getType(Class<T> type) throws NotFoundException;
+    default <T> long count(AQuery<T> query) throws MException {
+        @SuppressWarnings("unchecked")
+        XdbType<T> type = (XdbType<T>) getType(query.getType());
+        return type.count(query);
+    }
 
-	<T extends Persistable> T inject(T object);
+    <T> XdbType<T> getType(Class<T> type) throws NotFoundException;
 
-	<T> T getObject(Class<T> clazz, Object ... keys) throws MException;
+    <T extends Persistable> T inject(T object);
 
-	PojoModelFactory getPojoModelFactory();
+    <T> T getObject(Class<T> clazz, Object... keys) throws MException;
 
-	String getDataSourceName();
+    PojoModelFactory getPojoModelFactory();
 
-	void delete(Persistable object) throws MException;
-	void save(Persistable object) throws MException;
+    String getDataSourceName();
 
+    void delete(Persistable object) throws MException;
+
+    void save(Persistable object) throws MException;
 }

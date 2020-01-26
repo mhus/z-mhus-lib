@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.jmx;
@@ -23,67 +21,63 @@ import de.mhus.lib.core.lang.MObject;
 
 public class JmxObject extends MObject implements JmxObjectMBean {
 
-	private boolean jmxRegistered = false;
-	private ObjectName objectName;
-	protected String jmxName = "Bean";
-	protected String jmxType = "MObject";
-	protected String jmxPackage = JmxObject.class.getCanonicalName();
-	protected boolean jmxFixName = false;
-	
-	public JmxObject() {
-		jmxType = MString.afterLastIndex(getClass().getCanonicalName(), '.');
-	}
-	
-	public ObjectName getJmxObjectName() throws MalformedObjectNameException {
-		if (objectName == null)
-			objectName = createJmxObjectName();
-		return objectName;
-	}
+    private boolean jmxRegistered = false;
+    private ObjectName objectName;
+    protected String jmxName = "Bean";
+    protected String jmxType = "MObject";
+    protected String jmxPackage = JmxObject.class.getCanonicalName();
+    protected boolean jmxFixName = false;
 
-	protected ObjectName createJmxObjectName() throws MalformedObjectNameException {
-		return new ObjectName(getJmxPackage() + ":name=" + getJmxName() + ",type=" + getJmxType());
-	}
+    public JmxObject() {
+        jmxType = MString.afterLastIndex(getClass().getCanonicalName(), '.');
+    }
 
-	protected String getJmxType() {
-		return jmxType;
-	}
+    public ObjectName getJmxObjectName() throws MalformedObjectNameException {
+        if (objectName == null) objectName = createJmxObjectName();
+        return objectName;
+    }
 
-	protected String getJmxPackage() {
-		return jmxPackage;
-	}
-	
-	protected String getJmxName() {
-		return jmxName;
-	}
-	
-	public void setJmxRegistered(boolean b) {
-		jmxRegistered = b;
-	}
-	
-	public boolean isJmxRegistered() {
-		return jmxRegistered;
-	}
+    protected ObjectName createJmxObjectName() throws MalformedObjectNameException {
+        return new ObjectName(getJmxPackage() + ":name=" + getJmxName() + ",type=" + getJmxType());
+    }
 
-	public void setJmxName(String in) {
-		if (isJmxRegistered()) return;
-		if (jmxName.equals(in)) return;
-		jmxName = in;
-		objectName = null;
-	}
+    protected String getJmxType() {
+        return jmxType;
+    }
 
-	public void setJmxPackage(String in) {
-		if (isJmxRegistered()) return;
-		if (jmxPackage.equals(in)) return;
-		jmxPackage = in;
-		objectName = null;
-	}
+    protected String getJmxPackage() {
+        return jmxPackage;
+    }
 
-	public boolean isJmxFixName() {
-		return jmxFixName;
-	}
+    protected String getJmxName() {
+        return jmxName;
+    }
 
-	public void setJmxProxy(MBeanProxy mBeanProxy) {
-		
-	}
+    public void setJmxRegistered(boolean b) {
+        jmxRegistered = b;
+    }
 
+    public boolean isJmxRegistered() {
+        return jmxRegistered;
+    }
+
+    public void setJmxName(String in) {
+        if (isJmxRegistered()) return;
+        if (jmxName.equals(in)) return;
+        jmxName = in;
+        objectName = null;
+    }
+
+    public void setJmxPackage(String in) {
+        if (isJmxRegistered()) return;
+        if (jmxPackage.equals(in)) return;
+        jmxPackage = in;
+        objectName = null;
+    }
+
+    public boolean isJmxFixName() {
+        return jmxFixName;
+    }
+
+    public void setJmxProxy(MBeanProxy mBeanProxy) {}
 }

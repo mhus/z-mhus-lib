@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.servlet;
@@ -26,66 +24,65 @@ import de.mhus.lib.core.IProperties;
 
 public interface RequestWrapper {
 
-	Object getAttribute(String name);
+    Object getAttribute(String name);
 
-	Cookie[] getCookies();
+    Cookie[] getCookies();
 
-	Iterator<String> getAttributeNames();
+    Iterator<String> getAttributeNames();
 
-	long getDateHeader(String name);
+    long getDateHeader(String name);
 
-	String getCharacterEncoding();
+    String getCharacterEncoding();
 
-	String getHeader(String name);
+    String getHeader(String name);
 
-	Enumeration<String> getHeaders(String name);
+    Enumeration<String> getHeaders(String name);
 
-	String getParameter(String name);
+    String getParameter(String name);
 
-	Iterator<String> getHeaderNames();
+    Iterator<String> getHeaderNames();
 
-	int getIntHeader(String name);
+    int getIntHeader(String name);
 
-	Iterator<String> getParameterNames();
+    Iterator<String> getParameterNames();
 
-	String getMethod();
+    String getMethod();
 
-	String[] getParameterValues(String name);
+    String[] getParameterValues(String name);
 
-	String getPathInfo();
+    String getPathInfo();
 
-	Map<String, String[]> getParameterMap();
+    Map<String, String[]> getParameterMap();
 
-	String getProtocol();
+    String getProtocol();
 
-	String getServerName();
+    String getServerName();
 
-	int getServerPort();
+    int getServerPort();
 
-	String getQueryString();
+    String getQueryString();
 
-	String getRemoteUser();
+    String getRemoteUser();
 
-	String getRemoteAddr();
+    String getRemoteAddr();
 
-	String getRemoteHost();
+    String getRemoteHost();
 
-	void setAttribute(String name, Object o);
+    void setAttribute(String name, Object o);
 
-	void removeAttribute(String name);
+    void removeAttribute(String name);
 
-	String getRequestedSessionId();
+    String getRequestedSessionId();
 
-	boolean isSecure();
+    boolean isSecure();
 
-	IProperties getSession(boolean create);
+    IProperties getSession(boolean create);
 
-	int getRemotePort();
+    int getRemotePort();
 
-	ServletContext getServletContext();
+    ServletContext getServletContext();
 
-	IProperties getSession();
+    IProperties getSession();
 
-	String getSessionId();
-
+    String getSessionId();
 }

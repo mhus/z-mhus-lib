@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.adb.model;
@@ -30,184 +28,175 @@ import de.mhus.lib.sql.DbResult;
 
 public abstract class Field extends MObject {
 
-	protected boolean isPrimary;
-	protected String name;
-	protected String nameOrg;
-	protected String createName;
-	protected Table table;
-	protected DbManager manager;
-	protected boolean nullable = true;
-	protected String defValue = null;
-	protected String description;
-	protected String[] hints;
-	protected int size = 200;
-	protected String retDbType;
-	protected String methodName;
-	protected boolean autoId;
-	protected ResourceNode<?> attr;
-	protected DbDynamic.Field dynamicField;
-	protected PojoAttribute<Object> attribute;
-	private LinkedList<AttributeFeature> features = new LinkedList<>();
-	protected boolean readOnly = false;
+    protected boolean isPrimary;
+    protected String name;
+    protected String nameOrg;
+    protected String createName;
+    protected Table table;
+    protected DbManager manager;
+    protected boolean nullable = true;
+    protected String defValue = null;
+    protected String description;
+    protected String[] hints;
+    protected int size = 200;
+    protected String retDbType;
+    protected String methodName;
+    protected boolean autoId;
+    protected ResourceNode<?> attr;
+    protected DbDynamic.Field dynamicField;
+    protected PojoAttribute<Object> attribute;
+    private LinkedList<AttributeFeature> features = new LinkedList<>();
+    protected boolean readOnly = false;
 
-	public abstract void prepareCreate(Object obj) throws Exception;
-	public abstract boolean isPersistent();
-	public abstract Object getFromTarget(Object obj) throws Exception;
-	public abstract void setToTarget(DbResult res, Object obj) throws Exception;
-	public abstract boolean changed(DbResult res, Object obj) throws Exception;
-	public abstract void fillNameMapping(HashMap<String, Object> nameMapping);
+    public abstract void prepareCreate(Object obj) throws Exception;
 
-	protected void init(String[] features) throws MException {
-		if (features != null) {
-			for (String featureName : features) {
-				AttributeFeature f = manager.getSchema().createAttributeFeature(manager, this, featureName);
-				if (f != null) this.features.add(f);
-			}
-		}
-	}
+    public abstract boolean isPersistent();
 
-	public void set(Object obj, Object value) throws Exception {
+    public abstract Object getFromTarget(Object obj) throws Exception;
 
-		if (attribute.getType().isEnum()) {
-			int index = -1;
-			if (value == null)
-				index= MCast.toint(defValue, -1);
-			else
-				if (value instanceof Number)
-					index = ((Number)value).intValue();
+    public abstract void setToTarget(DbResult res, Object obj) throws Exception;
 
-			Object[] values=attribute.getType().getEnumConstants();
-			if (value instanceof String) {
-				for (int i = 0; i < values.length; i++)
-					if (values[i].toString().equals(value)) index = i;
-				if (index < 0)
-					index = MCast.toint(value, -1);
-			}
+    public abstract boolean changed(DbResult res, Object obj) throws Exception;
 
-			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
+    public abstract void fillNameMapping(HashMap<String, Object> nameMapping);
 
-			value = values[index];
+    protected void init(String[] features) throws MException {
+        if (features != null) {
+            for (String featureName : features) {
+                AttributeFeature f =
+                        manager.getSchema().createAttributeFeature(manager, this, featureName);
+                if (f != null) this.features.add(f);
+            }
+        }
+    }
 
-		}
+    public void set(Object obj, Object value) throws Exception {
 
-		for (Feature f : table.getFeatures())
-			value = f.setValue(obj, this, value);
+        if (attribute.getType().isEnum()) {
+            int index = -1;
+            if (value == null) index = MCast.toint(defValue, -1);
+            else if (value instanceof Number) index = ((Number) value).intValue();
 
-		for (AttributeFeature f : features)
-			value = f.set(obj, value);
+            Object[] values = attribute.getType().getEnumConstants();
+            if (value instanceof String) {
+                for (int i = 0; i < values.length; i++)
+                    if (values[i].toString().equals(value)) index = i;
+                if (index < 0) index = MCast.toint(value, -1);
+            }
 
-		if (dynamicField != null && obj instanceof DbDynamic)
-			((DbDynamic)obj).setValue(dynamicField,value);
-		else
-			attribute.set(obj,value);
-	}
+            if (index < 0 || index >= values.length)
+                throw new MException("index not found in enum", attribute.getType().getName());
 
-	public boolean different(Object obj, Object value) throws Exception {
+            value = values[index];
+        }
 
-		if (attribute.getType().isEnum()) {
-			int index = -1;
-			if (value == null)
-				index= MCast.toint(defValue, -1);
-			else
-				if (value instanceof Number)
-					index = ((Number)value).intValue();
+        for (Feature f : table.getFeatures()) value = f.setValue(obj, this, value);
 
-			Object[] values=attribute.getType().getEnumConstants();
-			if (index < 0 || index >= values.length) throw new MException("index not found in enum",attribute.getType().getName());
+        for (AttributeFeature f : features) value = f.set(obj, value);
 
-			value = values[index];
+        if (dynamicField != null && obj instanceof DbDynamic)
+            ((DbDynamic) obj).setValue(dynamicField, value);
+        else attribute.set(obj, value);
+    }
 
-			Object objValue = null;
+    public boolean different(Object obj, Object value) throws Exception {
 
-			if (dynamicField != null && obj instanceof DbDynamic)
-				objValue = ((DbDynamic)obj).getValue(dynamicField);
-			else
-				objValue = attribute.get(obj);
+        if (attribute.getType().isEnum()) {
+            int index = -1;
+            if (value == null) index = MCast.toint(defValue, -1);
+            else if (value instanceof Number) index = ((Number) value).intValue();
 
-			return !MSystem.equals(String.valueOf(value), String.valueOf(objValue));
-		}
+            Object[] values = attribute.getType().getEnumConstants();
+            if (index < 0 || index >= values.length)
+                throw new MException("index not found in enum", attribute.getType().getName());
 
-		for (Feature f : table.getFeatures())
-			value = f.setValue(obj, this, value);
+            value = values[index];
 
-		for (AttributeFeature f : features)
-			value = f.set(obj, value);
+            Object objValue = null;
 
-		Object objValue = null;
+            if (dynamicField != null && obj instanceof DbDynamic)
+                objValue = ((DbDynamic) obj).getValue(dynamicField);
+            else objValue = attribute.get(obj);
 
-		if (dynamicField != null && obj instanceof DbDynamic)
-			objValue = ((DbDynamic)obj).getValue(dynamicField);
-		else
-			objValue = attribute.get(obj);
+            return !MSystem.equals(String.valueOf(value), String.valueOf(objValue));
+        }
 
-		//		for (AttributeFeature f : features)
-		//			objValue = f.get(obj, objValue);
-		//
-		//		for (Feature f : table.getFeatures())
-		//			objValue = f.get(obj, this, objValue);
+        for (Feature f : table.getFeatures()) value = f.setValue(obj, this, value);
 
-		return !MSystem.equals(value, objValue);
-	}
+        for (AttributeFeature f : features) value = f.set(obj, value);
 
-	public Object get(Object obj) throws Exception {
-		Object val = null;
-		if (dynamicField != null && obj instanceof DbDynamic)
-			val = ((DbDynamic)obj).getValue(dynamicField);
-		else
-			val = attribute.get(obj);
+        Object objValue = null;
 
-		for (AttributeFeature f : features)
-			val = f.get(obj, val);
+        if (dynamicField != null && obj instanceof DbDynamic)
+            objValue = ((DbDynamic) obj).getValue(dynamicField);
+        else objValue = attribute.get(obj);
 
-		for (Feature f : table.getFeatures())
-			val = f.getValue(obj, this, val);
+        //		for (AttributeFeature f : features)
+        //			objValue = f.get(obj, objValue);
+        //
+        //		for (Feature f : table.getFeatures())
+        //			objValue = f.get(obj, this, objValue);
 
-		return val;
-	}
+        return !MSystem.equals(value, objValue);
+    }
 
-	public ResourceNode<?> getAttributes() {
-		return attr;
-	}
-	public int getSize() {
-		return size;
-	}
-	public Class<?> getType() {
-		return attribute.getType();
-	}
+    public Object get(Object obj) throws Exception {
+        Object val = null;
+        if (dynamicField != null && obj instanceof DbDynamic)
+            val = ((DbDynamic) obj).getValue(dynamicField);
+        else val = attribute.get(obj);
 
-	public String getName() {
-		return methodName;
-	}
+        for (AttributeFeature f : features) val = f.get(obj, val);
 
-	public String getMappedName() {
-		return name;
-	}
+        for (Feature f : table.getFeatures()) val = f.getValue(obj, this, val);
 
-	public String getDescription() {
-		return description;
-	}
-	
-	public String[] getHints() {
-		return hints;
-	}
-	public boolean isReadOnly() {
-		return readOnly;
-	}
+        return val;
+    }
 
-	public boolean isTechnical() {
-		return isHint("technical");
-	}
-	
-	public boolean isHint(String string) {
-		if (hints == null) return false;
-		for (String h : hints)
-			if (h.equals(string)) return true;
-		return false;
-	}
+    public ResourceNode<?> getAttributes() {
+        return attr;
+    }
 
-	@Override
-	public String toString() {
-		return MSystem.toString(this, name);
-	}
+    public int getSize() {
+        return size;
+    }
 
+    public Class<?> getType() {
+        return attribute.getType();
+    }
+
+    public String getName() {
+        return methodName;
+    }
+
+    public String getMappedName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String[] getHints() {
+        return hints;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isTechnical() {
+        return isHint("technical");
+    }
+
+    public boolean isHint(String string) {
+        if (hints == null) return false;
+        for (String h : hints) if (h.equals(string)) return true;
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return MSystem.toString(this, name);
+    }
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.cao;
@@ -26,77 +24,76 @@ import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.lang.MObject;
 
 /**
- * <p>CaoDirectory class.</p>
+ * CaoDirectory class.
  *
  * @author mikehummel
  * @version $Id: $Id
  */
 public class CaoDirectory extends MObject implements IBase {
 
-	protected HashMap<String, CaoConnection> schemes = new HashMap<String, CaoConnection>();
+    protected HashMap<String, CaoConnection> schemes = new HashMap<String, CaoConnection>();
 
-	/**
-	 * <p>getScheme.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link de.mhus.lib.cao.CaoConnection} object.
-	 */
-	public CaoConnection getScheme(String name) {
-		return schemes.get(name);
-	}
+    /**
+     * getScheme.
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link de.mhus.lib.cao.CaoConnection} object.
+     */
+    public CaoConnection getScheme(String name) {
+        return schemes.get(name);
+    }
 
-	/**
-	 * <p>getInputStream.</p>
-	 *
-	 * @param uri a {@link java.net.URI} object.
-	 * @return a {@link java.io.InputStream} object.
-	 * @throws java.io.IOException if any.
-	 */
-	public InputStream getInputStream(URI uri) throws IOException {
-		String schemeName = uri.getScheme();
-		log().t(schemeName);
-		CaoConnection scheme = getScheme(schemeName);
-		if (scheme == null) return null;
+    /**
+     * getInputStream.
+     *
+     * @param uri a {@link java.net.URI} object.
+     * @return a {@link java.io.InputStream} object.
+     * @throws java.io.IOException if any.
+     */
+    public InputStream getInputStream(URI uri) throws IOException {
+        String schemeName = uri.getScheme();
+        log().t(schemeName);
+        CaoConnection scheme = getScheme(schemeName);
+        if (scheme == null) return null;
 
-		return scheme.getResourceByPath(uri.getPath()).getInputStream();
-	}
+        return scheme.getResourceByPath(uri.getPath()).getInputStream();
+    }
 
-	/**
-	 * <p>getInputStream.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.io.InputStream} object.
-	 * @throws java.net.URISyntaxException if any.
-	 * @throws java.io.IOException if any.
-	 */
-	public InputStream getInputStream(String name) throws URISyntaxException, IOException {
-		return getInputStream(new URI(name));
-	}
+    /**
+     * getInputStream.
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.io.InputStream} object.
+     * @throws java.net.URISyntaxException if any.
+     * @throws java.io.IOException if any.
+     */
+    public InputStream getInputStream(String name) throws URISyntaxException, IOException {
+        return getInputStream(new URI(name));
+    }
 
-	/**
-	 * <p>getResource.</p>
-	 *
-	 * @param uri a {@link java.net.URI} object.
-	 * @return a {@link java.net.URL} object.
-	 */
-	public URL getResource(URI uri) {
-		String schemeName = uri.getScheme();
-		log().t(schemeName);
-		CaoConnection scheme = getScheme(schemeName);
-		if (scheme == null) return null;
-		return scheme.getResourceByPath(uri.getPath()).getUrl();
-	}
+    /**
+     * getResource.
+     *
+     * @param uri a {@link java.net.URI} object.
+     * @return a {@link java.net.URL} object.
+     */
+    public URL getResource(URI uri) {
+        String schemeName = uri.getScheme();
+        log().t(schemeName);
+        CaoConnection scheme = getScheme(schemeName);
+        if (scheme == null) return null;
+        return scheme.getResourceByPath(uri.getPath()).getUrl();
+    }
 
-	/**
-	 * <p>getResource.</p>
-	 *
-	 * @param name a {@link java.lang.String} object.
-	 * @return a {@link java.net.URL} object.
-	 * @throws java.net.URISyntaxException if any.
-	 */
-	public URL getResource(String name) throws URISyntaxException {
-		URI uri = new URI(name);
-		return getResource(uri);
-	}
-
+    /**
+     * getResource.
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.net.URL} object.
+     * @throws java.net.URISyntaxException if any.
+     */
+    public URL getResource(String name) throws URISyntaxException {
+        URI uri = new URI(name);
+        return getResource(uri);
+    }
 }

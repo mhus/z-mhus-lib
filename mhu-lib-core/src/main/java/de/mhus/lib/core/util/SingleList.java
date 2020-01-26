@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.util;
@@ -23,130 +21,126 @@ import java.util.ListIterator;
 
 public class SingleList<E> implements List<E> {
 
-	private E element;
-	
-	public SingleList(E element) {
-		this.element = element;
-	}
-	
-	@Override
-	public int size() {
-		return 1;
-	}
+    private E element;
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    public SingleList(E element) {
+        this.element = element;
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		return element.equals(o);
-	}
+    @Override
+    public int size() {
+        return 1;
+    }
 
-	@Override
-	public Iterator<E> iterator() {
-		return new SingleIterator<E>(element);
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	public Object[] toArray() {
-		return new Object[] {element};
-	}
+    @Override
+    public boolean contains(Object o) {
+        return element.equals(o);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T[] toArray(T[] a) {
-		T[] out = a;
-		if (out.length != 1)
-			out = (T[]) Array.newInstance(a.getClass(), 1);
-		out[0] = (T)element;
-		return out;
-	}
+    @Override
+    public Iterator<E> iterator() {
+        return new SingleIterator<E>(element);
+    }
 
-	@Override
-	public boolean add(E e) {
-		return false;
-	}
+    @Override
+    public Object[] toArray() {
+        return new Object[] {element};
+    }
 
-	@Override
-	public boolean remove(Object o) {
-		return false;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T[] toArray(T[] a) {
+        T[] out = a;
+        if (out.length != 1) out = (T[]) Array.newInstance(a.getClass(), 1);
+        out[0] = (T) element;
+        return out;
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return false;
-	}
+    @Override
+    public boolean add(E e) {
+        return false;
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends E> c) {
-		return false;
-	}
+    @Override
+    public boolean remove(Object o) {
+        return false;
+    }
 
-	@Override
-	public boolean addAll(int index, Collection<? extends E> c) {
-		return false;
-	}
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return false;
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return false;
-	}
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        return false;
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return false;
-	}
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        return false;
+    }
 
-	@Override
-	public void clear() {
-	}
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return false;
+    }
 
-	@Override
-	public E get(int index) {
-		if (index == 0) return element;
-		return null;
-	}
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;
+    }
 
-	@Override
-	public E set(int index, E element) {
-		return null;
-	}
+    @Override
+    public void clear() {}
 
-	@Override
-	public void add(int index, E element) {
-	}
+    @Override
+    public E get(int index) {
+        if (index == 0) return element;
+        return null;
+    }
 
-	@Override
-	public E remove(int index) {
-		return null;
-	}
+    @Override
+    public E set(int index, E element) {
+        return null;
+    }
 
-	@Override
-	public int indexOf(Object o) {
-		if (element.equals(o)) return 0;
-		return -1;
-	}
+    @Override
+    public void add(int index, E element) {}
 
-	@Override
-	public int lastIndexOf(Object o) {
-		return indexOf(o);
-	}
+    @Override
+    public E remove(int index) {
+        return null;
+    }
 
-	@Override
-	public ListIterator<E> listIterator() {
-		return new SingleIterator<E>(element);
-	}
+    @Override
+    public int indexOf(Object o) {
+        if (element.equals(o)) return 0;
+        return -1;
+    }
 
-	@Override
-	public ListIterator<E> listIterator(int index) {
-		return new SingleIterator<E>(element);
-	}
+    @Override
+    public int lastIndexOf(Object o) {
+        return indexOf(o);
+    }
 
-	@Override
-	public List<E> subList(int fromIndex, int toIndex) {
-		return this;
-	}
+    @Override
+    public ListIterator<E> listIterator() {
+        return new SingleIterator<E>(element);
+    }
 
+    @Override
+    public ListIterator<E> listIterator(int index) {
+        return new SingleIterator<E>(element);
+    }
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        return this;
+    }
 }

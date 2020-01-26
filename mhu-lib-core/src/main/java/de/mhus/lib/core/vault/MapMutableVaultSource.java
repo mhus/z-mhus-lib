@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.vault;
@@ -26,16 +24,16 @@ import de.mhus.lib.errors.MException;
 
 public abstract class MapMutableVaultSource extends MLog implements MutableVaultSource {
 
-	protected HashMap<UUID, VaultEntry> entries = new HashMap<>();
-	protected String name = UUID.randomUUID().toString();
-	
-	@Override
-	public VaultEntry getEntry(UUID id) {
-	    doCheckSource();
-		synchronized (entries) {
-			return entries.get(id);
-		}
-	}
+    protected HashMap<UUID, VaultEntry> entries = new HashMap<>();
+    protected String name = UUID.randomUUID().toString();
+
+    @Override
+    public VaultEntry getEntry(UUID id) {
+        doCheckSource();
+        synchronized (entries) {
+            return entries.get(id);
+        }
+    }
 
     @Override
     public VaultEntry getEntry(String name) {
@@ -43,33 +41,32 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
         synchronized (entries) {
             // TODO optimize !!!
             for (VaultEntry entry : entries.values())
-                if (name.equals(entry.getName()))
-                    return entry;
+                if (name.equals(entry.getName())) return entry;
         }
         return null;
     }
-    
-	@Override
-	public Set<UUID> getEntryIds() {
-        doCheckSource();
-		synchronized (entries) {
-			return Collections.unmodifiableSet(entries.keySet());
-		}
-	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void addEntry(VaultEntry entry) throws MException {
+    @Override
+    public Set<UUID> getEntryIds() {
         doCheckSource();
-		synchronized (entries) {
-			entries.put(entry.getId(), new DefaultEntry(entry));
-		}
-	}
-	
+        synchronized (entries) {
+            return Collections.unmodifiableSet(entries.keySet());
+        }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void addEntry(VaultEntry entry) throws MException {
+        doCheckSource();
+        synchronized (entries) {
+            entries.put(entry.getId(), new DefaultEntry(entry));
+        }
+    }
+
     @Override
     public void updateEntry(VaultEntry entry) throws MException {
         doCheckSource();
@@ -77,20 +74,19 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
             entries.put(entry.getId(), new DefaultEntry(entry));
         }
     }
-    
-	@Override
-	public void removeEntry(UUID id) throws MException {
-        doCheckSource();
-		synchronized (entries) {
-			entries.remove(id);
-		}
-	}
-		
-	protected abstract void doCheckSource();
 
     @Override
-	public String toString() {
-		return MSystem.toString(this, name, entries.size());
-	}
+    public void removeEntry(UUID id) throws MException {
+        doCheckSource();
+        synchronized (entries) {
+            entries.remove(id);
+        }
+    }
 
+    protected abstract void doCheckSource();
+
+    @Override
+    public String toString() {
+        return MSystem.toString(this, name, entries.size());
+    }
 }

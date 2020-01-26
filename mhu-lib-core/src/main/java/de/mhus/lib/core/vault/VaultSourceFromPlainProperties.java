@@ -16,21 +16,21 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
     private long fileModified;
     private boolean fileCanWrite;
 
-    public VaultSourceFromPlainProperties(File file, boolean editable, String name) throws IOException {
+    public VaultSourceFromPlainProperties(File file, boolean editable, String name)
+            throws IOException {
         this.file = file;
         this.name = name;
         this.editable = editable;
-        if (file.exists())
-            doLoad();
+        if (file.exists()) doLoad();
     }
-    
+
     @Override
     public void doLoad() throws IOException {
         entries.clear();
         MProperties prop = MProperties.load(file);
         for (String key : prop.keys()) {
             if (MValidator.isUUID(key)) {
-                VaultEntry entry = new PlainEntry( prop, name);
+                VaultEntry entry = new PlainEntry(prop, name);
                 entries.put(UUID.fromString(name), entry);
             }
         }
@@ -107,7 +107,6 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
         public String getName() {
             return name;
         }
-        
     }
 
     @Override
@@ -116,7 +115,7 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
             try {
                 doLoad();
             } catch (IOException e) {
-                log().e(file,e);
+                log().e(file, e);
             }
     }
 }

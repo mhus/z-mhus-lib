@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.cao;
@@ -24,119 +22,110 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class CaoCore extends CaoConnection {
 
-	protected CaoDriver driver;
-	protected MutableActionList actionList = new MutableActionList();
-	protected HashMap<Class<? extends CaoAspect>,CaoAspectFactory<?>> aspectFactory = new HashMap<>();
-	protected String name;
-	protected CaoConnection con;
+    protected CaoDriver driver;
+    protected MutableActionList actionList = new MutableActionList();
+    protected HashMap<Class<? extends CaoAspect>, CaoAspectFactory<?>> aspectFactory =
+            new HashMap<>();
+    protected String name;
+    protected CaoConnection con;
 
-	public CaoCore(String name, CaoDriver driver) {
-		this.name = name;
-		this.driver = driver;
-	}
+    public CaoCore(String name, CaoDriver driver) {
+        this.name = name;
+        this.driver = driver;
+    }
 
-	
-	public CaoConnection getConnection() {
-		return con;
-	}
-	
-	@Override
-	public CaoDriver getDriver() {
-		return driver;
-	}
+    public CaoConnection getConnection() {
+        return con;
+    }
 
-	@Override
-	public CaoActionList getActions() {
-		return actionList;
-	}
-		
-	public <T extends CaoAspect> CaoCore registerAspectFactory(Class<T> ifc,CaoAspectFactory<T> factory) throws MException {
-		if (aspectFactory.containsKey(ifc))
-			throw new MException("Aspect already registered",ifc);
-		aspectFactory.put(ifc, factory);
-		factory.doInitialize(this, actionList);
-		return this;
-	}
+    @Override
+    public CaoDriver getDriver() {
+        return driver;
+    }
 
-	public void doInitializeActions() {
-		for (CaoAction action : actionList)
-			action.doInitialize(this);
-	}
+    @Override
+    public CaoActionList getActions() {
+        return actionList;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
-		return (CaoAspectFactory<T>)aspectFactory.get(ifc);
-	}
+    public <T extends CaoAspect> CaoCore registerAspectFactory(
+            Class<T> ifc, CaoAspectFactory<T> factory) throws MException {
+        if (aspectFactory.containsKey(ifc)) throw new MException("Aspect already registered", ifc);
+        aspectFactory.put(ifc, factory);
+        factory.doInitialize(this, actionList);
+        return this;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    public void doInitializeActions() {
+        for (CaoAction action : actionList) action.doInitialize(this);
+    }
 
-	/**
-	 * Send a query into the data store system. This method opens the possibility to
-	 * access more then the content structure. But it's not specified and must be
-	 * known by the caller.
-	 *  e.g. get access to the underlying type or user system or send proprietary queries
-	 *  to the system.
-	 * 
-	 * @param space The data space, e.g. users, types, content
-	 * @param query The query itself
-	 * @return A list of results.
-	 * @throws MException Throws NotSupportedException if the method is not implemented at all
-	 */
-	@Override
-	public CaoList executeQuery(String space, String query) throws MException {
-		throw new NotSupportedException();
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends CaoAspect> CaoAspectFactory<T> getAspectFactory(Class<T> ifc) {
+        return (CaoAspectFactory<T>) aspectFactory.get(ifc);
+    }
 
-	/**
-	 * 
-	 * Send a query into the data store system. This method opens the possibility to
-	 * access more then the content structure. But it's not specified and must be
-	 * known by the caller.
-	 *  e.g. get access to the underlying type or user system or send proprietary queries
-	 *  to the system.
-	 *  
-	 * @param space The data space, e.g. users, types, content
-	 * @param query The query itself
-	 * @return A list of results.
-	 * @throws MException Throws NotSupportedException if the method is not implemented at all
-	 */
-	@Override
-	public <T> CaoList executeQuery(String space, AQuery<T> query) throws MException {
-		// return executeQuery(space, query.toQualification(dbManager) );
-		throw new NotSupportedException();
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public CaoAction getAction(String name) {
-		return getActions().getAction(name);
-	}
+    /**
+     * Send a query into the data store system. This method opens the possibility to access more
+     * then the content structure. But it's not specified and must be known by the caller. e.g. get
+     * access to the underlying type or user system or send proprietary queries to the system.
+     *
+     * @param space The data space, e.g. users, types, content
+     * @param query The query itself
+     * @return A list of results.
+     * @throws MException Throws NotSupportedException if the method is not implemented at all
+     */
+    @Override
+    public CaoList executeQuery(String space, String query) throws MException {
+        throw new NotSupportedException();
+    }
 
-	@Override
-	public boolean containsNode(CaoNode node) {
-		return con.equals(node.getConnection());
-	}
+    /**
+     * Send a query into the data store system. This method opens the possibility to access more
+     * then the content structure. But it's not specified and must be known by the caller. e.g. get
+     * access to the underlying type or user system or send proprietary queries to the system.
+     *
+     * @param space The data space, e.g. users, types, content
+     * @param query The query itself
+     * @return A list of results.
+     * @throws MException Throws NotSupportedException if the method is not implemented at all
+     */
+    @Override
+    public <T> CaoList executeQuery(String space, AQuery<T> query) throws MException {
+        // return executeQuery(space, query.toQualification(dbManager) );
+        throw new NotSupportedException();
+    }
 
-	public void setShared() {
-		if (isClosed()) return;
-		shared = true;
-	}
-	
-	public void closeShared() {
-		if (!isShared() || isClosed()) return;
-		shared = false;
-		close();
-	}
-	
-	@Override
-	protected void finalize() {
-		if (isShared()) 
-			closeShared();
-		else
-			close();
-	}
-	
+    @Override
+    public CaoAction getAction(String name) {
+        return getActions().getAction(name);
+    }
+
+    @Override
+    public boolean containsNode(CaoNode node) {
+        return con.equals(node.getConnection());
+    }
+
+    public void setShared() {
+        if (isClosed()) return;
+        shared = true;
+    }
+
+    public void closeShared() {
+        if (!isShared() || isClosed()) return;
+        shared = false;
+        close();
+    }
+
+    @Override
+    protected void finalize() {
+        if (isShared()) closeShared();
+        else close();
+    }
 }

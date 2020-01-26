@@ -24,10 +24,9 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         this.file = file;
         this.name = name;
         this.editable = editable;
-        if (file.exists())
-            doLoad();
+        if (file.exists()) doLoad();
     }
-    
+
     @Override
     public void doLoad() throws IOException {
         entries.clear();
@@ -112,17 +111,15 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         public String getName() {
             return name;
         }
-        
     }
-    
+
     @Override
     protected void doCheckSource() {
         if (file.lastModified() != fileModified)
             try {
                 doLoad();
             } catch (IOException e) {
-                log().e(file,e);
+                log().e(file, e);
             }
     }
-    
 }

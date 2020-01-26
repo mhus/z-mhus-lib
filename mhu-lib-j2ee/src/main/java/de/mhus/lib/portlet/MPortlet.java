@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.portlet;
@@ -34,102 +32,98 @@ import de.mhus.lib.portlet.actions.ActionRequestHandler;
 import de.mhus.lib.portlet.resource.ResourceRequestHandler;
 
 /**
- * <p>MPortlet class.</p>
+ * MPortlet class.
  *
  * @author mikehummel
  * @version $Id: $Id
  */
 public class MPortlet extends GenericPortlet {
 
-	protected ResourceRequestHandler resourcesHandler = new ResourceRequestHandler();
-	protected ActionRequestHandler actionsHandler = new ActionRequestHandler();
-	protected Log log = Log.getLog(this.getClass());
+    protected ResourceRequestHandler resourcesHandler = new ResourceRequestHandler();
+    protected ActionRequestHandler actionsHandler = new ActionRequestHandler();
+    protected Log log = Log.getLog(this.getClass());
 
-	protected String editJsp;
-	protected String viewJsp;
+    protected String editJsp;
+    protected String viewJsp;
 
-	/** {@inheritDoc} */
-	@Override
-	public void init() throws PortletException {
-		editJsp = getInitParameter("edit-template");
-		viewJsp = getInitParameter("view-template");
-	}
+    /** {@inheritDoc} */
+    @Override
+    public void init() throws PortletException {
+        editJsp = getInitParameter("edit-template");
+        viewJsp = getInitParameter("view-template");
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected void doEdit(RenderRequest request, RenderResponse response)
-			throws PortletException, IOException {
-		
-		response.setContentType("text/html");
-		PortletURL addNameUrl = response.createActionURL();
-		addNameUrl.setParameter("action", "addName");
-		request.setAttribute("addNameUrl", addNameUrl.toString());
+    /** {@inheritDoc} */
+    @Override
+    protected void doEdit(RenderRequest request, RenderResponse response)
+            throws PortletException, IOException {
 
-		PortletPreferences prefs = request.getPreferences();
-		String userName = (String) prefs.getValue("name", "");
-		request.setAttribute("name", userName);
-		
-		include(editJsp,request,response);
-	}
+        response.setContentType("text/html");
+        PortletURL addNameUrl = response.createActionURL();
+        addNameUrl.setParameter("action", "addName");
+        request.setAttribute("addNameUrl", addNameUrl.toString());
 
-	/** {@inheritDoc} */
-	@Override
-	protected void doView(RenderRequest request, RenderResponse response)
-			throws PortletException, IOException {
+        PortletPreferences prefs = request.getPreferences();
+        String userName = (String) prefs.getValue("name", "");
+        request.setAttribute("name", userName);
 
-		PortletPreferences prefs = request.getPreferences();
-		String userName = (String) prefs.getValue("name", "");
-		request.setAttribute("name", userName);
-		include(viewJsp,request,response);
-	}
+        include(editJsp, request, response);
+    }
 
-	/**
-	 * <p>include.</p>
-	 *
-	 * @param path a {@link java.lang.String} object.
-	 * @param request a {@link javax.portlet.RenderRequest} object.
-	 * @param response a {@link javax.portlet.RenderResponse} object.
-	 * @throws javax.portlet.PortletException if any.
-	 * @throws java.io.IOException if any.
-	 */
-	protected void include(String path, RenderRequest request,
-			RenderResponse response) throws PortletException, IOException {
+    /** {@inheritDoc} */
+    @Override
+    protected void doView(RenderRequest request, RenderResponse response)
+            throws PortletException, IOException {
 
-		PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher(path);
-		if (dispatcher == null)
-			log.e("include","path not found",path);
-		else
-			dispatcher.include(request, response);
-	}
+        PortletPreferences prefs = request.getPreferences();
+        String userName = (String) prefs.getValue("name", "");
+        request.setAttribute("name", userName);
+        include(viewJsp, request, response);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void processAction(ActionRequest request, ActionResponse response)
-			throws PortletException, IOException {
-		
-		log.t("action",request.getParameter(ActionRequest.ACTION_NAME));
-		try {
-			if (actionsHandler.processAction(request, response)) return;
-		} catch (PortletException e) {
-			throw e;
-		} catch (IOException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IOException(e);
-		}
-		super.processAction(request, response);
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public void serveResource(ResourceRequest resourceRequest,
-			ResourceResponse resourceResponse) throws IOException,
-			PortletException {
-				
-		log.t("resource",resourceRequest.getResourceID());
-		if (resourcesHandler.serveResource(resourceRequest, resourceResponse)) return;
-		
-		super.serveResource(resourceRequest, resourceResponse);
-	}
+    /**
+     * include.
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param request a {@link javax.portlet.RenderRequest} object.
+     * @param response a {@link javax.portlet.RenderResponse} object.
+     * @throws javax.portlet.PortletException if any.
+     * @throws java.io.IOException if any.
+     */
+    protected void include(String path, RenderRequest request, RenderResponse response)
+            throws PortletException, IOException {
 
+        PortletRequestDispatcher dispatcher = getPortletContext().getRequestDispatcher(path);
+        if (dispatcher == null) log.e("include", "path not found", path);
+        else dispatcher.include(request, response);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void processAction(ActionRequest request, ActionResponse response)
+            throws PortletException, IOException {
+
+        log.t("action", request.getParameter(ActionRequest.ACTION_NAME));
+        try {
+            if (actionsHandler.processAction(request, response)) return;
+        } catch (PortletException e) {
+            throw e;
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+        super.processAction(request, response);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+            throws IOException, PortletException {
+
+        log.t("resource", resourceRequest.getResourceID());
+        if (resourcesHandler.serveResource(resourceRequest, resourceResponse)) return;
+
+        super.serveResource(resourceRequest, resourceResponse);
+    }
 }

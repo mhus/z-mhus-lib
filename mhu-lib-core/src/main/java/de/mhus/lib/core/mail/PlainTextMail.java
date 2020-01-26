@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.mail;
@@ -27,85 +25,78 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 
 public class PlainTextMail extends MLog implements Mail {
-	
-	private String from;
-	private String[] to;
-	private String[] cc;
-	private String[] bcc;
-	private String subject;
-	private String content;
 
-	public PlainTextMail setFrom(String from) {
-		this.from = from;
-		return this;
-	}
-	
-	public PlainTextMail setTo(String ... to) {
-		this.to = to;
-		return this;
-	}
-	
-	public PlainTextMail setCc(String ... cc) {
-		this.cc = cc;
-		return this;
-	}
+    private String from;
+    private String[] to;
+    private String[] cc;
+    private String[] bcc;
+    private String subject;
+    private String content;
 
-	public PlainTextMail setBcc(String ... bcc) {
-		this.bcc = bcc;
-		return this;
-	}
-	
-	public PlainTextMail setSubject(String subject) {
-		this.subject = subject;
-		return this;
-	}
-	
-	public PlainTextMail setContent(String content) {
-		this.content = content;
-		return this;
-	}
+    public PlainTextMail setFrom(String from) {
+        this.from = from;
+        return this;
+    }
 
-	@Override
-	public void send(MailTransport transport) throws Exception {
-		
-		InternetAddress[] toAddresses = new InternetAddress[to.length];
-		for (int i = 0; i < to.length; i++)
-			toAddresses[i] = new InternetAddress(to[i]);
-		
-		InternetAddress[] ccAddresses = null;
-		if (cc != null && cc.length > 0) {
-			ccAddresses = new InternetAddress[cc.length];
-			for (int i = 0; i < cc.length; i++)
-				ccAddresses[i] = new InternetAddress(cc[i]);
-		}
+    public PlainTextMail setTo(String... to) {
+        this.to = to;
+        return this;
+    }
 
-		InternetAddress[] bccAddresses = null;
-		if (bcc != null && bcc.length > 0) {
-			bccAddresses = new InternetAddress[bcc.length];
-			for (int i = 0; i < bcc.length; i++)
-				bccAddresses[i] = new InternetAddress(bcc[i]);
-		}
+    public PlainTextMail setCc(String... cc) {
+        this.cc = cc;
+        return this;
+    }
 
-		MimeMessage msg = new MimeMessage(transport.getSession());
-		msg.setFrom(MString.isSet(from) ? new InternetAddress(from) : transport.getFrom());
-		msg.setRecipients(RecipientType.TO, toAddresses);
-		if (ccAddresses != null)
-			msg.setRecipients(RecipientType.CC, ccAddresses);
-		if (bccAddresses != null)
-			msg.setRecipients(RecipientType.BCC, bccAddresses);
-		
-		msg.setSubject(subject, "UTF-8");
+    public PlainTextMail setBcc(String... bcc) {
+        this.bcc = bcc;
+        return this;
+    }
+
+    public PlainTextMail setSubject(String subject) {
+        this.subject = subject;
+        return this;
+    }
+
+    public PlainTextMail setContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    @Override
+    public void send(MailTransport transport) throws Exception {
+
+        InternetAddress[] toAddresses = new InternetAddress[to.length];
+        for (int i = 0; i < to.length; i++) toAddresses[i] = new InternetAddress(to[i]);
+
+        InternetAddress[] ccAddresses = null;
+        if (cc != null && cc.length > 0) {
+            ccAddresses = new InternetAddress[cc.length];
+            for (int i = 0; i < cc.length; i++) ccAddresses[i] = new InternetAddress(cc[i]);
+        }
+
+        InternetAddress[] bccAddresses = null;
+        if (bcc != null && bcc.length > 0) {
+            bccAddresses = new InternetAddress[bcc.length];
+            for (int i = 0; i < bcc.length; i++) bccAddresses[i] = new InternetAddress(bcc[i]);
+        }
+
+        MimeMessage msg = new MimeMessage(transport.getSession());
+        msg.setFrom(MString.isSet(from) ? new InternetAddress(from) : transport.getFrom());
+        msg.setRecipients(RecipientType.TO, toAddresses);
+        if (ccAddresses != null) msg.setRecipients(RecipientType.CC, ccAddresses);
+        if (bccAddresses != null) msg.setRecipients(RecipientType.BCC, bccAddresses);
+
+        msg.setSubject(subject, "UTF-8");
         msg.setSentDate(new Date());
         msg.setText(content, "UTF-8");
-		
+
         log().t(content);
-		Transport.send(msg);
-		
-	}
+        Transport.send(msg);
+    }
 
-	@Override
-	public String toString() {
-		return MSystem.toString(this, subject,"from",from,"to",to,"cc",cc,"bcc",bcc);
-	}
-
+    @Override
+    public String toString() {
+        return MSystem.toString(this, subject, "from", from, "to", to, "cc", cc, "bcc", bcc);
+    }
 }

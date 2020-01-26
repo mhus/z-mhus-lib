@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.parser;
@@ -23,150 +21,156 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class StringPropertyReplacerMap extends StringPropertyReplacer implements Map<String,String> {
-	
-	private HashMap<String,String> map = new HashMap<>();
-	
-	@Override
-	public String findValueFor(String key) {
-		return map.get(key);
-	}
+public class StringPropertyReplacerMap extends StringPropertyReplacer
+        implements Map<String, String> {
 
-	@Override
-	public boolean equals(Object o) {
-		return map.equals(o);
-	}
+    private HashMap<String, String> map = new HashMap<>();
 
-	@Override
-	public int hashCode() {
-		return map.hashCode();
-	}
+    @Override
+    public String findValueFor(String key) {
+        return map.get(key);
+    }
 
-	@Override
-	public String toString() {
-		return map.toString();
-	}
+    @Override
+    public boolean equals(Object o) {
+        return map.equals(o);
+    }
 
-	@Override
-	public int size() {
-		return map.size();
-	}
+    @Override
+    public int hashCode() {
+        return map.hashCode();
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return map.isEmpty();
-	}
+    @Override
+    public String toString() {
+        return map.toString();
+    }
 
-	@Override
-	public String get(Object key) {
-		return map.get(key);
-	}
+    @Override
+    public int size() {
+        return map.size();
+    }
 
-	@Override
-	public boolean containsKey(Object key) {
-		return map.containsKey(key);
-	}
+    @Override
+    public boolean isEmpty() {
+        return map.isEmpty();
+    }
 
-	@Override
-	public String put(String key, String value) {
-		return map.put(key, value);
-	}
+    @Override
+    public String get(Object key) {
+        return map.get(key);
+    }
 
-	@Override
-	public void putAll(Map<? extends String, ? extends String> m) {
-		map.putAll(m);
-	}
+    @Override
+    public boolean containsKey(Object key) {
+        return map.containsKey(key);
+    }
 
-	@Override
-	public String remove(Object key) {
-		return map.remove(key);
-	}
+    @Override
+    public String put(String key, String value) {
+        return map.put(key, value);
+    }
 
-	@Override
-	public void clear() {
-		map.clear();
-	}
+    @Override
+    public void putAll(Map<? extends String, ? extends String> m) {
+        map.putAll(m);
+    }
 
-	@Override
-	public boolean containsValue(Object value) {
-		return map.containsValue(value);
-	}
+    @Override
+    public String remove(Object key) {
+        return map.remove(key);
+    }
 
-	@Override
-	public Set<String> keySet() {
-		return map.keySet();
-	}
+    @Override
+    public void clear() {
+        map.clear();
+    }
 
-	@Override
-	public Collection<String> values() {
-		return map.values();
-	}
+    @Override
+    public boolean containsValue(Object value) {
+        return map.containsValue(value);
+    }
 
-	@Override
-	public Set<java.util.Map.Entry<String, String>> entrySet() {
-		return map.entrySet();
-	}
+    @Override
+    public Set<String> keySet() {
+        return map.keySet();
+    }
 
-	@Override
-	public String getOrDefault(Object key, String defaultValue) {
-		return map.getOrDefault(key, defaultValue);
-	}
+    @Override
+    public Collection<String> values() {
+        return map.values();
+    }
 
-	@Override
-	public String putIfAbsent(String key, String value) {
-		return map.putIfAbsent(key, value);
-	}
+    @Override
+    public Set<java.util.Map.Entry<String, String>> entrySet() {
+        return map.entrySet();
+    }
 
-	@Override
-	public boolean remove(Object key, Object value) {
-		return map.remove(key, value);
-	}
+    @Override
+    public String getOrDefault(Object key, String defaultValue) {
+        return map.getOrDefault(key, defaultValue);
+    }
 
-	@Override
-	public boolean replace(String key, String oldValue, String newValue) {
-		return map.replace(key, oldValue, newValue);
-	}
+    @Override
+    public String putIfAbsent(String key, String value) {
+        return map.putIfAbsent(key, value);
+    }
 
-	@Override
-	public String replace(String key, String value) {
-		return map.replace(key, value);
-	}
+    @Override
+    public boolean remove(Object key, Object value) {
+        return map.remove(key, value);
+    }
 
-	@Override
-	public String computeIfAbsent(String key, Function<? super String, ? extends String> mappingFunction) {
-		return map.computeIfAbsent(key, mappingFunction);
-	}
+    @Override
+    public boolean replace(String key, String oldValue, String newValue) {
+        return map.replace(key, oldValue, newValue);
+    }
 
-	@Override
-	public String computeIfPresent(String key,
-	        BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
-		return map.computeIfPresent(key, remappingFunction);
-	}
+    @Override
+    public String replace(String key, String value) {
+        return map.replace(key, value);
+    }
 
-	@Override
-	public String compute(String key, BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
-		return map.compute(key, remappingFunction);
-	}
+    @Override
+    public String computeIfAbsent(
+            String key, Function<? super String, ? extends String> mappingFunction) {
+        return map.computeIfAbsent(key, mappingFunction);
+    }
 
-	@Override
-	public String merge(String key, String value,
-	        BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
-		return map.merge(key, value, remappingFunction);
-	}
+    @Override
+    public String computeIfPresent(
+            String key,
+            BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+        return map.computeIfPresent(key, remappingFunction);
+    }
 
-	@Override
-	public void forEach(BiConsumer<? super String, ? super String> action) {
-		map.forEach(action);
-	}
+    @Override
+    public String compute(
+            String key,
+            BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+        return map.compute(key, remappingFunction);
+    }
 
-	@Override
-	public void replaceAll(BiFunction<? super String, ? super String, ? extends String> function) {
-		map.replaceAll(function);
-	}
+    @Override
+    public String merge(
+            String key,
+            String value,
+            BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+        return map.merge(key, value, remappingFunction);
+    }
 
-	@Override
-	public Object clone() {
-		return map.clone();
-	}
+    @Override
+    public void forEach(BiConsumer<? super String, ? super String> action) {
+        map.forEach(action);
+    }
 
+    @Override
+    public void replaceAll(BiFunction<? super String, ? super String, ? extends String> function) {
+        map.replaceAll(function);
+    }
+
+    @Override
+    public Object clone() {
+        return map.clone();
+    }
 }

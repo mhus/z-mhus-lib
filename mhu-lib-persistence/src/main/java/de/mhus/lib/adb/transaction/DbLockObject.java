@@ -1,20 +1,17 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.adb.transaction;
-
 
 import de.mhus.lib.adb.DbComfortableObject;
 import de.mhus.lib.annotations.adb.DbPersistent;
@@ -23,45 +20,41 @@ import de.mhus.lib.sql.DbConnection;
 
 public class DbLockObject extends DbComfortableObject {
 
-	@DbPrimaryKey(auto_id=false)
-	@DbPersistent(features="cut")
-	private String key;
-	
-	@DbPersistent
-	private long created;
-	
-	@DbPersistent
-	private String owner;
+    @DbPrimaryKey(auto_id = false)
+    @DbPersistent(features = "cut")
+    private String key;
 
-	
-	@Override
-	public void doPreCreate(DbConnection con) {
-		created = System.currentTimeMillis();
-		super.doPreCreate(con);
-	}
+    @DbPersistent private long created;
 
-	public String getKey() {
-		return key;
-	}
+    @DbPersistent private String owner;
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    @Override
+    public void doPreCreate(DbConnection con) {
+        created = System.currentTimeMillis();
+        super.doPreCreate(con);
+    }
 
-	public long getCreated() {
-		return created;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	public String getOwner() {
-		return owner;
-	}
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-	
-	public long getAge() {
-		return System.currentTimeMillis() - created;
-	}
-	
+    public long getCreated() {
+        return created;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public long getAge() {
+        return System.currentTimeMillis() - created;
+    }
 }

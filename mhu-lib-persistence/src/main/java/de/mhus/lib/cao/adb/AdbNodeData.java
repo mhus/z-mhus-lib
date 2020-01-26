@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.cao.adb;
@@ -24,58 +22,57 @@ import de.mhus.lib.errors.MException;
 
 public class AdbNodeData extends DbMetadata {
 
-	public enum TYPE {NODE, LEAF};
-	
-	@DbPersistent(size=50)
-	private String collection;
-	@DbPersistent
-	private UUID parent;
-	@DbPersistent
-	private String name;
-	@DbPersistent
-	private TYPE type;
-	@DbPersistent
-	private MProperties properties;
-	
-	@Override
-	public DbMetadata findParentObject() throws MException {
-		return null;
-	}
+    public enum TYPE {
+        NODE,
+        LEAF
+    };
 
-	public UUID getParent() {
-		return parent;
-	}
+    @DbPersistent(size = 50)
+    private String collection;
 
-	public void setParent(UUID parent) {
-		this.parent = parent;
-	}
+    @DbPersistent private UUID parent;
+    @DbPersistent private String name;
+    @DbPersistent private TYPE type;
+    @DbPersistent private MProperties properties;
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public DbMetadata findParentObject() throws MException {
+        return null;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public UUID getParent() {
+        return parent;
+    }
 
-	public TYPE getType() {
-		return type;
-	}
+    public void setParent(UUID parent) {
+        this.parent = parent;
+    }
 
-	public void setType(TYPE type) {
-		this.type = type;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getCollection() {
-		return collection;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public MProperties getProperties() {
-		return properties;
-	}
+    public TYPE getType() {
+        return type;
+    }
 
-	public void setProperties(MProperties modified) {
-		this.properties = modified;
-	}
+    public void setType(TYPE type) {
+        this.type = type;
+    }
 
+    public String getCollection() {
+        return collection;
+    }
+
+    public MProperties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(MProperties modified) {
+        this.properties = modified;
+    }
 }

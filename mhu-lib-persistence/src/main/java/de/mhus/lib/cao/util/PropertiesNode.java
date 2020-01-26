@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.cao.util;
@@ -30,64 +28,64 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class PropertiesNode extends CaoNode {
 
-	private static final long serialVersionUID = 1L;
-	protected MProperties properties = new MProperties();
-	protected String id;
-	protected String name;
-	
-	public PropertiesNode(CaoCore core, CaoNode parent) {
-		super(core, parent);
-	}
-	
-	@Override
-	public CaoWritableElement getWritableNode() throws MException {
-		if (isEditable()) return new WritablePropertiesNode(core, this);
-		return null;
-	}
+    private static final long serialVersionUID = 1L;
+    protected MProperties properties = new MProperties();
+    protected String id;
+    protected String name;
 
-	@Override
-	public String getId() {
-		return id;
-	}
-	
-	@Override
-	public String getName() {
-		return name;
-	}
+    public PropertiesNode(CaoCore core, CaoNode parent) {
+        super(core, parent);
+    }
 
-	@Override
-	public Collection<String> getPropertyKeys() {
-		return MCollection.toList(properties.keySet());
-	}
+    @Override
+    public CaoWritableElement getWritableNode() throws MException {
+        if (isEditable()) return new WritablePropertiesNode(core, this);
+        return null;
+    }
 
-	@Override
-	public Object getProperty(String name) {
-		return properties.getProperty(name);
-	}
+    @Override
+    public String getId() {
+        return id;
+    }
 
-	@Override
-	public boolean isProperty(String name) {
-		return properties.containsKey(name);
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void removeProperty(String key) {
-		throw new NotSupportedException();
-	}
+    @Override
+    public Collection<String> getPropertyKeys() {
+        return MCollection.toList(properties.keySet());
+    }
 
-	@Override
-	public void setProperty(String key, Object value) {
-		throw new NotSupportedException();
-	}
+    @Override
+    public Object getProperty(String name) {
+        return properties.getProperty(name);
+    }
 
-	protected CaoMetadata createMetadataByProperties() {
-		MutableMetadata metadata = new MutableMetadata(core.getDriver());
-		for (java.util.Map.Entry<String, Object> entry : properties.entrySet()) {
-			((MutableMetadata)metadata).addDefinition(entry.getKey(), CaoUtil.objectToMetaType(entry.getValue()), 700);
-		}
-		return metadata;
-	}
+    @Override
+    public boolean isProperty(String name) {
+        return properties.containsKey(name);
+    }
 
-	protected abstract void doUpdate(MProperties modified) throws CaoException;
-	
+    @Override
+    public void removeProperty(String key) {
+        throw new NotSupportedException();
+    }
+
+    @Override
+    public void setProperty(String key, Object value) {
+        throw new NotSupportedException();
+    }
+
+    protected CaoMetadata createMetadataByProperties() {
+        MutableMetadata metadata = new MutableMetadata(core.getDriver());
+        for (java.util.Map.Entry<String, Object> entry : properties.entrySet()) {
+            ((MutableMetadata) metadata)
+                    .addDefinition(entry.getKey(), CaoUtil.objectToMetaType(entry.getValue()), 700);
+        }
+        return metadata;
+    }
+
+    protected abstract void doUpdate(MProperties modified) throws CaoException;
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.adb;
@@ -36,92 +34,89 @@ import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.sql.DbConnection;
 
-@DbTable(features=DbAccessManager.FEATURE_NAME)
-public abstract class DbMetadata extends DbComfortableObject implements UuidIdentificable, Externalizable {
+@DbTable(features = DbAccessManager.FEATURE_NAME)
+public abstract class DbMetadata extends DbComfortableObject
+        implements UuidIdentificable, Externalizable {
 
-	@DbPrimaryKey
-	@Public
-	private UUID id;
-	@DbPersistent
-	@DbIndex("adb_created")
-	@Public
-	private Date creationDate;
-	@DbPersistent
-	@DbIndex("adb_modified")
-	@Public
-	private Date modifyDate;
-	@DbPersistent
-	@Public
-	private long vstamp;
+    @DbPrimaryKey @Public private UUID id;
 
-	@Override
-	public UUID getId() {
-		return id;
-	}
+    @DbPersistent
+    @DbIndex("adb_created")
+    @Public
+    private Date creationDate;
 
-	@Override
-	@GenerateHidden
-	public void doPreCreate(DbConnection con) {
-		creationDate = new Date();
-		modifyDate = creationDate;
-		vstamp = 0;
-	}
-	
-	@Override
-	@GenerateHidden
-	public void doPreSave(DbConnection con) {
-		modifyDate = new Date();
-		vstamp++;
-	}
+    @DbPersistent
+    @DbIndex("adb_modified")
+    @Public
+    private Date modifyDate;
 
-	public Date getCreationDate() {
-		return creationDate;
-	}
+    @DbPersistent @Public private long vstamp;
 
-	public Date getModifyDate() {
-		return modifyDate;
-	}
+    @Override
+    public UUID getId() {
+        return id;
+    }
 
-	public long getVstamp() {
-		return vstamp;
-	}
+    @Override
+    @GenerateHidden
+    public void doPreCreate(DbConnection con) {
+        creationDate = new Date();
+        modifyDate = creationDate;
+        vstamp = 0;
+    }
 
-	@GenerateHidden
-	public abstract DbMetadata findParentObject() throws MException;
-	
-	@Override
-	public String toString() {
-		return MSystem.toString(this,getId());
-	}
+    @Override
+    @GenerateHidden
+    public void doPreSave(DbConnection con) {
+        modifyDate = new Date();
+        vstamp++;
+    }
 
-	@Override
-	public void writeExternal(ObjectOutput out) throws IOException {
-		PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
-		for (PojoAttribute<?> field : model) {
-			if (field.canRead()) {
-				out.writeBoolean(true);
-				out.writeUTF(field.getName());
-				out.writeObject(field.get(this));
-			}
-		}
-		out.writeBoolean(false);
-	}
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
-		while (in.readBoolean()) {
-			String name = in.readUTF();
-			Object value = in.readObject();
-			@SuppressWarnings("rawtypes")
-			PojoAttribute attr = model.getAttribute(name);
-			if (attr != null) {
-				if (attr.canWrite())
-					attr.set(this, value);
-			} else
-				log().d("can't read external",name);
-		}
-	}
+    public Date getModifyDate() {
+        return modifyDate;
+    }
 
+    public long getVstamp() {
+        return vstamp;
+    }
+
+    @GenerateHidden
+    public abstract DbMetadata findParentObject() throws MException;
+
+    @Override
+    public String toString() {
+        return MSystem.toString(this, getId());
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
+        for (PojoAttribute<?> field : model) {
+            if (field.canRead()) {
+                out.writeBoolean(true);
+                out.writeUTF(field.getName());
+                out.writeObject(field.get(this));
+            }
+        }
+        out.writeBoolean(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        PojoModel model = AdbUtil.createDefaultPojoModel(getClass());
+        while (in.readBoolean()) {
+            String name = in.readUTF();
+            Object value = in.readObject();
+            @SuppressWarnings("rawtypes")
+            PojoAttribute attr = model.getAttribute(name);
+            if (attr != null) {
+                if (attr.canWrite()) attr.set(this, value);
+            } else log().d("can't read external", name);
+        }
+    }
 }

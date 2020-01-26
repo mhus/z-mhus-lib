@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.jms.test;
@@ -34,58 +32,57 @@ import de.mhus.lib.jms.ServerJms;
 public class JmsTest {
 
     @Test
-	public void testCommunication() throws JMSException {
-		
-		MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
+    public void testCommunication() throws JMSException {
 
-		JmsConnection con1 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
-		JmsConnection con2 = new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
+        MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
 
-		ClientJms client = new ClientJms(con1.createQueue("test"));
+        JmsConnection con1 =
+                new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
+        JmsConnection con2 =
+                new JmsConnection("vm://localhost?broker.persistent=false", "admin", "password");
 
-		final ObjectContainer<Message> requestMessage = new ObjectContainer<>();
-		
-		ServerJms server = new ServerJms(con2.createQueue("test")) {
+        ClientJms client = new ClientJms(con1.createQueue("test"));
 
-			@Override
-			public void receivedOneWay(Message msg) throws JMSException {
-				System.out.println("--- receivedOneWay: " + msg);
-				requestMessage.setObject(msg);
-			}
+        final ObjectContainer<Message> requestMessage = new ObjectContainer<>();
 
-			@Override
-			public Message received(Message msg) throws JMSException {
-				System.out.println("--- received: " + msg);
-				
-				requestMessage.setObject(msg);
-				return getSession().createTextMessage("pong");
-			}
-			
-		};
-		
-		client.open();
-		server.open();
-		
-		System.out.println(">>> sendJmsOneWay");
-		client.sendJmsOneWay(con1.createTextMessage("aloa"));
+        ServerJms server =
+                new ServerJms(con2.createQueue("test")) {
 
-		while(requestMessage.getObject() == null)
-			MThread.sleep(100);
-		assertEquals("aloa", ((TextMessage)requestMessage.getObject()).getText() );
-		
-		System.out.println(">>> sendJms");
-		Message res = client.sendJms(con1.createTextMessage("ping"));
-		assertEquals("ping", ((TextMessage)requestMessage.getObject()).getText() );
-		assertEquals("pong", ((TextMessage)res).getText() );
+                    @Override
+                    public void receivedOneWay(Message msg) throws JMSException {
+                        System.out.println("--- receivedOneWay: " + msg);
+                        requestMessage.setObject(msg);
+                    }
 
-		System.out.println(res);
-		
-		con1.close();
-		con2.close();
-		
-		client.close();
-		server.close();
-		
-	}
-	
+                    @Override
+                    public Message received(Message msg) throws JMSException {
+                        System.out.println("--- received: " + msg);
+
+                        requestMessage.setObject(msg);
+                        return getSession().createTextMessage("pong");
+                    }
+                };
+
+        client.open();
+        server.open();
+
+        System.out.println(">>> sendJmsOneWay");
+        client.sendJmsOneWay(con1.createTextMessage("aloa"));
+
+        while (requestMessage.getObject() == null) MThread.sleep(100);
+        assertEquals("aloa", ((TextMessage) requestMessage.getObject()).getText());
+
+        System.out.println(">>> sendJms");
+        Message res = client.sendJms(con1.createTextMessage("ping"));
+        assertEquals("ping", ((TextMessage) requestMessage.getObject()).getText());
+        assertEquals("pong", ((TextMessage) res).getText());
+
+        System.out.println(res);
+
+        con1.close();
+        con2.close();
+
+        client.close();
+        server.close();
+    }
 }

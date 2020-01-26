@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core;
@@ -38,13 +36,15 @@ public class MLdap {
 
     @SuppressWarnings("unused")
     private static final Log log = Log.getLog(MLdap.class);
+
     public static final String KEY_NAME = ".name";
     public static final String KEY_FQDN = ".fqdn";
     public static final String KEY_CLASS = ".class";
     public static final String FILTER_ALL_CLASSES = "(objectclass=*)";
-    
+
     @SuppressWarnings("unchecked")
-    public static DirContext getConnection(String url, String principal, String password) throws NamingException {
+    public static DirContext getConnection(String url, String principal, String password)
+            throws NamingException {
         @SuppressWarnings("rawtypes")
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
@@ -52,12 +52,12 @@ public class MLdap {
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         env.put(Context.SECURITY_PRINCIPAL, principal);
         env.put(Context.SECURITY_CREDENTIALS, password);
-        
-        DirContext ctx = new InitialDirContext(env);    
-        
+
+        DirContext ctx = new InitialDirContext(env);
+
         return ctx;
     }
-    
+
     public static SearchControls getSimpleSearchControls() {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -83,15 +83,14 @@ public class MLdap {
                 map.put(attrId, attrValue);
             }
         }
-        
+
         map.put(KEY_NAME, result.getName());
         map.put(KEY_FQDN, result.getNameInNamespace());
         map.put(KEY_CLASS, result.getClassName());
-        
+
         return map;
     }
-    
-    
+
     public static Map<String, Object> getFirst(NamingEnumeration<SearchResult> res) {
         try {
             Map<String, Object> next = getNext(res);
@@ -101,7 +100,7 @@ public class MLdap {
             throw new MRuntimeException(t);
         }
     }
-    
+
     public static Map<String, Object> getNext(NamingEnumeration<SearchResult> res) {
         try {
             if (!res.hasMore()) return null;
@@ -111,13 +110,13 @@ public class MLdap {
             throw new MRuntimeException(t);
         }
     }
-    
+
     public static Iterable<Map<String, Object>> iterate(final NamingEnumeration<SearchResult> res) {
-        return new Iterable<Map<String,Object>>() {
-            
+        return new Iterable<Map<String, Object>>() {
+
             @Override
             public Iterator<Map<String, Object>> iterator() {
-                return new Iterator<Map<String,Object>>() {
+                return new Iterator<Map<String, Object>>() {
 
                     @Override
                     public boolean hasNext() {
@@ -168,5 +167,4 @@ public class MLdap {
         }
         return out;
     }
-    
 }

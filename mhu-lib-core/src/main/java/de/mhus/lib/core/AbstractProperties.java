@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core;
@@ -29,391 +27,377 @@ import de.mhus.lib.errors.MRuntimeException;
 
 public abstract class AbstractProperties extends MObject implements IProperties {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Overwrite this function to provide values in string format.
-	 * 
-	 * @param name
-	 * @return null if the property not exists or the property value.
-	 */
-	@Override
-	public abstract Object getProperty(String name);
-	
-//	@Deprecated
-//	public boolean getProperty(String name, boolean def) {
-//		return getBoolean(name, def);
-//	}
-//	
-//	@Deprecated
-//	public String getProperty(String name, String def) {
-//		Object out = getProperty(name);
-//		if (out == null) return def;
-//		return String.valueOf(out);
-//	}
+    /**
+     * Overwrite this function to provide values in string format.
+     *
+     * @param name
+     * @return null if the property not exists or the property value.
+     */
+    @Override
+    public abstract Object getProperty(String name);
 
-	@Override
-	public String getString(String name, String def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		if (out == null) return def;
-		return String.valueOf(out);
-	}
-	
-	@Override
-	public String getString(String name) throws MException {
-		Object out = getProperty(name);
-		if (out == null) return null;
-		return String.valueOf(out);
-	}
-	
-	@Override
-	public boolean getBoolean(String name, boolean def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		return MCast.toboolean(out, def);
-	}
+    //	@Deprecated
+    //	public boolean getProperty(String name, boolean def) {
+    //		return getBoolean(name, def);
+    //	}
+    //
+    //	@Deprecated
+    //	public String getProperty(String name, String def) {
+    //		Object out = getProperty(name);
+    //		if (out == null) return def;
+    //		return String.valueOf(out);
+    //	}
 
-	@Override
-	public boolean getBoolean(String name) throws MException {
-		Object out = getProperty(name);
-		if (out == null) throw new MException("value not found");
-		return MCast.toboolean(out, false);
-	}
+    @Override
+    public String getString(String name, String def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        if (out == null) return def;
+        return String.valueOf(out);
+    }
 
-	@Override
-	public int getInt(String name, int def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		return MCast.toint(out,def);
-	}
-	
-	@Override
-	public long getLong(String name, long def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		return MCast.tolong(out, def);
-	}
-	
-	@Override
-	public float getFloat(String name, float def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		return MCast.tofloat(out, def);
-	}
-	
-	@Override
-	public double getDouble(String name, double def) {
-		Object out;
-		try {
-			out = getProperty(name);
-		} catch (Throwable e) {
-			return def;
-		}
-		return MCast.todouble(out,def);
-	}
-	
-	@Override
-	public Calendar getCalendar(String name) throws MException {
-		Object out = getProperty(name);
-		return MCast.toCalendar(out);
-	}
-	
-	@Override
-	public Date getDate(String name) {
-		try {
-			Object out = getProperty(name);
-			return MCast.toDate(out, null);
-		} catch (Throwable t) {}
-		return null;
-	}
-	
-	@Override
-	public void setString(String name, String value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setInt(String name, int value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setLong(String name, long value) {
-		setProperty(name, value);
-	}
+    @Override
+    public String getString(String name) throws MException {
+        Object out = getProperty(name);
+        if (out == null) return null;
+        return String.valueOf(out);
+    }
 
-	@Override
-	public void setDouble(String name, double value) {
-		setProperty(name, value);
-	}
+    @Override
+    public boolean getBoolean(String name, boolean def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        return MCast.toboolean(out, def);
+    }
 
-	@Override
-	public void setFloat(String name, float value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setBoolean(String name, boolean value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setCalendar(String name, Calendar value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setDate(String name, Date value) {
-		setProperty(name, value);
-	}
-	
-	@Override
-	public void setNumber(String name, Number value) {
-		if (value == null) {
-			removeProperty(name);
-			return;
-		}
-		if (value instanceof Integer)
-			setInt(name, (Integer)value);
-		else
-		if (value instanceof Long) {
-			setLong(name, (Long)value);
-		} else
-		if (value instanceof Float) {
-			setFloat(name, (Float)value);
-		} else
-		if (value instanceof Double) {
-			setDouble(name, (Double)value);
-		} else
-			throw new MRuntimeException("Unknown number class", name, value.getClass());
-			
-	}
+    @Override
+    public boolean getBoolean(String name) throws MException {
+        Object out = getProperty(name);
+        if (out == null) throw new MException("value not found");
+        return MCast.toboolean(out, false);
+    }
 
-	@Override
-	public Number getNumber(String name, Number def) {
-		Object out = getProperty(name);
-		if (out == null) return def;
-		if (out instanceof Number) return (Number)out;
-		try {
-			return MCast.todouble(out, 0);
-		} catch (NumberFormatException e) {
-			return def;
-		}
-	}
-	
-	/**
-	 * Return true if the property exists.
-	 * 
-	 * @param name
-	 * @return if exists
-	 */
-	@Override
-	public abstract boolean isProperty(String name);
+    @Override
+    public int getInt(String name, int def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        return MCast.toint(out, def);
+    }
 
-	/**
-	 * Remove the property field in the list of properties.
-	 * 
-	 * @param key
-	 */
-	@Override
-	public abstract void removeProperty(String key);
-	
-	/**
-	 * Overwrite this function to allow changes in properties.
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	public abstract void setProperty(String key, Object value);
-	
-	/**
-	 * Overwrite this function and return true if the property set can be edited.
-	 * 
-	 * @return if is editable
-	 */
-	@Override
-	public abstract boolean isEditable();
-	
-	/**
-	 * @return the keys
-	 * 
-	 */
-	@Override
-	public abstract Set<String> keys();
-	
-	@Override
-	public Iterator<Map.Entry<String, Object>> iterator() {
-		return new IPIterator();
-	}
+    @Override
+    public long getLong(String name, long def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        return MCast.tolong(out, def);
+    }
 
-	public Map<String, Object> toMap() {
-		Map<String, Object> out = new HashMap<>();
-		for (Map.Entry<String, Object> entry : this) {
-			out.put(entry.getKey(), entry.getValue());
-		}
-		return out;
-	}
+    @Override
+    public float getFloat(String name, float def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        return MCast.tofloat(out, def);
+    }
 
-	private class IPIterator implements Iterator<Map.Entry<String, Object>> {
+    @Override
+    public double getDouble(String name, double def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def;
+        }
+        return MCast.todouble(out, def);
+    }
 
-		private Iterator<String> keys;
-		private String currentkey;
+    @Override
+    public Calendar getCalendar(String name) throws MException {
+        Object out = getProperty(name);
+        return MCast.toCalendar(out);
+    }
 
-		IPIterator() {
-			keys = keys().iterator();
-		}
-		
-		@Override
-		public boolean hasNext() {
-			return keys.hasNext();
-		}
+    @Override
+    public Date getDate(String name) {
+        try {
+            Object out = getProperty(name);
+            return MCast.toDate(out, null);
+        } catch (Throwable t) {
+        }
+        return null;
+    }
 
-		@Override
-		public Entry<String, Object> next() {
-			currentkey = keys.next();
-			return new IPEntry(currentkey);
-		}
+    @Override
+    public void setString(String name, String value) {
+        setProperty(name, value);
+    }
 
-		@Override
-		public void remove() {
-			try {
-				removeProperty(currentkey);
-			} catch (Throwable e) {
-				log().t(e);
-			}
-		}
-	}
-	
-	private class IPEntry implements Map.Entry<String, Object> {
+    @Override
+    public void setInt(String name, int value) {
+        setProperty(name, value);
+    }
 
-		private String key;
+    @Override
+    public void setLong(String name, long value) {
+        setProperty(name, value);
+    }
 
-		public IPEntry(String next) {
-			key = next;
-		}
+    @Override
+    public void setDouble(String name, double value) {
+        setProperty(name, value);
+    }
 
-		@Override
-		public String getKey() {
-			return key;
-		}
+    @Override
+    public void setFloat(String name, float value) {
+        setProperty(name, value);
+    }
 
-		@Override
-		public Object getValue() {
-			try {
-				return getProperty(key);
-			} catch (Throwable e) {
-				throw new MRuntimeException(e);
-			}
-		}
+    @Override
+    public void setBoolean(String name, boolean value) {
+        setProperty(name, value);
+    }
 
-		@Override
-		public Object setValue(Object value) {
-			Object old = null;
-			try {
-				old = getProperty(key);
-			} catch (Throwable e1) {
-				log().t(key,e1);
-			}
-			try {
-				setProperty(key, value);
-			} catch (Throwable e) {
-				log().t(key,e);
-			}
-			return old;
-		}
-		
-	}
+    @Override
+    public void setCalendar(String name, Calendar value) {
+        setProperty(name, value);
+    }
 
-	@Override
-	public abstract int size();
-	
-	@Override
-	public boolean isEmpty() {
-		return size() == 0;
-	}
+    @Override
+    public void setDate(String name, Date value) {
+        setProperty(name, value);
+    }
 
-	@Override
-	public boolean containsKey(Object key) {
-		if (key == null) return false;
-		return isProperty(String.valueOf(key));
-	}
+    @Override
+    public void setNumber(String name, Number value) {
+        if (value == null) {
+            removeProperty(name);
+            return;
+        }
+        if (value instanceof Integer) setInt(name, (Integer) value);
+        else if (value instanceof Long) {
+            setLong(name, (Long) value);
+        } else if (value instanceof Float) {
+            setFloat(name, (Float) value);
+        } else if (value instanceof Double) {
+            setDouble(name, (Double) value);
+        } else throw new MRuntimeException("Unknown number class", name, value.getClass());
+    }
 
-	@Override
-	public Object get(Object key) {
-		if (key == null) return null;
-		return getProperty(String.valueOf(key));
-	}
+    @Override
+    public Number getNumber(String name, Number def) {
+        Object out = getProperty(name);
+        if (out == null) return def;
+        if (out instanceof Number) return (Number) out;
+        try {
+            return MCast.todouble(out, 0);
+        } catch (NumberFormatException e) {
+            return def;
+        }
+    }
 
-	@Override
-	public Object put(String key, Object value) {
-		Object current = get(key);
-		setProperty(key, value);
-		return current;
-	}
+    /**
+     * Return true if the property exists.
+     *
+     * @param name
+     * @return if exists
+     */
+    @Override
+    public abstract boolean isProperty(String name);
 
-	@Override
-	public Object remove(Object key) {
-		if (key == null) return null;
-		Object current = get(key);
-		removeProperty(String.valueOf(key));
-		return current;
-	}
+    /**
+     * Remove the property field in the list of properties.
+     *
+     * @param key
+     */
+    @Override
+    public abstract void removeProperty(String key);
 
-	@Override
-	public void putAll(Map<? extends String, ? extends Object> m) {
-		for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
-			if (e.getValue() instanceof IsNull)
-				remove(e.getKey());
-			else
-				put(e.getKey(),e.getValue());
-	}
+    /**
+     * Overwrite this function to allow changes in properties.
+     *
+     * @param key
+     * @param value
+     */
+    public abstract void setProperty(String key, Object value);
 
-	public void putReadProperties(IReadProperties m) {
-		for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
-			if (e.getValue() instanceof IsNull)
-				remove(e.getKey());
-			else
-				put(e.getKey(),e.getValue());
-	}
-	
-//	@Override
-//	public void clear() {
-//		
-//		for (String name : keys())
-//			removeProperty(name);
-//	}
+    /**
+     * Overwrite this function and return true if the property set can be edited.
+     *
+     * @return if is editable
+     */
+    @Override
+    public abstract boolean isEditable();
 
-	@Override
-	public Set<String> keySet() {
-		return keys();
-	}
+    /** @return the keys */
+    @Override
+    public abstract Set<String> keys();
 
-	@Override
-	public String getFormatted(String name, String def, Object ... values ) {
-		String format = getString(name, def);
-		if (format == null) return def; // probably null
-		return String.format(format, values);
-	}
+    @Override
+    public Iterator<Map.Entry<String, Object>> iterator() {
+        return new IPIterator();
+    }
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> out = new HashMap<>();
+        for (Map.Entry<String, Object> entry : this) {
+            out.put(entry.getKey(), entry.getValue());
+        }
+        return out;
+    }
+
+    private class IPIterator implements Iterator<Map.Entry<String, Object>> {
+
+        private Iterator<String> keys;
+        private String currentkey;
+
+        IPIterator() {
+            keys = keys().iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return keys.hasNext();
+        }
+
+        @Override
+        public Entry<String, Object> next() {
+            currentkey = keys.next();
+            return new IPEntry(currentkey);
+        }
+
+        @Override
+        public void remove() {
+            try {
+                removeProperty(currentkey);
+            } catch (Throwable e) {
+                log().t(e);
+            }
+        }
+    }
+
+    private class IPEntry implements Map.Entry<String, Object> {
+
+        private String key;
+
+        public IPEntry(String next) {
+            key = next;
+        }
+
+        @Override
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public Object getValue() {
+            try {
+                return getProperty(key);
+            } catch (Throwable e) {
+                throw new MRuntimeException(e);
+            }
+        }
+
+        @Override
+        public Object setValue(Object value) {
+            Object old = null;
+            try {
+                old = getProperty(key);
+            } catch (Throwable e1) {
+                log().t(key, e1);
+            }
+            try {
+                setProperty(key, value);
+            } catch (Throwable e) {
+                log().t(key, e);
+            }
+            return old;
+        }
+    }
+
+    @Override
+    public abstract int size();
+
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        if (key == null) return false;
+        return isProperty(String.valueOf(key));
+    }
+
+    @Override
+    public Object get(Object key) {
+        if (key == null) return null;
+        return getProperty(String.valueOf(key));
+    }
+
+    @Override
+    public Object put(String key, Object value) {
+        Object current = get(key);
+        setProperty(key, value);
+        return current;
+    }
+
+    @Override
+    public Object remove(Object key) {
+        if (key == null) return null;
+        Object current = get(key);
+        removeProperty(String.valueOf(key));
+        return current;
+    }
+
+    @Override
+    public void putAll(Map<? extends String, ? extends Object> m) {
+        for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
+            if (e.getValue() instanceof IsNull) remove(e.getKey());
+            else put(e.getKey(), e.getValue());
+    }
+
+    public void putReadProperties(IReadProperties m) {
+        for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
+            if (e.getValue() instanceof IsNull) remove(e.getKey());
+            else put(e.getKey(), e.getValue());
+    }
+
+    //	@Override
+    //	public void clear() {
+    //
+    //		for (String name : keys())
+    //			removeProperty(name);
+    //	}
+
+    @Override
+    public Set<String> keySet() {
+        return keys();
+    }
+
+    @Override
+    public String getFormatted(String name, String def, Object... values) {
+        String format = getString(name, def);
+        if (format == null) return def; // probably null
+        return String.format(format, values);
+    }
 }

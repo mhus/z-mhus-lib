@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.config;
@@ -30,147 +28,143 @@ import de.mhus.lib.core.MCollection;
 import de.mhus.lib.errors.MException;
 
 /**
- * Load the configuration from a properties file. The implementation do not
- * support inner configurations.
- * 
- * @author mhu
+ * Load the configuration from a properties file. The implementation do not support inner
+ * configurations.
  *
+ * @author mhu
  */
 public class PropertiesConfig extends IConfig implements IFlatConfig {
 
-	private static final long serialVersionUID = 1L;
-	protected Properties properties = null;
-	protected boolean changed = false;
-	protected String name;
+    private static final long serialVersionUID = 1L;
+    protected Properties properties = null;
+    protected boolean changed = false;
+    protected String name;
 
-	public PropertiesConfig() {
-		this(new Properties());
-	}
-	
-	public PropertiesConfig(Properties config) {
-		properties = config;
-	}
-	
-	public PropertiesConfig(String fill) {
-		properties = new Properties();
-		if (fill != null) {
-			try {
-				readConfig(new StringReader(fill));
-			} catch (IOException e) {
-			}
-		}
-	}
+    public PropertiesConfig() {
+        this(new Properties());
+    }
 
-	public void writeConfig(Writer os) throws IOException {
-		properties.store(os, "");
-		changed = false;
-	}
+    public PropertiesConfig(Properties config) {
+        properties = config;
+    }
 
-	public void readConfig(Reader file) throws IOException {
-		properties.load(file);
-	}
+    public PropertiesConfig(String fill) {
+        properties = new Properties();
+        if (fill != null) {
+            try {
+                readConfig(new StringReader(fill));
+            } catch (IOException e) {
+            }
+        }
+    }
 
-	public void configRemoved() {
-	}
+    public void writeConfig(Writer os) throws IOException {
+        properties.store(os, "");
+        changed = false;
+    }
 
-	@Override
-	public IConfig getNode(String key) {
-		return null;
-	}
+    public void readConfig(Reader file) throws IOException {
+        properties.load(file);
+    }
 
-	@Override
-	public List<IConfig> getNodes(String key) {
-		return MCollection.getEmptyList();
-	}
+    public void configRemoved() {}
 
-	@Override
-	public List<IConfig> getNodes() {
-		return MCollection.getEmptyList();
-	}
-	
-	@Override
-	public List<String> getNodeKeys() {
-		//return (String[]) properties.keySet().toArray(new String[properties.size()]);
-		return MCollection.getEmptyList();
-	}
+    @Override
+    public IConfig getNode(String key) {
+        return null;
+    }
 
-	@Override
-	public List<String> getPropertyKeys() {
-		LinkedList<String> out = new LinkedList<>();
-		for (Object key : properties.keySet())
-			out.add( key.toString() );
-		return out;
-	}
+    @Override
+    public List<IConfig> getNodes(String key) {
+        return MCollection.getEmptyList();
+    }
 
-	@Override
-	public String getProperty(String name) {
-		return properties.getProperty(name);
-	}
+    @Override
+    public List<IConfig> getNodes() {
+        return MCollection.getEmptyList();
+    }
 
-	@Override
-	public boolean isProperty(String name) {
-		return properties.containsKey(name);
-	}
+    @Override
+    public List<String> getNodeKeys() {
+        // return (String[]) properties.keySet().toArray(new String[properties.size()]);
+        return MCollection.getEmptyList();
+    }
 
-	@Override
-	public void removeProperty(String key) {
-		properties.remove(key);
-		changed = true;
-	}
+    @Override
+    public List<String> getPropertyKeys() {
+        LinkedList<String> out = new LinkedList<>();
+        for (Object key : properties.keySet()) out.add(key.toString());
+        return out;
+    }
 
-	@Override
-	public void setProperty(String key, Object value) {
-		properties.setProperty(key,MCast.objectToString(value));
-		changed = true;
-	}
+    @Override
+    public String getProperty(String name) {
+        return properties.getProperty(name);
+    }
 
-	public boolean isConfigChanged() {
-		return changed;
-	}
+    @Override
+    public boolean isProperty(String name) {
+        return properties.containsKey(name);
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public void removeProperty(String key) {
+        properties.remove(key);
+        changed = true;
+    }
 
-	@Override
-	public IConfig createConfig(String key) throws MException {
-		throw new MException("not supported");
-	}
+    @Override
+    public void setProperty(String key, Object value) {
+        properties.setProperty(key, MCast.objectToString(value));
+        changed = true;
+    }
 
-	@Override
-	public int moveConfig(IConfig config, int newPos) throws MException {
-		throw new MException("not supported");
-	}
+    public boolean isConfigChanged() {
+        return changed;
+    }
 
-	@Override
-	public void removeConfig(IConfig config) throws MException {
-		throw new MException("not supported");
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public boolean isEditable() {
-		return false;
-	}
+    @Override
+    public IConfig createConfig(String key) throws MException {
+        throw new MException("not supported");
+    }
 
-	@Override
-	public IConfig getParent() {
-		return null;
-	}
+    @Override
+    public int moveConfig(IConfig config, int newPos) throws MException {
+        throw new MException("not supported");
+    }
 
-	@Override
-	public InputStream getInputStream(String key) {
-		return null;
-	}
+    @Override
+    public void removeConfig(IConfig config) throws MException {
+        throw new MException("not supported");
+    }
 
-	@Override
-	public URL getUrl() {
-		return null;
-	}
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
 
-	@Override
-	public void clear() {
-		properties.clear();
-	}
+    @Override
+    public IConfig getParent() {
+        return null;
+    }
 
+    @Override
+    public InputStream getInputStream(String key) {
+        return null;
+    }
+
+    @Override
+    public URL getUrl() {
+        return null;
+    }
+
+    @Override
+    public void clear() {
+        properties.clear();
+    }
 }

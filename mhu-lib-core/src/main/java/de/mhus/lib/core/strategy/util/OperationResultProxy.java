@@ -12,5 +12,4 @@ public class OperationResultProxy extends OperationResult {
         setNextOperation(instance.getNextOperation());
         setOperationPath(instance.getOperationPath());
     }
-
 }

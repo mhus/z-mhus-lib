@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.jms.heartbeat;
@@ -23,45 +21,45 @@ import de.mhus.lib.jms.JmsConnection;
 
 public class HeartbeatTimer extends Heartbeat {
 
-	private MTimer timer;
+    private MTimer timer;
 
-	public HeartbeatTimer() throws JMSException {
-		super();
-	}
+    public HeartbeatTimer() throws JMSException {
+        super();
+    }
 
-	public HeartbeatTimer(JmsConnection con) throws JMSException {
-		super(con);
-	}
+    public HeartbeatTimer(JmsConnection con) throws JMSException {
+        super(con);
+    }
 
-	@Override
-	public synchronized void open() throws JMSException {
-		super.open();
-		if (timer == null) {
-			timer = new MTimer(true);
-			timer.schedule(new MTimerTask() {
-				
-				@Override
-				public void doit() throws Exception {
-					doTimerTask();
-				}
-			}, 10000,60000 * 5);
-		}
-	}
+    @Override
+    public synchronized void open() throws JMSException {
+        super.open();
+        if (timer == null) {
+            timer = new MTimer(true);
+            timer.schedule(
+                    new MTimerTask() {
 
-	protected void doTimerTask() {
-		if (isClosed() || sender == null || sender.isClosed()) return;
-		sender.sendHeartbeat(null);
-	}
+                        @Override
+                        public void doit() throws Exception {
+                            doTimerTask();
+                        }
+                    },
+                    10000,
+                    60000 * 5);
+        }
+    }
 
-	@Override
-	public void close() {
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
-		super.close();
-	}
+    protected void doTimerTask() {
+        if (isClosed() || sender == null || sender.isClosed()) return;
+        sender.sendHeartbeat(null);
+    }
 
-	
-	
+    @Override
+    public void close() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        super.close();
+    }
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.util;
@@ -24,96 +22,92 @@ import de.mhus.lib.basics.Versioned;
  * From aQute.libg.version.VersionRange
  */
 public class VersionRange {
-	Version			high;
-	Version			low;
-	char			start	= '[';
-	char			end		= ']';
-    public final static String  VERSION_STRING = "(\\d+)(\\.(\\d+)(\\.(\\d+)(\\.([-_\\da-zA-Z]+))?)?)?";
+    Version high;
+    Version low;
+    char start = '[';
+    char end = ']';
+    public static final String VERSION_STRING =
+            "(\\d+)(\\.(\\d+)(\\.(\\d+)(\\.([-_\\da-zA-Z]+))?)?)?";
 
-	static Pattern	RANGE	= Pattern.compile("(\\(|\\[)\\s*(" +
-									VERSION_STRING + ")\\s*,\\s*(" +
-									VERSION_STRING + ")\\s*(\\)|\\])");
+    static Pattern RANGE =
+            Pattern.compile(
+                    "(\\(|\\[)\\s*("
+                            + VERSION_STRING
+                            + ")\\s*,\\s*("
+                            + VERSION_STRING
+                            + ")\\s*(\\)|\\])");
 
-	public VersionRange(String string) {
-		string = string.trim();
-		if (string.indexOf(',') > 0) {
-			if (!string.startsWith("[") && !string.startsWith("("))
-				string = "[" + string;
-			if (!string.endsWith("]") && !string.endsWith(")"))
-				string = string + ")";
-		}
-		
-		Matcher m = RANGE.matcher(string);
-		if (m.matches()) {
-			start = m.group(1).charAt(0);
-			String v1 = m.group(2);
-			String v2 = m.group(10);
-			low = new Version(v1);
-			high = new Version(v2);
-			end = m.group(18).charAt(0);
-			if (low.compareTo(high) > 0)
-				throw new IllegalArgumentException(
-						"Low Range is higher than High Range: " + low + "-" +
-								high);
+    public VersionRange(String string) {
+        string = string.trim();
+        if (string.indexOf(',') > 0) {
+            if (!string.startsWith("[") && !string.startsWith("(")) string = "[" + string;
+            if (!string.endsWith("]") && !string.endsWith(")")) string = string + ")";
+        }
 
-		} else
-			high = low = new Version(string);
-	}
+        Matcher m = RANGE.matcher(string);
+        if (m.matches()) {
+            start = m.group(1).charAt(0);
+            String v1 = m.group(2);
+            String v2 = m.group(10);
+            low = new Version(v1);
+            high = new Version(v2);
+            end = m.group(18).charAt(0);
+            if (low.compareTo(high) > 0)
+                throw new IllegalArgumentException(
+                        "Low Range is higher than High Range: " + low + "-" + high);
 
-	public boolean isRange() {
-		return high != low;
-	}
+        } else high = low = new Version(string);
+    }
 
-	public boolean includeLow() {
-		return start == '[';
-	}
+    public boolean isRange() {
+        return high != low;
+    }
 
-	public boolean includeHigh() {
-		return end == ']';
-	}
+    public boolean includeLow() {
+        return start == '[';
+    }
 
-	@Override
-	public String toString() {
-		if (high == low)
-			return high.toString();
+    public boolean includeHigh() {
+        return end == ']';
+    }
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(start);
-		sb.append(low);
-		sb.append(',');
-		sb.append(high);
-		sb.append(end);
-		return sb.toString();
-	}
+    @Override
+    public String toString() {
+        if (high == low) return high.toString();
 
-	public Version getLow() {
-		return low;
-	}
+        StringBuilder sb = new StringBuilder();
+        sb.append(start);
+        sb.append(low);
+        sb.append(',');
+        sb.append(high);
+        sb.append(end);
+        return sb.toString();
+    }
 
-	public Version getHigh() {
-		return high;
-	}
+    public Version getLow() {
+        return low;
+    }
 
-	public boolean includes(Versioned v) {
-		return includes(new Version(v.getVersionString()));
-	}
-	
-	public boolean includes(Version v) {
-		if ( !isRange() ) {
-			return low.compareTo(v) <=0;
-		}
-		if (includeLow()) {
-			if (v.compareTo(low) < 0)
-				return false;
-		} else if (v.compareTo(low) <= 0)
-			return false;
+    public Version getHigh() {
+        return high;
+    }
 
-		if (includeHigh()) {
-			if (v.compareTo(high) > 0)
-				return false;
-		} else if (v.compareTo(high) >= 0)
-			return false;
-		
-		return true;
-	}
+    public boolean includes(Versioned v) {
+        return includes(new Version(v.getVersionString()));
+    }
+
+    public boolean includes(Version v) {
+        if (!isRange()) {
+            return low.compareTo(v) <= 0;
+        }
+        if (includeLow()) {
+            if (v.compareTo(low) < 0) return false;
+        } else if (v.compareTo(low) <= 0) return false;
+
+        if (includeHigh()) {
+            if (v.compareTo(high) > 0) return false;
+        } else if (v.compareTo(high) >= 0) return false;
+
+        return true;
+    }
 }

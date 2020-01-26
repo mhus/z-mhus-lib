@@ -12,8 +12,7 @@ public class LocalLock implements Lock {
     protected long cnt = 0;
     protected String stacktrace;
 
-    public LocalLock() {
-    }
+    public LocalLock() {}
 
     public LocalLock(String name) {
         setName(name);
@@ -27,7 +26,6 @@ public class LocalLock implements Lock {
     @Override
     public Lock lock() {
         synchronized (this) {
-
             while (isLocked()) {
                 try {
                     wait();
@@ -46,23 +44,21 @@ public class LocalLock implements Lock {
 
     /**
      * Overwrite this to get the lock events.
-     * 
+     *
      * @param locked
      */
-    protected void lockEvent(boolean locked) {
-    
-    }
+    protected void lockEvent(boolean locked) {}
 
-      @Override
+    @Override
     public boolean lock(long timeout) {
         synchronized (this) {
             long start = System.currentTimeMillis();
-            while(isLocked()){
-              try {
-                wait(timeout);
-            } catch (InterruptedException e) {
-            }
-              if (System.currentTimeMillis() - start >= timeout ) return false;
+            while (isLocked()) {
+                try {
+                    wait(timeout);
+                } catch (InterruptedException e) {
+                }
+                if (System.currentTimeMillis() - start >= timeout) return false;
             }
             lock = Thread.currentThread();
             stacktrace = MCast.toString("", lock.getStackTrace());
@@ -71,15 +67,15 @@ public class LocalLock implements Lock {
             return true;
         }
     }
-    
-      /**
-       * Unlock if the current thread is also the owner.
-       * 
-       * @return true if unlock was successful
-       */
-      @Override
-    public boolean unlock(){
-          synchronized (this) {
+
+    /**
+     * Unlock if the current thread is also the owner.
+     *
+     * @return true if unlock was successful
+     */
+    @Override
+    public boolean unlock() {
+        synchronized (this) {
             if (lock != Thread.currentThread()) return false;
             lockEvent(false);
             lock = null;
@@ -87,24 +83,21 @@ public class LocalLock implements Lock {
             lockTime = 0;
             notify();
             return true;
-          }
-      }
+        }
+    }
 
-      /**
-       * Unlock in every case !!! This can break a locked area.
-       * 
-       */
-      @Override
-    public void unlockHard(){
-          synchronized (this) {
+    /** Unlock in every case !!! This can break a locked area. */
+    @Override
+    public void unlockHard() {
+        synchronized (this) {
             lockEvent(false);
             lock = null;
             stacktrace = null;
             lockTime = 0;
             notify();
-          }
-      }
-      
+        }
+    }
+
     @Override
     public boolean isLocked() {
         return lock != null;
@@ -118,17 +111,17 @@ public class LocalLock implements Lock {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public String getOwner() {
         return lock == null ? null : lock.getId() + " " + lock.toString();
     }
-    
+
     @Override
     public String toString() {
         return name + (lock != null ? " " + lock.getName() : "");
     }
-      
+
     @Override
     public long getLockTime() {
         return lockTime;
@@ -138,15 +131,14 @@ public class LocalLock implements Lock {
     public boolean refresh() {
         return isLocked();
     }
-    
+
     @Override
     public long getCnt() {
         return cnt;
     }
-    
+
     @Override
     public String getStartStackTrace() {
         return stacktrace;
     }
-
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.matcher;
@@ -18,47 +16,41 @@ package de.mhus.lib.core.matcher;
 import java.util.Map;
 
 public abstract class ModelPart {
-	
-	private boolean not;
-	private String param;
-	
-	public boolean isNot() {
-		return not;
-	}
 
-	public void setNot(boolean not) {
-		this.not = not;
-	}
-	
-	public boolean m(Map<String,?> map, String str) {
-		if (not)
-			return !matches(this, null, str);
-		else
-			return matches(this, null, str);
-	}
+    private boolean not;
+    private String param;
 
-	public boolean m(Map<String,?> map) {
-		if (not)
-			return !matches(map);
-		else
-			return matches(map);
-	}
+    public boolean isNot() {
+        return not;
+    }
 
-	public void setParamName(String param) {
-		this.param = param;
-	}
-	
-	public String getParamName() {
-		return param;
-	}
+    public void setNot(boolean not) {
+        this.not = not;
+    }
 
-	protected boolean matches(Map<String,?> map) {
-		Object val = map.get(param);
-		if (val != null)
-			return matches(this, map, String.valueOf(val));
-		return false;
-	}
-	
-	protected abstract boolean matches(ModelPart part, Map<String,?> map, String str);
-	
+    public boolean m(Map<String, ?> map, String str) {
+        if (not) return !matches(this, null, str);
+        else return matches(this, null, str);
+    }
+
+    public boolean m(Map<String, ?> map) {
+        if (not) return !matches(map);
+        else return matches(map);
+    }
+
+    public void setParamName(String param) {
+        this.param = param;
+    }
+
+    public String getParamName() {
+        return param;
+    }
+
+    protected boolean matches(Map<String, ?> map) {
+        Object val = map.get(param);
+        if (val != null) return matches(this, map, String.valueOf(val));
+        return false;
+    }
+
+    protected abstract boolean matches(ModelPart part, Map<String, ?> map, String str);
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.base;
@@ -20,26 +18,26 @@ import de.mhus.lib.core.lang.Base;
 
 public class BaseByThreadStrategy extends BaseFindStrategy {
 
-	private Base defaultBase = MApi.get().getBaseControl().createBase(null, null);
-	
-	private ThreadLocal<Base> threadBase = new ThreadLocal<Base>() {
-		@Override
-		protected Base initialValue() {
-			return defaultBase;
-		}
-	};
+    private Base defaultBase = MApi.get().getBaseControl().createBase(null, null);
 
-	@Override
-	public Base find(Object... attributes) {
-//		Thread.currentThread().
-		return threadBase.get();
-	}
+    private ThreadLocal<Base> threadBase =
+            new ThreadLocal<Base>() {
+                @Override
+                protected Base initialValue() {
+                    return defaultBase;
+                }
+            };
 
-	@Override
-	public Base install(Base base) {
-		Base cur = threadBase.get();
-		threadBase.set(base);
-		return cur;
-	}
-	
+    @Override
+    public Base find(Object... attributes) {
+        //		Thread.currentThread().
+        return threadBase.get();
+    }
+
+    @Override
+    public Base install(Base base) {
+        Base cur = threadBase.get();
+        threadBase.set(base);
+        return cur;
+    }
 }

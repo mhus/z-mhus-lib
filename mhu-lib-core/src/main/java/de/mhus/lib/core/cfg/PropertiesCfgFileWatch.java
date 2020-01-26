@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.cfg;
@@ -26,75 +24,73 @@ import de.mhus.lib.core.io.FileWatch;
 
 public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
+    private FileWatch fileWatch;
+    private File file;
+    private IConfig config;
+    private String name;
 
-	private FileWatch fileWatch;
-	private File file;
-	private IConfig config;
-	private String name;
-	
-	public PropertiesCfgFileWatch() {
-	}
-	
-	public PropertiesCfgFileWatch(File file) {
-		setFile(file);
-	}
-	
-	@Override
-	public void doStart(final String name) {
-		this.name = name;
-		load();
-		MApi.getCfgUpdater().doUpdate(name);
-		
-		fileWatch = new FileWatch(file, new FileWatch.Listener() {
+    public PropertiesCfgFileWatch() {}
 
-			@Override
-			public void onFileChanged(FileWatch fileWatch) {
-				log().d("update cfg properties file",file);
-				load();
-				MApi.getCfgUpdater().doUpdate(name);
-			}
+    public PropertiesCfgFileWatch(File file) {
+        setFile(file);
+    }
 
-			@Override
-			public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-				log().d(file,t);
-			}
-			
-		});
-		fileWatch.doStart();
-	}
-	
-	private void load() {
-		try {
-			config = new PropertiesConfigFile(file);
-		} catch (IOException e) {
-			log().d(file,e);
-		}
-	}
+    @Override
+    public void doStart(final String name) {
+        this.name = name;
+        load();
+        MApi.getCfgUpdater().doUpdate(name);
 
-	@Override
-	public void doStop() {
-		if (fileWatch != null) {
-			fileWatch.doStop();
-			fileWatch = null;
-		}
-	}
-	
-	
-	@Override
-	public IConfig getConfig() {
-		return config;
-	}
+        fileWatch =
+                new FileWatch(
+                        file,
+                        new FileWatch.Listener() {
 
-	public File getFile() {
-		return file;
-	}
+                            @Override
+                            public void onFileChanged(FileWatch fileWatch) {
+                                log().d("update cfg properties file", file);
+                                load();
+                                MApi.getCfgUpdater().doUpdate(name);
+                            }
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-	
-	public String getName() {
-		return name;
-	}
+                            @Override
+                            public void onFileWatchError(FileWatch fileWatch, Throwable t) {
+                                log().d(file, t);
+                            }
+                        });
+        fileWatch.doStart();
+    }
 
+    private void load() {
+        try {
+            config = new PropertiesConfigFile(file);
+        } catch (IOException e) {
+            log().d(file, e);
+        }
+    }
+
+    @Override
+    public void doStop() {
+        if (fileWatch != null) {
+            fileWatch.doStop();
+            fileWatch = null;
+        }
+    }
+
+    @Override
+    public IConfig getConfig() {
+        return config;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.schedule;
@@ -18,26 +16,23 @@ package de.mhus.lib.core.schedule;
 import java.util.List;
 
 /**
- * Interface to a scheduler queue.  Queue must be synchronized!
- * 
- * @author mikehummel
+ * Interface to a scheduler queue. Queue must be synchronized!
  *
+ * @author mikehummel
  */
 public interface SchedulerQueue {
 
-	List<SchedulerJob> removeJobs(long toTime);
+    List<SchedulerJob> removeJobs(long toTime);
 
-	void doSchedule(SchedulerJob job);
+    void doSchedule(SchedulerJob job);
 
-	void removeJob(SchedulerJob job);
+    void removeJob(SchedulerJob job);
 
-	int size();
-	
-	List<SchedulerJob> getJobs();
+    int size();
 
-	boolean contains(SchedulerJob j);
+    List<SchedulerJob> getJobs();
 
-	void clear();
-	
-	
+    boolean contains(SchedulerJob j);
+
+    void clear();
 }

@@ -1,21 +1,17 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.mail;
-
-
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -65,78 +61,76 @@ import de.mhus.lib.core.crypt.MBouncy;
 @SuppressWarnings("deprecation")
 public class GpgSignedMail implements Mail {
 
-    static int  serialNo = 1;
+    static int serialNo = 1;
 
-	private String from;
-	private String[] to;
-	private String[] cc;
-	private String[] bcc;
-	private String subject;
-	private String content;
+    private String from;
+    private String[] to;
+    private String[] cc;
+    private String[] bcc;
+    private String subject;
+    private String content;
 
-	private String signDN;
+    private String signDN;
 
-	private X509Certificate origCert;
+    private X509Certificate origCert;
 
-	private KeyPair origKP;
+    private KeyPair origKP;
 
-	private CertStore certsAndcrls;
+    private CertStore certsAndcrls;
 
-	public GpgSignedMail setFrom(String from) {
-		this.from = from;
-		return this;
-	}
-	
-	public GpgSignedMail setTo(String ... to) {
-		this.to = to;
-		return this;
-	}
-	
-	public GpgSignedMail setCc(String ... cc) {
-		this.cc = cc;
-		return this;
-	}
+    public GpgSignedMail setFrom(String from) {
+        this.from = from;
+        return this;
+    }
 
-	public GpgSignedMail setBcc(String ... bcc) {
-		this.bcc = bcc;
-		return this;
-	}
-	
-	public GpgSignedMail setSubject(String subject) {
-		this.subject = subject;
-		return this;
-	}
-	
-	public GpgSignedMail setContent(String content) {
-		this.content = content;
-		return this;
-	}
-	
-	public GpgSignedMail createCertificates(String signDN, String origDN) throws Exception {
-		this.signDN = signDN;
-		
- 	    //
+    public GpgSignedMail setTo(String... to) {
+        this.to = to;
+        return this;
+    }
+
+    public GpgSignedMail setCc(String... cc) {
+        this.cc = cc;
+        return this;
+    }
+
+    public GpgSignedMail setBcc(String... bcc) {
+        this.bcc = bcc;
+        return this;
+    }
+
+    public GpgSignedMail setSubject(String subject) {
+        this.subject = subject;
+        return this;
+    }
+
+    public GpgSignedMail setContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public GpgSignedMail createCertificates(String signDN, String origDN) throws Exception {
+        this.signDN = signDN;
+
+        //
         // set up our certs
         //
-        KeyPairGenerator    kpg  = KeyPairGenerator.getInstance("RSA", "BC");
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
 
         kpg.initialize(1024, new SecureRandom());
 
         //
         // cert that issued the signing certificate
         //
-        KeyPair             signKP = kpg.generateKeyPair();
-        X509Certificate     signCert = makeCertificate(
-                                        signKP, signDN, signKP, signDN);
+        KeyPair signKP = kpg.generateKeyPair();
+        X509Certificate signCert = makeCertificate(signKP, signDN, signKP, signDN);
 
         //
         // cert we sign against
         //
-        					origKP = kpg.generateKeyPair();
-        					origCert = makeCertificate(
-                                        origKP, origDN, signKP, signDN);
+        origKP = kpg.generateKeyPair();
+        origCert = makeCertificate(origKP, origDN, signKP, signDN);
 
-        List<X509Certificate>  certList = new ArrayList<>();
+        List<X509Certificate> certList = new ArrayList<>();
 
         certList.add(origCert);
         certList.add(signCert);
@@ -145,41 +139,38 @@ public class GpgSignedMail implements Mail {
         // create a CertStore containing the certificates we want carried
         // in the signature
         //
-        					setCertsAndcrls(CertStore.getInstance(
-                                "Collection",
-                                new CollectionCertStoreParameters(certList), "BC"));
+        setCertsAndcrls(
+                CertStore.getInstance(
+                        "Collection", new CollectionCertStoreParameters(certList), "BC"));
 
         return this;
-	}
-		
-	@Override
-	public void send(MailTransport transport) throws Exception {
-		
-		MBouncy.init();
+    }
 
-		InternetAddress[] toAddresses = new InternetAddress[to.length];
-		for (int i = 0; i < to.length; i++)
-			toAddresses[i] = new InternetAddress(to[i]);
-		
-		InternetAddress[] ccAddresses = null;
-		if (cc != null && cc.length > 0) {
-			ccAddresses = new InternetAddress[cc.length];
-			for (int i = 0; i < cc.length; i++)
-				ccAddresses[i] = new InternetAddress(cc[i]);
-		}
+    @Override
+    public void send(MailTransport transport) throws Exception {
 
-		InternetAddress[] bccAddresses = null;
-		if (bcc != null && bcc.length > 0) {
-			bccAddresses = new InternetAddress[bcc.length];
-			for (int i = 0; i < bcc.length; i++)
-				bccAddresses[i] = new InternetAddress(bcc[i]);
-		}
+        MBouncy.init();
+
+        InternetAddress[] toAddresses = new InternetAddress[to.length];
+        for (int i = 0; i < to.length; i++) toAddresses[i] = new InternetAddress(to[i]);
+
+        InternetAddress[] ccAddresses = null;
+        if (cc != null && cc.length > 0) {
+            ccAddresses = new InternetAddress[cc.length];
+            for (int i = 0; i < cc.length; i++) ccAddresses[i] = new InternetAddress(cc[i]);
+        }
+
+        InternetAddress[] bccAddresses = null;
+        if (bcc != null && bcc.length > 0) {
+            bccAddresses = new InternetAddress[bcc.length];
+            for (int i = 0; i < bcc.length; i++) bccAddresses[i] = new InternetAddress(bcc[i]);
+        }
 
         //
         // create some smime capabilities in case someone wants to respond
         //
-        ASN1EncodableVector         signedAttrs = new ASN1EncodableVector();
-        SMIMECapabilityVector       caps = new SMIMECapabilityVector();
+        ASN1EncodableVector signedAttrs = new ASN1EncodableVector();
+        SMIMECapabilityVector caps = new SMIMECapabilityVector();
 
         caps.addCapability(SMIMECapability.dES_EDE3_CBC);
         caps.addCapability(SMIMECapability.rC2_CBC, 128);
@@ -191,8 +182,8 @@ public class GpgSignedMail implements Mail {
         // add an encryption key preference for encrypted responses -
         // normally this would be different from the signing certificate...
         //
-        IssuerAndSerialNumber   issAndSer = new IssuerAndSerialNumber(
-                new X509Name(signDN), origCert.getSerialNumber());
+        IssuerAndSerialNumber issAndSer =
+                new IssuerAndSerialNumber(new X509Name(signDN), origCert.getSerialNumber());
 
         signedAttrs.add(new SMIMEEncryptionKeyPreferenceAttribute(issAndSer));
 
@@ -207,7 +198,12 @@ public class GpgSignedMail implements Mail {
         // will be generated as part of the signature. The encryption algorithm
         // used is taken from the key - in this RSA with PKCS1Padding
         //
-        gen.addSigner(origKP.getPrivate(), origCert, SMIMESignedGenerator.DIGEST_SHA1, new AttributeTable(signedAttrs), null);
+        gen.addSigner(
+                origKP.getPrivate(),
+                origCert,
+                SMIMESignedGenerator.DIGEST_SHA1,
+                new AttributeTable(signedAttrs),
+                null);
 
         //
         // add our pool of certs and cerls (if any) to go with the signature
@@ -217,7 +213,7 @@ public class GpgSignedMail implements Mail {
         //
         // create the base for our message
         //
-        MimeBodyPart    msg = new MimeBodyPart();
+        MimeBodyPart msg = new MimeBodyPart();
 
         msg.setText(content);
 
@@ -235,35 +231,25 @@ public class GpgSignedMail implements Mail {
         MimeMessage body = new MimeMessage(session);
         body.setFrom(MString.isSet(from) ? new InternetAddress(from) : transport.getFrom());
         body.setRecipients(Message.RecipientType.TO, toAddresses);
-		if (ccAddresses != null)
-			body.setRecipients(Message.RecipientType.CC, ccAddresses);
-		if (bccAddresses != null)
-			body.setRecipients(Message.RecipientType.BCC, bccAddresses);
+        if (ccAddresses != null) body.setRecipients(Message.RecipientType.CC, ccAddresses);
+        if (bccAddresses != null) body.setRecipients(Message.RecipientType.BCC, bccAddresses);
         body.setSubject(subject);
         body.setContent(mm, mm.getContentType());
         body.saveChanges();
 
         transport.send(body);
-        
-	}
+    }
 
-    /**
-     * create a basic X509 certificate from the given keys
-     */
-	static X509Certificate makeCertificate(
-        KeyPair subKP,
-        String  subDN,
-        KeyPair issKP,
-        String  issDN) 
-        throws GeneralSecurityException, IOException
-    {
-//        X509Name   xName   = new X509Name(subDN);
-        PublicKey  subPub  = subKP.getPublic();
+    /** create a basic X509 certificate from the given keys */
+    static X509Certificate makeCertificate(KeyPair subKP, String subDN, KeyPair issKP, String issDN)
+            throws GeneralSecurityException, IOException {
+        //        X509Name   xName   = new X509Name(subDN);
+        PublicKey subPub = subKP.getPublic();
         PrivateKey issPriv = issKP.getPrivate();
-        PublicKey  issPub  = issKP.getPublic();
-        
+        PublicKey issPub = issKP.getPublic();
+
         X509V3CertificateGenerator v3CertGen = new X509V3CertificateGenerator();
-        
+
         v3CertGen.setSerialNumber(BigInteger.valueOf(serialNo++));
         v3CertGen.setIssuerDN(new X509Name(issDN));
         v3CertGen.setNotBefore(new Date(System.currentTimeMillis()));
@@ -273,75 +259,63 @@ public class GpgSignedMail implements Mail {
         v3CertGen.setSignatureAlgorithm("MD5WithRSAEncryption");
 
         v3CertGen.addExtension(
-            X509Extensions.SubjectKeyIdentifier,
-            false,
-            createSubjectKeyId(subPub));
+                X509Extensions.SubjectKeyIdentifier, false, createSubjectKeyId(subPub));
 
         v3CertGen.addExtension(
-            X509Extensions.AuthorityKeyIdentifier,
-            false,
-            createAuthorityKeyId(issPub));
+                X509Extensions.AuthorityKeyIdentifier, false, createAuthorityKeyId(issPub));
 
         return v3CertGen.generateX509Certificate(issPriv);
     }
 
-
     @SuppressWarnings("resource")
-	static AuthorityKeyIdentifier createAuthorityKeyId(
-        PublicKey pub) 
-        throws IOException
-    {
+    static AuthorityKeyIdentifier createAuthorityKeyId(PublicKey pub) throws IOException {
         ByteArrayInputStream bIn = new ByteArrayInputStream(pub.getEncoded());
-        SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(
-            (ASN1Sequence)new ASN1InputStream(bIn).readObject());
+        SubjectPublicKeyInfo info =
+                new SubjectPublicKeyInfo((ASN1Sequence) new ASN1InputStream(bIn).readObject());
 
         return new AuthorityKeyIdentifier(info);
     }
 
     @SuppressWarnings("resource")
-	static SubjectKeyIdentifier createSubjectKeyId(
-        PublicKey pub) 
-        throws IOException
-    {
+    static SubjectKeyIdentifier createSubjectKeyId(PublicKey pub) throws IOException {
         ByteArrayInputStream bIn = new ByteArrayInputStream(pub.getEncoded());
 
-        SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(
-            (ASN1Sequence)new ASN1InputStream(bIn).readObject());
+        SubjectPublicKeyInfo info =
+                new SubjectPublicKeyInfo((ASN1Sequence) new ASN1InputStream(bIn).readObject());
 
         return new SubjectKeyIdentifier(info);
     }
 
-	public KeyPair getOrigKP() {
-		return origKP;
-	}
+    public KeyPair getOrigKP() {
+        return origKP;
+    }
 
-	public GpgSignedMail setOrigKP(KeyPair origKP) {
-		this.origKP = origKP;
-		return this;
-	}
+    public GpgSignedMail setOrigKP(KeyPair origKP) {
+        this.origKP = origKP;
+        return this;
+    }
 
-	public String getSignDN() {
-		return signDN;
-	}
+    public String getSignDN() {
+        return signDN;
+    }
 
-	public void setSignDN(String signDN) {
-		this.signDN = signDN;
-	}
+    public void setSignDN(String signDN) {
+        this.signDN = signDN;
+    }
 
-	public X509Certificate getOrigCert() {
-		return origCert;
-	}
+    public X509Certificate getOrigCert() {
+        return origCert;
+    }
 
-	public void setOrigCert(X509Certificate origCert) {
-		this.origCert = origCert;
-	}
+    public void setOrigCert(X509Certificate origCert) {
+        this.origCert = origCert;
+    }
 
-	public CertStore getCertsAndcrls() {
-		return certsAndcrls;
-	}
+    public CertStore getCertsAndcrls() {
+        return certsAndcrls;
+    }
 
-	public void setCertsAndcrls(CertStore certsAndcrls) {
-		this.certsAndcrls = certsAndcrls;
-	}
-
+    public void setCertsAndcrls(CertStore certsAndcrls) {
+        this.certsAndcrls = certsAndcrls;
+    }
 }

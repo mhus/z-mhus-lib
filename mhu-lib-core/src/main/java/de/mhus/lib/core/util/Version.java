@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.core.util;
@@ -20,85 +18,81 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 
 public class Version implements Comparable<Version> {
-	
-	public static final Version V_0_0_0 = new Version("0.0.0");
-	public static final Version V_1_0_0 = new Version("1.0.0");
-	
-	private String original;
-	private long[] versions;
-	private VersionRange range;
-	
-	public Version(String in) {
-		if (in == null) in = Versioned.DEFAULT_VERSION;
-		
-		this.original = in;
-		// parse in
-		// crop
-		for (int i = 0; i < in.length(); i++) {
-			char c = in.charAt(i);
-			if (!(c == '.' || (c >= '0' && c <= '9'))) {
-				in = in.substring(0, i);
-				break;
-			}
-		}
-		String[] parts = in.split("\\.");
-		versions = new long[parts.length];
-		for (int i = 0; i < parts.length; i++)
-			versions[i] = MCast.tolong(parts[i], 0);
-	}
-	
-	public int size() {
-		if (versions == null) return 0;
-		return versions.length;
-	}
-	
-	public long getVersion(int index) {
-		return versions[index];
-	}
-	
-	@Override
-	public String toString() {
-		return MString.join(versions, '.');
-	}
 
-	@Override
-	public boolean equals(Object in) {
-		if (in == null) return false;
-		if (in instanceof String) in = new Version((String)in);
-		if (in instanceof Version) {
-			Version v = (Version)in;
-			if (v.size() != size()) return false;
-			for (int i=0; i < size(); i++)
-				if (v.getVersion(i) != getVersion(i)) return false;
-			return true;
-		}
-		return false;
-	}
+    public static final Version V_0_0_0 = new Version("0.0.0");
+    public static final Version V_1_0_0 = new Version("1.0.0");
 
-	@Override
-	public int compareTo(Version o) {
-		int len = Math.min(size(), o.size());
-		for (int i = 0; i < len; i++) {
-			long ov = o.getVersion(i);
-			long v = getVersion(i);
-			if (ov < v) return 1;
-			if (ov > v) return -1;
-		}
-		if (size() > len) return 1;
-		if (o.size() > len) return -1;
-		return 0;
-	}
+    private String original;
+    private long[] versions;
+    private VersionRange range;
 
-	public VersionRange toRange() {
-		if (range == null)
-			range = new VersionRange(toString());
-		return range;
-	}
-	
-	public String getOriginal() {
-		return original;
-	}
-	
+    public Version(String in) {
+        if (in == null) in = Versioned.DEFAULT_VERSION;
+
+        this.original = in;
+        // parse in
+        // crop
+        for (int i = 0; i < in.length(); i++) {
+            char c = in.charAt(i);
+            if (!(c == '.' || (c >= '0' && c <= '9'))) {
+                in = in.substring(0, i);
+                break;
+            }
+        }
+        String[] parts = in.split("\\.");
+        versions = new long[parts.length];
+        for (int i = 0; i < parts.length; i++) versions[i] = MCast.tolong(parts[i], 0);
+    }
+
+    public int size() {
+        if (versions == null) return 0;
+        return versions.length;
+    }
+
+    public long getVersion(int index) {
+        return versions[index];
+    }
+
+    @Override
+    public String toString() {
+        return MString.join(versions, '.');
+    }
+
+    @Override
+    public boolean equals(Object in) {
+        if (in == null) return false;
+        if (in instanceof String) in = new Version((String) in);
+        if (in instanceof Version) {
+            Version v = (Version) in;
+            if (v.size() != size()) return false;
+            for (int i = 0; i < size(); i++) if (v.getVersion(i) != getVersion(i)) return false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(Version o) {
+        int len = Math.min(size(), o.size());
+        for (int i = 0; i < len; i++) {
+            long ov = o.getVersion(i);
+            long v = getVersion(i);
+            if (ov < v) return 1;
+            if (ov > v) return -1;
+        }
+        if (size() > len) return 1;
+        if (o.size() > len) return -1;
+        return 0;
+    }
+
+    public VersionRange toRange() {
+        if (range == null) range = new VersionRange(toString());
+        return range;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
 }
 
 /*
@@ -233,7 +227,7 @@ public class Version implements Comparable<Version> {
     public boolean equals(Object ot) {
         if ( ! (ot instanceof Version))
             return false;
-        
+
         return compareTo((Version)ot) == 0;
     }
 
@@ -251,7 +245,7 @@ public class Version implements Comparable<Version> {
             throw new IllegalArgumentException("Version can only get 0 (major), 1 (minor), or 2 (micro)");
         }
     }
-    
+
     public static Version parseVersion(String version) {
 		if (version == null) {
 			return LOWEST;

@@ -11,5 +11,4 @@ import java.lang.annotation.Target;
 public @interface DbIndexes {
 
     DbIndex[] values();
-
 }

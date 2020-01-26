@@ -1,16 +1,14 @@
 /**
  * Copyright 2018 Mike Hummel
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * <p>http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * <p>Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package de.mhus.lib.servlet;
@@ -24,52 +22,51 @@ import javax.servlet.ServletOutputStream;
 
 public interface ResponseWrapper {
 
-	String getContentType();
+    String getContentType();
 
-	ServletOutputStream getOutputStream() throws IOException;
+    ServletOutputStream getOutputStream() throws IOException;
 
-	void sendError(int sc, String msg) throws IOException;
+    void sendError(int sc, String msg) throws IOException;
 
-	PrintWriter getWriter() throws IOException;
+    PrintWriter getWriter() throws IOException;
 
-	void sendError(int sc) throws IOException;
+    void sendError(int sc) throws IOException;
 
-	void setCharacterEncoding(String charset);
+    void setCharacterEncoding(String charset);
 
-	void sendRedirect(String location) throws IOException;
+    void sendRedirect(String location) throws IOException;
 
-	void setDateHeader(String name, long date);
+    void setDateHeader(String name, long date);
 
-	void setContentType(String type);
+    void setContentType(String type);
 
-	void addDateHeader(String name, long date);
+    void addDateHeader(String name, long date);
 
-	void setHeader(String name, String value);
+    void setHeader(String name, String value);
 
-	void addHeader(String name, String value);
+    void addHeader(String name, String value);
 
-	void setIntHeader(String name, int value);
+    void setIntHeader(String name, int value);
 
-	void addIntHeader(String name, int value);
+    void addIntHeader(String name, int value);
 
-	void flushBuffer() throws IOException;
+    void flushBuffer() throws IOException;
 
-	void setStatus(int sc);
+    void setStatus(int sc);
 
-	boolean isCommitted();
+    boolean isCommitted();
 
-	void setStatus(int sc, String sm);
+    void setStatus(int sc, String sm);
 
-	int getStatus();
+    int getStatus();
 
-	String getHeader(String name);
+    String getHeader(String name);
 
-	void setLocale(Locale loc);
+    void setLocale(Locale loc);
 
-	Collection<String> getHeaders(String name);
+    Collection<String> getHeaders(String name);
 
-	Collection<String> getHeaderNames();
+    Collection<String> getHeaderNames();
 
-	Locale getLocale();
-
+    Locale getLocale();
 }
