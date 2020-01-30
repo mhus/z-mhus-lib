@@ -7,6 +7,7 @@
 * Link https://github.com/googlei18n/libphonenumber to work with phone numbers
 * Reimplement cron scheduling
 * Add central maven parent pom for all mhu projects and reorg maven poms
+* Add JSqlParser support for generic xdb queries, generate Adb query model out of a sql statement https://github.com/JSQLParser/JSqlParser
 
 ## 3.5.0
 
