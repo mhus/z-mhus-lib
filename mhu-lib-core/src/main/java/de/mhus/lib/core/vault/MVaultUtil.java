@@ -100,17 +100,50 @@ public class MVaultUtil {
     }
 
     public static String getType(String content) {
+        
+        if (content == null) return MVault.TYPE_TEXT;
+        
+        // only analyse the first block in content
+        int pos = content.indexOf("-----END ");
+        if (pos < 0) return MVault.TYPE_TEXT;
+        content = content.substring(0, pos);
+        
         if (content.contains("-----BEGIN RSA PRIVATE KEY-----")) return MVault.TYPE_RSA_PRIVATE_KEY;
-        else if (content.contains("-----BEGIN RSA PUBLIC KEY-----"))
+        if (content.contains("-----BEGIN RSA PUBLIC KEY-----"))
             return MVault.TYPE_RSA_PUBLIC_KEY;
-        else if (content.contains("-----BEGIN DSA PRIVATE KEY-----"))
+        if (content.contains("-----BEGIN DSA PRIVATE KEY-----"))
             return MVault.TYPE_DSA_PRIVATE_KEY;
-        else if (content.contains("-----BEGIN DSA PUBLIC KEY-----"))
+        if (content.contains("-----BEGIN DSA PUBLIC KEY-----"))
             return MVault.TYPE_DSA_PUBLIC_KEY;
-        else if (content.contains("-----BEGIN ECC PRIVATE KEY-----"))
+        if (content.contains("-----BEGIN ECC PRIVATE KEY-----"))
             return MVault.TYPE_ECC_PRIVATE_KEY;
-        else if (content.contains("-----BEGIN ECC PUBLIC KEY-----"))
+        if (content.contains("-----BEGIN ECC PUBLIC KEY-----"))
             return MVault.TYPE_ECC_PUBLIC_KEY;
+        if (content.contains("-----BEGIN PRIVATE KEY-----")) {
+            if (content.contains("Method: AES"))
+                return MVault.TYPE_AES_PRIVATE_KEY;
+            if (content.contains("Method: RSA"))
+                return MVault.TYPE_RSA_PRIVATE_KEY;
+            if (content.contains("Method: ECC"))
+                return MVault.TYPE_ECC_PRIVATE_KEY;
+            if (content.contains("Method: DSA"))
+                return MVault.TYPE_DSA_PRIVATE_KEY;
+        }
+        if (content.contains("-----BEGIN PUBLIC KEY-----")) {
+            if (content.contains("Method: AES"))
+                return MVault.TYPE_AES_PUBLIC_KEY;
+            if (content.contains("Method: RSA"))
+                return MVault.TYPE_RSA_PUBLIC_KEY;
+            if (content.contains("Method: ECC"))
+                return MVault.TYPE_ECC_PUBLIC_KEY;
+            if (content.contains("Method: DSA"))
+                return MVault.TYPE_DSA_PUBLIC_KEY;
+        }
+        if (content.contains("-----BEGIN CIPHER-----"))
+            return MVault.TYPE_CIPHER;
+        if (content.contains("-----BEGIN SIGNATURE-----"))
+            return MVault.TYPE_SIGNATURE;
+            
         else return MVault.TYPE_TEXT;
     }
 
