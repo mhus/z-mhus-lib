@@ -34,6 +34,9 @@
     
     <properties>
         <mhus-lib.version>${project.version}</mhus-lib.version>
+        <!-- Legacy 
+        <httpcomponents.httpclient.version>4.3.6</httpcomponents.httpclient.version>
+        -->
     </properties>
     
 	<licenses>

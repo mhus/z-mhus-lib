@@ -63,7 +63,11 @@ public class MHttpClientBuilder extends MObject {
     }
 
     protected void configureConnectionManager(HttpClientBuilder build) {
-        build.setConnectionManagerShared(false);
+        try { // XXX Legacy to httpclient 4.3.6
+            build.setConnectionManagerShared(false);
+        } catch (NoSuchMethodError e) {
+            
+        };
         connManager = new PoolingHttpClientConnectionManager();
         ((PoolingHttpClientConnectionManager) connManager).setMaxTotal(100);
         ((PoolingHttpClientConnectionManager) connManager).setDefaultMaxPerRoute(100);
