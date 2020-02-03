@@ -127,7 +127,7 @@ public class M {
      * @param node
      * @param path
      * @param def
-     * @return
+     * @return value of the node
      */
     public static String get(JsonNode node, String path, String def) {
         return MJson.getText(node, path, def);
