@@ -57,6 +57,16 @@ public class MCollection {
         return false;
     }
 
+    public static int indexOf(Object[] array, Object item) {
+        if (array == null) return -1;
+        int pos = -1;
+        for (Object o : array) {
+            pos++;
+            if (item == null && o == null || o != null && o.equals(item)) return pos;
+        }
+        return -1;
+    }
+    
     /**
      * Fills a list at the end with the values of an array, ignoring null values.
      *
