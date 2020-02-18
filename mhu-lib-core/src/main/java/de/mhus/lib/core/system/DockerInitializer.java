@@ -38,6 +38,8 @@ public class DockerInitializer implements CfgInitiator {
                         String[] parts = line.split("/");
                         if (parts.length > 2) {
                             containerId = parts[2];
+                            if ("kubepods".equals(containerId) && parts.length > 4)
+                                containerId = parts[4];
                         }
                         break;
                     }
