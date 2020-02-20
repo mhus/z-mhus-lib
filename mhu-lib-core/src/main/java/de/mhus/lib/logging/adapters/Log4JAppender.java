@@ -13,76 +13,77 @@
  */
 package de.mhus.lib.logging.adapters;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LocationInfo;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.spi.ThrowableInformation;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
 
 import de.mhus.lib.core.logging.Log;
 
-public class Log4JAppender extends AppenderSkeleton {
+import java.io.Serializable;
+
+import org.apache.logging.log4j.Level;
+
+public class Log4JAppender extends AbstractAppender {
+
+
+    public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
+        super(name, filter, layout, ignoreExceptions);
+    }
+
+    public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
+        super(name, filter, layout);
+    }
 
     @Override
-    protected void append(LoggingEvent evt) {
+    public void append(LogEvent evt) {
         Level level = evt.getLevel();
-        LocationInfo location = evt.getLocationInformation();
         String loggerName = evt.getLoggerName();
         Object msg = evt.getMessage();
-        ThrowableInformation throwableInfo = evt.getThrowableInformation();
-        Throwable t = null;
-        if (throwableInfo != null) t = throwableInfo.getThrowable();
+        Throwable t = evt.getThrown();
 
         Log logger = Log.getLog(loggerName);
 
-        String method =
+        StackTraceElement location = evt.getSource();
+        String method = 
                 location.getClassName()
                         + "."
                         + location.getMethodName()
                         + ":"
                         + location.getLineNumber();
 
-        switch (level.toInt()) {
-            case Level.FATAL_INT:
-                logger.f(method, msg, t);
-                break;
-            case Level.ERROR_INT:
-                logger.e(method, msg, t);
-                break;
-            case Level.WARN_INT:
-                logger.w(method, msg, t);
-                break;
-            case Level.INFO_INT:
-                logger.i(method, msg, t);
-                break;
-            case Level.DEBUG_INT:
-                logger.d(method, msg, t);
-                break;
-            case Level.TRACE_INT:
-                logger.t(method, msg, t);
-                break;
-            default:
-                logger.t(method, msg, t);
-                break;
-        }
+        int l = level.intLevel();
+        if (l == Level.FATAL.intLevel())
+            logger.f(method, msg, t);
+        else if (l == Level.ERROR.intLevel())
+            logger.e(method, msg, t);
+        else if (l == Level.WARN.intLevel())
+            logger.w(method, msg, t);
+        else if (l == Level.INFO.intLevel())
+            logger.i(method, msg, t);
+        else if (l == Level.DEBUG.intLevel())
+            logger.d(method, msg, t);
+        else if (l == Level.TRACE.intLevel())
+            logger.t(method, msg, t);
+        else
+            logger.t(method, msg, t);
     }
-
-    @Override
-    public void close() {}
-
-    @Override
-    public boolean requiresLayout() {
-        return false;
-    }
-
-    public static void configure() {
-
-        Log4JAppender appender = new Log4JAppender();
-        appender.setThreshold(Level.ALL);
-        appender.setName("mlog2log4j");
-        appender.activateOptions();
-
-        Logger.getRootLogger().addAppender(appender);
-    }
+//
+//    @Override
+//    public void close() {}
+//
+//    @Override
+//    public boolean requiresLayout() {
+//        return false;
+//    }
+//
+//    public static void configure() {
+//
+//        Log4JAppender appender = new Log4JAppender();
+//        appender.setThreshold(Level.ALL);
+//        appender.setName("mlog2log4j");
+//        appender.activateOptions();
+//
+//        Logger.getRootLogger().addAppender(appender);
+//    }
 }

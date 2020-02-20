@@ -15,7 +15,6 @@ package de.mhus.lib.logging;
 
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.logging.adapters.JavaLoggerHandler;
-import de.mhus.lib.logging.adapters.Log4JAppender;
 
 public class ConfigureDefault extends MObject {
 
@@ -24,7 +23,7 @@ public class ConfigureDefault extends MObject {
         try {
             if (Class.forName("org.apache.log4j.Logger") != null) {
                 log().d("configure log4j");
-                Log4JAppender.configure();
+                // Log4JAppender.configure();
             }
         } catch (Throwable t) {
         }
