@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class SoftHashMap<K, V> implements Map<K, V>, Cloneable, Serializable {
 
@@ -433,5 +434,14 @@ public class SoftHashMap<K, V> implements Map<K, V>, Cloneable, Serializable {
         public IteratorWrap(Iterator<SoftReference<V>> iterator) {
             this.iterator = iterator;
         }
+    }
+
+    public V getOrCreate(K key, Function<K, V> creator ) {
+        V ret = get(key);
+        if (ret == null) {
+            ret = creator.apply(key);
+            put(key, ret);
+        }
+        return ret;
     }
 }
