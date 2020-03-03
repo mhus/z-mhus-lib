@@ -441,31 +441,33 @@ public class MFile {
 
     /**
      * Copy a file.
+     * Return -1 if src or dest is null, -2 if src is a directory, -3 if src and dest is the same file, -4 on error.
      *
      * @param _src
      * @param _dest
-     * @return true if successful
+     * @return lesser zero for an error or the copied size
      */
-    public static boolean copyFile(File _src, File _dest) {
-        if (_src == null || _dest == null) return false;
+    public static long copyFile(File _src, File _dest) {
+        if (_src == null || _dest == null) return -1;
 
-        if (_src.isDirectory()) return false;
+        if (_src.isDirectory()) return -2;
 
         if (_dest.isDirectory()) _dest = new File(_dest, _src.getName());
 
-        if (_dest.equals(_src)) return false;
+        if (_dest.equals(_src)) return -3;
 
+        long size = 0;
         try {
             InputStream fis = new FileInputStream(_src);
             OutputStream fos = new FileOutputStream(_dest);
-            copyFile(fis, fos);
+            size = copyFile(fis, fos);
             fis.close();
             fos.close();
         } catch (Exception e) {
             log.d(_src, _dest, e);
-            return false;
+            return -4;
         }
-        return true;
+        return size;
     }
 
     /**
@@ -473,10 +475,12 @@ public class MFile {
      *
      * @param _is
      * @param _os
+     * @return The copied size or -1 if _is or _os is null
      */
-    public static void copyFile(InputStream _is, OutputStream _os) {
-        if (_is == null || _os == null) return;
+    public static long copyFile(InputStream _is, OutputStream _os) {
+        if (_is == null || _os == null) return -1;
 
+        long size = 0;
         long free = Runtime.getRuntime().freeMemory();
         if (free < 1024) free = 1024;
         if (free > 32768) free = 32768;
@@ -486,12 +490,17 @@ public class MFile {
 
         try {
             while ((i = _is.read(buffer)) != -1) {
-                if (i == 0) MThread.sleep(100);
-                else _os.write(buffer, 0, i);
+                if (i == 0) 
+                    MThread.sleep(100);
+                else {
+                    _os.write(buffer, 0, i);
+                    size+=i;
+                }
             }
         } catch (Exception e) {
             log.d(e);
         }
+        return size;
     }
 
     /**
@@ -499,10 +508,12 @@ public class MFile {
      *
      * @param _is
      * @param _os
+     * @return Return the copied size of bytes or -1.
      */
-    public static void copyFile(Reader _is, Writer _os) {
-        if (_is == null || _os == null) return;
+    public static long copyFile(Reader _is, Writer _os) {
+        if (_is == null || _os == null) return -1;
 
+        long size = 0;
         long free = Runtime.getRuntime().freeMemory();
         if (free < 1024) free = 1024;
         if (free > 32768) free = 32768;
@@ -512,11 +523,16 @@ public class MFile {
 
         try {
             while ((i = _is.read(buffer)) != -1)
-                if (i == 0) MThread.sleep(100);
-                else _os.write(buffer, 0, i);
+                if (i == 0) 
+                    MThread.sleep(100);
+                else {
+                    _os.write(buffer, 0, i);
+                    size += i;
+                }
         } catch (Exception e) {
             log.d(e);
         }
+        return size;
     }
 
     /**
