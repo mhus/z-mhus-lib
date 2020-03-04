@@ -164,10 +164,17 @@ public class MThread extends MObject implements Runnable {
      * @param _millisec
      */
     public static void sleep(long _millisec) {
-        try {
-            Thread.sleep(_millisec);
-        } catch (InterruptedException e) {
-            log.i(e);
+        while (true) {
+            long start = System.currentTimeMillis();
+            try {
+                Thread.sleep(_millisec);
+                return;
+            } catch (InterruptedException e) {
+                log.d(e);
+                long done = System.currentTimeMillis() - start;
+                _millisec = _millisec - done;
+                if (_millisec <= 0) return;
+            }
         }
     }
 
