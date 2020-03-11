@@ -271,4 +271,25 @@ public class MSql {
             throw new SQLException("name is not a column identifier, possible injection");
         return name;
     }
+    
+    /**
+     * Returns true if a column exists in the result set.
+     * The function is linear do not use it in every iteration of an result set. Try to cache the result.
+     * Be aware of case sensitive / not sensitive database implementations.
+     * 
+     * @param rs Result Set to check
+     * @param column Name of the column to that should exists
+     * @return true if the column exists in the result set.
+     * @throws SQLException
+     */
+    public static boolean hasColumn(ResultSet rs, String column) throws SQLException {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        int columns = rsmd.getColumnCount();
+        for (int x = 1; x <= columns; x++) {
+            if (column.equals(rsmd.getColumnName(x))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
