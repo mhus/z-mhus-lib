@@ -22,10 +22,10 @@
 	<modelVersion>4.0.0</modelVersion>
     <parent>
 		<groupId>de.mhus.lib</groupId>
-		<version>6.5.0-SNAPSHOT</version>
+		<version>7.0.0-SNAPSHOT</version>
 	    <artifactId>mhus-oss</artifactId>
     </parent>
-    <version>6.4.0-SNAPSHOT</version>
+    <version>7.0.0-SNAPSHOT</version>
 	<artifactId>mhus-lib</artifactId>
 	<packaging>pom</packaging>
 	<description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
@@ -105,13 +105,13 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
-				<module>mhu-lib-annotations</module>
-				<module>mhu-lib-core</module>
-				<module>mhu-lib-j2ee</module>
-				<module>mhu-lib-persistence</module>
-                <module>mhu-lib-jpa</module>
-				<module>mhu-lib-standalone</module>
-				<module>mhu-lib-jms</module>
+				<module>lib-annotations</module>
+				<module>lib-core</module>
+				<module>lib-j2ee</module>
+				<module>lib-persistence</module>
+                <module>lib-jpa</module>
+				<module>lib-standalone</module>
+				<module>lib-jms</module>
 			</modules>
 
 		</profile>
@@ -124,15 +124,13 @@
 				</property>
 			</activation>
 			<modules>
-				<module>mhu-lib-annotations</module>
-				<module>mhu-lib-core</module>
-				<module>mhu-lib-persistence</module>
-				<module>mhu-lib-j2ee</module>
-		      <!-- currently no release wanted
-                <module>mhu-lib-jpa</module>
-		        <module>mhu-lib-standalone</module>
-		       -->
-				<module>mhu-lib-jms</module>
+				<module>lib-annotations</module>
+				<module>lib-core</module>
+				<module>lib-persistence</module>
+				<module>lib-j2ee</module>
+                <module>lib-jpa</module>
+		        <module>lib-standalone</module>
+				<module>lib-jms</module>
 			</modules>
 		</profile>
 	</profiles>

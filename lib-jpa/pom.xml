@@ -18,14 +18,14 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mhu-lib-persistence</artifactId>
+  <artifactId>lib-jpa</artifactId>
     <packaging>bundle</packaging>
-	<name>mhu-lib-persistence</name>
-	<description>Tools to develop applications with persistence</description>
+	<name>mhu-lib-jpa</name>
+	<description>Enhance persistence with jpa</description>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>
-        <version>6.4.0-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
   </parent>
   
      <build>
@@ -39,20 +39,15 @@
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            de.mhus.lib.adb.*;version=${project.version},
-	            de.mhus.lib.xdb.*;version=${project.version},
-	            de.mhus.lib.cao.*;version=${project.version},
-	            de.mhus.lib.sql.*;version=${project.version},
+	            de.mhus.lib.jpa.*;version=${project.version}
 	            </Export-Package>
 	            <Import-Package>
 		            javax.persistence.*;resolution:=optional,
+		            org.apache.openjpa.*;resolution:=optional,
 		            org.bson.*;resolution:=optional,
 		            *
 	            </Import-Package>
 				<DynamicImport-Package>*</DynamicImport-Package>
-				<!-- 
-                <Embed-Dependency>jsqlparser</Embed-Dependency>
-				 -->
 	          </instructions>
 	        </configuration>
 	      </plugin>
@@ -62,38 +57,19 @@
   <dependencies>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-core</artifactId>
+  		<artifactId>lib-core</artifactId>
   	</dependency>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-annotations</artifactId>
+  		<artifactId>lib-annotations</artifactId>
   	</dependency>
-	<!-- https://mvnrepository.com/artifact/com.github.jsqlparser/jsqlparser -->
-	<!-- 
-	<dependency>
-	    <groupId>com.github.jsqlparser</groupId>
-	    <artifactId>jsqlparser</artifactId>
-	    <version>3.0</version>
-	</dependency>
-	 -->
-  	
-  	<dependency>
-    	<groupId>org.hsqldb</groupId>
-    	<artifactId>hsqldb</artifactId>
-    	<type>jar</type>
-    	<scope>test</scope>
-    </dependency>
     <dependency>
-    	<groupId>mysql</groupId>
-    	<artifactId>mysql-connector-java</artifactId>
-    	<type>jar</type>
-    	<scope>test</scope>
+        <groupId>de.mhus.lib</groupId>
+        <artifactId>lib-persistence</artifactId>
     </dependency>
-	<dependency>
-	    <groupId>org.postgresql</groupId>
-	    <artifactId>postgresql</artifactId>
-    	<type>jar</type>
-	   	<scope>test</scope>
-	</dependency>
+  	<dependency>
+    	<groupId>org.apache.openjpa</groupId>
+    	<artifactId>openjpa</artifactId>
+  	</dependency>
   </dependencies>
 </project>

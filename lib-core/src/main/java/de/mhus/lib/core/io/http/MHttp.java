@@ -87,6 +87,16 @@ public class MHttp {
     public static final String CONTENT_TYPE_TEXT = "text/plain";
     public static final String CONTENT_TYPE_PDF = "application/pdf";
 
+    public static final String METHOD_DELETE = "DELETE";
+    public static final String METHOD_HEAD = "HEAD";
+    public static final String METHOD_GET = "GET";
+    public static final String METHOD_OPTIONS = "OPTIONS";
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_PUT = "PUT";
+    public static final String METHOD_TRACE = "TRACE";
+    public static final String METHOD_PATCH = "PATCH";
+    public static final String METHOD_CONNECT = "CONNECT";
+    
     public enum METHOD {
         GET,
         HEAD,

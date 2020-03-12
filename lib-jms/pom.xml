@@ -18,18 +18,18 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>mhu-lib-jpa</artifactId>
-    <packaging>bundle</packaging>
-	<name>mhu-lib-jpa</name>
-	<description>Enhance persistence with jpa</description>
+  <artifactId>lib-jms</artifactId>
+  <packaging>bundle</packaging>
+  <description>Tools to develop jms applications</description>
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>
-        <version>6.4.0-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
   </parent>
   
-     <build>
+   <build>
     <plugins>
+   
 		  <plugin>
 	        <groupId>org.apache.felix</groupId>
 	        <artifactId>maven-bundle-plugin</artifactId>
@@ -39,15 +39,12 @@
                 <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                 <Bundle-Version>${project.version}</Bundle-Version>
 	            <Export-Package>
-	            de.mhus.lib.jpa.*;version=${project.version}
-	            </Export-Package>
+	            	de.mhus.lib.jms*;version=${project.version}
+	            	</Export-Package>
 	            <Import-Package>
-		            javax.persistence.*;resolution:=optional,
-		            org.apache.openjpa.*;resolution:=optional,
-		            org.bson.*;resolution:=optional,
-		            *
+	            org.apache.activemq.*;resolution:=optional,
+	            *
 	            </Import-Package>
-				<DynamicImport-Package>*</DynamicImport-Package>
 	          </instructions>
 	        </configuration>
 	      </plugin>
@@ -55,21 +52,37 @@
   </build>
   
   <dependencies>
-  	<dependency>
-  		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-core</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>de.mhus.lib</groupId>
-  		<artifactId>mhu-lib-annotations</artifactId>
-  	</dependency>
     <dependency>
-        <groupId>de.mhus.lib</groupId>
-        <artifactId>mhu-lib-persistence</artifactId>
+    	<groupId>org.codehaus.jackson</groupId>
+    	<artifactId>jackson-mapper-asl</artifactId>
+    	<type>jar</type>
+    	<scope>compile</scope>
     </dependency>
   	<dependency>
-    	<groupId>org.apache.openjpa</groupId>
-    	<artifactId>openjpa</artifactId>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>lib-annotations</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>de.mhus.lib</groupId>
+  		<artifactId>lib-core</artifactId>
+  	</dependency>
+  	
+     <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-jms_1.1_spec</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-osgi</artifactId>
+    </dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.geronimo.specs/geronimo-ws-metadata_2.0_spec -->
+	<dependency>
+	    <groupId>org.apache.geronimo.specs</groupId>
+	    <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
+	</dependency>
+	
+	
+
   </dependencies>
+  
 </project>
