@@ -20,6 +20,7 @@ import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.errors.RuntimeInterruptedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 /**
@@ -159,25 +160,62 @@ public class MThread extends MObject implements Runnable {
     }
 
     /**
-     * Sleeps _millisec milliseconds. On Error (e.g. a break), it prints a stacktrace dump.
+     * Sleeps _millisec milliseconds. On Interruption it will throw an RuntimeInterruptedException
      *
      * @param _millisec
      */
     public static void sleep(long _millisec) {
+        try {
+            Thread.sleep(_millisec);
+        } catch (InterruptedException e) {
+            throw new RuntimeInterruptedException(e);
+        }
+    }
+
+    /**
+     * Sleeps _millisec milliseconds. On Interruption it will throw an InterruptedException.
+     * If thread is already interrupted, it will throw the exception directly.
+     *
+     * This can be used in loops if a interrupt should be able to stop the loop.
+     *
+     * @param _millisec
+     * @throws InterruptedException on interrupt
+     */
+    public static void sleepInLoop(long _millisec) throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+        Thread.sleep(_millisec);
+    }
+    
+    /**
+     * Sleeps _millisec milliseconds. On Interruption it will print a debug stack trace but not break.
+     * It will leave the Thread.interrupted state to false
+     * see https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html
+     * 
+     * @param _millisec
+     * @return true if the thread was interrupted in the sleep time
+     */
+    public static boolean sleepForSure(long _millisec) {
+        boolean interrupted = false;
         while (true) {
             long start = System.currentTimeMillis();
             try {
                 Thread.sleep(_millisec);
-                return;
+                return interrupted;
             } catch (InterruptedException e) {
+                interrupted = true;
+                try {
+                    Thread.sleep(1); // clear interrupted state
+                } catch (InterruptedException e1) {
+                } 
                 log.d(e);
                 long done = System.currentTimeMillis() - start;
                 _millisec = _millisec - done;
-                if (_millisec <= 0) return;
+                if (_millisec <= 0) return interrupted;
             }
         }
     }
-
+    
     protected void taskError(Throwable t) {
         log().e(name, t);
     }
