@@ -370,4 +370,14 @@ public class MThread extends MObject implements Runnable {
     public Thread getThread() {
         return thread;
     }
+
+    /**
+     * Check if the thread was interrupted an throws the InterruptedException
+     * exception.
+     * @throws InterruptedException Throw if the thread was interrupted in the meantime.
+     */
+    public static void checkInterruptedException() throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+    }
 }
