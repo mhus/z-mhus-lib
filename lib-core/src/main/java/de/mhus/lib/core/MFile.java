@@ -984,4 +984,18 @@ public class MFile {
                     }
                 });
     }
+
+    /**
+     * Touch a file
+     * @param file
+     * @return true if touch was successful
+     */
+    public static boolean touch(File file) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file, true);
+            fos.close();
+            return true;
+        } catch (IOException e) {}
+        return false;
+    }
 }
