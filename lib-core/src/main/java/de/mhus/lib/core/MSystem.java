@@ -226,13 +226,13 @@ public class MSystem {
         return "?";
     }
 
-    public static String findSourceMethod(int returns) {
+    public static String findCallingMethod(int returns) {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         if (stack.length > returns) return stack[returns].getMethodName();
         return "?";
     }
 
-    public static String findSourceMethod() {
+    public static String findCallingMethod() {
         StackTraceElement[] stack = Thread.currentThread().getStackTrace();
         for (StackTraceElement step : stack) {
             String n = step.getClassName();
