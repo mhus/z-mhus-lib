@@ -2,6 +2,7 @@ package de.mhus.lib.core.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.config.IniSecurityManagerFactory;
+import org.apache.shiro.env.BasicIniEnvironment;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -16,6 +17,7 @@ public class DefaultShiroSecurity extends MLog implements ShiroSecurity {
 
     public static CfgString CFG_CONFIG_FILE = new CfgString(ShiroSecurity.class,"iniResourcePath", MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath() );
     private SecurityManager securityManager;
+    private BasicIniEnvironment env;
     
     public DefaultShiroSecurity() {
         initialize();
@@ -23,14 +25,16 @@ public class DefaultShiroSecurity extends MLog implements ShiroSecurity {
     
     protected void initialize() {
         log().d("Initialize Shiro",CFG_CONFIG_FILE);
-        Factory<SecurityManager> factory = new IniSecurityManagerFactory(CFG_CONFIG_FILE.value());
-        securityManager = factory.getInstance();
-        SecurityUtils.setSecurityManager(securityManager);
+        env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+        SecurityUtils.setSecurityManager(env.getSecurityManager());
+//        Factory<SecurityManager> factory = new IniSecurityManagerFactory(CFG_CONFIG_FILE.value());
+//        securityManager = factory.getInstance();
+//        SecurityUtils.setSecurityManager(securityManager);
     }
     
     @Override
     public SecurityManager getSecurityManager() {
-        return securityManager;
+        return env.getSecurityManager();
     }
     
     @Override
@@ -53,6 +57,11 @@ public class DefaultShiroSecurity extends MLog implements ShiroSecurity {
                 }
             }
         }
+    }
+
+    @Override
+    public Subject getSubject() {
+        return SecurityUtils.getSubject();
     }
 
 }

@@ -106,6 +106,14 @@
         <groupId>org.apache.shiro</groupId>
         <artifactId>shiro-core</artifactId>
     </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-config-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-config-ogdl</artifactId>
+    </dependency>
         <!-- Shiro uses SLF4J for logging.  We'll use the 'simple' binding
              in this example app.  See http://www.slf4j.org for more info. -->
         <dependency>

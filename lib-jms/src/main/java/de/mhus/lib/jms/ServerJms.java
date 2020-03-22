@@ -27,6 +27,7 @@ import org.apache.activemq.ActiveMQSession;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.LevelMapper;
@@ -237,9 +238,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
             }
             log().d("received", dest, message);
 
+            MProperties callContext = new MProperties();
             try {
                 if (interceptorIn != null) {
-                    interceptorIn.begin(message);
+                    interceptorIn.begin(callContext, message);
                 }
             } catch (Throwable t) {
                 log().w(t);
@@ -284,7 +286,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
                 log().w("3", Thread.currentThread().getName(), t);
             } finally {
                 if (interceptorIn != null) {
-                    interceptorIn.end(message);
+                    interceptorIn.end(callContext, message);
                 }
             }
 

@@ -15,11 +15,13 @@ package de.mhus.lib.jms;
 
 import javax.jms.Message;
 
+import de.mhus.lib.core.IProperties;
+
 public interface JmsInterceptor {
 
-    void begin(Message message);
+    void begin(IProperties callContext, Message message);
 
-    void end(Message message);
+    void end(IProperties callContext, Message message);
 
     void prepare(Message answer);
 

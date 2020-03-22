@@ -14,4 +14,6 @@ public interface ShiroSecurity {
 
     void updateSessionLastAccessTime();
 
+    Subject getSubject();
+
 }

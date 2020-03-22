@@ -15,6 +15,7 @@ package de.mhus.lib.jms;
 
 import javax.jms.Message;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MLog;
 
@@ -29,13 +30,13 @@ public class InterceptorChain extends MLog implements JmsInterceptor {
     }
 
     @Override
-    public void begin(Message message) {
+    public void begin(IProperties callContext, Message message) {
         synchronized (this) {
             if (chain == null) return;
             for (JmsInterceptor inter : chain) {
                 if (inter == null) continue;
                 try {
-                    inter.begin(message);
+                    inter.begin(callContext, message);
                 } catch (Throwable t) {
                     log().w(inter, t);
                 }
@@ -44,14 +45,14 @@ public class InterceptorChain extends MLog implements JmsInterceptor {
     }
 
     @Override
-    public void end(Message message) {
+    public void end(IProperties callContext, Message message) {
         synchronized (this) {
             if (chain == null) return;
             for (int i = chain.length; i > 0; i--) {
                 JmsInterceptor inter = chain[i - 1];
                 if (inter == null) continue;
                 try {
-                    inter.end(message);
+                    inter.end(callContext, message);
                 } catch (Throwable t) {
                     log().w(inter, t);
                 }

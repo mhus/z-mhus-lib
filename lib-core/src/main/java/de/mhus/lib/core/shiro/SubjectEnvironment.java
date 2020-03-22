@@ -1,7 +1,6 @@
 package de.mhus.lib.core.shiro;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
