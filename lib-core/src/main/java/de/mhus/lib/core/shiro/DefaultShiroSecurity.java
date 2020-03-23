@@ -1,23 +1,21 @@
 package de.mhus.lib.core.shiro;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.env.BasicIniEnvironment;
+import org.apache.shiro.env.Environment;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgString;
 
-@SuppressWarnings("deprecation")
 public class DefaultShiroSecurity extends MLog implements ShiroSecurity {
 
     public static CfgString CFG_CONFIG_FILE = new CfgString(ShiroSecurity.class,"iniResourcePath", MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath() );
-    private SecurityManager securityManager;
-    private BasicIniEnvironment env;
+    protected SecurityManager securityManager;
+    protected Environment env;
     
     public DefaultShiroSecurity() {
         initialize();

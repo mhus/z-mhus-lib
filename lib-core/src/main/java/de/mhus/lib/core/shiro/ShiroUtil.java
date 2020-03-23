@@ -294,11 +294,13 @@ public class ShiroUtil {
      * @param subject - the subject to login
      * @param user - the user
      * @param pass - the password
+     * @param rememberMe 
      * @param locale The current locale for the session or null
      * @return true if login was successful
      */
-    public static boolean login(Subject subject, String user, String pass, Locale locale) {
+    public static boolean login(Subject subject, String user, String pass, boolean rememberMe, Locale locale) {
         UsernamePasswordToken token = new UsernamePasswordToken(user, MPassword.decode(pass));
+        token.setRememberMe(rememberMe);
         try {
             subject.login(token);
         } catch (AuthenticationException e) {

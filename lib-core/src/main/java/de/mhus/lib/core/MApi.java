@@ -42,6 +42,7 @@ public class MApi {
     }
 
     private static IApi api;
+    private static Log log = null;
     protected static Boolean trace;
     //	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
     private static IConfig emptyConfig = null;
@@ -78,6 +79,8 @@ public class MApi {
                 System.out.println("--- MApi: " + api.getClass().getCanonicalName());
             if (api instanceof ApiInitialize)
                 ((ApiInitialize) api).doInitialize(DummyClass.class.getClassLoader());
+            // init local log at the end
+            log = Log.getLog(MApi.class);
         }
         return api;
     }
@@ -183,6 +186,10 @@ public class MApi {
     }
 
     public static void dirtyLog(Object... string) {
+        if (log != null) {
+            log.d(string);
+            return;
+        }
         if (string == null || !isDirtyTrace()) return;
         out.println("--- " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
