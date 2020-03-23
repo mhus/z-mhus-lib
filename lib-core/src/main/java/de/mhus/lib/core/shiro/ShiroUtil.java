@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -15,9 +17,12 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.logging.Log;
 
 public class ShiroUtil {
 
+    private static final Log log = Log.getLog(ShiroUtil.class);
     public static final String ROLE_ADMIN = "GLOBAL_ADMIN";
     private static final Object ATTR_LOCALE = "locale";
 
@@ -281,6 +286,29 @@ public class ShiroUtil {
         if (ret == null) return def;
         if (ret instanceof String) return (String)ret;
         return String.valueOf(ret);
+    }
+    
+    /**
+     * Login and load user data from source (if needed and possible).
+     * 
+     * @param subject - the subject to login
+     * @param user - the user
+     * @param pass - the password
+     * @param locale The current locale for the session or null
+     * @return true if login was successful
+     */
+    public static boolean login(Subject subject, String user, String pass, Locale locale) {
+        UsernamePasswordToken token = new UsernamePasswordToken(user, MPassword.decode(pass));
+        try {
+            subject.login(token);
+        } catch (AuthenticationException e) {
+            log.d(e);
+            return false;
+        }
+        loadPrincipalData(subject);
+        if (locale != null)
+            setLocale(locale);
+        return true;
     }
 
 }

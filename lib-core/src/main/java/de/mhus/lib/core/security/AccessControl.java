@@ -11,17 +11,15 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.jms;
+package de.mhus.lib.core.security;
 
-import javax.jms.Message;
+public interface AccessControl extends Rightful {
 
-public interface JmsInterceptor {
+    boolean signIn(String username, String password);
 
-    void begin(CallContext callContext);
+    boolean isUserSignedIn();
 
-    void end(CallContext callContext);
+    void signOut();
 
-    void prepare(Message answer);
-
-    void answer(Message message);
+    Account getAccount();
 }
