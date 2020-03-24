@@ -24,6 +24,85 @@ import de.mhus.lib.core.shiro.SubjectEnvironment;
 public class ShiroSecurityTest {
 
     @Test
+    public void rolesTest() {
+        init("classpath:de/mhus/lib/test/shiro-data.ini");
+
+        // init shiro and get subject
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+
+        // admin ---------------------------------------------
+
+        // login
+        UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
+        
+        assertTrue(AccessUtil.hasRole("admin"));
+        assertFalse(AccessUtil.hasRole("user")); // should have all roles!!
+        
+        // none admin -----------------------------------------
+        
+        //cleanup shiro and test new subject
+        AccessUtil.subjectCleanup();
+        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        
+        //login lonestarr
+        token = new UsernamePasswordToken("lonestarr", "vespa");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        
+        assertFalse(AccessUtil.hasRole("admin"));
+
+    }
+    
+    @Test
+    public void permissionsTest() {
+        init("classpath:de/mhus/lib/test/shiro-data.ini");
+
+        // init shiro and get subject
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+
+        // admin ---------------------------------------------
+        
+        // login
+        UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
+        
+        assertTrue(AccessUtil.isPermitted("printer", "print", null));
+        
+        // none admin -----------------------------------------
+        
+        //cleanup shiro and test new subject
+        AccessUtil.subjectCleanup();
+        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        
+        //login lonestarr
+        token = new UsernamePasswordToken("lonestarr", "vespa");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        
+        assertFalse(AccessUtil.isPermitted("printer", "print", null));
+        
+    }
+    
+    @Test
     public void sessionTest() {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
         

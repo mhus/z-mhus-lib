@@ -20,6 +20,7 @@ import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
 import de.mhus.lib.core.util.SecureString;
@@ -27,14 +28,20 @@ import de.mhus.lib.core.util.SecureString;
 public class AccessUtil {
 
     private static final Log log = Log.getLog(AccessUtil.class);
-    public static final String ROLE_ADMIN = "GLOBAL_ADMIN";
+    public static final CfgString ROLE_ADMIN = new CfgString(AccessApi.class, "adminRole", "GLOBAL_ADMIN");
     private static final String ATTR_LOCALE = "locale";
     private static final String TICKET_PREFIX_TRUST = "tru:";
     private static final String TICKET_PREFIX_ACCOUNT = "acc:";
+    public static final Object CURRENT_PRINCIPAL = new Object() {
+        @Override
+        public String toString() {
+            return getPrincipal();
+        }
+    };
 
     public static boolean isAdmin() {
         Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return subject.hasRole(ROLE_ADMIN);
+        return subject.hasRole(ROLE_ADMIN.value());
     }
     
     public static Subject getSubject() {
@@ -346,6 +353,10 @@ public class AccessUtil {
             return subject;
         }
         throw new AuthorizationException("unknown ticket type");
+    }
+
+    public static boolean hasRole(String role) {
+        return getSubject().hasRole(role);
     }
     
 }

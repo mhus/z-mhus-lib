@@ -3,19 +3,22 @@ package de.mhus.lib.core.shiro;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.text.IniRealm;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import de.mhus.lib.core.logging.Log;
 
 public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     public static final String DATA_SECTION_NAME = "data";
-    private static transient final Logger log = LoggerFactory.getLogger(IniDataRealm.class);
+    private static transient final Log log = Log.getLog(IniDataRealm.class);
 
     private HashMap<String,Map<String,String>> userData = new HashMap<>();
+    private boolean debugPermissions;
     
     
     
@@ -50,13 +53,13 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     private void processDefinitions(Ini ini) {
         if (CollectionUtils.isEmpty(ini)) {
-            log.warn("{} defined, but the ini instance is null or empty.", getClass().getSimpleName());
+            log.w("defined, but the ini instance is null or empty.", getClass().getSimpleName());
             return;
         }
 
         Ini.Section dataSection = ini.getSection(DATA_SECTION_NAME);
         if (!CollectionUtils.isEmpty(dataSection)) {
-            log.debug("Discovered the [{}] section.  Processing...", DATA_SECTION_NAME);
+            log.d("Discovered the section.  Processing...", DATA_SECTION_NAME);
             processDataDefinitions(dataSection);
         }
     }
@@ -81,6 +84,32 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
                 data.put(subKey, value);
             }
         }
+    }
+
+    @Override
+    protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
+        boolean ret = super.isPermitted(permission, info);
+        if (debugPermissions && !ret) {
+            log.d("perm access denied",AccessUtil.CURRENT_PRINCIPAL, permission);
+        }
+        return ret;
+    }
+
+    @Override
+    protected boolean hasRole(String roleIdentifier, AuthorizationInfo info) {
+        boolean ret = super.hasRole(roleIdentifier, info);
+        if (debugPermissions && !ret) {
+            log.d("role access denied",AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
+        }
+        return ret;
+    }
+    
+    public boolean isDebugPermissions() {
+        return debugPermissions;
+    }
+
+    public void setDebugPermissions(boolean debugPermissions) {
+        this.debugPermissions = debugPermissions;
     }
     
 }

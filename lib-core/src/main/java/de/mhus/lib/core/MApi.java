@@ -95,7 +95,7 @@ public class MApi {
     }
 
     public static boolean isTrace(String name) {
-        dirtyLog("Ask for trace", name);
+        //dirtyLog("Ask for trace", name);
         //		String value = System.getProperty(name+".trace");
         //		if (value != null) return "true".equals(value);
         return get().isTrace(name);
