@@ -61,5 +61,11 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     public Subject getSubject() {
         return SecurityUtils.getSubject();
     }
+    
+    @Override
+    public void restart() {
+        // simply restart
+        initialize();
+    }
 
 }

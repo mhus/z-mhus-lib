@@ -16,4 +16,6 @@ public interface AccessApi {
 
     Subject getSubject();
 
+    void restart();
+
 }
