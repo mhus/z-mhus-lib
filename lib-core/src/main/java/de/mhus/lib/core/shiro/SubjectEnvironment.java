@@ -29,7 +29,7 @@ public class SubjectEnvironment implements Closeable {
 
     @Override
     public String toString() {
-        return ShiroUtil.toString(subject);
+        return AccessUtil.toString(subject);
     }
     
 }

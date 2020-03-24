@@ -189,6 +189,14 @@ public class MPassword {
         return in;
     }
 
+    public static SecureString decodeSecure(String in) {
+        return new SecureString(decode(in));
+    }
+    
+    public static SecureString decodeSecure(SecureString in) {
+        return new SecureString(decode(in.value()));
+    }
+    
     public static boolean validatePasswordMD5(String real, String md5) {
         if (md5 == null || real == null || md5.length() < 2) return false;
         if (md5.startsWith(PREFIX_HASH_MD5))

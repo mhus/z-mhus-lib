@@ -40,6 +40,7 @@ public class FileSourceRealm extends AuthorizingRealm {
     public FileSourceRealm() {
     }
     
+    @Override
     protected void onInit() {
         userDir = new File(resourcesPath + File.separator + "users");
         rolesDir = new File(resourcesPath + File.separator + "roles");

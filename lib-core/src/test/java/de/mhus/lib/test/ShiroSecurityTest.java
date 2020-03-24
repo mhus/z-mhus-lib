@@ -15,10 +15,10 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.base.SingleBaseStrategy;
 import de.mhus.lib.core.lang.MDirtyTricks;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.shiro.DefaultShiroSecurity;
+import de.mhus.lib.core.shiro.DefaultAccessApi;
 import de.mhus.lib.core.shiro.PrincipalData;
-import de.mhus.lib.core.shiro.ShiroSecurity;
-import de.mhus.lib.core.shiro.ShiroUtil;
+import de.mhus.lib.core.shiro.AccessApi;
+import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.core.shiro.SubjectEnvironment;
 
 public class ShiroSecurityTest {
@@ -28,32 +28,32 @@ public class ShiroSecurityTest {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
         
         // init shiro and get subject
-        System.out.println("1 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
         
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        ShiroUtil.getSubject().login(token);
+        AccessUtil.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("admin", ShiroUtil.getPrincipal());
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
         
-        String sessionId = ShiroUtil.getSessionId(true);
-        System.out.println("2 Session: " + ShiroUtil.getSessionId(false));
+        String sessionId = AccessUtil.getSessionId(true);
+        System.out.println("2 Session: " + AccessUtil.getSessionId(false));
         //cleanup shiro and test new subject
-        ShiroUtil.subjectCleanup();
-        System.out.println("3 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        System.out.println("3 Session: " + ShiroUtil.getSessionId(false));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        AccessUtil.subjectCleanup();
+        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        System.out.println("3 Session: " + AccessUtil.getSessionId(false));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
 
         // recreate session
-        Subject session = ShiroUtil.createSubjectFromSessionId(sessionId);
+        Subject session = AccessUtil.createSubjectFromSessionId(sessionId);
         session.execute(() -> {
-            System.out.println("4 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-            System.out.println("4 Session: " + ShiroUtil.getSessionId(false));
-            assertTrue(ShiroUtil.getSubject().isAuthenticated());
-            assertEquals("admin", ShiroUtil.getPrincipal());
+            System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+            System.out.println("4 Session: " + AccessUtil.getSessionId(false));
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            assertEquals("admin", AccessUtil.getPrincipal());
         });
         
         
@@ -64,43 +64,43 @@ public class ShiroSecurityTest {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
         
         // init shiro and get subject
-        Subject subject = ShiroUtil.getSubject();
-        System.out.println("1 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        Subject subject = AccessUtil.getSubject();
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
         
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        ShiroUtil.getSubject().login(token);
+        AccessUtil.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("admin", ShiroUtil.getPrincipal());
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
 
         //cleanup shiro and test new subject
-        ShiroUtil.subjectCleanup();
-        System.out.println("3 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        AccessUtil.subjectCleanup();
+        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
         
         //login
         token = new UsernamePasswordToken("lonestarr", "vespa");
-        ShiroUtil.getSubject().login(token);
+        AccessUtil.getSubject().login(token);
         // test
-        System.out.println("4 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", ShiroUtil.getPrincipal());
+        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("lonestarr", AccessUtil.getPrincipal());
         
         // use a different subject for a while
-        try (SubjectEnvironment env = ShiroUtil.useSubject(subject)) {
+        try (SubjectEnvironment env = AccessUtil.useSubject(subject)) {
             System.out.println("5 Env: " + env);
-            System.out.println("5 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-            assertTrue(ShiroUtil.getSubject().isAuthenticated());
-            assertEquals("admin", ShiroUtil.getPrincipal());
+            System.out.println("5 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            assertEquals("admin", AccessUtil.getPrincipal());
         }
         
         // check if subject was restored
-        System.out.println("6 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", ShiroUtil.getPrincipal());
+        System.out.println("6 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("lonestarr", AccessUtil.getPrincipal());
         
     }
 
@@ -109,19 +109,19 @@ public class ShiroSecurityTest {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
         
         // init shiro and get subject
-        Subject subject = ShiroUtil.getSubject();
-        System.out.println("1 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        Subject subject = AccessUtil.getSubject();
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        ShiroUtil.getSubject().login(token);
+        AccessUtil.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("admin", ShiroUtil.getPrincipal());
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
 
-        for (Realm realm : ShiroUtil.getRealms()) {
+        for (Realm realm : AccessUtil.getRealms()) {
             System.out.println(realm);
         }
         
@@ -136,7 +136,7 @@ public class ShiroSecurityTest {
             }
         }
         
-        ShiroUtil.getPrincipalData();
+        AccessUtil.getPrincipalData();
         
     }
     
@@ -146,18 +146,18 @@ public class ShiroSecurityTest {
         init("classpath:de/mhus/lib/test/shiro-data.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertFalse(ShiroUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        ShiroUtil.getSubject().login(token);
+        AccessUtil.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + ShiroUtil.toString(ShiroUtil.getSubject()));
-        assertTrue(ShiroUtil.getSubject().isAuthenticated());
-        assertEquals("admin", ShiroUtil.getPrincipal());
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
 
-        PrincipalData data = ShiroUtil.getPrincipalData();
+        PrincipalData data = AccessUtil.getPrincipalData();
         System.out.println("DisplayName: " + data.getDisplayName());
 
         assertEquals("Administrator", data.getDisplayName());
@@ -171,11 +171,11 @@ public class ShiroSecurityTest {
         MApi.get().getLogFactory().setDefaultLevel(Log.LEVEL.DEBUG);
         MApi.get().getBaseControl().setFindStrategy(new SingleBaseStrategy());
         //cleanup shiro
-        ShiroUtil.subjectCleanup();
+        AccessUtil.subjectCleanup();
        // touch class
-        DefaultShiroSecurity.CFG_CONFIG_FILE.value();
+        DefaultAccessApi.CFG_CONFIG_FILE.value();
         // patch value
-        assertTrue(MDirtyTricks.updateCfgValue(ShiroSecurity.class, "iniResourcePath", config));
+        assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "iniResourcePath", config));
     }
     
 }

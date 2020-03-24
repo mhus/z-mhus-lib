@@ -27,7 +27,7 @@ public class ShiroAccount implements Account {
 
     @Override
     public String getName() {
-        return ShiroUtil.getPrincipal(subject);
+        return AccessUtil.getPrincipal(subject);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ShiroAccount implements Account {
 
     @Override
     public String getDisplayName() {
-        return ShiroUtil.getPrincipalData().getDisplayName();
+        return AccessUtil.getPrincipalData().getDisplayName();
     }
 
     @Override

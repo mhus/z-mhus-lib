@@ -33,7 +33,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     @Override
     public Map<String,String> getUserData(Subject subject) {
-        String userName = ShiroUtil.getPrincipal(subject);
+        String userName = AccessUtil.getPrincipal(subject);
         Map<String,String> data = userData.get(userName);
         if (data == null) return null;
         return data;

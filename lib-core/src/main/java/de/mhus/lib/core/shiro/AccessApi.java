@@ -5,8 +5,8 @@ import org.apache.shiro.subject.Subject;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 
-@DefaultImplementation(DefaultShiroSecurity.class)
-public interface ShiroSecurity {
+@DefaultImplementation(DefaultAccessApi.class)
+public interface AccessApi {
 
     SecurityManager getSecurityManager();
 

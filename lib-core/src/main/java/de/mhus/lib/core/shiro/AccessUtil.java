@@ -8,41 +8,47 @@ import java.util.Map;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.security.TrustApi;
+import de.mhus.lib.core.util.SecureString;
 
-public class ShiroUtil {
+public class AccessUtil {
 
-    private static final Log log = Log.getLog(ShiroUtil.class);
+    private static final Log log = Log.getLog(AccessUtil.class);
     public static final String ROLE_ADMIN = "GLOBAL_ADMIN";
-    private static final Object ATTR_LOCALE = "locale";
+    private static final String ATTR_LOCALE = "locale";
+    private static final String TICKET_PREFIX_TRUST = "tru:";
+    private static final String TICKET_PREFIX_ACCOUNT = "acc:";
 
     public static boolean isAdmin() {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         return subject.hasRole(ROLE_ADMIN);
     }
     
     public static Subject getSubject() {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         return subject;
     }
     
     public static boolean isAuthenticated() {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         return subject.isAuthenticated();
     }
     
     public static String getPrincipal() {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         return getPrincipal(subject);
     }
     
@@ -71,7 +77,7 @@ public class ShiroUtil {
     }
     
     public static Collection<Realm> getRealms() {
-        SecurityManager securityManager = M.l(ShiroSecurity.class).getSecurityManager();
+        SecurityManager securityManager = M.l(AccessApi.class).getSecurityManager();
         return ((RealmSecurityManager)securityManager).getRealms();
     }
     
@@ -208,7 +214,7 @@ public class ShiroUtil {
      * @return true if access is granted
      */
     public static boolean isPermitted(String permission, String level, String instance) {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         permission = normalizeWildcardPart(permission);
         StringBuilder wildcardString = new StringBuilder().append(permission);
         if (level != null || instance != null) {
@@ -233,7 +239,7 @@ public class ShiroUtil {
     }
 
     public static boolean isPermitted(String wildcardString) {
-        Subject subject =  M.l(ShiroSecurity.class).getSubject(); // init
+        Subject subject =  M.l(AccessApi.class).getSubject(); // init
         return subject.isPermitted(new WildcardPermission(wildcardString));
     }
 
@@ -313,4 +319,33 @@ public class ShiroUtil {
         return true;
     }
 
+    public static String createTrustTicket(String trust, Subject subject) {
+        // TODO encode with rsa
+        SecureString password = M.l(TrustApi.class).getPassword(trust);
+        return TICKET_PREFIX_TRUST + trust + ":" + AccessUtil.getPrincipal(subject) +":" + password.value();
+    }
+
+    public static String createAccountTicket(String account, String password) {
+        // TODO encode with rsa
+        return TICKET_PREFIX_ACCOUNT + account + ":" + MPassword.encode(password);
+    }
+    
+    public static Subject login(String ticket) {
+        if (ticket == null) throw new AuthorizationException("ticket not set");
+        String[] parts = ticket.split(":");
+        if (parts[0].equals(TICKET_PREFIX_TRUST)) {
+            if (parts.length != 4) throw new AuthorizationException("ticket not valide (1)");
+            M.l(TrustApi.class).validatePassword(parts[1],parts[3]);
+            return new Subject.Builder().authenticated(true).principals(new SimplePrincipalCollection(parts[2],"trust")).buildSubject();
+        }
+        if (parts[0].equals(TICKET_PREFIX_ACCOUNT)) {
+            if (parts.length != 3) throw new AuthorizationException("ticket not valide (2)");
+            Subject subject = M.l(AccessApi.class).createSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(parts[1], parts[2]);
+            subject.login(token);
+            return subject;
+        }
+        throw new AuthorizationException("unknown ticket type");
+    }
+    
 }

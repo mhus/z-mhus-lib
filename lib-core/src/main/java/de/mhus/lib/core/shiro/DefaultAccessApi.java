@@ -11,13 +11,13 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgString;
 
-public class DefaultShiroSecurity extends MLog implements ShiroSecurity {
+public class DefaultAccessApi extends MLog implements AccessApi {
 
-    public static CfgString CFG_CONFIG_FILE = new CfgString(ShiroSecurity.class,"iniResourcePath", MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath() );
+    public static CfgString CFG_CONFIG_FILE = new CfgString(AccessApi.class,"iniResourcePath", MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath() );
     protected SecurityManager securityManager;
     protected Environment env;
     
-    public DefaultShiroSecurity() {
+    public DefaultAccessApi() {
         initialize();
     }
     
