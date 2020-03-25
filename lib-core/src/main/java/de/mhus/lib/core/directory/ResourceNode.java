@@ -360,6 +360,7 @@ public abstract class ResourceNode<T extends ResourceNode<?>> extends AbstractPr
     @SuppressWarnings("unchecked")
     public T getNodeByPath(String path) {
         if (path == null) return null;
+        if (path.equals("") || path.equals(".")) return (T) this;
         while (path.startsWith("/")) path = path.substring(1);
         if (path.length() == 0) return (T) this;
         int p = path.indexOf('/');

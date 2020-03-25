@@ -30,8 +30,8 @@ public class AccessUtil {
     private static final Log log = Log.getLog(AccessUtil.class);
     public static final CfgString ROLE_ADMIN = new CfgString(AccessApi.class, "adminRole", "GLOBAL_ADMIN");
     private static final String ATTR_LOCALE = "locale";
-    private static final String TICKET_PREFIX_TRUST = "tru:";
-    private static final String TICKET_PREFIX_ACCOUNT = "acc:";
+    private static final String TICKET_PREFIX_TRUST = "tru";
+    private static final String TICKET_PREFIX_ACCOUNT = "acc";
     public static final Object CURRENT_PRINCIPAL = new Object() {
         @Override
         public String toString() {
@@ -329,15 +329,16 @@ public class AccessUtil {
     public static String createTrustTicket(String trust, Subject subject) {
         // TODO encode with rsa
         SecureString password = M.l(TrustApi.class).getPassword(trust);
-        return TICKET_PREFIX_TRUST + trust + ":" + AccessUtil.getPrincipal(subject) +":" + password.value();
+        return TICKET_PREFIX_TRUST + ":" + trust + ":" + AccessUtil.getPrincipal(subject) +":" + password.value();
     }
 
     public static String createAccountTicket(String account, String password) {
         // TODO encode with rsa
-        return TICKET_PREFIX_ACCOUNT + account + ":" + MPassword.encode(password);
+        return TICKET_PREFIX_ACCOUNT + ":" + account + ":" + MPassword.encode(password);
     }
     
     public static Subject login(String ticket) {
+        M.l(AccessApi.class); // init
         if (ticket == null) throw new AuthorizationException("ticket not set");
         String[] parts = ticket.split(":");
         if (parts[0].equals(TICKET_PREFIX_TRUST)) {
