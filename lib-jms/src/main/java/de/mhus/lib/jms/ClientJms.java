@@ -60,8 +60,9 @@ public class ClientJms extends JmsChannel implements MessageListener {
 
     public void sendJmsOneWay(Message msg) throws JMSException {
         open();
+        JmsContext context = new JmsContext(msg);
         prepareMessage(msg);
-        if (interceptorOut != null) interceptorOut.prepare(msg);
+        if (interceptorOut != null) interceptorOut.prepare(context);
         log().d("sendJmsOneWay", dest, producer.getTimeToLive(), msg);
         try {
             producer.send(msg);
@@ -84,13 +85,14 @@ public class ClientJms extends JmsChannel implements MessageListener {
     public Message sendJms(Message msg) throws JMSException {
         open();
 
+        JmsContext context = new JmsContext(msg);
         prepareMessage(msg);
         String id = msg.getJMSMessageID();
         openAnswerQueue();
         msg.setJMSReplyTo(answerQueue);
         msg.setJMSCorrelationID(id);
         addAllowedId(id);
-        if (interceptorOut != null) interceptorOut.prepare(msg);
+        if (interceptorOut != null) interceptorOut.prepare(context);
         try {
             log().d("sendJms", dest, producer.getTimeToLive(), msg);
             try {
@@ -117,8 +119,14 @@ public class ClientJms extends JmsChannel implements MessageListener {
                 synchronized (responses) {
                     Message answer = responses.get(id);
                     if (answer != null) {
+                        context.setAnswer(answer);
                         responses.remove(id);
                         log().d("sendJmsAnswer", dest, answer);
+                        try {
+                            if (interceptorIn != null) interceptorIn.answer(context);
+                        } catch (Throwable t) {
+                            log().d(t);
+                        }
                         return answer;
                     }
                 }
@@ -242,7 +250,6 @@ public class ClientJms extends JmsChannel implements MessageListener {
             synchronized (responses) {
                 String id = message.getJMSCorrelationID();
                 if (!allowedIds.contains(id)) return;
-                if (interceptorIn != null) interceptorIn.answer(message);
                 responses.put(id, message);
             }
             synchronized (this) {

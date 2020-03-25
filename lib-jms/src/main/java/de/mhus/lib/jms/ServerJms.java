@@ -108,13 +108,17 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
 
     public abstract Message received(Message msg) throws JMSException;
 
-    protected void sendAnswer(Message msg, Message answer) throws JMSException {
+    protected void sendAnswer(JmsContext rpcContext) throws JMSException {
+        Message msg = rpcContext.getMessage();
+        Message answer = rpcContext.getAnswer();
         openAnswer();
-        if (answer == null)
+        if (answer == null) {
             answer =
                     createErrorAnswer(
                             null); // other side is waiting for an answer - send a null text
-        if (interceptorOut != null) interceptorOut.prepare(answer);
+            rpcContext.setAnswer(answer);
+        }
+        if (interceptorOut != null) interceptorOut.prepare(rpcContext);
         answer.setJMSMessageID(createMessageId());
         answer.setJMSCorrelationID(msg.getJMSCorrelationID());
         replyProducer.send(
@@ -237,10 +241,10 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
             }
             log().d("received", dest, message);
 
-            CallContext callContext = new CallContext(message);
+            JmsContext context = new JmsContext(message);
             try {
                 if (interceptorIn != null) {
-                    interceptorIn.begin(callContext);
+                    interceptorIn.begin(context);
                 }
             } catch (Throwable t) {
                 log().w(t);
@@ -248,7 +252,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
                     if (message.getJMSReplyTo() != null) {
                         TextMessage answer = createErrorAnswer(t);
                         log().d("errorAnswer", dest, answer);
-                        sendAnswer(message, answer);
+                        context.setAnswer(answer);
+                        sendAnswer(context);
                     }
                 } catch (Throwable tt) {
                     log().w(tt);
@@ -268,7 +273,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
                         answer = createErrorAnswer(t);
                     }
                     log().d("receivedAnswer", dest, answer);
-                    sendAnswer(message, answer);
+                    context.setAnswer(answer);
+                    sendAnswer(context);
                 } else {
                     log().d("receivedOneWay", dest, message);
                     receivedOneWay(message);
@@ -285,7 +291,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
                 log().w("3", Thread.currentThread().getName(), t);
             } finally {
                 if (interceptorIn != null) {
-                    interceptorIn.end(callContext);
+                    interceptorIn.end(context);
                 }
             }
 

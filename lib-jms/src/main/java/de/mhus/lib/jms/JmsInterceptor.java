@@ -13,15 +13,29 @@
  */
 package de.mhus.lib.jms;
 
-import javax.jms.Message;
-
 public interface JmsInterceptor {
 
-    void begin(CallContext callContext);
+    /**
+     * Begin processing of a incoming JMS RPC
+     * @param context
+     */
+    void begin(JmsContext context);
 
-    void end(CallContext callContext);
+    /**
+     * End of processing incoming JMS RPC
+     * @param context
+     */
+    void end(JmsContext context);
 
-    void prepare(Message answer);
+    /**
+     * Prepare a message JMS RPC call
+     * @param context
+     */
+    void prepare(JmsContext context);
 
-    void answer(Message message);
+    /**
+     * Check incoming answer of an JMS RPC call
+     * @param context
+     */
+    void answer(JmsContext context);
 }
