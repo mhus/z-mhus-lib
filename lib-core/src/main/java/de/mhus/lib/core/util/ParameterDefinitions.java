@@ -24,6 +24,20 @@ public class ParameterDefinitions extends TreeMap<String, ParameterDefinition> {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Format of lines:
+     * name,key:value,key:value...
+     * 
+     * Keys:
+     * type:[type]
+     * format:[format]
+     * mandatory:[bool]
+     * default:[default]
+     * 
+     * 
+     * @param definitions
+     * @return
+     */
     public static ParameterDefinitions create(Collection<String> definitions) {
         ParameterDefinitions out = new ParameterDefinitions();
         for (String line : definitions) {
@@ -41,12 +55,11 @@ public class ParameterDefinitions extends TreeMap<String, ParameterDefinition> {
 
     private static void collect(IConfig form, ParameterDefinitions out) throws MException {
 
-        // TODO need more transform options
         if (form instanceof IFmElement) {
-            String name = form.getString("name");
-            String type = form.getString("type", null);
+//            String name = form.getString("name");
+//            String type = form.getString("type", null);
             ParameterDefinition def =
-                    new ParameterDefinition(name + (type != null ? ",type:" + type : ""));
+                    new ParameterDefinition(form);
             out.put(def.getName(), def);
         }
 

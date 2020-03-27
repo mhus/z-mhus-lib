@@ -206,11 +206,62 @@ public class MValidator {
         return nr.matches("^[-+]?[0-9]*\\.?[0-9]+$");
     }
 
-    public static boolean isInteger(String nr) {
+    public static boolean isInteger(Object nr) {
         if (nr == null) return false;
-        return nr.matches("^[-+]?[0-9]*$");
+        if (nr instanceof Integer) return true;
+        try {
+            Integer.valueOf(String.valueOf(nr));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        // return String.valueOf(nr).matches("^[-+]?[0-9]*$");
     }
 
+    public static boolean isLong(Object nr) {
+        if (nr == null) return false;
+        if (nr instanceof Integer || nr instanceof Long) return true;
+        try {
+            Long.valueOf(String.valueOf(nr));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        // return String.valueOf(nr).matches("^[-+]?[0-9]*$");
+    }
+    
+    public static boolean isDouble(Object nr) {
+        if (nr == null) return false;
+        if (nr instanceof Double || nr instanceof Float) return true;
+        try {
+            Double.valueOf(String.valueOf(nr));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        // return String.valueOf(nr).matches("^[-+]?[0-9]*$");
+    }
+    
+    public static boolean isFloat(Object nr) {
+        if (nr == null) return false;
+        if (nr instanceof Float) return true;
+        try {
+            Float.valueOf(String.valueOf(nr));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        // return String.valueOf(nr).matches("^[-+]?[0-9]*$");
+    }
+
+    public static boolean isBoolean(Object nr) {
+        if (nr == null) return false;
+        if (nr instanceof Boolean) return true;
+        if (MCast.toboolean(nr, true) == true && MCast.toboolean(nr, false) == false)
+            return false;
+        return true;
+    }
+    
     public static boolean isIPv4(String ip) {
         if (ip == null) return false;
         return ip.matches(

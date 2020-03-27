@@ -11,21 +11,13 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.form;
+package de.mhus.lib.form.definition;
 
-public interface IFormInformation extends IFormProvider {
+import de.mhus.lib.core.definition.DefAttribute;
 
-    /**
-     * Get Action Handler Class or null
-     *
-     * @return Action handler
-     */
-    Class<? extends ActionHandler> getActionHandler();
+public class FaMandatory extends DefAttribute {
 
-    /**
-     * Get Form Control Class or null
-     *
-     * @return Form Control
-     */
-    Class<? extends FormControl> getFormControl();
+    public FaMandatory() {
+        super("mandatory", "true");
+    }
 }

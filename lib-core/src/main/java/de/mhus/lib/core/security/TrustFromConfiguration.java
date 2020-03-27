@@ -13,7 +13,7 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
 public class TrustFromConfiguration extends MLog implements TrustApi {
 
     private SoftHashMap<String, SecureString> cache = new SoftHashMap<>();
-    private CfgNode config = new CfgNode(TrustApi.class, ".", null)
+    private CfgNode config = new CfgNode(TrustApi.class, "", null)
             .updateAction((c) -> {
                 synchronized (cache) {
                     cache.clear();

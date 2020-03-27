@@ -15,11 +15,13 @@ package de.mhus.lib.core.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
@@ -34,13 +36,20 @@ public class ParameterDefinition {
     private String format;
     private IReadProperties properties;
 
+    public ParameterDefinition(Map<String, Object> properties) {
+        this.properties = new MProperties(properties);
+        name = this.properties.getString("name", "");
+        type = this.properties.getString("type", "");
+        loadProperties();
+    }
+    
     public ParameterDefinition(String line) {
         if (MString.isIndex(line, ',')) {
             name = MString.beforeIndex(line, ',');
             line = MString.afterIndex(line, ',');
-
+            
             properties = MProperties.explodeToMProperties(line.split(","), ':', (char) 0);
-
+            
         } else {
             name = line;
             if (name.startsWith("*")) {
@@ -56,11 +65,19 @@ public class ParameterDefinition {
             name = name.substring(1);
         }
 
-        type = properties.getString("type", "");
+        loadProperties();
+    }
+
+
+    private void loadProperties() {
+        if (type == null) type = "";
+        type = properties.getString("type", type);
+        
         mandatory = properties.getBoolean("mandatory", mandatory);
         def = properties.getString("default", null);
         mapping = properties.getString("mapping", null);
         format = properties.getString("format", null);
+
     }
 
     public String getName() {
@@ -135,5 +152,43 @@ public class ParameterDefinition {
     @Override
     public String toString() {
         return name + ":" + type;
+    }
+
+    public boolean validate(Object v) {
+        switch (type) {
+        case "int":
+        case "integer":
+            return MValidator.isInteger(v);
+        case "long":
+            return MValidator.isLong(v);
+        case "bool":
+        case "boolean":
+            return MValidator.isBoolean(v);
+        case "datestring":
+            {
+                Date date = MCast.toDate(v, MCast.toDate(def, null));
+                if (date == null) return false;
+                return true;
+            }
+        case "date":
+            {
+                Date date = MCast.toDate(v, MCast.toDate(def, null));
+                if (date == null) return false;
+                return true;
+            }
+        case "enum":
+            {
+                String[] parts = def.split(",");
+                String val = String.valueOf(v).toLowerCase();
+                for (String p : parts) if (val.equals(p.toLowerCase())) return true;
+                return false;
+            }
+        case "string":
+        case "text":
+            return true;
+        default:
+            log.d("Unknown Type", name, type);
+    }
+        return true;
     }
 }

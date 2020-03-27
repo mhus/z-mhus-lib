@@ -40,8 +40,15 @@ public class VersionRange {
     public VersionRange(String string) {
         string = string.trim();
         if (string.indexOf(',') > 0) {
-            if (!string.startsWith("[") && !string.startsWith("(")) string = "[" + string;
-            if (!string.endsWith("]") && !string.endsWith(")")) string = string + ")";
+            if (string.startsWith("]")) // ]1.0.0,...
+                string = "(" + string.substring(1);
+            else if (!string.startsWith("[") && !string.startsWith("(")) string = "[" + string;
+            
+            if (string.endsWith("[")) // ...,2.0.0[
+                string = string.substring(0,string.length()-1) + ")";
+            else if (!string.endsWith("]") && !string.endsWith(")")) 
+                string = string + ")";
+            
         }
 
         Matcher m = RANGE.matcher(string);
