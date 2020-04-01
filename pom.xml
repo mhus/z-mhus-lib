@@ -108,7 +108,6 @@
 				<module>lib-annotations</module>
 				<module>lib-core</module>
 				<module>lib-j2ee</module>
-				<module>lib-persistence</module>
 				<module>lib-standalone</module>
 				<module>lib-jms</module>
 			</modules>
@@ -126,7 +125,9 @@
 				<module>lib-annotations</module>
 				<module>lib-core</module>
 				<module>lib-j2ee</module>
+				<!-- 
 		        <module>lib-standalone</module>
+				 -->
 				<module>lib-jms</module>
 			</modules>
 		</profile>
