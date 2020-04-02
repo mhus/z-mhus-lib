@@ -961,4 +961,8 @@ public class MSystem {
         if (key == null) return false;
         return key.toLowerCase().contains("pass"); // password, ? secret ?
     }
+
+    public static String currentStackTrace(String firstLine) {
+        return MCast.toString(firstLine,Thread.currentThread().getStackTrace());
+    }
 }
