@@ -196,6 +196,7 @@ public class MApi {
     }
 
     public static void dirtyLogInfo(Object... string) {
+        if (!isDirtyTrace()) return;
         if (string == null) return;
         out.println("--- " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);

@@ -71,6 +71,7 @@ public class ANSIConsole extends Console {
     protected int width = 0;
     protected int height = 0;
     protected boolean supportSize;
+    private String term;
 
     public ANSIConsole() throws IOException {
         this(new LineReaderImpl(TerminalBuilder.builder().build()));
@@ -90,6 +91,7 @@ public class ANSIConsole extends Console {
     }
 
     protected void loadSettings() {
+        term = System.getenv("TERM");
         int w = reader.getTerminal().getWidth();
         int h = reader.getTerminal().getHeight();
         if (w == 80 && h == 24) { // default size if size can't be recognized
@@ -213,7 +215,9 @@ public class ANSIConsole extends Console {
     @Override
     public boolean isSupportColor() {
         // method not found return reader.getTerminal().getAnsiSupport();
-        return reader.getTerminal().getType().equals("ansi");
+        boolean ret = reader.getTerminal().getType().equals("ansi");
+        if (ret) return true;
+        return term.contains("color");
     }
 
     @Override
@@ -230,11 +234,11 @@ public class ANSIConsole extends Console {
     }
 
     public static String ansiForeground(COLOR color) {
-        return (char) 27 + "[3" + ansiColorValue(color) + "m";
+        return (char) 27 + "[" + ansiFGColorValue(color) + "m";
     }
 
     public static String ansiBackground(COLOR color) {
-        return (char) 27 + "[4" + ansiColorValue(color) + "m";
+        return (char) 27 + "[" + ansiBGColorValue(color) + "m";
     }
 
     @Override
@@ -287,28 +291,88 @@ public class ANSIConsole extends Console {
         return bold;
     }
 
-    public static String ansiColorValue(COLOR col) {
+    public static String ansiFGColorValue(COLOR col) {
         switch (col) {
             case BLACK:
-                return "0";
+                return "30";
             case BLUE:
-                return "4";
+                return "34";
             case GREEN:
-                return "2";
+                return "32";
             case RED:
-                return "1";
+                return "31";
             case WHITE:
-                return "7";
+                return "37";
             case YELLOW:
-                return "3";
+                return "33";
             case CYAN:
-                return "6";
+                return "36";
             case MAGENTA:
-                return "5";
+                return "35";
+                
+            case BRIGHT_BLACK:
+                return "90";
+            case BRIGHT_BLUE:
+                return "94";
+            case BRIGHT_GREEN:
+                return "92";
+            case BRIGHT_RED:
+                return "91";
+            case BRIGHT_WHITE:
+                return "97";
+            case BRIGHT_YELLOW:
+                return "93";
+            case BRIGHT_CYAN:
+                return "96";
+            case BRIGHT_MAGENTA:
+                return "95";
+                
             default:
-                return "7";
+                return "37";
         }
     }
+    
+    public static String ansiBGColorValue(COLOR col) {
+        switch (col) {
+            case BLACK:
+                return "40";
+            case BLUE:
+                return "44";
+            case GREEN:
+                return "42";
+            case RED:
+                return "41";
+            case WHITE:
+                return "47";
+            case YELLOW:
+                return "43";
+            case CYAN:
+                return "46";
+            case MAGENTA:
+                return "45";
+
+            case BRIGHT_BLACK:
+                return "100";
+            case BRIGHT_BLUE:
+                return "104";
+            case BRIGHT_GREEN:
+                return "102";
+            case BRIGHT_RED:
+                return "101";
+            case BRIGHT_WHITE:
+                return "107";
+            case BRIGHT_YELLOW:
+                return "103";
+            case BRIGHT_CYAN:
+                return "106";
+            case BRIGHT_MAGENTA:
+                return "105";
+                
+            default:
+                return "47";
+        }
+    }
+    
 
     @Override
     public void cleanup() {

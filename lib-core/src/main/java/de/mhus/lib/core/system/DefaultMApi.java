@@ -29,10 +29,11 @@ import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
+import de.mhus.lib.core.logging.PrintStreamFactory;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
-    private LogFactory logFactory = new ConsoleFactory();
+    private LogFactory logFactory = new PrintStreamFactory();
     private BaseControl baseControl;
     private CfgManager configProvider;
     private HashSet<String> logTrace = new HashSet<>();
@@ -41,6 +42,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
     @Override
     public void doInitialize(ClassLoader coreLoader) {
+        logFactory = new ConsoleFactory();
         getCfgManager().reConfigure();
     }
 

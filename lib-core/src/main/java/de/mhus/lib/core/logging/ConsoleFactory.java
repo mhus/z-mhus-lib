@@ -13,30 +13,38 @@
  */
 package de.mhus.lib.core.logging;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
-import de.mhus.lib.core.M;
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
+import de.mhus.lib.core.console.Console.COLOR;
 import de.mhus.lib.core.directory.ResourceNode;
-import de.mhus.lib.errors.MException;
 
 public class ConsoleFactory extends LogFactory {
 
+    public static int FIX_NAME_LENGTH = 30;
     // public static boolean tracing = true;
-    private PrintStream out;
+    private Console out;
     private boolean traces = true;
     private boolean printTime = true;
+
+    private static COLOR COLOR_TIME = COLOR.BRIGHT_BLACK;
+    
+    private static COLOR COLOR_TRACE = COLOR.BRIGHT_BLACK;
+    private static COLOR COLOR_DEBUG = COLOR.BLUE;
+    private static COLOR COLOR_INFO = COLOR.GREEN;
+    private static COLOR COLOR_WARN = COLOR.BRIGHT_RED;
+    private static COLOR COLOR_ERROR = COLOR.RED;
+    private static COLOR COLOR_FATAL = COLOR.MAGENTA;
+
+    private static COLOR COLOR_NAME = COLOR.BRIGHT_BLACK;
+    private static COLOR COLOR_MESSAGE = COLOR.BRIGHT_WHITE;
 
     @SuppressWarnings("unused")
     private ResourceNode<?> config;
 
     public ConsoleFactory() {
-        out = MApi.out;
+        out = Console.get();
     }
 
     @Override
@@ -65,37 +73,57 @@ public class ConsoleFactory extends LogFactory {
         String newLevel = config.getExtracted("LEVEL", level.name());
         if (newLevel != null) level = Log.LEVEL.valueOf(newLevel.toUpperCase());
 
-        String file = config.getExtracted("file", null);
-        String io = config.getExtracted("stream", null);
         traces = config.getBoolean("traces", true);
-
-        if (file != null) {
-            FileOutputStream f;
-            try {
-                f = new FileOutputStream(file, config.getBoolean("append", true));
-            } catch (FileNotFoundException e) {
-                throw new MException(file, e);
-            }
-            out = new PrintStream(f, true);
-        } else if ("console".equals(io)) {
-            out = M.l(Console.class);
-        } else if ("err".equals(io)) {
-            out = System.err;
-        } else {
-            out = System.out;
-        }
+        
+        try {
+            String col = config.getString("COLOR_TIME", null);
+            if (col != null)
+                COLOR_TIME = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_TRACE", null);
+            if (col != null)
+                COLOR_TRACE = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_DEBUG", null);
+            if (col != null)
+                COLOR_DEBUG = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_INFO", null);
+            if (col != null)
+                COLOR_INFO = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_WARN", null);
+            if (col != null)
+                COLOR_WARN = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_ERROR", null);
+            if (col != null)
+                COLOR_ERROR = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_FATAL", null);
+            if (col != null)
+                COLOR_FATAL = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_NAME", null);
+            if (col != null)
+                COLOR_NAME = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        try {
+            String col = config.getString("COLOR_MESSAGE", null);
+            if (col != null)
+                COLOR_MESSAGE = COLOR.valueOf(col.toUpperCase());
+        } catch (Throwable t) {}
+        
+        FIX_NAME_LENGTH = config.getInt("FIX_NAME_LENGTH", FIX_NAME_LENGTH);
+        
     }
-
-    public ConsoleFactory(PrintStream stream) {
-        this.out = stream;
-    }
-
-    //	@Override
-    //    public void update(Observable o, Object arg) {
-    //        level =
-    // Log.LEVEL.valueOf(MApi.instance().getConfig().getString("LEVEL",level.name()).toUpperCase());
-    //        super.update(o, arg);
-    //	}
 
     public Log.LEVEL getLevel() {
         return level;
@@ -107,6 +135,8 @@ public class ConsoleFactory extends LogFactory {
 
     private class ConsoleLog extends LogEngine {
 
+        private String fixName;
+
         public ConsoleLog(String name) {
             super(name);
         }
@@ -114,61 +144,133 @@ public class ConsoleFactory extends LogFactory {
         @Override
         public void debug(Object message) {
             if (!isDebugEnabled()) return;
-            out.println(printTime() + "DEBUG: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_DEBUG, null);
+            out.print("DEBUG ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void debug(Object message, Throwable t) {
             if (!isDebugEnabled()) return;
-            out.println(printTime() + "DEBUG: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_DEBUG, null);
+            out.print("DEBUG ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void error(Object message) {
             if (!isErrorEnabled()) return;
-            out.println(printTime() + "ERROR: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_ERROR, null);
+            out.print("ERROR ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable && traces)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void error(Object message, Throwable t) {
             if (!isErrorEnabled()) return;
-            out.println(printTime() + "ERROR: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_ERROR, null);
+            out.print("ERROR ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void fatal(Object message) {
             if (!isFatalEnabled()) return;
-            out.println(printTime() + "FATAL: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_FATAL, null);
+            out.print("FATAL ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable && traces)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void fatal(Object message, Throwable t) {
             if (!isFatalEnabled()) return;
-            out.println(printTime() + "FATAL: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_FATAL, null);
+            out.print("FATAL ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void info(Object message) {
             if (!isInfoEnabled()) return;
-            out.println(printTime() + "INFO : " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_INFO, null);
+            out.print("INFO  ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable && traces)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void info(Object message, Throwable t) {
             if (!isInfoEnabled()) return;
-            out.println(printTime() + "INFO : " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_INFO, null);
+            out.print("INFO  ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
@@ -204,31 +306,79 @@ public class ConsoleFactory extends LogFactory {
         @Override
         public void trace(Object message) {
             if (!isTraceEnabled()) return;
-            out.println(printTime() + "TRACE: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_TRACE, null);
+            out.print("TRACE ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable && traces)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void trace(Object message, Throwable t) {
             if (!isTraceEnabled()) return;
-            out.println(printTime() + "TRACE: " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_TRACE, null);
+            out.print("TRACE ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void warn(Object message) {
             if (!isWarnEnabled()) return;
-            out.println(printTime() + "WARN : " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_WARN, null);
+            out.print("WARN  ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (message != null && message instanceof Throwable && traces)
                 ((Throwable) message).printStackTrace(out);
+            out.cleanup();
         }
 
         @Override
         public void warn(Object message, Throwable t) {
             if (!isWarnEnabled()) return;
-            out.println(printTime() + "WARN : " + getName() + " " + message);
+            out.setColor(COLOR_TIME, null);
+            out.print(printTime());
+            out.setColor(COLOR_WARN, null);
+            out.print("WARN  ");
+            out.setColor(COLOR_NAME, null);
+            out.print(getFixName());
+            out.print(" ");
+            out.setColor(COLOR_MESSAGE, null);
+            out.println(message);
             if (t != null && traces) t.printStackTrace(out);
+            out.cleanup();
+        }
+
+        private String getFixName() {
+            if (fixName == null) {
+                String n = getName();
+                if (n.length() > FIX_NAME_LENGTH)
+                    n = n.substring(0, FIX_NAME_LENGTH);
+                else if (n.length() < FIX_NAME_LENGTH)
+                n = n + MString.rep(' ', FIX_NAME_LENGTH - n.length());
+                fixName = n;
+            }
+            return fixName;
         }
 
         @Override

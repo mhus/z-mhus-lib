@@ -29,6 +29,7 @@ import de.mhus.lib.errors.NotSupportedException;
 @DefaultImplementation(SimpleConsole.class)
 public abstract class Console extends PrintStream implements IBase, Adaptable {
 
+    // https://en.wikipedia.org/wiki/ANSI_escape_code
     public enum COLOR {
         UNKNOWN,
         WHITE,
@@ -38,7 +39,15 @@ public abstract class Console extends PrintStream implements IBase, Adaptable {
         BLUE,
         YELLOW,
         MAGENTA,
-        CYAN
+        CYAN,
+        BRIGHT_WHITE,
+        BRIGHT_BLACK,
+        BRIGHT_RED,
+        BRIGHT_GREEN,
+        BRIGHT_BLUE,
+        BRIGHT_YELLOW,
+        BRIGHT_MAGENTA,
+        BRIGHT_CYAN
     };
 
     public static int DEFAULT_WIDTH = 200;
