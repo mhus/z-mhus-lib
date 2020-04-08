@@ -139,4 +139,12 @@ public class MStopWatch extends MJmx {
     public long getCount() {
         return count;
     }
+    
+    public long getStart() {
+        return start;
+    }
+    
+    public long getStop() {
+        return stop;
+    }
 }
