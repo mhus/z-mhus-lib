@@ -15,9 +15,12 @@ package de.mhus.lib.core.strategy;
 
 import java.util.Map;
 
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.errors.UsageException;
 
 public class OperationResult {
 
@@ -104,15 +107,19 @@ public class OperationResult {
         return result != null && clazz.isInstance(result);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getResultAs(Class<T> clazz) {
-        // TODO try to cast or convert
-        return (T) result;
+    public IProperties getResultAsMap() {
+        if (result == null) return new MProperties();
+        if (result instanceof IProperties)
+            return (IProperties)result;
+        if (result instanceof Map)
+            return new MProperties((Map<?, ?>)result);
+        throw new UsageException("Can't cast result to map",result.getClass());
     }
-
-    @SuppressWarnings("unchecked")
-    public <T> T getResultAs() {
-        return (T) result;
+    
+    public String getResultAsString() {
+        if (result == null) return "";
+        if (result instanceof String) return (String)result;
+        return String.valueOf(result);
     }
 
     @Override
