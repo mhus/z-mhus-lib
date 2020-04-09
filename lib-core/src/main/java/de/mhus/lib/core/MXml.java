@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -1080,4 +1081,13 @@ public class MXml {
         }
         return null;
     }
+
+	public static List<String> getValues(Element root, String name) {
+		LinkedList<String> ret = new LinkedList<>();
+		for (Element element : getLocalElementIterator(root, name)) {
+			ret.add( getValue(element, false) );
+		}
+		return ret;
+	}
+	
 }
