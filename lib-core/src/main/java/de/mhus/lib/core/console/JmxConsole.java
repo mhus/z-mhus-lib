@@ -16,7 +16,7 @@ package de.mhus.lib.core.console;
 import java.io.IOException;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.system.CfgManager;
 import de.mhus.lib.errors.MException;
 
@@ -30,7 +30,7 @@ public class JmxConsole extends VirtualConsole {
         width = 80;
         height = 40;
         echo = true;
-        ResourceNode<?> config = M.l(CfgManager.class).getCfg(this, null);
+        IConfig config = M.l(CfgManager.class).getCfg(this, null);
         if (config != null) {
             width = config.getInt("width", width);
             height = config.getInt("height", height);

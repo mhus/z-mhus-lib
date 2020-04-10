@@ -15,7 +15,7 @@ package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 public class CfgDouble extends CfgValue<Double> {
 
@@ -27,7 +27,7 @@ public class CfgDouble extends CfgValue<Double> {
     protected Double loadValue() {
         int p = getPath().indexOf('@');
         if (p < 0) return MApi.getCfg(getOwner()).getDouble(getPath(), getDefault());
-        ResourceNode<?> node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return node.getDouble(getPath().substring(p + 1), getDefault());
     }

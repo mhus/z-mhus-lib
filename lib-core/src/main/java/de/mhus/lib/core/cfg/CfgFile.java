@@ -16,7 +16,7 @@ package de.mhus.lib.core.cfg;
 import java.io.File;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 
 public class CfgFile extends CfgValue<File> {
 
@@ -32,7 +32,7 @@ public class CfgFile extends CfgValue<File> {
             if (str == null) return getDefault();
             return new File(str);
         }
-        ResourceNode<?> node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         String str = node.getExtracted(getPath().substring(p + 1), null);
         if (str == null) return getDefault();

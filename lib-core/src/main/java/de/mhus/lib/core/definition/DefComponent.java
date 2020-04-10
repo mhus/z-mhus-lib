@@ -17,10 +17,11 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
-public class DefComponent extends HashConfig implements IDefDefinition {
+public class DefComponent extends IConfig implements IDefDefinition {
 
     private static final long serialVersionUID = 1L;
     private String tag;
@@ -49,7 +50,7 @@ public class DefComponent extends HashConfig implements IDefDefinition {
     @Override
     public void inject(DefComponent parent) throws MException {
         if (parent != null) {
-            parent.setConfig(tag, this);
+            parent.setObject(tag, this);
         }
         for (IDefDefinition d : definitions) {
             d.inject(this);
@@ -70,10 +71,10 @@ public class DefComponent extends HashConfig implements IDefDefinition {
         fill(this, p);
     }
 
-    private void fill(HashConfig config, Properties p) throws MException {
-        for (ResourceNode<?> c : config.getNodes()) {
+    private void fill(IConfig config, Properties p) throws MException {
+        for (IConfig c : config.getObjects()) {
             if (c instanceof DefComponent) ((DefComponent) c).fillNls(p);
-            else fill((HashConfig) c, p);
+            else fill(c, p);
         }
     }
 }

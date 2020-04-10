@@ -19,8 +19,7 @@ import java.util.HashMap;
 import de.mhus.lib.basics.ActivatorObjectLifecycle;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IFlatConfig;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.errors.MException;
 
 public class DefaultActivator extends MActivator implements MutableActivator {
@@ -34,15 +33,19 @@ public class DefaultActivator extends MActivator implements MutableActivator {
         super(loader);
     }
 
-    public DefaultActivator(ResourceNode<?> cactivator, ClassLoader loader) throws MException {
+    public DefaultActivator(IConfig cactivator, ClassLoader loader) throws MException {
         super(loader);
         if (cactivator != null) {
-            if (cactivator instanceof IFlatConfig) {
-                for (String key : cactivator.getPropertyKeys())
-                    addMap(key, cactivator.getExtracted(key));
+            if (cactivator.isArray("map")) {
+            	for (IConfig entry : cactivator.getArray("map"))
+            		addMap(entry.getExtracted("name", ""), entry.getExtracted("class", ""));
+            } else if (cactivator.isObject("map")) {
+            	IConfig obj = cactivator.getObject("map");
+            	for (String key : obj.getPropertyKeys())
+            		addMap(key, obj.getExtracted(key));
             } else {
-                for (ResourceNode<?> entry : cactivator.getNodes("map"))
-                    addMap(entry.getExtracted("name", ""), entry.getExtracted("class", ""));
+            	for (String key : cactivator.getPropertyKeys())
+            		addMap(key, cactivator.getExtracted(key));
             }
         }
     }

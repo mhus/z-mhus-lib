@@ -18,7 +18,6 @@ import java.io.PrintStream;
 import java.util.Arrays;
 
 import de.mhus.lib.core.cfg.UpdaterCfg;
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -149,7 +148,7 @@ public class MApi {
      * @return the config
      */
     public static IConfig getCfg(Object owner) {
-        if (emptyConfig == null) emptyConfig = new HashConfig();
+        if (emptyConfig == null) emptyConfig = new IConfig();
         return get().getCfgManager().getCfg(owner, emptyConfig);
     }
 
