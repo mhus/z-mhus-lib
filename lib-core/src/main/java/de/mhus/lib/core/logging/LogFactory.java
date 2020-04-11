@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.system.CfgManager;
@@ -42,10 +42,10 @@ public abstract class LogFactory implements IBase {
         return getInstance(clazz.getCanonicalName());
     }
 
-    public abstract void init(ResourceNode<?> config) throws Exception;
+    public abstract void init(IConfig config) throws Exception;
 
     public void init() throws Exception {
-        ResourceNode<?> config = M.l(CfgManager.class).getCfg(this, null);
+        IConfig config = M.l(CfgManager.class).getCfg(this, null);
         init(config);
     }
 

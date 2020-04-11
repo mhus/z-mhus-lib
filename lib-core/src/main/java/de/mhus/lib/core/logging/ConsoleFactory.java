@@ -18,7 +18,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.console.Console.COLOR;
-import de.mhus.lib.core.directory.ResourceNode;
 
 public class ConsoleFactory extends LogFactory {
 
@@ -41,7 +40,7 @@ public class ConsoleFactory extends LogFactory {
     private static COLOR COLOR_MESSAGE = COLOR.BRIGHT_WHITE;
 
     @SuppressWarnings("unused")
-    private ResourceNode<?> config;
+    private IConfig config;
 
     public ConsoleFactory() {
         out = Console.get();
@@ -65,7 +64,7 @@ public class ConsoleFactory extends LogFactory {
     }
 
     @Override
-    public void init(ResourceNode<?> config) throws Exception {
+    public void init(IConfig config) throws Exception {
         if (config == null) return;
 
         this.config = config;

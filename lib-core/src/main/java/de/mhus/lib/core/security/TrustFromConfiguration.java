@@ -28,7 +28,7 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
                 if (ret == null) {
                     IConfig node = config.value();
                     if (node != null) {
-                        for (IConfig trust : node.getNodes()) {
+                        for (IConfig trust : node.getObjects()) {
                             if (trust.getString("name","").equals(name)) {
                                 ret = MPassword.decodeSecure(trust.getString("password",""));
                                 cache.put(name, ret);

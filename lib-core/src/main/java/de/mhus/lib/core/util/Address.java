@@ -26,8 +26,6 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.config.XmlConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.errors.MException;
 
@@ -115,11 +113,11 @@ public class Address implements Externalizable {
     public String getFullName(Locale l) {
         IConfig locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cAssemble = locale.getNode("assemble");
+            IConfig cAssemble = locale.getObject("assemble");
             if (cAssemble != null) {
-                IConfig cSal = cAssemble.getNode(getSalutation().name().toLowerCase());
+                IConfig cSal = cAssemble.getObject(getSalutation().name().toLowerCase());
                 if (cSal != null) {
-                    String template = cSal.getString(XmlConfig.VALUE, "");
+                    String template = cSal.getString(IConfig.VALUE, "");
                     String out = MString.compileAndExecute(template, getAttributes(), "");
                     while (out.indexOf("  ") > -1) out = out.replace("  ", " ");
                     return out;
@@ -161,11 +159,11 @@ public class Address implements Externalizable {
     public static String toSalutationString(SALUTATION salutation, Locale l) {
         IConfig locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cSingular = locale.getNode("singular");
+            IConfig cSingular = locale.getObject("singular");
             if (cSingular != null) {
-                IConfig cSal = cSingular.getNode(salutation.name().toLowerCase());
+                IConfig cSal = cSingular.getObject(salutation.name().toLowerCase());
                 if (cSal != null) {
-                    return cSal.getString(XmlConfig.VALUE, "");
+                    return cSal.getString(IConfig.VALUE, "");
                 }
             }
         }
@@ -191,11 +189,11 @@ public class Address implements Externalizable {
     public String getLetterSalutation(Locale l) {
         IConfig locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cLetter = locale.getNode("letter");
+            IConfig cLetter = locale.getObject("letter");
             if (cLetter != null) {
-                IConfig cSal = cLetter.getNode(getSalutation().name().toLowerCase());
+                IConfig cSal = cLetter.getObject(getSalutation().name().toLowerCase());
                 if (cSal != null) {
-                    String template = cSal.getString(XmlConfig.VALUE, "");
+                    String template = cSal.getString(IConfig.VALUE, "");
                     return MString.compileAndExecute(template, getAttributes(), "");
                 }
             }
@@ -229,25 +227,25 @@ public class Address implements Externalizable {
     public static synchronized IConfig getDefinition() {
         if (definition == null) {
             try {
-                definition = MConfig.createFromResource(Address.class, "address.xml");
+                definition = IConfig.createFromResource(Address.class, "address.xml");
             } catch (MException e) {
                 MLogUtil.log().w(Address.class, e);
-                definition = new XmlConfig(); // empty config
+                definition = new IConfig(); // empty config
             }
 
             // load data
             mapping = new HashMap<>();
             locales = new HashMap<>();
-            for (IConfig locale : definition.getNodes("locale")) {
+            for (IConfig locale : definition.getArray("locale")) {
                 String lang = locale.getString("language", "").toLowerCase();
                 locales.put(lang, locale);
                 {
-                    IConfig cMapping = locale.getNode("mapping");
+                    IConfig cMapping = locale.getObject("mapping");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getNodes()) {
+                        for (IConfig cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(XmlConfig.VALUE, null);
+                                String val = cMap.getString(IConfig.VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }
@@ -255,12 +253,12 @@ public class Address implements Externalizable {
                     }
                 }
                 {
-                    IConfig cMapping = locale.getNode("plural");
+                    IConfig cMapping = locale.getObject("plural");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getNodes()) {
+                        for (IConfig cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(XmlConfig.VALUE, null);
+                                String val = cMap.getString(IConfig.VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }
@@ -268,12 +266,12 @@ public class Address implements Externalizable {
                     }
                 }
                 {
-                    IConfig cMapping = locale.getNode("singular");
+                    IConfig cMapping = locale.getObject("singular");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getNodes()) {
+                        for (IConfig cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(XmlConfig.VALUE, null);
+                                String val = cMap.getString(IConfig.VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }

@@ -32,10 +32,7 @@ import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.config.XmlConfigFile;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.SingleList;
 
@@ -131,7 +128,7 @@ public class CfgManager {
         }
         IConfig defaultConfig = provider.getConfig();
         if (defaultConfig == null) return null;
-        IConfig cOwner = defaultConfig.getNode(owner);
+        IConfig cOwner = defaultConfig.getObject(owner);
         return cOwner;
     }
 
@@ -223,7 +220,7 @@ public class CfgManager {
                 for (String owner : MApi.get().getCfgManager().getOwners()) {
                     IConfig cfg = MApi.get().getCfgManager().getCfg(owner);
                     MActivator activator = MApi.get().createActivator();
-                    for (IConfig node : cfg.getNodes()) {
+                    for (IConfig node : cfg.getObjects()) {
                         try {
                             if ("initiator".equals(node.getName())) {
                                 String clazzName = node.getString("class");
@@ -268,10 +265,10 @@ public class CfgManager {
                 try {
                     synchronized (configFiles) {
                         MApi.dirtyLogInfo("Load config file", configFile);
-                        XmlConfigFile c = new XmlConfigFile(configFile);
+                        IConfig c = IConfig.createFromResource(configFile);
                         configFiles.clear();
                         configFiles.put(configFile, configFile.lastModified());
-                        IConfig systemNode = c.getNode("system");
+                        IConfig systemNode = c.getObject("system");
                         if (systemNode != null) {
                             String includePattern = systemNode.getString("include", null);
                             if (includePattern != null) {
@@ -282,10 +279,10 @@ public class CfgManager {
                                 for (File f : MFile.filter(i.getParentFile(), i.getName())) {
                                     if (f.getName().endsWith(".xml")) {
                                         MApi.dirtyLogInfo("Load config file", f);
-                                        XmlConfigFile cc = new XmlConfigFile(f);
+                                        IConfig cc = IConfig.createFromResource(f);
                                         configFiles.put(f, f.lastModified());
                                         cc.setString("_source", f.getAbsolutePath());
-                                        MConfig.merge(cc, c);
+                                        IConfig.merge(cc, c);
                                     }
                                 }
                             }
@@ -306,7 +303,7 @@ public class CfgManager {
         @Override
         public synchronized IConfig getConfig() {
             if (config == null) {
-                config = new HashConfig();
+                config = new IConfig();
                 internalLoadConfig();
             }
             return config;

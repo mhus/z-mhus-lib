@@ -36,7 +36,7 @@ public class FmWizard extends DefAttribute {
         super.inject(parent);
         if (options != null) {
             DefComponent dummy = new DefComponent("wizard", options);
-            parent.setConfig("wizard", dummy);
+            parent.setObject("wizard", dummy);
             dummy.inject(null);
         }
     }

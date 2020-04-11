@@ -21,7 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
@@ -33,7 +33,7 @@ public final class Log4JFactory extends LogFactory {
 
 
     @Override
-    public void init(ResourceNode<?> config) throws Exception {
+    public void init(IConfig config) throws Exception {
         if (config == null) return;
 
         //ResourceNode<?> ccc = config.getNode("configuration");

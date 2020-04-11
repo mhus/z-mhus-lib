@@ -13,33 +13,27 @@
  */
 package de.mhus.lib.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.config.ConfigBuilder;
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.JsonConfig;
-import de.mhus.lib.core.config.PropertiesConfig;
-import de.mhus.lib.core.config.XmlConfig;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ConfigTest {
 
     @Test
     public void testProperties() throws MException {
-        Properties p = new Properties();
-        p.setProperty("test1", "wow");
-        p.setProperty("test2", "alf");
-        PropertiesConfig c = new PropertiesConfig(p);
+    	IConfig c = new IConfig();
+        c.setProperty("test1", "wow");
+        c.setProperty("test2", "alf");
 
         derTeschd(c, false);
     }
@@ -51,7 +45,7 @@ public class ConfigTest {
                 "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
         Document doc = MXml.loadXml(xml);
 
-        XmlConfig c = new XmlConfig(doc.getDocumentElement());
+        IConfig c = IConfig.createFromXml(doc.getDocumentElement());
 
         derTeschd(c, true);
     }
@@ -70,7 +64,7 @@ public class ConfigTest {
                         "'",
                         "\"");
 
-        JsonConfig c = new JsonConfig(json);
+        IConfig c = IConfig.createFromJson(json);
 
         derTeschd(c, true);
     }
@@ -78,46 +72,44 @@ public class ConfigTest {
     @Test
     public void testHash() throws Exception {
 
-        HashConfig c = new HashConfig();
+        IConfig c = new IConfig();
         c.setString("test1", "wow");
         c.setString("test2", "alf");
-        ResourceNode<?> s = c.createConfig("sub");
+        IConfig s = c.createObject("sub");
         s.setString("test1", "wow1");
         s.setString("test2", "alf1");
-        s = c.createConfig("sub");
+        s = c.createObject("sub");
         s.setString("test1", "wow2");
         s.setString("test2", "alf2");
-        s = c.createConfig("sub");
+        s = c.createObject("sub");
         s.setString("test1", "wow3");
         s.setString("test2", "alf3");
 
         derTeschd(c, true);
     }
 
-    @Test
-    public void testClone() throws Exception {
-
-        ConfigBuilder builder = new ConfigBuilder();
-
-        String xml =
-                "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
-        Document doc = MXml.loadXml(xml);
-
-        XmlConfig src = new XmlConfig(doc.getDocumentElement());
-
-        HashConfig tar1 = new HashConfig();
-        JsonConfig tar2 = new JsonConfig();
-        XmlConfig tar3 = new XmlConfig();
-
-        builder.cloneConfig(src, tar1);
-        builder.cloneConfig(src, tar2);
-        builder.cloneConfig(src, tar3);
-
-        derTeschd(src, true);
-        derTeschd(tar1, true);
-        derTeschd(tar2, true);
-        derTeschd(tar3, true);
-    }
+//    @Test
+//    public void testClone() throws Exception {
+//
+//        String xml =
+//                "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
+//        Document doc = MXml.loadXml(xml);
+//
+//        IConfig src = IConfig.createFromXml(doc.getDocumentElement());
+//
+//        IConfig tar1 = new IConfig();
+//        JsonConfig tar2 = new JsonConfig();
+//        XmlConfig tar3 = new XmlConfig();
+//
+//        builder.cloneConfig(src, tar1);
+//        builder.cloneConfig(src, tar2);
+//        builder.cloneConfig(src, tar3);
+//
+//        derTeschd(src, true);
+//        derTeschd(tar1, true);
+//        derTeschd(tar2, true);
+//        derTeschd(tar3, true);
+//    }
 
     @Test
     private void derTeschd(IConfig c, boolean testsub) throws MException {
@@ -126,20 +118,20 @@ public class ConfigTest {
         assertEquals("alf", c.getString("test2", "no"));
         assertEquals("no", c.getString("test3", "no"));
 
-        assertNull(c.getNode("test4"));
+        assertNull(c.getObject("test4"));
 
         if (!testsub) return;
 
         // sub config tests
 
-        assertEquals(1, c.getNodeKeys().size());
-        assertEquals("sub", c.getNodeKeys().iterator().next());
+        assertEquals(1, c.getObjectKeys().size());
+        assertEquals("sub", c.getObjectKeys().iterator().next());
 
-        Collection<IConfig> list = c.getNodes("sub");
+        Collection<IConfig> list = c.getArray("sub");
         assertEquals(3, list.size());
 
         Iterator<IConfig> listIter = list.iterator();
-        ResourceNode<?> sub = listIter.next();
+        IConfig sub = listIter.next();
         assertEquals("wow1", sub.getString("test1", "no"));
         assertEquals("alf1", sub.getString("test2", "no"));
         assertEquals("no", sub.getString("test3", "no"));
@@ -164,7 +156,7 @@ public class ConfigTest {
 
         // change config
 
-        sub = c.createConfig("sub");
+        sub = c.createObject("sub");
         sub.setProperty("test1", "aloa4");
         sub.setProperty("test2", "alf4");
         assertEquals("aloa4", sub.getString("test1", "no"));

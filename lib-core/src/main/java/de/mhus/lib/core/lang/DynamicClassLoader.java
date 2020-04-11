@@ -43,7 +43,6 @@ public class DynamicClassLoader extends ClassLoader {
 
     protected String name = null;
 
-    @SuppressWarnings("rawtypes")
     protected LinkedList<MResourceProvider> classLoaders = new LinkedList<MResourceProvider>();
 
     protected Rule[] rules = null;
@@ -106,9 +105,9 @@ public class DynamicClassLoader extends ClassLoader {
         if (defaultRule == RESULT.FORWARD) return super.findClass(name);
 
         String resName = name.replaceAll("\\.", "/") + ".class";
-        for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
+        for (MResourceProvider cl : classLoaders) {
             try {
-                InputStream res = cl.getResourceByPath(resName).getInputStream();
+                InputStream res = cl.getInputStream(resName);
                 if (res != null) {
                     log.t("loaded class", this, cl, name);
                     return toClass(name, res);
@@ -128,9 +127,9 @@ public class DynamicClassLoader extends ClassLoader {
         }
 
         String resName = name.replaceAll("\\.", "/") + ".class";
-        for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
+        for (MResourceProvider cl : classLoaders) {
             try {
-                InputStream res = cl.getResourceByPath(resName).getInputStream();
+                InputStream res = cl.getInputStream(resName);
                 if (res != null) {
                     log.t("loaded class", this, cl, name);
                     return toClass(name, res);
@@ -167,9 +166,9 @@ public class DynamicClassLoader extends ClassLoader {
     @Override
     protected URL findResource(String name) {
         log.t("resource", this, name);
-        for (@SuppressWarnings("rawtypes") MResourceProvider cl : classLoaders) {
+        for (MResourceProvider cl : classLoaders) {
             try {
-                URL res = cl.getResourceByPath(name).getUrl();
+                URL res = cl.getUrl(name);
                 if (res != null) {
                     res.openStream().close();
                     log.t("loaded resource", this, cl, name);
@@ -183,11 +182,11 @@ public class DynamicClassLoader extends ClassLoader {
 
     // --- Methods to handle list
 
-    public boolean add(@SuppressWarnings("rawtypes") MResourceProvider e) {
+    public boolean add(MResourceProvider e) {
         return classLoaders.add(e);
     }
 
-    public boolean remove(@SuppressWarnings("rawtypes") MResourceProvider o) {
+    public boolean remove(MResourceProvider o) {
         return classLoaders.remove(o);
     }
 
@@ -195,7 +194,7 @@ public class DynamicClassLoader extends ClassLoader {
         classLoaders.clear();
     }
 
-    public void add(int index, @SuppressWarnings("rawtypes") MResourceProvider element) {
+    public void add(int index, MResourceProvider element) {
         classLoaders.add(index, element);
     }
 

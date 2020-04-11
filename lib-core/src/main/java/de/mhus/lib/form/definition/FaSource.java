@@ -13,12 +13,12 @@
  */
 package de.mhus.lib.form.definition;
 
-import de.mhus.lib.core.config.HashConfig;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
-public class FaSource extends HashConfig implements IDefAttribute {
+public class FaSource extends IConfig implements IDefAttribute {
 
     private static final long serialVersionUID = 1L;
     private String tag;
@@ -31,10 +31,10 @@ public class FaSource extends HashConfig implements IDefAttribute {
 
     @Override
     public void inject(DefComponent root) throws MException {
-        HashConfig sources = (HashConfig) root.getNode("sources");
+    	IConfig sources = root.getObject("sources");
         if (sources == null) {
-            sources = (HashConfig) root.createConfig("sources");
+            sources = root.createObject("sources");
         }
-        sources.setConfig(tag, this);
+        sources.setObject(tag, this);
     }
 }

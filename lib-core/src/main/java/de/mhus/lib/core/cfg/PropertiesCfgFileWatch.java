@@ -14,13 +14,12 @@
 package de.mhus.lib.core.cfg;
 
 import java.io.File;
-import java.io.IOException;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.PropertiesConfigFile;
 import de.mhus.lib.core.io.FileWatch;
+import de.mhus.lib.errors.MException;
 
 public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
@@ -63,8 +62,8 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
 
     private void load() {
         try {
-            config = new PropertiesConfigFile(file);
-        } catch (IOException e) {
+            config = IConfig.createFromResource(file);
+        } catch (MException e) {
             log().d(file, e);
         }
     }

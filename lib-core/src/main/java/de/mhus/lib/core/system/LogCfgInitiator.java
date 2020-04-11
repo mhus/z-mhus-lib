@@ -21,7 +21,6 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.PropertiesConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -47,7 +46,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         IConfig system = manager.getCfg("system");
 
-        if (system == null) system = new PropertiesConfig(); // empty
+        if (system == null) system = new IConfig(); // empty
 
         internal.getLogTrace().clear();
         for (String p : system.getPropertyKeys()) {
@@ -124,7 +123,7 @@ public class LogCfgInitiator implements CfgInitiator {
                 && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
             try {
                 Collection<IConfig> mappers =
-                        system.getNodes(MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS);
+                        system.getArray(MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS);
                 if (mappers.size() > 0)
                     ((MutableParameterMapper) logFactory.getParameterMapper()).clear();
                 for (IConfig mapper : mappers) {

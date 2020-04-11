@@ -23,21 +23,21 @@ import java.util.Properties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
 import de.mhus.lib.core.directory.MResourceProvider;
-import de.mhus.lib.core.directory.ResourceNode;
 
 public class MNlsFactory extends MNlsBundle {
 
     @SuppressWarnings("unused")
-    private ResourceNode<?> config;
+    private IConfig config;
 
     public MNlsFactory() {
         this(null);
         //		forkBase();
     }
 
-    public MNlsFactory(ResourceNode<?> config) {
+    public MNlsFactory(IConfig config) {
         this.config = config;
     }
 
@@ -59,12 +59,12 @@ public class MNlsFactory extends MNlsBundle {
         return load(null, owner, null, locale == null ? null : locale.toString());
     }
 
-    public MNls load(MResourceProvider<?> res, Class<?> owner, String resourceName, String locale) {
+    public MNls load(MResourceProvider res, Class<?> owner, String resourceName, String locale) {
         return load(res, owner, resourceName, locale, true);
     }
 
     public MNls load(
-            MResourceProvider<?> res,
+            MResourceProvider res,
             Class<?> owner,
             String resourceName,
             String locale,
@@ -73,7 +73,7 @@ public class MNlsFactory extends MNlsBundle {
     }
 
     protected MNls load(
-            MResourceProvider<?> res,
+            MResourceProvider res,
             Class<?> owner,
             String resourceName,
             String locale,
@@ -99,33 +99,30 @@ public class MNlsFactory extends MNlsBundle {
             Properties properties = new Properties();
 
             is =
-                    res.getResourceByPath(locale.toString() + "/" + resourceName + ".properties")
-                            .getInputStream();
+                    res
+                            .getInputStream(locale.toString() + "/" + resourceName + ".properties");
             String prefix = getResourcePrefix();
 
             if (searchAlternatives) {
 
                 if (prefix != null && is == null)
                     is =
-                            res.getResourceByPath(
+                            res.getInputStream(
                                             prefix
                                                     + "/"
                                                     + getDefaultLocale()
                                                     + "/"
                                                     + resourceName
-                                                    + ".properties")
-                                    .getInputStream();
+                                                    + ".properties");
                 if (is == null)
                     is =
-                            res.getResourceByPath(
-                                            getDefaultLocale() + "/" + resourceName + ".properties")
-                                    .getInputStream();
+                            res.getInputStream(
+                                            getDefaultLocale() + "/" + resourceName + ".properties");
                 if (prefix != null && is == null)
                     is =
-                            res.getResourceByPath(prefix + "/" + resourceName + ".properties")
-                                    .getInputStream();
+                            res.getInputStream(prefix + "/" + resourceName + ".properties");
                 if (is == null)
-                    is = res.getResourceByPath(resourceName + ".properties").getInputStream();
+                    is = res.getInputStream(resourceName + ".properties");
             }
 
             if (is != null) {
@@ -161,7 +158,7 @@ public class MNlsFactory extends MNlsBundle {
         return null;
     }
 
-    protected MResourceProvider<?> findResourceProvider(Class<?> owner) {
+    protected MResourceProvider findResourceProvider(Class<?> owner) {
         if (owner != null) return new ClassLoaderResourceProvider(owner.getClassLoader());
         else return new ClassLoaderResourceProvider();
     }

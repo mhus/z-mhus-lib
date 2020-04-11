@@ -63,7 +63,7 @@ public class ParameterDefinitions extends TreeMap<String, ParameterDefinition> {
             out.put(def.getName(), def);
         }
 
-        for (IConfig node : form.getNodes()) {
+        for (IConfig node : form.getObjects()) {
             collect(node, out);
         }
     }

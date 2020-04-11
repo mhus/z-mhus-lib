@@ -16,9 +16,7 @@ package de.mhus.lib.core.definition;
 import java.util.LinkedList;
 import java.util.Properties;
 
-import de.mhus.lib.core.config.HashConfig;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
 public class DefComponent extends IConfig implements IDefDefinition {
@@ -77,4 +75,5 @@ public class DefComponent extends IConfig implements IDefDefinition {
             else fill(c, p);
         }
     }
+
 }

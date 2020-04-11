@@ -22,7 +22,6 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.errors.MException;
 
 public class PrintStreamFactory extends LogFactory {
@@ -33,7 +32,7 @@ public class PrintStreamFactory extends LogFactory {
     private boolean printTime = true;
 
     @SuppressWarnings("unused")
-    private ResourceNode<?> config;
+    private IConfig config;
 
     public PrintStreamFactory() {
         out = MApi.out;
@@ -57,7 +56,7 @@ public class PrintStreamFactory extends LogFactory {
     }
 
     @Override
-    public void init(ResourceNode<?> config) throws Exception {
+    public void init(IConfig config) throws Exception {
         if (config == null) return;
 
         this.config = config;
