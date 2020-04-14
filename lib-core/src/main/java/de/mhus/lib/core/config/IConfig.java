@@ -1,155 +1,81 @@
 package de.mhus.lib.core.config;
 
-import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.w3c.dom.Element;
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.errors.NotFoundException;
 
-import de.mhus.lib.core.MProperties;
-import de.mhus.lib.errors.MException;
+/**
+ * A IConfig extends the concept of properties to a object oriented structure.
+ * A property can also be an object or array of objects. The IConfig will not
+ * really separate objects and arrays. If you require an array and it's only a 
+ * single objects you will get a list with a single object and vies versa.
+ * 
+ * @author mikehummel
+ *
+ */
+public interface IConfig extends IProperties {
 
-public class IConfig extends MProperties {
+    public static final String NAMELESS_VALUE = "";
 
-	public static final String VALUE = "_value";
-	protected String name;
-	protected IConfig parent;
+    /**
+     * Returns true if the key is an object.
+     * 
+     * @param key
+     * @return If the property is an object or array
+     */
+    boolean isObject(String key);
 
-	public IConfig() {
-		
-	}
-	
-	public IConfig(String name, IConfig parent) {
-        this.name = name;
-        this.parent = parent;
-	}
-
-	public boolean isObject(String key) {
-		return false;
-	}
-	
-	public IConfig getObject(String key) {
-		return null;
-	}
-	
-	public boolean isArray(String key) {
-		return false;
-	}
-	
-	public List<IConfig> getArray(String key) {
-		return null;
-	}
-
-	public IConfig getNodeByPath(String path) {
-		return null;
-	}
-	
-	public String getExtracted(String key, String def) {
-		return null;
-	}
-
-	public String getExtracted(String key) {
-		return null;
-	}
-
-	public List<IConfig> getObjects() {
-		return null;
-	}
-	
-	public void setObject(String key, IConfig object) {
-		// TODO Warn if already bound ? - clone?
-		object.parent = this;
-		object.name = key;
-		put(key, object);
-	}
-	
-	@SuppressWarnings({ "unchecked" })
-	public void addObject(String key, IConfig object) {
-		Object obj = get(key);
-		if (obj != null) {
-			if (obj instanceof List) {
-				// ignore
-			} else
-			if (obj instanceof IConfig) {
-				LinkedList<Object> list = new LinkedList<>();
-				list.add(obj);
-				obj = list;
-				put(key, obj);
-			} else {
-				// overwrite non object and arrays
-				obj = new LinkedList<>();
-				put(key, obj);
-			}
-		} else {
-			setObject(key, object);
-			return;
-		}
-		// TODO Warn if already bound ? - clone?
-		object.parent = this;
-		object.name = key;
-		((List<Object>)obj).add(object);
-	}
-
-	public IConfig createObject(String key) {
-		IConfig obj = new IConfig();
-		addObject(key, obj);
-		return obj;
-	}
-
-	/**
-	 * Return only the property keys without objects and arrays.
-	 * 
-	 * @return
-	 */
-	public List<String> getPropertyKeys() {
-		return null;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public IConfig getParent() {
-		return parent;
-	}
-
-    public static IConfig createFromResource(Class<?> owner, String fileName) throws MException {
-    	return null;
-    }
-
-    public static IConfig createFromResource(File file) throws MException {
-    	return null;
-    }
+    IConfig getObjectOrNull(String key);
     
-	public List<String> getObjectKeys() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    IConfig getObject(String key) throws NotFoundException;
 
-	public String dump() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-    public static void merge(IConfig from, IConfig to) throws MException {
-    	// TODO
-        for (IConfig node : from.getObjects()) {
-            IConfig n = to.createObject(node.getName());
-            for (String name : node.getPropertyKeys()) {
-                n.put(name, node.get(name));
-            }
-            merge(node, (IConfig) n);
-        }
-    }
+    boolean isArray(String key);
 
-	public static IConfig createFromXml(Element documentElement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    ConfigList getArray(String key) throws NotFoundException;
 
-	public static IConfig createFromJson(String json) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+    IConfig getObjectByPath(String path);
+
+    String getExtracted(String key, String def);
+
+    String getExtracted(String key);
+
+    List<IConfig> getObjects();
+
+    void setObject(String key, IConfig object);
+
+    void addObject(String key, IConfig object);
+
+    IConfig createObject(String key);
+
+    List<String> getPropertyKeys();
+
+    String getName();
+
+    IConfig getParent();
+
+    List<String> getObjectKeys();
+
+    /**
+     * Return a iterator over a array or a single object.
+     * Return an empty iterator if not found.
+     * Use this function to iterate over arrays or objects.
+     * 
+     * @param key
+     * @return Never null.
+     */
+    List<IConfig> getObjectList(String key);
+
+    List<String> getObjectAndArrayKeys();
+
+    List<String> getArrayKeys();
+
+    ConfigList getArrayOrNull(String key);
+
+    ConfigList getArrayOrCreate(String key);
+
+    ConfigList createArray(String key);
+
+//    IConfig cloneObject(IConfig node);
+    
 }

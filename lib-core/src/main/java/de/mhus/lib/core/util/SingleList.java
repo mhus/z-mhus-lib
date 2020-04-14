@@ -19,6 +19,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * A list with one single element. The list is unmodifiable.
+ * 
+ * @author mikehummel
+ *
+ * @param <E>
+ */
 public class SingleList<E> implements List<E> {
 
     private E element;
@@ -63,41 +70,46 @@ public class SingleList<E> implements List<E> {
 
     @Override
     public boolean add(E e) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        for (Object i : c)
+            if (!element.equals(i)) 
+                return false;
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void clear() {}
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public E get(int index) {
@@ -107,15 +119,17 @@ public class SingleList<E> implements List<E> {
 
     @Override
     public E set(int index, E element) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void add(int index, E element) {}
+    public void add(int index, E element) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public E remove(int index) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -141,6 +155,7 @@ public class SingleList<E> implements List<E> {
 
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
+        if (fromIndex == toIndex) return new EmptyList<>();
         return this;
     }
 }

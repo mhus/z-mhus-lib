@@ -32,7 +32,10 @@ import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
+import de.mhus.lib.core.config.DefaultConfigFactory;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.IConfigFactory;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.SingleList;
 
@@ -46,6 +49,7 @@ public class CfgManager {
     private IConfig config;
     private File configFile;
     private TreeMap<String, Object[]> initiators = new TreeMap<>(); // execute in an ordered way
+    private IConfigFactory configFactory;
 
     private long lastConfigUpdate;
 
@@ -86,6 +90,26 @@ public class CfgManager {
         return new SingleList<CfgProvider>(provider); // currently only one provider
     }
 
+    /**
+     * The getConfig without default value will return an empty
+     * configuration and not null if the configuration is not found.
+     * 
+     * @param owner
+     * @return Always an configuration.
+     */
+    public IConfig getCfg(Object owner) {
+        IConfig ret = getCfg(owner, null);
+        if (ret == null) ret = getConfigFactory().create();
+        return ret;
+    }
+    
+    /**
+     * Returns the found configuration or the default value.
+     * 
+     * @param owner
+     * @param def
+     * @return The configuration or def
+     */
     public IConfig getCfg(Object owner, IConfig def) {
         initCfg();
 
@@ -127,8 +151,9 @@ public class CfgManager {
             if (cOwner != null) return cOwner;
         }
         IConfig defaultConfig = provider.getConfig();
-        if (defaultConfig == null) return null;
-        IConfig cOwner = defaultConfig.getObject(owner);
+        if (defaultConfig == null) return new MConfig();
+        IConfig cOwner = defaultConfig.getObjectOrNull(owner);
+        if (cOwner == null) cOwner = new MConfig();
         return cOwner;
     }
 
@@ -176,6 +201,13 @@ public class CfgManager {
     public void reConfigure() {
         provider.reConfigure();
     }
+
+    public synchronized IConfigFactory getConfigFactory() {
+        if (configFactory == null)
+            configFactory = new DefaultConfigFactory();
+        return configFactory;
+    }
+
 
     public class CentralMhusCfgProvider implements CfgProvider {
 
@@ -239,7 +271,7 @@ public class CfgManager {
                                 }
                             }
                         } catch (Throwable t) {
-                            MApi.dirtyLogError("Can't load initiator", node.dump(), " Error: ", t);
+                            MApi.dirtyLogError("Can't load initiator", node, " Error: ", t);
                         }
                     }
                 }
@@ -265,7 +297,7 @@ public class CfgManager {
                 try {
                     synchronized (configFiles) {
                         MApi.dirtyLogInfo("Load config file", configFile);
-                        IConfig c = IConfig.createFromResource(configFile);
+                        IConfig c = getConfigFactory().read(configFile);
                         configFiles.clear();
                         configFiles.put(configFile, configFile.lastModified());
                         IConfig systemNode = c.getObject("system");
@@ -279,10 +311,10 @@ public class CfgManager {
                                 for (File f : MFile.filter(i.getParentFile(), i.getName())) {
                                     if (f.getName().endsWith(".xml")) {
                                         MApi.dirtyLogInfo("Load config file", f);
-                                        IConfig cc = IConfig.createFromResource(f);
+                                        IConfig cc = getConfigFactory().read(f);
                                         configFiles.put(f, f.lastModified());
                                         cc.setString("_source", f.getAbsolutePath());
-                                        IConfig.merge(cc, c);
+                                        MConfig.merge(cc, c);
                                     }
                                 }
                             }
@@ -303,7 +335,7 @@ public class CfgManager {
         @Override
         public synchronized IConfig getConfig() {
             if (config == null) {
-                config = new IConfig();
+                config = getConfigFactory().create();
                 internalLoadConfig();
             }
             return config;

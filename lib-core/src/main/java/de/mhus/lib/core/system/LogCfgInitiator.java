@@ -46,7 +46,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         IConfig system = manager.getCfg("system");
 
-        if (system == null) system = new IConfig(); // empty
+        if (system == null) system = manager.getConfigFactory().create(); // empty
 
         internal.getLogTrace().clear();
         for (String p : system.getPropertyKeys()) {

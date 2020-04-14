@@ -32,7 +32,7 @@ public class CfgFile extends CfgValue<File> {
             if (str == null) return getDefault();
             return new File(str);
         }
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         String str = node.getExtracted(getPath().substring(p + 1), null);
         if (str == null) return getDefault();

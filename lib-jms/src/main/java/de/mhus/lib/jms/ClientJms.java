@@ -27,7 +27,7 @@ import javax.jms.TemporaryQueue;
 
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 
 public class ClientJms extends JmsChannel implements MessageListener {
@@ -49,7 +49,7 @@ public class ClientJms extends JmsChannel implements MessageListener {
     public ClientJms(JmsDestination dest) {
         super(dest);
         try {
-            ResourceNode<?> cfg = MJms.getConfig();
+            IConfig cfg = MJms.getConfig();
             timeout = cfg.getLong("answerTimeout", timeout);
             warnTimeout = cfg.getLong("answerWarnTimeout", warnTimeout);
             broadcastTimeout = cfg.getLong("broadcastTimeout", broadcastTimeout);

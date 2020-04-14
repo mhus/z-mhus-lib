@@ -34,7 +34,7 @@ public class CfgBigDecimal extends CfgValue<BigDecimal> {
             } catch (NumberFormatException e) {
                 return getDefault();
             }
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         try {
             return new BigDecimal(

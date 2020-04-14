@@ -24,6 +24,7 @@ import de.mhus.lib.basics.IsNull;
 import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
+import de.mhus.lib.errors.NotFoundException;
 
 public abstract class AbstractProperties extends MObject implements IProperties {
 
@@ -32,11 +33,11 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     /**
      * Overwrite this function to provide values in string format.
      *
-     * @param name
+     * @param key
      * @return null if the property not exists or the property value.
      */
     @Override
-    public abstract Object getProperty(String name);
+    public abstract Object getProperty(String key);
 
     //	@Deprecated
     //	public boolean getProperty(String name, boolean def) {
@@ -51,10 +52,10 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     //	}
 
     @Override
-    public String getString(String name, String def) {
+    public String getString(String key, String def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -63,17 +64,17 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public String getString(String name) throws MException {
-        Object out = getProperty(name);
-        if (out == null) return null;
+    public String getString(String key) throws NotFoundException {
+        Object out = getProperty(key);
+        if (out == null) throw new NotFoundException("value not found",key);
         return String.valueOf(out);
     }
 
     @Override
-    public boolean getBoolean(String name, boolean def) {
+    public boolean getBoolean(String key, boolean def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -81,17 +82,17 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public boolean getBoolean(String name) throws MException {
-        Object out = getProperty(name);
-        if (out == null) throw new MException("value not found");
+    public boolean getBoolean(String key) throws NotFoundException {
+        Object out = getProperty(key);
+        if (out == null) throw new NotFoundException("value not found",key);
         return MCast.toboolean(out, false);
     }
 
     @Override
-    public int getInt(String name, int def) {
+    public int getInt(String key, int def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -99,10 +100,10 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public long getLong(String name, long def) {
+    public long getLong(String key, long def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -110,10 +111,10 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public float getFloat(String name, float def) {
+    public float getFloat(String key, float def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -121,10 +122,10 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public double getDouble(String name, double def) {
+    public double getDouble(String key, double def) {
         Object out;
         try {
-            out = getProperty(name);
+            out = getProperty(key);
         } catch (Throwable e) {
             return def;
         }
@@ -132,15 +133,15 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public Calendar getCalendar(String name) throws MException {
-        Object out = getProperty(name);
+    public Calendar getCalendar(String key) throws MException {
+        Object out = getProperty(key);
         return MCast.toCalendar(out);
     }
 
     @Override
-    public Date getDate(String name) {
+    public Date getDate(String key) {
         try {
-            Object out = getProperty(name);
+            Object out = getProperty(key);
             return MCast.toDate(out, null);
         } catch (Throwable t) {
         }
@@ -148,64 +149,64 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public void setString(String name, String value) {
-        setProperty(name, value);
+    public void setString(String key, String value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setInt(String name, int value) {
-        setProperty(name, value);
+    public void setInt(String key, int value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setLong(String name, long value) {
-        setProperty(name, value);
+    public void setLong(String key, long value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setDouble(String name, double value) {
-        setProperty(name, value);
+    public void setDouble(String key, double value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setFloat(String name, float value) {
-        setProperty(name, value);
+    public void setFloat(String key, float value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setBoolean(String name, boolean value) {
-        setProperty(name, value);
+    public void setBoolean(String key, boolean value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setCalendar(String name, Calendar value) {
-        setProperty(name, value);
+    public void setCalendar(String key, Calendar value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setDate(String name, Date value) {
-        setProperty(name, value);
+    public void setDate(String key, Date value) {
+        setProperty(key, value);
     }
 
     @Override
-    public void setNumber(String name, Number value) {
+    public void setNumber(String key, Number value) {
         if (value == null) {
-            removeProperty(name);
+            removeProperty(key);
             return;
         }
-        if (value instanceof Integer) setInt(name, (Integer) value);
+        if (value instanceof Integer) setInt(key, (Integer) value);
         else if (value instanceof Long) {
-            setLong(name, (Long) value);
+            setLong(key, (Long) value);
         } else if (value instanceof Float) {
-            setFloat(name, (Float) value);
+            setFloat(key, (Float) value);
         } else if (value instanceof Double) {
-            setDouble(name, (Double) value);
-        } else throw new MRuntimeException("Unknown number class", name, value.getClass());
+            setDouble(key, (Double) value);
+        } else throw new MRuntimeException("Unknown number class", key, value.getClass());
     }
 
     @Override
-    public Number getNumber(String name, Number def) {
-        Object out = getProperty(name);
+    public Number getNumber(String key, Number def) {
+        Object out = getProperty(key);
         if (out == null) return def;
         if (out instanceof Number) return (Number) out;
         try {
@@ -218,11 +219,11 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     /**
      * Return true if the property exists.
      *
-     * @param name
+     * @param key
      * @return if exists
      */
     @Override
-    public abstract boolean isProperty(String name);
+    public abstract boolean isProperty(String key);
 
     /**
      * Remove the property field in the list of properties.
@@ -238,6 +239,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
      * @param key
      * @param value
      */
+    @Override
     public abstract void setProperty(String key, Object value);
 
     /**
@@ -395,9 +397,10 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     }
 
     @Override
-    public String getFormatted(String name, String def, Object... values) {
-        String format = getString(name, def);
+    public String getFormatted(String key, String def, Object... values) {
+        String format = getString(key, def);
         if (format == null) return def; // probably null
         return String.format(format, values);
     }
+
 }

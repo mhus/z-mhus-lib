@@ -45,7 +45,7 @@ public class JmxHttpServer extends MJmx {
         if (config == null || server != null) return;
         server = new HtmlAdaptorServer(config.getInt("port", 1098));
 
-        for (IConfig cuser : config.getNodes("user")) {
+        for (IConfig cuser : config.getArray("user")) {
             server.addUserAuthenticationInfo(
                     new AuthInfo(
                             cuser.getExtracted("name"),

@@ -43,7 +43,7 @@ public class MRemoteManager extends MObject implements IBase {
 
     public MRemoteManager() throws MException {
         housekeeper = new Housekeeper(this);
-        IConfig config = M.l(CfgManager.class).getCfg(this, new IConfig());
+        IConfig config = M.l(CfgManager.class).getCfg(this);
         M.l(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep", 30000));
     }
 

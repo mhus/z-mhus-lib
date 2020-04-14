@@ -33,7 +33,7 @@ public class CfgSecure extends CfgValue<SecureString> {
         if (p < 0)
             return new SecureString(
                     MApi.getCfg(getOwner()).getString(getPath(), strValueOf(getDefault())));
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return new SecureString(
                 node.getString(getPath().substring(p + 1), strValueOf(getDefault())));

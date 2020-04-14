@@ -30,5 +30,7 @@ public class EmptyIterator<E> implements Iterator<E>, ReadOnly {
     }
 
     @Override
-    public void remove() {}
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

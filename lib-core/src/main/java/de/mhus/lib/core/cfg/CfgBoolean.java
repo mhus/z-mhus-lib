@@ -27,7 +27,7 @@ public class CfgBoolean extends CfgValue<Boolean> {
     protected Boolean loadValue() {
         int p = getPath().indexOf('@');
         if (p < 0) return MApi.getCfg(getOwner()).getBoolean(getPath(), getDefault());
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return node.getBoolean(getPath().substring(p + 1), getDefault());
     }

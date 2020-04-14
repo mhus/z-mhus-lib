@@ -14,10 +14,10 @@
 package de.mhus.lib.core.directory;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 
 @DefaultImplementation(ClassLoaderResourceProvider.class)
-public abstract class MResourceProvider extends IConfig
+public abstract class MResourceProvider extends MConfig
         implements IResourceProvider {
     
 }

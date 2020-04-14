@@ -17,12 +17,12 @@ import java.util.Map;
 
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MStopWatch;
-import de.mhus.lib.core.directory.ResourceNode;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.jmx.MJmx;
 
 public abstract class Task extends MJmx {
 
-    protected ResourceNode<?> config;
+    protected IConfig config;
     protected TaskConfig base;
     protected MProperties options;
 

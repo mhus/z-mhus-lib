@@ -42,18 +42,19 @@ public class Initializer extends MJmx {
             ((MutableActivator) base).addObject(Initializer.class, null, this);
         }
 
-        IConfig cInit = config.getNode("initialize");
-        for (IConfig cStart : cInit.getNodes("start")) {
-            try {
-                String clazz = cStart.getExtracted("class");
-                String interf = cStart.getExtracted("interface");
-                String method = cStart.getExtracted("method");
-                start(clazz, interf, method);
-            } catch (Throwable t) {
-                log().e(t);
+        IConfig cInit = config.getObjectOrNull("initialize");
+        if (cInit != null) {
+            for (IConfig cStart : cInit.getObjectList("start")) {
+                try {
+                    String clazz = cStart.getExtracted("class");
+                    String interf = cStart.getExtracted("interface");
+                    String method = cStart.getExtracted("method");
+                    start(clazz, interf, method);
+                } catch (Throwable t) {
+                    log().e(t);
+                }
             }
         }
-
         jmxRegister(true, getClass().getCanonicalName());
     }
 

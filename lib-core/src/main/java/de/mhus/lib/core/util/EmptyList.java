@@ -21,7 +21,15 @@ import java.util.ListIterator;
 
 import de.mhus.lib.basics.ReadOnly;
 
+/**
+ * An empty list. The list is unmodifiable.
+ * 
+ * @author mikehummel
+ *
+ * @param <E>
+ */
 public class EmptyList<E> implements List<E>, ReadOnly {
+    public static final List<?> INSTANCE = new EmptyList<>();
 
     @Override
     public int size() {
@@ -35,7 +43,6 @@ public class EmptyList<E> implements List<E>, ReadOnly {
 
     @Override
     public boolean contains(Object o) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -57,12 +64,12 @@ public class EmptyList<E> implements List<E>, ReadOnly {
 
     @Override
     public boolean add(Object e) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -72,26 +79,28 @@ public class EmptyList<E> implements List<E>, ReadOnly {
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends E> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void clear() {}
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public E get(int index) {
@@ -100,15 +109,17 @@ public class EmptyList<E> implements List<E>, ReadOnly {
 
     @Override
     public E set(int index, E element) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void add(int index, E element) {}
+    public void add(int index, E element) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public E remove(int index) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -133,6 +144,6 @@ public class EmptyList<E> implements List<E>, ReadOnly {
 
     @Override
     public List<E> subList(int fromIndex, int toIndex) {
-        return new EmptyList<>();
+        return this;
     }
 }

@@ -26,6 +26,7 @@ import java.io.StringBufferInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +37,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -67,6 +70,7 @@ import de.mhus.lib.core.logging.MLogUtil;
 public class MXml {
 
     private static DocumentBuilderFactory dbf;
+    private static TransformerFactory transformerFactory;
 
     // private static Log log = Log.getLog(MXml.class);
 
@@ -452,6 +456,7 @@ public class MXml {
                 // remaining parser logic
                 
                 dbf.setIgnoringComments(false);
+                dbf.setNamespaceAware(false);
 
             } catch (ParserConfigurationException e) {
                 // This should catch a failed setFeature feature
@@ -518,10 +523,15 @@ public class MXml {
      *
      * @param e
      * @param out
-     * @throws Exception
+     * @throws TransformerFactoryConfigurationError 
+     * @throws TransformerException 
      */
-    public static void saveXml(Node e, OutputStream out) throws Exception {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    public static void saveXml(Node e, OutputStream out) throws TransformerFactoryConfigurationError, TransformerException {
+        if (transformerFactory == null) {
+            transformerFactory = TransformerFactory.newInstance();
+            
+        }
+        Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         StreamResult result = new StreamResult(out);
@@ -570,15 +580,24 @@ public class MXml {
 
     /**
      * Create and return a empty xml document.
-     *
+     * There is no document element created.
+     * 
      * @return xml model
-     * @throws Exception
+     * @throws ParserConfigurationException 
      */
-    public static Document createDocument() throws Exception {
+    public static Document createDocument() throws ParserConfigurationException {
         DocumentBuilder builder = newBuilder();
         return builder.newDocument();
     }
 
+    public static Document createDocument(String rootNodeName) throws ParserConfigurationException {
+        DocumentBuilder builder = newBuilder();
+        Document doc = builder.newDocument();
+        Element rootNode = doc.createElement(rootNodeName);
+        doc.appendChild(rootNode);
+        return doc;
+    }
+    
     /**
      * Encode the default problematic characters in a string to store it in a xml value.
      *
@@ -1089,5 +1108,13 @@ public class MXml {
 		}
 		return ret;
 	}
+
+    public static List<String> getAttributeNames(Element element) {
+        NamedNodeMap attr = element.getAttributes();
+        ArrayList<String> out = new ArrayList<>(attr.getLength());
+        for (int i = 0; i < attr.getLength(); i++)
+            out.add(attr.item(i).getNodeName());
+        return out;
+    }
 	
 }

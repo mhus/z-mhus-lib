@@ -20,7 +20,9 @@ import java.util.List;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.config.ConfigList;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 
 public class ClassLoaderResourceProvider extends MResourceProvider {
 
@@ -48,7 +50,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         this.loader = loader;
     }
 
-    private static class CLResourceNode extends IConfig {
+    private static class CLResourceNode extends MConfig {
 
         private static final long serialVersionUID = 1L;
         private String name;
@@ -73,8 +75,8 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         }
 
         @Override
-        public List<IConfig> getArray(String key) {
-            return MCollection.getEmptyList();
+        public ConfigList getArray(String key) {
+            return new ConfigList(key, this);
         }
 
         @Override

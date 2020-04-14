@@ -24,6 +24,8 @@ public interface IProperties
                 Serializable,
                 Iterable<Map.Entry<String, Object>> {
 
+    void setProperty(String name, Object value);
+    
     void setString(String name, String value);
 
     void setInt(String name, int value);

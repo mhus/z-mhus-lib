@@ -29,7 +29,7 @@ public class CfgTimeInterval extends CfgValue<String> {
     protected String loadValue() {
         int p = getPath().indexOf('@');
         if (p < 0) return MApi.getCfg(getOwner()).getString(getPath(), getDefault());
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return node.getString(getPath().substring(p + 1), getDefault());
     }

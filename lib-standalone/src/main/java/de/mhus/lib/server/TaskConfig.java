@@ -18,7 +18,6 @@ import java.util.Map;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.directory.ResourceNode;
 import de.mhus.lib.core.jmx.MJmx;
 
 public class TaskConfig extends MJmx {
@@ -38,7 +37,7 @@ public class TaskConfig extends MJmx {
         this.config = config;
     }
 
-    public ResourceNode<?> config() {
+    public IConfig config() {
         return config;
     }
 

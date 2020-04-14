@@ -14,11 +14,12 @@
 package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.errors.MException;
 
-public class FaSource extends IConfig implements IDefAttribute {
+public class FaSource extends MConfig implements IDefAttribute {
 
     private static final long serialVersionUID = 1L;
     private String tag;

@@ -27,7 +27,7 @@ public class CfgDouble extends CfgValue<Double> {
     protected Double loadValue() {
         int p = getPath().indexOf('@');
         if (p < 0) return MApi.getCfg(getOwner()).getDouble(getPath(), getDefault());
-        IConfig node = MApi.getCfg(getOwner()).getNodeByPath(getPath().substring(0, p));
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return node.getDouble(getPath().substring(p + 1), getDefault());
     }

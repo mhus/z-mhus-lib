@@ -32,7 +32,6 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.config.EmptyConfig;
 import de.mhus.lib.core.config.IConfig;
 
 public class MJms {
@@ -126,7 +125,7 @@ public class MJms {
     }
 
     public static synchronized IConfig getConfig() {
-        if (config == null) config = MApi.get().getCfgManager().getCfg("jms", new EmptyConfig());
+        if (config == null) config = MApi.get().getCfgManager().getCfg("jms");
         return config;
     }
 

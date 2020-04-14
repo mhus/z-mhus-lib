@@ -17,9 +17,10 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.errors.MException;
 
-public class DefComponent extends IConfig implements IDefDefinition {
+public class DefComponent extends MConfig implements IDefDefinition {
 
     private static final long serialVersionUID = 1L;
     private String tag;

@@ -104,13 +104,13 @@ public class MProperties extends AbstractProperties implements Externalizable {
     }
 
     @Override
-    public Object getProperty(String name) {
-        return properties.get(name);
+    public Object getProperty(String key) {
+        return properties.get(key);
     }
 
     @Override
-    public boolean isProperty(String name) {
-        return properties.containsKey(name);
+    public boolean isProperty(String key) {
+        return properties.containsKey(key);
     }
 
     @Override

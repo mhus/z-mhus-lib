@@ -108,28 +108,30 @@ public class MFile {
 
     /**
      * Return the Suffix of a file. Its the string after the last dot.
+     * It's lower case and trimmed!
      *
      * @param _file
      * @return the file suffix
      */
-    public static String getFileSuffix(File _file) {
+    public static String getFileExtension(File _file) {
         if (_file == null) return null;
-        return getFileSuffix(_file.getAbsolutePath());
+        return getFileExtension(_file.getAbsolutePath());
     }
 
     /**
      * Return the Suffix of a file. Its the string after the last dot or an empty string.
+     * It's lower case and trimmed!
      *
      * @param name
      * @return the file suffix
      */
-    public static String getFileSuffix(String name) {
+    public static String getFileExtension(String name) {
         if (name == null) return null;
 
         if (!MString.isIndex(name, '.')) return "";
         name = MString.afterLastIndex(name, '.');
 
-        return name;
+        return name.trim().toLowerCase();
     }
 
     /**

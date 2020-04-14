@@ -44,7 +44,6 @@ public class MApi {
     private static Log log = null;
     protected static Boolean trace;
     //	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
-    private static IConfig emptyConfig = null;
     private static UpdaterCfg configUpdater;
     public static PrintStream out =
             System.out; // catch default system out while startup (gogo shell will change stdout)
@@ -148,8 +147,7 @@ public class MApi {
      * @return the config
      */
     public static IConfig getCfg(Object owner) {
-        if (emptyConfig == null) emptyConfig = new IConfig();
-        return get().getCfgManager().getCfg(owner, emptyConfig);
+        return get().getCfgManager().getCfg(owner);
     }
 
     public static synchronized UpdaterCfg getCfgUpdater() {
