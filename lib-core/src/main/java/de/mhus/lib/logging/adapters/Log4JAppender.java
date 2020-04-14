@@ -13,16 +13,15 @@
  */
 package de.mhus.lib.logging.adapters;
 
+import java.io.Serializable;
+
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 
 import de.mhus.lib.core.logging.Log;
-
-import java.io.Serializable;
-
-import org.apache.logging.log4j.Level;
 
 public class Log4JAppender extends AbstractAppender {
 

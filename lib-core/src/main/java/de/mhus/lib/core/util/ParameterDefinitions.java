@@ -36,7 +36,7 @@ public class ParameterDefinitions extends TreeMap<String, ParameterDefinition> {
      * 
      * 
      * @param definitions
-     * @return
+     * @return Parameter definition
      */
     public static ParameterDefinitions create(Collection<String> definitions) {
         ParameterDefinitions out = new ParameterDefinitions();

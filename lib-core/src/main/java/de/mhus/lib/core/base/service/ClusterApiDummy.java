@@ -1,7 +1,6 @@
 package de.mhus.lib.core.base.service;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.base.service.LockManager;
 import de.mhus.lib.core.concurrent.Lock;
 
 public class ClusterApiDummy implements ClusterApi {

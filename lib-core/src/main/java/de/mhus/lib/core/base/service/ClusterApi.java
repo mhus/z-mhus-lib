@@ -2,7 +2,6 @@ package de.mhus.lib.core.base.service;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.base.service.ServerIdent;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.concurrent.Lock;
 

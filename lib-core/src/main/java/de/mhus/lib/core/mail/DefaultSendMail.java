@@ -27,8 +27,8 @@ import javax.mail.internet.MimeMessage;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPassword;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;

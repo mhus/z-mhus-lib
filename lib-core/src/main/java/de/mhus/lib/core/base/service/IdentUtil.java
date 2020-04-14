@@ -14,7 +14,6 @@
 package de.mhus.lib.core.base.service;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.base.service.ServerIdent;
 
 public class IdentUtil {
 

@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import de.mhus.lib.core.MCollection;
-import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.logging.Log;
 
 // https://developer.gemalto.com/faq/how-obtain-time-internet-java-rfc868
