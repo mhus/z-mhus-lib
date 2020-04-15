@@ -79,6 +79,10 @@ public class DefaultConfigFactory implements IConfigFactory {
         return new XmlConfigBuilder().readFromElement(documentElement);
     }
 
+    public static IConfig readFromYamlString(String yaml) throws MException {
+        return new YamlConfigBuilder().readFromString(yaml);
+    }
+
     @Override
     public void write(IConfig config, File file) throws MException {
         String ext = MFile.getFileExtension(file);

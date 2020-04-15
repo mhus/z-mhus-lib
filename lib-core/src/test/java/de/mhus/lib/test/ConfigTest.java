@@ -92,6 +92,38 @@ public class ConfigTest {
     }
 
     @Test
+    public void testYaml() throws Exception {
+        String yaml = 
+                "test1: wow\n"
+              + "test2: alf\n"
+              + "sub:\n"
+              + "- test1: wow1\n"
+              + "  test2: alf1\n"
+              + "- test1: wow2\n"
+              + "  test2: alf2\n"
+              + "- test1: wow3\n"
+              + "  test2: alf3\n"
+              + "";
+        
+        {
+            IConfig c = DefaultConfigFactory.readFromYamlString(yaml);
+            derTeschd(c, true);
+        }
+        {
+            IConfig c = DefaultConfigFactory.readFromYamlString(yaml);
+            File file = new File("target/config.yaml");
+            DefaultConfigFactory dcf = new DefaultConfigFactory();
+            System.out.println("C1: " + c);
+            dcf.write(c, file);
+            
+            // read
+            IConfig c2 = dcf.read(file);
+            System.out.println("C2: " + c2);
+            derTeschd(c2, true);
+        }
+    }
+    
+    @Test
     public void testJson() throws Exception {
 
         String json =

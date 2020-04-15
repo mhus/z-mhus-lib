@@ -53,6 +53,7 @@
 		            javax.mail.*;resolution:=optional,
                     jline.console*;resolution:=optional,
                     org.apache.shiro.*;resolution:=optional,
+                    org.yaml.snakeyaml.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <Private-Package>
@@ -116,18 +117,23 @@
     </dependency>
         <!-- Shiro uses SLF4J for logging.  We'll use the 'simple' binding
              in this example app.  See http://www.slf4j.org for more info. -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.21</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.21</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.7.21</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+    </dependency>
     
   </dependencies>
   

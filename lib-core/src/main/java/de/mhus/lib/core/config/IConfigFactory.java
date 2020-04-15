@@ -51,6 +51,14 @@ public interface IConfigFactory {
             if (f.exists() && f.isFile()) read(f);
         }
         {
+            File f = new File(parent, name + ".yaml");
+            if (f.exists() && f.isFile()) read(f);
+        }
+        {
+            File f = new File(parent, name + ".yml");
+            if (f.exists() && f.isFile()) read(f);
+        }
+        {
             File f = new File(parent, name + ".properties");
             if (f.exists() && f.isFile()) read(f);
         }
