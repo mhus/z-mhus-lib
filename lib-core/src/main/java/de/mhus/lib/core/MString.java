@@ -1626,6 +1626,33 @@ public class MString {
         return "";
     }
 
+    /**
+     * This will truncate the string, but it also adds three dots (...) at the removed position. The
+     * truncation is not at the end at all. The resulted string is a nice representation of the
+     * original input. Use this function to display a truncated string.
+     *
+     * <p>abc...xyz
+     *
+     * @param in String to truncate
+     * @param length Max length of the string
+     * @param cutPos positive position from left or negative position from right (lesser then -3 is recommended)
+     * @return truncated string
+     */
+    public static String truncateNice(String in, int length, int cutPos) {
+        if (in == null || in.length() <= length) return in;
+        if (length < 4) return in.substring(0, length);
+        if (cutPos < 0) {
+            if (cutPos < -3 && length > -cutPos + 3)
+                return in.substring(0, length + cutPos) + "..." + in.substring(in.length() + cutPos + 3);
+        } else {
+            if (length > cutPos + 3)
+                return in.substring(0, cutPos) + "..." + in.substring(in.length() - length + cutPos + 3);
+        }
+        if (length > 3) return in.substring(0, length - 3) + "...";
+        if (length > 0) return in.substring(0, length);
+        return "";
+    }
+    
     public static String truncateNiceLeft(String in, int length) {
         if (in == null || in.length() <= length) return in;
         int s = in.length();
