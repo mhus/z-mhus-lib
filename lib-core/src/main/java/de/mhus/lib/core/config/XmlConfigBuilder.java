@@ -95,7 +95,7 @@ public class XmlConfigBuilder extends IConfigBuilder {
                 IConfig itemC = arrayC.createObject();
                 read(itemC, itemE, level+1);
             } else
-            if (config.isObject(key) || !"object".equals(itemE.getAttribute("config:type"))) {
+            if (config.isObject(key) && !"object".equals(itemE.getAttribute("config:type"))) {
                 IConfig firstC = config.getObjectOrNull(key);
                 ConfigList arrayC = config.createArray(key);
                 if (firstC != null)
