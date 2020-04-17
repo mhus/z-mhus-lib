@@ -36,12 +36,24 @@ public class MYaml {
         return yaml;
     }
 
-    public static YMap loadFromString(String content) {
+    public static YElement loadFromString(String content) {
+        getYaml();
+        YElement docE = new YMap(yaml.load(content));
+        return docE;
+    }
+    
+    public static YMap loadMapFromString(String content) {
         getYaml();
         YMap docE = new YMap(yaml.load(content));
         return docE;
     }
 
+    public static YList loadListFromString(String content) {
+        getYaml();
+        YList docE = new YList(yaml.load(content));
+        return docE;
+    }
+    
     public static YMap createMap() {
         return new YMap(new HashMap<>());
     }

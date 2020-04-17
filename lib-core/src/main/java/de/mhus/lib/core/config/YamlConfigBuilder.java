@@ -46,12 +46,12 @@ public class YamlConfigBuilder extends IConfigBuilder {
         for (YElement itemY : listY) {
             IConfig itemC = listC.createObject();
             if (itemY.isMap()) {
-                fill(itemC, itemY.getMap(), level+1);
+                fill(itemC, itemY.asMap(), level+1);
             } else
             if (itemY.isList()) {
                 // nameless list in list - not really supported - but ...
                 ConfigList arrayY2 = itemC.createArray(IConfig.NAMELESS_VALUE);
-                fill(arrayY2, itemY.getList(), level+1);
+                fill(arrayY2, itemY.asList(), level+1);
             } else {
                 itemC.put(IConfig.NAMELESS_VALUE, itemY.getObject());
             }

@@ -11,11 +11,11 @@ public class YElement {
         this.obj = elem;
     }
 
-    public YMap getMap() {
+    public YMap asMap() {
         return new YMap(obj);
     }
     
-    public YList getList() {
+    public YList asList() {
         return new YList(obj);
     }
 
