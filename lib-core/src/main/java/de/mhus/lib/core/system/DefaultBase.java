@@ -66,7 +66,7 @@ public class DefaultBase extends Base {
             if (ret != null) return ret;
 
         } catch (Exception e) {
-            MApi.dirtyLog("info: fallback to default", ifc, def, e);
+            MApi.dirtyLogDebug("info: fallback to default", ifc, def, e);
         }
 
         if (def == null) return null;
@@ -79,7 +79,7 @@ public class DefaultBase extends Base {
                 | InvocationTargetException
                 | NoSuchMethodException
                 | SecurityException e) {
-            MApi.dirtyLog(ifc, e);
+            MApi.dirtyLogDebug(ifc, e);
         }
         return null;
     }

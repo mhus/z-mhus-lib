@@ -32,7 +32,7 @@ public class SystemCfgInitiator implements CfgInitiator {
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) internal.setBaseDir(new File(name));
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
     }
 }

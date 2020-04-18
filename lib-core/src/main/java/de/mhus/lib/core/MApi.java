@@ -62,7 +62,7 @@ public class MApi {
                 String path = "de.mhus.lib.mutable.MApiFactory";
                 if (System.getProperty("mhu.lib.api.factory") != null)
                     path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
-                dirtyLog("MApiFactory", path);
+                dirtyLogDebug("MApiFactory", path);
                 IApiFactory factory =
                         (IApiFactory) Class.forName(path).getDeclaredConstructor().newInstance();
                 if (factory != null) {
@@ -182,7 +182,7 @@ public class MApi {
         }
     }
 
-    public static void dirtyLog(Object... string) {
+    public static void dirtyLogDebug(Object... string) {
         if (log != null) {
             log.d(string);
             return;
@@ -193,6 +193,10 @@ public class MApi {
     }
 
     public static void dirtyLogInfo(Object... string) {
+        if (log != null) {
+            log.i(string);
+            return;
+        }
         if (!isDirtyTrace()) return;
         if (string == null) return;
         out.println("--- " + Arrays.toString(string));
@@ -200,6 +204,10 @@ public class MApi {
     }
 
     public static void dirtyLogError(Object... string) {
+        if (log != null) {
+            log.e(string);
+            return;
+        }
         if (string == null) return;
         err.println("*** " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);

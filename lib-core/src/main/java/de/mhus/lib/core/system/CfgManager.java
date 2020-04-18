@@ -261,10 +261,10 @@ public class CfgManager {
                                 name = level + "_" + name;
 
                                 if ("none".equals(clazzName)) {
-                                    MApi.dirtyLog("remove initiator", name);
+                                    MApi.dirtyLogDebug("remove initiator", name);
                                     initiators.remove(name);
                                 } else if (clazzName != null && !initiators.containsKey(name)) {
-                                    MApi.dirtyLog("add initiator", name);
+                                    MApi.dirtyLogDebug("add initiator", name);
                                     CfgInitiator initiator =
                                             activator.createObject(CfgInitiator.class, clazzName);
                                     initiators.put(name, new Object[] {initiator, node});
@@ -324,10 +324,10 @@ public class CfgManager {
                     }
                     return true;
                 } catch (Exception e) {
-                    MApi.dirtyLog(e);
+                    MApi.dirtyLogDebug(e);
                 }
 
-            MApi.dirtyLog("*** MHUS Config file not found", configFile);
+            MApi.dirtyLogDebug("*** MHUS Config file not found", configFile);
 
             return false;
         }

@@ -64,7 +64,7 @@ public class LogCfgInitiator implements CfgInitiator {
                                 Class.forName(name.trim()).getDeclaredConstructor().newInstance();
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
         if (mlogFactory != null) internal.setMLogFactory(mlogFactory);
 
@@ -79,7 +79,7 @@ public class LogCfgInitiator implements CfgInitiator {
                                 Class.forName(name.trim()).getDeclaredConstructor().newInstance();
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
         if (logFactory == null) logFactory = new ConsoleFactory();
 
@@ -93,7 +93,7 @@ public class LogCfgInitiator implements CfgInitiator {
                                 Class.forName(name.trim()).getDeclaredConstructor().newInstance());
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
 
         try {
@@ -103,7 +103,7 @@ public class LogCfgInitiator implements CfgInitiator {
                 logFactory.setMaxMessageSize(Integer.valueOf(size));
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
 
         try {
@@ -116,7 +116,7 @@ public class LogCfgInitiator implements CfgInitiator {
                                 Class.forName(name.trim()).getDeclaredConstructor().newInstance());
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
 
         if (logFactory.getParameterMapper() != null
@@ -139,7 +139,7 @@ public class LogCfgInitiator implements CfgInitiator {
                                                         .newInstance());
                 }
             } catch (Throwable t) {
-                MApi.dirtyLog(t);
+                MApi.dirtyLogDebug(t);
             }
         }
 
@@ -154,7 +154,7 @@ public class LogCfgInitiator implements CfgInitiator {
                 }
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
 
         try {
@@ -165,7 +165,7 @@ public class LogCfgInitiator implements CfgInitiator {
                 logFactory.setDefaultLevel(Log.LEVEL.valueOf(value.toUpperCase()));
             }
         } catch (Throwable t) {
-            MApi.dirtyLog(t);
+            MApi.dirtyLogDebug(t);
         }
 
         internal.setLogFactory(logFactory);

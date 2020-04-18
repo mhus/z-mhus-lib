@@ -71,7 +71,7 @@ public class DefaultActivator extends MActivator implements MutableActivator {
                 try {
                     ((ActivatorObjectLifecycle) obj).objectActivated(name, old);
                 } catch (Throwable t) {
-                    MApi.dirtyLog(this, name, t);
+                    MApi.dirtyLogDebug(this, name, t);
                 }
             }
             old = instances.put(name, obj);
@@ -81,7 +81,7 @@ public class DefaultActivator extends MActivator implements MutableActivator {
             try {
                 ((ActivatorObjectLifecycle) obj).objectDeactivated();
             } catch (Throwable t) {
-                MApi.dirtyLog(this, name, t);
+                MApi.dirtyLogDebug(this, name, t);
             }
         }
     }

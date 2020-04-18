@@ -214,7 +214,7 @@ public class FileLogger extends Log {
             try {
                 out = new PrintStream(new BufferedOutputStream(new FileOutputStream(file)));
             } catch (FileNotFoundException e) {
-                MApi.dirtyLog(e);
+                MApi.dirtyLogDebug(e);
             }
         }
 
