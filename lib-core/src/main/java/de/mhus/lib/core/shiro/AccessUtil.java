@@ -1,6 +1,9 @@
 package de.mhus.lib.core.shiro;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +12,17 @@ import java.util.Map;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresGuest;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
+import org.apache.shiro.authz.aop.AuthenticatedAnnotationHandler;
+import org.apache.shiro.authz.aop.AuthorizingAnnotationHandler;
+import org.apache.shiro.authz.aop.GuestAnnotationHandler;
+import org.apache.shiro.authz.aop.PermissionAnnotationHandler;
+import org.apache.shiro.authz.aop.RoleAnnotationHandler;
+import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
@@ -19,8 +33,10 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.cfg.CfgString;
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
 import de.mhus.lib.core.util.SecureString;
@@ -38,6 +54,14 @@ public class AccessUtil {
             return getPrincipal();
         }
     };
+    
+    public static Map<Class<? extends Annotation>, AuthorizingAnnotationHandler> shiroAnnotations = Collections.unmodifiableMap(MCollection.asMap(
+            RequiresPermissions.class, new PermissionAnnotationHandler(),
+            RequiresRoles.class, new RoleAnnotationHandler(),
+            RequiresAuthentication.class, new AuthenticatedAnnotationHandler(),
+            RequiresUser.class, new UserAnnotationHandler(),
+            RequiresGuest.class, new GuestAnnotationHandler()
+            ));
 
     public static boolean isAdmin() {
         Subject subject =  M.l(AccessApi.class).getSubject(); // init
@@ -358,6 +382,51 @@ public class AccessUtil {
 
     public static boolean hasRole(String role) {
         return getSubject().hasRole(role);
+    }
+    
+    public static boolean hasPermission(Subject subject, Class<?> clazz) {
+        return hasPermission(subject, clazz.getAnnotations());
+    }
+
+    public static boolean hasPermission(Subject subject, Method method) {
+        return hasPermission(subject, method.getAnnotations());
+    }
+
+    public static boolean hasPermission(Subject subject, Annotation[] annotations) {
+        Value<Boolean> perm = new Value<>(true);
+        subject.execute( () -> {
+            try {
+                for (Annotation classAnno : annotations) {
+                    AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.getClass());
+                    if (handler == null) continue;
+                    handler.assertAuthorized(classAnno);
+                }
+            } catch (AuthorizationException e) {
+                perm.value = false;
+            }
+        });
+        return perm.value;
+    }
+    
+    public static void checkPermission(Object obj) {
+        if (obj == null) return;
+        checkPermission(obj.getClass());
+    }
+    
+    public static void checkPermission(Class<?> clazz) {
+        checkPermission(clazz.getAnnotations());
+    }
+
+    public static void checkPermission(Method method) {
+        checkPermission(method.getAnnotations());
+    }
+
+    public static void checkPermission(Annotation[] annotations) {
+        for (Annotation classAnno : annotations) {
+            AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.getClass());
+            if (handler == null) continue;
+            handler.assertAuthorized(classAnno);
+        }
     }
     
 }

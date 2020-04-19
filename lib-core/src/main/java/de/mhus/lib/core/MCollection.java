@@ -578,4 +578,21 @@ public class MCollection {
         for (T item : iter) if (filter.test(item)) return item;
         return null;
     }
+
+    /**
+     * Return an new map and add the attributes alternating key and value.
+     * 
+     * @param <K>
+     * @param <V>
+     * @param keyValues
+     * @return A new Map filed with values
+     */
+    @SuppressWarnings("unchecked")
+    public static <K,V> Map<K,V> asMap(Object ... keyValues) {
+        HashMap<K,V> out = new HashMap<>();
+        for (int i = 0; i < keyValues.length-1; i=i+2)
+            out.put((K)keyValues[i], (V)keyValues[i+1]);
+        return out;
+    }
+    
 }
