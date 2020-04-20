@@ -21,6 +21,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleRole;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -43,6 +44,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     private File rolesDir;
     private String defaultRole;
     private boolean debugPermissions;
+    private String rolePermission;
     
     public FileSourceRealm() {
     }
@@ -279,10 +281,15 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     @Override
     protected boolean hasRole(String roleIdentifier, AuthorizationInfo info) {
+        //1. check role to permission mapping
+        if (rolePermission != null && isPermitted(new WildcardPermission(rolePermission + ":*:" + roleIdentifier), info))
+            return true;
+        //2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
             log.d("role access denied",AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
         }
+        
         return ret;
     }
     
@@ -292,6 +299,23 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     public void setDebugPermissions(boolean debugPermissions) {
         this.debugPermissions = debugPermissions;
+    }
+
+    public String getRolePermission() {
+        return rolePermission;
+    }
+
+    /**
+     * This option maps role access to permissions. Role access check is also active as next check.
+     * 
+     * Set the role permission to not null to enable general role permission check.
+     * If you set it to "admin" and give "admin:*" permission and a user have the permission then the user has access to all
+     * roles. Use "admin:*:user" to permit acess to the role "user".
+     * 
+     * @param rolePermission
+     */
+    public void setRolePermission(String rolePermission) {
+        this.rolePermission = rolePermission;
     }
     
 }

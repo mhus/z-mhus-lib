@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.text.IniRealm;
 import org.apache.shiro.subject.Subject;
@@ -19,8 +20,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     private HashMap<String,Map<String,String>> userData = new HashMap<>();
     private boolean debugPermissions;
-    
-    
+    private String rolePermission;
     
     public IniDataRealm() {
         super();
@@ -97,6 +97,10 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     @Override
     protected boolean hasRole(String roleIdentifier, AuthorizationInfo info) {
+        //1. check role to permission mapping
+        if (rolePermission != null && isPermitted(new WildcardPermission(rolePermission + ":*:" + roleIdentifier), info))
+            return true;
+        //2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
             log.d("role access denied",AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
@@ -110,6 +114,23 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     public void setDebugPermissions(boolean debugPermissions) {
         this.debugPermissions = debugPermissions;
+    }
+    
+    public String getRolePermission() {
+        return rolePermission;
+    }
+
+    /**
+     * This option maps role access to permissions. Role access check is also active as next check.
+     * 
+     * Set the role permission to not null to enable general role permission check.
+     * If you set it to "admin" and give "admin:*" permission and a user have the permission then the user has access to all
+     * roles. Use "admin:*:user" to permit acess to the role "user".
+     * 
+     * @param rolePermission
+     */
+    public void setRolePermission(String rolePermission) {
+        this.rolePermission = rolePermission;
     }
     
 }

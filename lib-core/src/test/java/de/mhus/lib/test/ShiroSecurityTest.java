@@ -3,8 +3,10 @@ package de.mhus.lib.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -20,9 +22,88 @@ import de.mhus.lib.core.shiro.PrincipalData;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.core.shiro.SubjectEnvironment;
+import de.mhus.lib.test.shiro.ShiroAnnotationTest;
 
 public class ShiroSecurityTest {
 
+    @Test
+    public void annotationsTest() throws NoSuchMethodException, SecurityException {
+        ShiroAnnotationTest test = new ShiroAnnotationTest();
+
+        init("classpath:de/mhus/lib/test/shiro-data.ini");
+
+        // init shiro and get subject
+        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+            fail();
+        } catch (AuthorizationException e) {}    
+
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+            fail();
+        } catch (AuthorizationException e) {}    
+
+        AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+
+        // admin ---------------------------------------------
+        
+        // login
+        UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("admin", AccessUtil.getPrincipal());
+        
+        AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+        
+        AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+        
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+            fail();
+        } catch (AuthorizationException e) {}    
+
+        AccessUtil.checkPermission(test.getClass().getMethod("roleAdmin"));
+        
+        // none admin -----------------------------------------
+        
+        //cleanup shiro and test new subject
+        AccessUtil.subjectCleanup();
+        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        
+        //login lonestarr
+        token = new UsernamePasswordToken("lonestarr", "vespa");
+        AccessUtil.getSubject().login(token);
+        // test
+        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        
+        AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+        
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+            fail();
+        } catch (AuthorizationException e) {}    
+        
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+            fail();
+        } catch (AuthorizationException e) {}    
+        
+        try {
+            AccessUtil.checkPermission(test.getClass().getMethod("roleAdmin"));
+            fail();
+        } catch (AuthorizationException e) {}    
+        
+//        AccessUtil.checkPermission(test.getClass().getMethod("roleUser"));
+
+    }
+    
     @Test
     public void rolesTest() {
         init("classpath:de/mhus/lib/test/shiro-data.ini");

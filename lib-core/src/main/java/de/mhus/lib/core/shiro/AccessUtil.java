@@ -55,12 +55,12 @@ public class AccessUtil {
         }
     };
     
-    public static Map<Class<? extends Annotation>, AuthorizingAnnotationHandler> shiroAnnotations = Collections.unmodifiableMap(MCollection.asMap(
-            RequiresPermissions.class, new PermissionAnnotationHandler(),
-            RequiresRoles.class, new RoleAnnotationHandler(),
-            RequiresAuthentication.class, new AuthenticatedAnnotationHandler(),
-            RequiresUser.class, new UserAnnotationHandler(),
-            RequiresGuest.class, new GuestAnnotationHandler()
+    public static Map<String, AuthorizingAnnotationHandler> shiroAnnotations = Collections.unmodifiableMap(MCollection.asMap(
+            RequiresPermissions.class.getCanonicalName(), new PermissionAnnotationHandler(),
+            RequiresRoles.class.getCanonicalName(), new RoleAnnotationHandler(),
+            RequiresAuthentication.class.getCanonicalName(), new AuthenticatedAnnotationHandler(),
+            RequiresUser.class.getCanonicalName(), new UserAnnotationHandler(),
+            RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler()
             ));
 
     public static boolean isAdmin() {
@@ -397,7 +397,7 @@ public class AccessUtil {
         subject.execute( () -> {
             try {
                 for (Annotation classAnno : annotations) {
-                    AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.getClass());
+                    AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.getClass().getCanonicalName());
                     if (handler == null) continue;
                     handler.assertAuthorized(classAnno);
                 }
@@ -423,7 +423,7 @@ public class AccessUtil {
 
     public static void checkPermission(Annotation[] annotations) {
         for (Annotation classAnno : annotations) {
-            AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.getClass());
+            AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.annotationType().getCanonicalName());
             if (handler == null) continue;
             handler.assertAuthorized(classAnno);
         }
