@@ -64,39 +64,39 @@ public class M {
      * @param def
      * @return Integer
      */
-    public static int c(Object in, int def) {
+    public static int to(Object in, int def) {
         return MCast.toint(in, def);
     }
 
-    public static int cint(Object in, int def) {
+    public static int toint(Object in, int def) {
         return MCast.toint(in, def);
     }
 
-    public static long c(Object in, long def) {
+    public static long to(Object in, long def) {
         return MCast.tolong(in, def);
     }
 
-    public static long clong(Object in, long def) {
+    public static long tolong(Object in, long def) {
         return MCast.tolong(in, def);
     }
 
-    public static double c(Object in, double def) {
+    public static double to(Object in, double def) {
         return MCast.todouble(in, def);
     }
 
-    public static double cdouble(Object in, double def) {
+    public static double todouble(Object in, double def) {
         return MCast.todouble(in, def);
     }
 
-    public static boolean c(Object in, boolean def) {
+    public static boolean to(Object in, boolean def) {
         return MCast.toboolean(in, def);
     }
 
-    public static Date c(Object in, Date def) {
+    public static Date to(Object in, Date def) {
         return MCast.toDate(in, def);
     }
 
-    public static Date cdate(Object in, Date def) {
+    public static Date todate(Object in, Date def) {
         return MCast.toDate(in, def);
     }
 
