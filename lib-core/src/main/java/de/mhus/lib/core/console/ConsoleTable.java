@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -60,7 +61,7 @@ public class ConsoleTable {
     public ConsoleTable(String options) {
         if (options != null) {
             options = options.trim();
-            MProperties o = MProperties.explodeToMProperties(options);
+            MProperties o = IProperties.explodeToMProperties(options);
             setFull(o.getBoolean("all", false));
             // TODO more options ...
         } else {

@@ -314,7 +314,7 @@ public class CfgManager {
                                         IConfig cc = getConfigFactory().read(f);
                                         configFiles.put(f, f.lastModified());
                                         cc.setString("_source", f.getAbsolutePath());
-                                        MConfig.merge(cc, c);
+                                        IConfig.merge(cc, c);
                                     }
                                 }
                             }

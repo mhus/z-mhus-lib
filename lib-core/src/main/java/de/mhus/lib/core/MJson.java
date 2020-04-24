@@ -516,4 +516,10 @@ public class MJson {
             throws JsonGenerationException, JsonMappingException, IOException {
         return mapper.writeValueAsString(to);
     }
+    
+    public static String toPrettyString(JsonNode to)
+            throws JsonGenerationException, JsonMappingException, IOException {
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(to);
+    }
+
 }

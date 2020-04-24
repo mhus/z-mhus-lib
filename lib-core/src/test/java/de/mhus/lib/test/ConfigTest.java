@@ -70,13 +70,13 @@ public class ConfigTest {
         {
             Document doc = MXml.loadXml(xml);
     
-            IConfig c = DefaultConfigFactory.readFromXmlString(doc.getDocumentElement());
+            IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
     
             derTeschd(c, true);
         }
         {
             Document doc = MXml.loadXml(xml);
-            IConfig c = DefaultConfigFactory.readFromXmlString(doc.getDocumentElement());
+            IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
             
             // save
             File file = new File("target/config.xml");
@@ -106,11 +106,11 @@ public class ConfigTest {
               + "";
         
         {
-            IConfig c = DefaultConfigFactory.readFromYamlString(yaml);
+            IConfig c = IConfig.readFromYamlString(yaml);
             derTeschd(c, true);
         }
         {
-            IConfig c = DefaultConfigFactory.readFromYamlString(yaml);
+            IConfig c = IConfig.readFromYamlString(yaml);
             File file = new File("target/config.yaml");
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);
@@ -137,11 +137,11 @@ public class ConfigTest {
                         "'",
                         "\"");
         {
-            IConfig c = DefaultConfigFactory.readFromJsonString(json);
+            IConfig c = IConfig.readFromJsonString(json);
             derTeschd(c, true);
         }
         {
-            IConfig c = DefaultConfigFactory.readFromJsonString(json);
+            IConfig c = IConfig.readFromJsonString(json);
             File file = new File("target/config.json");
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);

@@ -38,6 +38,6 @@ public class CfgProperties extends CfgValue<IProperties> {
 
     @Override
     protected IProperties loadValue(String value) {
-        return MProperties.explodeToMProperties(value.split("\n"));
+        return IProperties.explodeToMProperties(value.split("\n"));
     }
 }

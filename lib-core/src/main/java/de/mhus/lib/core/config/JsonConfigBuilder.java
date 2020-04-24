@@ -76,21 +76,26 @@ public class JsonConfigBuilder extends IConfigBuilder {
     @Override
     public void write(IConfig config, OutputStream os) throws MException {
         try {
-            if (config.isArray(IConfig.NAMELESS_VALUE)) {
-//                ArrayNode arrayJ = MJson.createArrayNode();
-//                for (IConfig itemC : config.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
-//                    
-//                }
-//                MJson.save(arrayJ, os);
-                throw new NotSupportedException("first config node as array is not supported");
-            } else {
-                ObjectNode objectJ = MJson.createObjectNode();
-                fill(objectJ, config, 0);
-                MJson.save(objectJ, os);
-            }
+            ObjectNode objectJ = writeToJsonNode(config);
+            MJson.save(objectJ, os);
         } catch (IOException e) {
             throw new MException(e);
         }
+    }
+    
+    public ObjectNode writeToJsonNode(IConfig config) {
+        if (config.isArray(IConfig.NAMELESS_VALUE)) {
+//          ArrayNode arrayJ = MJson.createArrayNode();
+//          for (IConfig itemC : config.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
+//              
+//          }
+//          MJson.save(arrayJ, os);
+          throw new NotSupportedException("first config node as array is not supported");
+      } else {
+          ObjectNode objectJ = MJson.createObjectNode();
+          fill(objectJ, config, 0);
+          return objectJ;
+      }
     }
 
     private void fill(ObjectNode objectJ, IConfig itemC, int level) {

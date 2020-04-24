@@ -16,7 +16,11 @@ package de.mhus.lib.core;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Properties;
+
+import de.mhus.lib.core.util.MUri;
 
 public interface IProperties
         extends IReadProperties,
@@ -52,4 +56,195 @@ public interface IProperties
     void clear();
 
     String getFormatted(String name, String def, Object... values);
+
+    /**
+     * This will handle the strings like options. Means a string without separator will handled as
+     * key and set to true. e.g. val1&val2&a=b will be val1=true, val2=true, a=b
+     *
+     * @param properties Rfc1738 (Url Encode) encoded string
+     * @return The MProperties
+     */
+    public static MProperties explodeToOptions(String properties) {
+        return explodeToOptions(MUri.explodeArray(properties), '=');
+    }
+
+    /**
+     * This will handle the strings like options. Means a string without separator will handled as
+     * key and set to true. e.g. [val1, val2, a=b] will be val1=true, val2=true, a=b
+     *
+     * @param properties
+     * @return The MProperties
+     */
+    public static MProperties explodeToOptions(String[] properties) {
+        return explodeToOptions(properties, '=');
+    }
+
+    /**
+     * This will handle the strings like properties. Means a string without separator will be stored
+     * as value with an increasing key as integer, e.g. val1&val2&a=b will be 0=val1, 1=val2, a=b
+     *
+     * @param properties Rfc1738 (Url Encoded) encoded string
+     * @return The MProperties
+     */
+    public static MProperties explodeToMProperties(String properties) {
+        return explodeToMProperties(MUri.explodeArray(properties), '=', ':', 0, Integer.MAX_VALUE);
+    }
+
+    /**
+     * This will handle the strings like properties. Means a string without separator will be stored
+     * as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2,
+     * a=b
+     *
+     * @param properties
+     * @return The MProperties
+     */
+    public static MProperties explodeToMProperties(String[] properties) {
+        if (properties == null) return new MProperties();
+        return explodeToMProperties(properties, '=', ':', 0, properties.length);
+    }
+
+    public static MProperties explodeToMProperties(String[] properties, int offset, int length) {
+        if (properties == null) return new MProperties();
+        return explodeToMProperties(properties, '=', ':', offset, length);
+    }
+
+    /**
+     * This will handle the strings like options. Means a string without separator will handled as
+     * key and set to true. e.g. [val1, val2, a=b] will be val1=true, val2=true, a=b
+     *
+     * @param properties
+     * @param separator
+     * @return The MProperties
+     */
+    public static MProperties explodeToOptions(String[] properties, char separator) {
+        MProperties p = new MProperties();
+        if (properties != null) {
+            for (String i : properties) {
+                if (i != null) {
+                    int idx = i.indexOf(separator);
+                    if (idx >= 0) {
+                        p.setProperty(i.substring(0, idx).trim(), i.substring(idx + 1));
+                    } else {
+                        p.setProperty(i, true);
+                    }
+                }
+            }
+        }
+        return p;
+    }
+
+    /**
+     * This will handle the strings like properties. Means a string without separator will be stored
+     * as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2,
+     * a=b
+     *
+     * @param properties
+     * @param keySeparator
+     * @param typeSeparator
+     * @return The MProperties
+     */
+    public static MProperties explodeToMProperties(
+            String[] properties, char keySeparator, char typeSeparator) {
+        return explodeToMProperties(properties, keySeparator, typeSeparator, 0, Integer.MAX_VALUE);
+    }
+
+    public static MProperties explodeToMProperties(
+            String[] properties, char keySeparator, char typeSeparator, int offset, int length) {
+        MProperties p = new MProperties();
+        if (properties != null) {
+            for (int i = 0; i < length; i++) {
+                int pos = i + offset;
+                if (pos >= properties.length) break;
+                String item = properties[pos];
+                if (item != null) appendToMap(p, item, keySeparator, typeSeparator);
+            }
+        }
+        return p;
+    }
+
+    /**
+     * This will handle the strings like properties. Means a string without separator will be stored
+     * as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2,
+     * a=b
+     *
+     * @param properties
+     * @return The Properties
+     */
+    public static Properties explodeToProperties(String[] properties) {
+        Properties p = new Properties();
+        if (properties != null) {
+            for (String i : properties) {
+                if (i != null) {
+                    appendToMap(p, i, '=', ':');
+                }
+            }
+        }
+        return p;
+    }
+
+    /**
+     * In this scenario we separate between functional parameters (starting with one underscore) and
+     * data. Using this method functional parameters can be cascaded over multiple levels.
+     *
+     * <p>Will remove all parameters starting with underscore and not two underscore and remove one
+     * underscore from thoos with more underscores.
+     *
+     * <p>_test will be removed __test will be _test
+     *
+     * <p>after update
+     *
+     * @param in
+     */
+    public static void updateFunctional(Map<String, Object> in) {
+        in.keySet().removeIf(k -> isFunctional(k));
+        for (String key : new LinkedList<>(in.keySet()))
+            if (key.startsWith("_")) in.put(key.substring(1), in.remove(key));
+    }
+
+    /**
+     * Return true if key starts with underscore but not with two underscores.
+     *
+     * @param key
+     * @return true if actual internal
+     */
+    public static boolean isFunctional(String key) {
+        return key.startsWith("_") && !key.startsWith("__");
+    }
+
+    public static IProperties toIProperties(IReadProperties properties) {
+        if (properties == null) return null;
+        if (properties instanceof IProperties) return (IProperties) properties;
+        return new MProperties(properties);
+    }
+
+    public static MProperties toMProperties(IReadProperties properties) {
+        if (properties == null) return null;
+        if (properties instanceof MProperties) return (MProperties) properties;
+        return new MProperties(properties);
+    }
+
+    public static void appendToMap(Map<?, ?> p, String para) {
+        appendToMap(p, para, '=', ':');
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void appendToMap(
+            Map<?, ?> p, String para, char keySeparator, char typeSeparator) {
+        if (para == null) return;
+        int pos = para.indexOf(keySeparator);
+        if (pos < 0) return;
+        String k = para.substring(0, pos).trim();
+        String v = para.substring(pos + 1);
+        String t = "text";
+        if (typeSeparator != 0) {
+            pos = k.indexOf(typeSeparator);
+            if (pos > 0) {
+                t = k.substring(pos + 1);
+                k = k.substring(0, pos);
+            }
+        }
+        Object obj = MCast.toType(v, t, null);
+        if (obj != null) ((Map<Object, Object>) p).put(k, obj);
+    }
+    
 }

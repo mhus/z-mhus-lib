@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
@@ -48,7 +49,7 @@ public class ParameterDefinition {
             name = MString.beforeIndex(line, ',');
             line = MString.afterIndex(line, ',');
             
-            properties = MProperties.explodeToMProperties(line.split(","), ':', (char) 0);
+            properties = IProperties.explodeToMProperties(line.split(","), ':', (char) 0);
             
         } else {
             name = line;

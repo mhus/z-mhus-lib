@@ -1,7 +1,6 @@
 package de.mhus.lib.core.config;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,7 +13,6 @@ import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;
-import de.mhus.lib.errors.TooDeepStructuresException;
 
 public class MConfig extends MProperties implements IConfig {
 
@@ -258,41 +256,6 @@ public class MConfig extends MProperties implements IConfig {
                 out.add(entry.getKey());
         }
         return Collections.unmodifiableList(out);
-    }
-
-    public static void merge(IConfig from, IConfig to) throws MException {
-        merge(from, to, 0);
-    }
-    
-    private static void merge(IConfig from, IConfig to, int level) throws MException {
-        if (level > 100) throw new TooDeepStructuresException();
-        for (IConfig node : from.getObjects()) {
-            IConfig n = to.createObject(node.getName());
-            for (String name : node.getPropertyKeys()) {
-                n.put(name, node.get(name));
-            }
-            merge(node, (IConfig) n, level+1);
-        }
-        for (String key : from.getArrayKeys()) {
-            ConfigList toArray = to.createArray(key);
-            for (IConfig node : from.getArrayOrNull(key)) {
-                IConfig n = toArray.createObject();
-                for (String name : node.getPropertyKeys()) {
-                    n.put(name, node.get(name));
-                }
-                merge(node, (IConfig) n, level+1);
-            }
-        }
-        
-    }
-
-    public static String[] toStringArray(Collection<IConfig> nodes, String key) {
-        LinkedList<String> out = new LinkedList<>();
-        for (IConfig item : nodes) {
-            String value = item.getString(key, null);
-            if (value != null) out.add(value);
-        }
-        return out.toArray(new String[out.size()]);
     }
     
 }
