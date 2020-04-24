@@ -380,4 +380,18 @@ public class MThread extends MObject implements Runnable {
         if (Thread.interrupted())
             throw new InterruptedException();
     }
+
+    public static void run(Runnable task) {
+        new Thread(new Runnable() {
+            
+            @Override
+            public void run() {
+                try {
+                    task.run();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }
