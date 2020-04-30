@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToInteger implements Caster<Object, Integer> {
 
@@ -32,20 +32,20 @@ public class ObjectToInteger implements Caster<Object, Integer> {
 
     @Override
     public Integer cast(Object in, Integer def) {
-        ObjectContainer<Integer> ret = new ObjectContainer<>(def);
+        Value<Integer> ret = new Value<>(def);
         toInt(in, 0, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public int toInt(Object in, int def, ObjectContainer<Integer> ret) {
+    public int toInt(Object in, int def, Value<Integer> ret) {
         if (in == null) return def;
         if (in instanceof Integer) {
-            if (ret != null) ret.setObject((Integer) in);
+            if (ret != null) ret.setValue((Integer) in);
             return ((Integer) in).intValue();
         }
         if (in instanceof Number) {
             int r = ((Number) in).intValue();
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         }
 
@@ -66,12 +66,12 @@ public class ObjectToInteger implements Caster<Object, Integer> {
                     out = out * 16 + s;
                 }
                 if (_in.startsWith("-")) out = -out;
-                if (ret != null) ret.setObject(out);
+                if (ret != null) ret.setValue(out);
                 return out;
             }
 
             int r = Integer.parseInt(_in);
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
             MLogUtil.log().t(_in, e.toString());

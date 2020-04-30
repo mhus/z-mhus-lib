@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToFloat implements Caster<Object, Float> {
 
@@ -32,21 +32,21 @@ public class ObjectToFloat implements Caster<Object, Float> {
 
     @Override
     public Float cast(Object in, Float def) {
-        ObjectContainer<Float> ret = new ObjectContainer<>(def);
+        Value<Float> ret = new Value<>(def);
         toFloat(in, 0, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public float toFloat(Object in, float def, ObjectContainer<Float> ret) {
+    public float toFloat(Object in, float def, Value<Float> ret) {
         if (in == null) return def;
         if (in instanceof Number) {
             float r = ((Number) in).floatValue();
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         }
         try {
             float r = Float.parseFloat(String.valueOf(in));
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
             log.t(in, e.toString());

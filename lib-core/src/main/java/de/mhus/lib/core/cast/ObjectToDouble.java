@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToDouble implements Caster<Object, Double> {
 
@@ -32,21 +32,21 @@ public class ObjectToDouble implements Caster<Object, Double> {
 
     @Override
     public Double cast(Object in, Double def) {
-        ObjectContainer<Double> ret = new ObjectContainer<>(def);
+        Value<Double> ret = new Value<>(def);
         toDouble(in, 0, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public double toDouble(Object in, double def, ObjectContainer<Double> ret) {
+    public double toDouble(Object in, double def, Value<Double> ret) {
         if (in == null) return def;
         if (in instanceof Number) {
             double r = ((Number) in).doubleValue();
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         }
         try {
             double r = Double.parseDouble(String.valueOf(in));
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
             log.t(in, e.toString());

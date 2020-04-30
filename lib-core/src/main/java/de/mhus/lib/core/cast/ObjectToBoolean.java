@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.util.ObjectContainer;
+import de.mhus.lib.core.lang.Value;
 
 public class ObjectToBoolean implements Caster<Object, Boolean> {
 
@@ -29,12 +29,12 @@ public class ObjectToBoolean implements Caster<Object, Boolean> {
 
     @Override
     public Boolean cast(Object in, Boolean def) {
-        ObjectContainer<Boolean> ret = new ObjectContainer<>(def);
+        Value<Boolean> ret = new Value<>(def);
         toBoolean(in, false, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public boolean toBoolean(Object in, boolean def, ObjectContainer<Boolean> ret) {
+    public boolean toBoolean(Object in, boolean def, Value<Boolean> ret) {
         if (in == null) return def;
 
         if (in instanceof Boolean) return (Boolean) in;
@@ -56,7 +56,7 @@ public class ObjectToBoolean implements Caster<Object, Boolean> {
                 || ins.equals("t")
                 || ins.equals("y")
                 || ins.equals("\u2612")) {
-            if (ret != null) ret.setObject(true);
+            if (ret != null) ret.setValue(true);
             return true;
         }
 
@@ -73,7 +73,7 @@ public class ObjectToBoolean implements Caster<Object, Boolean> {
                 || ins.equals("f")
                 || ins.equals("n")
                 || ins.equals("\u2610")) {
-            if (ret != null) ret.setObject(false);
+            if (ret != null) ret.setValue(false);
             return false;
         }
         return def;

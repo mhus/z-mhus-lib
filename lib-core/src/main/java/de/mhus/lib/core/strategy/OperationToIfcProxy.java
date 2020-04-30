@@ -37,6 +37,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
     public static final String PARAMETERTYPE = "ptype";
     public static final String NULL = ":null";
     public static final String PARAMETERORGTYPE = "otype";
+    public static final String JSON = "json";
+    public static final String VALUE = "value";
 
     protected abstract Class<?> getInterfaceClass();
 

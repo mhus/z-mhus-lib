@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToByte implements Caster<Object, Byte> {
 
@@ -32,20 +32,20 @@ public class ObjectToByte implements Caster<Object, Byte> {
 
     @Override
     public Byte cast(Object in, Byte def) {
-        ObjectContainer<Byte> ret = new ObjectContainer<>(def);
+        Value<Byte> ret = new Value<>(def);
         toByte(in, (byte) 0, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public byte toByte(Object in, byte def, ObjectContainer<Byte> ret) {
+    public byte toByte(Object in, byte def, Value<Byte> ret) {
         if (in == null) return def;
         if (in instanceof Byte) {
-            if (ret != null) ret.setObject((Byte) in);
+            if (ret != null) ret.setValue((Byte) in);
             return ((Byte) in).byteValue();
         }
         if (in instanceof Number) {
             byte r = ((Number) in).byteValue();
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         }
 
@@ -68,12 +68,12 @@ public class ObjectToByte implements Caster<Object, Byte> {
                 if (_in.startsWith("-")) out = -out;
                 if (out > Byte.MAX_VALUE) out = Byte.MAX_VALUE;
                 if (out < Byte.MIN_VALUE) out = Byte.MIN_VALUE;
-                if (ret != null) ret.setObject((byte) out);
+                if (ret != null) ret.setValue((byte) out);
                 return (byte) out;
             }
 
             byte r = Byte.parseByte(_in);
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
             log.t(_in, e.toString());

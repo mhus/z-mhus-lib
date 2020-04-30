@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.core.util.ObjectContainer;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerJms;
@@ -43,7 +43,7 @@ public class JmsTest {
 
         ClientJms client = new ClientJms(con1.createQueue("test"));
 
-        final ObjectContainer<Message> requestMessage = new ObjectContainer<>();
+        final Value<Message> requestMessage = new Value<>();
 
         ServerJms server =
                 new ServerJms(con2.createQueue("test")) {
@@ -51,14 +51,14 @@ public class JmsTest {
                     @Override
                     public void receivedOneWay(Message msg) throws JMSException {
                         System.out.println("--- receivedOneWay: " + msg);
-                        requestMessage.setObject(msg);
+                        requestMessage.setValue(msg);
                     }
 
                     @Override
                     public Message received(Message msg) throws JMSException {
                         System.out.println("--- received: " + msg);
 
-                        requestMessage.setObject(msg);
+                        requestMessage.setValue(msg);
                         return getSession().createTextMessage("pong");
                     }
                 };
@@ -69,12 +69,12 @@ public class JmsTest {
         System.out.println(">>> sendJmsOneWay");
         client.sendJmsOneWay(con1.createTextMessage("aloa"));
 
-        while (requestMessage.getObject() == null) MThread.sleep(100);
-        assertEquals("aloa", ((TextMessage) requestMessage.getObject()).getText());
+        while (requestMessage.getValue() == null) MThread.sleep(100);
+        assertEquals("aloa", ((TextMessage) requestMessage.getValue()).getText());
 
         System.out.println(">>> sendJms");
         Message res = client.sendJms(con1.createTextMessage("ping"));
-        assertEquals("ping", ((TextMessage) requestMessage.getObject()).getText());
+        assertEquals("ping", ((TextMessage) requestMessage.getValue()).getText());
         assertEquals("pong", ((TextMessage) res).getText());
 
         System.out.println(res);

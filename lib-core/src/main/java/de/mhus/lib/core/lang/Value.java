@@ -70,4 +70,9 @@ public class Value<T> implements Valueable<T>, Serializable {
         int type = in.readInt();
         if (type == 1) value = (T) in.readObject();
     }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+    
 }

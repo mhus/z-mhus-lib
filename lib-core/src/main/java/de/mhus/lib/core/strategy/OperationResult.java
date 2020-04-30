@@ -19,7 +19,10 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
 
 public class OperationResult {
@@ -149,5 +152,27 @@ public class OperationResult {
             return msgParts.get("m");
         }
         return msg;
+    }
+
+    public boolean isEmpty() {
+        return result == null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public IConfig getResultAsConfig() {
+        if (result == null) return new MConfig();
+        try {
+            if (result instanceof IConfig) return (IConfig)result;
+            if (result instanceof String)
+                return IConfig.readConfigFromString( (String)result );
+            if (result instanceof Map)
+                return IConfig.readFromProperties((Map<String, Object>) result);
+
+            // fallback
+            return IConfig.readConfigFromString( String.valueOf(result) );
+
+        } catch (Exception e) {
+            throw new MRuntimeException(this,e); // or empty config?
+        }
     }
 }

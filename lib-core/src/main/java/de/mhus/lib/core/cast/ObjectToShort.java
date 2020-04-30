@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.util.ObjectContainer;
 
 public class ObjectToShort implements Caster<Object, Short> {
 
@@ -32,20 +32,20 @@ public class ObjectToShort implements Caster<Object, Short> {
 
     @Override
     public Short cast(Object in, Short def) {
-        ObjectContainer<Short> ret = new ObjectContainer<>(def);
+        Value<Short> ret = new Value<>(def);
         toShort(in, (short) 0, ret);
-        return ret.getObject();
+        return ret.getValue();
     }
 
-    public short toShort(Object in, short def, ObjectContainer<Short> ret) {
+    public short toShort(Object in, short def, Value<Short> ret) {
         if (in == null) return def;
         if (in instanceof Short) {
-            if (ret != null) ret.setObject((Short) in);
+            if (ret != null) ret.setValue((Short) in);
             return ((Short) in).shortValue();
         }
         if (in instanceof Number) {
             short r = ((Number) in).shortValue();
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         }
 
@@ -69,12 +69,12 @@ public class ObjectToShort implements Caster<Object, Short> {
                 if (_in.startsWith("-")) out = -out;
                 if (out > Short.MAX_VALUE) out = Short.MAX_VALUE;
                 if (out < Short.MIN_VALUE) out = Short.MIN_VALUE;
-                if (ret != null) ret.setObject((short) out);
+                if (ret != null) ret.setValue((short) out);
                 return (short) out;
             }
 
             short r = Short.parseShort(_in);
-            if (ret != null) ret.setObject(r);
+            if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
             log.t(_in, e.toString());
