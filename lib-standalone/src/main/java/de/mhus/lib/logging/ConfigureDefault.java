@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.logging;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.logging.adapters.JavaLoggerHandler;
 
 public class ConfigureDefault extends MObject {

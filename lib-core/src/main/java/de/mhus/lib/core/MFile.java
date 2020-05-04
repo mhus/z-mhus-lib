@@ -50,9 +50,9 @@ import java.util.concurrent.TimeoutException;
 import de.mhus.lib.core.cfg.CfgProperties;
 import de.mhus.lib.core.io.FileChecker;
 import de.mhus.lib.core.io.PdfFileChecker;
-import de.mhus.lib.core.lang.IObserver;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.IObserver;
 
 /** @author hummel */
 public class MFile {

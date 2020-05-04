@@ -23,7 +23,7 @@ import java.io.OutputStream;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 /**

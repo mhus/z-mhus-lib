@@ -36,10 +36,10 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.cfg.CfgString;
-import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
 import de.mhus.lib.core.util.SecureString;
+import de.mhus.lib.core.util.Value;
 
 public class AccessUtil {
 

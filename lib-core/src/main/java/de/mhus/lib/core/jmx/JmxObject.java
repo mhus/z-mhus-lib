@@ -17,7 +17,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public class JmxObject extends MObject implements JmxObjectMBean {
 

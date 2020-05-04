@@ -18,10 +18,10 @@ import java.util.Locale;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.core.util.MNlsProvider;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 /**

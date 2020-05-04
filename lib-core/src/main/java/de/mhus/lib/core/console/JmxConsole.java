@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.system.CfgManager;
+import de.mhus.lib.core.mapi.CfgManager;
 import de.mhus.lib.errors.MException;
 
 public class JmxConsole extends VirtualConsole {

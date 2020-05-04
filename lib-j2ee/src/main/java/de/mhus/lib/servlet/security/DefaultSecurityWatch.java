@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgLong;
-import de.mhus.lib.core.lang.LongValue;
+import de.mhus.lib.core.util.LongValue;
 
 /*
 <de.mhus.lib.servlet.security.SecurityApi

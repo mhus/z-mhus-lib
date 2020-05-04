@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.mhus.lib.basics.IsNull;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;

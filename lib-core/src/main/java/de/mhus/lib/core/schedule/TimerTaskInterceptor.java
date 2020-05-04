@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.schedule;
 
-import de.mhus.lib.core.strategy.DefaultTaskContext;
+import de.mhus.lib.core.operation.DefaultTaskContext;
 
 public interface TimerTaskInterceptor {
 

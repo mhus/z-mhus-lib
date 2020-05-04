@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core;
 
-import de.mhus.lib.core.lang.IObserver;
+import de.mhus.lib.core.util.IObserver;
 
 public class MObserverHandler<T> extends MEventHandler<IObserver<T>> {
 

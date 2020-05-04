@@ -28,9 +28,9 @@ import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.IBase;
-import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.system.CfgManager;
+import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.util.IBase;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 public class MRemoteManager extends MObject implements IBase {

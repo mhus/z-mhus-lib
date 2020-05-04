@@ -22,8 +22,8 @@ import de.mhus.lib.annotations.activator.DefaultImplementationNull;
 import de.mhus.lib.annotations.activator.ObjectFactory;
 import de.mhus.lib.annotations.lang.Prototype;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.lang.Injector;
-import de.mhus.lib.core.lang.InjectorList;
+import de.mhus.lib.core.util.Injector;
+import de.mhus.lib.core.util.InjectorList;
 
 @DefaultImplementation(DefaultActivator.class)
 public abstract class MActivator extends ClassLoader {

@@ -20,8 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import de.mhus.lib.core.lang.IObserver;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.IObserver;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class MValidator {

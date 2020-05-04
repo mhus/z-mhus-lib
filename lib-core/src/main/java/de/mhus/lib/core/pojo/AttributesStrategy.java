@@ -23,7 +23,7 @@ import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 @IgnoreBind
 public class AttributesStrategy extends MObject implements PojoStrategy {

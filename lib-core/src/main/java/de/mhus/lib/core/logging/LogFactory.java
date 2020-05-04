@@ -18,9 +18,9 @@ import java.util.WeakHashMap;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.lang.IBase;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.core.system.CfgManager;
+import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.util.IBase;
 
 @DefaultImplementation(ConsoleFactory.class)
 public abstract class LogFactory implements IBase {

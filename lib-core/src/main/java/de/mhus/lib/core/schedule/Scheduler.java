@@ -28,7 +28,7 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.lang.ValueProvider;
+import de.mhus.lib.core.util.ValueProvider;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class Scheduler extends MLog implements Named {

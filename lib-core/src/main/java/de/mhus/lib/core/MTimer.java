@@ -15,7 +15,7 @@ package de.mhus.lib.core;
 
 import java.util.Timer;
 
-import de.mhus.lib.core.lang.IBase;
+import de.mhus.lib.core.util.IBase;
 
 public class MTimer extends Timer implements IBase {
 

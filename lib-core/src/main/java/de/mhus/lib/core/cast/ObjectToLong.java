@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.util.Value;
 
 public class ObjectToLong implements Caster<Object, Long> {
 

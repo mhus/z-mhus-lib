@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.base;
 
-import de.mhus.lib.core.lang.Base;
-import de.mhus.lib.core.strategy.FindStrategy;
+import de.mhus.lib.core.operation.FindStrategy;
+import de.mhus.lib.core.util.Base;
 
 public abstract class BaseFindStrategy implements FindStrategy<Base> {
 

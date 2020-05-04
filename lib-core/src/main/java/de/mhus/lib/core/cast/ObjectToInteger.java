@@ -13,8 +13,8 @@
  */
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.Value;
 
 public class ObjectToInteger implements Caster<Object, Integer> {
 

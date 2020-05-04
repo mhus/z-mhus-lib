@@ -14,12 +14,12 @@
 package de.mhus.lib.core;
 
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.core.lang.Checker;
-import de.mhus.lib.core.lang.MObject;
-import de.mhus.lib.core.lang.Value;
-import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.util.Checker;
+import de.mhus.lib.core.util.MObject;
+import de.mhus.lib.core.util.Value;
+import de.mhus.lib.core.util.ValueProvider;
 import de.mhus.lib.errors.RuntimeInterruptedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 

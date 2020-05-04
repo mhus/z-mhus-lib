@@ -16,12 +16,12 @@ package de.mhus.lib.core.base;
 import de.mhus.lib.annotations.base.Bind;
 import de.mhus.lib.annotations.base.IgnoreBind;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.lang.Base;
 import de.mhus.lib.core.pojo.AttributesStrategy;
 import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
+import de.mhus.lib.core.util.Base;
 
 public class AnnotationInjectStrategy extends InjectStrategy {
 

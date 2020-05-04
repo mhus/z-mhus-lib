@@ -14,7 +14,7 @@
 package de.mhus.lib.server;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.server.service.Command;
 import de.mhus.lib.server.service.GarbageCollectionTrigger;
 import de.mhus.lib.server.service.Quit;

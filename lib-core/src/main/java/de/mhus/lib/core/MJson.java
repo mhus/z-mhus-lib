@@ -44,7 +44,7 @@ import org.codehaus.jackson.node.ObjectNode;
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.json.TransformStrategy;
-import de.mhus.lib.core.lang.NullValue;
+import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MaxDepthReached;
 
 public class MJson {

@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.*;
 
 import de.mhus.lib.annotations.base.Bind;
-import de.mhus.lib.core.lang.MBaseObject;
+import de.mhus.lib.core.util.MBaseObject;
 
 @Bind
 public class MBaseTestInjectionObject extends MBaseObject {

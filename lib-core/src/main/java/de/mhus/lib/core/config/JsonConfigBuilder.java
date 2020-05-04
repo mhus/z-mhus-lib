@@ -10,8 +10,8 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.lang.NullValue;
 import de.mhus.lib.core.util.MIterable;
+import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TooDeepStructuresException;

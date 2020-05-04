@@ -24,7 +24,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public class Unzip extends MObject {
 

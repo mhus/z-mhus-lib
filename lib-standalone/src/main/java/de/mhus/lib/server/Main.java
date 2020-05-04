@@ -31,7 +31,7 @@ import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.io.CSVReader;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.system.DefaultBase;
+import de.mhus.lib.core.mapi.DefaultBase;
 import de.mhus.lib.core.util.MUri;
 
 @JmxManaged

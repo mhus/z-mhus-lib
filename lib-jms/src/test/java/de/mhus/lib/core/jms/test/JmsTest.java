@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.lang.Value;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.util.Value;
 import de.mhus.lib.jms.ClientJms;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerJms;

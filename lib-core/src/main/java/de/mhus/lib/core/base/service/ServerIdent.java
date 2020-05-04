@@ -23,8 +23,8 @@ import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgString;
-import de.mhus.lib.core.lang.MObject;
 import de.mhus.lib.core.parser.StringCompiler;
+import de.mhus.lib.core.util.MObject;
 
 public class ServerIdent extends MObject {
 

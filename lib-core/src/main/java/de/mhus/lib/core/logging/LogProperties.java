@@ -19,7 +19,7 @@ import java.util.Map;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgString;
-import de.mhus.lib.core.lang.NullValue;
+import de.mhus.lib.core.util.NullValue;
 
 /**
  * Use this tool to shrink properties.

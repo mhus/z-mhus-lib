@@ -16,7 +16,7 @@ package de.mhus.lib.core.vault;
 import java.util.HashMap;
 import java.util.UUID;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public class DefaultVault extends MObject implements MVault {
 

@@ -14,7 +14,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.system.SimpleMLogFactory;
+import de.mhus.lib.core.mapi.SimpleMLogFactory;
 
 // @DefaultImplementation(SingleMLogInstanceFactory.class)
 @DefaultImplementation(SimpleMLogFactory.class)

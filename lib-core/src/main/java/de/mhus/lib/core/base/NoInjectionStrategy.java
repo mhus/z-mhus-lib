@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.base;
 
-import de.mhus.lib.core.lang.Base;
+import de.mhus.lib.core.util.Base;
 
 public class NoInjectionStrategy extends InjectStrategy {
 

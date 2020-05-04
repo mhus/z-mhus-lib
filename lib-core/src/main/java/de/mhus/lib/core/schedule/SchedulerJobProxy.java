@@ -14,9 +14,9 @@
 package de.mhus.lib.core.schedule;
 
 import de.mhus.lib.core.ITimerTask;
-import de.mhus.lib.core.strategy.OperationDescription;
-import de.mhus.lib.core.strategy.OperationResult;
-import de.mhus.lib.core.strategy.TaskContext;
+import de.mhus.lib.core.operation.OperationDescription;
+import de.mhus.lib.core.operation.OperationResult;
+import de.mhus.lib.core.operation.TaskContext;
 
 public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJob {
 

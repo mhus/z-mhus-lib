@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import de.mhus.lib.annotations.generic.Public;
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public class ActionsOnlyStrategy extends MObject implements PojoStrategy {
 

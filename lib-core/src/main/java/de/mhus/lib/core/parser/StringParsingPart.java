@@ -15,7 +15,7 @@ package de.mhus.lib.core.parser;
 
 import java.io.IOException;
 
-import de.mhus.lib.core.lang.MObject;
+import de.mhus.lib.core.util.MObject;
 
 public abstract class StringParsingPart extends MObject implements ParsingPart {
 

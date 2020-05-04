@@ -14,8 +14,8 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.system.CfgManager;
-import de.mhus.lib.core.system.IApiInternal;
+import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.mapi.IApiInternal;
 
 public interface CfgInitiator {
 

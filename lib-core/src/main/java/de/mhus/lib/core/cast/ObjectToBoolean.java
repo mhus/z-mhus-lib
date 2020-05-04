@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.cast;
 
-import de.mhus.lib.core.lang.Value;
+import de.mhus.lib.core.util.Value;
 
 public class ObjectToBoolean implements Caster<Object, Boolean> {
 

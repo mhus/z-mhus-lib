@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.mhus.lib.core.MStopWatch;
-import de.mhus.lib.core.lang.MObject;
 
 public class CompareDir extends MObject {
 

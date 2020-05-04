@@ -16,7 +16,7 @@ package de.mhus.lib.core.logging;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MMath;
 import de.mhus.lib.core.cfg.CfgString;
-import de.mhus.lib.core.system.IApi;
+import de.mhus.lib.core.mapi.IApi;
 
 public class MLogUtil {
 

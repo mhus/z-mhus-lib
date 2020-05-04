@@ -31,7 +31,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.lang.Value;
+import de.mhus.lib.core.util.Value;
 
 public class ConsoleTable {
 

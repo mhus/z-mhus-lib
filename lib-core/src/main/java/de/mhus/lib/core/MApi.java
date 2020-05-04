@@ -23,11 +23,11 @@ import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.logging.TrailLevelMapper;
-import de.mhus.lib.core.system.ApiInitialize;
-import de.mhus.lib.core.system.DefaultMApi;
-import de.mhus.lib.core.system.DummyClass;
-import de.mhus.lib.core.system.IApi;
-import de.mhus.lib.core.system.IApiFactory;
+import de.mhus.lib.core.mapi.ApiInitialize;
+import de.mhus.lib.core.mapi.DefaultMApi;
+import de.mhus.lib.core.mapi.DummyClass;
+import de.mhus.lib.core.mapi.IApi;
+import de.mhus.lib.core.mapi.IApiFactory;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MApi {

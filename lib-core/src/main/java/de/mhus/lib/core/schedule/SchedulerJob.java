@@ -22,12 +22,12 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.strategy.DefaultTaskContext;
-import de.mhus.lib.core.strategy.NotSuccessful;
-import de.mhus.lib.core.strategy.Operation;
-import de.mhus.lib.core.strategy.OperationDescription;
-import de.mhus.lib.core.strategy.OperationResult;
-import de.mhus.lib.core.strategy.TaskContext;
+import de.mhus.lib.core.operation.DefaultTaskContext;
+import de.mhus.lib.core.operation.NotSuccessful;
+import de.mhus.lib.core.operation.Operation;
+import de.mhus.lib.core.operation.OperationDescription;
+import de.mhus.lib.core.operation.OperationResult;
+import de.mhus.lib.core.operation.TaskContext;
 import de.mhus.lib.core.util.MNls;
 
 public abstract class SchedulerJob extends MTimerTask implements Operation {

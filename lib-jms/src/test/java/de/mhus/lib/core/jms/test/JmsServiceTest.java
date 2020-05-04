@@ -30,8 +30,8 @@ import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.lang.ValueProvider;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.util.ValueProvider;
 import de.mhus.lib.jms.ClientObjectProxy;
 import de.mhus.lib.jms.JmsConnection;
 import de.mhus.lib.jms.ServerObjectProxy;

@@ -19,8 +19,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import de.mhus.lib.core.lang.NullValue;
-
 public class NullableMap<K, V> implements Map<K, V> {
 
     private HashMap<K, Object> impl = new HashMap<K, Object>();

@@ -19,8 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.lang.AlreadyBoundException;
-import de.mhus.lib.core.lang.LocalClassLoader;
+import de.mhus.lib.core.util.AlreadyBoundException;
+import de.mhus.lib.core.util.LocalClassLoader;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.test.util.TransferIfc;
 import de.mhus.lib.test.util.TransferImpl;
