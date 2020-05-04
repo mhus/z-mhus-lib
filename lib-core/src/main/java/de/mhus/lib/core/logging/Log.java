@@ -251,7 +251,12 @@ public class Log {
     }
 
     public static Log getLog(Object owner) {
-        return MApi.get().lookupLog(owner);
+        try {
+            return MApi.get().lookupLog(owner);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
 
     public void update() {
