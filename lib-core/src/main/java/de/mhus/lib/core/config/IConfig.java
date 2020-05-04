@@ -70,6 +70,15 @@ public interface IConfig extends IProperties {
     List<String> getObjectKeys();
 
     /**
+     * Return in every case a list. An Array List or list with a single 
+     * Object or a object with nameless value or
+     * an empty list.
+     * @param key
+     * @return A list
+     */
+    ConfigList getList(String key);
+    
+    /**
      * Return a iterator over a array or a single object.
      * Return an empty iterator if not found.
      * Use this function to iterate over arrays or objects.

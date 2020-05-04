@@ -119,6 +119,25 @@ public class MConfig extends MProperties implements IConfig {
 		return getExtracted(key, null);
 	}
 
+    @Override
+    public ConfigList getList(String key) {
+        if (isArray(key))
+            return getArrayOrNull(key);
+        if (isObject(key)) {
+            ConfigList ret = new ConfigList(key, this);
+            ret.add(getObjectOrNull(key));
+            return ret;
+        }
+        if (containsKey(key)) {
+            ConfigList ret = new ConfigList(key, this);
+            MConfig obj = new MConfig(key, this);
+            obj.put(NAMELESS_VALUE, get(key));
+            ret.add(obj);
+            return ret;
+        }
+        return new ConfigList(key, this);
+    }
+
     protected String getExtracted(String key, String def, int level) {
 
         if (level > 10) return def;

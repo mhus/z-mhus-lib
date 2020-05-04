@@ -212,4 +212,28 @@ public class MApi {
         err.println("*** " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
+    
+    public static String getSystemProperty(String name, String def) {
+        String value = System.getProperty(name);
+        if (value == null) {
+            switch (name) {
+                case MConstants.PROP_CONFIG_FILE:
+                    {
+                        String file = MConstants.DEFAULT_MHUS_CONFIG_FILE;
+                        return getFile(MApi.SCOPE.ETC, file).getAbsolutePath();
+                    }
+                case MConstants.PROP_TIMER_CONFIG_FILE:
+                    {
+                        String file = MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE;
+                        file = get().getCfgString(IApi.class, MConstants.PROP_TIMER_CONFIG_FILE, file);
+                        return getFile(MApi.SCOPE.ETC, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)
+                                .getAbsolutePath();
+                    }
+                default:
+                    return def;
+            }
+        }
+        return value;
+    }
+    
 }

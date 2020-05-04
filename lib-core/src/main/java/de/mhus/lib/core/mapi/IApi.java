@@ -17,7 +17,6 @@ import java.io.File;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
@@ -47,29 +46,6 @@ public interface IApi {
      * @return file The file.
      */
     File getFile(MApi.SCOPE scope, String name);
-
-    default String getSystemProperty(String name, String def) {
-        String value = System.getProperty(name);
-        if (value == null) {
-            switch (name) {
-                case MConstants.PROP_CONFIG_FILE:
-                    {
-                        String file = MConstants.DEFAULT_MHUS_CONFIG_FILE;
-                        return getFile(MApi.SCOPE.ETC, file).getAbsolutePath();
-                    }
-                case MConstants.PROP_TIMER_CONFIG_FILE:
-                    {
-                        String file = MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE;
-                        file = getCfgString(IApi.class, MConstants.PROP_TIMER_CONFIG_FILE, file);
-                        return getFile(MApi.SCOPE.ETC, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)
-                                .getAbsolutePath();
-                    }
-                default:
-                    return def;
-            }
-        }
-        return value;
-    }
 
     Log lookupLog(Object owner);
 

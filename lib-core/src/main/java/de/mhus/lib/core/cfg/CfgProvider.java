@@ -24,7 +24,6 @@ public abstract class CfgProvider extends MLog {
 
     public CfgProvider(String name) {
         this.name = name;
-        doStart();
     }
 
     public abstract void doRestart();
@@ -37,4 +36,9 @@ public abstract class CfgProvider extends MLog {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+    
 }

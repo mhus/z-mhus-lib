@@ -67,6 +67,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     public synchronized MCfgManager getCfgManager() {
         if (configProvider == null) {
             configProvider = new MCfgManager(this);
+            configProvider.startInitiators();
         }
         return configProvider;
     }

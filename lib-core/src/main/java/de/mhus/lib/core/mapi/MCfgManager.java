@@ -96,17 +96,22 @@ public class MCfgManager {
 
         // init initiators
         try {
-            IConfig system = MApi.get().getCfgManager().getCfg(MConstants.CFG_SYSTEM);
+            IConfig system = null;
+            CfgProvider provider = configurations.get(MConstants.CFG_SYSTEM);
+            if (provider != null)
+                system = provider.getConfig();
             if (system != null) {
                 MApi.setDirtyTrace(system.getBoolean("log.trace", false));
                 Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
             }
-            for (String owner : MApi.get().getCfgManager().getOwners()) {
-                IConfig cfg = MApi.get().getCfgManager().getCfg(owner);
+            for (String owner : configurations.keySet()) {
+                IConfig cfg = configurations.get(owner).getConfig();
                 MActivator activator = MApi.get().createActivator();
-                for (IConfig node : cfg.getObjects()) {
-                    try {
-                        if ("initiator".equals(node.getName())) {
+                if (cfg == null) {
+                    MApi.dirtyLogDebug("Config is null for",owner);
+                } else
+                    for (IConfig node : cfg.getList("initiator")) {
+                        try {
                             String clazzName = node.getString("class");
                             String name = node.getString("name", clazzName);
                             String level = node.getString("level", "100");
@@ -121,11 +126,10 @@ public class MCfgManager {
                                         activator.createObject(CfgInitiator.class, clazzName);
                                 initiators.put(name, new Object[] {initiator, node});
                             }
+                        } catch (Throwable t) {
+                            MApi.dirtyLogError("Can't load initiator", node, " Error: ", t);
                         }
-                    } catch (Throwable t) {
-                        MApi.dirtyLogError("Can't load initiator", node, " Error: ", t);
                     }
-                }
             }
 
             for (Object[] initiator : initiators.values())
@@ -133,7 +137,7 @@ public class MCfgManager {
                     CfgInitiator i = (CfgInitiator) initiator[0];
                     IConfig c = (IConfig) initiator[1];
                     MApi.dirtyLogInfo("run initiator", initiator[0].getClass());
-                    i.doInitialize(internal, MApi.get().getCfgManager(), c);
+                    i.doInitialize(internal, this, c);
                 } catch (Throwable t) {
                     MApi.dirtyLogError("Can't initiate", initiator.getClass(), " Error: ", t);
                 }
@@ -165,7 +169,6 @@ public class MCfgManager {
      * @return The configuration or def
      */
     public IConfig getCfg(Object owner, IConfig def) {
-        initCfg();
 
         Class<?> c = null;
         if (owner instanceof String) {
@@ -194,10 +197,7 @@ public class MCfgManager {
         return def;
     }
 
-    private void initCfg() {}
-
     public IConfig getCfg(String owner) {
-        initCfg();
 
         CfgProvider p = configurations.get(owner);
         if (p != null) {
@@ -208,7 +208,6 @@ public class MCfgManager {
     }
 
     public IConfig getCfg(String owner, IConfig def) {
-        initCfg();
 
         IConfig cClass = getCfg(owner);
         if (cClass != null) {
@@ -225,14 +224,12 @@ public class MCfgManager {
             configurations.forEach((k,v) -> v.doRestart() );
         } else {
             initialConfiguration();
-            
         }
     }
 
     protected void initialConfiguration() {
         CentralMhusCfgProvider provider = new CentralMhusCfgProvider();
         registerCfgProvider(provider);
-        startInitiators();
     }
 
     public synchronized IConfigFactory getConfigFactory() {
@@ -268,7 +265,7 @@ public class MCfgManager {
             
             LinkedList<File> fileList = new LinkedList<>();
             
-            File configFile = new File(MApi.get().getSystemProperty(MConstants.PROP_CONFIG_FILE, null));
+            File configFile = new File(MApi.getSystemProperty(MConstants.PROP_CONFIG_FILE, null));
             fileList.add(configFile);
             
             if (configFile.exists() && configFile.isFile())
@@ -308,7 +305,8 @@ public class MCfgManager {
                 }
 
             MApi.dirtyLogDebug("*** MHUS Config file not found", configFile);
-
+            config = new MConfig(); // set empty config
+            
         }
 
         @Override
@@ -350,7 +348,6 @@ public class MCfgManager {
     }
 
     public List<String> getOwners() {
-        initCfg();
         return new LinkedList<>(configurations.keySet());
     }
 
