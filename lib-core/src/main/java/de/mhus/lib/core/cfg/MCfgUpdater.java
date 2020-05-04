@@ -24,7 +24,7 @@ public class MCfgUpdater {
     //	private WeakHashMap<CfgValue, String> registry = new WeakHashMap<>();
     private HashMap<String, HashMap<String, WeakHashMap<CfgValue, String>>> registry =
             new HashMap<>();
-
+    
     @SuppressWarnings("rawtypes")
     protected synchronized WeakHashMap<CfgValue, String> getCfgContainer(
             String owner, String path) {

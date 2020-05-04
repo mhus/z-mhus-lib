@@ -42,7 +42,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     @Override
     public void doInitialize(ClassLoader coreLoader) {
         logFactory = new ConsoleFactory();
-        getCfgManager().reConfigure();
+        getCfgManager().doRestart();
     }
 
     @Override

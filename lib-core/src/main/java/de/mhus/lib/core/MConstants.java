@@ -89,4 +89,6 @@ public class MConstants {
     public static final String TYPE_LONG = "long";
     public static final String TYPE_FLOAT = "float";
     public static final String TYPE_DOUBLE = "double";
+
+    public static final String CFG_SYSTEM = "system";
 }

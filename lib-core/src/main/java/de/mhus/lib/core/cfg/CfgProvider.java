@@ -13,13 +13,28 @@
  */
 package de.mhus.lib.core.cfg;
 
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.config.IConfig;
 
-public interface CfgProvider {
+public abstract class CfgProvider extends MLog {
 
-    public IConfig getConfig();
+    private String name;
 
-    public void doStart(String name);
+    public abstract IConfig getConfig();
 
-    public void doStop();
+    public CfgProvider(String name) {
+        this.name = name;
+        doStart();
+    }
+
+    public abstract void doRestart();
+    
+    public abstract void doStart();
+
+    public abstract void doStop();
+
+    public final String getName() {
+        return name;
+    }
+
 }

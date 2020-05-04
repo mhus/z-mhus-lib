@@ -17,30 +17,26 @@ import java.io.File;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.io.FileWatch;
 import de.mhus.lib.errors.MException;
 
-public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
+public class PropertiesCfgFileWatch extends CfgProvider {
 
     private FileWatch fileWatch;
     private File file;
     private IConfig config;
-    private String name;
 
-    public PropertiesCfgFileWatch() {}
-
-    public PropertiesCfgFileWatch(File file) {
+    public PropertiesCfgFileWatch(String name, File file) {
+        super(name);
         setFile(file);
     }
 
     @Override
-    public void doStart(final String name) {
-        this.name = name;
+    public void doStart() {
         load();
-        MApi.getCfgUpdater().doUpdate(name);
+        MApi.getCfgUpdater().doUpdate(getName());
 
         fileWatch =
                 new FileWatch(
@@ -51,7 +47,7 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
                             public void onFileChanged(FileWatch fileWatch) {
                                 log().d("update cfg properties file", file);
                                 load();
-                                MApi.getCfgUpdater().doUpdate(name);
+                                MApi.getCfgUpdater().doUpdate(getName());
                             }
 
                             @Override
@@ -91,7 +87,10 @@ public class PropertiesCfgFileWatch extends MLog implements CfgProvider {
         this.file = file;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void doRestart() {
+        doStop();
+        doStart();
     }
+
 }
