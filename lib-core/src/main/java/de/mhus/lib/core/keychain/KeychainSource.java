@@ -11,46 +11,46 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.UUID;
 
-import de.mhus.lib.core.util.SecureString;
-
-public interface VaultEntry {
+public interface KeychainSource {
 
     /**
-     * Returns the unique id of the entry.
+     * Return a entry by id or null if not found.
      *
-     * @return The unique id
+     * @param id
+     * @return The id or null
      */
-    UUID getId();
+    KeyEntry getEntry(UUID id);
 
     /**
-     * Returns the type of the entry as string. A list of default types is defined in MVault.
+     * Return a not editable list of current stored entry ids.
      *
-     * @return The type of the entry, never null.
+     * @return a list of ids.
      */
-    String getType();
+    Iterable<UUID> getEntryIds();
 
     /**
-     * Return a readable description describe the key and/or the usage.
+     * Return a unique name of the source.
      *
-     * @return description
-     */
-    String getDescription();
-
-    /**
-     * Return the value of the entry as text.
-     *
-     * @return The entry as text.
-     */
-    SecureString getValue();
-
-    /**
-     * Return a technical name of the entry.
-     *
-     * @return The name
+     * @return the name
      */
     String getName();
+
+    /**
+     * Return a editable instance or null if not supported
+     *
+     * @return editable vault source
+     */
+    MutableVaultSource getEditable();
+
+    /**
+     * Return a entry by name or null if not found. Return the first entry found.
+     *
+     * @param name
+     * @return The id or null
+     */
+    KeyEntry getEntry(String name);
 }

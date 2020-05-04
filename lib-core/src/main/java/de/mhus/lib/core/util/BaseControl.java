@@ -18,6 +18,7 @@ import de.mhus.lib.core.base.InjectStrategy;
 import de.mhus.lib.core.base.NoInjectionStrategy;
 import de.mhus.lib.core.base.SingleBaseStrategy;
 import de.mhus.lib.core.mapi.DefaultBase;
+import de.mhus.lib.core.mapi.MBase;
 
 public class BaseControl {
 
@@ -26,7 +27,7 @@ public class BaseControl {
     private BaseFindStrategy findStrategy = null;
     private InjectStrategy injectStrategy = null;
 
-    public Base base() {
+    public MBase base() {
         return getFindStrategy().find();
     }
 
@@ -52,12 +53,12 @@ public class BaseControl {
         return findStrategy;
     }
 
-    public Base createBase(MObject mObject, Base parent) {
-        Base newBase = new DefaultBase(parent);
+    public MBase createBase(MObject mObject, MBase parent) {
+        MBase newBase = new DefaultBase(parent);
         return newBase;
     }
 
-    public Base installBase(Base base) {
+    public MBase installBase(MBase base) {
         return getFindStrategy().install(base);
     }
 
@@ -65,7 +66,7 @@ public class BaseControl {
     //		return getFindStrategy().find();
     //	}
 
-    public void inject(Object object, Base base) {
+    public void inject(Object object, MBase base) {
         getInjectStrategy().inject(object, base);
     }
 }

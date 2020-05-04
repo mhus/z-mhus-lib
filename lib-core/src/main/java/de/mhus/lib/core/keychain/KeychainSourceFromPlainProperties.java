@@ -1,4 +1,4 @@
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +9,14 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.util.SecureString;
 
-public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
+public class KeychainSourceFromPlainProperties extends MapMutableVaultSource {
 
     private boolean editable;
     private File file;
     private long fileModified;
     private boolean fileCanWrite;
 
-    public VaultSourceFromPlainProperties(File file, boolean editable, String name)
+    public KeychainSourceFromPlainProperties(File file, boolean editable, String name)
             throws IOException {
         this.file = file;
         this.name = name;
@@ -30,7 +30,7 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
         MProperties prop = MProperties.load(file);
         for (String key : prop.keys()) {
             if (MValidator.isUUID(key)) {
-                VaultEntry entry = new PlainEntry(prop, name);
+                KeyEntry entry = new PlainEntry(prop, name);
                 entries.put(UUID.fromString(name), entry);
             }
         }
@@ -41,7 +41,7 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
     @Override
     public void doSave() throws IOException {
         MProperties out = new MProperties();
-        for (VaultEntry entry : entries.values()) {
+        for (KeyEntry entry : entries.values()) {
             out.setString(entry.getId().toString(), entry.getValue().value());
             out.setString(entry.getId() + ".name", entry.getName());
             out.setString(entry.getId() + ".type", entry.getType());
@@ -67,7 +67,7 @@ public class VaultSourceFromPlainProperties extends MapMutableVaultSource {
         return MSystem.toString(this, name, entries.size(), file);
     }
 
-    private class PlainEntry implements VaultEntry {
+    private class PlainEntry implements KeyEntry {
 
         private UUID id;
         private SecureString value;

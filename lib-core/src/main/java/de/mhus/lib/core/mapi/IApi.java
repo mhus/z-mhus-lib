@@ -21,14 +21,13 @@ import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.util.Base;
 import de.mhus.lib.core.util.BaseControl;
 
 public interface IApi {
 
     // Log createLog(Object owner);
 
-    CfgManager getCfgManager();
+    MCfgManager getCfgManager();
 
     BaseControl getBaseControl();
 
@@ -38,7 +37,7 @@ public interface IApi {
 
     boolean isTrace(String name);
 
-    Base base();
+    MBase base();
 
     /**
      * Return a File inside the current application context.

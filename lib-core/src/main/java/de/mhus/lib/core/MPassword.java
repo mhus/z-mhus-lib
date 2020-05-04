@@ -22,10 +22,10 @@ import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.MRandom;
 import de.mhus.lib.core.crypt.Rot13;
 import de.mhus.lib.core.io.TextReader;
+import de.mhus.lib.core.keychain.MKeychain;
+import de.mhus.lib.core.keychain.MKeychainUtil;
+import de.mhus.lib.core.keychain.KeyEntry;
 import de.mhus.lib.core.util.SecureString;
-import de.mhus.lib.core.vault.MVault;
-import de.mhus.lib.core.vault.MVaultUtil;
-import de.mhus.lib.core.vault.VaultEntry;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
 
@@ -93,11 +93,11 @@ public class MPassword {
             case ROT13:
                 return PREFIX_ROT13 + Rot13.encode(in);
             case RSA:
-                MVault vault = MVaultUtil.loadDefault();
-                VaultEntry entry = vault.getEntry(UUID.fromString(secret));
+                MKeychain vault = MKeychainUtil.loadDefault();
+                KeyEntry entry = vault.getEntry(UUID.fromString(secret));
                 if (entry == null) throw new MRuntimeException("key not found", secret);
                 try {
-                    AsyncKey key = MVaultUtil.adaptTo(entry, AsyncKey.class);
+                    AsyncKey key = MKeychainUtil.adaptTo(entry, AsyncKey.class);
                     return PREFIX_RSA + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
                 } catch (Exception e) {
                     throw new MRuntimeException(e);
@@ -134,11 +134,11 @@ public class MPassword {
             if (p < 0) throw new UsageException("key id not found");
             String keyId = in.substring(0, p);
             in = in.substring(p + 1);
-            MVault vault = MVaultUtil.loadDefault();
-            VaultEntry entry = vault.getEntry(UUID.fromString(keyId));
+            MKeychain vault = MKeychainUtil.loadDefault();
+            KeyEntry entry = vault.getEntry(UUID.fromString(keyId));
             if (entry == null) throw new MRuntimeException("key not found", keyId);
             try {
-                AsyncKey key = MVaultUtil.adaptTo(entry, AsyncKey.class);
+                AsyncKey key = MKeychainUtil.adaptTo(entry, AsyncKey.class);
                 return MCrypt.decodeWithSalt(key, in);
             } catch (Exception e) {
                 throw new MRuntimeException(e);

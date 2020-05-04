@@ -1,4 +1,4 @@
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,14 +13,14 @@ import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.SecureString;
 
-public class VaultSourceFromPlainJson extends MapMutableVaultSource {
+public class KeychainSourceFromPlainJson extends MapMutableVaultSource {
 
     private boolean editable;
     private File file;
     private long fileModified;
     private boolean fileCanWrite;
 
-    public VaultSourceFromPlainJson(File file, boolean editable, String name) throws IOException {
+    public KeychainSourceFromPlainJson(File file, boolean editable, String name) throws IOException {
         this.file = file;
         this.name = name;
         this.editable = editable;
@@ -32,7 +32,7 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         entries.clear();
         JsonNode json = MJson.load(file);
         for (JsonNode jEntry : json) {
-            VaultEntry entry = new PlainEntry(jEntry);
+            KeyEntry entry = new PlainEntry(jEntry);
             entries.put(entry.getId(), entry);
         }
         fileModified = file.lastModified();
@@ -42,7 +42,7 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
     @Override
     public void doSave() throws IOException {
         ArrayNode json = MJson.createArrayNode();
-        for (VaultEntry entry : entries.values()) {
+        for (KeyEntry entry : entries.values()) {
             ObjectNode jEntry = MJson.createObjectNode();
             json.add(jEntry);
             jEntry.put("id", entry.getId().toString());
@@ -71,7 +71,7 @@ public class VaultSourceFromPlainJson extends MapMutableVaultSource {
         return MSystem.toString(this, name, entries.size(), file);
     }
 
-    private class PlainEntry implements VaultEntry {
+    private class PlainEntry implements KeyEntry {
 
         private UUID id;
         private SecureString value;

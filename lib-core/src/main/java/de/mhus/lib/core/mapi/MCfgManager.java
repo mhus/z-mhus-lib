@@ -40,7 +40,7 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.SingleList;
 
 @DefaultFactory(DefaultMApiFactory.class)
-public class CfgManager {
+public class MCfgManager {
 
     private HashMap<String, CfgProvider> configurations = new HashMap<>();
     
@@ -60,7 +60,7 @@ public class CfgManager {
         initiators.put("002_logger", new Object[] {new LogCfgInitiator(), null});
     }
 
-    public CfgManager(IApiInternal internal) {
+    public MCfgManager(IApiInternal internal) {
         this.internal = internal;
         provider = new CentralMhusCfgProvider();
         provider.doInitialize();

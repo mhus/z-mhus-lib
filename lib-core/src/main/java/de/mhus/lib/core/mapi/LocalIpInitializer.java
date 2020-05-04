@@ -10,7 +10,7 @@ import de.mhus.lib.core.config.IConfig;
 public class LocalIpInitializer implements CfgInitiator {
 
     @Override
-    public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             System.out.println("IP Address: " + inetAddress.getHostAddress() + " / Host Name: " + inetAddress.getHostName());

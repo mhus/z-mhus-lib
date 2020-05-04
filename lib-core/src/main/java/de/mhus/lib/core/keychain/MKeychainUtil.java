@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,22 +23,22 @@ import de.mhus.lib.core.console.ConsoleTable;
 import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class MVaultUtil {
+public class MKeychainUtil {
 
-    public static MVault loadDefault() {
-        MVault vault = M.l(MVault.class);
+    public static MKeychain loadDefault() {
+        MKeychain vault = M.l(MKeychain.class);
         checkDefault(vault);
         return vault;
     }
 
-    public static void checkDefault(MVault vault) {
-        VaultSource def = vault.getSource(MVault.SOURCE_DEFAULT);
+    public static void checkDefault(MKeychain vault) {
+        KeychainSource def = vault.getSource(MKeychain.SOURCE_DEFAULT);
         if (def == null) {
 
-            VaultPassphrase vaultPassphrase = M.l(VaultPassphrase.class);
-            VaultSourceFactory factory = M.l(VaultSourceFactory.class);
+            KeychainPassphrase vaultPassphrase = M.l(KeychainPassphrase.class);
+            KeychainSourceFactory factory = M.l(KeychainSourceFactory.class);
 
-            def = factory.create(MVault.SOURCE_DEFAULT, vaultPassphrase);
+            def = factory.create(MKeychain.SOURCE_DEFAULT, vaultPassphrase);
             if (def != null) vault.registerSource(def);
         }
     }
@@ -46,16 +46,16 @@ public class MVaultUtil {
     public static void main(String[] in) throws IOException {
         MArgs args = new MArgs(in);
 
-        MVault vault = loadDefault();
+        MKeychain vault = loadDefault();
 
-        VaultSource source = null;
+        KeychainSource source = null;
         if (args.contains("file")) {
             String vp = args.getValue("passphrase", "setit", 0);
             File f = new File(args.getValue("file", 0));
-            source = new VaultSourceFromSecFile(f, vp);
+            source = new KeychainSourceFromSecFile(f, vp);
             vault.registerSource(source);
         }
-        if (source == null) source = vault.getSource(MVault.SOURCE_DEFAULT);
+        if (source == null) source = vault.getSource(MKeychain.SOURCE_DEFAULT);
 
         String cmd = args.getValue(MArgs.DEFAULT, "help", 0);
 
@@ -73,7 +73,7 @@ public class MVaultUtil {
                     for (String sourceName : vault.getSourceNames()) {
                         source = vault.getSource(sourceName);
                         for (UUID id : source.getEntryIds()) {
-                            VaultEntry entry = source.getEntry(id);
+                            KeyEntry entry = source.getEntry(id);
                             out.addRowValues(
                                     sourceName, id, entry.getType(), entry.getDescription());
                         }
@@ -93,58 +93,58 @@ public class MVaultUtil {
      * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
      * @throws ParseException
      */
-    public static <T> T adaptTo(VaultEntry entry, Class<? extends T> ifc)
+    public static <T> T adaptTo(KeyEntry entry, Class<? extends T> ifc)
             throws ParseException, NotSupportedException {
         // delegate to service
-        return M.l(VaultMutator.class).adaptTo(entry, ifc);
+        return M.l(KeyMutator.class).adaptTo(entry, ifc);
     }
 
     public static String getType(String content) {
         
-        if (content == null) return MVault.TYPE_TEXT;
+        if (content == null) return MKeychain.TYPE_TEXT;
         
         // only analyse the first block in content
         int pos = content.indexOf("-----END ");
-        if (pos < 0) return MVault.TYPE_TEXT;
+        if (pos < 0) return MKeychain.TYPE_TEXT;
         content = content.substring(0, pos);
         
-        if (content.contains("-----BEGIN RSA PRIVATE KEY-----")) return MVault.TYPE_RSA_PRIVATE_KEY;
+        if (content.contains("-----BEGIN RSA PRIVATE KEY-----")) return MKeychain.TYPE_RSA_PRIVATE_KEY;
         if (content.contains("-----BEGIN RSA PUBLIC KEY-----"))
-            return MVault.TYPE_RSA_PUBLIC_KEY;
+            return MKeychain.TYPE_RSA_PUBLIC_KEY;
         if (content.contains("-----BEGIN DSA PRIVATE KEY-----"))
-            return MVault.TYPE_DSA_PRIVATE_KEY;
+            return MKeychain.TYPE_DSA_PRIVATE_KEY;
         if (content.contains("-----BEGIN DSA PUBLIC KEY-----"))
-            return MVault.TYPE_DSA_PUBLIC_KEY;
+            return MKeychain.TYPE_DSA_PUBLIC_KEY;
         if (content.contains("-----BEGIN ECC PRIVATE KEY-----"))
-            return MVault.TYPE_ECC_PRIVATE_KEY;
+            return MKeychain.TYPE_ECC_PRIVATE_KEY;
         if (content.contains("-----BEGIN ECC PUBLIC KEY-----"))
-            return MVault.TYPE_ECC_PUBLIC_KEY;
+            return MKeychain.TYPE_ECC_PUBLIC_KEY;
         if (content.contains("-----BEGIN PRIVATE KEY-----")) {
             if (content.contains("Method: AES"))
-                return MVault.TYPE_AES_PRIVATE_KEY;
+                return MKeychain.TYPE_AES_PRIVATE_KEY;
             if (content.contains("Method: RSA"))
-                return MVault.TYPE_RSA_PRIVATE_KEY;
+                return MKeychain.TYPE_RSA_PRIVATE_KEY;
             if (content.contains("Method: ECC"))
-                return MVault.TYPE_ECC_PRIVATE_KEY;
+                return MKeychain.TYPE_ECC_PRIVATE_KEY;
             if (content.contains("Method: DSA"))
-                return MVault.TYPE_DSA_PRIVATE_KEY;
+                return MKeychain.TYPE_DSA_PRIVATE_KEY;
         }
         if (content.contains("-----BEGIN PUBLIC KEY-----")) {
             if (content.contains("Method: AES"))
-                return MVault.TYPE_AES_PUBLIC_KEY;
+                return MKeychain.TYPE_AES_PUBLIC_KEY;
             if (content.contains("Method: RSA"))
-                return MVault.TYPE_RSA_PUBLIC_KEY;
+                return MKeychain.TYPE_RSA_PUBLIC_KEY;
             if (content.contains("Method: ECC"))
-                return MVault.TYPE_ECC_PUBLIC_KEY;
+                return MKeychain.TYPE_ECC_PUBLIC_KEY;
             if (content.contains("Method: DSA"))
-                return MVault.TYPE_DSA_PUBLIC_KEY;
+                return MKeychain.TYPE_DSA_PUBLIC_KEY;
         }
         if (content.contains("-----BEGIN CIPHER-----"))
-            return MVault.TYPE_CIPHER;
+            return MKeychain.TYPE_CIPHER;
         if (content.contains("-----BEGIN SIGNATURE-----"))
-            return MVault.TYPE_SIGNATURE;
+            return MKeychain.TYPE_SIGNATURE;
             
-        else return MVault.TYPE_TEXT;
+        else return MKeychain.TYPE_TEXT;
     }
 
     /**

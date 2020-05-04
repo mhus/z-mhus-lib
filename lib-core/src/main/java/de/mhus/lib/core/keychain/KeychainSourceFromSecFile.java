@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,17 +28,17 @@ import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.errors.MException;
 
-public class VaultSourceFromSecFile extends MapMutableVaultSource {
+public class KeychainSourceFromSecFile extends MapMutableVaultSource {
 
     private SecureString passphrase;
     private File file;
 
-    public VaultSourceFromSecFile(File file, String passphrase, String name) throws IOException {
+    public KeychainSourceFromSecFile(File file, String passphrase, String name) throws IOException {
         this(file, passphrase);
         this.name = name;
     }
 
-    public VaultSourceFromSecFile(File file, String passphrase) throws IOException {
+    public KeychainSourceFromSecFile(File file, String passphrase) throws IOException {
         this.passphrase = new SecureString(passphrase);
         this.file = file;
         if (file.exists()) doLoad();
@@ -53,7 +53,7 @@ public class VaultSourceFromSecFile extends MapMutableVaultSource {
         int size = ois.readInt();
         entries.clear();
         for (int i = 0; i < size; i++) {
-            VaultEntry entry = new FileEntry(ois);
+            KeyEntry entry = new FileEntry(ois);
             try {
                 addEntry(entry);
             } catch (MException e) {
@@ -71,7 +71,7 @@ public class VaultSourceFromSecFile extends MapMutableVaultSource {
         oos.writeInt(1); // version
         oos.writeUTF(name);
         oos.writeInt(entries.size());
-        for (VaultEntry entry : entries.values()) {
+        for (KeyEntry entry : entries.values()) {
             oos.writeUTF(entry.getId().toString());
             oos.writeUTF(entry.getType());
             oos.writeUTF(entry.getDescription());

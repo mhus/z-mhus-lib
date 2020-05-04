@@ -11,26 +11,26 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 import de.mhus.lib.core.util.MObject;
 
-public class DefaultVault extends MObject implements MVault {
+public class DefaultKeychain extends MObject implements MKeychain {
 
-    private HashMap<String, VaultSource> sources = new HashMap<>();
-    private MVault parent;
+    private HashMap<String, KeychainSource> sources = new HashMap<>();
+    private MKeychain parent;
 
-    public DefaultVault() {}
+    public DefaultKeychain() {}
 
-    public DefaultVault(MVault parent) {
+    public DefaultKeychain(MKeychain parent) {
         this.parent = parent;
     }
 
     @Override
-    public void registerSource(VaultSource source) {
+    public void registerSource(KeychainSource source) {
         if (source == null) return;
         synchronized (sources) {
             sources.put(source.getName(), source);
@@ -69,21 +69,21 @@ public class DefaultVault extends MObject implements MVault {
     }
 
     @Override
-    public VaultSource getSource(String name) {
+    public KeychainSource getSource(String name) {
         if (name == null) return null;
         synchronized (sources) {
-            VaultSource ret = sources.get(name);
+            KeychainSource ret = sources.get(name);
             if (ret == null && parent != null) return parent.getSource(name);
             else return ret;
         }
     }
 
     @Override
-    public VaultEntry getEntry(UUID id) {
+    public KeyEntry getEntry(UUID id) {
         if (id == null) return null;
         synchronized (sources) {
-            for (VaultSource source : sources.values()) {
-                VaultEntry res = source.getEntry(id);
+            for (KeychainSource source : sources.values()) {
+                KeyEntry res = source.getEntry(id);
                 if (res != null) return res;
             }
         }
@@ -92,11 +92,11 @@ public class DefaultVault extends MObject implements MVault {
     }
 
     @Override
-    public VaultEntry getEntry(String name) {
+    public KeyEntry getEntry(String name) {
         if (name == null) return null;
         synchronized (sources) {
-            for (VaultSource source : sources.values()) {
-                VaultEntry res = source.getEntry(name);
+            for (KeychainSource source : sources.values()) {
+                KeyEntry res = source.getEntry(name);
                 if (res != null) return res;
             }
         }

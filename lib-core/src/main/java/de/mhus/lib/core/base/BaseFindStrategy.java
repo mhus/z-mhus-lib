@@ -13,13 +13,13 @@
  */
 package de.mhus.lib.core.base;
 
+import de.mhus.lib.core.mapi.MBase;
 import de.mhus.lib.core.operation.FindStrategy;
-import de.mhus.lib.core.util.Base;
 
-public abstract class BaseFindStrategy implements FindStrategy<Base> {
+public abstract class BaseFindStrategy implements FindStrategy<MBase> {
 
     @Override
-    public abstract Base find(Object... attributes);
+    public abstract MBase find(Object... attributes);
 
-    public abstract Base install(Base base);
+    public abstract MBase install(MBase base);
 }

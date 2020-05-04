@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,19 +31,19 @@ import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.util.SecureString;
 
-public class VaultSourceFromSecFolder extends MapMutableVaultSource {
+public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
 
     private SecureString passphrase;
     private File folder;
     private int version;
 
-    public VaultSourceFromSecFolder(File folder, String passphrase, String name)
+    public KeychainSourceFromSecFolder(File folder, String passphrase, String name)
             throws IOException {
         this(folder, passphrase);
         this.name = name;
     }
 
-    public VaultSourceFromSecFolder(File folder, String passphrase) throws IOException {
+    public KeychainSourceFromSecFolder(File folder, String passphrase) throws IOException {
         this.passphrase = new SecureString(passphrase);
         this.folder = folder;
         if (folder.exists()) doLoad();
@@ -76,7 +76,7 @@ public class VaultSourceFromSecFolder extends MapMutableVaultSource {
         InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
         ObjectInputStream ois = new ObjectInputStream(is);
         try {
-            VaultEntry entry = new FileEntry(version, ois);
+            KeyEntry entry = new FileEntry(version, ois);
             addEntry(entry);
         } catch (Exception e) {
             log().w(file, e);
@@ -96,7 +96,7 @@ public class VaultSourceFromSecFolder extends MapMutableVaultSource {
             MFile.writeFile(file, "" + version);
         }
         HashSet<String> ids = new HashSet<>();
-        for (VaultEntry entry : entries.values()) {
+        for (KeyEntry entry : entries.values()) {
             ids.add(entry.getId().toString());
             saveEntry(entry);
         }
@@ -109,7 +109,7 @@ public class VaultSourceFromSecFolder extends MapMutableVaultSource {
         }
     }
 
-    protected void saveEntry(VaultEntry entry) throws IOException {
+    protected void saveEntry(KeyEntry entry) throws IOException {
         File file = new File(folder, entry.getId().toString());
         FileOutputStream parent = new FileOutputStream(file);
         OutputStream os = MCrypt.createCipherOutputStream(parent, passphrase.value());

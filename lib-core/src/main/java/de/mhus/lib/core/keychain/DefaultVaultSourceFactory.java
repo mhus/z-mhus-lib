@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,31 +21,31 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgFile;
 
-public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactory {
+public class DefaultVaultSourceFactory extends MLog implements KeychainSourceFactory {
 
     private static CfgFile CFG_DEFAULT_FILE =
             new CfgFile(
-                    MVault.class,
+                    MKeychain.class,
                     "file",
                     MApi.getFile(MApi.SCOPE.ETC, "de.mhus.lib.core.vault.FileVaultSource.dat"));
     private static CfgFile CFG_DEFAULT_FOLDER =
             new CfgFile(
-                    MVault.class,
+                    MKeychain.class,
                     "folder",
                     MApi.getFile(MApi.SCOPE.DATA, "de.mhus.lib.core.vault.FolderVaultSource"));
     private static CfgBoolean CFG_EDITABLE =
-            new CfgBoolean(VaultSourceFromPlainProperties.class, "editable", false);
+            new CfgBoolean(KeychainSourceFromPlainProperties.class, "editable", false);
 
     @Override
-    public VaultSource create(String name, VaultPassphrase vaultPassphrase) {
-        VaultSource def = null;
-        if (MVault.SOURCE_DEFAULT.equals(name)) {
+    public KeychainSource create(String name, KeychainPassphrase vaultPassphrase) {
+        KeychainSource def = null;
+        if (MKeychain.SOURCE_DEFAULT.equals(name)) {
             if (CFG_DEFAULT_FILE.value().exists()) {
 
                 if (CFG_DEFAULT_FILE.value().getName().endsWith(".json")) {
                     try {
                         def =
-                                new VaultSourceFromPlainJson(
+                                new KeychainSourceFromPlainJson(
                                         CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
                     } catch (IOException e) {
                         log().d(e);
@@ -53,7 +53,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
                 } else if (CFG_DEFAULT_FILE.value().getName().endsWith(".properties")) {
                     try {
                         def =
-                                new VaultSourceFromPlainProperties(
+                                new KeychainSourceFromPlainProperties(
                                         CFG_DEFAULT_FILE.value(), CFG_EDITABLE.value(), name);
                     } catch (IOException e) {
                         log().d(e);
@@ -62,7 +62,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
                     // legacy
                     try {
                         def =
-                                new VaultSourceFromSecFile(
+                                new KeychainSourceFromSecFile(
                                         CFG_DEFAULT_FILE.value(),
                                         vaultPassphrase.getPassphrase(),
                                         name);
@@ -74,7 +74,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
                 // default
                 try {
                     def =
-                            new VaultSourceFromSecFolder(
+                            new KeychainSourceFromSecFolder(
                                     CFG_DEFAULT_FOLDER.value(),
                                     vaultPassphrase.getPassphrase(),
                                     name);
@@ -87,7 +87,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
             if (file.exists() && file.isFile()) {
                 try {
                     def =
-                            new VaultSourceFromSecFile(
+                            new KeychainSourceFromSecFile(
                                     file, vaultPassphrase.getPassphrase(), file.getName());
                 } catch (IOException e) {
                     log().d(e);
@@ -95,7 +95,7 @@ public class DefaultVaultSourceFactory extends MLog implements VaultSourceFactor
             } else {
                 try {
                     def =
-                            new VaultSourceFromSecFolder(
+                            new KeychainSourceFromSecFolder(
                                     file, vaultPassphrase.getPassphrase(), file.getName());
                 } catch (IOException e) {
                     log().w(e);

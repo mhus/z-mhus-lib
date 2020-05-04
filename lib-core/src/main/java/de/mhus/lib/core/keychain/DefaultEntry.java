@@ -11,14 +11,14 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.UUID;
 
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.util.SecureString;
 
-public class DefaultEntry implements VaultEntry {
+public class DefaultEntry implements KeyEntry {
 
     protected UUID id = UUID.randomUUID();
     protected String type;
@@ -52,7 +52,7 @@ public class DefaultEntry implements VaultEntry {
         this.value = value;
     }
 
-    public DefaultEntry(VaultEntry clone) {
+    public DefaultEntry(KeyEntry clone) {
         this(
                 clone.getId(),
                 clone.getType(),

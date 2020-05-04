@@ -11,14 +11,14 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.UUID;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 
-@DefaultImplementation(DefaultVault.class)
-public interface MVault {
+@DefaultImplementation(DefaultKeychain.class)
+public interface MKeychain {
 
     static final String TYPE_RSA_PRIVATE_KEY = "rsa.cipher.private.key";
     static final String TYPE_RSA_PUBLIC_KEY = "rsa.cipher.public.key";
@@ -46,7 +46,7 @@ public interface MVault {
      *
      * @param source
      */
-    void registerSource(VaultSource source);
+    void registerSource(KeychainSource source);
     /**
      * Unregister a registered source
      *
@@ -67,7 +67,7 @@ public interface MVault {
      * @param name
      * @return the source or null.
      */
-    VaultSource getSource(String name);
+    KeychainSource getSource(String name);
 
     /**
      * Return a entry by id or null if not found.
@@ -75,7 +75,7 @@ public interface MVault {
      * @param id
      * @return The entry or null.
      */
-    VaultEntry getEntry(UUID id);
+    KeyEntry getEntry(UUID id);
 
     /**
      * Return a entry by name or null if not found. The method will return the first entry found.
@@ -83,5 +83,5 @@ public interface MVault {
      * @param name
      * @return The entry or null.
      */
-    VaultEntry getEntry(String name);
+    KeyEntry getEntry(String name);
 }

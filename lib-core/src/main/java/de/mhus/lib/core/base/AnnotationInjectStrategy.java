@@ -16,18 +16,18 @@ package de.mhus.lib.core.base;
 import de.mhus.lib.annotations.base.Bind;
 import de.mhus.lib.annotations.base.IgnoreBind;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.mapi.MBase;
 import de.mhus.lib.core.pojo.AttributesStrategy;
 import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAttribute;
 import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.core.pojo.PojoParser;
-import de.mhus.lib.core.util.Base;
 
 public class AnnotationInjectStrategy extends InjectStrategy {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void inject(Object object, Base base) {
+    public void inject(Object object, MBase base) {
 
         IgnoreBind classIgnoreBind =
                 object.getClass()

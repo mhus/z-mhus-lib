@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
 
-import de.mhus.lib.core.cfg.UpdaterCfg;
+import de.mhus.lib.core.cfg.MCfgUpdater;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
@@ -44,7 +44,7 @@ public class MApi {
     private static Log log = null;
     protected static Boolean trace;
     //	private static WeakHashMap<UUID, Log> loggers = new WeakHashMap<>();
-    private static UpdaterCfg configUpdater;
+    private static MCfgUpdater configUpdater;
     public static PrintStream out =
             System.out; // catch default system out while startup (gogo shell will change stdout)
     public static PrintStream err =
@@ -150,8 +150,8 @@ public class MApi {
         return get().getCfgManager().getCfg(owner);
     }
 
-    public static synchronized UpdaterCfg getCfgUpdater() {
-        if (configUpdater == null) configUpdater = new UpdaterCfg();
+    public static synchronized MCfgUpdater getCfgUpdater() {
+        if (configUpdater == null) configUpdater = new MCfgUpdater();
         return configUpdater;
     }
 

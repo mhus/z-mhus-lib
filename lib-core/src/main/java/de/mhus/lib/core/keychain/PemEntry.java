@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.UUID;
 
@@ -38,16 +38,16 @@ public class PemEntry extends DefaultEntry {
         {
             String method = block.getString(PemBlock.METHOD, "").toUpperCase();
             if (PemUtil.isPubKey(block)) {
-                if (method.contains("RSA")) type = MVault.TYPE_RSA_PUBLIC_KEY;
-                else if (method.contains("DSA")) type = MVault.TYPE_DSA_PUBLIC_KEY;
-                else if (method.contains("ECC")) type = MVault.TYPE_ECC_PUBLIC_KEY;
-                else type = "?" + MVault.SUFFIX_CIPHER_PUBLIC_KEY;
+                if (method.contains("RSA")) type = MKeychain.TYPE_RSA_PUBLIC_KEY;
+                else if (method.contains("DSA")) type = MKeychain.TYPE_DSA_PUBLIC_KEY;
+                else if (method.contains("ECC")) type = MKeychain.TYPE_ECC_PUBLIC_KEY;
+                else type = "?" + MKeychain.SUFFIX_CIPHER_PUBLIC_KEY;
             } else if (PemUtil.isPrivKey(block)) {
-                if (method.contains("RSA")) type = MVault.TYPE_RSA_PRIVATE_KEY;
-                else if (method.contains("DSA")) type = MVault.TYPE_DSA_PRIVATE_KEY;
-                else if (method.contains("ECC")) type = MVault.TYPE_ECC_PRIVATE_KEY;
-                else type = "?" + MVault.SUFFIX_CIPHER_PRIVATE_KEY;
-            } else type = MVault.TYPE_TEXT;
+                if (method.contains("RSA")) type = MKeychain.TYPE_RSA_PRIVATE_KEY;
+                else if (method.contains("DSA")) type = MKeychain.TYPE_DSA_PRIVATE_KEY;
+                else if (method.contains("ECC")) type = MKeychain.TYPE_ECC_PRIVATE_KEY;
+                else type = "?" + MKeychain.SUFFIX_CIPHER_PRIVATE_KEY;
+            } else type = MKeychain.TYPE_TEXT;
         }
         value = new SecureString(block.toString());
     }

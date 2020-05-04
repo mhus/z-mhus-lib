@@ -18,13 +18,12 @@ import java.lang.reflect.InvocationTargetException;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.MutableActivator;
-import de.mhus.lib.core.util.Base;
 
-public class DefaultBase extends Base {
+public class DefaultBase extends MBase {
 
     MActivator activator;
 
-    public DefaultBase(Base parent) {
+    public DefaultBase(MBase parent) {
         super(parent);
         this.activator = MApi.get().createActivator();
     }

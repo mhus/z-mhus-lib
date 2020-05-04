@@ -19,7 +19,7 @@ import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
-import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.mapi.MCfgManager;
 import de.mhus.lib.core.util.IBase;
 
 @DefaultImplementation(ConsoleFactory.class)
@@ -45,7 +45,7 @@ public abstract class LogFactory implements IBase {
     public abstract void init(IConfig config) throws Exception;
 
     public void init() throws Exception {
-        IConfig config = M.l(CfgManager.class).getCfg(this, null);
+        IConfig config = M.l(MCfgManager.class).getCfg(this, null);
         init(config);
     }
 

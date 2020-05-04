@@ -11,29 +11,17 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
-import java.io.IOException;
-import java.util.UUID;
+import de.mhus.lib.core.cfg.CfgSecure;
 
-import de.mhus.lib.errors.MException;
+public class KeychainPassphraseFromConfig implements KeychainPassphrase {
 
-public interface MutableVaultSource extends VaultSource {
+    private static CfgSecure defaultPassphrase =
+            new CfgSecure(MKeychain.class, "passphrase", "changeit");
 
-    void addEntry(VaultEntry entry) throws MException;
-
-    void removeEntry(UUID id) throws MException;
-
-    void doLoad() throws IOException;
-
-    void doSave() throws IOException;
-
-    /**
-     * Return true if load and save is needed to persist changed data.
-     *
-     * @return true if storage is in memory
-     */
-    boolean isMemoryBased();
-
-    void updateEntry(VaultEntry entry) throws MException;
+    @Override
+    public String getPassphrase() {
+        return defaultPassphrase.valueAsString();
+    }
 }

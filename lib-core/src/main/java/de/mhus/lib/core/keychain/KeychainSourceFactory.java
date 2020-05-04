@@ -11,12 +11,12 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 
 @DefaultImplementation(DefaultVaultSourceFactory.class)
-public interface VaultSourceFactory {
+public interface KeychainSourceFactory {
 
-    VaultSource create(String name, VaultPassphrase vaultPassphrase);
+    KeychainSource create(String name, KeychainPassphrase vaultPassphrase);
 }

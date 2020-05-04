@@ -11,16 +11,16 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.util;
+package de.mhus.lib.core.mapi;
 
 import java.util.HashSet;
 
-public abstract class Base {
+public abstract class MBase {
 
-    protected Base parent;
+    protected MBase parent;
     protected HashSet<String> local;
 
-    public Base(Base parent) {
+    public MBase(MBase parent) {
         this.parent = parent;
     }
 
@@ -40,7 +40,7 @@ public abstract class Base {
 
     public abstract boolean removeObject(Class<?> ifc);
 
-    public Base getParent() {
+    public MBase getParent() {
         return parent;
     }
 

@@ -14,21 +14,21 @@
 package de.mhus.lib.core.base;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.util.Base;
+import de.mhus.lib.core.mapi.MBase;
 
 public class SingleBaseStrategy extends BaseFindStrategy {
 
-    private Base defaultBase = MApi.get().getBaseControl().createBase(null, null);
+    private MBase defaultBase = MApi.get().getBaseControl().createBase(null, null);
 
     @Override
-    public Base find(Object... attributes) {
+    public MBase find(Object... attributes) {
         //		Thread.currentThread().
         return defaultBase;
     }
 
     @Override
-    public Base install(Base base) {
-        Base cur = defaultBase;
+    public MBase install(MBase base) {
+        MBase cur = defaultBase;
         //		defaultBase = base; // do not overwrite
         return cur;
     }

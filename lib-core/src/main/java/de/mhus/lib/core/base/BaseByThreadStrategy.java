@@ -14,29 +14,29 @@
 package de.mhus.lib.core.base;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.util.Base;
+import de.mhus.lib.core.mapi.MBase;
 
 public class BaseByThreadStrategy extends BaseFindStrategy {
 
-    private Base defaultBase = MApi.get().getBaseControl().createBase(null, null);
+    private MBase defaultBase = MApi.get().getBaseControl().createBase(null, null);
 
-    private ThreadLocal<Base> threadBase =
-            new ThreadLocal<Base>() {
+    private ThreadLocal<MBase> threadBase =
+            new ThreadLocal<MBase>() {
                 @Override
-                protected Base initialValue() {
+                protected MBase initialValue() {
                     return defaultBase;
                 }
             };
 
     @Override
-    public Base find(Object... attributes) {
+    public MBase find(Object... attributes) {
         //		Thread.currentThread().
         return threadBase.get();
     }
 
     @Override
-    public Base install(Base base) {
-        Base cur = threadBase.get();
+    public MBase install(MBase base) {
+        MBase cur = threadBase.get();
         threadBase.set(base);
         return cur;
     }

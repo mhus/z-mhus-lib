@@ -28,14 +28,13 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.logging.PrintStreamFactory;
-import de.mhus.lib.core.util.Base;
 import de.mhus.lib.core.util.BaseControl;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
     private LogFactory logFactory = new PrintStreamFactory();
     private BaseControl baseControl;
-    private CfgManager configProvider;
+    private MCfgManager configProvider;
     private HashSet<String> logTrace = new HashSet<>();
     private File baseDir = new File(".");
     private MLogFactory mlogFactory;
@@ -65,9 +64,9 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     }
 
     @Override
-    public synchronized CfgManager getCfgManager() {
+    public synchronized MCfgManager getCfgManager() {
         if (configProvider == null) {
-            configProvider = new CfgManager(this);
+            configProvider = new MCfgManager(this);
         }
         return configProvider;
     }
@@ -78,7 +77,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     }
 
     @Override
-    public Base base() {
+    public MBase base() {
         return getBaseControl().base();
     }
 

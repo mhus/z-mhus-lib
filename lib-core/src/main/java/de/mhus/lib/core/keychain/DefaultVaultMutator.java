@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
@@ -21,7 +21,7 @@ import de.mhus.lib.core.crypt.pem.PemUtil;
 import de.mhus.lib.core.parser.ParseException;
 import de.mhus.lib.errors.NotSupportedException;
 
-public class DefaultVaultMutator implements VaultMutator {
+public class DefaultVaultMutator implements KeyMutator {
 
     /**
      * Try to adapt the entry to the given class or interface.
@@ -34,30 +34,30 @@ public class DefaultVaultMutator implements VaultMutator {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T adaptTo(VaultEntry entry, Class<? extends T> ifc)
+    public <T> T adaptTo(KeyEntry entry, Class<? extends T> ifc)
             throws ParseException, NotSupportedException {
         if (entry.getType() != null) {
             try {
-                if (ifc == AsyncKey.class && MVault.TYPE_RSA_PRIVATE_KEY.equals(entry.getType())) {
+                if (ifc == AsyncKey.class && MKeychain.TYPE_RSA_PRIVATE_KEY.equals(entry.getType())) {
                     return (T) MCrypt.loadPrivateRsaKey(entry.getValue().value());
                 }
-                if (ifc == AsyncKey.class && MVault.TYPE_RSA_PUBLIC_KEY.equals(entry.getType())) {
+                if (ifc == AsyncKey.class && MKeychain.TYPE_RSA_PUBLIC_KEY.equals(entry.getType())) {
                     return (T) MCrypt.loadPrivateRsaKey(entry.getValue().value());
                 }
                 if (ifc == PemPriv.class
-                        && entry.getType().endsWith(MVault.SUFFIX_CIPHER_PRIVATE_KEY)) {
+                        && entry.getType().endsWith(MKeychain.SUFFIX_CIPHER_PRIVATE_KEY)) {
                     return (T) PemUtil.cipherPrivFromString(entry.getValue().value());
                 }
                 if (ifc == PemPub.class
-                        && entry.getType().endsWith(MVault.SUFFIX_CIPHER_PUBLIC_KEY)) {
+                        && entry.getType().endsWith(MKeychain.SUFFIX_CIPHER_PUBLIC_KEY)) {
                     return (T) PemUtil.cipherPubFromString(entry.getValue().value());
                 }
                 if (ifc == PemPriv.class
-                        && entry.getType().endsWith(MVault.SUFFIX_SIGN_PRIVATE_KEY)) {
+                        && entry.getType().endsWith(MKeychain.SUFFIX_SIGN_PRIVATE_KEY)) {
                     return (T) PemUtil.signPrivFromString(entry.getValue().value());
                 }
                 if (ifc == PemPub.class
-                        && entry.getType().endsWith(MVault.SUFFIX_SIGN_PUBLIC_KEY)) {
+                        && entry.getType().endsWith(MKeychain.SUFFIX_SIGN_PUBLIC_KEY)) {
                     return (T) PemUtil.signPubFromString(entry.getValue().value());
                 }
             } catch (Exception e) {

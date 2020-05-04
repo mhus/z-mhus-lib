@@ -13,10 +13,10 @@
  */
 package de.mhus.lib.core.base;
 
-import de.mhus.lib.core.util.Base;
+import de.mhus.lib.core.mapi.MBase;
 
 public class NoInjectionStrategy extends InjectStrategy {
 
     @Override
-    public void inject(Object object, Base base) {}
+    public void inject(Object object, MBase base) {}
 }

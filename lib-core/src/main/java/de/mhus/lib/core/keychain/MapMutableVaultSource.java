@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,11 +24,11 @@ import de.mhus.lib.errors.MException;
 
 public abstract class MapMutableVaultSource extends MLog implements MutableVaultSource {
 
-    protected HashMap<UUID, VaultEntry> entries = new HashMap<>();
+    protected HashMap<UUID, KeyEntry> entries = new HashMap<>();
     protected String name = UUID.randomUUID().toString();
 
     @Override
-    public VaultEntry getEntry(UUID id) {
+    public KeyEntry getEntry(UUID id) {
         doCheckSource();
         synchronized (entries) {
             return entries.get(id);
@@ -36,11 +36,11 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
     }
 
     @Override
-    public VaultEntry getEntry(String name) {
+    public KeyEntry getEntry(String name) {
         doCheckSource();
         synchronized (entries) {
             // TODO optimize !!!
-            for (VaultEntry entry : entries.values())
+            for (KeyEntry entry : entries.values())
                 if (name.equals(entry.getName())) return entry;
         }
         return null;
@@ -60,7 +60,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
     }
 
     @Override
-    public void addEntry(VaultEntry entry) throws MException {
+    public void addEntry(KeyEntry entry) throws MException {
         doCheckSource();
         synchronized (entries) {
             entries.put(entry.getId(), new DefaultEntry(entry));
@@ -68,7 +68,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
     }
 
     @Override
-    public void updateEntry(VaultEntry entry) throws MException {
+    public void updateEntry(KeyEntry entry) throws MException {
         doCheckSource();
         synchronized (entries) {
             entries.put(entry.getId(), new DefaultEntry(entry));

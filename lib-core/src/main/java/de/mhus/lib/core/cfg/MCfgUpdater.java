@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class UpdaterCfg {
+public class MCfgUpdater {
 
     @SuppressWarnings("rawtypes")
     //	private WeakHashMap<CfgValue, String> registry = new WeakHashMap<>();

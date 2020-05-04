@@ -11,11 +11,29 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.base;
+package de.mhus.lib.core.keychain;
 
-import de.mhus.lib.core.mapi.MBase;
+import java.io.IOException;
+import java.util.UUID;
 
-public abstract class InjectStrategy {
+import de.mhus.lib.errors.MException;
 
-    public abstract void inject(Object object, MBase base);
+public interface MutableVaultSource extends KeychainSource {
+
+    void addEntry(KeyEntry entry) throws MException;
+
+    void removeEntry(UUID id) throws MException;
+
+    void doLoad() throws IOException;
+
+    void doSave() throws IOException;
+
+    /**
+     * Return true if load and save is needed to persist changed data.
+     *
+     * @return true if storage is in memory
+     */
+    boolean isMemoryBased();
+
+    void updateEntry(KeyEntry entry) throws MException;
 }

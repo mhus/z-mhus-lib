@@ -27,7 +27,7 @@ public class DockerInitializer implements CfgInitiator {
     private static String containerId;
 
     @Override
-    public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         // get docker id
         File cgroup = new File("/proc/self/cgroup");
         if (cgroup.exists()) {

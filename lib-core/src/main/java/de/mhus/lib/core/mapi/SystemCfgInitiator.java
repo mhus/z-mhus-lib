@@ -24,7 +24,7 @@ import de.mhus.lib.core.config.IConfig;
 public class SystemCfgInitiator implements CfgInitiator {
 
     @Override
-    public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         IConfig system = manager.getCfg("system");
         try {
             String key = MConstants.PROP_BASE_DIR;

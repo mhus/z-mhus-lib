@@ -11,12 +11,24 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.vault;
+package de.mhus.lib.core.keychain;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.errors.NotSupportedException;
 
-@DefaultImplementation(VaultPassphraseFromConfig.class)
-public interface VaultPassphrase {
+@DefaultImplementation(DefaultVaultMutator.class)
+public interface KeyMutator {
 
-    public String getPassphrase();
+    /**
+     * Try to adapt the entry to the given class or interface.
+     *
+     * @param entry
+     * @param ifc
+     * @return The requested interface or class.
+     * @throws NotSupportedException Thrown if the entry can't be adapted to the interface.
+     * @throws ParseException
+     */
+    <T> T adaptTo(KeyEntry entry, Class<? extends T> ifc)
+            throws ParseException, NotSupportedException;
 }

@@ -42,7 +42,7 @@ public class LogCfgInitiator implements CfgInitiator {
     }
 
     @Override
-    public void doInitialize(IApiInternal internal, CfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
 
         IConfig system = manager.getCfg("system");
 

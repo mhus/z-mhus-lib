@@ -14,10 +14,10 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.mapi.CfgManager;
+import de.mhus.lib.core.mapi.MCfgManager;
 import de.mhus.lib.core.mapi.IApiInternal;
 
 public interface CfgInitiator {
 
-    void doInitialize(IApiInternal internal, CfgManager manager, IConfig config);
+    void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config);
 }

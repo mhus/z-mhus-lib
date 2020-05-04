@@ -20,7 +20,7 @@ public class DefaultMApiFactory implements ObjectFactory {
 
     @Override
     public Object create(Class<?> clazz, Class<?>[] classes, Object[] objects) {
-        if (clazz == CfgManager.class) return MApi.get().getCfgManager();
+        if (clazz == MCfgManager.class) return MApi.get().getCfgManager();
         return null;
     }
 }
