@@ -14,12 +14,11 @@ import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.base.SingleBaseStrategy;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.shiro.DefaultAccessApi;
-import de.mhus.lib.core.shiro.PrincipalData;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
+import de.mhus.lib.core.shiro.DefaultAccessApi;
+import de.mhus.lib.core.shiro.PrincipalData;
 import de.mhus.lib.core.shiro.SubjectEnvironment;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.test.shiro.ShiroAnnotationTest;
@@ -329,7 +328,7 @@ public class ShiroSecurityTest {
         // --- Prepare
         MApi.setDirtyTrace(true);
         MApi.get().getLogFactory().setDefaultLevel(Log.LEVEL.DEBUG);
-        MApi.get().getBaseControl().setFindStrategy(new SingleBaseStrategy());
+//        MApi.get().getBaseControl().setFindStrategy(new SingleBaseStrategy());
         //cleanup shiro
         AccessUtil.subjectCleanup();
        // touch class

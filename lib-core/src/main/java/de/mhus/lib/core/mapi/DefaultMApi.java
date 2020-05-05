@@ -28,16 +28,16 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.logging.PrintStreamFactory;
-import de.mhus.lib.core.util.BaseControl;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
     private LogFactory logFactory = new PrintStreamFactory();
-    private BaseControl baseControl;
+//    private BaseControl baseControl;
     private MCfgManager configProvider;
     private HashSet<String> logTrace = new HashSet<>();
     private File baseDir = new File(".");
     private MLogFactory mlogFactory;
+    private DefaultActivator base = new DefaultActivator();
 
     @Override
     public void doInitialize(ClassLoader coreLoader) {
@@ -45,13 +45,13 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         getCfgManager().doRestart();
     }
 
-    @Override
-    public synchronized BaseControl getBaseControl() {
-        if (baseControl == null) {
-            baseControl = new BaseControl();
-        }
-        return baseControl;
-    }
+//    @Override
+//    public synchronized BaseControl getBaseControl() {
+//        if (baseControl == null) {
+//            baseControl = new BaseControl();
+//        }
+//        return baseControl;
+//    }
 
     @Override
     public MActivator createActivator() {
@@ -77,10 +77,10 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         return logTrace.contains(name);
     }
 
-    @Override
-    public MBase base() {
-        return getBaseControl().base();
-    }
+//    @Override
+//    public MBase base() {
+//        return getBaseControl().base();
+//    }
 
     @Override
     public void setLogFactory(LogFactory logFactory) {
@@ -126,4 +126,15 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     public void setMLogFactory(MLogFactory mlogFactory) {
         this.mlogFactory = mlogFactory;
     }
+
+    @Override
+    public <T, D extends T> T lookup(Class<T> ifc, Class<D> def) {
+        return base.lookup(ifc, def);
+    }
+
+    @Override
+    public DefaultActivator getLookupActivator() {
+        return base;
+    }
+
 }

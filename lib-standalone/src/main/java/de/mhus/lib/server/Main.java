@@ -26,12 +26,9 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MStopWatch;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.activator.MutableActivator;
-import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.io.CSVReader;
 import de.mhus.lib.core.jmx.MJmx;
-import de.mhus.lib.core.mapi.DefaultBase;
 import de.mhus.lib.core.util.MUri;
 
 @JmxManaged
@@ -54,13 +51,11 @@ public class Main extends MJmx {
 
         boolean exitOnEnd = false;
 
-        ((MutableActivator) ((DefaultBase) MApi.get().getBaseControl().base()).getActivator())
-                .addObject(Main.class, null, this);
+        MApi.get().getLookupActivator().addObject(Main.class, null, this);
         lists = new TreeMap<String, TaskListDefinition>();
 
-        new de.mhus.lib.framework.Initializer(M.l(IConfigFactory.class).read(new File("config.xml")),
-                        ((DefaultBase) MApi.get().getBaseControl().base()).getActivator())
-                .initialize();
+//        new de.mhus.lib.framework.Initializer(M.l(IConfigFactory.class).read(new File("config.xml")),
+//                        ((DefaultActivator)((DefaultMApi) MApi.get()).getActivator()).initialize();
 
         Console console = M.l(Console.class);
         while (true) {

@@ -14,6 +14,7 @@
 package de.mhus.lib.core.activator;
 
 import java.io.Closeable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import de.mhus.lib.basics.ActivatorObjectLifecycle;
@@ -168,4 +169,29 @@ public class DefaultActivator extends MActivator implements MutableActivator {
     public String[] getObjectNames() {
         return instances.keySet().toArray(new String[mapper.size()]);
     }
+    
+    public <T, D extends T> T lookup(Class<T> ifc, Class<D> def) {
+        try {
+            T ret = getObject(ifc);
+            if (ret != null) return ret;
+
+        } catch (Exception e) {
+            MApi.dirtyLogDebug("info: fallback to default", ifc, def, e);
+        }
+
+        if (def == null) return null;
+
+        try {
+            return def.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException
+                | IllegalAccessException
+                | IllegalArgumentException
+                | InvocationTargetException
+                | NoSuchMethodException
+                | SecurityException e) {
+            MApi.dirtyLogDebug(ifc, e);
+        }
+        return null;
+    }
+    
 }

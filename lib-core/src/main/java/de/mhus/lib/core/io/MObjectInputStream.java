@@ -60,7 +60,7 @@ public class MObjectInputStream extends ObjectInputStream {
         String name = desc.getName();
 
         if (act == null && cl == null) {
-            act = MApi.get().base().lookup(MActivator.class); // load default activator
+            act = MApi.get().lookup(MActivator.class); // load default activator
         }
 
         try {

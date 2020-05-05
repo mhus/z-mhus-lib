@@ -70,7 +70,7 @@ public class TableRow implements Serializable {
                 String clazzName = in.readUTF();
                 Object obj;
                 try {
-                    obj = MApi.get().base().lookup(MActivator.class).createObject(clazzName);
+                    obj = MApi.get().lookup(MActivator.class).createObject(clazzName);
                 } catch (Exception e) {
                     throw new IOException(e);
                 }

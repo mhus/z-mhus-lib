@@ -160,11 +160,11 @@ public class MApi {
     }
 
     public static <T> T lookup(Class<T> class1) {
-        return get().getBaseControl().base().lookup(class1);
+        return get().lookup(class1);
     }
 
     public static <T, D extends T> T lookup(Class<T> class1, Class<D> def) {
-        return get().getBaseControl().base().lookup(class1, def);
+        return get().lookup(class1, def);
     }
 
     public static <T extends Object> T waitFor(Class<? extends T> ifc, long timeout) {

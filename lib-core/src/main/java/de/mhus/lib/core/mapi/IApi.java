@@ -17,10 +17,10 @@ import java.io.File;
 
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.util.BaseControl;
 
 public interface IApi {
 
@@ -28,15 +28,11 @@ public interface IApi {
 
     MCfgManager getCfgManager();
 
-    BaseControl getBaseControl();
-
     MActivator createActivator();
 
     LogFactory getLogFactory();
 
     boolean isTrace(String name);
-
-    MBase base();
 
     /**
      * Return a File inside the current application context.
@@ -58,4 +54,13 @@ public interface IApi {
         if (node == null) return def;
         return node.getString(path.substring(p + 1), def);
     }
+
+    default <T> T lookup(Class<T> ifc) {
+        return lookup(ifc, null);
+    }
+
+    <T, D extends T> T lookup(Class<T> ifc, Class<D> def);
+
+    DefaultActivator getLookupActivator();
+
 }
