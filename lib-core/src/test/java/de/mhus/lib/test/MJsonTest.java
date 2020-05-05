@@ -13,6 +13,9 @@
  */
 package de.mhus.lib.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,15 +23,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.codehaus.jackson.JsonNode;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.json.JacksonTransformer;
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.SimpleObjectTransformer;
 import de.mhus.lib.core.json.TransformHelper;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class MJsonTest {
 

@@ -22,13 +22,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.BooleanNode;
-import org.codehaus.jackson.node.DoubleNode;
-import org.codehaus.jackson.node.IntNode;
-import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.node.TextNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.BooleanNode;
+import com.fasterxml.jackson.databind.node.DoubleNode;
+import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -42,7 +42,7 @@ public class SerializerTransformer extends TransformStrategy {
     public Object jsonToPojo(JsonNode from, Class<?> typex, TransformHelper helper)
             throws NotSupportedException {
 
-        if (from instanceof TextNode) return ((TextNode) from).getTextValue();
+        if (from instanceof TextNode) return ((TextNode) from).asText();
         if (from instanceof ArrayNode) {
             ArrayNode node = (ArrayNode) from;
             LinkedList<Object> list = new LinkedList<>();
@@ -53,7 +53,7 @@ public class SerializerTransformer extends TransformStrategy {
                     list.add(jsonToPojo(item, null, helper));
                 }
             }
-            String aclazz = first.get("_arraytype").getTextValue();
+            String aclazz = first.get("_arraytype").asText();
             Object array = null;
             try {
                 array = helper.createArray(list.size(), helper.getType(aclazz));
@@ -66,9 +66,9 @@ public class SerializerTransformer extends TransformStrategy {
 
         if (MJson.getValue(from, "_null", false)) return null; // return null is ok !
 
-        if (from instanceof IntNode) return ((IntNode) from).getIntValue();
-        if (from instanceof BooleanNode) return ((BooleanNode) from).getBooleanValue();
-        if (from instanceof DoubleNode) return ((DoubleNode) from).getDoubleValue();
+        if (from instanceof IntNode) return ((IntNode) from).asInt();
+        if (from instanceof BooleanNode) return ((BooleanNode) from).asBoolean();
+        if (from instanceof DoubleNode) return ((DoubleNode) from).asDouble();
 
         if (!(from instanceof ObjectNode)) throw new NotSupportedException("node type is unknown");
 
@@ -85,23 +85,23 @@ public class SerializerTransformer extends TransformStrategy {
             try {
                 switch (clazz) {
                     case "java.lang.String":
-                        return val.getTextValue();
+                        return val.asText();
                     case "java.lang.Boolean":
-                        return val.getBooleanValue();
+                        return val.asBoolean();
                     case "java.lang.Byte":
-                        return val.getBinaryValue()[0];
+                        return val.binaryValue()[0];
                     case "java.lang.Integer":
-                        return val.getIntValue();
+                        return val.asInt();
                     case "java.lang.Short":
-                        return val.getBigIntegerValue().shortValue();
+                        return val.numberValue().shortValue();
                     case "java.lang.Double":
-                        return val.getDoubleValue();
+                        return val.asDouble();
                     case "java.lang.Float":
-                        return val.getBigIntegerValue().floatValue();
+                        return val.numberValue().floatValue();
                     case "java.lang.Long":
-                        return val.getBigIntegerValue().longValue();
+                        return val.numberValue().longValue();
                     case "java.lang.Character":
-                        return (char) val.getIntValue();
+                        return (char) val.asInt();
                 }
 
             } catch (IOException e) {
@@ -118,7 +118,7 @@ public class SerializerTransformer extends TransformStrategy {
             } catch (Throwable e) {
                 out = new HashMap<>();
             }
-            Iterator<Entry<String, JsonNode>> fieldIter = map.getFields();
+            Iterator<Entry<String, JsonNode>> fieldIter = map.fields();
             while (fieldIter.hasNext()) {
                 Entry<String, JsonNode> field = fieldIter.next();
                 if (!field.getKey().startsWith("_")) {
@@ -209,7 +209,7 @@ public class SerializerTransformer extends TransformStrategy {
                 @SuppressWarnings({"rawtypes"})
                 Map<Object, Object> map = (Map) from;
                 ObjectNode x = out.objectNode();
-                out.put("_map", x);
+                out.set("_map", x);
                 for (Map.Entry<Object, Object> en : map.entrySet()) {
                     putPojoValue(x, String.valueOf(en.getKey()), en.getValue(), helper);
                 }
@@ -219,7 +219,7 @@ public class SerializerTransformer extends TransformStrategy {
                 out.put("_special", "collection");
                 @SuppressWarnings({"rawtypes"})
                 Collection<Object> col = (Collection) from;
-                out.put("_array", pojoToJson(col.toArray()));
+                out.set("_array", pojoToJson(col.toArray()));
             } else {
                 out.put("_type", from.getClass().getCanonicalName());
 
@@ -239,6 +239,7 @@ public class SerializerTransformer extends TransformStrategy {
         }
     }
 
+    @SuppressWarnings("deprecation")
     protected void putPojoValue(ObjectNode out, String name, Object value, TransformHelper helper) {
         if (value == null) out.putNull(name);
         else if (value instanceof Byte) out.put(name, new byte[] {(Byte) value});
@@ -253,22 +254,4 @@ public class SerializerTransformer extends TransformStrategy {
         else out.put(name, pojoToJson(value, helper.incLevel()));
     }
 
-    public static Object getValue(JsonNode node, TransformHelper helper) {
-        Object out = null;
-        if (node == null) return null;
-        try {
-            if (node.isTextual()) out = node.asText();
-            else if (node.isNull()) out = null;
-            else if (node.isBigDecimal()) out = node.getDecimalValue();
-            else if (node.isBigInteger()) out = node.getBigIntegerValue();
-            else if (node.isBinary()) out = node.getBinaryValue();
-            else if (node.isBoolean()) out = node.getBooleanValue();
-            else if (node.isDouble()) out = node.getDoubleValue();
-            else if (node.isInt()) out = node.getIntValue();
-            else if (node.isLong()) out = node.getLongValue();
-            else if (node.isNumber()) out = node.getNumberValue();
-        } catch (IOException e) {
-        }
-        return out;
-    }
 }

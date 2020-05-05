@@ -20,8 +20,8 @@ import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * Abstract AjaxResource class.
@@ -43,7 +43,7 @@ public abstract class AjaxResource extends AbstractResource {
             resourceResponse.setContentType("application/json");
             resourceResponse.resetBuffer();
             resourceResponse.setCharacterEncoding("UTF-8");
-            JsonGenerator out = f.createJsonGenerator(resourceResponse.getWriter());
+            JsonGenerator out = f.createGenerator(resourceResponse.getWriter());
 
             doRequest(resourceRequest, out);
             out.close();
@@ -51,7 +51,7 @@ public abstract class AjaxResource extends AbstractResource {
             resourceResponse.flushBuffer();
         } else {
             StringWriter sw = new StringWriter();
-            JsonGenerator out = f.createJsonGenerator(sw);
+            JsonGenerator out = f.createGenerator(sw);
 
             doRequest(resourceRequest, out);
             out.close();

@@ -18,7 +18,7 @@ import java.util.LinkedList;
 
 import javax.jms.JMSException;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;

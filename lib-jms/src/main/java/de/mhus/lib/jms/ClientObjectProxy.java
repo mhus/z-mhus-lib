@@ -30,7 +30,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;

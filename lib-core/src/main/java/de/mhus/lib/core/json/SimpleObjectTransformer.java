@@ -13,7 +13,6 @@
  */
 package de.mhus.lib.core.json;
 
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Date;
@@ -23,9 +22,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.UUID;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.pojo.PojoAttribute;
@@ -47,7 +46,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
         }
 
         if (from.size() == 1) {
-            String singleName = from.getFieldNames().next();
+            String singleName = from.fieldNames().next();
             if ("_collection".equals(singleName)) {
                 LinkedList<Object> out = new LinkedList<>();
                 for (JsonNode n : from.get(0)) {
@@ -57,7 +56,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
                 return out;
             } else if ("_map".equals(singleName)) {
                 HashMap<Object, Object> out = new HashMap<>();
-                Iterator<String> nameIter = from.getFieldNames();
+                Iterator<String> nameIter = from.fieldNames();
                 while (nameIter.hasNext()) {
                     String name = nameIter.next();
                     JsonNode on = from.get(name);
@@ -102,9 +101,9 @@ public class SimpleObjectTransformer extends TransformStrategy {
                 } else if (Map.class.isAssignableFrom(aType)) {
 
                     HashMap<String, Object> map = new HashMap<>();
-                    for (Iterator<String> iter = json.getFieldNames(); iter.hasNext(); ) {
+                    for (Iterator<String> iter = json.fieldNames(); iter.hasNext(); ) {
                         String n = iter.next();
-                        map.put(n, getValue(json.get(name), helper));
+                        map.put(n, MJson.getValue(json.get(name), helper));
                     }
                     attr.set(to, map);
 
@@ -112,7 +111,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
                     LinkedList<Object> list = new LinkedList<>();
                     ArrayNode array = (ArrayNode) json;
                     for (JsonNode a : array) {
-                        list.add(getValue(a, helper));
+                        list.add(MJson.getValue(a, helper));
                     }
                 } else if (aType == String[].class) {
                     try {
@@ -156,7 +155,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
         if (from instanceof Object[]) {
             // it's an array
             ArrayNode array = to.arrayNode();
-            to.put("array", array);
+            to.set("array", array);
             for (Object i : (Object[]) from) {
                 JsonNode o = pojoToJson(i, helper.incLevel());
                 array.add(o);
@@ -169,7 +168,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
 
             Collection<?> obj = (Collection<?>) from;
             ArrayNode array = to.arrayNode();
-            to.put("_collection", array);
+            to.set("_collection", array);
             for (Object o : obj) {
                 JsonNode item = pojoToJson(o, helper.incLevel());
                 array.add(item);
@@ -180,10 +179,10 @@ public class SimpleObjectTransformer extends TransformStrategy {
 
         if (from instanceof Map) {
             ObjectNode obj = to.objectNode();
-            to.put("_map", obj);
+            to.set("_map", obj);
             for (Map.Entry<String, Object> e : ((Map<String, Object>) from).entrySet()) {
                 JsonNode on = pojoToJson(e.getValue(), helper);
-                obj.put(String.valueOf(e.getKey()), on);
+                obj.set(String.valueOf(e.getKey()), on);
             }
             helper.decLevel();
             return to;
@@ -204,24 +203,24 @@ public class SimpleObjectTransformer extends TransformStrategy {
                 } else if (value instanceof Date) to.put(name, ((Date) value).getTime());
                 else if (value instanceof String[]) {
                     ArrayNode array = to.arrayNode();
-                    to.put(name, array);
+                    to.set(name, array);
                     for (String i : (String[]) value) array.add(i);
                 } else if (value instanceof Object[]) {
                     ArrayNode array = to.arrayNode();
-                    to.put(name, array);
+                    to.set(name, array);
                     for (Object i : (Object[]) value) {
                         JsonNode o = pojoToJson(i, helper.incLevel());
                         array.add(o);
                     }
                 } else if (value instanceof Map) {
                     ObjectNode obj = to.objectNode();
-                    to.put(name, obj);
+                    to.set(name, obj);
                     for (Map.Entry<String, Object> e : ((Map<String, Object>) value).entrySet())
                         obj.put(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
                 } else if (value instanceof Collection) {
                     Collection<?> obj = (Collection<?>) value;
                     ArrayNode array = to.arrayNode();
-                    to.put(name, array);
+                    to.set(name, array);
                     for (Object o : obj) {
                         JsonNode item = pojoToJson(o, helper.incLevel());
                         array.add(item);
@@ -240,7 +239,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
                                         + value.getClass().getSimpleName());
                     }
                     JsonNode sub = pojoToJson(value, helper.incLevel());
-                    to.put(attr.getName(), sub);
+                    to.set(attr.getName(), sub);
                 }
             } catch (Throwable t) {
                 helper.log(null, t);
@@ -251,22 +250,4 @@ public class SimpleObjectTransformer extends TransformStrategy {
         return to;
     }
 
-    public static Object getValue(JsonNode node, TransformHelper helper) {
-        Object out = null;
-        if (node == null) return null;
-        try {
-            if (node.isTextual()) out = node.asText();
-            else if (node.isNull()) out = null;
-            else if (node.isBigDecimal()) out = node.getDecimalValue();
-            else if (node.isBigInteger()) out = node.getBigIntegerValue();
-            else if (node.isBinary()) out = node.getBinaryValue();
-            else if (node.isBoolean()) out = node.getBooleanValue();
-            else if (node.isDouble()) out = node.getDoubleValue();
-            else if (node.isInt()) out = node.getIntValue();
-            else if (node.isLong()) out = node.getLongValue();
-            else if (node.isNumber()) out = node.getNumberValue();
-        } catch (IOException e) {
-        }
-        return out;
-    }
 }

@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.json;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MLog;

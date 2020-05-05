@@ -26,11 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Element;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.basics.consts.Identifier;
@@ -217,13 +218,13 @@ public class MPojo {
                 to.put(name, ((Date) value).getTime());
                 to.put(name + "_", MDate.toIso8601((Date) value));
             } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
-            else if (value instanceof JsonNode) to.put(name, (JsonNode) value);
+            else if (value instanceof JsonNode) to.set(name, (JsonNode) value);
             else if (value.getClass().isEnum()) {
                 to.put(name, ((Enum<?>) value).ordinal());
                 to.put(name + "_", ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 ObjectNode obj = to.objectNode();
-                to.put(name, obj);
+                to.set(name, obj);
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
                     setJsonValue(
                             obj,
@@ -236,20 +237,20 @@ public class MPojo {
                 }
             } else if (value.getClass().isArray()) {
                 ArrayNode array = to.arrayNode();
-                to.put(name, array);
+                to.set(name, array);
                 for (Object o : (Object[]) value) {
                     addJsonValue(array, o, factory, usePublic, true, level + 1);
                 }
             } else if (value instanceof Collection) {
                 ArrayNode array = to.arrayNode();
-                to.put(name, array);
+                to.set(name, array);
                 for (Object o : ((Collection<Object>) value)) {
                     addJsonValue(array, o, factory, usePublic, true, level + 1);
                 }
             } else {
                 if (deep) {
                     ObjectNode too = to.objectNode();
-                    to.put(name, too);
+                    to.set(name, too);
                     pojoToJson(value, too, factory, usePublic, level + 1);
                 } else {
                     to.put(name, String.valueOf(value));

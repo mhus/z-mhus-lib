@@ -13,7 +13,7 @@
  */
 package de.mhus.lib.core.json;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.errors.NotSupportedException;
@@ -25,7 +25,7 @@ public class JacksonTransformer extends TransformStrategy {
             throws NotSupportedException {
 
         try {
-            return MJson.getMapper().readValue(node, type);
+            return MJson.getMapper().readerFor(type).readValue(node);
         } catch (Exception e) {
             throw new NotSupportedException(e);
         }

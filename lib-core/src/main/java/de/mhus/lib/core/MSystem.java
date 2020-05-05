@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.LockInfo;
@@ -964,5 +965,86 @@ public class MSystem {
 
     public static String currentStackTrace(String firstLine) {
         return MCast.toString(firstLine,Thread.currentThread().getStackTrace());
+    }
+    
+    public static int execute(String name, File rootDir, String cmd, ExecuteControl control) throws IOException {
+        
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (rootDir != null)
+            processBuilder.directory(rootDir);
+        if (MSystem.isWindows())
+            // Windows
+            processBuilder.command("cmd.exe", "/c", cmd);
+        else
+            // Unix
+            processBuilder.command("/bin/bash", "-c", cmd);
+
+        try {
+
+            Process process = processBuilder.start();
+
+            control.stdin(new PrintWriter( new BufferedOutputStream( process.getOutputStream() ) ) );
+
+            BufferedReader outReader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            final BufferedReader errReader =
+                    new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            Thread errorWriterTask = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    String line;
+                    try {
+                        while ((line = errReader.readLine()) != null) {
+                            control.stderr(line);
+                        }
+                    } catch (Throwable t) {}
+                }
+            });
+            errorWriterTask.start();
+
+            String line;
+            while ((line = outReader.readLine()) != null) {
+                control.stdout(line);
+            }
+
+            int exitCode = process.waitFor();
+
+            errorWriterTask.interrupt();
+
+            return exitCode;
+
+        } catch (InterruptedException e) {
+            throw new IOException(e);
+        }
+    }
+
+    public static interface ExecuteControl {
+
+        void stdin(PrintWriter writer);
+
+        void stderr(String line);
+
+        void stdout(String line);
+    }
+
+    public static class DefaultExecuteControl implements ExecuteControl {
+
+        @Override
+        public void stdin(PrintWriter writer) {
+        }
+
+        @Override
+        public void stderr(String line) {
+            System.err.println(line);
+        }
+
+        @Override
+        public void stdout(String line) {
+            System.out.println(line);
+        }
+
     }
 }

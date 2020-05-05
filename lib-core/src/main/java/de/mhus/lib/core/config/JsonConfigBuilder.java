@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.util.MIterable;
@@ -57,7 +57,7 @@ public class JsonConfigBuilder extends IConfigBuilder {
             return;
         }
         
-        for (Map.Entry<String,JsonNode> itemJ : new MIterable<>(json.getFields())) {
+        for (Map.Entry<String,JsonNode> itemJ : new MIterable<>(json.fields())) {
             if (itemJ.getValue().isArray()) {
                 ConfigList array = config.createArray(itemJ.getKey());
                 for (JsonNode item2J : itemJ.getValue()) {

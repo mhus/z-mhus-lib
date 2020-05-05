@@ -15,7 +15,7 @@ package de.mhus.lib.core;
 
 import java.util.Date;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.pojo.MPojo;

@@ -291,6 +291,8 @@ public class MCfgManager {
                                 }
                             }
                         }
+                    } else {
+                        systemNode = new MConfig();
                     }
 
                     for (IConfig owner : config.getObjects()) {
@@ -306,6 +308,7 @@ public class MCfgManager {
 
             MApi.dirtyLogDebug("*** MHUS Config file not found", configFile);
             config = new MConfig(); // set empty config
+            systemNode = new MConfig();
             
         }
 

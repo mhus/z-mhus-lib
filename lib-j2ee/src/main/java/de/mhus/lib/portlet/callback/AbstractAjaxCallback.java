@@ -18,7 +18,7 @@ import java.io.IOException;
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
 
-import org.codehaus.jackson.JsonGenerator;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MNls;

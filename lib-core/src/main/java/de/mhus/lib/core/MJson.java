@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,16 +29,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.TransformHelper;
@@ -81,7 +80,7 @@ public class MJson {
     }
 
     public static JsonNode load(InputStream r) throws JsonProcessingException, IOException {
-        JsonParser parser = factory.createJsonParser(r);
+        JsonParser parser = factory.createParser(r);
         JsonNode in = mapper.readTree(parser);
         return in;
     }
@@ -92,7 +91,7 @@ public class MJson {
     }
 
     public static JsonNode load(Reader r) throws JsonProcessingException, IOException {
-        JsonParser parser = factory.createJsonParser(r);
+        JsonParser parser = factory.createParser(r);
         JsonNode in = mapper.readTree(parser);
         return in;
     }
@@ -238,24 +237,24 @@ public class MJson {
             return;
         }
         if (value instanceof JsonNode) {
-            node.put(name, (JsonNode) value);
+            node.set(name, (JsonNode) value);
             return;
         }
         if (value.getClass().isArray()) {
             ArrayNode array = node.arrayNode();
-            node.put(name, array);
+            node.set(name, array);
             setValues(array, (Object[]) value, level);
             return;
         }
         if (value instanceof Collection<?>) {
             ArrayNode array = node.arrayNode();
-            node.put(name, array);
+            node.set(name, array);
             setValues(array, (Collection<?>) value, level);
             return;
         }
         if (value instanceof Map<?, ?>) {
             ObjectNode obj = node.objectNode();
-            node.put(name, obj);
+            node.set(name, obj);
             setValues(obj, (Map<?, ?>) value);
             return;
         }
@@ -348,33 +347,71 @@ public class MJson {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static Object getValue(JsonNode node, TransformHelper helper) {
         Object out = null;
         if (node == null) return null;
         try {
-            if (node.isNull()) out = null;
-            else if (node.isTextual()) out = node.getValueAsText();
-            else if (node.isBigDecimal()) out = node.getDecimalValue();
-            else if (node.isBigInteger()) out = node.getBigIntegerValue();
-            else if (node.isBinary()) out = node.getBinaryValue();
-            else if (node.isBoolean()) out = node.getBooleanValue();
-            else if (node.isDouble()) out = node.getDoubleValue();
-            else if (node.isInt()) out = node.getIntValue();
-            else if (node.isLong()) out = node.getLongValue();
-            else if (node.isNumber()) out = node.getNumberValue();
-            else if (node.isArray()) {
+            switch (node.getNodeType()) {
+            case ARRAY:
                 LinkedList<Object> l = new LinkedList<>();
                 for (JsonNode n : node) {
                     l.add(getValue(n, helper));
                 }
                 out = l;
-            } else if (node.isObject()) {
+                break;
+            case BINARY:
+                out = node.binaryValue();
+                break;
+            case BOOLEAN:
+                out = node.booleanValue();
+                break;
+            case MISSING:
+                out = node.asText();
+                break;
+            case NULL:
+                out = null;
+                break;
+            case NUMBER:
+                switch (node.numberType()) {
+                case BIG_DECIMAL:
+                    out = node.numberValue();
+                    break;
+                case BIG_INTEGER:
+                    out = node.numberValue();
+                    break;
+                case DOUBLE:
+                    out = node.numberValue().doubleValue();
+                    break;
+                case FLOAT:
+                    out = node.numberValue().floatValue();
+                    break;
+                case INT:
+                    out = node.numberValue().intValue();
+                    break;
+                case LONG:
+                    out = node.numberValue().longValue();
+                    break;
+                default:
+                    out = node.numberValue();
+                    break;
+                }
+                break;
+            case OBJECT:
                 HashMap<String, Object> m = new HashMap<>();
-                for (Iterator<String> i = node.getFieldNames(); i.hasNext(); ) {
+                for (Iterator<String> i = node.fieldNames(); i.hasNext(); ) {
                     String name = i.next();
                     m.put(name, getValue(node.get(name), helper));
                 }
+                break;
+            case POJO:
+                out = node.asText();
+                break;
+            case STRING:
+                out = node.textValue();
+                break;
+            default:
+                break;
+            
             }
         } catch (IOException e) {
         }
@@ -393,35 +430,11 @@ public class MJson {
         if (node == null) return def;
         if (node.isTextual()) {
             String out = null;
-            out = node.getTextValue();
+            out = node.textValue();
             if (out == null) out = def;
             return out;
         }
-        if (node.isBoolean()) {
-            boolean out = node.getBooleanValue();
-            return MCast.toString(out);
-        }
-        if (node.isInt()) {
-            int out = node.getIntValue();
-            return MCast.toString(out);
-        }
-        if (node.isDouble()) {
-            double out = node.getDoubleValue();
-            return MCast.toString(out);
-        }
-        if (node.isLong()) {
-            long out = node.getLongValue();
-            return MCast.toString(out);
-        }
-        if (node.isBigInteger()) {
-            BigInteger out = node.getBigIntegerValue();
-            return MCast.toString(out);
-        }
-        if (node.isBigDecimal()) {
-            BigDecimal out = node.getDecimalValue();
-            return MCast.toString(out);
-        }
-        return node.toString();
+        return node.asText();
     }
 
     /*

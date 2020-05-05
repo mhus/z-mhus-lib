@@ -52,12 +52,10 @@
   </build>
   
   <dependencies>
-    <dependency>
-    	<groupId>org.codehaus.jackson</groupId>
-    	<artifactId>jackson-mapper-asl</artifactId>
-    	<type>jar</type>
-    	<scope>compile</scope>
-    </dependency>
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	</dependency>
   	<dependency>
   		<groupId>de.mhus.lib</groupId>
   		<artifactId>lib-annotations</artifactId>
