@@ -59,7 +59,7 @@ public class CallContext implements MNlsProvider {
      *
      * @param callback a {@link de.mhus.lib.portlet.callback.AbstractAjaxCallback} object.
      * @param request a {@link javax.portlet.ResourceRequest} object.
-     * @param response a {@link org.codehaus.jackson.JsonGenerator} object.
+     * @param response a JsonGenerator object.
      */
     public CallContext(
             AbstractAjaxCallback callback, ResourceRequest request, JsonGenerator response) {
@@ -206,7 +206,7 @@ public class CallContext implements MNlsProvider {
     /**
      * addResult.
      *
-     * @return a {@link org.codehaus.jackson.node.ObjectNode} object.
+     * @return a ObjectNode object.
      */
     public ObjectNode addResult() {
         return result.addObject();
@@ -258,7 +258,7 @@ public class CallContext implements MNlsProvider {
     /**
      * getData.
      *
-     * @return a {@link org.codehaus.jackson.JsonNode} object.
+     * @return a JsonNode object.
      * @throws de.mhus.lib.errors.MException if any.
      */
     public JsonNode getData() throws MException {
@@ -269,7 +269,7 @@ public class CallContext implements MNlsProvider {
      * getData.
      *
      * @param attributeName a {@link java.lang.String} object.
-     * @return a {@link org.codehaus.jackson.JsonNode} object.
+     * @return a JsonNode object.
      * @throws de.mhus.lib.errors.MException if any.
      */
     public JsonNode getData(String attributeName) throws MException {
@@ -279,7 +279,7 @@ public class CallContext implements MNlsProvider {
             try {
                 JsonFactory f = new JsonFactory();
                 ObjectMapper mapper = new ObjectMapper();
-                JsonParser parser = f.createJsonParser(dataStr);
+                JsonParser parser = f.createParser(dataStr);
                 in = mapper.readTree(parser);
             } catch (Throwable t) {
             }
