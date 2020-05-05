@@ -30,21 +30,25 @@ public class PropertiesDataSource implements DataSource {
 
     @Override
     public boolean getBoolean(UiComponent component, String name, boolean def) {
+        if (component == null) return def;
         return properties.getBoolean(toName(component.getName(), name), def);
     }
 
     @Override
     public int getInt(UiComponent component, String name, int def) {
+        if (component == null) return def;
         return properties.getInt(toName(component.getName(), name), def);
     }
 
     @Override
     public String getString(UiComponent component, String name, String def) {
+        if (component == null) return def;
         return properties.getString(toName(component.getName(), name), def);
     }
 
     @Override
     public Object getObject(UiComponent component, String name, Object def) {
+        if (component == null) return def;
         Object val = properties.getProperty(toName(component.getName(), name));
         if (val == null) return def;
         return val;
@@ -59,6 +63,7 @@ public class PropertiesDataSource implements DataSource {
 
     @Override
     public void setObject(UiComponent component, String name, Object value) {
+        if (component == null) return;
         properties.put(toName(component.getName(), name), value);
     }
 

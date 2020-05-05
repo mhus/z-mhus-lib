@@ -49,6 +49,7 @@ public class DefComponent extends MConfig implements IDefDefinition {
     @Override
     public void inject(DefComponent parent) throws MException {
         if (parent != null) {
+            parent.getArrayOrCreate(NAMELESS_VALUE).add(this);
             parent.setObject(tag, this);
         }
         for (IDefDefinition d : definitions) {

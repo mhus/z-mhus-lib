@@ -21,7 +21,7 @@ public abstract class UiComponent {
 
     public static final String FULL_SIZE = "fullSize";
     public static final String FULL_SIZE_DEFAULT = "fullSizeDefault";
-    private static final String WIZARD = null;
+    private static final String WIZARD = "wizard";
 
     private MForm form;
     private IConfig config;
