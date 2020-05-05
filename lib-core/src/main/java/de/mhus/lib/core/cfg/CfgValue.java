@@ -30,8 +30,8 @@ public abstract class CfgValue<T> {
     private String calling;
 
     public CfgValue(Object owner, String path, T def) {
-        if (owner instanceof Class) this.owner = ((Class<?>) owner).getCanonicalName().toLowerCase();
-        else this.owner = String.valueOf(owner).toLowerCase();
+        if (owner instanceof Class) this.owner = ((Class<?>) owner).getCanonicalName();
+        else this.owner = String.valueOf(owner);
         this.path = path;
         this.def = def;
         MApi.getCfgUpdater().register(this);

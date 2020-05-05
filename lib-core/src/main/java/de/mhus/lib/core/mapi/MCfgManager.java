@@ -324,7 +324,7 @@ public class MCfgManager {
         private IConfig config;
 
         public PartialConfigProvider(IConfig config) {
-            super(config.getName().toLowerCase());
+            super(config.getName());
             this.config = config;
         }
 

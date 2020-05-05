@@ -8,7 +8,7 @@ public class MDirtyTricks {
 
     public static boolean updateCfgValue(Class<?> owner, String path, String value) {
         for (CfgValue<?> cfg : MApi.getCfgUpdater().getList()) {
-            if (cfg.getOwner().equals(owner.getCanonicalName().toLowerCase())
+            if (cfg.getOwner().equals(owner.getCanonicalName())
                     && cfg.getPath().equals(path)) {
                 cfg.setValue(value);
                 return true;
