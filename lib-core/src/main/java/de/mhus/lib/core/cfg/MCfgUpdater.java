@@ -63,8 +63,13 @@ public class MCfgUpdater {
     public void doUpdate(String owner) {
         LinkedList<CfgValue> list = new LinkedList<>();
         synchronized (registry) {
-            for (WeakHashMap<CfgValue, String> pathContainer : getOwnerContainers(owner).values())
-                list.addAll(pathContainer.keySet());
+            if (owner == null) {
+                for (HashMap<String, WeakHashMap<CfgValue, String>> cfgs : registry.values() )
+                    for (WeakHashMap<CfgValue, String> cfg: cfgs.values())
+                        list.addAll(cfg.keySet());
+            } else
+                for (WeakHashMap<CfgValue, String> pathContainer : getOwnerContainers(owner).values())
+                    list.addAll(pathContainer.keySet());
         }
         for (CfgValue<?> item : list)
             if (owner == null

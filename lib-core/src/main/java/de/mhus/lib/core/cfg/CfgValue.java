@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 
 public abstract class CfgValue<T> {
@@ -134,4 +135,18 @@ public abstract class CfgValue<T> {
     public String getCalling() {
         return calling;
     }
+
+    protected IConfig getNode() {
+        int p = getPath().indexOf('@');
+        if (p < 0) return MApi.getCfg(getOwner());
+        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
+        return node;
+    }
+
+    protected String getParameterName() {
+        int p = getPath().indexOf('@');
+        if (p < 0) return getPath();
+        return getPath().substring(p + 1);
+    }
+
 }

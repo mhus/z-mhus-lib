@@ -13,7 +13,6 @@
  */
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.config.IConfig;
 
 public class CfgString extends CfgValue<String> {
@@ -24,11 +23,9 @@ public class CfgString extends CfgValue<String> {
 
     @Override
     protected String loadValue() {
-        int p = getPath().indexOf('@');
-        if (p < 0) return MApi.getCfg(getOwner()).getString(getPath(), getDefault());
-        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
+        IConfig node = getNode();
         if (node == null) return getDefault();
-        return node.getString(getPath().substring(p + 1), getDefault());
+        return node.getString(getParameterName(), getDefault());
     }
 
     @Override
