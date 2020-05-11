@@ -11,21 +11,13 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.base.service;
+package de.mhus.lib.core.service;
 
-import de.mhus.lib.core.M;
+import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.util.DefaultTimerFactory;
 
-public class IdentUtil {
+@DefaultImplementation(DefaultTimerFactory.class)
+public interface TimerFactory {
 
-    private static String ident;
-
-    public static String getServerIdent() {
-        if (ident == null) ident = M.l(ServerIdent.class).getIdent();
-        return ident;
-    }
-
-    public static String getServiceIdent() {
-        if (ident == null) ident = M.l(ServerIdent.class).getService();
-        return ident;
-    }
+    public TimerIfc getTimer();
 }

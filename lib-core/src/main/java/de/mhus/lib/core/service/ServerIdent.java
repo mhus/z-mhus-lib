@@ -11,7 +11,7 @@
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.base.service;
+package de.mhus.lib.core.service;
 
 import java.io.File;
 import java.io.IOException;

@@ -19,7 +19,7 @@ import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.base.service.HolidayProviderIfc;
+import de.mhus.lib.core.service.HolidayProviderIfc;
 
 /**
  * Schedule tasks like Crontab (man -S 5 crontab). Next scheduling is done after execution of a

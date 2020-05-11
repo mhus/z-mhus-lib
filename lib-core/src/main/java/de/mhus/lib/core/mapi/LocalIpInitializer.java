@@ -3,9 +3,9 @@ package de.mhus.lib.core.mapi;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import de.mhus.lib.core.base.service.ServerIdent;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.service.ServerIdent;
 
 public class LocalIpInitializer implements CfgInitiator {
 

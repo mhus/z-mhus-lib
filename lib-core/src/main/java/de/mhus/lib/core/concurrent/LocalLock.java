@@ -2,7 +2,7 @@ package de.mhus.lib.core.concurrent;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.base.service.LockManager;
+import de.mhus.lib.core.service.LockManager;
 
 public class LocalLock implements Lock {
 

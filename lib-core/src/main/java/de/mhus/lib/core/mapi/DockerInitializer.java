@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.util.List;
 
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.base.service.ServerIdent;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.service.ServerIdent;
 
 public class DockerInitializer implements CfgInitiator {
 

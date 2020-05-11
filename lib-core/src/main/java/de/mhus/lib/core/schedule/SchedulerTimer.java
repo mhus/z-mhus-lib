@@ -20,7 +20,7 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.base.service.TimerIfc;
+import de.mhus.lib.core.service.TimerIfc;
 
 public class SchedulerTimer extends Scheduler implements TimerIfc {
 

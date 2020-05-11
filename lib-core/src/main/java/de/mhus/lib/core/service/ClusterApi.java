@@ -1,4 +1,4 @@
-package de.mhus.lib.core.base.service;
+package de.mhus.lib.core.service;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
