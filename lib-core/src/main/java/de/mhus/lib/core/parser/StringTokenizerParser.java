@@ -29,7 +29,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
     protected String whiteSpace = " \r\t";
     protected String encapsulateCharacters = "\\";
     protected String lineSeparator = "\n";
-    protected String startComment = "#";
+    private String startComment = "#";
     protected char enclosure;
     protected char encapsulated;
     protected StringBuilder buffer;
@@ -120,7 +120,7 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
     }
 
     protected boolean isStartComment() {
-        return startComment.indexOf(current) >= 0;
+        return startComment != null && startComment.indexOf(current) >= 0;
     }
 
     protected void foundBreak(int i) {
@@ -246,5 +246,13 @@ public class StringTokenizerParser implements Iterable<String>, Iterator<String>
 
     public boolean isEnclosuredToken() {
         return wasEnclosured;
+    }
+
+    public String getStartComment() {
+        return startComment;
+    }
+
+    public void setStartComment(String startComment) {
+        this.startComment = startComment;
     }
 }

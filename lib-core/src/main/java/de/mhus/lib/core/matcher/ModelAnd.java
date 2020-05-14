@@ -31,7 +31,7 @@ public class ModelAnd extends ModelComposit {
     }
 
     @Override
-    protected boolean matches(Map<String, ?> map) {
+    protected boolean matches(Map<String, Object> map) {
         for (ModelPart part : components) {
             if (!part.m(map)) return false;
         }

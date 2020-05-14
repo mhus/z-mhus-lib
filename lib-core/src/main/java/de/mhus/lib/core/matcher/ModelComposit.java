@@ -31,7 +31,7 @@ public abstract class ModelComposit extends ModelPart {
     }
 
     @Override
-    protected abstract boolean matches(Map<String, ?> map);
+    protected abstract boolean matches(Map<String, Object> map);
 
     @Override
     public String toString() {

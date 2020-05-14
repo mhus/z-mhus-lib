@@ -15,34 +15,40 @@ package de.mhus.lib.core.matcher;
 
 import java.util.Map;
 
-public class NullPattern extends ModelPattern {
+import de.mhus.lib.core.util.Version;
+import de.mhus.lib.core.util.VersionRange;
+
+public class ModelRange extends ModelPattern {
+
+    private VersionRange pattern;
 
     @Override
-    public void setPattern(String pattern) {}
+    public boolean matches(ModelPart model, Map<String, ?> map, String str) {
+        setCondition(CONDITION.NONE);
+        Version v = new Version(str);
+        return  pattern.includes(v);
+    }
+
+    @Override
+    public void setPattern(String pattern) {
+        this.pattern = new VersionRange(pattern);
+    }
 
     @Override
     public String getPattern() {
-        return "null";
+        return pattern.toString();
     }
 
     @Override
     public String getPatternStr() {
-        return "null";
+        return "'" + pattern.toString() + "'";
     }
 
     @Override
     public String getPatternTypeName() {
-        return "null";
+        return "range";
     }
 
     @Override
-    protected boolean matches(ModelPart model, Map<String, ?> map, String str) {
-        return str == null;
-    }
-
-    @Override
-    protected boolean matches(Map<String, Object> map) {
-        Object val = map.get(getParamName());
-        return val == null;
-    }
+    public void setCondition(CONDITION cond) {}
 }

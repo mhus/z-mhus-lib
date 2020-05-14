@@ -36,10 +36,11 @@ public class Condition {
     public Condition(String condition) throws MException {
         TechnicalStringParser tokenizer = new TechnicalStringParser(condition);
         tokenizer.setBreakableCharacters("()!");
+        tokenizer.setStartComment(null);
         parse(tokenizer);
     }
 
-    public boolean matches(Map<String, ?> map) {
+    public boolean matches(Map<String, Object> map) {
         if (map == null) return false;
         return root.m(map);
     }
@@ -146,6 +147,10 @@ public class Condition {
                         if (pattern != null) throw new SyntaxError("type before type");
                         pattern = new ModelVariable();
                         break;
+                    case "range":
+                        if (pattern != null) throw new SyntaxError("type before type");
+                        pattern = new ModelRange();
+                        break;
                     case "is":
                     case "==":
                         cond = CONDITION.EQ;
@@ -188,23 +193,27 @@ public class Condition {
 
                 if (context.current == null && context.first != null)
                     throw new SyntaxError("pattern after pattern without operation");
-                if (param == null) param = context.current.getParamName();
-                if (param == null) throw new SyntaxError("pattern without parameter name");
-                if (pattern == null) {
-                    if (part.startsWith("${")) pattern = new ModelVariable();
-                    else if (MValidator.isNumber(part)) pattern = new ModelNumber();
-                    else pattern = new ModelRegex();
+                if (context.current == null && param == null) {
+                    throw new SyntaxError("no left parameter defined");
+                } else {
+                    if (param == null) param = context.current.getParamName();
+                    if (param == null) throw new SyntaxError("pattern without parameter name");
+                    if (pattern == null) {
+                        if (part.startsWith("${")) pattern = new ModelVariable();
+                        else if (MValidator.isNumber(part)) pattern = new ModelNumber();
+                        else pattern = new ModelRegex();
+                    }
+                    pattern.setCondition(cond);
+                    pattern.setParamName(param);
+                    pattern.setPattern(part);
+                    pattern.setNot(context.not);
+                    if (context.current == null) context.first = pattern;
+                    else context.current.add(pattern);
+                    context.not = false;
+                    pattern = null;
+                    param = null;
+                    cond = CONDITION.EQ;
                 }
-                pattern.setCondition(cond);
-                pattern.setParamName(param);
-                pattern.setPattern(part);
-                pattern.setNot(context.not);
-                if (context.current == null) context.first = pattern;
-                else context.current.add(pattern);
-                context.not = false;
-                pattern = null;
-                param = null;
-                cond = CONDITION.EQ;
             }
         }
 

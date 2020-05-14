@@ -96,13 +96,19 @@ public class StringCompiler implements Parser {
     }
 
     protected StringPart createAttributePart(String part) {
+        if (part.startsWith("#"))
+            return createExtraAttributePart(part);
+        return createDefaultAttributePart(part);
+    }
+
+    public static StringPart createExtraAttributePart(String part) {
         if (part.startsWith("#env.")) return new EnvironmentPart(part);
         if (part.startsWith("#system.")) return new SystemPart(part);
         if (part.equals("#hostname")) return new StaticPart(MSystem.getHostname());
         if (part.equals("#username")) return new StaticPart(MSystem.getUsername());
         if (part.equals("#userhome"))
             return new StaticPart(MSystem.getUserHome().getAbsolutePath());
-        return createDefaultAttributePart(part);
+        return new StaticPart(part.substring(1));
     }
 
     protected StringPart createDefaultAttributePart(String part) {
@@ -133,7 +139,7 @@ public class StringCompiler implements Parser {
         }
     }
 
-    public class EnvironmentPart implements StringPart {
+    public static class EnvironmentPart implements StringPart {
 
         private String name;
         private String def;
@@ -166,7 +172,7 @@ public class StringCompiler implements Parser {
         }
     }
 
-    public class StaticPart implements StringPart {
+    public static class StaticPart implements StringPart {
 
         private String value;
 
@@ -186,7 +192,7 @@ public class StringCompiler implements Parser {
         }
     }
 
-    public class SystemPart implements StringPart {
+    public static class SystemPart implements StringPart {
 
         private String name;
         private String def;

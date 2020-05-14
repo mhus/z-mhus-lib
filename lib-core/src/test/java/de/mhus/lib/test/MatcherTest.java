@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.core.matcher.Condition;
 import de.mhus.lib.core.matcher.Matcher;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.SyntaxError;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MatcherTest {
@@ -275,6 +277,17 @@ public class MatcherTest {
             Condition cond = new Condition("${param5} == ${param6}");
             System.out.println(cond);
             assertEquals(true, cond.matches(val));
+        }
+        {
+            Condition cond = new Condition("${param5} == 2");
+            System.out.println(cond);
+            assertEquals(false, cond.matches(val));
+        }
+        try {
+            new Condition("1 == 2");
+            fail();
+        } catch (SyntaxError e) {
+            System.out.println(e.getMessage());
         }
     }
 }

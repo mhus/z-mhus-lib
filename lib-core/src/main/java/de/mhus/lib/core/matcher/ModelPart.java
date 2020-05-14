@@ -15,10 +15,16 @@ package de.mhus.lib.core.matcher;
 
 import java.util.Map;
 
+import de.mhus.lib.core.parser.StringCompiler;
+import de.mhus.lib.core.parser.StringPart;
+import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.MRuntimeException;
+
 public abstract class ModelPart {
 
     private boolean not;
     private String param;
+    private StringPart extra;
 
     public boolean isNot() {
         return not;
@@ -33,21 +39,33 @@ public abstract class ModelPart {
         else return matches(this, null, str);
     }
 
-    public boolean m(Map<String, ?> map) {
+    public boolean m(Map<String, Object> map) {
         if (not) return !matches(map);
         else return matches(map);
     }
 
     public void setParamName(String param) {
         this.param = param;
+        if (param != null && param.startsWith("#"))
+            extra = StringCompiler.createExtraAttributePart(param);
     }
 
     public String getParamName() {
         return param;
     }
 
-    protected boolean matches(Map<String, ?> map) {
-        Object val = map.get(param);
+    protected boolean matches(Map<String, Object> map) {
+        Object val = null;
+        if (extra != null) {
+            try {
+                StringBuilder out = new StringBuilder();
+                extra.execute(out, map);
+                val = out.toString();
+            } catch (MException e) {
+                throw new MRuntimeException(param,e);
+            }
+        } else
+            val = map.get(param);
         if (val != null) return matches(this, map, String.valueOf(val));
         return false;
     }
