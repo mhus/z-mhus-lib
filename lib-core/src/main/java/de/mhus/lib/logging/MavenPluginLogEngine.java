@@ -1,53 +1,52 @@
-package de.mhus.mvn.manual;
+package de.mhus.lib.logging;
 
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.logging.Log;
 
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
 public class MavenPluginLogEngine extends LogEngine {
 
-	private Log log;
+	private AbstractMojo owner;
 
 	public MavenPluginLogEngine(AbstractMojo owner) {
 		super(owner.getClass().getName());
-		this.log = owner.getLog();
+		this.owner = owner;
 	}
 
 	@Override
 	public boolean isDebugEnabled() {
-		return log.isDebugEnabled();
+		return owner.getLog().isDebugEnabled();
 	}
 
 	@Override
 	public boolean isErrorEnabled() {
-		return log.isErrorEnabled();
+		return owner.getLog().isErrorEnabled();
 	}
 
 	@Override
 	public boolean isFatalEnabled() {
-		return log.isErrorEnabled();
+		return owner.getLog().isErrorEnabled();
 	}
 
 	@Override
 	public boolean isInfoEnabled() {
-		return log.isInfoEnabled();
+		return owner.getLog().isInfoEnabled();
 	}
 
 	@Override
 	public boolean isTraceEnabled() {
-		return log.isDebugEnabled();
+		return owner.getLog().isDebugEnabled();
 	}
 
 	@Override
 	public boolean isWarnEnabled() {
-		return log.isWarnEnabled();
+		return owner.getLog().isWarnEnabled();
 	}
 
 	@Override
 	public void trace(Object message) {
-		log.debug(String.valueOf(message));
+		owner.getLog().debug(String.valueOf(message));
 	}
 
 	@Override
@@ -55,12 +54,12 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			trace(message);
 		else
-			log.debug(String.valueOf(message), t);
+			owner.getLog().debug(String.valueOf(message), t);
 	}
 
 	@Override
 	public void debug(Object message) {
-		log.debug(String.valueOf(message));
+		owner.getLog().debug(String.valueOf(message));
 	}
 
 	@Override
@@ -68,12 +67,12 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			debug(message);
 		else
-			log.debug(String.valueOf(message), t);
+			owner.getLog().debug(String.valueOf(message), t);
 	}
 
 	@Override
 	public void info(Object message) {
-		log.info(String.valueOf(message));
+		owner.getLog().info(String.valueOf(message));
 	}
 
 	@Override
@@ -81,12 +80,12 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			info(message);
 		else
-			log.info(String.valueOf(message), t);
+			owner.getLog().info(String.valueOf(message), t);
 	}
 
 	@Override
 	public void warn(Object message) {
-		log.warn(String.valueOf(message));
+		owner.getLog().warn(String.valueOf(message));
 	}
 
 	@Override
@@ -94,12 +93,12 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			warn(message);
 		else
-			log.warn(String.valueOf(message), t);
+			owner.getLog().warn(String.valueOf(message), t);
 	}
 
 	@Override
 	public void error(Object message) {
-		log.error(String.valueOf(message));
+		owner.getLog().error(String.valueOf(message));
 	}
 
 	@Override
@@ -107,12 +106,12 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			error(message);
 		else
-			log.error(String.valueOf(message), t);
+			owner.getLog().error(String.valueOf(message), t);
 	}
 
 	@Override
 	public void fatal(Object message) {
-		log.error(String.valueOf(message));
+		owner.getLog().error(String.valueOf(message));
 	}
 
 	@Override
@@ -120,7 +119,7 @@ public class MavenPluginLogEngine extends LogEngine {
 		if (t == null)
 			fatal(message);
 		else
-			log.error(String.valueOf(message), t);
+			owner.getLog().error(String.valueOf(message), t);
 	}
 
 	@Override
