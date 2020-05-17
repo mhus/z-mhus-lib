@@ -13,6 +13,11 @@ public class MavenPluginLogEngine extends LogEngine {
 		super(owner.getClass().getName());
 		this.owner = owner;
 	}
+	
+	public MavenPluginLogEngine(AbstractMojo owner, String name) {
+		super(name);
+		this.owner = owner;
+	}
 
 	@Override
 	public boolean isDebugEnabled() {
