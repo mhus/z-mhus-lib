@@ -29,11 +29,10 @@ import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.mapi.MCfgManager;
-import de.mhus.lib.core.util.IBase;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
-public class MRemoteManager extends MObject implements IBase {
+public class MRemoteManager extends MObject {
 
     private static CfgBoolean jmxEnabled = new CfgBoolean(MRemoteManager.class, "enabled", false);
     private MBeanServer mbs;

@@ -17,10 +17,9 @@ import java.util.Vector;
 
 import de.mhus.lib.core.MThreadPool.ThreadContainer;
 import de.mhus.lib.core.cfg.CfgLong;
-import de.mhus.lib.core.util.IBase;
 import de.mhus.lib.core.util.MObject;
 
-public class MThreadPoolManager extends MObject implements IBase {
+public class MThreadPoolManager extends MObject {
 
     public static CfgLong CFG_SLEEP_TIME =
             new CfgLong(MThreadPoolManager.class, "sleepTime", 1000 * 60 * 10);

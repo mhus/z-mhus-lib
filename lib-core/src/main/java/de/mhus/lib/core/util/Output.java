@@ -16,7 +16,7 @@ package de.mhus.lib.core.util;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-public class Output extends PrintStream implements IBase {
+public class Output extends PrintStream {
 
     public Output() throws FileNotFoundException {
         super(System.out);

@@ -23,11 +23,10 @@ import java.util.LinkedList;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.basics.Adaptable;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.util.IBase;
 import de.mhus.lib.errors.NotSupportedException;
 
 @DefaultImplementation(SimpleConsole.class)
-public abstract class Console extends PrintStream implements IBase, Adaptable {
+public abstract class Console extends PrintStream implements Adaptable {
 
     // https://en.wikipedia.org/wiki/ANSI_escape_code
     public enum COLOR {

@@ -20,10 +20,9 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.mapi.MCfgManager;
-import de.mhus.lib.core.util.IBase;
 
 @DefaultImplementation(ConsoleFactory.class)
-public abstract class LogFactory implements IBase {
+public abstract class LogFactory {
 
     WeakHashMap<String, LogEngine> buffer = new WeakHashMap<String, LogEngine>();
     protected LEVEL level = LEVEL.INFO;

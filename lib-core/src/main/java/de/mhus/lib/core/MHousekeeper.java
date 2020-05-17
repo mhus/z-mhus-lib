@@ -15,10 +15,9 @@ package de.mhus.lib.core;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.mapi.DefaultHousekeeper;
-import de.mhus.lib.core.util.IBase;
 
 @DefaultImplementation(DefaultHousekeeper.class)
-public abstract interface MHousekeeper extends IBase {
+public abstract interface MHousekeeper {
 
     void register(MHousekeeperTask task, long sleep);
 }
