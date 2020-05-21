@@ -2177,4 +2177,24 @@ public class MString {
         }
         return String.valueOf(c);
     }
+
+    /**
+     * Return true if the character is a-z or A-Z
+     * 
+     * @param c
+     * @return true if alphabetical
+     */
+	public static boolean isAlphabeticalAscii(char c) {
+		return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+	}
+	/**
+	 * Return true if c is between 0-9
+	 * 
+	 * @param c
+	 * @return True if digit
+	 */
+	public static boolean isDigit(char c) {
+		return c >= '0' && c <= '9';
+	}
+	
 }

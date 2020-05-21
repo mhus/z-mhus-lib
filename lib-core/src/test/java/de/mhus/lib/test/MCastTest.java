@@ -201,6 +201,12 @@ public class MCastTest {
         System.out.println(MDate.toIso8601(date));
         assertTrue(MDate.toIso8601(date).equals("2000-01-01T00:10:00"));
 
+        System.out.print("22: ");
+        date = MCast.toDate("1. Januar 2000 12:10", null);
+        assertNotNull(date);
+        System.out.println(MDate.toIso8601(date));
+        assertTrue(MDate.toIso8601(date).equals("2000-01-01T12:10:00"));
+        
         System.out.println();
 
         TimeZone.setDefault(null);
