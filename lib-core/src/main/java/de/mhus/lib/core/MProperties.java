@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.SetCast;
@@ -509,26 +510,50 @@ public class MProperties extends AbstractProperties implements Externalizable {
         return ret;
     }
 
+    public boolean save(File file, boolean addDate) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
+        boolean ret = save(fos, addDate);
+        fos.close();
+        return ret;
+    }
+    
     public String saveToString() {
         StringWriter out = new StringWriter();
         try {
-            store(new BufferedWriter(out), true);
+            store(new BufferedWriter(out), true, true);
         } catch (IOException e) {
             log().e(e);
         }
         return out.toString();
     }
 
-    public boolean save(OutputStream out) throws IOException {
-        store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)), true);
+    public String saveToString(boolean addDate) {
+        StringWriter out = new StringWriter();
+        try {
+            store(new BufferedWriter(out), true, addDate);
+        } catch (IOException e) {
+            log().e(e);
+        }
+        return out.toString();
+    }
+    
+    public boolean save(OutputStream out, boolean addDate) throws IOException {
+        store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)), true, addDate);
         return true;
     }
 
-    private void store(BufferedWriter bw, boolean escUnicode) throws IOException {
-        bw.write("#" + new Date().toString());
-        bw.newLine();
+    public boolean save(OutputStream out) throws IOException {
+        store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)), true, true);
+        return true;
+    }
+    
+    private void store(BufferedWriter bw, boolean escUnicode, boolean addDate) throws IOException {
+    	if (addDate) {
+	        bw.write("#" + new Date().toString());
+	        bw.newLine();
+    	}
         synchronized (this) {
-            for (String key : keys()) {
+            for (String key : sortedKeys()) {
                 String val = (String) getString(key, "");
                 key = saveConvert(key, true, escUnicode);
                 /* No need to escape embedded and trailing spaces for value, hence
@@ -542,7 +567,11 @@ public class MProperties extends AbstractProperties implements Externalizable {
         bw.flush();
     }
 
-    private String saveConvert(String value, boolean escapeSpace, boolean escapeUnicode) {
+    public Set<String> sortedKeys() {
+        return new TreeSet<String>(new SetCast<Object, String>(properties.keySet()));
+    }
+
+	private String saveConvert(String value, boolean escapeSpace, boolean escapeUnicode) {
         int len = value.length();
         int bufLen = len * 2;
         if (bufLen < 0) bufLen = Integer.MAX_VALUE;
