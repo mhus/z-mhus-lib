@@ -9,9 +9,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -42,10 +43,15 @@ public class MYaml {
         return yaml;
     }
 
-    public static YElement loadFromString(String content) {
+    @SuppressWarnings("rawtypes")
+	public static YElement loadFromString(String content) {
         getYaml();
-        YElement docE = new YMap(yaml.load(content));
-        return docE;
+        Object obj = yaml.load(content);
+        if (obj instanceof Map)
+        	return new YMap((Map)obj);
+        if (obj instanceof List)
+        	return new YList((List)obj);
+        return new YElement(obj);
     }
     
     public static YMap loadMapFromString(String content) {
