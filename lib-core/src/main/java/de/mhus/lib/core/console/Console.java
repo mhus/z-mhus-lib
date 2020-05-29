@@ -83,10 +83,8 @@ public abstract class Console extends PrintStream implements Adaptable {
         return console;
     }
 
-    protected LinkedList<String> history = new LinkedList<String>();
-
     public String readLine() {
-        return readLine(history);
+        return readLine(null);
     }
 
     public abstract String readLine(LinkedList<String> history);

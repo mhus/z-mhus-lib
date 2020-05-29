@@ -126,6 +126,9 @@ public class ANSIConsole extends Console {
     @Override
     public String readLine(LinkedList<String> history) {
         try {
+        	reader.getHistory().purge();
+        	if (history != null)
+        		history.forEach(i -> reader.getHistory().add(i));
             return reader.readLine();
         } catch (Exception e) {
             MLogUtil.log().t(e);
