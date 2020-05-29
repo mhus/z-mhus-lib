@@ -47,7 +47,9 @@ public class SimpleConsole extends Console {
     }
 
     @Override
-    public String readLine(LinkedList<String> history) {
+    public String readLine(String prompt, LinkedList<String> history) {
+    	if (prompt != null)
+    		print(prompt);
         return reader.readLine();
         //		return System.console().readLine();
     }

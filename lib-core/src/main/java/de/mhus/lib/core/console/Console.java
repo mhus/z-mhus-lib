@@ -84,10 +84,14 @@ public abstract class Console extends PrintStream implements Adaptable {
     }
 
     public String readLine() {
-        return readLine(null);
+        return readLine(null, null);
     }
 
-    public abstract String readLine(LinkedList<String> history);
+    public String readLine(LinkedList<String> history) {
+    	return readLine(null,history);
+    }
+    
+	public abstract String readLine(String prompt, LinkedList<String> history);
 
     /**
      * Returns the next character from input stream of the console. In some cases check for ALT key
@@ -247,4 +251,5 @@ public abstract class Console extends PrintStream implements Adaptable {
             }
         }
     }
+	
 }
