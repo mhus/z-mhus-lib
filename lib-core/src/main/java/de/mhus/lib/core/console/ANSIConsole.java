@@ -23,6 +23,7 @@ import org.jline.reader.impl.LineReaderImpl;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.MLogUtil;
 
 // http://ascii-table.com/ansi-escape-sequences.php
@@ -129,7 +130,12 @@ public class ANSIConsole extends Console {
         	reader.getHistory().purge();
         	if (history != null)
         		history.forEach(i -> reader.getHistory().add(i));
-            return reader.readLine();
+            String ret = reader.readLine();
+            if (history != null && MString.isSetTrim(ret) && !ret.startsWith(" ")) {
+            	if (history.size() == 0 || !history.getLast().equals(ret))
+            		history.add(ret);
+            }
+            return ret;
         } catch (Exception e) {
             MLogUtil.log().t(e);
         }
