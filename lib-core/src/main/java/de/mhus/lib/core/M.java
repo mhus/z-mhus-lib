@@ -18,6 +18,8 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.logging.ITracer;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.pojo.MPojo;
 
 /**
@@ -131,5 +133,29 @@ public class M {
      */
     public static String get(JsonNode node, String path, String def) {
         return MJson.getText(node, path, def);
+    }
+    
+    /**
+     * Fast access to tracer
+     * 
+     * @return
+     */
+    public static ITracer tracer() {
+    	return MApi.lookup(ITracer.class);
+    }
+    
+    /**
+     * Fast access to logger.
+     * 
+     * @param owner
+     * @return
+     */
+    public static Log log(Object owner) {
+    	try {
+            return MApi.get().lookupLog(owner);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
 }
