@@ -5,11 +5,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MSystem;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 
 public class DummyTracer implements ITracer {
+	
+	private Span current = null;
 	
 	@Override
 	public Scope start(String spanName, boolean active, String ... tagPairs) {
@@ -21,10 +24,12 @@ public class DummyTracer implements ITracer {
 		Span span = new DummySpan(spanName);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.setTag(tagPairs[i], tagPairs[i+1]);
-		return new DummyScope(span);
+		Span last = current;
+		current = span;
+		return new DummyScope(span, last);
 	}
 
-	private static class DummySpan implements Span {
+	private class DummySpan implements Span {
 
 		private String name;
 		private DummyContext context;
@@ -117,7 +122,7 @@ public class DummyTracer implements ITracer {
 		
 	}
 	
-	private static class DummyContext implements SpanContext {
+	private class DummyContext implements SpanContext {
 		
 		private HashMap<String,String> baggage = null;
 		
@@ -134,17 +139,20 @@ public class DummyTracer implements ITracer {
 		
 	}
 	
-	private static class DummyScope implements Scope {
+	private class DummyScope implements Scope {
 
 		private Span span;
+		private Span last;
 
-		public DummyScope(Span span) {
+		public DummyScope(Span span, Span last) {
 			this.span = span;
+			this.last = last;
 		}
 
 		@Override
 		public void close() {
-			
+			if (current == span)
+				current = last;
 		}
 
 		@Override
@@ -152,5 +160,23 @@ public class DummyTracer implements ITracer {
 			return span;
 		}
 		
+	}
+
+	@Override
+	public void inject(String type, Object object) {
+		if (type == null || object == null) return;
+		if (object instanceof Thread) {
+			
+		}
+	}
+
+	@Override
+	public Scope extract(String type, Object object) {
+		return enter(object == null ? "?" : MSystem.getCanonicalClassName(object.getClass()));
+	}
+
+	@Override
+	public Span current() {
+		return null;
 	}
 }
