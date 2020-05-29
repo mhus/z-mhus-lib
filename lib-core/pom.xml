@@ -141,7 +141,12 @@
             <artifactId>maven-plugin-api</artifactId>
             <version>3.0</version>
         </dependency>
-    
+
+		<dependency>
+	        <groupId>io.opentracing</groupId>
+		    <artifactId>opentracing-api</artifactId>
+		</dependency>
+		
   </dependencies>
   
   
