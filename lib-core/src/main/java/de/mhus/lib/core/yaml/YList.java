@@ -10,60 +10,63 @@ import de.mhus.lib.core.util.EmptyList;
 
 public class YList extends YElement implements Iterable<YElement> {
 
-	private List<Object> list;
-
-	@SuppressWarnings("unchecked")
 	public YList(Object obj) {
 	    super(obj);
-		list = (List<Object>)obj;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public int size() {
-	    if (list == null) return 0;
-		return list.size();
+	    if (getObject() == null) return 0;
+		return ((List<Object>)getObject()).size();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public String getString(int index) {
-        if (list == null || index >= list.size()) return null;
-		Object ret = list.get(index);
+        if (getObject() == null || index >= ((List<Object>)getObject()).size()) return null;
+		Object ret = ((List<Object>)getObject()).get(index);
 		if (ret == null) return null;
 		if (ret instanceof String) return (String) ret;
 		return String.valueOf(ret);
 	}
 	
-    public YMap getMap(int index) {
-        if (list == null || index >= list.size()) return null;
-        Object ret = list.get(index);
+    @SuppressWarnings("unchecked")
+	public YMap getMap(int index) {
+        if (getObject() == null || index >= ((List<Object>)getObject()).size()) return null;
+        Object ret = ((List<Object>)getObject()).get(index);
         if (ret == null) return null;
         return new YMap(ret);
     }
     
+	@SuppressWarnings("unchecked")
 	public List<String> toStringList() {
-        if (list == null) return new EmptyList<>();
+        if (getObject() == null) return new EmptyList<>();
 		LinkedList<String> ret = new LinkedList<>();
-		for (int i = 0; i < list.size(); i++)
+		for (int i = 0; i < ((List<Object>)getObject()).size(); i++)
 			ret.add(getString(i));
 		return ret;
 	}
 
-    public List<YMap> toMapList() {
-        if (list == null) return new EmptyList<>();
+    @SuppressWarnings("unchecked")
+	public List<YMap> toMapList() {
+        if (getObject() == null) return new EmptyList<>();
         LinkedList<YMap> ret = new LinkedList<>();
-        for (int i = 0; i < list.size(); i++)
+        for (int i = 0; i < ((List<Object>)getObject()).size(); i++)
             ret.add(getMap(i));
         return ret;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Iterator<YElement> iterator() {
         ArrayList<YElement> out = new ArrayList<>(size());
-        list.forEach(i -> out.add(new YElement(i)));
+        ((List<Object>)getObject()).forEach(i -> out.add(new YElement(i)));
         return out.iterator();
     }
     
-    public YElement getElement(int index) {
-        if (list == null || index >= list.size()) return null;
-        Object ret = list.get(index);
+    @SuppressWarnings("unchecked")
+	public YElement getElement(int index) {
+        if (getObject() == null || index >= ((List<Object>)getObject()).size()) return null;
+        Object ret = ((List<Object>)getObject()).get(index);
         return new YElement(ret);
     }
 
@@ -71,24 +74,31 @@ public class YList extends YElement implements Iterable<YElement> {
         return getInteger(index, 0);
     }
     
-    public int getInteger(int index, int def) {
-        if (list == null || index >= list.size()) return def;
-        Object ret = list.get(index);
+    @SuppressWarnings("unchecked")
+	public int getInteger(int index, int def) {
+        if (getObject() == null || index >= ((List<Object>)getObject()).size()) return def;
+        Object ret = ((List<Object>)getObject()).get(index);
         if (ret == null) return def;
         if (ret instanceof Number) return ((Number) ret).intValue();
         return MCast.toint(ret, def);
     }
 
-    public boolean isInteger(int index) {
-        if (list == null || index >= list.size()) return false;
-        Object val = list.get(index);
+    @SuppressWarnings("unchecked")
+	public boolean isInteger(int index) {
+        if (getObject() == null || index >= ((List<Object>)getObject()).size()) return false;
+        Object val = ((List<Object>)getObject()).get(index);
         if (val == null) return false;
         return val instanceof Number;
     }
 
-    public void add(YElement item) {
+    @SuppressWarnings("unchecked")
+	public void add(YElement item) {
         if (item == null || item.getObject() == null) return;
-        list.add(item.getObject());
+        ((List<Object>)getObject()).add(item.getObject());
+    }
+
+    public String toString() {
+    	return getObject() == null ? null : getObject().toString();
     }
 
 }

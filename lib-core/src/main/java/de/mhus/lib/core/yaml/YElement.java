@@ -19,6 +19,10 @@ public class YElement {
         return new YList(obj);
     }
 
+    public String toString() {
+    	return obj == null ? null : obj.toString();
+    }
+
 //    public String getString() {
 //        return getString(null);
 //    }

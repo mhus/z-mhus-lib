@@ -10,8 +10,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 public class MYaml {
@@ -31,8 +33,12 @@ public class MYaml {
     }
 
     public synchronized static Yaml getYaml() {
-        if (yaml == null)
-            yaml = new Yaml();
+        if (yaml == null) {
+        	DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            options.setPrettyFlow(true);
+            yaml = new Yaml(options);
+        }
         return yaml;
     }
 
@@ -55,7 +61,7 @@ public class MYaml {
     }
     
     public static YMap createMap() {
-        return new YMap(new HashMap<>());
+        return new YMap(new LinkedHashMap<String,Object>());
     }
     
     public static YList createList() {

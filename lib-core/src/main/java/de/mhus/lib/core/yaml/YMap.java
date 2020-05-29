@@ -9,28 +9,27 @@ import de.mhus.lib.core.util.EmptySet;
 
 public class YMap extends YElement {
 
-	private Map<String, Object> map;
-
-	@SuppressWarnings("unchecked")
 	public YMap(Object obj) {
 	    super(obj);
-		map = (Map<String, Object>)obj;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Set<String> getKeys() {
-	    if (map == null) return new EmptySet<>();
-	    return map.keySet();
+	    if (getObject() == null) return new EmptySet<>();
+	    return ((Map<String, Object>)getObject()).keySet();
 	}
+	@SuppressWarnings("unchecked")
 	public YMap getMap(String key) {
-	    if (map == null) return null;
-	    Object ret = map.get(key);
+	    if (getObject() == null) return null;
+	    Object ret = ((Map<String, Object>)getObject()).get(key);
 	    if (ret == null) return null;
 		return new YMap(ret);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public YList getList(String key) {
-        if (map == null) return null;
-        Object ret = map.get(key);
+        if (getObject() == null) return null;
+        Object ret = ((Map<String, Object>)getObject()).get(key);
         if (ret == null) return null;
 		return new YList(ret);
 	}
@@ -39,9 +38,10 @@ public class YMap extends YElement {
         return getString(key, null);
     }
     
+	@SuppressWarnings("unchecked")
 	public String getString(String key, String def) {
-        if (map == null) return def;
-		Object val = map.get(key);
+        if (getObject() == null) return def;
+		Object val = ((Map<String, Object>)getObject()).get(key);
 		if (val == null) return def;
 		if (val instanceof String) return (String) val;
 		return String.valueOf(val);
@@ -51,39 +51,51 @@ public class YMap extends YElement {
         return getBoolean(key, false);
     }
     
-    public boolean getBoolean(String key, boolean def) {
-        if (map == null) return def;
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public boolean getBoolean(String key, boolean def) {
+        if (getObject() == null) return def;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         if (val == null) return def;
         if (val instanceof Boolean) return (Boolean) val;
         return MCast.toboolean(val, def);
     }
 
-    public boolean isEmpty() {
-        return map == null || map.size() == 0;
+    @SuppressWarnings("unchecked")
+	public boolean isEmpty() {
+        return getObject() == null || ((Map<String, Object>)getObject()).size() == 0;
     }
 
-    public boolean isString(String key) {
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public boolean isString(String key) {
+    	if (getObject() == null) return false;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         return val instanceof String;
     }
     
-    public boolean isList(String key) {
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public boolean isList(String key) {
+    	if (getObject() == null) return false;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         return val instanceof List;
     }
 
-    public boolean isMap(String key) {
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public boolean isMap(String key) {
+    	if (getObject() == null) return false;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         return val instanceof Map;
     }
 
-    public Object getObject(String key) {
-        return map.get(key);
+    @SuppressWarnings("unchecked")
+	public Object getObject(String key) {
+    	if (getObject() == null) return null;
+        return ((Map<String, Object>)getObject()).get(key);
     }
     
-    public YElement getElement(String key) {
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public YElement getElement(String key) {
+    	if (getObject() == null) return null;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         if (val == null) return null;
         return new YElement(val);
     }
@@ -92,26 +104,33 @@ public class YMap extends YElement {
         return getInteger(key, 0);
     }
     
-    public int getInteger(String key, int def) {
-        if (map == null) return def;
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public int getInteger(String key, int def) {
+        if (getObject() == null) return def;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         if (val == null) return def;
         if (val instanceof Number) return ((Number) val).intValue();
         return MCast.toint(val, def);
     }
     
-    public boolean isInteger(String key) {
-        if (map == null) return false;
-        Object val = map.get(key);
+    @SuppressWarnings("unchecked")
+	public boolean isInteger(String key) {
+        if (getObject() == null) return false;
+        Object val = ((Map<String, Object>)getObject()).get(key);
         if (val == null) return false;
         return val instanceof Number;
     }
 
-    public void put(String key, YElement elem) {
+    @SuppressWarnings("unchecked")
+	public void put(String key, YElement elem) {
         if (elem == null || elem.getObject() == null)
-            map.remove(key);
+        	((Map<String, Object>)getObject()).remove(key);
         else
-            map.put(key, elem.getObject());
+        	((Map<String, Object>)getObject()).put(key, elem.getObject());
+    }
+    
+    public String toString() {
+    	return getObject() == null ? null : getObject().toString();
     }
 
 }

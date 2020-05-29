@@ -14,6 +14,7 @@
 package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
@@ -103,7 +105,10 @@ public class ConfigTest {
               + "  test2: alf2\n"
               + "- test1: wow3\n"
               + "  test2: alf3\n"
-              + "";
+              + "projects:\n"
+              + "- properties:\n"
+              + "    name: name\n"
+              + "    url: http://test.de";
         
         {
             IConfig c = IConfig.readFromYamlString(yaml);
@@ -120,6 +125,11 @@ public class ConfigTest {
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
+            
+            // check file
+            String content = MFile.readFile(file);
+            System.out.println(content);
+            assertFalse(content.contains("{"));
         }
     }
     

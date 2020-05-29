@@ -277,4 +277,9 @@ public class MConfig extends MProperties implements IConfig {
         return Collections.unmodifiableList(out);
     }
     
+    @Override
+    public synchronized String toString() {
+    	return name + super.toString();
+    }
+
 }

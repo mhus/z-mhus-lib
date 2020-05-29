@@ -31,7 +31,9 @@ public class YamlConfigBuilder extends IConfigBuilder {
                 fill(arrayC, elemY.getList(key), level+1);
             } else
             if (elemY.isMap(key)) {
-                
+                IConfig objC = elemC.createObject(key);
+                YMap objY = elemY.getMap(key);
+                fill(objC, objY, level+1);
             } else {
                 elemC.put(key, elemY.getObject(key));
             }
@@ -70,6 +72,8 @@ public class YamlConfigBuilder extends IConfigBuilder {
 
     private YElement create(IConfig elemC, int level) {
 
+        if (level > 100)
+            throw new TooDeepStructuresException();
         
         if (elemC.containsKey(IConfig.NAMELESS_VALUE)) {
             if (elemC.isArray(IConfig.NAMELESS_VALUE)) {
