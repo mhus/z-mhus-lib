@@ -53,6 +53,7 @@ import de.mhus.lib.core.io.PdfFileChecker;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.IObserver;
+import de.mhus.lib.core.util.MUri;
 
 /** @author hummel */
 public class MFile {
@@ -781,6 +782,58 @@ public class MFile {
     }
 
     /**
+     * Write a line list to a file. Every line will be URL encoded
+     * 
+     * @param file
+     * @param lines
+     * @param append
+     * @throws IOException
+     */
+    public static void writeLinesEncoded(File file, List<String> lines, boolean append)
+            throws IOException {
+        if (file == null || lines == null) return;
+        FileWriter w = new FileWriter(file, append);
+        writeLinesEncoded(w, lines);
+        w.close();
+    }
+
+    public static void writeLinesEncoded(Writer w, List<String> lines) throws IOException {
+        for (String line : lines) {
+            w.write(MUri.encode(line));
+            w.write('\n');
+        }
+    }
+
+
+    /**
+     * Read a file into a list line by line
+     *
+     * @param file
+     * @param removeLastEmpty If you have written line by line the last ENTER will produce an empty
+     *     line, set true to remove this line.
+     * @return the file content as list of lines
+     * @throws IOException
+     */
+    public static List<String> readLinesEncoded(File file, boolean removeLastEmpty) throws IOException {
+        if (file == null) return null;
+
+        final LinkedList<String> out = new LinkedList<>();
+        readLines(
+                file,
+                new IObserver<String>() {
+
+                    @Override
+                    public void update(Object o, Object reason, String arg) {
+                        out.add( MUri.decode( (String) arg) );
+                    }
+                });
+
+        if (removeLastEmpty && out.size() > 0 && MString.isEmpty(out.getLast())) out.removeLast();
+
+        return out;
+    }
+
+    /**
      * Write a line list to a file. Be aware of the ENTER \\n character in the lines ! Every line
      * will be truncated by a ENTER \\n sign. This means the last line is empty.
      *
@@ -797,7 +850,7 @@ public class MFile {
         w.close();
     }
 
-    private static void writeLines(Writer w, List<String> lines) throws IOException {
+    public static void writeLines(Writer w, List<String> lines) throws IOException {
         for (String line : lines) {
             w.write(line);
             w.write('\n');
