@@ -12,7 +12,7 @@ import io.opentracing.SpanContext;
 
 public class DummyTracer implements ITracer {
 	
-	private Span current = null;
+	private ThreadLocal<Span> current = new ThreadLocal<>();
 	
 	@Override
 	public Scope start(String spanName, boolean active, String ... tagPairs) {
@@ -24,9 +24,7 @@ public class DummyTracer implements ITracer {
 		Span span = new DummySpan(spanName);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.setTag(tagPairs[i], tagPairs[i+1]);
-		Span last = current;
-		current = span;
-		return new DummyScope(span, last);
+		return new DummyScope(span);
 	}
 
 	private class DummySpan implements Span {
@@ -37,7 +35,13 @@ public class DummyTracer implements ITracer {
 		
 		public DummySpan(String spanName) {
 			name = spanName;
-			context = new DummyContext();
+			synchronized (current) {
+				Span c = current.get();
+				if (c != null)
+					context = (DummyContext) c.context();
+				else
+					context = new DummyContext();
+			}
 		}
 
 		@Override
@@ -71,6 +75,7 @@ public class DummyTracer implements ITracer {
 
 		@Override
 		public Span log(Map<String, ?> fields) {
+			log(System.currentTimeMillis(), fields);
 			return this;
 		}
 
@@ -81,6 +86,7 @@ public class DummyTracer implements ITracer {
 
 		@Override
 		public Span log(String event) {
+			log(System.currentTimeMillis(), event);
 			return this;
 		}
 
@@ -108,7 +114,7 @@ public class DummyTracer implements ITracer {
 
 		@Override
 		public void finish() {
-			
+			finish(System.currentTimeMillis());
 		}
 
 		@Override
@@ -144,15 +150,24 @@ public class DummyTracer implements ITracer {
 		private Span span;
 		private Span last;
 
-		public DummyScope(Span span, Span last) {
+		public DummyScope(Span span) {
+			synchronized (current) {
+				last = current.get();
+				current.set(span);
+			}
 			this.span = span;
-			this.last = last;
 		}
 
 		@Override
 		public void close() {
-			if (current == span)
-				current = last;
+			if (span == null) return;
+			synchronized (current) {
+				if (current == span)
+					current.set(last);
+			}
+			span.finish();
+			span = null;
+			last = null;
 		}
 
 		@Override
@@ -177,6 +192,6 @@ public class DummyTracer implements ITracer {
 
 	@Override
 	public Span current() {
-		return null;
+		return current.get();
 	}
 }
