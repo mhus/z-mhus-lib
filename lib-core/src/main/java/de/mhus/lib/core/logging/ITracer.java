@@ -5,7 +5,7 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 
-@DefaultImplementation(DummyTracer.class)
+@DefaultImplementation(DefaultTracer.class)
 public interface ITracer {
 	
 	public static final String TYPE_HTTP = "http";
