@@ -362,4 +362,9 @@ public class MCfgManager {
     public List<File> getMhusConfigFiles() {
         return mhusConfigFiles;
     }
+
+	public void reload(Object owner) {
+		
+	}
+	
 }

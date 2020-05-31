@@ -3,6 +3,7 @@ package de.mhus.lib.core.logging;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import io.opentracing.Scope;
 import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @DefaultImplementation(DummyTracer.class)
 public interface ITracer {
@@ -31,21 +32,29 @@ public interface ITracer {
 	Scope enter(String spanName, String ... tagPairs);
 
 	/**
-	 * Inject the current span to an object. Supported objects should be
-	 * Http Client Request, Thread
+	 * Enter a sub span and set the given parent span.
+	 * If parent is null the behavior is not clear. Could
+	 * be a unbound span or a sub span from the current.
 	 * 
-	 * @param object
-	 */
-	void inject(String type, Object object);
-	
-	/**
-	 * Extract a new Span from an object.
-	 * 
-	 * @param object
+	 * @param parent
+	 * @param spanName
+	 * @param tagPairs
 	 * @return
 	 */
-	Scope extract(String type, Object object);
-	
+	Scope enter(Span parent, String spanName, String ... tagPairs);
+
+	/**
+	 * Return the current active span or null if not exists.
+	 * 
+	 * @return The span or null
+	 */
 	Span current();
-	
+
+	/**
+	 * Return the current tracer. Could return null if no tracer is available.
+	 * 
+	 * @return The tracer or null
+	 */
+	Tracer tracer();
+		
 }

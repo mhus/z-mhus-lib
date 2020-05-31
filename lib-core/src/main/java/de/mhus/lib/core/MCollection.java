@@ -594,5 +594,24 @@ public class MCollection {
             out.put((K)keyValues[i], (V)keyValues[i+1]);
         return out;
     }
+
+    /**
+     * Transforms a map into a key - value pair string.
+     * 
+     * @param map
+     * @return
+     */
+    public static String[] toPairs(Map<String, Object> map) {
+    	if (map == null) return null;
+    	String[] out = new String[map.size()*2];
+    	int cnt = 0;
+    	for (Entry<String, Object> entry : map.entrySet()) {
+    		out[cnt] = entry.getKey();
+    		cnt++;
+    		out[cnt] = String.valueOf(entry.getValue());
+    		cnt++;
+    	}
+    	return out;
+    }
     
 }

@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MSystem;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
+import io.opentracing.Tracer;
 
 public class DummyTracer implements ITracer {
 	
@@ -16,12 +16,23 @@ public class DummyTracer implements ITracer {
 	
 	@Override
 	public Scope start(String spanName, boolean active, String ... tagPairs) {
-		return enter(spanName, tagPairs);
+		Span span = new DummySpan(spanName, null);
+		for (int i = 0; i < tagPairs.length-1; i=i+2)
+			span.setTag(tagPairs[i], tagPairs[i+1]);
+		return new DummyScope(span);
 	}
 
 	@Override
 	public Scope enter(String spanName, String ... tagPairs ) {
-		Span span = new DummySpan(spanName);
+		Span span = new DummySpan(spanName, current.get());
+		for (int i = 0; i < tagPairs.length-1; i=i+2)
+			span.setTag(tagPairs[i], tagPairs[i+1]);
+		return new DummyScope(span);
+	}
+
+	@Override
+	public Scope enter(Span parent, String spanName, String... tagPairs) {
+		Span span = new DummySpan(spanName, parent);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.setTag(tagPairs[i], tagPairs[i+1]);
 		return new DummyScope(span);
@@ -33,12 +44,11 @@ public class DummyTracer implements ITracer {
 		private DummyContext context;
 		private MProperties tags;
 		
-		public DummySpan(String spanName) {
+		public DummySpan(String spanName, Span parent) {
 			name = spanName;
 			synchronized (current) {
-				Span c = current.get();
-				if (c != null)
-					context = (DummyContext) c.context();
+				if (parent != null)
+					context = (DummyContext) parent.context();
 				else
 					context = new DummyContext();
 			}
@@ -176,22 +186,15 @@ public class DummyTracer implements ITracer {
 		}
 		
 	}
-
-	@Override
-	public void inject(String type, Object object) {
-		if (type == null || object == null) return;
-		if (object instanceof Thread) {
-			
-		}
-	}
-
-	@Override
-	public Scope extract(String type, Object object) {
-		return enter(object == null ? "?" : MSystem.getCanonicalClassName(object.getClass()));
-	}
-
+	
 	@Override
 	public Span current() {
 		return current.get();
 	}
+
+	@Override
+	public Tracer tracer() {
+		return null;
+	}
+
 }

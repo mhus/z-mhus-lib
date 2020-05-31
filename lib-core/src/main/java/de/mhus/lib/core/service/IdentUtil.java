@@ -18,14 +18,22 @@ import de.mhus.lib.core.M;
 public class IdentUtil {
 
     private static String ident;
-
+    private static String service;
+    private static String str;
+    
     public static String getServerIdent() {
         if (ident == null) ident = M.l(ServerIdent.class).getIdent();
         return ident;
     }
 
     public static String getServiceIdent() {
-        if (ident == null) ident = M.l(ServerIdent.class).getService();
-        return ident;
+        if (service == null) service = M.l(ServerIdent.class).getService();
+        return service;
     }
+    
+    public static String getFullIdent() {
+    	if (str == null) str = M.l(ServerIdent.class).toString();
+    	return str;
+    }
+    
 }
