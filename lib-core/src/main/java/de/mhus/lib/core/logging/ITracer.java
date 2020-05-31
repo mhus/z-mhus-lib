@@ -1,6 +1,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.MApi;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -57,4 +58,23 @@ public interface ITracer {
 	 */
 	Tracer tracer();
 		
+	public static void setTrailConfig(String logTrailConfig) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void releaseTrailConfig() {
+		// TODO Auto-generated method stub
+		
+	}
+
+    /**
+     * Fast access to tracer
+     * 
+     * @return
+     */
+    public static ITracer get() {
+    	return MApi.lookup(ITracer.class);
+    }
+	
 }

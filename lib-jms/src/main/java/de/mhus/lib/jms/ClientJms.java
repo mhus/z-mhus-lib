@@ -15,7 +15,9 @@ package de.mhus.lib.jms;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 
 import javax.jms.IllegalStateException;
 import javax.jms.JMSException;
@@ -25,10 +27,13 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.TemporaryQueue;
 
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.logging.ITracer;
+import io.opentracing.Scope;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 
 public class ClientJms extends JmsChannel implements MessageListener {
 
@@ -59,18 +64,20 @@ public class ClientJms extends JmsChannel implements MessageListener {
     }
 
     public void sendJmsOneWay(Message msg) throws JMSException {
-        open();
-        JmsContext context = new JmsContext(msg);
-        prepareMessage(msg);
-        if (interceptorOut != null) interceptorOut.prepare(context);
-        log().d("sendJmsOneWay", dest, producer.getTimeToLive(), msg);
-        try {
-            producer.send(msg);
-        } catch (IllegalStateException ise) {
-            log().d("reconnect", getName(), ise.getMessage());
-            producer = null;
-            open();
-            producer.send(msg);
+    	try (Scope scope = ITracer.get().enter("jmscall-oneway","name",getName(),"dest",dest.toString())) {
+	        open();
+	        JmsContext context = new JmsContext(msg);
+	        prepareMessage(msg);
+	        if (interceptorOut != null) interceptorOut.prepare(context);
+	        log().d("sendJmsOneWay", dest, producer.getTimeToLive(), msg);
+	        try {
+	            producer.send(msg);
+	        } catch (IllegalStateException ise) {
+	            log().d("reconnect", getName(), ise.getMessage());
+	            producer = null;
+	            open();
+	            producer.send(msg);
+	        }
         }
     }
 
@@ -78,69 +85,87 @@ public class ClientJms extends JmsChannel implements MessageListener {
 
         msg.setJMSMessageID(createMessageId());
 
-        String config = MLogUtil.getTrailConfig();
-        if (config != null) msg.setStringProperty(MConstants.LOG_MAPPER, config);
+        Tags.SPAN_KIND.set(ITracer.get().current(), Tags.SPAN_KIND_CLIENT);
+        ITracer.get().tracer().inject(ITracer.get().current().context(), Format.Builtin.TEXT_MAP, new TextMap() {
+
+			@Override
+			public Iterator<Entry<String, String>> iterator() {
+				return null;
+			}
+
+			@Override
+			public void put(String key, String value) {
+				try {
+					msg.setStringProperty(key, value);
+				} catch (JMSException e) {
+					log().e(dest,key,value,e);
+				}
+			}
+        	
+        });
     }
 
     public Message sendJms(Message msg) throws JMSException {
-        open();
-
-        JmsContext context = new JmsContext(msg);
-        prepareMessage(msg);
-        String id = msg.getJMSMessageID();
-        openAnswerQueue();
-        msg.setJMSReplyTo(answerQueue);
-        msg.setJMSCorrelationID(id);
-        addAllowedId(id);
-        if (interceptorOut != null) interceptorOut.prepare(context);
-        try {
-            log().d("sendJms", dest, producer.getTimeToLive(), msg);
-            try {
-                producer.send(msg);
-            } catch (IllegalStateException ise) {
-                log().d("reconnect", getName(), ise.getMessage());
-                producer = null;
-                open();
-                openAnswerQueue();
-                msg.setJMSReplyTo(answerQueue);
-                producer.send(msg);
-            }
-
-            long start = System.currentTimeMillis();
-            while (true) {
-                try {
-                    synchronized (this) {
-                        this.wait(10000);
-                    }
-                } catch (InterruptedException e) {
-                    log().t(e);
-                }
-
-                synchronized (responses) {
-                    Message answer = responses.get(id);
-                    if (answer != null) {
-                        context.setAnswer(answer);
-                        responses.remove(id);
-                        log().d("sendJmsAnswer", dest, answer);
-                        try {
-                            if (interceptorIn != null) interceptorIn.answer(context);
-                        } catch (Throwable t) {
-                            log().d(t);
-                        }
-                        return answer;
-                    }
-                }
-
-                long delta = System.currentTimeMillis() - start;
-                if (delta > warnTimeout) log().w("long time waiting", dest, delta);
-
-                if (delta > timeout) {
-                    log().w("timeout", delta);
-                    throw new JMSException("answer timeout " + dest);
-                }
-            }
-        } finally {
-            removeAllowedId(id);
+        try (Scope scope = ITracer.get().enter("jmscall","name",getName(),"dest",dest.toString())) {
+	        open();
+	
+	        JmsContext context = new JmsContext(msg);
+	        prepareMessage(msg);
+	        String id = msg.getJMSMessageID();
+	        openAnswerQueue();
+	        msg.setJMSReplyTo(answerQueue);
+	        msg.setJMSCorrelationID(id);
+	        addAllowedId(id);
+	        if (interceptorOut != null) interceptorOut.prepare(context);
+	        try {
+	            log().d("sendJms", dest, producer.getTimeToLive(), msg);
+	            try {
+	                producer.send(msg);
+	            } catch (IllegalStateException ise) {
+	                log().d("reconnect", getName(), ise.getMessage());
+	                producer = null;
+	                open();
+	                openAnswerQueue();
+	                msg.setJMSReplyTo(answerQueue);
+	                producer.send(msg);
+	            }
+	
+	            long start = System.currentTimeMillis();
+	            while (true) {
+	                try {
+	                    synchronized (this) {
+	                        this.wait(10000);
+	                    }
+	                } catch (InterruptedException e) {
+	                    log().t(e);
+	                }
+	
+	                synchronized (responses) {
+	                    Message answer = responses.get(id);
+	                    if (answer != null) {
+	                        context.setAnswer(answer);
+	                        responses.remove(id);
+	                        log().d("sendJmsAnswer", dest, answer);
+	                        try {
+	                            if (interceptorIn != null) interceptorIn.answer(context);
+	                        } catch (Throwable t) {
+	                            log().d(t);
+	                        }
+	                        return answer;
+	                    }
+	                }
+	
+	                long delta = System.currentTimeMillis() - start;
+	                if (delta > warnTimeout) log().w("long time waiting", dest, delta);
+	
+	                if (delta > timeout) {
+	                    log().w("timeout", delta);
+	                    throw new JMSException("answer timeout " + dest);
+	                }
+	            }
+	        } finally {
+	            removeAllowedId(id);
+	        }
         }
     }
 

@@ -19,10 +19,7 @@ import java.util.Arrays;
 
 import de.mhus.lib.core.cfg.MCfgUpdater;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.logging.TrailLevelMapper;
 import de.mhus.lib.core.mapi.ApiInitialize;
 import de.mhus.lib.core.mapi.DefaultMApi;
 import de.mhus.lib.core.mapi.DummyClass;
@@ -99,17 +96,17 @@ public class MApi {
         return get().isTrace(name);
     }
 
-    public static void doStartTrailLog(String source) {
-        LevelMapper mapper = get().getLogFactory().getLevelMapper();
-        if (mapper != null && mapper instanceof TrailLevelMapper)
-            ((TrailLevelMapper) mapper).doConfigureTrail(source, MLogUtil.MAP_LABEL);
-    }
-
-    public static void doStopTrailLog() {
-        LevelMapper mapper = get().getLogFactory().getLevelMapper();
-        if (mapper != null && mapper instanceof TrailLevelMapper)
-            ((TrailLevelMapper) mapper).doResetTrail();
-    }
+//    public static void doStartTrailLog(String source) {
+//        LevelMapper mapper = get().getLogFactory().getLevelMapper();
+//        if (mapper != null && mapper instanceof TrailLevelMapper)
+//            ((TrailLevelMapper) mapper).doConfigureTrail(source, MLogUtil.MAP_LABEL);
+//    }
+//
+//    public static void doStopTrailLog() {
+//        LevelMapper mapper = get().getLogFactory().getLevelMapper();
+//        if (mapper != null && mapper instanceof TrailLevelMapper)
+//            ((TrailLevelMapper) mapper).doResetTrail();
+//    }
 
     //	public static void registerLogger(Log log) {
     //		synchronized (loggers) {

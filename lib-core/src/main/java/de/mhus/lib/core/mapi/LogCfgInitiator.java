@@ -22,7 +22,6 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
-import de.mhus.lib.core.logging.LevelMapper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.logging.LogFactory;
@@ -87,11 +86,6 @@ public class LogCfgInitiator implements CfgInitiator {
             String key = MConstants.PROP_LOG_LEVEL_MAPPER_CLASS;
             String name = system.getString(key,null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
-            if (MString.isSet(name)) {
-                logFactory.setLevelMapper(
-                        (LevelMapper)
-                                Class.forName(name.trim()).getDeclaredConstructor().newInstance());
-            }
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
         }

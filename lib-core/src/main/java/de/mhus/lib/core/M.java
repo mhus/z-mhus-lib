@@ -134,16 +134,7 @@ public class M {
     public static String get(JsonNode node, String path, String def) {
         return MJson.getText(node, path, def);
     }
-    
-    /**
-     * Fast access to tracer
-     * 
-     * @return
-     */
-    public static ITracer tracer() {
-    	return MApi.lookup(ITracer.class);
-    }
-    
+        
     /**
      * Fast access to logger.
      * 

@@ -13,11 +13,13 @@
  */
 package de.mhus.lib.core;
 
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.core.util.ValueProvider;
 import de.mhus.lib.errors.TimeoutRuntimeException;
+import io.opentracing.Scope;
+import io.opentracing.Span;
 
 /**
  * @author hummel
@@ -124,7 +126,7 @@ public class MThreadPool extends MObject implements Runnable {
         private MThreadPool task = null;
         private String name;
         private long sleepStart;
-        private String trailConfig;
+        private Span span;
 
         public ThreadContainer(ThreadGroup group, String pName) {
             super(group, pName);
@@ -138,7 +140,7 @@ public class MThreadPool extends MObject implements Runnable {
                 // remember next task
                 task = _task;
                 // remember trail log
-                trailConfig = MLogUtil.getTrailConfig();
+                span = ITracer.get().current();
                 notify();
             }
             return true;
@@ -196,27 +198,24 @@ public class MThreadPool extends MObject implements Runnable {
                                     + currentTask.getTask().getClass().getName());
 
                     // set trail log if set
-                    if (trailConfig != null) MLogUtil.setTrailConfig(trailConfig);
-
-                    try {
-                        log.t("Enter Thread Task");
-                        currentTask.getTask().run();
-                        log.t("Leave Thread Task");
-                    } catch (Throwable t) {
-                        try {
-                            log.i("Thread Task Error", getName(), t);
-                            currentTask.taskError(t);
-                        } catch (Throwable t2) {
-                            log.i("Thread Task Finish Error", getName(), t2);
-                        }
+                    try (Scope scope = ITracer.get().enter(span, name)) {
+	                    try {
+	                        log.t("Enter Thread Task");
+	                        currentTask.getTask().run();
+	                        log.t("Leave Thread Task");
+	                    } catch (Throwable t) {
+	                        try {
+	                            log.i("Thread Task Error", getName(), t);
+	                            currentTask.taskError(t);
+	                        } catch (Throwable t2) {
+	                            log.i("Thread Task Finish Error", getName(), t2);
+	                        }
+	                    }
+	                    log.t("###: LEAVE THREAD");
                     }
-
-                    log.t("###: LEAVE THREAD");
-                    MLogUtil.releaseTrailConfig(); // reset trail log
                     setName(name + " sleeping");
                 }
                 if (currentTask != null) currentTask.taskFinish();
-                trailConfig = null;
                 task = null; // don't need sync
             }
         }

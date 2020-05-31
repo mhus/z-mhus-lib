@@ -26,7 +26,7 @@ public abstract class LogFactory {
 
     WeakHashMap<String, LogEngine> buffer = new WeakHashMap<String, LogEngine>();
     protected LEVEL level = LEVEL.INFO;
-    protected LevelMapper levelMapper;
+    //protected LevelMapper levelMapper;
     private ParameterMapper parameterMapper;
     private int maxMsgSize = 1024 * 100; // 100kb default max
 
@@ -111,13 +111,13 @@ public abstract class LogFactory {
     //			return null;
     //	}
 
-    public LevelMapper getLevelMapper() {
-        return levelMapper;
-    }
-
-    public void setLevelMapper(LevelMapper levelMapper) {
-        this.levelMapper = levelMapper;
-    }
+//    public LevelMapper getLevelMapper() {
+//        return levelMapper;
+//    }
+//
+//    public void setLevelMapper(LevelMapper levelMapper) {
+//        this.levelMapper = levelMapper;
+//    }
 
     public ParameterMapper getParameterMapper() {
         return parameterMapper;

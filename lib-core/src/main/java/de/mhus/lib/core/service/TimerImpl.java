@@ -18,13 +18,13 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.TrailLevelMapper;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.schedule.SchedulerJob;
 import de.mhus.lib.core.util.TimerTaskSelfControl;
+import io.opentracing.Scope;
+import io.opentracing.Span;
 
 public class TimerImpl extends MLog implements TimerIfc {
 
@@ -132,7 +132,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 
         private TimerTask task;
         private TimerImpl timer;
-        private String log;
+        private Span span;
         private String name;
 
         public TimerTaskWrap(TimerImpl timer, String name, TimerTask task) {
@@ -143,24 +143,12 @@ public class TimerImpl extends MLog implements TimerIfc {
             synchronized (timer) {
                 timer.tasks.add(this);
             }
-            LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
-            if (lm != null && lm instanceof TrailLevelMapper)
-                log = ((TrailLevelMapper) lm).doSerializeTrail();
+            span = ITracer.get().current();
         }
 
         @Override
         public void run() {
-            try {
-                //				if (task.isCancelled(task)) {
-                //					cancel();
-                //					return;
-                //				}
-                if (log != null) {
-                    LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
-                    if (lm != null && lm instanceof TrailLevelMapper)
-                        ((TrailLevelMapper) lm).doConfigureTrail(null, log);
-                }
-
+            try (Scope scope = ITracer.get().enter(span, name )) { // XXX more tags?!
                 log().t("run", name, task);
                 task.run();
             } catch (Throwable t) {
@@ -168,12 +156,6 @@ public class TimerImpl extends MLog implements TimerIfc {
                 if (task instanceof TimerTaskSelfControl) {
                     if (((TimerTaskSelfControl) task).isCancelOnError()) cancel();
                 } else cancel();
-            } finally {
-                if (log != null) {
-                    LevelMapper lm = MApi.get().getLogFactory().getLevelMapper();
-                    if (lm != null && lm instanceof TrailLevelMapper)
-                        ((TrailLevelMapper) lm).doResetTrail();
-                }
             }
         }
 

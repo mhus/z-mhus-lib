@@ -20,8 +20,8 @@ import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.operation.DefaultTaskContext;
 import de.mhus.lib.core.operation.NotSuccessful;
 import de.mhus.lib.core.operation.Operation;
@@ -94,7 +94,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
             boolean logConfigReset = false;
             if (getLogTrailConfig() != null) {
-                MLogUtil.setTrailConfig(getLogTrailConfig());
+            	ITracer.setTrailConfig(getLogTrailConfig());
                 logConfigReset = true;
             }
             try {
@@ -130,7 +130,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                 context.clear();
                 setDone(true);
             } finally {
-                if (logConfigReset) MLogUtil.releaseTrailConfig();
+                if (logConfigReset) ITracer.releaseTrailConfig();
             }
         } else {
             log.d("Execution delayed", task);

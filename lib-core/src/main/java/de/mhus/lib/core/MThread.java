@@ -14,14 +14,16 @@
 package de.mhus.lib.core;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.Checker;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.core.util.Value;
 import de.mhus.lib.core.util.ValueProvider;
 import de.mhus.lib.errors.RuntimeInterruptedException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
+import io.opentracing.Scope;
+import io.opentracing.Span;
 
 /**
  * @author hummel
@@ -92,33 +94,27 @@ public class MThread extends MObject implements Runnable {
     private class Container implements Runnable {
 
         private long parentThreadId;
-        private String trailConfig;
+        private Span span;
 
         public Container() {
             try {
                 parentThreadId = Thread.currentThread().getId();
-                trailConfig = MLogUtil.getTrailConfig();
+                span = ITracer.get().current();;
             } catch (Throwable t) {
             }
         }
 
         @Override
         public void run() {
-            try {
-                if (trailConfig != null) MLogUtil.setTrailConfig(trailConfig);
+            try (Scope scope = ITracer.get().enter(span, name, "id", ""+thread.getId(), "parent", ""+parentThreadId)){
                 log().t("###: NEW THREAD", parentThreadId, thread.getId());
-            } catch (Throwable t) {
-            }
-            try {
-                if (task != null) task.run();
-            } catch (Throwable t) {
-                taskError(t);
-            }
-            try {
+	            try {
+	                if (task != null) task.run();
+	            } catch (Throwable t) {
+	                taskError(t);
+	            }
                 log.t("###: LEAVE THREAD", thread.getId());
-                MLogUtil.releaseTrailConfig();
-            } catch (Throwable t) {
-            }
+            } 
         }
     }
 

@@ -38,7 +38,6 @@ public class Log {
     protected boolean localTrace = true;
     private static boolean stacktraceTrace = false;
     protected String name;
-    protected static LevelMapper levelMapper;
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     //    protected UUID id = UUID.randomUUID();
@@ -90,8 +89,6 @@ public class Log {
 
     public void log(LEVEL level, Object... msg) {
         if (engine == null) return;
-
-        if (levelMapper != null) level = levelMapper.map(this, level, msg);
 
         switch (level) {
             case DEBUG:
@@ -220,11 +217,7 @@ public class Log {
     }
 
     protected void prepare(StringBuilder sb) {
-        if (levelMapper != null) {
-            levelMapper.prepareMessage(this, sb);
-        } else {
-            sb.append('[').append(Thread.currentThread().getId()).append(']');
-        }
+        sb.append('[').append(Thread.currentThread().getId()).append(']');
     }
 
     public void setLocalTrace(boolean localTrace) {
@@ -262,7 +255,6 @@ public class Log {
     public void update() {
         engine = MApi.get().getLogFactory().getInstance(getName());
         localTrace = MApi.isTrace(name);
-        levelMapper = MApi.get().getLogFactory().getLevelMapper();
         parameterMapper = MApi.get().getLogFactory().getParameterMapper();
         maxMsgSize = MApi.get().getLogFactory().getMaxMessageSize();
     }
@@ -282,7 +274,6 @@ public class Log {
         if (engine == null) return false;
 
         if (localTrace) level = LEVEL.INFO;
-        else if (levelMapper != null) level = levelMapper.map(this, level);
 
         switch (level) {
             case DEBUG:

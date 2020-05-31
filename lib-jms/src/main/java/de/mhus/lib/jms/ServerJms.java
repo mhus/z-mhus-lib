@@ -13,6 +13,10 @@
  */
 package de.mhus.lib.jms;
 
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import javax.jms.InvalidDestinationException;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -24,14 +28,17 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQSession;
 
-import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
-import de.mhus.lib.core.logging.LevelMapper;
-import de.mhus.lib.core.logging.MLogUtil;
-import de.mhus.lib.core.logging.TrailLevelMapper;
+import de.mhus.lib.core.logging.ITracer;
+import de.mhus.lib.errors.MRuntimeException;
+import io.opentracing.Scope;
+import io.opentracing.SpanContext;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
+import io.opentracing.tag.Tags;
 
 public abstract class ServerJms extends JmsChannel implements MessageListener {
 
@@ -41,7 +48,9 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
             new CfgLong(ServerJms.class, "maxThreadCountTimeout", 10000);
     private static CfgLong inactivityTimeout =
             new CfgLong(ServerJms.class, "inactivityTimeout", MPeriod.HOUR_IN_MILLISECOUNDS);
-
+    
+    private static CfgBoolean CFG_TRACE_ACTIVE = new CfgBoolean(ServerJms.class, "traceActive", false);
+    
     public ServerJms(JmsDestination dest) {
         super(dest);
     }
@@ -227,15 +236,73 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
     public void processMessage(final Message message) {
         lastActivity = System.currentTimeMillis();
 
-        boolean releaseLog = false;
+        Scope scope = null;
         try {
             if (message != null) {
                 try {
-                    String logMapper = message.getStringProperty(MConstants.LOG_MAPPER);
-                    if (logMapper != null) {
-                        releaseLog = true;
-                        MLogUtil.setTrailConfig(MLogUtil.TRAIL_SOURCE_JMS, logMapper);
+                    SpanContext parentSpanCtx = ITracer.get().tracer().extract(Format.Builtin.TEXT_MAP, new TextMap() {
+
+						@Override
+						public Iterator<Entry<String, String>> iterator() {
+							try {
+								@SuppressWarnings("unchecked")
+								final Enumeration<String> enu = message.getPropertyNames();
+								return new Iterator<Entry<String,String>>() {
+									@Override
+									public boolean hasNext() {
+										return enu.hasMoreElements();
+									}
+	
+									@Override
+									public Entry<String, String> next() {
+										final String key = enu.nextElement();
+										return new Entry<String, String>() {
+	
+											@Override
+											public String getKey() {
+												return key;
+											}
+	
+											@Override
+											public String getValue() {
+												try {
+													return message.getStringProperty(key);
+												} catch (JMSException e) {
+													throw new MRuntimeException(key,e);
+												}
+											}
+	
+											@Override
+											public String setValue(String value) {
+												return null;
+											}
+											
+										};
+									}
+								};
+							} catch (JMSException e) {
+								throw new MRuntimeException(e);
+							}
+						}
+
+						@Override
+						public void put(String key, String value) {
+							
+						}
+                    	
+                    });
+                    
+                    if (parentSpanCtx == null) {
+                    	scope = ITracer.get().start(getName(), CFG_TRACE_ACTIVE.value());
+                    } else
+                    if (parentSpanCtx != null) {
+                    	scope = ITracer.get().tracer().buildSpan(getName()).asChildOf(parentSpanCtx).startActive(true);
                     }
+                    
+                    if (scope != null) {
+                        Tags.SPAN_KIND.set(scope.span(), Tags.SPAN_KIND_SERVER);
+                    }
+
                 } catch (Throwable t) {
                 }
             }
@@ -296,10 +363,8 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
             }
 
         } finally {
-            if (releaseLog) {
-                LevelMapper levelMapper = MApi.get().getLogFactory().getLevelMapper();
-                if (levelMapper != null && levelMapper instanceof TrailLevelMapper)
-                    ((TrailLevelMapper) levelMapper).doResetTrail();
+            if (scope != null) {
+            	scope.close();
             }
         }
     }
