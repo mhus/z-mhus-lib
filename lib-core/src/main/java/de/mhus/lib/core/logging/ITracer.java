@@ -21,7 +21,7 @@ public interface ITracer {
 	 * @param tagPairs key-value pairs for tags
 	 * @return The scope
 	 */
-	Scope start(String name, boolean active, String ... tagPairs);
+	Scope start(String name, String activation, String ... tagPairs);
 	
 	/**
 	 * Enter a sub span.
@@ -76,5 +76,7 @@ public interface ITracer {
     public static ITracer get() {
     	return MApi.lookup(ITracer.class);
     }
+
+	void activate(String activation);
 	
 }

@@ -30,8 +30,8 @@ import org.apache.activemq.ActiveMQSession;
 
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgLong;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.errors.MRuntimeException;
 import io.opentracing.Scope;
@@ -49,7 +49,7 @@ public abstract class ServerJms extends JmsChannel implements MessageListener {
     private static CfgLong inactivityTimeout =
             new CfgLong(ServerJms.class, "inactivityTimeout", MPeriod.HOUR_IN_MILLISECOUNDS);
     
-    private static CfgBoolean CFG_TRACE_ACTIVE = new CfgBoolean(ServerJms.class, "traceActive", false);
+    private static CfgString CFG_TRACE_ACTIVE = new CfgString(ServerJms.class, "traceActivation", "");
     
     public ServerJms(JmsDestination dest) {
         super(dest);

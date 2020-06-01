@@ -1,6 +1,10 @@
 package de.mhus.lib.core.logging;
 
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.service.IdentUtil;
 import de.mhus.lib.core.shiro.AccessUtil;
 import io.opentracing.Scope;
@@ -13,7 +17,7 @@ import io.opentracing.util.GlobalTracer;
 public class DefaultTracer extends MLog implements ITracer {
 		
 	@Override
-	public Scope start(String spanName, boolean active, String ... tagPairs) {
+	public Scope start(String spanName, String activation, String ... tagPairs) {
 		SpanBuilder span = GlobalTracer.get().buildSpan(spanName);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.withTag(tagPairs[i],tagPairs[i+1]);
@@ -21,10 +25,29 @@ public class DefaultTracer extends MLog implements ITracer {
     	span.withTag("pricipal", AccessUtil.getPrincipal());
     	
 		Scope scope = span.ignoreActiveSpan().startActive(true);
-		if (active)
-			Tags.SAMPLING_PRIORITY.set(scope.span(), 1);
+		activate(activation);
 		return scope;
 
+	}
+	
+	@Override
+	public void activate(String activation) {
+		if (MString.isEmpty(activation)) return;
+		Span span = current();
+		if (activation.equals("-")) {
+			Tags.SAMPLING_PRIORITY.set(span, 0);
+			return;
+		}
+		Tags.SAMPLING_PRIORITY.set(span, 1);
+		int p = activation.indexOf(':');
+		if (p >= 0) {
+			MProperties options = IProperties.explodeToMProperties(activation.substring(p+1).split(","));
+			if (options.containsKey("level")) {
+				span.setBaggageItem(MLog.LOG_LEVEL_MAPPING, options.getString("level", ""));
+			}
+			activation = activation.substring(0,p);
+		}
+		span.setTag("activation", activation);
 	}
 
 	@Override
