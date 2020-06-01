@@ -1,6 +1,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.service.IdentUtil;
+import de.mhus.lib.core.shiro.AccessUtil;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -16,6 +17,8 @@ public class DefaultTracer implements ITracer {
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.withTag(tagPairs[i],tagPairs[i+1]);
     	span.withTag("ident", IdentUtil.getFullIdent());
+    	span.withTag("pricipal", AccessUtil.getPrincipal());
+    	
 		Scope scope = span.ignoreActiveSpan().startActive(true);
 		if (active)
 			Tags.SAMPLING_PRIORITY.set(scope.span(), 1);
@@ -34,6 +37,7 @@ public class DefaultTracer implements ITracer {
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.withTag(tagPairs[i],tagPairs[i+1]);
     	span.withTag("ident", IdentUtil.getFullIdent());
+    	span.withTag("pricipal", AccessUtil.getPrincipal());
 		if (parent != null)
 			span.asChildOf(parent);
 		Scope scope = span.startActive(true);
