@@ -1,5 +1,6 @@
 package de.mhus.lib.core.logging;
 
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.service.IdentUtil;
 import de.mhus.lib.core.shiro.AccessUtil;
 import io.opentracing.Scope;
@@ -9,7 +10,7 @@ import io.opentracing.Tracer.SpanBuilder;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 
-public class DefaultTracer implements ITracer {
+public class DefaultTracer extends MLog implements ITracer {
 		
 	@Override
 	public Scope start(String spanName, boolean active, String ... tagPairs) {
