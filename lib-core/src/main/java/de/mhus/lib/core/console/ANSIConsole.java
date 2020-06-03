@@ -72,7 +72,7 @@ public class ANSIConsole extends Console {
     protected int width = 0;
     protected int height = 0;
     protected boolean supportSize;
-    private String term;
+    private String term = "";
 
     public ANSIConsole() throws IOException {
         this(new LineReaderImpl(TerminalBuilder.builder().build()));
@@ -93,6 +93,7 @@ public class ANSIConsole extends Console {
 
     protected void loadSettings() {
         term = System.getenv("TERM");
+        if (term == null) term = "";
         int w = reader.getTerminal().getWidth();
         int h = reader.getTerminal().getHeight();
         if (w == 80 && h == 24) { // default size if size can't be recognized
