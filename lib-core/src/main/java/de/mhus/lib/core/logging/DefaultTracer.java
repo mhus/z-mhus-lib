@@ -16,7 +16,7 @@ import io.opentracing.util.GlobalTracer;
 public class DefaultTracer extends MLog implements ITracer {
 		
 	@Override
-	public Scope start(String spanName, String activation, String ... tagPairs) {
+	public Scope start(String spanName, String activation, Object ... tagPairs) {
 		SpanBuilder span = createSpan(null, spanName, tagPairs);
 		Scope scope = span.ignoreActiveSpan().startActive(true);
 		activate(activation);
@@ -45,22 +45,22 @@ public class DefaultTracer extends MLog implements ITracer {
 	}
 
 	@Override
-	public Scope enter(String spanName, String ... tagPairs ) {
+	public Scope enter(String spanName, Object ... tagPairs ) {
 		return enter(null, spanName, tagPairs);
 	}
 
 	@Override
-	public Scope enter(Span parent, String spanName, String... tagPairs) {
+	public Scope enter(Span parent, String spanName, Object... tagPairs) {
 		SpanBuilder span = createSpan(parent, spanName, tagPairs);
 		Scope scope = span.startActive(true);
 		return scope;
 	}
 	
 	@Override
-	public SpanBuilder createSpan(Span parent, String spanName, String... tagPairs) {
+	public SpanBuilder createSpan(Span parent, String spanName, Object... tagPairs) {
 		SpanBuilder span = GlobalTracer.get().buildSpan(spanName);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
-			span.withTag(tagPairs[i],tagPairs[i+1]);
+			span.withTag(String.valueOf(tagPairs[i]),MString.toString(tagPairs[i+1]));
     	span.withTag("ident", IdentUtil.getFullIdent());
     	span.withTag("pricipal", AccessUtil.getPrincipal());
 		if (parent != null)

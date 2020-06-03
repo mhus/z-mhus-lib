@@ -85,24 +85,26 @@ public class ClientJms extends JmsChannel implements MessageListener {
 
         msg.setJMSMessageID(createMessageId());
 
-        Tags.SPAN_KIND.set(ITracer.get().current(), Tags.SPAN_KIND_CLIENT);
-        ITracer.get().tracer().inject(ITracer.get().current().context(), Format.Builtin.TEXT_MAP, new TextMap() {
-
-			@Override
-			public Iterator<Entry<String, String>> iterator() {
-				return null;
-			}
-
-			@Override
-			public void put(String key, String value) {
-				try {
-					msg.setStringProperty(key, value);
-				} catch (JMSException e) {
-					log().e(dest,key,value,e);
+        if (ITracer.get().current() != null) {
+	        Tags.SPAN_KIND.set(ITracer.get().current(), Tags.SPAN_KIND_CLIENT);
+	        ITracer.get().tracer().inject(ITracer.get().current().context(), Format.Builtin.TEXT_MAP, new TextMap() {
+	
+				@Override
+				public Iterator<Entry<String, String>> iterator() {
+					return null;
 				}
-			}
-        	
-        });
+	
+				@Override
+				public void put(String key, String value) {
+					try {
+						msg.setStringProperty(key, value);
+					} catch (JMSException e) {
+						log().e(dest,key,value,e);
+					}
+				}
+	        	
+	        });
+        }
     }
 
     public Message sendJms(Message msg) throws JMSException {

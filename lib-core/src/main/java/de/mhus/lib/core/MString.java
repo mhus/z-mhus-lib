@@ -2082,11 +2082,16 @@ public class MString {
                 // another error
                 sb.append("[").append(o).append("]");
             } else if (o.getClass().isArray()) {
-                sb.append("{");
+                sb.append("[");
+                boolean first = true;
                 for (Object p : (Object[]) o) {
+                	if (first)
+                		first = false;
+                	else
+                		sb.append(",");
                     error = serialize(sb, p, error);
                 }
-                sb.append("}");
+                sb.append("]");
             } else sb.append("[").append(o).append("]");
         } catch (Throwable t) {
         }

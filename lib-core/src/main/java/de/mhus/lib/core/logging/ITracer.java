@@ -22,7 +22,7 @@ public interface ITracer {
 	 * @param tagPairs key-value pairs for tags
 	 * @return The scope
 	 */
-	Scope start(String name, String activation, String ... tagPairs);
+	Scope start(String name, String activation, Object ... tagPairs);
 	
 	/**
 	 * Enter a sub span.
@@ -31,7 +31,7 @@ public interface ITracer {
 	 * @param tagPairs key-value pairs for tags
 	 * @return The scope
 	 */
-	Scope enter(String spanName, String ... tagPairs);
+	Scope enter(String spanName, Object ... tagPairs);
 
 	/**
 	 * Enter a sub span and set the given parent span.
@@ -43,7 +43,7 @@ public interface ITracer {
 	 * @param tagPairs
 	 * @return
 	 */
-	Scope enter(Span parent, String spanName, String ... tagPairs);
+	Scope enter(Span parent, String spanName, Object ... tagPairs);
 
 	/**
 	 * Return the current active span or null if not exists.
@@ -80,6 +80,6 @@ public interface ITracer {
 
 	void activate(String activation);
 
-	SpanBuilder createSpan(Span parent, String spanName, String ... tagPairs);
+	SpanBuilder createSpan(Span parent, String spanName, Object ... tagPairs);
 	
 }

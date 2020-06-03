@@ -4,3 +4,4 @@
 target/
 .externalToolBuilders/
 lib-core/de.mhus.lib.core.service.ServerIdent.properties
+lib-jms/de.mhus.lib.core.service.ServerIdent.properties
