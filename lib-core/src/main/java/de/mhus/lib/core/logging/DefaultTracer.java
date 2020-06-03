@@ -1,7 +1,6 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -18,12 +17,7 @@ public class DefaultTracer extends MLog implements ITracer {
 		
 	@Override
 	public Scope start(String spanName, String activation, String ... tagPairs) {
-		SpanBuilder span = GlobalTracer.get().buildSpan(spanName);
-		for (int i = 0; i < tagPairs.length-1; i=i+2)
-			span.withTag(tagPairs[i],tagPairs[i+1]);
-    	span.withTag("ident", IdentUtil.getFullIdent());
-    	span.withTag("pricipal", AccessUtil.getPrincipal());
-    	
+		SpanBuilder span = createSpan(null, spanName, tagPairs);
 		Scope scope = span.ignoreActiveSpan().startActive(true);
 		activate(activation);
 		return scope;
@@ -57,6 +51,13 @@ public class DefaultTracer extends MLog implements ITracer {
 
 	@Override
 	public Scope enter(Span parent, String spanName, String... tagPairs) {
+		SpanBuilder span = createSpan(parent, spanName, tagPairs);
+		Scope scope = span.startActive(true);
+		return scope;
+	}
+	
+	@Override
+	public SpanBuilder createSpan(Span parent, String spanName, String... tagPairs) {
 		SpanBuilder span = GlobalTracer.get().buildSpan(spanName);
 		for (int i = 0; i < tagPairs.length-1; i=i+2)
 			span.withTag(tagPairs[i],tagPairs[i+1]);
@@ -64,8 +65,7 @@ public class DefaultTracer extends MLog implements ITracer {
     	span.withTag("pricipal", AccessUtil.getPrincipal());
 		if (parent != null)
 			span.asChildOf(parent);
-		Scope scope = span.startActive(true);
-		return scope;
+		return span;
 	}
 	
 	@Override

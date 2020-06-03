@@ -5,6 +5,7 @@ import de.mhus.lib.core.MApi;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.Tracer.SpanBuilder;
 
 @DefaultImplementation(DefaultTracer.class)
 public interface ITracer {
@@ -78,5 +79,7 @@ public interface ITracer {
     }
 
 	void activate(String activation);
+
+	SpanBuilder createSpan(Span parent, String spanName, String ... tagPairs);
 	
 }

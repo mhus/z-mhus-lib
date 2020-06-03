@@ -10,6 +10,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
@@ -326,10 +327,9 @@ public class ShiroSecurityTest {
         System.out.println();
         System.out.println(">>> " + MSystem.findCallingMethod(3));
         // --- Prepare
-        MApi.setDirtyTrace(true);
-        MApi.get().getLogFactory().setDefaultLevel(Log.LEVEL.DEBUG);
-//        MApi.get().getBaseControl().setFindStrategy(new SingleBaseStrategy());
+        MDirtyTricks.setTestLogging();
         //cleanup shiro
+        MApi.get().getLookupActivator().removeObject(AccessApi.class, null);
         AccessUtil.subjectCleanup();
        // touch class
         DefaultAccessApi.CFG_CONFIG_FILE.value();

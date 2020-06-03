@@ -1,7 +1,11 @@
 package de.mhus.lib.core.shiro;
 
+import java.io.File;
+import java.util.HashMap;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.env.BasicIniEnvironment;
+import org.apache.shiro.env.DefaultEnvironment;
 import org.apache.shiro.env.Environment;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
@@ -22,8 +26,15 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     }
     
     protected void initialize() {
-        log().d("Initialize Shiro",CFG_CONFIG_FILE);
-        env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+    	try {
+    		log().d("Initialize shiro",CFG_CONFIG_FILE);
+    		env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+    	} catch (Exception e) {
+    		log().d("Initialize empty shiro",CFG_CONFIG_FILE, e.toString());
+    		HashMap<String, Object> seed = new HashMap<>();
+    		seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, new EmptySecurityManager());
+    		env = new DefaultEnvironment(seed);
+    	}
         SecurityUtils.setSecurityManager(env.getSecurityManager());
 //        Factory<SecurityManager> factory = new IniSecurityManagerFactory(CFG_CONFIG_FILE.value());
 //        securityManager = factory.getInstance();

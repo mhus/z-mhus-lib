@@ -26,6 +26,7 @@ public class MDirtyTricks {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        MApi.setDirtyTrace(true);
     }
     
     public static void setJavaLogging() {

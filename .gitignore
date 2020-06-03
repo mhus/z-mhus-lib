@@ -3,3 +3,4 @@
 .settings/
 target/
 .externalToolBuilders/
+lib-core/de.mhus.lib.core.service.ServerIdent.properties

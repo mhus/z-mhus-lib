@@ -64,23 +64,43 @@ public class AccessUtil {
             ));
 
     public static boolean isAdmin() {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return subject.hasRole(ROLE_ADMIN.value());
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        return subject.hasRole(ROLE_ADMIN.value());
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return false;
+    	}
     }
     
     public static Subject getSubject() {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return subject;
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        return subject;
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return null;
+    	}
     }
     
     public static boolean isAuthenticated() {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return subject.isAuthenticated();
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        return subject.isAuthenticated();
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return false;
+    	}
     }
     
     public static String getPrincipal() {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return getPrincipal(subject);
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        return getPrincipal(subject);
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return null;
+    	}
     }
     
     public static String getPrincipal(Subject subject) {
@@ -108,8 +128,13 @@ public class AccessUtil {
     }
     
     public static Collection<Realm> getRealms() {
-        SecurityManager securityManager = M.l(AccessApi.class).getSecurityManager();
-        return ((RealmSecurityManager)securityManager).getRealms();
+    	try {
+	        SecurityManager securityManager = M.l(AccessApi.class).getSecurityManager();
+	        return ((RealmSecurityManager)securityManager).getRealms();
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return Collections.emptyList();
+    	}
     }
     
     public static PrincipalData loadPrincipalDataFromRealm(Subject subject) {
@@ -245,22 +270,27 @@ public class AccessUtil {
      * @return true if access is granted
      */
     public static boolean isPermitted(String permission, String level, String instance) {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        permission = normalizeWildcardPart(permission);
-        StringBuilder wildcardString = new StringBuilder().append(permission);
-        if (level != null || instance != null) {
-            if (level == null)
-                wildcardString.append(":*");
-            else {
-                level = normalizeWildcardPart(level);
-                wildcardString.append(':').append(level);
-            }
-            if (instance != null) {
-                instance = normalizeWildcardPart(instance);
-                wildcardString.append(':').append(instance);
-            }
-        }
-        return subject.isPermitted(new WildcardPermission(wildcardString.toString()));
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        permission = normalizeWildcardPart(permission);
+	        StringBuilder wildcardString = new StringBuilder().append(permission);
+	        if (level != null || instance != null) {
+	            if (level == null)
+	                wildcardString.append(":*");
+	            else {
+	                level = normalizeWildcardPart(level);
+	                wildcardString.append(':').append(level);
+	            }
+	            if (instance != null) {
+	                instance = normalizeWildcardPart(instance);
+	                wildcardString.append(':').append(instance);
+	            }
+	        }
+	        return subject.isPermitted(new WildcardPermission(wildcardString.toString()));
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return false;
+    	}
     }
     
     private static String normalizeWildcardPart(String permission) {
@@ -270,8 +300,13 @@ public class AccessUtil {
     }
 
     public static boolean isPermitted(String wildcardString) {
-        Subject subject =  M.l(AccessApi.class).getSubject(); // init
-        return subject.isPermitted(new WildcardPermission(wildcardString));
+    	try {
+	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
+	        return subject.isPermitted(new WildcardPermission(wildcardString));
+    	} catch (Throwable t) {
+    		log.d(t);
+    		return false;
+    	}
     }
 
     public static Locale getLocale() {
