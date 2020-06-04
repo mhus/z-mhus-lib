@@ -52,6 +52,7 @@ public class MHttpClientBuilder extends MObject {
     private int proxyPort = 3128;
     private BasicCookieStore cookieStore;
     private boolean useSystemProperties;
+    private boolean tracing = true;
     protected HttpClientConnectionManager connManager;
 
     /**
@@ -77,46 +78,48 @@ public class MHttpClientBuilder extends MObject {
     }
 
     protected void configureTrace(HttpClientBuilder build) {
-		build.addInterceptorFirst(new HttpRequestInterceptor() {
-			
-			@Override
-			public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-				try {
-					Span span = ITracer.get().current();
-					if (span != null) {
-						RequestLine line = request.getRequestLine();
-						Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
-						Tags.HTTP_URL.set(span, line.getUri() );
-						Tags.HTTP_METHOD.set(span, line.getMethod());
-						ITracer.get().tracer().inject(span.context(), Format.Builtin.HTTP_HEADERS, new TextMap() {
-	
-							@Override
-							public Iterator<Entry<String, String>> iterator() {
-								return null;
-							}
-	
-							@Override
-							public void put(String key, String value) {
-								request.setHeader(key, value);
-							}
-							
-						});
-					}
-				} catch (Throwable t) {}
-			}
-		});
-		build.addInterceptorLast(new HttpResponseInterceptor() {
-			
-			@Override
-			public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-				try {
-					Span span = ITracer.get().current();
-					if (span != null) {
-						Tags.HTTP_STATUS.set(span, response.getStatusLine().getStatusCode());
-					}
-				} catch (Throwable t) {}
-			}
-		});
+    	if (tracing) {
+			build.addInterceptorFirst(new HttpRequestInterceptor() {
+				
+				@Override
+				public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+					try {
+						Span span = ITracer.get().current();
+						if (span != null) {
+							RequestLine line = request.getRequestLine();
+							Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
+							Tags.HTTP_URL.set(span, line.getUri() );
+							Tags.HTTP_METHOD.set(span, line.getMethod());
+							ITracer.get().tracer().inject(span.context(), Format.Builtin.HTTP_HEADERS, new TextMap() {
+		
+								@Override
+								public Iterator<Entry<String, String>> iterator() {
+									return null;
+								}
+		
+								@Override
+								public void put(String key, String value) {
+									request.setHeader(key, value);
+								}
+								
+							});
+						}
+					} catch (Throwable t) {}
+				}
+			});
+			build.addInterceptorLast(new HttpResponseInterceptor() {
+				
+				@Override
+				public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+					try {
+						Span span = ITracer.get().current();
+						if (span != null) {
+							Tags.HTTP_STATUS.set(span, response.getStatusLine().getStatusCode());
+						}
+					} catch (Throwable t) {}
+				}
+			});
+    	}
 	}
 
 	protected void configureConnectionManager(HttpClientBuilder build) {
@@ -247,4 +250,12 @@ public class MHttpClientBuilder extends MObject {
             //			log().d(e);
         }
     }
+
+	public boolean isTracing() {
+		return tracing;
+	}
+
+	public void setTracing(boolean tracing) {
+		this.tracing = tracing;
+	}
 }
