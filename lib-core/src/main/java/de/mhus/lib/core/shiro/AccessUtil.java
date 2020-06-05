@@ -381,7 +381,12 @@ public class AccessUtil {
         }
         loadPrincipalData(subject);
         if (locale != null)
-            setLocale(locale);
+        	try {
+        		setLocale(locale);
+        	} catch (org.apache.shiro.session.UnknownSessionException e) {
+        		subject.getSession(true);
+        		setLocale(locale);
+        	}
         return true;
     }
 

@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.MUri;
 
 public interface IProperties
@@ -232,7 +233,19 @@ public interface IProperties
             Map<?, ?> p, String para, char keySeparator, char typeSeparator) {
         if (para == null) return;
         int pos = para.indexOf(keySeparator);
-        if (pos < 0) return;
+        if (pos < 0) {
+            String t = "text";
+            if (typeSeparator != 0) {
+                pos = para.indexOf(typeSeparator);
+                if (pos > 0) {
+                    t = para.substring(pos + 1);
+                    para = para.substring(0, pos);
+                }
+            }
+        	Object obj = MCast.toType(para, t, null);
+            if (obj != null) ((Map<Object, Object>) p).put(IConfig.NAMELESS_VALUE, para);
+        	return;
+        }
         String k = para.substring(0, pos).trim();
         String v = para.substring(pos + 1);
         String t = "text";

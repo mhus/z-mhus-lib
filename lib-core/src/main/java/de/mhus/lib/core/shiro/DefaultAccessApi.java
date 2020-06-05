@@ -1,6 +1,5 @@
 package de.mhus.lib.core.shiro;
 
-import java.io.File;
 import java.util.HashMap;
 
 import org.apache.shiro.SecurityUtils;

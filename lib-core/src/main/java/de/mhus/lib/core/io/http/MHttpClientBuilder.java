@@ -255,7 +255,8 @@ public class MHttpClientBuilder extends MObject {
 		return tracing;
 	}
 
-	public void setTracing(boolean tracing) {
+	public MHttpClientBuilder setTracing(boolean tracing) {
 		this.tracing = tracing;
+		return this;
 	}
 }
