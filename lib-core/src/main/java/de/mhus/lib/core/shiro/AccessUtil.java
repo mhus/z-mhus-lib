@@ -371,6 +371,17 @@ public class AccessUtil {
      * @return true if login was successful
      */
     public static boolean login(Subject subject, String user, String pass, boolean rememberMe, Locale locale) {
+    	
+    	try {
+	    	try {
+	    		subject.getSession(true).getAttributeKeys();
+	    	} catch (org.apache.shiro.session.UnknownSessionException e) {
+	    		subject.logout();
+	    	}
+    	} catch (Throwable t) {
+    		log.w(t);
+    	}
+    	
         UsernamePasswordToken token = new UsernamePasswordToken(user, MPassword.decode(pass));
         token.setRememberMe(rememberMe);
         try {
@@ -381,12 +392,7 @@ public class AccessUtil {
         }
         loadPrincipalData(subject);
         if (locale != null)
-        	try {
-        		setLocale(locale);
-        	} catch (org.apache.shiro.session.UnknownSessionException e) {
-        		subject.getSession(true);
-        		setLocale(locale);
-        	}
+    		setLocale(locale);
         return true;
     }
 
