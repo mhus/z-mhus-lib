@@ -15,8 +15,10 @@ package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import io.opentracing.Span;
 
 /**
  * Got the interface from apache-commons-logging. I need to switch because its not working in
@@ -90,6 +92,22 @@ public class Log {
     public void log(LEVEL level, Object... msg) {
         if (engine == null) return;
 
+        // level mapping
+        Span span = ITracer.get().current();
+        if (span != null) {
+            String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
+            if (mapping != null) {
+                switch (mapping) {
+                case "trace":
+                    if (level == LEVEL.TRACE)
+                        level = LEVEL.INFO;
+                case "debug":
+                    if (level == LEVEL.DEBUG)
+                        level = LEVEL.INFO;
+                }
+            }
+        }
+        
         switch (level) {
             case DEBUG:
                 if (!engine.isDebugEnabled()) return;
@@ -275,6 +293,22 @@ public class Log {
 
         if (localTrace) level = LEVEL.INFO;
 
+        // level mapping
+        Span span = ITracer.get().current();
+        if (span != null) {
+            String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
+            if (mapping != null) {
+                switch (mapping) {
+                case "trace":
+                    if (level == LEVEL.TRACE)
+                        return engine.isInfoEnabled();
+                case "debug":
+                    if (level == LEVEL.DEBUG)
+                        return engine.isInfoEnabled();
+                }
+            }
+        }
+        
         switch (level) {
             case DEBUG:
                 return engine.isDebugEnabled();

@@ -36,8 +36,11 @@ public class DefaultTracer extends MLog implements ITracer {
 		int p = activation.indexOf(':');
 		if (p >= 0) {
 			MProperties options = IProperties.explodeToMProperties(activation.substring(p+1).split(","));
-			if (options.containsKey("level")) {
-				span.setBaggageItem(MLog.LOG_LEVEL_MAPPING, options.getString("level", ""));
+			{
+    			String value = options.getString("level", null);
+    			if (value != null) {
+    				span.setBaggageItem(MLog.LOG_LEVEL_MAPPING, value);
+    			}
 			}
 			activation = activation.substring(0,p);
 		}

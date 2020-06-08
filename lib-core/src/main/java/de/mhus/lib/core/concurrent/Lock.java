@@ -15,8 +15,10 @@ package de.mhus.lib.core.concurrent;
 
 import java.io.Closeable;
 
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.errors.TimeoutException;
 import de.mhus.lib.errors.TimeoutRuntimeException;
+import io.opentracing.Scope;
 
 public interface Lock extends Closeable {
 
@@ -90,17 +92,26 @@ public interface Lock extends Closeable {
         throw new TimeoutRuntimeException(getName());
     }
 
+    @SuppressWarnings("resource")
     default boolean waitUntilUnlock(long timeout) {
-        synchronized (this) {
-            while (isLocked()) {
-                long start = System.currentTimeMillis();
-                try {
-                    wait(timeout);
-                } catch (InterruptedException e) {
+        Scope scope = null;
+        try {
+            synchronized (this) {
+                while (isLocked()) {
+                    long start = System.currentTimeMillis();
+                    if (scope != null)
+                        scope = ITracer.get().enter("waitUntilUnlock", "name", getName());
+                    try {
+                        wait(timeout);
+                    } catch (InterruptedException e) {
+                    }
+                    if (System.currentTimeMillis() - start >= timeout) return false;
                 }
-                if (System.currentTimeMillis() - start >= timeout) return false;
+                return true;
             }
-            return true;
+        } finally {
+            if (scope != null)
+                scope.close();
         }
     }
 

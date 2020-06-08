@@ -2,7 +2,9 @@ package de.mhus.lib.core.concurrent;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.service.LockManager;
+import io.opentracing.Scope;
 
 public class LocalLock implements Lock {
 
@@ -23,21 +25,30 @@ public class LocalLock implements Lock {
         M.l(LockManager.class).register(this);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public Lock lock() {
-        synchronized (this) {
-            while (isLocked()) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-
+        Scope scope = null;
+        try {
+            synchronized (this) {
+                while (isLocked()) {
+                    if (scope != null)
+                        scope = ITracer.get().enter("waitUntilUnlock", "name", getName());
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+    
+                    }
                 }
+                lock = Thread.currentThread();
+                stacktrace = MCast.toString("", lock.getStackTrace());
+                lockTime = System.currentTimeMillis();
+                cnt++;
+                lockEvent(true);
             }
-            lock = Thread.currentThread();
-            stacktrace = MCast.toString("", lock.getStackTrace());
-            lockTime = System.currentTimeMillis();
-            cnt++;
-            lockEvent(true);
+        } finally {
+            if (scope != null)
+                scope.close();
         }
         return this;
     }
@@ -49,22 +60,31 @@ public class LocalLock implements Lock {
      */
     protected void lockEvent(boolean locked) {}
 
+    @SuppressWarnings("resource")
     @Override
     public boolean lock(long timeout) {
-        synchronized (this) {
-            long start = System.currentTimeMillis();
-            while (isLocked()) {
-                try {
-                    wait(timeout);
-                } catch (InterruptedException e) {
+        Scope scope = null;
+        try {
+            synchronized (this) {
+                long start = System.currentTimeMillis();
+                while (isLocked()) {
+                    if (scope != null)
+                        scope = ITracer.get().enter("waitUntilUnlock", "name", getName());
+                    try {
+                        wait(timeout);
+                    } catch (InterruptedException e) {
+                    }
+                    if (System.currentTimeMillis() - start >= timeout) return false;
                 }
-                if (System.currentTimeMillis() - start >= timeout) return false;
+                lock = Thread.currentThread();
+                stacktrace = MCast.toString("", lock.getStackTrace());
+                lockTime = System.currentTimeMillis();
+                lockEvent(true);
+                return true;
             }
-            lock = Thread.currentThread();
-            stacktrace = MCast.toString("", lock.getStackTrace());
-            lockTime = System.currentTimeMillis();
-            lockEvent(true);
-            return true;
+        } finally {
+            if (scope != null)
+                scope.close();
         }
     }
 
