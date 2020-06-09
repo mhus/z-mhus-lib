@@ -251,5 +251,8 @@ public abstract class Console extends PrintStream implements Adaptable {
             }
         }
     }
+
+    public void beep() {
+    }
 	
 }

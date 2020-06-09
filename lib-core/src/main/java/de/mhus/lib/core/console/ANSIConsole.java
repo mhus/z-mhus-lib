@@ -432,4 +432,11 @@ public class ANSIConsole extends Console {
     public void setHeight(int h) {
         this.height = h;
     }
+    
+    @Override
+    public void beep() {
+        print("\007");
+        flush();
+    }
+
 }
