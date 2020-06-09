@@ -37,6 +37,7 @@ public class Log {
         FATAL
     };
 
+    private static ThreadLocal<String> lookingForSpan = new ThreadLocal<>();
     protected boolean localTrace = true;
     private static boolean stacktraceTrace = false;
     protected String name;
@@ -93,7 +94,17 @@ public class Log {
         if (engine == null) return;
 
         // level mapping
-        Span span = ITracer.get().current();
+        Span span = null;
+        // avoid stack overloading
+        if (lookingForSpan.get() == null) {
+            lookingForSpan.set("");
+            try {
+                span = ITracer.get().current();
+            } finally {
+                lookingForSpan.remove();
+            }
+        }
+
         if (span != null) {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
             if (mapping != null) {
