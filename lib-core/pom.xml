@@ -55,6 +55,7 @@
                     org.apache.shiro.*;resolution:=optional,
                     org.yaml.snakeyaml.*;resolution:=optional,
                     org.apache.maven.plugin.*;resolution:=optional,
+                    io.opentracing.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <Private-Package>

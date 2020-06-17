@@ -179,6 +179,16 @@ public class MApi {
         }
     }
 
+    public static void dirtyLogTrace(Object... string) {
+        if (log != null) {
+            log.t(string);
+            return;
+        }
+        if (string == null || !isDirtyTrace()) return;
+        out.println("--- " + Arrays.toString(string));
+        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
+    }
+    
     public static void dirtyLogDebug(Object... string) {
         if (log != null) {
             log.d(string);

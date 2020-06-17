@@ -937,6 +937,15 @@ public class MSystem {
         return out;
     }
 
+    public static List<Method> findMethodsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+        LinkedList<Method> out = new LinkedList<>();
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getAnnotation(annotationClass) != null)
+                out.add(method);
+        }
+        return out;
+    }
+    
     public static Class<?> getClass(ClassLoader cl, String type) throws ClassNotFoundException {
         if (type == null) return null;
         if (type.equals("int") || type.equals("integer")) return int.class;
@@ -1047,4 +1056,5 @@ public class MSystem {
         }
 
     }
+
 }
