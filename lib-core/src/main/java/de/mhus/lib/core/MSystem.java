@@ -946,6 +946,15 @@ public class MSystem {
         return out;
     }
     
+    public static List<Field> findFieldsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+        LinkedList<Field> out = new LinkedList<>();
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.getAnnotation(annotationClass) != null)
+                out.add(field);
+        }
+        return out;
+    }
+    
     public static Class<?> getClass(ClassLoader cl, String type) throws ClassNotFoundException {
         if (type == null) return null;
         if (type.equals("int") || type.equals("integer")) return int.class;
