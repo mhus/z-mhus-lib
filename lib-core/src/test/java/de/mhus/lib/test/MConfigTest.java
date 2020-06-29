@@ -14,21 +14,13 @@
 package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.logging.LogFactory;
-import de.mhus.lib.core.logging.MLogFactory;
-import de.mhus.lib.core.mapi.IApiInternal;
-import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.errors.MException;
 
 public class MConfigTest {
@@ -36,45 +28,17 @@ public class MConfigTest {
     private static String initiatorValue;
 
     @Test
-    public void testLoading() throws MException {
+    public void testLoading() throws MException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
         
-        // init first as 'dummy'
-        MApi.get().getCfgManager();
-        
+        MDirtyTricks.cleanupMApi();
         
         System.setProperty(MConstants.PROP_CONFIG_FILE, "src/test/resources/de/mhus/lib/test/mhus-config.xml");
-        
-        IApiInternal internal = new IApiInternal() {
-            
-            @Override
-            public void setMLogFactory(MLogFactory mlogFactory) {
-            }
-            
-            @Override
-            public void setLogFactory(LogFactory logFactory) {
-            }
-            
-            @Override
-            public void setBaseDir(File file) {
-            }
-            
-            @Override
-            public Set<String> getLogTrace() {
-                return new HashSet<>();
-            }
-        };
-        
+
         initiatorValue = "";
-        MCfgManager manager = new MCfgManager(internal );
         assertEquals("", initiatorValue);
+        //  start init
+        MApi.get().getCfgManager();
         
-        IConfig systemC = manager.getCfg("system");
-        assertNotNull(systemC);
-        IConfig testC = manager.getCfg("de.test");
-        assertNotNull(testC);
-        
-        initiatorValue = "";
-        manager.startInitiators();
         assertEquals("abcdefghi", initiatorValue);
         
     }

@@ -1,10 +1,13 @@
 <config>
-<system>
-  <initiator class="de.mhus.lib.test.util.SampleInitiator" value="abc" level="100" />
-</system>
-<de.test>
-  <initiator class="de.mhus.lib.test.util.SampleInitiator" value="ghi" level="102" />
-  <initiator class="de.mhus.lib.test.util.SampleInitiator" value="def" level="101" />
-</de.test>
-
+	<system>
+	    <global>
+	        <initiator class="de.mhus.lib.test.util.SampleInitiator" value="abc" level="100" />
+	    </global>
+	</system>
+	<de.test>
+	    <global>
+	        <initiator class="de.mhus.lib.test.util.SampleInitiator" value="ghi" level="102" />
+	        <initiator class="de.mhus.lib.test.util.SampleInitiator" value="def" level="101" />
+	    </global>
+	</de.test>
 </config>

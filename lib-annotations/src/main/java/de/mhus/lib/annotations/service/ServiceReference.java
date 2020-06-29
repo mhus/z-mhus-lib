@@ -28,5 +28,6 @@ public @interface ServiceReference {
     long timeout() default 0;
     Class<?> service() default Object.class;
     int ranking() default 0;
+    boolean unset() default false;
     
 }

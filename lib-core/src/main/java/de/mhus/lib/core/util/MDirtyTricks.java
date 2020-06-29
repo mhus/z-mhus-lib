@@ -1,5 +1,7 @@
 package de.mhus.lib.core.util;
 
+import java.lang.reflect.Field;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.cfg.CfgValue;
 import de.mhus.lib.core.logging.Log.LEVEL;
@@ -31,6 +33,13 @@ public class MDirtyTricks {
     
     public static void setJavaLogging() {
     	((IApiInternal)MApi.get()).setLogFactory(new JavaLoggerFactory() );
+    }
+
+    public static void cleanupMApi() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = MApi.class.getDeclaredField("api");
+        if (!field.canAccess(null))
+            field.setAccessible(true);
+        field.set(null, null);
     }
         
 }

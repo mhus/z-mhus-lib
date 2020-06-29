@@ -14,40 +14,34 @@
 package de.mhus.lib.core.mapi;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
-import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.DefaultConfigFactory;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.config.MConfig;
-import de.mhus.lib.core.logging.Log;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class MCfgManager {
 
     private HashMap<String, CfgProvider> configurations = new HashMap<>();
-    
-    //private CentralMhusCfgProvider provider;
-    private IApiInternal internal;
 
     private IConfigFactory configFactory;
 
     private LinkedList<File> mhusConfigFiles = new LinkedList<>();
 
-    public MCfgManager(IApiInternal internal) {
-        this.internal = internal;
-        doRestart();
+    public MCfgManager() {
+ // is done in MApi doRestart();
     }
 
     /**
@@ -85,69 +79,6 @@ public class MCfgManager {
         return configurations.values();
     }
 
-    public void startInitiators() {
-
-        MApi.dirtyLogInfo("Start mhu-lib initiators");
-        
-        TreeMap<String, Object[]> initiators = new TreeMap<>(); // execute in an ordered way
-        // default
-        initiators.put("001_system", new Object[] {new SystemCfgInitiator(), null});
-        initiators.put("002_logger", new Object[] {new LogCfgInitiator(), null});
-
-        // init initiators
-        try {
-            IConfig system = null;
-            CfgProvider provider = configurations.get(MConstants.CFG_SYSTEM);
-            if (provider != null)
-                system = provider.getConfig();
-            if (system != null) {
-                MApi.setDirtyTrace(system.getBoolean("log.trace", false));
-                Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
-            }
-            for (String owner : configurations.keySet()) {
-                IConfig cfg = configurations.get(owner).getConfig();
-                MActivator activator = MApi.get().createActivator();
-                if (cfg == null) {
-                    MApi.dirtyLogDebug("Config is null for",owner);
-                } else
-                    for (IConfig node : cfg.getList("initiator")) {
-                        try {
-                            String clazzName = node.getString("class");
-                            String name = node.getString("name", clazzName);
-                            String level = node.getString("level", "100");
-                            name = level + "_" + name;
-
-                            if ("none".equals(clazzName)) {
-                                MApi.dirtyLogDebug("remove initiator", name);
-                                initiators.remove(name);
-                            } else if (clazzName != null && !initiators.containsKey(name)) {
-                                MApi.dirtyLogDebug("add initiator", name);
-                                CfgInitiator initiator =
-                                        activator.createObject(CfgInitiator.class, clazzName);
-                                initiators.put(name, new Object[] {initiator, node});
-                            }
-                        } catch (Throwable t) {
-                            MApi.dirtyLogError("Can't load initiator", node, " Error: ", t);
-                        }
-                    }
-            }
-
-            for (Object[] initiator : initiators.values())
-                try {
-                    CfgInitiator i = (CfgInitiator) initiator[0];
-                    IConfig c = (IConfig) initiator[1];
-                    MApi.dirtyLogInfo("run initiator", initiator[0].getClass());
-                    i.doInitialize(internal, this, c);
-                } catch (Throwable t) {
-                    MApi.dirtyLogError("Can't initiate", initiator.getClass(), " Error: ", t);
-                }
-
-        } catch (Throwable t) {
-            MApi.dirtyLogError("Can't initiate config ", t);
-        }
-        // MApi.getCfgUpdater().doUpdate(null);
-    }
-    
     /**
      * The getConfig without default value will return an empty
      * configuration and not null if the configuration is not found.
@@ -221,7 +152,8 @@ public class MCfgManager {
     public void doRestart() {
         CfgProvider system = configurations.get(MConstants.CFG_SYSTEM);
         if (system != null) {
-            configurations.forEach((k,v) -> v.doRestart() );
+            for (CfgProvider v : new ArrayList<>(configurations.values())) // java.util.ConcurrentModificationException
+                v.doRestart();
         } else {
             initialConfiguration();
         }
@@ -366,5 +298,41 @@ public class MCfgManager {
 	public void reload(Object owner) {
 		
 	}
+
+	/**
+	 * Return all entries of type key from the 'global' configuration section from inside the
+	 * providers configuration.
+	 * 
+	 * The method will ever return a list.
+	 * 
+	 * @param provider The provider where to search in.
+	 * @param key Name of the section
+	 * @return A list of configurations
+	 */
+    @SuppressWarnings("unchecked")
+    public static List<IConfig> getGlobalConfigurations(CfgProvider provider, String key) {
+        IConfig global = provider.getConfig().getObjectOrNull("global");
+        if (global == null) return (List<IConfig>) MCollection.EMPTY_LIST;
+        return global.getObjectList(key);
+    }
 	
+    /**
+     * Return all entries of type key from the 'global' configuration section from all providers.
+     * 
+     * The method will ever return a list.
+     * 
+     * @param key Name of the section
+     * @return A list of configurations
+     */
+    public static List<IConfig> getGlobalConfigurations(String key) {
+        LinkedList<IConfig> out = new LinkedList<>();
+        for (CfgProvider provider : new ArrayList<>( MApi.get().getCfgManager().getProviders() )) {
+            IConfig global = provider.getConfig().getObjectOrNull("global");
+            if (global == null) continue;
+            List<IConfig> list = global.getObjectList(key);
+            out.addAll(list);
+        }
+        return out;
+    }
+
 }

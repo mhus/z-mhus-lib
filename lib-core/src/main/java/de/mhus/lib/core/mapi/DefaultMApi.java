@@ -16,13 +16,18 @@ package de.mhus.lib.core.mapi;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MApi.SCOPE;
+import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
+import de.mhus.lib.core.cfg.CfgInitiator;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
@@ -31,18 +36,18 @@ import de.mhus.lib.core.logging.PrintStreamFactory;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
-    private LogFactory logFactory = new PrintStreamFactory();
+    protected LogFactory logFactory = new PrintStreamFactory();
 //    private BaseControl baseControl;
-    private MCfgManager configProvider;
-    private HashSet<String> logTrace = new HashSet<>();
-    private File baseDir = new File(".");
-    private MLogFactory mlogFactory;
-    private DefaultActivator base = new DefaultActivator();
+    protected MCfgManager configProvider;
+    protected HashSet<String> logTrace = new HashSet<>();
+    protected File baseDir = new File(".");
+    protected MLogFactory mlogFactory;
+    protected DefaultActivator base = new DefaultActivator();
 
     @Override
     public void doInitialize(ClassLoader coreLoader) {
         logFactory = new ConsoleFactory();
-        getCfgManager().doRestart();
+        getCfgManager();
     }
 
 //    @Override
@@ -66,10 +71,15 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     @Override
     public synchronized MCfgManager getCfgManager() {
         if (configProvider == null) {
-            configProvider = new MCfgManager(this);
-            configProvider.startInitiators();
+            configProvider = createMCfgManager();
+            configProvider.doRestart();
+            startInitiators();
         }
         return configProvider;
+    }
+
+    protected MCfgManager createMCfgManager() {
+        return new MCfgManager();
     }
 
     @Override
@@ -77,6 +87,59 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         return logTrace.contains(name);
     }
 
+    public void startInitiators() {
+
+        MApi.dirtyLogInfo("Start mhu-lib initiators");
+        
+        TreeMap<String, Object[]> initiators = new TreeMap<>(); // execute in an ordered way
+        // default
+        initiators.put("001_system", new Object[] {new SystemCfgInitiator(), null});
+        initiators.put("002_logger", new Object[] {new LogCfgInitiator(), null});
+
+        // init initiators
+        try {
+            IConfig system = configProvider.getCfg(MConstants.CFG_SYSTEM);
+            MApi.setDirtyTrace(system.getBoolean("log.trace", false));
+            Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
+            
+            MActivator activator = MApi.get().createActivator();
+            for (IConfig node : MCfgManager.getGlobalConfigurations("initiator")) {
+                try {
+                    String clazzName = node.getString("class");
+                    String name = node.getString("name", clazzName);
+                    String level = node.getString("level", "100");
+                    name = level + "_" + name;
+
+                    if ("none".equals(clazzName)) {
+                        MApi.dirtyLogDebug("remove initiator", name);
+                        initiators.remove(name);
+                    } else if (clazzName != null && !initiators.containsKey(name)) {
+                        MApi.dirtyLogDebug("add initiator", name);
+                        CfgInitiator initiator =
+                                activator.createObject(CfgInitiator.class, clazzName);
+                        initiators.put(name, new Object[] {initiator, node});
+                    }
+                } catch (Throwable t) {
+                    MApi.dirtyLogError("Can't load initiator", node, " Error: ", t);
+                }
+            }
+
+            for (Object[] initiator : initiators.values())
+                try {
+                    CfgInitiator i = (CfgInitiator) initiator[0];
+                    IConfig c = (IConfig) initiator[1];
+                    MApi.dirtyLogInfo("run initiator", initiator[0].getClass());
+                    i.doInitialize(this, configProvider, c);
+                } catch (Throwable t) {
+                    MApi.dirtyLogError("Can't initiate", initiator.getClass(), " Error: ", t);
+                }
+
+        } catch (Throwable t) {
+            MApi.dirtyLogError("Can't initiate config ", t);
+        }
+        // MApi.getCfgUpdater().doUpdate(null);
+    }
+    
 //    @Override
 //    public MBase base() {
 //        return getBaseControl().base();

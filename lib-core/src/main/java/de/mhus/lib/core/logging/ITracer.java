@@ -18,6 +18,7 @@ public interface ITracer {
 	 * closed before creation of the new span. It is always a root span.
 	 * 
 	 * @param name Name of the activity
+	 * @param activation 
 	 * @param active Set true to force sampling of the span.
 	 * @param tagPairs key-value pairs for tags
 	 * @return The scope
@@ -41,7 +42,7 @@ public interface ITracer {
 	 * @param parent
 	 * @param spanName
 	 * @param tagPairs
-	 * @return
+	 * @return The new Scope
 	 */
 	Scope enter(Span parent, String spanName, Object ... tagPairs);
 
@@ -72,7 +73,7 @@ public interface ITracer {
     /**
      * Fast access to tracer
      * 
-     * @return
+     * @return The current tracer
      */
     public static ITracer get() {
     	return MApi.lookup(ITracer.class);
