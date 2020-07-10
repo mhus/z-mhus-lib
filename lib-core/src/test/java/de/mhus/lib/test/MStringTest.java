@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 
 import org.junit.jupiter.api.Test;
 
-public class MStringTest {
+public class MStringTest extends InternatTestCase {
 
     @Test
     public void testStringCompiler() throws MException {

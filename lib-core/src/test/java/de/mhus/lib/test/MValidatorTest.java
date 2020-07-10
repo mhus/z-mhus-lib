@@ -22,7 +22,7 @@ import de.mhus.lib.core.MSql;
 import de.mhus.lib.core.MValidator;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MValidatorTest {
+public class MValidatorTest extends InternatTestCase {
 
     @Test
     public void testFileName() {

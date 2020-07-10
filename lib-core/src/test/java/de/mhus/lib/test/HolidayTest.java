@@ -23,7 +23,7 @@ import de.mhus.lib.core.calendar.Holidays;
 import de.mhus.lib.errors.NotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HolidayTest {
+public class HolidayTest extends InternatTestCase {
 
     @SuppressWarnings("deprecation")
     @Test

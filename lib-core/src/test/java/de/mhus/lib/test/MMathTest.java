@@ -25,7 +25,7 @@ import de.mhus.lib.core.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MMathTest {
+public class MMathTest extends InternatTestCase {
 
     @Test
     public void testTrimDecimals() {

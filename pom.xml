@@ -106,6 +106,7 @@
 				<module>lib-core</module>
 				<module>lib-j2ee</module>
 				<module>lib-standalone</module>
+                <module>lib-tests</module>
 			</modules>
 
 		</profile>
@@ -121,6 +122,7 @@
 				<module>lib-annotations</module>
 				<module>lib-core</module>
 				<module>lib-j2ee</module>
+                <module>lib-tests</module>
 				<!-- 
 		        <module>lib-standalone</module>
 				 -->

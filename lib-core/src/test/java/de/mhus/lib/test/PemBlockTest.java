@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class PemBlockTest {
+public class PemBlockTest extends InternatTestCase {
 
     @Test
     public void testBlock() throws ParseException {

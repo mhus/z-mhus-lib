@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class VersionTest {
+public class VersionTest extends InternatTestCase {
 
     @Test
     public void testVersion() {

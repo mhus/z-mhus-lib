@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.core.util.MUri;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Rfc1738Test {
+public class Rfc1738Test extends InternatTestCase {
 
     @Test
     public void testCoding() {

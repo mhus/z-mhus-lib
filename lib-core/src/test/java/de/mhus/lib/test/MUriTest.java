@@ -21,7 +21,7 @@ import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.util.MUri;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MUriTest {
+public class MUriTest extends InternatTestCase {
 
     @Test
     public void testParser() {

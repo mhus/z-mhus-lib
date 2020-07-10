@@ -26,7 +26,7 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.parser.HtmlParser;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HtmlParserTest {
+public class HtmlParserTest extends InternatTestCase {
 
     @Test
     public void testParser() throws IOException {

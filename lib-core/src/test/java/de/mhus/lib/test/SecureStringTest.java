@@ -32,7 +32,7 @@ import de.mhus.lib.core.util.Lorem;
 import de.mhus.lib.core.util.SecureString;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SecureStringTest {
+public class SecureStringTest extends InternatTestCase {
 
     @Test
     public void testSecureString() {

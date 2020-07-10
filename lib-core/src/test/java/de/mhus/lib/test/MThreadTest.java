@@ -24,7 +24,7 @@ import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MThreadDaemon;
 import de.mhus.lib.core.logging.Log.LEVEL;
 
-public class MThreadTest {
+public class MThreadTest extends InternatTestCase {
 
     protected boolean done;
 

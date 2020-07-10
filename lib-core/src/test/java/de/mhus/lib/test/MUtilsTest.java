@@ -21,7 +21,7 @@ import de.mhus.lib.core.io.StreamBuffer;
 import de.mhus.lib.core.util.ByteBuffer;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MUtilsTest {
+public class MUtilsTest extends InternatTestCase {
 
     @Test
     public void testByteBuffer() {

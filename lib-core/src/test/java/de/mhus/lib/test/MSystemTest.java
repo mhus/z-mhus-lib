@@ -22,7 +22,7 @@ import de.mhus.lib.test.util.StringValue;
 import de.mhus.lib.test.util.Template;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MSystemTest {
+public class MSystemTest extends InternatTestCase {
 
     @Test
     public void testTemplateNames() {

@@ -45,7 +45,7 @@ import de.mhus.lib.core.util.Base64;
 import de.mhus.lib.core.util.Lorem;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CryptTest {
+public class CryptTest extends InternatTestCase {
 
     static final String key2048 =
             "-----BEGIN RSA PRIVATE KEY-----\n"

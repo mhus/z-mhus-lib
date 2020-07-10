@@ -33,7 +33,7 @@ import de.mhus.lib.core.json.SerializerTransformer;
 import de.mhus.lib.core.json.SimpleObjectTransformer;
 import de.mhus.lib.core.json.TransformHelper;
 
-public class MJsonTest {
+public class MJsonTest extends InternatTestCase {
 
     @Test
     public void testSerializerTransformations() {

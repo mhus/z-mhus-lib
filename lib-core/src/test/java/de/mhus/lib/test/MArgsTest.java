@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class MArgsTest {
+public class MArgsTest extends InternatTestCase {
 
     @Test
     public void testDefaultParsing() {

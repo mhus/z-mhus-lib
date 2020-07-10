@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 
 import de.mhus.lib.core.MXml;
 
-public class MXmlTest {
+public class MXmlTest extends InternatTestCase {
 
     final static String 
     // prepared the xml to exactly be reproduced

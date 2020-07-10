@@ -24,7 +24,7 @@ import de.mhus.lib.errors.SyntaxError;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MatcherTest {
+public class MatcherTest extends InternatTestCase {
 
     @Test
     public void testSimple() throws MException {

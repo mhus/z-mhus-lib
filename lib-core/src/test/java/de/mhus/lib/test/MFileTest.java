@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-public class MFileTest {
+public class MFileTest extends InternatTestCase {
 
     @Test
     public void testSaveLoadHistory() throws MException, IOException {

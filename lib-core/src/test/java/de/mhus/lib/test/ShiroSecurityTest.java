@@ -22,7 +22,7 @@ import de.mhus.lib.core.shiro.SubjectEnvironment;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.test.shiro.ShiroAnnotationTest;
 
-public class ShiroSecurityTest {
+public class ShiroSecurityTest extends InternatTestCase {
 
     @Test
     public void annotationsTest() throws NoSuchMethodException, SecurityException {

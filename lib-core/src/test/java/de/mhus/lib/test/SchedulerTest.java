@@ -22,7 +22,7 @@ import de.mhus.lib.core.schedule.CronJob;
 import de.mhus.lib.core.schedule.CronJob.Definition;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SchedulerTest {
+public class SchedulerTest extends InternatTestCase {
 
     @Test
     public void testCron() {

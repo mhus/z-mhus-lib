@@ -17,7 +17,7 @@ package de.mhus.lib.test;
 
 import org.junit.jupiter.api.Test;
 
-public class LogTest {
+public class LogTest extends InternatTestCase {
 
     @Test
     public void testLogName() throws Exception {

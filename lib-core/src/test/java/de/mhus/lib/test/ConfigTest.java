@@ -34,7 +34,7 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.errors.MException;
 
-public class ConfigTest {
+public class ConfigTest extends InternatTestCase {
 
     @Test
     public void testProperties() throws MException {

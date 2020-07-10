@@ -21,7 +21,7 @@ import de.mhus.lib.core.MEventHandler;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Unit test for simple App. */
-public class EventHandlerTest {
+public class EventHandlerTest extends InternatTestCase {
 
     /**
      * Test registration of normal and weak listeners. Test if weak listener will be removed after

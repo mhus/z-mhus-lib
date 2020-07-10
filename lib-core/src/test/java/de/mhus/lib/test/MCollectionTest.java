@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.core.MCollection;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MCollectionTest {
+public class MCollectionTest extends InternatTestCase {
 
     @Test
     public void testArrayManipulation() {

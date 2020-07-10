@@ -26,7 +26,7 @@ import de.mhus.lib.test.util.TransferIfc;
 import de.mhus.lib.test.util.TransferImpl;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BytecodeTest {
+public class BytecodeTest extends InternatTestCase {
 
     @Test
     public void testGetMethodName() throws NotFoundException {

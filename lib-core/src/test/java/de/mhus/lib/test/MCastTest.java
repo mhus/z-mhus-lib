@@ -27,7 +27,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MDate;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MCastTest {
+public class MCastTest extends InternatTestCase {
 
     @BeforeAll
     public static void setUp() throws Exception {

@@ -23,7 +23,7 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.errors.MException;
 
-public class MConfigTest {
+public class MConfigTest extends InternatTestCase {
 
     private static String initiatorValue;
 
