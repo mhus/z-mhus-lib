@@ -95,40 +95,13 @@
 
 	</build>
 
-	<profiles>
-		<profile>
-			<id>default</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
-				<module>lib-annotations</module>
-				<module>lib-core</module>
-				<module>lib-j2ee</module>
-				<module>lib-standalone</module>
-                <module>lib-tests</module>
-			</modules>
-
-		</profile>
-		<profile>
-			<id>release-mhus</id>
-			<activation>
-				<property>
-					<name>performMhusRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<modules>
-				<module>lib-annotations</module>
-				<module>lib-core</module>
-				<module>lib-j2ee</module>
-                <module>lib-tests</module>
-				<!-- 
-		        <module>lib-standalone</module>
-				 -->
-			</modules>
-		</profile>
-	</profiles>
+	<modules>
+		<module>lib-annotations</module>
+		<module>lib-core</module>
+        <module>lib-tests</module>
+		<module>lib-j2ee</module>
+		<module>lib-standalone</module>
+	</modules>
 
     <dependencies>
 		<dependency>
