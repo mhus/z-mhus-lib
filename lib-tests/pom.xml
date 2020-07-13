@@ -64,6 +64,13 @@
             <version>${hamcrest.version}</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- for docker remote control -->
+		<dependency>
+		  <groupId>com.spotify</groupId>
+		  <artifactId>docker-client</artifactId>
+		  <version>8.16.0</version>
+		</dependency>
   </dependencies>
   
 </project>
