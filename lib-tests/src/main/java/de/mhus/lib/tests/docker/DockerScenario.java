@@ -5,19 +5,30 @@ import java.util.LinkedList;
 import com.google.common.collect.Lists;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient.ListContainersParam;
+import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.LogStream;
+import com.spotify.docker.client.ProgressHandler;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.ProgressMessage;
 
 import de.mhus.lib.errors.NotFoundException;
 
+// https://github.com/spotify/docker-client
 public class DockerScenario {
 
 	private LinkedList<DockerContainer> containers = new LinkedList<>();
 	private DefaultDockerClient docker;
+	private String prefix = "test-";
 
+	public DockerScenario() {}
+	
+	public DockerScenario(String prefix) {
+		this.prefix = prefix;
+	}
+	
 	public DockerScenario add(String name, String image, String ... params) {
 		return add(new DockerContainer(name, image, params));
 	}
@@ -35,8 +46,10 @@ public class DockerScenario {
 	}
 	
 	public void init() throws DockerCertificateException {
-		if (docker == null)
+		if (docker == null) {
 			docker = DefaultDockerClient.fromEnv().build();
+//			docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+		}
 	}
 	
 	public void start() throws DockerCertificateException, DockerException, InterruptedException {
@@ -44,7 +57,20 @@ public class DockerScenario {
 		destroy();
 		for (DockerContainer cont : Lists.reverse(containers)) {
 			System.out.println("--- Start " + cont.getName());
-			ContainerCreation creation = docker.createContainer(cont.buildConfig(), cont.getName());
+			
+			try {
+				docker.inspectImage(cont.getImage());
+			} catch (DockerException e) {
+				System.out.println("    Load: " + cont.getImage());
+				docker.pull(cont.getImage(), new ProgressHandler() {
+					
+					@Override
+					public void progress(ProgressMessage message) throws DockerException {
+						System.out.println("    " + message.progress());
+					}
+				});
+			}
+			ContainerCreation creation = docker.createContainer(cont.buildConfig(this), prefix + cont.getName());
 			cont.setId(creation.id());
 			for (String warnings : creation.warnings())
 				System.out.println("    " + warnings);
@@ -82,7 +108,7 @@ public class DockerScenario {
 	public LogStream logs(String name) throws NotFoundException, DockerException, InterruptedException {
 		DockerContainer cont = get(name);
 		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
-		return docker.logs(cont.getId());
+		return docker.logs(cont.getId(), LogsParam.stdout(), LogsParam.stderr());
 	}
 
 	private void fetchContainers() throws DockerException, InterruptedException {
@@ -91,11 +117,17 @@ public class DockerScenario {
 			cont2.setId(null);
 		
 		for (Container cont : docker.listContainers(ListContainersParam.allContainers())) {
-			for (DockerContainer cont2 : containers)
-				if (cont.names().contains(cont2.getName()))
+			System.out.println("Existing " + cont.names());
+			for (DockerContainer cont2 : containers) {
+				if (cont.names().contains("/" + prefix + cont2.getName()))
 					cont2.setId(cont.id());
+			}
 		}
 		
+	}
+
+	public String getPrefix() {
+		return prefix;
 	}
 	
 }

@@ -1,7 +1,10 @@
 package de.mhus.lib.tests.docker;
 
+import java.util.LinkedList;
+
 import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerConfig.Builder;
+import com.spotify.docker.client.messages.HostConfig;
 
 public class DockerContainer {
 	
@@ -32,16 +35,17 @@ public class DockerContainer {
 		this.id = id;
 	}
 
-	public ContainerConfig buildConfig() {
+	public ContainerConfig buildConfig(DockerScenario scenario) {
 		Builder config = ContainerConfig.builder()
 				.hostname(name)
 				.image(image);
-		buildConfig(config);
+		buildConfig(scenario, config);
 		return config.build();
 	}
 
-	protected void buildConfig(Builder config) {
+	protected void buildConfig(DockerScenario scenario, Builder config) {
 		if (params == null) return;
+		LinkedList<String> links = new LinkedList<>();
 		for (String param : params) {
 			if (param.startsWith("env:")) {
 				config.env(param.substring(4));
@@ -57,13 +61,24 @@ public class DockerContainer {
 				config.attachStdout(true);
 				config.attachStdin(true);
 			} else 
-			if (buildConfig(param, config)) {
+			if (param.startsWith("link:")) {
+				links.add(scenario.getPrefix() + param.substring(5));
+			} else
+			if (buildConfig(scenario, param, config)) {
 			} else
 				System.out.println("*** Unknown param: " + param);
 		}
+		
+		if (links.size() > 0) {
+			HostConfig hostConfig = HostConfig.builder()
+					.links(links)
+					.build();
+			config.hostConfig(hostConfig);
+		}
+		
 	}
 
-	protected boolean buildConfig(String param, Builder config) {
+	protected boolean buildConfig(DockerScenario scenario, String param, Builder config) {
 		return false;
 	}
 	
