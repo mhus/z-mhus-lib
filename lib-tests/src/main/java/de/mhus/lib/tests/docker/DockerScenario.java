@@ -28,7 +28,9 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 
-// https://github.com/spotify/docker-client
+// https://github.com/docker-java/docker-java
+// https://github.com/docker-java/docker-java/blob/77103e319060e8fa3a4d0caaf2773597a907687c/docker-java/src/test/java/com/github/dockerjava/cmd/StartContainerCmdIT.java
+
 public class DockerScenario {
 
 	private LinkedList<DockerContainer> containers = new LinkedList<>();
