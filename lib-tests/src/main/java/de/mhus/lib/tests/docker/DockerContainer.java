@@ -1,10 +1,11 @@
 package de.mhus.lib.tests.docker;
 
-import java.util.LinkedList;
+import java.util.Map;
 
-import com.spotify.docker.client.messages.ContainerConfig;
-import com.spotify.docker.client.messages.ContainerConfig.Builder;
-import com.spotify.docker.client.messages.HostConfig;
+import org.mandas.docker.client.messages.ContainerConfig;
+import org.mandas.docker.client.messages.ContainerConfig.Builder;
+
+import de.mhus.lib.core.MString;
 
 public class DockerContainer {
 	
@@ -12,6 +13,7 @@ public class DockerContainer {
 	private String image;
 	private String id;
 	private String[] params;
+    private Map<String, String> portBinding;
 	
 	public DockerContainer(String name, String image, String ... params) {
 		this.name = name;
@@ -35,51 +37,61 @@ public class DockerContainer {
 		this.id = id;
 	}
 
-	public ContainerConfig buildConfig(DockerScenario scenario) {
-		Builder config = ContainerConfig.builder()
+	public ContainerConfig buildConfig(DockerScenario scenario, DockerContainer cont) {
+		Builder builder = ContainerConfig.builder()
 				.hostname(name)
 				.image(image);
-		buildConfig(scenario, config);
-		return config.build();
+		ContainerBuilder config = new ContainerBuilder(scenario, cont, builder);
+		buildConfig(config);
+        return config.build();
 	}
 
-	protected void buildConfig(DockerScenario scenario, Builder config) {
+	protected void buildConfig(ContainerBuilder config) {
 		if (params == null) return;
-		LinkedList<String> links = new LinkedList<>();
 		for (String param : params) {
-			if (param.startsWith("env:")) {
-				config.env(param.substring(4));
+			if (param.startsWith("env:") || param.startsWith("e:")) {
+				config.env.add(MString.afterIndex(param, ':'));
 			} else
-			if (param.startsWith("vol:")) {
-				config.addVolume(param.substring(4));
+			if (param.startsWith("vol:") || param.startsWith("v:") || param.startsWith("volume:")) {
+				config.volumes.add(MString.afterIndex(param, ':'));
 			} else
-			if (param.startsWith("t")) {
-				config.tty(true);
+			if (param.startsWith("t") || param.equals("tty")) {
+				config.builder.tty(true);
 			} else
-			if (param.startsWith("i")) {
-				config.attachStderr(true);
-				config.attachStdout(true);
-				config.attachStdin(true);
+			if (param.startsWith("i") || param.equals("interactive")) {
+				config.builder.attachStderr(true);
+				config.builder.attachStdout(true);
+				config.builder.attachStdin(true);
 			} else 
-			if (param.startsWith("link:")) {
-				links.add(scenario.getPrefix() + param.substring(5));
+			if (param.startsWith("link:") || param.startsWith("l:")) {
+			    config.links.add(config.scenario.getPrefix() + MString.afterIndex(param, ':') );
 			} else
-			if (buildConfig(scenario, param, config)) {
+            if (param.startsWith("port:") || param.startsWith("p:")) {
+                config.ports.add(MString.afterIndex(param, ':') );
+            } else
+            if (param.startsWith("cmd:") ) {
+                config.cmd.add(MString.afterIndex(param, ':') );
+            } else
+            if (param.startsWith("entrypoint:") ) {
+                config.entrypoint.add(MString.afterIndex(param, ':') );
+            } else
+			if (buildConfigParam(config, param)) {
 			} else
 				System.out.println("*** Unknown param: " + param);
 		}
 		
-		if (links.size() > 0) {
-			HostConfig hostConfig = HostConfig.builder()
-					.links(links)
-					.build();
-			config.hostConfig(hostConfig);
-		}
-		
 	}
 
-	protected boolean buildConfig(DockerScenario scenario, String param, Builder config) {
+	protected boolean buildConfigParam(ContainerBuilder config, String param) {
 		return false;
 	}
+
+    public void setPortBindings(Map<String, String> portBinding) {
+        this.portBinding = portBinding;
+    }
 	
+    public Map<String, String> getPortBindings() {
+        return portBinding;
+    }
+    
 }
