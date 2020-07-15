@@ -7,7 +7,7 @@ import de.mhus.lib.core.MSystem;
 public class Karaf extends DockerContainer {
 
     public Karaf(String name, String version, String ... params) {
-        super(name, "mhus/karaf-k8s:" + (version == null ? "last" : version), params);
+        super(name, "mhus/apache-karaf:" + (version == null ? "4.2.6_04" : version), params);
     }
 
     @Override
@@ -23,12 +23,13 @@ public class Karaf extends DockerContainer {
 
     @Override
     protected void buildConfig(ContainerBuilder config) {
-        config.builder.tty(true);
-        config.builder.attachStderr(true);
-        config.builder.attachStdin(true);
-        config.builder.attachStdout(true);
 
         super.buildConfig(config);
+        
+        config.builder.withTty(true);
+        config.builder.withStdinOpen(true);
+        config.builder.withAttachStdout(true);
+        config.builder.withAttachStderr(true);
     }
 
 }

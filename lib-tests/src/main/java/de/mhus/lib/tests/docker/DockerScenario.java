@@ -1,25 +1,31 @@
 package de.mhus.lib.tests.docker;
 
+import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
-import org.mandas.docker.client.DockerClient;
-import org.mandas.docker.client.DockerClient.AttachParameter;
-import org.mandas.docker.client.DockerClient.ListContainersParam;
-import org.mandas.docker.client.DockerClient.LogsParam;
-import org.mandas.docker.client.LogMessage;
-import org.mandas.docker.client.LogStream;
-import org.mandas.docker.client.ProgressHandler;
-import org.mandas.docker.client.builder.jersey.JerseyDockerClientBuilder;
-import org.mandas.docker.client.exceptions.DockerCertificateException;
-import org.mandas.docker.client.exceptions.DockerException;
-import org.mandas.docker.client.messages.Container;
-import org.mandas.docker.client.messages.ContainerCreation;
-import org.mandas.docker.client.messages.ProgressMessage;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.AttachContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.LogContainerCmd;
+import com.github.dockerjava.api.exception.NotModifiedException;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 
+import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.errors.NotFoundException;
 
 // https://github.com/spotify/docker-client
@@ -28,6 +34,7 @@ public class DockerScenario {
 	private LinkedList<DockerContainer> containers = new LinkedList<>();
 	private DockerClient docker;
 	private String prefix = "test-";
+	private Timer watch = new Timer("DockerScenarioTimer", true);
 
 	public DockerScenario() {}
 	
@@ -51,120 +58,190 @@ public class DockerScenario {
 		throw new NotFoundException("container not found", name);
 	}
 	
-	public void init() throws DockerCertificateException {
+	public void init() {
 		if (docker == null) {
 		    if (System.getenv("DOCKER_HOST") == null) {
     		    System.clearProperty("http.proxyHost");
                 System.clearProperty("https.proxyHost");
                 System.clearProperty("ftp.proxyHost");
 		    }
-		    docker = new JerseyDockerClientBuilder().fromEnv().build(); // For Jersey
-//			docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+		    DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder().build();
+		    DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+		            .dockerHost(config.getDockerHost())
+		            .sslConfig(config.getSSLConfig())
+		            .build();
+		    
+		    docker = DockerClientImpl.getInstance(config, httpClient);
 		}
 	}
 	
-	public void start() throws DockerCertificateException, DockerException, InterruptedException {
+	public void start() {
 		init();
 		destroy();
 		for (DockerContainer cont : containers) {
 			System.out.println("--- Create " + cont.getName());
 			
 			try {
-				docker.inspectImage(cont.getImage());
-			} catch (DockerException e) {
+				docker.inspectImageCmd(cont.getImage()).exec();
+			} catch (com.github.dockerjava.api.exception.NotFoundException e) {
 				System.out.println("    Load: " + cont.getImage());
-				docker.pull(cont.getImage(), new ProgressHandler() {
-					
-					@Override
-					public void progress(ProgressMessage message) throws DockerException {
-						System.out.println("    " + message.progress());
-					}
-				});
+				docker.pullImageCmd(cont.getImage()).start();
 			}
-			ContainerCreation creation = docker.createContainer(cont.buildConfig(this, cont), prefix + cont.getName());
-			cont.setId(creation.id());
-			for (String warnings : creation.warnings())
+
+			CreateContainerCmd containerCmd = docker.createContainerCmd(cont.getImage());
+
+			cont.buildConfig(this, containerCmd);
+			containerCmd.withName(prefix + cont.getName());
+			CreateContainerResponse resp = containerCmd.exec();
+			cont.setId(this, resp.getId());
+			
+			for (String warnings : resp.getWarnings())
 				System.out.println("    " + warnings);
 		}
         for (DockerContainer cont : containers) {
-            System.out.println("--- Start " + cont.getName());
-            docker.startContainer(cont.getId());
+            System.out.println("--- Start " + cont.getName() + " " + cont.getId());
+            docker.startContainerCmd(cont.getId()).exec();
         }
 	}
 	
-	public void destroy() throws DockerCertificateException, DockerException, InterruptedException {
+	public void destroy() {
 		init();
 		fetchContainers();
 		
         ArrayList<DockerContainer> reverse = new ArrayList<>(containers);
+        ArrayList<String> remove = new ArrayList<>();
         Collections.reverse(reverse);
+        
 		for (DockerContainer cont : reverse) {
 			if (cont.getId() != null) {
 				System.out.println("--- Stop " + cont.getName());
-				docker.stopContainer(cont.getId(), 15);
+				remove.add(cont.getId());
+				try {
+				    if (cont.isRunning()) {
+				        docker.stopContainerCmd(cont.getId()).withTimeout(60).exec();
+				    }
+				} catch (NotModifiedException e) {}
 			}
 		}
 
-		for (DockerContainer cont : reverse) {
-			if (cont.getId() != null) {
-				System.out.println("--- Remove " + cont.getName());
-				docker.removeContainer(cont.getId());
-				cont.setId(null);
-			}
+        for (DockerContainer cont : reverse) {
+            while (cont.isRunning()) {
+                System.out.println("--- Running " + cont.getName());
+                MThread.sleep(200);
+            }
+            System.out.println("--- Done " + cont.getName());
+            cont.setId(this, null);
+        }
+		for (String id : remove) {
+			System.out.println("--- Remove " + id);
+			docker.removeContainerCmd(id).exec();
 		}
 		
 	}
 	
-	public LogStream attach(String name) throws NotFoundException, DockerException, InterruptedException {
+	public LogStream attach(String name, String send) throws InterruptedException, NotFoundException {
 		DockerContainer cont = get(name);
 		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
-		return docker.attachContainer(cont.getId(), 
-		        AttachParameter.STDERR, 
-		        AttachParameter.STDOUT, 
-		        AttachParameter.STDIN,
-		        AttachParameter.STREAM);
+		
+		LogStream stream = new LogStream(cont);
+		
+		AttachContainerCmd builder = docker.attachContainerCmd(cont.getId())
+		        .withStdErr(true)
+		        .withStdOut(true)
+		        .withFollowStream(true);
+		
+		if (send != null) {
+		    ByteArrayInputStream is = new ByteArrayInputStream(send.getBytes(MString.CHARSET_CHARSET_UTF_8));
+		    builder.withStdIn(is);
+		}
+		
+        builder.exec(stream);
+		stream.awaitStarted(60, TimeUnit.SECONDS);
+		return stream;
 	}
 	
-	public LogStream logs(String name, boolean follow, int tail) throws NotFoundException, DockerException, InterruptedException {
+	public LogStream logs(String name, boolean follow, int tail) throws NotFoundException {
 		DockerContainer cont = get(name);
 		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
-		if (tail > 0) 
-	        return docker.logs(cont.getId(), 
-	                LogsParam.stdout(), 
-	                LogsParam.stderr(), 
-	                LogsParam.follow(follow),
-	                LogsParam.tail(tail));
-		else
-    	    return docker.logs(cont.getId(), 
-    	            LogsParam.stdout(), 
-    	            LogsParam.stderr(), 
-    	            LogsParam.follow(follow));
+		
+		LogStream stream =  new LogStream(cont);
+		LogContainerCmd lcc = docker.logContainerCmd(cont.getId());
+		lcc.withStdErr(true);
+		lcc.withStdOut(true);
+		lcc.withFollowStream(follow);
+		if (tail > 0)
+		    lcc.withTail(tail);
+		lcc.exec(stream);
+		return stream;
 	}
 	
-	public void waitForLogEntry(String name, String waitForString, int tail, boolean print) throws NotFoundException, DockerException, InterruptedException, IOException {
+    public void waitForLogEntry(String name, String waitForString, int tail) throws NotFoundException, IOException, InterruptedException {
         try (LogStream logStream = logs("karaf", true, tail)) {
-            while (logStream.hasNext()) {
-                LogMessage msg = logStream.next();
-                String logStr = StandardCharsets.UTF_8.decode(msg.content()).toString();
-                if (print)
-                    System.out.println(logStr);
+            logStream.awaitStarted(60, TimeUnit.SECONDS);
+            waitForLogEntry(logStream,  waitForString);
+        }
+        
+    }
+    
+	public void waitForLogEntry(LogStream logStream, String waitForString) throws NotFoundException, IOException {
+
+        WaitContainer waitCont = new WaitContainer();
+        waitCont.cont = logStream.getContainer();
+        if (waitCont.cont.getId() == null) throw new NotFoundException("Container not started",waitCont.cont.getName());
+
+        watch.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                try {
+                    if (!waitCont.running) {
+                        cancel();
+                    } else
+                    if (!waitCont.cont.isRunning()) {
+                        System.err.println("#### CLOSE " + waitCont.cont.getName() + " ####");
+                        logStream.close();
+                        cancel();
+                    }
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+            
+        }, 1000, 1000);
+        
+        try {
+            while (true) {
+
+                String logStr = logStream.readStringLine();
+//                System.err.println(logStr);
                 if (logStr.contains(waitForString)) {
                     return;
                 }
+                if (logStream.isClosed())
+                    throw new EOFException();
             }
+        } finally {
+            waitCont.running = false;
         }
+    
 	}
 
-	private void fetchContainers() throws DockerException, InterruptedException {
+	private static class WaitContainer {
+        public DockerContainer cont;
+        volatile boolean running = true;
+
+	}
+	
+	private void fetchContainers() {
 		
 		for (DockerContainer cont2 : containers)
-			cont2.setId(null);
+			cont2.setId(this, null);
 		
-		for (Container cont : docker.listContainers(ListContainersParam.allContainers())) {
-			System.out.println("Existing " + cont.names());
+		for (Container cont : docker.listContainersCmd().withShowAll(true).exec()) {
+//			System.out.println("Existing " + Arrays.toString(cont.getNames()));
 			for (DockerContainer cont2 : containers) {
-				if (cont.names().contains("/" + prefix + cont2.getName()))
-					cont2.setId(cont.id());
+				if (MCollection.contains(cont.getNames(),"/" + prefix + cont2.getName()))
+					cont2.setId(this, cont.getId());
 			}
 		}
 		
@@ -173,5 +250,9 @@ public class DockerScenario {
 	public String getPrefix() {
 		return prefix;
 	}
+
+    public DockerClient getClient() {
+        return docker;
+    }
 	
 }

@@ -13,40 +13,29 @@
  */
 package de.mhus.lib.core.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.LinkedList;
 
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MThread;
 
-public class PipedStream {
+public class PipedStream implements Closeable {
 
+    private CircularByteBuffer byteBuffer = new CircularByteBuffer(10000);
     private Out out = new Out();
     private In in = new In();
-    private LinkedList<Byte> buffer = new LinkedList<Byte>();
-    private int maxBufferSize = 3000;
     private long writeTimeout = -1;
     private long readTimeout = -1;
-
+    private boolean closed = false;
+    
     public OutputStream getOut() {
         return out;
     }
 
     public InputStream getIn() {
         return in;
-    }
-
-    public int getBufferSize() {
-        return buffer.size();
-    }
-
-    public void setMaxBufferSize(int maxBufferSize) {
-        this.maxBufferSize = maxBufferSize;
-    }
-
-    public int getMaxBufferSize() {
-        return maxBufferSize;
     }
 
     public void setWriteTimeout(long writeTimeout) {
@@ -64,24 +53,22 @@ public class PipedStream {
     public long getReadTimeout() {
         return readTimeout;
     }
-
+    
     private class Out extends OutputStream {
 
         @Override
         public void write(int b) throws IOException {
 
-            synchronized (this) {
-                long time = 0;
-                while (buffer.size() >= maxBufferSize) {
-                    if (getWriteTimeout() >= 0 && time >= getWriteTimeout())
-                        throw new IOException("timeout", null);
-                    MThread.sleep(100);
-                    if (getWriteTimeout() >= 0) time += 100;
-                }
-
-                synchronized (buffer) {
-                    buffer.addLast((byte) b);
-                }
+//            if (closed) throw new EOFException();
+            long start = System.currentTimeMillis();
+            while (byteBuffer.isNearlyFull()) {
+                MThread.sleep(200);
+                if (MPeriod.isTimeOut(start, writeTimeout))
+                    throw new IOException("write timeout");
+            }
+            synchronized (PipedStream.this) {
+//                System.out.println("Write: " + (char)b + " (" + b + ")");
+                byteBuffer.putInt(b);
             }
         }
     }
@@ -91,20 +78,23 @@ public class PipedStream {
         @Override
         public int read() throws IOException {
 
-            synchronized (this) {
-                long time = 0;
-                while (buffer.size() == 0) {
-                    if (getReadTimeout() >= 0 && time >= getReadTimeout())
-                        throw new IOException("timeout", null);
-                    MThread.sleep(100);
-                    if (getReadTimeout() >= 0) time += 100;
-                }
-
-                synchronized (buffer) {
-                    Byte first = buffer.removeFirst();
-                    return first;
-                }
+            long start = System.currentTimeMillis();
+            while (byteBuffer.isEmpty()) {
+                if (closed) return -1; // EOFException ?
+                MThread.sleep(200);
+                if (MPeriod.isTimeOut(start, readTimeout))
+                    throw new IOException("read timeout");
+            }
+            synchronized (PipedStream.this) {
+               byte o = byteBuffer.get();
+//               System.err.println("Read: " + (char)o + "(" + o + ")");
+               return o;
             }
         }
+    }
+
+    @Override
+    public void close() {
+        closed = true;
     }
 }

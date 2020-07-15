@@ -71,30 +71,19 @@
         
         <!-- for docker remote control -->
 		<dependency>
-		  <groupId>org.mandas</groupId>
-		  <artifactId>docker-client</artifactId>
-		  <version>4.0.0</version>
+		    <groupId>com.github.docker-java</groupId>
+		    <artifactId>docker-java-core</artifactId>
+		    <version>3.2.5</version>
 		</dependency>
+		
 		<dependency>
-		  <groupId>org.glassfish.jersey.core</groupId>
-		  <artifactId>jersey-client</artifactId>
-		  <version>2.30.1</version>
+		    <groupId>com.github.docker-java</groupId>
+		    <artifactId>docker-java-transport-httpclient5</artifactId>
+		    <version>3.2.5</version>
 		</dependency>
-		<dependency>
-		  <groupId>org.glassfish.jersey.inject</groupId>
-		  <artifactId>jersey-hk2</artifactId>
-		  <version>2.30.1</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.glassfish.jersey.connectors</groupId>
-		  <artifactId>jersey-apache-connector</artifactId>
-		  <version>2.30.1</version>
-		</dependency>
-		<dependency>
-		  <groupId>org.glassfish.jersey.media</groupId>
-		  <artifactId>jersey-media-json-jackson</artifactId>
-		  <version>2.30.1</version>
-		</dependency>
+
+        
+        
   </dependencies>
   
 </project>

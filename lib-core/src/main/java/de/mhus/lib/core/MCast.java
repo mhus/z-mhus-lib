@@ -1196,4 +1196,14 @@ public final class MCast {
         }
         return toType(value, t, def);
     }
+
+    public static byte[] toByteArray(List<Byte> in) {
+        byte[] out = new byte[in.size()];
+        int cnt = 0;
+        for (Byte b : in) {
+            out[cnt] = b;
+            cnt++;
+        }
+        return out;
+    }
 }

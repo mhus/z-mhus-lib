@@ -1,9 +1,7 @@
 package de.mhus.lib.tests.docker;
 
-import java.util.Map;
-
-import org.mandas.docker.client.messages.ContainerConfig;
-import org.mandas.docker.client.messages.ContainerConfig.Builder;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 
 import de.mhus.lib.core.MString;
 
@@ -13,7 +11,7 @@ public class DockerContainer {
 	private String image;
 	private String id;
 	private String[] params;
-    private Map<String, String> portBinding;
+    private DockerScenario scenario;
 	
 	public DockerContainer(String name, String image, String ... params) {
 		this.name = name;
@@ -33,17 +31,18 @@ public class DockerContainer {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(DockerScenario scenario, String id) {
+	    this.scenario = scenario;
 		this.id = id;
 	}
 
-	public ContainerConfig buildConfig(DockerScenario scenario, DockerContainer cont) {
-		Builder builder = ContainerConfig.builder()
-				.hostname(name)
-				.image(image);
-		ContainerBuilder config = new ContainerBuilder(scenario, cont, builder);
+	public void buildConfig(DockerScenario scenario, CreateContainerCmd builder) {
+
+	    builder.withHostName(name);
+	    builder.withImage(image);
+		ContainerBuilder config = new ContainerBuilder(scenario, this, builder);
 		buildConfig(config);
-        return config.build();
+        config.build();
 	}
 
 	protected void buildConfig(ContainerBuilder config) {
@@ -56,13 +55,13 @@ public class DockerContainer {
 				config.volumes.add(MString.afterIndex(param, ':'));
 			} else
 			if (param.startsWith("t") || param.equals("tty")) {
-				config.builder.tty(true);
+				config.builder.withTty(true);
 			} else
 			if (param.startsWith("i") || param.equals("interactive")) {
-				config.builder.attachStderr(true);
-				config.builder.attachStdout(true);
-				config.builder.attachStdin(true);
-			} else 
+				config.builder.withStdinOpen(true);
+				config.builder.withAttachStdout(true);
+				config.builder.withAttachStderr(true);
+			} else
 			if (param.startsWith("link:") || param.startsWith("l:")) {
 			    config.links.add(config.scenario.getPrefix() + MString.afterIndex(param, ':') );
 			} else
@@ -86,12 +85,16 @@ public class DockerContainer {
 		return false;
 	}
 
-    public void setPortBindings(Map<String, String> portBinding) {
-        this.portBinding = portBinding;
+    public boolean isRunning() {
+        if (scenario == null || id == null) return false;
+        try {
+            InspectContainerResponse resp = scenario.getClient().inspectContainerCmd(getId()).exec();
+            return resp.getState().getRunning();
+        } catch (com.github.dockerjava.api.exception.NotFoundException e) {
+            e.printStackTrace();
+            id = null;
+            return false;
+        }
     }
-	
-    public Map<String, String> getPortBindings() {
-        return portBinding;
-    }
-    
+
 }
