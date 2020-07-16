@@ -3,6 +3,7 @@ package de.mhus.lib.tests.docker;
 import java.util.LinkedList;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.AccessMode;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
@@ -43,14 +44,28 @@ public class ContainerBuilder {
 
         if (ports.size() > 0) {
             for (String port : ports) {
-                if (port.indexOf(':') > 0) {
-                    ExposedPort tcp = ExposedPort.tcp(M.to(MString.beforeIndex(port, ':'), 0));
-                    Binding bind = Binding.bindPort(M.to(MString.afterIndex(port, ':'), 0));
-                    portConfig.bind(tcp, bind);
-                } else {
-                    ExposedPort tcp = ExposedPort.tcp(M.to(port, 0));
-                    portConfig.bind(tcp, Binding.empty());
-                }
+            	if (port.endsWith("/udp")) {
+            		port = MString.beforeIndex(port, '/');
+                    if (port.indexOf(':') > 0) {
+                        ExposedPort udp = ExposedPort.udp(M.to(MString.beforeIndex(port, ':'), 0));
+                        Binding bind = Binding.bindPort(M.to(MString.afterIndex(port, ':'), 0));
+                        portConfig.bind(udp, bind);
+                    } else {
+                        ExposedPort udp = ExposedPort.udp(M.to(port, 0));
+                        portConfig.bind(udp, Binding.empty());
+                    }
+            	} else {
+            		if (port.endsWith("/tcp"))
+                		port = MString.beforeIndex(port, '/');
+	                if (port.indexOf(':') > 0) {
+	                    ExposedPort tcp = ExposedPort.tcp(M.to(MString.beforeIndex(port, ':'), 0));
+	                    Binding bind = Binding.bindPort(M.to(MString.afterIndex(port, ':'), 0));
+	                    portConfig.bind(tcp, bind);
+	                } else {
+	                    ExposedPort tcp = ExposedPort.tcp(M.to(port, 0));
+	                    portConfig.bind(tcp, Binding.empty());
+	                }
+            	}
             }
             hostBuilder.withPortBindings(portConfig);
         }
@@ -60,9 +75,20 @@ public class ContainerBuilder {
         
         if (volumes.size() > 0) {
             for (String vol : volumes) {
-                Volume v = new Volume(MString.afterIndex(vol, ':'));
+            	AccessMode mode = AccessMode.DEFAULT;
+            	String src = MString.beforeIndex(vol, ':');
+            	String trg = MString.afterIndex(vol, ':');
+            	if (MString.isIndex(trg, ':')) {
+            		String modeStr = MString.afterIndex(trg, ':');
+            		trg = MString.beforeIndex(trg, ':');
+            		if (modeStr.equals("ro"))
+            			mode = AccessMode.ro;
+            		if (modeStr.equals("rw"))
+            			mode = AccessMode.rw;
+            	}
+                Volume v = new Volume(trg);
                 volumesDef.add(v);
-                volumesBind.add(new Bind(MString.afterIndex(vol, ':'), v));
+                volumesBind.add(new Bind(src, v, mode));
             }
             builder.withVolumes(volumesDef);
         }

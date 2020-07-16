@@ -48,6 +48,12 @@ public class DockerContainer {
 	protected void buildConfig(ContainerBuilder config) {
 		if (params == null) return;
 		for (String param : params) {
+			if (param.equals("privileged")) {
+				config.hostBuilder.withPrivileged(true);
+			} else
+			if (param.startsWith("user:")) {
+				config.builder.withUser(MString.afterIndex(param, ':'));
+			} else
 			if (param.startsWith("env:") || param.startsWith("e:")) {
 				config.env.add(MString.afterIndex(param, ':'));
 			} else
