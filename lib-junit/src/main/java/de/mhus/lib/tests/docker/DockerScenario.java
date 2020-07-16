@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,9 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.AttachContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.ExecCreateCmd;
+import com.github.dockerjava.api.command.ExecCreateCmdResponse;
+import com.github.dockerjava.api.command.ExecStartCmd;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.NotModifiedException;
 import com.github.dockerjava.api.model.Container;
@@ -177,6 +181,54 @@ public class DockerScenario {
 			docker.removeContainerCmd(id).exec();
 		}
 		
+	}
+	
+	public LogStream exec1(String name, String ... cmd) throws InterruptedException, NotFoundException {
+		return exec(name, cmd, null, false, null, null, null);
+	}
+	
+	public LogStream exec2(String name, String cmd) throws InterruptedException, NotFoundException {
+		return exec(name, cmd.split(" "), null, false, null, null, null);
+	}
+	
+	public LogStream exec3(String name, String cmd, String send) throws InterruptedException, NotFoundException {
+		return exec(name, cmd.split(" "), null, false, null, null, send);
+	}
+	
+	public LogStream exec(String name, String[] cmd, List<String> env, boolean privileges, String user, String dir, String send) throws InterruptedException, NotFoundException {
+		DockerContainer cont = get(name);
+		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
+		
+		LogStream stream = new LogStream(cont);
+
+		ExecCreateCmd builder = docker.execCreateCmd(cont.getId())
+			.withAttachStderr(true)
+			.withAttachStderr(true)
+			.withTty(true);
+		
+		builder.withCmd(cmd);
+		if (send != null)
+			builder.withAttachStdin(true);
+		if (env != null)
+			builder.withEnv(env);
+		if (privileges)
+			builder.withPrivileged(true);
+		if (user != null)
+			builder.withUser(user);
+		if (dir != null)
+			builder.withWorkingDir(dir);
+		
+		ExecCreateCmdResponse create = builder.exec();
+		
+		ExecStartCmd startBuilder = docker.execStartCmd(create.getId());
+		if (send != null) {
+			ByteArrayInputStream is = new ByteArrayInputStream(send.getBytes(MString.CHARSET_CHARSET_UTF_8));
+			startBuilder.withStdIn(is);
+		}
+		
+		startBuilder.exec(stream);
+		
+		return stream;
 	}
 	
 	public LogStream attach(String name, String send) throws InterruptedException, NotFoundException {
