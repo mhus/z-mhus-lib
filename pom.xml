@@ -97,9 +97,10 @@
 
 	<modules>
 		<module>lib-annotations</module>
-		<module>lib-core</module>
-        <module>lib-tests</module>
+        <module>lib-core</module>
 		<module>lib-j2ee</module>
+        <module>lib-junit</module>
+        <module>lib-tests</module>
 	</modules>
 
     <dependencies>

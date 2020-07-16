@@ -21,7 +21,7 @@
   <artifactId>lib-tests</artifactId>
   <!-- remove this -->
     <properties>
-        <maven.test.skip>true</maven.test.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
   <parent>
@@ -35,55 +35,11 @@
     	<groupId>de.mhus.lib</groupId>
     	<artifactId>lib-core</artifactId>
     </dependency>
+    <dependency>
+        <groupId>de.mhus.lib</groupId>
+        <artifactId>lib-junit</artifactId>
+    </dependency>
     
-        <!-- junit 5, unit tests -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.juniper.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.juniper.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-commons</artifactId>
-            <version>${junit.platform.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-           <groupId>org.junit.platform</groupId>
-           <artifactId>junit-platform-launcher</artifactId>
-           <version>${junit.platform.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Needed by junit -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        
-        <!-- for docker remote control -->
-		<dependency>
-		    <groupId>com.github.docker-java</groupId>
-		    <artifactId>docker-java-core</artifactId>
-		    <version>3.2.5</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.github.docker-java</groupId>
-		    <artifactId>docker-java-transport-httpclient5</artifactId>
-		    <version>3.2.5</version>
-		</dependency>
-
-        
-        
   </dependencies>
   
 </project>
