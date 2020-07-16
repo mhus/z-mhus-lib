@@ -6,3 +6,4 @@ target/
 lib-core/de.mhus.lib.core.service.ServerIdent.properties
 lib-jms/de.mhus.lib.core.service.ServerIdent.properties
 lib-tests/de.mhus.lib.core.service.ServerIdent.properties
+lib-tests/.DS_Store
