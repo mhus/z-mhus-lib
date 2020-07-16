@@ -106,6 +106,44 @@ public class DockerScenario {
         }
 	}
 	
+	/**
+	 * Stop and remove all containers starting with the prefix.
+	 */
+	public void destroyPrefix() {
+		init();
+		
+		
+		ArrayList<String> remove = new ArrayList<>();
+		for (Container cont : docker.listContainersCmd().withShowAll(true).exec()) {
+			String removeName = null;
+			for (String name : cont.getNames())
+				if (name.startsWith("/" + prefix)) {
+					removeName = name;
+					break;
+				}
+			if (removeName == null) continue;
+			
+			System.out.println("--- Stop " + removeName);
+			remove.add(cont.getId());
+			try {
+		        docker.stopContainerCmd(cont.getId()).withTimeout(60).exec();
+			} catch (NotModifiedException e) {}
+			
+		}
+
+		for (String id : remove) {
+			System.out.println("--- Remove " + id);
+			docker.removeContainerCmd(id).exec();
+		}
+
+		for (DockerContainer cont2 : containers)
+			cont2.setId(this, null);
+		
+	}
+	
+	/**
+	 * Stop end remove the configured containers.
+	 */
 	public void destroy() {
 		init();
 		fetchContainers();
@@ -214,7 +252,7 @@ public class DockerScenario {
         try {
             while (true) {
 
-                String logStr = logStream.readStringLine();
+                String logStr = logStream.readLine();
 //                System.err.println(logStr);
                 if (logStr.contains(waitForString)) {
                     return;

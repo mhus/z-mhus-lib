@@ -52,7 +52,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
      * 
      * @return The next line until and inclusive LF \n, also inclusive 0 characters and CR \r
      */
-    public LinkedList<Byte> readLine() {
+    public LinkedList<Byte> readLineRaw() {
         LinkedList<Byte> sb = new LinkedList<>();
         try {
             while (true) {
@@ -72,8 +72,8 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         }
     }
     
-    public String readStringLine() {
-        LinkedList<Byte> logArray = readLine();
+    public String readLine() {
+        LinkedList<Byte> logArray = readLineRaw();
         logArray.removeIf(v -> v == 0);
         String logStr = new String(MCast.toByteArray(logArray), MString.CHARSET_CHARSET_UTF_8);
         return logStr;
