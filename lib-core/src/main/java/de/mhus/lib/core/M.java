@@ -138,7 +138,7 @@ public class M {
      * Fast access to logger.
      * 
      * @param owner
-     * @return
+     * @return a log instance for the owner
      */
     public static Log log(Object owner) {
     	try {

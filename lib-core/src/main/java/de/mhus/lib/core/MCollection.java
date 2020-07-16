@@ -599,7 +599,7 @@ public class MCollection {
      * Transforms a map into a key - value pair string.
      * 
      * @param map
-     * @return
+     * @return a key-value list
      */
     public static String[] toPairs(Map<String, Object> map) {
     	if (map == null) return null;

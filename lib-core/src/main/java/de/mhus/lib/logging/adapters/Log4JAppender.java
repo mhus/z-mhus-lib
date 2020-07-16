@@ -20,6 +20,7 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 
 import de.mhus.lib.core.logging.Log;
 
@@ -27,11 +28,11 @@ public class Log4JAppender extends AbstractAppender {
 
 
     public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
-        super(name, filter, layout, ignoreExceptions);
+        super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
     }
 
     public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
-        super(name, filter, layout);
+        super(name, filter, layout, true , Property.EMPTY_ARRAY);
     }
 
     @Override
