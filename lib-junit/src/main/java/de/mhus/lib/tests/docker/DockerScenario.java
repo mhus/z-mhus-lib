@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -15,12 +16,14 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.AttachContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.ExecCreateCmd;
 import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.command.ExecStartCmd;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.NotModifiedException;
 import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
@@ -41,6 +44,8 @@ public class DockerScenario {
 	private DockerClient docker;
 	private String prefix = "test-";
 	private Timer watch = new Timer("DockerScenarioTimer", true);
+    private String networkId;
+    private boolean useExistingNetwork = true;
 
 	public DockerScenario() {}
 	
@@ -84,6 +89,13 @@ public class DockerScenario {
 	public void start() {
 		init();
 		destroy();
+        destroyNetwork(false);
+		
+		// create network
+		createNetwork();
+		
+		// create containers
+		
 		for (DockerContainer cont : containers) {
 			System.out.println("--- Create " + cont.getName());
 			
@@ -101,21 +113,96 @@ public class DockerScenario {
 			CreateContainerResponse resp = containerCmd.exec();
 			cont.setId(this, resp.getId());
 			
-			for (String warnings : resp.getWarnings())
-				System.out.println("    " + warnings);
+			for (String warning : resp.getWarnings())
+				System.out.println("    " + warning);
 		}
+		
+        for (DockerContainer cont : containers) {
+            docker.connectToNetworkCmd()
+                .withContainerId(cont.getId())
+                .withNetworkId(networkId)
+                .exec();
+        }
+        
         for (DockerContainer cont : containers) {
             System.out.println("--- Start " + cont.getName() + " " + cont.getId());
             docker.startContainerCmd(cont.getId()).exec();
         }
 	}
 	
-	/**
+	@SuppressWarnings("resource")
+    public void createNetwork() {
+	    
+	    String nameNet = (prefix + "net").replace("-", "_");
+	    if (useExistingNetwork) {
+	        for (Network network : docker.listNetworksCmd().exec()) {
+	            // System.out.println("Net: " + network.getName() + " " + nameNet);
+	            if (network.getName().equals(nameNet)) {
+	                networkId = network.getId();
+	                return;
+	            }
+	        }
+	    }
+	    
+        System.out.println("--- CreateNetwork " + nameNet);
+
+        Network.Ipam ipam = new Network.Ipam().withConfig(new Network.Ipam.Config()
+                .withSubnet("10.67.79.0/24")
+                .withGateway("10.67.79.1"));
+
+        HashMap<String,String> optionsNet = new HashMap<>();
+        optionsNet.put("com.docker.network.bridge.name", nameNet);
+        optionsNet.put("com.docker.network.bridge.host_binding_ipv4", "0.0.0.0");
+        optionsNet.put("com.docker.network.bridge.enable_icc", "true");
+        optionsNet.put("com.docker.network.bridge.enable_ip_masquerade", "true");
+        optionsNet.put("com.docker.network.driver.mtu", "1500");
+        
+        CreateNetworkResponse resNet = docker.createNetworkCmd()
+                .withName(nameNet)
+//              .withDriver("bridge")
+//              .withOptions(optionsNet)
+                .withIpam(ipam)
+                .exec();
+        if (resNet.getWarnings() != null)
+            for (String warning : resNet.getWarnings())
+                System.out.println("    " + warning);
+        networkId = resNet.getId();
+        
+    }
+
+    public void destroyNetwork(boolean forced) {
+        
+        if (useExistingNetwork && !forced) 
+            return;
+        
+        init();
+        if (networkId != null) {
+            try {
+                docker.removeNetworkCmd(networkId).exec();
+            } catch (Exception e) {}
+            networkId = null;
+        }
+        String nameNet = (prefix + "net").replace("-", "_");
+        for (Network network : docker.listNetworksCmd().exec()) {
+            // System.out.println("Net: " + network.getName() + " " + nameNet);
+            if (network.getName().equals(nameNet)) {
+                networkId = network.getId();
+                break;
+            }
+        }
+        if (networkId != null) {
+            try {
+                docker.removeNetworkCmd(networkId).exec();
+            } catch (Exception e) {}
+            networkId = null;
+        }
+    }
+
+    /**
 	 * Stop and remove all containers starting with the prefix.
 	 */
 	public void destroyPrefix() {
 		init();
-		
 		
 		ArrayList<String> remove = new ArrayList<>();
 		for (Container cont : docker.listContainersCmd().withShowAll(true).exec()) {
@@ -143,6 +230,7 @@ public class DockerScenario {
 		for (DockerContainer cont2 : containers)
 			cont2.setId(this, null);
 		
+        destroyNetwork(false);
 	}
 	
 	/**
@@ -364,6 +452,15 @@ public class DockerScenario {
 
     public DockerClient getClient() {
         return docker;
+    }
+
+    public boolean isUseExistingNetwork() {
+        return useExistingNetwork;
+    }
+
+    public DockerScenario setUseExistingNetwork(boolean useExistingNetwork) {
+        this.useExistingNetwork = useExistingNetwork;
+        return this;
     }
 	
 }
