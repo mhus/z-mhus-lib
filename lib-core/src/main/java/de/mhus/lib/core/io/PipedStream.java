@@ -91,6 +91,11 @@ public class PipedStream implements Closeable {
                return o;
             }
         }
+        
+        @Override
+        public int available() throws IOException {
+            return byteBuffer.length();
+        }
     }
 
     @Override

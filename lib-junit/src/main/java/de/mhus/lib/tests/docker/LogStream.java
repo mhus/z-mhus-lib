@@ -8,6 +8,7 @@ import com.github.dockerjava.api.model.Frame;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.io.PipedStream;
+import de.mhus.lib.errors.NotFoundException;
 
 public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Adapter<Frame> {
 
@@ -15,6 +16,11 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     private DockerContainer cont;
     private boolean print = true;
     private boolean closed = false;
+    private StringBuilder capture = null;
+    
+    public LogStream(DockerScenario scenario, String contName) throws NotFoundException {
+        this.cont = scenario.get(contName);
+    }
     
     public LogStream(DockerContainer cont) {
         this.cont = cont;
@@ -37,6 +43,8 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
             if (print)
                 System.out.print(new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
 //                System.out.print("(" + step + ")" + new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
+            if (capture != null)
+                capture.append(new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
             output.getOut().write(item.getPayload());
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,12 +126,26 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         return print;
     }
 
-    public void setPrint(boolean print) {
+    public LogStream setPrint(boolean print) {
         this.print = print;
+        return this;
     }
 
     public boolean isClosed() {
         return closed;
     }
 
+    public LogStream setCaputre(boolean capt) {
+        if (capt)
+            capture = new StringBuilder();
+        else
+            capture = null;
+        return this;
+    }
+    
+    public String getCaptured() {
+        if (capture == null) return null;
+        return capture.toString();
+    }
+    
 }

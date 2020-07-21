@@ -195,12 +195,19 @@ public class DockerScenario {
 		return exec(name, cmd.split(" "), null, false, null, null, send);
 	}
 	
-	public LogStream exec(String name, String[] cmd, List<String> env, boolean privileges, String user, String dir, String send) throws InterruptedException, NotFoundException {
-		DockerContainer cont = get(name);
-		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
-		
-		LogStream stream = new LogStream(cont);
+    public LogStream exec(String name, String[] cmd, List<String> env, boolean privileges, String user, String dir, String send) throws InterruptedException, NotFoundException {
+        DockerContainer cont = get(name);
+        if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
+        
+        LogStream stream = new LogStream(cont);
+        
+        return exec(stream, cmd, env, privileges, user, dir, send);
+    }
+    
+	public LogStream exec(LogStream stream, String[] cmd, List<String> env, boolean privileges, String user, String dir, String send) throws InterruptedException, NotFoundException {
 
+	    DockerContainer cont = stream.getContainer();
+	    
 		ExecCreateCmd builder = docker.execCreateCmd(cont.getId())
 			.withAttachStderr(true)
 			.withAttachStdout(true)
@@ -237,26 +244,39 @@ public class DockerScenario {
 		
 		LogStream stream = new LogStream(cont);
 		
-		AttachContainerCmd builder = docker.attachContainerCmd(cont.getId())
-		        .withStdErr(true)
-		        .withStdOut(true)
-		        .withFollowStream(true);
-		
-		if (send != null) {
-		    ByteArrayInputStream is = new ByteArrayInputStream(send.getBytes(MString.CHARSET_CHARSET_UTF_8));
-		    builder.withStdIn(is);
-		}
-		
-        builder.exec(stream);
-		stream.awaitStarted(60, TimeUnit.SECONDS);
-		return stream;
+		return attach(stream, send);
 	}
+
+    public LogStream attach(LogStream stream, String send) throws InterruptedException, NotFoundException {
+
+        DockerContainer cont = stream.getContainer();
+        
+        AttachContainerCmd builder = docker.attachContainerCmd(cont.getId())
+                .withStdErr(true)
+                .withStdOut(true)
+                .withFollowStream(true);
+        
+        if (send != null) {
+            ByteArrayInputStream is = new ByteArrayInputStream(send.getBytes(MString.CHARSET_CHARSET_UTF_8));
+            builder.withStdIn(is);
+        }
+        
+        builder.exec(stream);
+        stream.awaitStarted(60, TimeUnit.SECONDS);
+        return stream;
+    }
 	
-	public LogStream logs(String name, boolean follow, int tail) throws NotFoundException {
-		DockerContainer cont = get(name);
-		if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
-		
-		LogStream stream =  new LogStream(cont);
+    public LogStream logs(String name, boolean follow, int tail) throws NotFoundException {
+        DockerContainer cont = get(name);
+        if (cont.getId() == null) throw new NotFoundException("Container not started",cont.getName());
+        
+        LogStream stream =  new LogStream(cont);
+        
+        return logs(stream, follow, tail);
+    }
+    
+	public LogStream logs(LogStream stream, boolean follow, int tail) throws NotFoundException {
+	    DockerContainer cont = stream.getContainer();
 		LogContainerCmd lcc = docker.logContainerCmd(cont.getId());
 		lcc.withStdErr(true);
 		lcc.withStdOut(true);
@@ -272,9 +292,8 @@ public class DockerScenario {
             logStream.awaitStarted(60, TimeUnit.SECONDS);
             waitForLogEntry(logStream,  waitForString);
         }
-        
     }
-    
+
 	public void waitForLogEntry(LogStream logStream, String waitForString) throws NotFoundException, IOException {
 
         WaitContainer waitCont = new WaitContainer();
