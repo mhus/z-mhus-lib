@@ -73,9 +73,33 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     }
     
     public String readLine() {
-        LinkedList<Byte> logArray = readLineRaw();
-        logArray.removeIf(v -> v == 0);
-        String logStr = new String(MCast.toByteArray(logArray), MString.CHARSET_CHARSET_UTF_8);
+        LinkedList<Byte> array = readLineRaw();
+        array.removeIf(v -> v == 0);
+        String logStr = new String(MCast.toByteArray(array), MString.CHARSET_CHARSET_UTF_8);
+        return logStr;
+    }
+
+    public LinkedList<Byte> readAllRaw() {
+        LinkedList<Byte> sb = new LinkedList<>();
+        try {
+            while (true) {
+                int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
+                if (c < 0) return sb;
+                sb.add((byte)c);
+                if (c == '\n') {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb;
+    }
+
+    public String readAll() {
+        LinkedList<Byte> array = readAllRaw();
+        array.removeIf(v -> v == 0);
+        String logStr = new String(MCast.toByteArray(array), MString.CHARSET_CHARSET_UTF_8);
         return logStr;
     }
 
@@ -101,4 +125,5 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     public boolean isClosed() {
         return closed;
     }
+
 }

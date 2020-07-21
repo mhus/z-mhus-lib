@@ -187,11 +187,11 @@ public class DockerScenario {
 		return exec(name, cmd, null, false, null, null, null);
 	}
 	
-	public LogStream exec2(String name, String cmd) throws InterruptedException, NotFoundException {
+	public LogStream exec(String name, String cmd) throws InterruptedException, NotFoundException {
 		return exec(name, cmd.split(" "), null, false, null, null, null);
 	}
 	
-	public LogStream exec3(String name, String cmd, String send) throws InterruptedException, NotFoundException {
+	public LogStream exec(String name, String cmd, String send) throws InterruptedException, NotFoundException {
 		return exec(name, cmd.split(" "), null, false, null, null, send);
 	}
 	
@@ -203,7 +203,7 @@ public class DockerScenario {
 
 		ExecCreateCmd builder = docker.execCreateCmd(cont.getId())
 			.withAttachStderr(true)
-			.withAttachStderr(true)
+			.withAttachStdout(true)
 			.withTty(true);
 		
 		builder.withCmd(cmd);

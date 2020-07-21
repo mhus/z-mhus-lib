@@ -91,6 +91,7 @@ public class ContainerBuilder {
                 volumesBind.add(new Bind(src, v, mode));
             }
             builder.withVolumes(volumesDef);
+            hostBuilder.withBinds(volumesBind);
         }
         if (env.size() > 0)
             builder.withEnv(env);

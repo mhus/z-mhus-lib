@@ -12,6 +12,7 @@ public class TestCase {
 
     @BeforeEach
     public void beforeEach(TestInfo testInfo) {
+        System.out.println();
         System.out.println("--------------------------------------------------");
         TestUtil.start(testInfo);
         System.out.println("--------------------------------------------------");
@@ -21,6 +22,7 @@ public class TestCase {
     @AfterEach
     public void afterEach() {
         timer.stop();
+        System.out.println();
         System.out.println("--------------------------------------------------");
         System.out.println("Time: " + timer.getCurrentTimeAsString());
         System.out.println("--------------------------------------------------");
