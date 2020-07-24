@@ -33,6 +33,7 @@ import de.mhus.lib.core.util.SecureString;
 
 public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
 
+    private static final int VERSION_LAST = 2;
     private SecureString passphrase;
     private File folder;
     private int version;
@@ -76,7 +77,7 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
         InputStream is = MCrypt.createCipherInputStream(parent, passphrase.value());
         ObjectInputStream ois = new ObjectInputStream(is);
         try {
-            KeyEntry entry = new FileEntry(version, ois);
+            KeyEntry entry = new FileEntry(ois);
             addEntry(entry);
         } catch (Exception e) {
             log().w(file, e);
@@ -86,7 +87,7 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
 
     @Override
     public void doSave() throws IOException {
-        version = 1;
+        version = VERSION_LAST;
         {
             File file = new File(folder, "info.txt");
             MFile.writeFile(file, name);
@@ -117,6 +118,7 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
         oos.writeInt(version);
         oos.writeUTF(entry.getId().toString());
         oos.writeUTF(entry.getType());
+        oos.writeUTF(entry.getName());
         oos.writeUTF(entry.getDescription());
         oos.writeObject(entry.getValue());
         oos.flush();
@@ -125,24 +127,19 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
 
     private class FileEntry extends DefaultEntry {
 
-        public FileEntry(int version, ObjectInputStream ois) throws IOException {
+        public FileEntry(ObjectInputStream ois) throws IOException {
 
-            if (version == 0) {
+            int v = ois.readInt();
+            if (v == 1 || v == 2) {
                 id = UUID.fromString(ois.readUTF());
                 type = ois.readUTF();
+                if (v == 2)
+                    name = ois.readUTF();
                 description = ois.readUTF();
-                value = new SecureString(ois.readUTF());
-            } else if (version > 0) {
-                int v = ois.readInt();
-                if (v == 1) {
-                    id = UUID.fromString(ois.readUTF());
-                    type = ois.readUTF();
-                    description = ois.readUTF();
-                    try {
-                        value = (SecureString) ois.readObject();
-                    } catch (ClassNotFoundException e) {
-                        throw new IOException(e);
-                    }
+                try {
+                    value = (SecureString) ois.readObject();
+                } catch (ClassNotFoundException e) {
+                    throw new IOException(e);
                 }
             }
         }

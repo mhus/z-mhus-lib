@@ -24,7 +24,7 @@ public class DefaultEntry implements KeyEntry {
     protected String type;
     protected String description;
     protected SecureString value;
-    private String name;
+    protected String name;
 
     public DefaultEntry() {}
 
