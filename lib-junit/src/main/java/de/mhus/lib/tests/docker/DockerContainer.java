@@ -110,7 +110,7 @@ public class DockerContainer {
 
     @SuppressWarnings("resource")
     public int getPortBinding(int exposed) {
-        for (Map.Entry<ExposedPort, Binding[]> binding : scenario.getClient().inspectContainerCmd(id).exec().getHostConfig().getPortBindings().getBindings().entrySet()) {
+        for (Map.Entry<ExposedPort, Binding[]> binding : scenario.getClient().inspectContainerCmd(id).exec().getNetworkSettings().getPorts().getBindings().entrySet() ) {
             if (binding.getKey().getPort() == exposed) {
                 if (binding.getValue().length > 0)
                     return M.to(binding.getValue()[0].getHostPortSpec(), 0);
