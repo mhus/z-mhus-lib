@@ -16,7 +16,8 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     private DockerContainer cont;
     private boolean print = true;
     private boolean closed = false;
-    private StringBuilder capture = null;
+    private LinkedList<Byte> capture = null;
+    private LogFilter filter = null;
     
     public LogStream(DockerScenario scenario, String contName) throws NotFoundException {
         this.cont = scenario.get(contName);
@@ -40,11 +41,20 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     @Override
     public void onNext(Frame item) {
         try {
-            if (print)
-                System.out.print(new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
-//                System.out.print("(" + step + ")" + new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
-            if (capture != null)
-                capture.append(new String(item.getPayload(), MString.CHARSET_CHARSET_UTF_8));
+            String logStr = null;
+            if (print || capture != null) {
+                LinkedList<Byte> sb = new LinkedList<>();
+                for (byte b : item.getPayload())
+                    if (b != 0) {
+                        sb.add(b);
+                        if (capture != null)
+                            capture.add(b);
+                    }
+                logStr = new String(MCast.toByteArray(sb), MString.CHARSET_CHARSET_UTF_8);
+            }
+            if (print) {
+                System.out.print(logStr);
+            }
             output.getOut().write(item.getPayload());
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,6 +93,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     public String readLine() {
         LinkedList<Byte> array = readLineRaw();
         array.removeIf(v -> v == 0);
+        if (filter != null) filter.doFilter(array);
         String logStr = new String(MCast.toByteArray(array), MString.CHARSET_CHARSET_UTF_8);
         return logStr;
     }
@@ -107,6 +118,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     public String readAll() {
         LinkedList<Byte> array = readAllRaw();
         array.removeIf(v -> v == 0);
+        if (filter != null) filter.doFilter(array);
         String logStr = new String(MCast.toByteArray(array), MString.CHARSET_CHARSET_UTF_8);
         return logStr;
     }
@@ -135,9 +147,9 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         return closed;
     }
 
-    public LogStream setCaputre(boolean capt) {
+    public LogStream setCapture(boolean capt) {
         if (capt)
-            capture = new StringBuilder();
+            capture = new LinkedList<>();
         else
             capture = null;
         return this;
@@ -145,7 +157,17 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     
     public String getCaptured() {
         if (capture == null) return null;
-        return capture.toString();
+        if (filter != null)
+            filter.doFilter(capture);
+        return new String(MCast.toByteArray(capture), MString.CHARSET_CHARSET_UTF_8);
+    }
+
+    public LogFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(LogFilter filter) {
+        this.filter = filter;
     }
     
 }

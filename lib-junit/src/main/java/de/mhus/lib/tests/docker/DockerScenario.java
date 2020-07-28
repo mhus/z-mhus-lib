@@ -462,5 +462,12 @@ public class DockerScenario {
         this.useExistingNetwork = useExistingNetwork;
         return this;
     }
+
+    String getExternalHost() {
+        if (System.getenv("DOCKER_HOST") == null) {
+            return "localhost";
+        }
+        return System.getenv("DOCKER_HOST");
+    }
 	
 }

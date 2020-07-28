@@ -118,5 +118,9 @@ public class DockerContainer {
         }
         return 0;
     }
+
+    public String getExternalHost() {
+        return scenario.getExternalHost();
+    }
     
 }

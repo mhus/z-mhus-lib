@@ -15,7 +15,7 @@ public class Karaf extends DockerContainer {
         if (param.equals("debug")) {
             config.volumes.add(MSystem.getUserHome() + File.separator + ".m2:/home/user/.m2");
             config.cmd.add("debug");
-            config.ports.add("5005");
+            config.ports.add("15005+:5005");
             return true;
         }
         return false;

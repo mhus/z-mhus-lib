@@ -8,12 +8,14 @@ import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Link;
-import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.Volume;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MNet;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.errors.MRuntimeException;
 
 public class ContainerBuilder {
     
@@ -30,8 +32,9 @@ public class ContainerBuilder {
     final public CreateContainerCmd builder;
     final public LinkedList<Volume> volumesDef = new LinkedList<>();
     final public LinkedList<Bind> volumesBind = new LinkedList<>();
-    final public Ports portConfig  = new Ports();
+    final public LinkedList<PortBinding> portConfig  = new LinkedList<>();
     final public LinkedList<Link> linksBind = new LinkedList<>();
+    final public LinkedList<ExposedPort> exposedPorts = new LinkedList<>();
 
     public ContainerBuilder(DockerScenario scenario, DockerContainer cont, CreateContainerCmd builder) {
         this.scenario = scenario;
@@ -47,26 +50,44 @@ public class ContainerBuilder {
             	if (port.endsWith("/udp")) {
             		port = MString.beforeIndex(port, '/');
                     if (port.indexOf(':') > 0) {
-                        ExposedPort udp = ExposedPort.udp(M.to(MString.beforeIndex(port, ':'), 0));
-                        Binding bind = Binding.bindPort(M.to(MString.afterIndex(port, ':'), 0));
-                        portConfig.bind(udp, bind);
+                        ExposedPort udp = ExposedPort.udp(M.to(MString.afterIndex(port, ':'), 0));
+                        Binding bind = Binding.bindPort(M.to(MString.beforeIndex(port, ':'), 0));
+                        PortBinding ports = new PortBinding(bind, udp);
+                        exposedPorts.add(udp);
+                        portConfig.add(ports);
                     } else {
                         ExposedPort udp = ExposedPort.udp(M.to(port, 0));
-                        portConfig.bind(udp, Binding.empty());
+                        PortBinding ports = new PortBinding(Binding.empty(), udp);
+                        exposedPorts.add(udp);
+                        portConfig.add(ports);
                     }
             	} else {
             		if (port.endsWith("/tcp"))
                 		port = MString.beforeIndex(port, '/');
 	                if (port.indexOf(':') > 0) {
-	                    ExposedPort tcp = ExposedPort.tcp(M.to(MString.beforeIndex(port, ':'), 0));
-	                    Binding bind = Binding.bindPort(M.to(MString.afterIndex(port, ':'), 0));
-	                    portConfig.bind(tcp, bind);
+	                    String bindPort = MString.beforeIndex(port, ':');
+	                    if (bindPort.endsWith("+")) {
+	                        // only localhost !!
+	                        int start = M.to(bindPort.substring(0, bindPort.length()-1), 0);
+	                        if (start == 0) throw new MRuntimeException("port malformed",bindPort);
+	                        while (!MNet.availablePort(start))
+	                            start++;
+	                        bindPort = String.valueOf(start);
+	                    }
+	                    ExposedPort tcp = ExposedPort.tcp(M.to(MString.afterIndex(port, ':'), 0));
+	                    Binding bind = Binding.bindPort(M.to(bindPort, 0));
+                        PortBinding ports = new PortBinding(bind, tcp);
+                        exposedPorts.add(tcp);
+                        portConfig.add(ports);
 	                } else {
 	                    ExposedPort tcp = ExposedPort.tcp(M.to(port, 0));
-	                    portConfig.bind(tcp, Binding.empty());
+                        PortBinding ports = new PortBinding(Binding.empty(), tcp);
+                        exposedPorts.add(tcp);
+                        portConfig.add(ports);
 	                }
             	}
             }
+            System.out.println("--- Port Binding: " + portConfig);
             hostBuilder.withPortBindings(portConfig);
         }
         
@@ -106,7 +127,9 @@ public class ContainerBuilder {
             hostBuilder.withLinks(linksBind);
         }
         builder.withHostConfig(hostBuilder);
+        builder.withExposedPorts(exposedPorts);
         
     }
+
 
 }

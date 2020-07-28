@@ -32,6 +32,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
+import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
@@ -54,13 +55,14 @@ public class AccessUtil {
             return getPrincipal();
         }
     };
-    
+
     public static Map<String, AuthorizingAnnotationHandler> shiroAnnotations = Collections.unmodifiableMap(MCollection.asMap(
             RequiresPermissions.class.getCanonicalName(), new PermissionAnnotationHandler(),
             RequiresRoles.class.getCanonicalName(), new RoleAnnotationHandler(),
             RequiresAuthentication.class.getCanonicalName(), new AuthenticatedAnnotationHandler(),
             RequiresUser.class.getCanonicalName(), new UserAnnotationHandler(),
-            RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler()
+            RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler(),
+            Public.class.getCanonicalName(), new PublicAnnotationHandler()
             ));
 
     public static boolean isAdmin() {
@@ -473,6 +475,23 @@ public class AccessUtil {
             if (handler == null) continue;
             handler.assertAuthorized(classAnno);
         }
+    }
+    
+    public static boolean isAnnotated(Class<?> clazz) {
+        return isAnnotated(clazz.getAnnotations());
+    }
+    
+    public static boolean isAnnotated(Method method) {
+        return isAnnotated(method.getAnnotations());
+    }
+    
+    public static boolean isAnnotated(Annotation[] annotations) {
+        for (Annotation classAnno : annotations) {
+            AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.annotationType().getCanonicalName());
+            if (handler == null) continue;
+            return  true;
+        }
+        return false;
     }
     
 }
