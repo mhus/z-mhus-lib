@@ -7,6 +7,7 @@ import com.github.dockerjava.api.model.Frame;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.io.PipedStream;
 import de.mhus.lib.errors.NotFoundException;
 
@@ -98,15 +99,19 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         return logStr;
     }
 
+    //TODO
     public LinkedList<Byte> readAllRaw() {
         LinkedList<Byte> sb = new LinkedList<>();
         try {
             while (true) {
-                int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
-                if (c < 0) return sb;
-                sb.add((byte)c);
-                if (c == '\n') {
-                    break;
+                int av = output.getIn().available();
+                if (av < 0) return sb;
+                if (av > 0) {
+                    int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
+                    if (c < 0 || closed) return sb;
+                    sb.add((byte)c);
+                } else {
+                    MThread.sleep(100);
                 }
             }
         } catch (IOException e) {

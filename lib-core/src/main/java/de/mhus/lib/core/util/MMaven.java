@@ -15,16 +15,20 @@ package de.mhus.lib.core.util;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
@@ -295,6 +299,7 @@ public class MMaven {
             version = MXml.getValue(xml, "version", version);
             type = MXml.getValue(xml, "packaging", type);
             if (type == null) type = MXml.getValue(xml, "type", null);
+            if (type == null) type = "";
             if (type.equals("bundle")) type = "jar";
         }
 
@@ -348,6 +353,40 @@ public class MMaven {
         }
     }
 
+    public static class Pom {
+        private File pomFile;
+        private Document pomDoc;
+        private Element pomE;
+        private Element parentE;
+        private Artifact artifact;
+        private Artifact parent;
+        
+
+        public Pom(File pomFile) throws ParserConfigurationException, SAXException, IOException {
+            this.pomFile = pomFile;
+            pomDoc = MXml.loadXml(pomFile);
+            pomE = pomDoc.getDocumentElement();
+            parentE = MXml.getElementByPath(pomE, "parent");
+            
+            if (parentE != null)
+                parent = new Artifact(parentE);
+            artifact = new Artifact(pomE);
+        }
+
+        public File getPomFile() {
+            return pomFile;
+        }
+
+        public Artifact getArtifact() {
+            return artifact;
+        }
+
+        public Artifact getParent() {
+            return parent;
+        }
+
+    }
+    
     public static Artifact toArtifact(
             String groupId, String artifactId, String version, String type) {
         return new Artifact(groupId, artifactId, version, type);
@@ -418,5 +457,12 @@ public class MMaven {
             return true;
         }
         return false;
+    }
+
+    public static Pom loadPom(String fileName) throws Exception {
+        File file = new File(fileName);
+        if (!file.exists())
+            throw new FileNotFoundException(fileName);
+        return new Pom(file);
     }
 }

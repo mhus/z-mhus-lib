@@ -376,7 +376,7 @@ public class DockerScenario {
 	}
 	
     public void waitForLogEntry(String name, String waitForString, int tail) throws NotFoundException, IOException, InterruptedException {
-        try (LogStream logStream = logs("karaf", true, tail)) {
+        try (LogStream logStream = logs(name, true, tail)) {
             logStream.awaitStarted(60, TimeUnit.SECONDS);
             waitForLogEntry(logStream,  waitForString);
         }
