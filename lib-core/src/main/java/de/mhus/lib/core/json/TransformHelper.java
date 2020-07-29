@@ -27,6 +27,7 @@ public class TransformHelper {
     int level = 0;
     protected String prefix = "";
     protected TransformStrategy strategy = MJson.DEFAULT_STRATEGY;
+    protected boolean force = false;
 
     public TransformHelper incLevel() {
         level++;
@@ -93,8 +94,9 @@ public class TransformHelper {
         return prefix;
     }
 
-    public void setPrefix(String in) {
+    public TransformHelper setPrefix(String in) {
         prefix = in;
+        return this;
     }
 
     public PojoModel createPojoModel(Object from) {
@@ -129,5 +131,14 @@ public class TransformHelper {
     public void postToPojo(JsonNode from, Object to) {
         // TODO Auto-generated method stub
 
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public TransformHelper setForce(boolean force) {
+        this.force = force;
+        return this;
     }
 }

@@ -77,26 +77,26 @@ public class SimpleObjectTransformer extends TransformStrategy {
                 if (json == null || !attr.canWrite()) {
 
                 } else if (aType == Boolean.class || aType == boolean.class)
-                    attr.set(to, json.asBoolean(false));
-                else if (aType == Integer.class || aType == int.class) attr.set(to, json.asInt(0));
-                else if (aType == String.class) attr.set(to, json.asText());
+                    attr.set(to, json.asBoolean(false), helper.isForce());
+                else if (aType == Integer.class || aType == int.class) attr.set(to, json.asInt(0), helper.isForce());
+                else if (aType == String.class) attr.set(to, json.asText(), helper.isForce());
                 else if (aType == UUID.class)
                     try {
-                        attr.set(to, UUID.fromString(json.asText()));
+                        attr.set(to, UUID.fromString(json.asText()), helper.isForce());
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, helper.isForce());
                     }
                 else if (aType.isEnum()) {
                     Object[] cons = aType.getEnumConstants();
                     int ord = json.asInt(0);
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
-                    attr.set(to, c);
+                    attr.set(to, c, helper.isForce());
                 } else if (aType == Date.class) {
                     try {
-                        attr.set(to, new Date(json.asLong(0)));
+                        attr.set(to, new Date(json.asLong(0)), helper.isForce());
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, helper.isForce());
                     }
                 } else if (Map.class.isAssignableFrom(aType)) {
 
@@ -105,7 +105,7 @@ public class SimpleObjectTransformer extends TransformStrategy {
                         String n = iter.next();
                         map.put(n, MJson.getValue(json.get(name), helper));
                     }
-                    attr.set(to, map);
+                    attr.set(to, map, helper.isForce());
 
                 } else if (Collection.class.isAssignableFrom(aType) && json instanceof ArrayNode) {
                     LinkedList<Object> list = new LinkedList<>();
@@ -119,9 +119,9 @@ public class SimpleObjectTransformer extends TransformStrategy {
                         for (JsonNode i : json) {
                             l.add(i.asText());
                         }
-                        attr.set(to, l.toArray(new String[l.size()]));
+                        attr.set(to, l.toArray(new String[l.size()]), helper.isForce());
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, helper.isForce());
                     }
                 } else if (aType.isArray()) {
                     try {
@@ -130,13 +130,13 @@ public class SimpleObjectTransformer extends TransformStrategy {
                             Object obj = jsonToPojo(i, aType, helper);
                             l.add(obj);
                         }
-                        attr.set(to, l.toArray((Object[]) Array.newInstance(aType, l.size())));
+                        attr.set(to, l.toArray((Object[]) Array.newInstance(aType, l.size())), helper.isForce());
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, helper.isForce());
                     }
                 } else {
                     Object obj = jsonToPojo(json, aType, helper);
-                    attr.set(to, obj);
+                    attr.set(to, obj, helper.isForce());
                 }
             } catch (Throwable t) {
                 helper.log("ERROR " + name, t);

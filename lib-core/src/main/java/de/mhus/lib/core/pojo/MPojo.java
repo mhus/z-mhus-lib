@@ -262,11 +262,19 @@ public class MPojo {
     }
 
     public static void jsonToPojo(JsonNode from, Object to) throws IOException {
-        jsonToPojo(from, to, getDefaultModelFactory());
+        jsonToPojo(from, to, getDefaultModelFactory(), false);
     }
 
+    public static void jsonToPojo(JsonNode from, Object to, boolean force) throws IOException {
+        jsonToPojo(from, to, getDefaultModelFactory(), force);
+    }
+    
+    public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory) throws IOException {
+        jsonToPojo(from, to, factory, false);
+    }
+    
     @SuppressWarnings("unchecked")
-    public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory)
+    public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory, boolean force)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
         for (PojoAttribute<Object> attr : model) {
@@ -281,33 +289,33 @@ public class MPojo {
                 if (json == null || !attr.canWrite()) {
 
                 } else if (type == Boolean.class || type == boolean.class)
-                    attr.set(to, json.asBoolean(false));
-                else if (type == Integer.class || type == int.class) attr.set(to, json.asInt(0));
-                else if (type == Long.class || type == long.class) attr.set(to, json.asLong(0));
+                    attr.set(to, json.asBoolean(false), force);
+                else if (type == Integer.class || type == int.class) attr.set(to, json.asInt(0), force);
+                else if (type == Long.class || type == long.class) attr.set(to, json.asLong(0), force);
                 else if (type == Double.class || type == double.class)
-                    attr.set(to, json.asDouble(0));
+                    attr.set(to, json.asDouble(0), force);
                 else if (type == Float.class || type == float.class)
-                    attr.set(to, (float) json.asDouble(0));
+                    attr.set(to, (float) json.asDouble(0), force);
                 else if (type == Byte.class || type == byte.class)
-                    attr.set(to, (byte) json.asInt(0));
+                    attr.set(to, (byte) json.asInt(0), force);
                 else if (type == Short.class || type == short.class)
-                    attr.set(to, (short) json.asInt(0));
+                    attr.set(to, (short) json.asInt(0), force);
                 else if (type == Character.class || type == char.class)
-                    attr.set(to, (char) json.asInt(0));
-                else if (type == String.class) attr.set(to, json.asText());
+                    attr.set(to, (char) json.asInt(0), force);
+                else if (type == String.class) attr.set(to, json.asText(), force);
                 else if (type == UUID.class)
                     try {
-                        attr.set(to, UUID.fromString(json.asText()));
+                        attr.set(to, UUID.fromString(json.asText()), force);
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, force);
                     }
                 else if (type.isEnum()) {
                     Object[] cons = type.getEnumConstants();
                     int ord = json.asInt(0);
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
-                    attr.set(to, c);
-                } else attr.set(to, json.asText());
+                    attr.set(to, c, force);
+                } else attr.set(to, json.asText(), force);
             } catch (Throwable t) {
                 log.d(MSystem.getClassName(to), name, t);
             }
@@ -391,11 +399,19 @@ public class MPojo {
     }
 
     public static void xmlToPojo(Element from, Object to, MActivator act) throws IOException {
-        xmlToPojo(from, to, getDefaultModelFactory(), act);
+        xmlToPojo(from, to, getDefaultModelFactory(), act, false);
     }
 
+    public static void xmlToPojo(Element from, Object to, MActivator act, boolean force) throws IOException {
+        xmlToPojo(from, to, getDefaultModelFactory(), act, force);
+    }
+    
+    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act) throws IOException {
+        xmlToPojo(from, to, factory, act, false);
+    }
+    
     @SuppressWarnings("unchecked")
-    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act)
+    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act, boolean force)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
 
@@ -418,7 +434,7 @@ public class MPojo {
                 {
                     String value = a.getAttribute("null");
                     if (MString.isSet(value) && value.equals("true")) {
-                        attr.set(to, null);
+                        attr.set(to, null, force);
                         continue;
                     }
                 }
@@ -426,39 +442,39 @@ public class MPojo {
                     String data = a.getAttribute("encoding");
                     if ("base64".equals(data)) {
                         String value = new String(Base64.decode(a.getAttribute("string")));
-                        attr.set(to, value);
+                        attr.set(to, value, force);
                     } else {
                         String value = a.getAttribute("string");
-                        attr.set(to, value);
+                        attr.set(to, value, force);
                     }
                     continue;
                 }
                 if (a.hasAttribute("boolean")) {
                     String value = a.getAttribute("boolean");
-                    attr.set(to, MCast.toboolean(value, false));
+                    attr.set(to, MCast.toboolean(value, false), force);
                     continue;
                 }
                 if (a.hasAttribute("int")) {
                     String value = a.getAttribute("int");
-                    attr.set(to, MCast.toint(value, 0));
+                    attr.set(to, MCast.toint(value, 0), force);
                     continue;
                 }
                 if (a.hasAttribute("long")) {
                     String value = a.getAttribute("long");
-                    attr.set(to, MCast.tolong(value, 0));
+                    attr.set(to, MCast.tolong(value, 0), force);
                     continue;
                 }
                 if (a.hasAttribute("date")) {
                     String value = a.getAttribute("date");
                     Date obj = new Date();
                     obj.setTime(MCast.tolong(value, 0));
-                    attr.set(to, obj);
+                    attr.set(to, obj, force);
                     continue;
                 }
                 if (a.hasAttribute("uuid")) {
                     String value = a.getAttribute("uuid");
                     try {
-                        attr.set(to, UUID.fromString(value));
+                        attr.set(to, UUID.fromString(value), force);
                     } catch (Throwable t) {
                         log.d(name, t);
                     }
@@ -466,7 +482,7 @@ public class MPojo {
                 }
                 if (a.hasAttribute("enum")) {
                     String value = a.getAttribute("enum");
-                    attr.set(to, MCast.toint(value, 0));
+                    attr.set(to, MCast.toint(value, 0), force);
                     continue;
                 }
                 if ("true".equals(a.getAttribute("serializable"))) {
@@ -475,7 +491,7 @@ public class MPojo {
                         String data = cdata.getData();
                         try {
                             Object obj = MCast.fromBinary(MCast.fromBinaryString(data));
-                            attr.set(to, obj);
+                            attr.set(to, obj, force);
                         } catch (ClassNotFoundException e1) {
                             throw new IOException(e1);
                         }
@@ -486,7 +502,7 @@ public class MPojo {
                     try {
                         Object obj = act.createObject(value);
                         xmlToPojo(a, obj, factory, act);
-                        attr.set(to, obj);
+                        attr.set(to, obj, force);
                     } catch (Exception e1) {
                         log.d(name, to.getClass(), e1);
                     }
@@ -569,12 +585,16 @@ public class MPojo {
     }
 
     public static void propertiesToPojo(IProperties from, Object to) throws IOException {
-        propertiesToPojo(from, to, getDefaultModelFactory(), null);
+        propertiesToPojo(from, to, getDefaultModelFactory(), null, false);
     }
 
+    public static void propertiesToPojo(IProperties from, Object to, boolean force) throws IOException {
+        propertiesToPojo(from, to, getDefaultModelFactory(), null, force);
+    }
+    
     public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory)
             throws IOException {
-        propertiesToPojo(from, to, factory, null);
+        propertiesToPojo(from, to, factory, null, false);
     }
 
     @SuppressWarnings("unchecked")
@@ -582,7 +602,9 @@ public class MPojo {
             IProperties from,
             Object to,
             PojoModelFactory factory,
-            Caster<Object, Object> unknownHadler)
+            Caster<Object, Object> unknownHadler,
+            boolean force
+            )
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
         for (PojoAttribute<Object> attr : model) {
@@ -595,28 +617,28 @@ public class MPojo {
                 if (!from.isProperty(name) || !attr.canWrite()) {
 
                 } else if (type == Boolean.class || type == boolean.class)
-                    attr.set(to, from.getBoolean(name, false));
+                    attr.set(to, from.getBoolean(name, false), force);
                 else if (type == Integer.class || type == int.class)
-                    attr.set(to, from.getInt(name, 0));
-                else if (type == String.class) attr.set(to, from.getString(name, null));
+                    attr.set(to, from.getInt(name, 0), force);
+                else if (type == String.class) attr.set(to, from.getString(name, null), force);
                 else if (type == UUID.class)
                     try {
-                        attr.set(to, UUID.fromString(from.getString(name)));
+                        attr.set(to, UUID.fromString(from.getString(name)), force);
                     } catch (IllegalArgumentException e) {
-                        attr.set(to, null);
+                        attr.set(to, null, force);
                     }
                 else if (type.isEnum()) {
                     Object[] cons = type.getEnumConstants();
                     int ord = from.getInt(name, 0);
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
-                    attr.set(to, c);
+                    attr.set(to, c, force);
                 } else
                     attr.set(
                             to,
                             unknownHadler == null
                                     ? from.getString(name)
-                                    : unknownHadler.cast(from.get(name), null));
+                                    : unknownHadler.cast(from.get(name), null), force);
             } catch (Throwable t) {
                 log.d(MSystem.getClassName(to), name, t);
             }
@@ -650,7 +672,7 @@ public class MPojo {
             String name = attr.getName();
             String value = from.get(name);
             if (value != null) {
-                attr.set(to, value);
+                attr.set(to, value, helper.isForce());
             }
         }
     }
@@ -673,12 +695,23 @@ public class MPojo {
 
     public static void objectStreamToPojo(ObjectInputStream from, Object to)
             throws IOException, ClassNotFoundException {
-        objectStreamToPojo(from, to, getDefaultModelFactory());
+        objectStreamToPojo(from, to, getDefaultModelFactory(), false);
     }
 
-    @SuppressWarnings("unchecked")
+    public static void objectStreamToPojo(ObjectInputStream from, Object to, boolean force)
+            throws IOException, ClassNotFoundException {
+        objectStreamToPojo(from, to, getDefaultModelFactory(), force);
+    }
+    
     public static void objectStreamToPojo(
             ObjectInputStream from, Object to, PojoModelFactory factory)
+            throws IOException, ClassNotFoundException {
+        objectStreamToPojo(from, to, factory, false);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static void objectStreamToPojo(
+            ObjectInputStream from, Object to, PojoModelFactory factory, boolean force)
             throws IOException, ClassNotFoundException {
         PojoModel model = factory.createPojoModel(to.getClass());
         while (true) {
@@ -687,7 +720,7 @@ public class MPojo {
             Object value = from.readObject();
             @SuppressWarnings("rawtypes")
             PojoAttribute attr = model.getAttribute(name);
-            if (attr != null) attr.set(to, value);
+            if (attr != null) attr.set(to, value, force);
         }
     }
 

@@ -145,8 +145,8 @@ public class SerializerTransformer extends TransformStrategy {
                     String name = attr.getName();
                     Class<?> type = attr.getType();
                     Object value = jsonToPojo(from.get(name), null, helper);
-                    if (value == null) attr.set(to, null);
-                    else if (type.isInstance(value)) attr.set(to, value);
+                    if (value == null) attr.set(to, null, true);
+                    else if (type.isInstance(value)) attr.set(to, value, true);
                     else System.out.println("Can't set ...");
                 }
                 return to;

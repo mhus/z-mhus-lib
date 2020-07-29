@@ -15,18 +15,17 @@ package de.mhus.lib.core.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.errors.NotSupportedException;
 
 public abstract class TransformStrategy extends MLog {
 
     public Object jsonToPojo(JsonNode node) throws NotSupportedException {
-        return jsonToPojo(node, null, MJson.DEFAULT_HELPER);
+        return jsonToPojo(node, null, new TransformHelper());
     }
 
     public Object jsonToPojo(JsonNode node, Class<?> type) throws NotSupportedException {
-        return jsonToPojo(node, type, MJson.DEFAULT_HELPER);
+        return jsonToPojo(node, type, new TransformHelper());
     }
 
     /**
@@ -43,7 +42,7 @@ public abstract class TransformStrategy extends MLog {
             throws NotSupportedException;
 
     public JsonNode pojoToJson(Object obj) throws NotSupportedException {
-        return pojoToJson(obj, MJson.DEFAULT_HELPER);
+        return pojoToJson(obj, new TransformHelper());
     }
 
     /**

@@ -87,7 +87,7 @@ public class PojoParser {
             if (out == null) {
                 try {
                     out = parent.getType().getDeclaredConstructor().newInstance();
-                    parent.set(pojo, out);
+                    parent.set(pojo, out, true);
                 } catch (InstantiationException
                         | IllegalAccessException
                         | IllegalArgumentException

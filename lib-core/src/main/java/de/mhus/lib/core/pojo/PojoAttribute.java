@@ -20,7 +20,7 @@ public interface PojoAttribute<T> {
 
     T get(Object pojo) throws IOException;
 
-    void set(Object pojo, T value) throws IOException;
+    void set(Object pojo, T value, boolean force) throws IOException;
 
     Class<?> getType();
 

@@ -99,7 +99,7 @@ public class PojoDataSource extends MLog implements DataSource {
     @Override
     public void setObject(UiComponent component, String name, Object value) throws IOException {
         log().t("setObject", component, name, value);
-        model.getAttribute(getName(component, name)).set(pojo.getPojo(), value);
+        model.getAttribute(getName(component, name)).set(pojo.getPojo(), value, false);
     }
 
     @Override

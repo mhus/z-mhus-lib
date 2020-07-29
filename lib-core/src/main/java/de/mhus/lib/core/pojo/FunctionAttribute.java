@@ -64,7 +64,7 @@ public class FunctionAttribute<T> implements PojoAttribute<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void set(Object pojo, T value) throws IOException {
+    public void set(Object pojo, T value, boolean force) throws IOException {
 
         pojo = PojoParser.checkParent(parent, pojo);
 

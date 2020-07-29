@@ -171,8 +171,8 @@ public class AttributesStrategy extends MObject implements PojoStrategy {
 
         @SuppressWarnings("unchecked")
         @Override
-        public void set(Object pojo, T value) throws IOException {
-            if (!writable) throw new IOException("field is read only: " + name);
+        public void set(Object pojo, T value, boolean force) throws IOException {
+            if (!force && !writable) throw new IOException("field is read only: " + name);
             try {
                 pojo = PojoParser.checkParent(parent, pojo);
                 if (!field.canAccess(pojo)) field.setAccessible(true);

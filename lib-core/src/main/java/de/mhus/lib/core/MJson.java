@@ -49,7 +49,6 @@ import de.mhus.lib.errors.MaxDepthReached;
 public class MJson {
 
     public static final TransformStrategy DEFAULT_STRATEGY = new SerializerTransformer();
-    public static final TransformHelper DEFAULT_HELPER = new TransformHelper();
     private static ObjectMapper mapper = new ObjectMapper();
     private static JsonFactory factory = new JsonFactory();
 
@@ -480,14 +479,14 @@ public class MJson {
     }
 
     public static JsonNode pojoToJson(Object from, TransformHelper helper) {
-        if (helper == null) helper = DEFAULT_HELPER;
+        if (helper == null) helper = new TransformHelper();
         JsonNode to = helper.getStrategy().pojoToJson(from, helper);
         helper.postToJson(from, to);
         return to;
     }
 
     public static Object jsonToPojo(JsonNode from, Class<?> type, TransformHelper helper) {
-        if (helper == null) helper = DEFAULT_HELPER;
+        if (helper == null) helper = new TransformHelper();
         Object to = helper.getStrategy().jsonToPojo(from, type, helper);
         helper.postToPojo(from, to);
         return to;

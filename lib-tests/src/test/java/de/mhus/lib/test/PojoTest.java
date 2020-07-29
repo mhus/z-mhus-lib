@@ -51,7 +51,7 @@ public class PojoTest extends TestCase {
         PojoAttribute<String> myString = model.getAttribute("mystring");
         assertNotNull(myString);
 
-        myString.set(example, "aloa");
+        myString.set(example, "aloa", false);
         assertEquals("aloa", example.getMyString());
         assertEquals("aloa", myString.get(example));
 
@@ -65,7 +65,7 @@ public class PojoTest extends TestCase {
         // Embedded
         PojoAttribute<String> line1 = model.getAttribute("myembedded.line1");
         assertNotNull(line1);
-        line1.set(example, "cleopatra");
+        line1.set(example, "cleopatra", false);
         assertEquals("cleopatra", example.getMyEmbedded().getLine1());
 
         // check hidden
@@ -84,9 +84,9 @@ public class PojoTest extends TestCase {
 
         PojoAttribute<Integer> myInt = model.getAttribute("myint");
         assertNotNull(myInt);
-        myInt.set(example, 1);
+        myInt.set(example, 1, false);
         assertEquals(1, example.getMyInt());
-        myInt.set(example, null);
+        myInt.set(example, null, false);
         assertEquals(0, example.getMyInt());
     }
 
@@ -134,7 +134,7 @@ public class PojoTest extends TestCase {
         PojoAttribute<String> myString = model.getAttribute("mystring");
         assertNotNull(myString);
 
-        myString.set(example, "aloa");
+        myString.set(example, "aloa", false);
         assertEquals("aloa", example.getMyString());
         assertEquals("aloa", myString.get(example));
 
@@ -144,7 +144,7 @@ public class PojoTest extends TestCase {
         // Embedded
         PojoAttribute<String> line1 = model.getAttribute("myembedded.line1");
         assertNotNull(line1);
-        line1.set(example, "cleopatra");
+        line1.set(example, "cleopatra", false);
         assertEquals("cleopatra", example.getMyEmbedded().getLine1());
 
         // check hidden
@@ -159,9 +159,9 @@ public class PojoTest extends TestCase {
 
         PojoAttribute<Integer> myInt = model.getAttribute("myint");
         assertNotNull(myInt);
-        myInt.set(example, 1);
+        myInt.set(example, 1, false);
         assertEquals(1, example.getMyInt());
-        myInt.set(example, null);
+        myInt.set(example, null, false);
         assertEquals(0, example.getMyInt());
     }
 
@@ -182,7 +182,7 @@ public class PojoTest extends TestCase {
         PojoAttribute<String> myString = model.getAttribute("mystring");
         assertNotNull(myString);
 
-        myString.set(example, "aloa");
+        myString.set(example, "aloa", false);
         assertEquals("aloa", example.getMyString());
         assertEquals("aloa", myString.get(example));
 
@@ -199,7 +199,7 @@ public class PojoTest extends TestCase {
         // Embedded
         PojoAttribute<String> line1 = model.getAttribute("myembedded.line1");
         assertNotNull(line1);
-        line1.set(example, "cleopatra");
+        line1.set(example, "cleopatra", false);
         assertEquals("cleopatra", example.getMyEmbedded().getLine1());
 
         // check hidden
