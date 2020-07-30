@@ -86,7 +86,7 @@ public class DockerScenario {
 		}
 	}
 	
-	public void start() {
+	public void start() throws InterruptedException {
 		init();
 		destroy();
         destroyNetwork(false);
@@ -103,7 +103,8 @@ public class DockerScenario {
 				docker.inspectImageCmd(cont.getImage()).exec();
 			} catch (com.github.dockerjava.api.exception.NotFoundException e) {
 				System.out.println("    Load: " + cont.getImage());
-				docker.pullImageCmd(cont.getImage()).start();
+				docker.pullImageCmd(cont.getImage())
+				    .start().awaitCompletion();
 			}
 
 			CreateContainerCmd containerCmd = docker.createContainerCmd(cont.getImage());
