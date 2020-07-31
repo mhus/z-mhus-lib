@@ -462,6 +462,7 @@ public class AccessUtil {
     }
     
     public static void checkPermission(Class<?> clazz) {
+        // TODO add caching
         checkPermission(clazz.getAnnotations());
     }
 
@@ -478,6 +479,7 @@ public class AccessUtil {
     }
     
     public static boolean isAnnotated(Class<?> clazz) {
+        // TODO add caching
         return isAnnotated(clazz.getAnnotations());
     }
     

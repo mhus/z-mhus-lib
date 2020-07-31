@@ -41,6 +41,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     
     @Override
     public void onNext(Frame item) {
+        if (closed) return;
         try {
             String logStr = null;
             if (print || capture != null) {
