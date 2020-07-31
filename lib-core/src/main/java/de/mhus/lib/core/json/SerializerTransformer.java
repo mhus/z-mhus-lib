@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
@@ -69,7 +70,8 @@ public class SerializerTransformer extends TransformStrategy {
         if (from instanceof IntNode) return ((IntNode) from).asInt();
         if (from instanceof BooleanNode) return ((BooleanNode) from).asBoolean();
         if (from instanceof DoubleNode) return ((DoubleNode) from).asDouble();
-
+        if (from instanceof NullNode) return null;
+        
         if (!(from instanceof ObjectNode)) throw new NotSupportedException("node type is unknown");
 
         String clazz = MJson.getValue(from, "_type", "");
