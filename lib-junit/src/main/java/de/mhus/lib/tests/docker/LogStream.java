@@ -1,5 +1,6 @@
 package de.mhus.lib.tests.docker;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -19,6 +20,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     private boolean closed = false;
     private LinkedList<Byte> capture = null;
     private LogFilter filter = null;
+    private boolean completed = false;
     
     public LogStream(DockerScenario scenario, String contName) throws NotFoundException {
         this.cont = scenario.get(contName);
@@ -33,10 +35,18 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     }
 
     @Override
+    public void onStart(Closeable closeable) {
+        completed = false;
+        super.onStart(closeable);
+    }
+
+    @Override
     public void onComplete() {
        // output.close();
        // if (input != null)
        //     input.close();
+       completed  = true;
+       super.onComplete();
     }
     
     @Override
@@ -100,19 +110,18 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         return logStr;
     }
 
-    //TODO
     public LinkedList<Byte> readAllRaw() {
         LinkedList<Byte> sb = new LinkedList<>();
         try {
             while (true) {
                 int av = output.getIn().available();
-                if (av < 0) return sb;
                 if (av > 0) {
                     int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
-                    if (c < 0 || closed) return sb;
+                    if (c < 0) return sb;
                     sb.add((byte)c);
                 } else {
                     MThread.sleep(100);
+                    if (sb.size() > 0 && (av < 0 || closed || completed) ) return sb;
                 }
             }
         } catch (IOException e) {
@@ -174,6 +183,14 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
 
     public void setFilter(LogFilter filter) {
         this.filter = filter;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
     
 }
