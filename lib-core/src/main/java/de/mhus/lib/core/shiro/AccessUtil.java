@@ -456,21 +456,21 @@ public class AccessUtil {
         return perm.value;
     }
     
-    public static void checkPermission(Object obj) {
+    public static void checkPermission(Object obj) throws AuthorizationException {
         if (obj == null) return;
         checkPermission(obj.getClass());
     }
     
-    public static void checkPermission(Class<?> clazz) {
+    public static void checkPermission(Class<?> clazz) throws AuthorizationException {
         // TODO add caching
         checkPermission(clazz.getAnnotations());
     }
 
-    public static void checkPermission(Method method) {
+    public static void checkPermission(Method method) throws AuthorizationException {
         checkPermission(method.getAnnotations());
     }
 
-    public static void checkPermission(Annotation[] annotations) {
+    public static void checkPermission(Annotation[] annotations) throws AuthorizationException {
         for (Annotation classAnno : annotations) {
             AuthorizingAnnotationHandler handler = shiroAnnotations.get(classAnno.annotationType().getCanonicalName());
             if (handler == null) continue;
