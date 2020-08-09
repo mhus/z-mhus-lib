@@ -18,4 +18,6 @@ public interface AccessApi {
 
     void restart();
 
+    void destroySession();
+
 }

@@ -1,13 +1,16 @@
 package de.mhus.lib.core.shiro;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.env.BasicIniEnvironment;
 import org.apache.shiro.env.DefaultEnvironment;
 import org.apache.shiro.env.Environment;
+import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.subject.Subject;
 
 import de.mhus.lib.core.MApi;
@@ -76,6 +79,27 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     public void restart() {
         // simply restart
         initialize();
+    }
+
+    @Override
+    public void destroySession() {
+        try {
+            Subject subject = getSubject();
+            String sessionId = String.valueOf(subject.getSession().getId());
+            log().d("destroySession",sessionId);
+            subject.logout();
+            DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
+            
+            DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
+            Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
+            for (Session session: activeSessions){
+                if (sessionId.equals(session.getId())) {
+                    session.stop();
+                }
+            }
+        } catch (Throwable t) {
+            log().d(t);
+        }
     }
 
 }

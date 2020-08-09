@@ -28,6 +28,7 @@ import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -79,6 +80,9 @@ public class AccessUtil {
     	try {
 	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
 	        return subject;
+        } catch (UnknownSessionException e) {
+            M.l(AccessApi.class).destroySession();
+            return null;
     	} catch (Throwable t) {
     		log.d(t);
     		return null;
@@ -89,6 +93,9 @@ public class AccessUtil {
     	try {
 	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
 	        return subject.isAuthenticated();
+        } catch (UnknownSessionException e) {
+            M.l(AccessApi.class).destroySession();
+            return false;
     	} catch (Throwable t) {
     		log.d(t);
     		return false;
@@ -99,6 +106,9 @@ public class AccessUtil {
     	try {
 	        Subject subject =  M.l(AccessApi.class).getSubject(); // init
 	        return getPrincipal(subject);
+    	} catch (UnknownSessionException e) {
+    	    M.l(AccessApi.class).destroySession();
+    	    return null;
     	} catch (Throwable t) {
     		log.d(t);
     		return null;
@@ -106,9 +116,14 @@ public class AccessUtil {
     }
     
     public static String getPrincipal(Subject subject) {
-        Object p = subject.getPrincipal();
-        if (p == null) return null;
-        return String.valueOf(p);
+        try {
+            Object p = subject.getPrincipal();
+            if (p == null) return null;
+            return String.valueOf(p);
+        } catch (UnknownSessionException e) {
+            M.l(AccessApi.class).destroySession();
+            return null;
+        }
     }
 
     public static String toString(Subject subject) {
