@@ -46,6 +46,16 @@ public class YMap extends YElement {
 		if (val instanceof String) return (String) val;
 		return String.valueOf(val);
 	}
+
+    @SuppressWarnings("unchecked")
+    public String[] getStringArray(String key) {
+        if (getObject() == null) return new String[0];
+        Object val = ((Map<String, Object>)getObject()).get(key);
+        if (val instanceof List) {
+            return getList(key).toStringList().toArray(new String[0]);
+        }
+        return new String[] {String.valueOf(val)};
+    }
 	
     public boolean getBoolean(String key) {
         return getBoolean(key, false);
