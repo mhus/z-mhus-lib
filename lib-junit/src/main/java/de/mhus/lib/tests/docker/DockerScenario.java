@@ -46,6 +46,7 @@ public class DockerScenario {
 	private Timer watch = new Timer("DockerScenarioTimer", true);
     private String networkId;
     private boolean useExistingNetwork = true;
+    private int cnt;
 
 	public DockerScenario() {}
 	
@@ -469,6 +470,10 @@ public class DockerScenario {
             return "localhost";
         }
         return System.getenv("DOCKER_HOST");
+    }
+
+    public int cnt() {
+        return cnt++;
     }
 	
 }

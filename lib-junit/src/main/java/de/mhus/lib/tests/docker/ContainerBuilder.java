@@ -69,9 +69,12 @@ public class ContainerBuilder {
 	                    if (bindPort.endsWith("+")) {
 	                        // only localhost !!
 	                        int start = M.to(bindPort.substring(0, bindPort.length()-1), 0);
+	                        start = start + scenario.cnt();
 	                        if (start == 0) throw new MRuntimeException("port malformed",bindPort);
-	                        while (!MNet.availablePort(start))
+	                        while (!MNet.availablePort(start)) {
 	                            start++;
+	                            scenario.cnt();
+	                        }
 	                        bindPort = String.valueOf(start);
 	                    }
 	                    ExposedPort tcp = ExposedPort.tcp(M.to(MString.afterIndex(port, ':'), 0));
