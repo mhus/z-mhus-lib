@@ -40,8 +40,7 @@ public abstract class MapMutableVaultSource extends MLog implements MutableVault
         doCheckSource();
         synchronized (entries) {
             // TODO optimize !!!
-            for (KeyEntry entry : entries.values())
-                if (name.equals(entry.getName())) return entry;
+            for (KeyEntry entry : entries.values()) if (name.equals(entry.getName())) return entry;
         }
         return null;
     }

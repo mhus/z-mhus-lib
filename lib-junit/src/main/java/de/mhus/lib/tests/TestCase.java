@@ -18,7 +18,7 @@ public class TestCase {
         System.out.println("--------------------------------------------------");
         timer = new MStopWatch().start();
     }
-    
+
     @AfterEach
     public void afterEach() {
         timer.stop();
@@ -26,6 +26,5 @@ public class TestCase {
         System.out.println("--------------------------------------------------");
         System.out.println("Time: " + timer.getCurrentTimeAsString());
         System.out.println("--------------------------------------------------");
-        
     }
 }

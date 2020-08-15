@@ -21,35 +21,36 @@ public @interface OperationService {
 
     /**
      * Display title of the operation. Default is the simple name of the current class.
+     *
      * @return display name
      */
     String title() default "";
     /**
-     * If you need to set the path by a class reference.
-     * Default path is the name of the current class.
+     * If you need to set the path by a class reference. Default path is the name of the current
+     * class.
+     *
      * @return path
      */
     Class<?> clazz() default Object.class;
     /**
-     * Set full path with group.id and overwrite clazz() setting. If you set this
-     * option setting clazz() makes no sense.
-     * Default path is the name of the current class.
+     * Set full path with group.id and overwrite clazz() setting. If you set this option setting
+     * clazz() makes no sense. Default path is the name of the current class.
+     *
      * @return path
      */
     String path() default "";
-    
+
     /**
      * Define the version of the operation. Default is 0.0.0
+     *
      * @return The version
      */
     String version() default "";
 
     /**
-     * Set to true if you wan't a strict parameter check.
-     * Unknown parameters will be rejected.
-     * 
+     * Set to true if you wan't a strict parameter check. Unknown parameters will be rejected.
+     *
      * @return true for strict check
      */
     boolean strictParameterCheck() default false;
-    
 }

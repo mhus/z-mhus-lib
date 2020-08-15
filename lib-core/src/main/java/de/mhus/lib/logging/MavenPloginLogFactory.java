@@ -8,20 +8,17 @@ import de.mhus.lib.core.logging.LogFactory;
 
 public class MavenPloginLogFactory extends LogFactory {
 
-	private AbstractMojo owner;
+    private AbstractMojo owner;
 
-	public MavenPloginLogFactory(AbstractMojo owner) {
-		this.owner = owner;
-	}
+    public MavenPloginLogFactory(AbstractMojo owner) {
+        this.owner = owner;
+    }
 
-	@Override
-	public void init(IConfig config) throws Exception {
+    @Override
+    public void init(IConfig config) throws Exception {}
 
-	}
-
-	@Override
-	public LogEngine createInstance(String name) {
-		return new MavenPluginLogEngine(owner, name);
-	}
-
+    @Override
+    public LogEngine createInstance(String name) {
+        return new MavenPluginLogEngine(owner, name);
+    }
 }

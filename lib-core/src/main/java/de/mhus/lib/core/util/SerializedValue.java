@@ -15,7 +15,6 @@ package de.mhus.lib.core.util;
 
 import java.io.Serializable;
 
-
 public class SerializedValue extends Value<Serializable> {
 
     private static final long serialVersionUID = 1L;

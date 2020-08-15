@@ -133,8 +133,7 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
             if (v == 1 || v == 2) {
                 id = UUID.fromString(ois.readUTF());
                 type = ois.readUTF();
-                if (v == 2)
-                    name = ois.readUTF();
+                if (v == 2) name = ois.readUTF();
                 description = ois.readUTF();
                 try {
                     value = (SecureString) ois.readObject();

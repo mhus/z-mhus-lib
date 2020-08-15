@@ -77,5 +77,4 @@ public class DefComponent extends MConfig implements IDefDefinition {
             else fill(c, p);
         }
     }
-
 }

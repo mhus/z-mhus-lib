@@ -62,10 +62,9 @@ public abstract class ModelPart {
                 extra.execute(out, map);
                 val = out.toString();
             } catch (MException e) {
-                throw new MRuntimeException(param,e);
+                throw new MRuntimeException(param, e);
             }
-        } else
-            val = map.get(param);
+        } else val = map.get(param);
         if (val != null) return matches(this, map, String.valueOf(val));
         return false;
     }

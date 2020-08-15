@@ -6,9 +6,8 @@ import de.mhus.lib.core.logging.Log;
 
 public class MavenPluginLog extends Log {
 
-	public MavenPluginLog(AbstractMojo owner) {
-		super(owner);
-		engine = new MavenPluginLogEngine(owner);
-	}
-
+    public MavenPluginLog(AbstractMojo owner) {
+        super(owner);
+        engine = new MavenPluginLogEngine(owner);
+    }
 }

@@ -1205,7 +1205,8 @@ public final class MCast {
                 out[cnt] = b;
                 cnt++;
             }
-        } catch (NullPointerException e) {} // caused by concurrent access
+        } catch (NullPointerException e) {
+        } // caused by concurrent access
         return out;
     }
 }

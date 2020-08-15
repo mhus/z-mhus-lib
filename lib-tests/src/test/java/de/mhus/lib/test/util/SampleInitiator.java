@@ -12,5 +12,4 @@ public class SampleInitiator implements CfgInitiator {
     public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         MConfigTest.initiate(config);
     }
-
 }

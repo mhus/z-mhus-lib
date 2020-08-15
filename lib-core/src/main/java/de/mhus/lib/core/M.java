@@ -133,15 +133,15 @@ public class M {
     public static String get(JsonNode node, String path, String def) {
         return MJson.getText(node, path, def);
     }
-        
+
     /**
      * Fast access to logger.
-     * 
+     *
      * @param owner
      * @return a log instance for the owner
      */
     public static Log log(Object owner) {
-    	try {
+        try {
             return MApi.get().lookupLog(owner);
         } catch (Throwable t) {
             t.printStackTrace();

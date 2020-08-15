@@ -100,15 +100,16 @@ public class MKeychainUtil {
     }
 
     public static String getType(String content) {
-        
+
         if (content == null) return MKeychain.TYPE_TEXT;
-        
+
         // only analyse the first block in content
         int pos = content.indexOf("-----END ");
         if (pos < 0) return MKeychain.TYPE_TEXT;
         content = content.substring(0, pos);
-        
-        if (content.contains("-----BEGIN RSA PRIVATE KEY-----")) return MKeychain.TYPE_RSA_PRIVATE_KEY;
+
+        if (content.contains("-----BEGIN RSA PRIVATE KEY-----"))
+            return MKeychain.TYPE_RSA_PRIVATE_KEY;
         if (content.contains("-----BEGIN RSA PUBLIC KEY-----"))
             return MKeychain.TYPE_RSA_PUBLIC_KEY;
         if (content.contains("-----BEGIN DSA PRIVATE KEY-----"))
@@ -120,30 +121,19 @@ public class MKeychainUtil {
         if (content.contains("-----BEGIN ECC PUBLIC KEY-----"))
             return MKeychain.TYPE_ECC_PUBLIC_KEY;
         if (content.contains("-----BEGIN PRIVATE KEY-----")) {
-            if (content.contains("Method: AES"))
-                return MKeychain.TYPE_AES_PRIVATE_KEY;
-            if (content.contains("Method: RSA"))
-                return MKeychain.TYPE_RSA_PRIVATE_KEY;
-            if (content.contains("Method: ECC"))
-                return MKeychain.TYPE_ECC_PRIVATE_KEY;
-            if (content.contains("Method: DSA"))
-                return MKeychain.TYPE_DSA_PRIVATE_KEY;
+            if (content.contains("Method: AES")) return MKeychain.TYPE_AES_PRIVATE_KEY;
+            if (content.contains("Method: RSA")) return MKeychain.TYPE_RSA_PRIVATE_KEY;
+            if (content.contains("Method: ECC")) return MKeychain.TYPE_ECC_PRIVATE_KEY;
+            if (content.contains("Method: DSA")) return MKeychain.TYPE_DSA_PRIVATE_KEY;
         }
         if (content.contains("-----BEGIN PUBLIC KEY-----")) {
-            if (content.contains("Method: AES"))
-                return MKeychain.TYPE_AES_PUBLIC_KEY;
-            if (content.contains("Method: RSA"))
-                return MKeychain.TYPE_RSA_PUBLIC_KEY;
-            if (content.contains("Method: ECC"))
-                return MKeychain.TYPE_ECC_PUBLIC_KEY;
-            if (content.contains("Method: DSA"))
-                return MKeychain.TYPE_DSA_PUBLIC_KEY;
+            if (content.contains("Method: AES")) return MKeychain.TYPE_AES_PUBLIC_KEY;
+            if (content.contains("Method: RSA")) return MKeychain.TYPE_RSA_PUBLIC_KEY;
+            if (content.contains("Method: ECC")) return MKeychain.TYPE_ECC_PUBLIC_KEY;
+            if (content.contains("Method: DSA")) return MKeychain.TYPE_DSA_PUBLIC_KEY;
         }
-        if (content.contains("-----BEGIN CIPHER-----"))
-            return MKeychain.TYPE_CIPHER;
-        if (content.contains("-----BEGIN SIGNATURE-----"))
-            return MKeychain.TYPE_SIGNATURE;
-            
+        if (content.contains("-----BEGIN CIPHER-----")) return MKeychain.TYPE_CIPHER;
+        if (content.contains("-----BEGIN SIGNATURE-----")) return MKeychain.TYPE_SIGNATURE;
         else return MKeychain.TYPE_TEXT;
     }
 

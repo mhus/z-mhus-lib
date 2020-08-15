@@ -360,16 +360,14 @@ public class MMaven {
         private Element parentE;
         private Artifact artifact;
         private Artifact parent;
-        
 
         public Pom(File pomFile) throws ParserConfigurationException, SAXException, IOException {
             this.pomFile = pomFile;
             pomDoc = MXml.loadXml(pomFile);
             pomE = pomDoc.getDocumentElement();
             parentE = MXml.getElementByPath(pomE, "parent");
-            
-            if (parentE != null)
-                parent = new Artifact(parentE);
+
+            if (parentE != null) parent = new Artifact(parentE);
             artifact = new Artifact(pomE);
         }
 
@@ -384,9 +382,8 @@ public class MMaven {
         public Artifact getParent() {
             return parent;
         }
-
     }
-    
+
     public static Artifact toArtifact(
             String groupId, String artifactId, String version, String type) {
         return new Artifact(groupId, artifactId, version, type);
@@ -461,8 +458,7 @@ public class MMaven {
 
     public static Pom loadPom(String fileName) throws Exception {
         File file = new File(fileName);
-        if (!file.exists())
-            throw new FileNotFoundException(fileName);
+        if (!file.exists()) throw new FileNotFoundException(fileName);
         return new Pom(file);
     }
 }

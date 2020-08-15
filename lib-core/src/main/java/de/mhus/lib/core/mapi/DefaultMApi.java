@@ -37,7 +37,7 @@ import de.mhus.lib.core.logging.PrintStreamFactory;
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
     protected LogFactory logFactory = new PrintStreamFactory();
-//    private BaseControl baseControl;
+    //    private BaseControl baseControl;
     protected MCfgManager configProvider;
     protected HashSet<String> logTrace = new HashSet<>();
     protected File baseDir = new File(".");
@@ -50,13 +50,13 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         getCfgManager();
     }
 
-//    @Override
-//    public synchronized BaseControl getBaseControl() {
-//        if (baseControl == null) {
-//            baseControl = new BaseControl();
-//        }
-//        return baseControl;
-//    }
+    //    @Override
+    //    public synchronized BaseControl getBaseControl() {
+    //        if (baseControl == null) {
+    //            baseControl = new BaseControl();
+    //        }
+    //        return baseControl;
+    //    }
 
     @Override
     public MActivator createActivator() {
@@ -90,7 +90,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     public void startInitiators() {
 
         MApi.dirtyLogInfo("Start mhu-lib initiators");
-        
+
         TreeMap<String, Object[]> initiators = new TreeMap<>(); // execute in an ordered way
         // default
         initiators.put("001_system", new Object[] {new SystemCfgInitiator(), null});
@@ -101,7 +101,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
             IConfig system = configProvider.getCfg(MConstants.CFG_SYSTEM);
             MApi.setDirtyTrace(system.getBoolean("log.trace", false));
             Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
-            
+
             MActivator activator = MApi.get().createActivator();
             for (IConfig node : MCfgManager.getGlobalConfigurations("initiator")) {
                 try {
@@ -139,11 +139,11 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         }
         // MApi.getCfgUpdater().doUpdate(null);
     }
-    
-//    @Override
-//    public MBase base() {
-//        return getBaseControl().base();
-//    }
+
+    //    @Override
+    //    public MBase base() {
+    //        return getBaseControl().base();
+    //    }
 
     @Override
     public void setLogFactory(LogFactory logFactory) {
@@ -199,5 +199,4 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     public DefaultActivator getLookupActivator() {
         return base;
     }
-
 }

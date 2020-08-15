@@ -351,66 +351,65 @@ public class MJson {
         if (node == null) return null;
         try {
             switch (node.getNodeType()) {
-            case ARRAY:
-                LinkedList<Object> l = new LinkedList<>();
-                for (JsonNode n : node) {
-                    l.add(getValue(n, helper));
-                }
-                out = l;
-                break;
-            case BINARY:
-                out = node.binaryValue();
-                break;
-            case BOOLEAN:
-                out = node.booleanValue();
-                break;
-            case MISSING:
-                out = node.asText();
-                break;
-            case NULL:
-                out = null;
-                break;
-            case NUMBER:
-                switch (node.numberType()) {
-                case BIG_DECIMAL:
-                    out = node.numberValue();
+                case ARRAY:
+                    LinkedList<Object> l = new LinkedList<>();
+                    for (JsonNode n : node) {
+                        l.add(getValue(n, helper));
+                    }
+                    out = l;
                     break;
-                case BIG_INTEGER:
-                    out = node.numberValue();
+                case BINARY:
+                    out = node.binaryValue();
                     break;
-                case DOUBLE:
-                    out = node.numberValue().doubleValue();
+                case BOOLEAN:
+                    out = node.booleanValue();
                     break;
-                case FLOAT:
-                    out = node.numberValue().floatValue();
+                case MISSING:
+                    out = node.asText();
                     break;
-                case INT:
-                    out = node.numberValue().intValue();
+                case NULL:
+                    out = null;
                     break;
-                case LONG:
-                    out = node.numberValue().longValue();
+                case NUMBER:
+                    switch (node.numberType()) {
+                        case BIG_DECIMAL:
+                            out = node.numberValue();
+                            break;
+                        case BIG_INTEGER:
+                            out = node.numberValue();
+                            break;
+                        case DOUBLE:
+                            out = node.numberValue().doubleValue();
+                            break;
+                        case FLOAT:
+                            out = node.numberValue().floatValue();
+                            break;
+                        case INT:
+                            out = node.numberValue().intValue();
+                            break;
+                        case LONG:
+                            out = node.numberValue().longValue();
+                            break;
+                        default:
+                            out = node.numberValue();
+                            break;
+                    }
+                    break;
+                case OBJECT:
+                    HashMap<String, Object> m = new HashMap<>();
+                    for (Iterator<String> i = node.fieldNames(); i.hasNext(); ) {
+                        String name = i.next();
+                        m.put(name, getValue(node.get(name), helper));
+                    }
+                    break;
+                case POJO:
+                    out = node.asText();
+                    break;
+                case STRING:
+                    out = node.textValue();
                     break;
                 default:
-                    out = node.numberValue();
                     break;
-                }
-                break;
-            case OBJECT:
-                HashMap<String, Object> m = new HashMap<>();
-                for (Iterator<String> i = node.fieldNames(); i.hasNext(); ) {
-                    String name = i.next();
-                    m.put(name, getValue(node.get(name), helper));
-                }
-                break;
-            case POJO:
-                out = node.asText();
-                break;
-            case STRING:
-                out = node.textValue();
-                break;
-            default:
-                break;
-            
             }
         } catch (IOException e) {
         }
@@ -528,10 +527,9 @@ public class MJson {
             throws JsonGenerationException, JsonMappingException, IOException {
         return mapper.writeValueAsString(to);
     }
-    
+
     public static String toPrettyString(JsonNode to)
             throws JsonGenerationException, JsonMappingException, IOException {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(to);
     }
-
 }

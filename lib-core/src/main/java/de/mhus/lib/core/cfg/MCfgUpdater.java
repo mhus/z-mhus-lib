@@ -24,7 +24,7 @@ public class MCfgUpdater {
     //	private WeakHashMap<CfgValue, String> registry = new WeakHashMap<>();
     private HashMap<String, HashMap<String, WeakHashMap<CfgValue, String>>> registry =
             new HashMap<>();
-    
+
     @SuppressWarnings("rawtypes")
     protected synchronized WeakHashMap<CfgValue, String> getCfgContainer(
             String owner, String path) {
@@ -64,12 +64,12 @@ public class MCfgUpdater {
         LinkedList<CfgValue> list = new LinkedList<>();
         synchronized (registry) {
             if (owner == null) {
-                for (HashMap<String, WeakHashMap<CfgValue, String>> cfgs : registry.values() )
-                    for (WeakHashMap<CfgValue, String> cfg: cfgs.values())
+                for (HashMap<String, WeakHashMap<CfgValue, String>> cfgs : registry.values())
+                    for (WeakHashMap<CfgValue, String> cfg : cfgs.values())
                         list.addAll(cfg.keySet());
             } else
-                for (WeakHashMap<CfgValue, String> pathContainer : getOwnerContainers(owner).values())
-                    list.addAll(pathContainer.keySet());
+                for (WeakHashMap<CfgValue, String> pathContainer :
+                        getOwnerContainers(owner).values()) list.addAll(pathContainer.keySet());
         }
         for (CfgValue<?> item : list)
             if (owner == null

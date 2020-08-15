@@ -13,15 +13,14 @@ public class MDirtyTricks {
 
     public static boolean updateCfgValue(Class<?> owner, String path, String value) {
         for (CfgValue<?> cfg : MApi.getCfgUpdater().getList()) {
-            if (cfg.getOwner().equals(owner.getCanonicalName())
-                    && cfg.getPath().equals(path)) {
+            if (cfg.getOwner().equals(owner.getCanonicalName()) && cfg.getPath().equals(path)) {
                 cfg.setValue(value);
                 return true;
             }
         }
         return false;
     }
-    
+
     public static void setTestLogging() {
         try {
             MApi.get().getLogFactory().setDefaultLevel(LEVEL.TRACE);
@@ -30,16 +29,16 @@ public class MDirtyTricks {
         }
         MApi.setDirtyTrace(true);
     }
-    
+
     public static void setJavaLogging() {
-    	((IApiInternal)MApi.get()).setLogFactory(new JavaLoggerFactory() );
+        ((IApiInternal) MApi.get()).setLogFactory(new JavaLoggerFactory());
     }
 
-    public static void cleanupMApi() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+    public static void cleanupMApi()
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+                    IllegalAccessException {
         Field field = MApi.class.getDeclaredField("api");
-        if (!field.canAccess(null))
-            field.setAccessible(true);
+        if (!field.canAccess(null)) field.setAccessible(true);
         field.set(null, null);
     }
-        
 }

@@ -13,12 +13,15 @@ public class LocalIpInitializer implements CfgInitiator {
     public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
-            System.out.println("IP Address: " + inetAddress.getHostAddress() + " / Host Name: " + inetAddress.getHostName());
+            System.out.println(
+                    "IP Address: "
+                            + inetAddress.getHostAddress()
+                            + " / Host Name: "
+                            + inetAddress.getHostName());
             ServerIdent.getAttributes().setString("ip", inetAddress.getHostAddress());
             ServerIdent.getAttributes().setString("hostname", inetAddress.getHostName());
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
-
 }

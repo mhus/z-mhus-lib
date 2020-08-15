@@ -108,8 +108,7 @@ public class MFile {
     }
 
     /**
-     * Return the Suffix of a file. Its the string after the last dot.
-     * It's lower case and trimmed!
+     * Return the Suffix of a file. Its the string after the last dot. It's lower case and trimmed!
      *
      * @param _file
      * @return the file suffix
@@ -120,8 +119,8 @@ public class MFile {
     }
 
     /**
-     * Return the Suffix of a file. Its the string after the last dot or an empty string.
-     * It's lower case and trimmed!
+     * Return the Suffix of a file. Its the string after the last dot or an empty string. It's lower
+     * case and trimmed!
      *
      * @param name
      * @return the file suffix
@@ -443,8 +442,8 @@ public class MFile {
     }
 
     /**
-     * Copy a file.
-     * Return -1 if src or dest is null, -2 if src is a directory, -3 if src and dest is the same file, -4 on error.
+     * Copy a file. Return -1 if src or dest is null, -2 if src is a directory, -3 if src and dest
+     * is the same file, -4 on error.
      *
      * @param _src
      * @param _dest
@@ -493,11 +492,10 @@ public class MFile {
 
         try {
             while ((i = _is.read(buffer)) != -1) {
-                if (i == 0) 
-                    MThread.sleep(100);
+                if (i == 0) MThread.sleep(100);
                 else {
                     _os.write(buffer, 0, i);
-                    size+=i;
+                    size += i;
                 }
             }
         } catch (Exception e) {
@@ -526,8 +524,7 @@ public class MFile {
 
         try {
             while ((i = _is.read(buffer)) != -1)
-                if (i == 0) 
-                    MThread.sleep(100);
+                if (i == 0) MThread.sleep(100);
                 else {
                     _os.write(buffer, 0, i);
                     size += i;
@@ -783,7 +780,7 @@ public class MFile {
 
     /**
      * Write a line list to a file. Every line will be URL encoded
-     * 
+     *
      * @param file
      * @param lines
      * @param append
@@ -804,7 +801,6 @@ public class MFile {
         }
     }
 
-
     /**
      * Read a file into a list line by line
      *
@@ -814,7 +810,8 @@ public class MFile {
      * @return the file content as list of lines
      * @throws IOException
      */
-    public static List<String> readLinesEncoded(File file, boolean removeLastEmpty) throws IOException {
+    public static List<String> readLinesEncoded(File file, boolean removeLastEmpty)
+            throws IOException {
         if (file == null) return null;
 
         final LinkedList<String> out = new LinkedList<>();
@@ -824,7 +821,7 @@ public class MFile {
 
                     @Override
                     public void update(Object o, Object reason, String arg) {
-                        out.add( MUri.decode( (String) arg) );
+                        out.add(MUri.decode((String) arg));
                     }
                 });
 
@@ -1042,6 +1039,7 @@ public class MFile {
 
     /**
      * Touch a file
+     *
      * @param file
      * @return true if touch was successful
      */
@@ -1050,7 +1048,8 @@ public class MFile {
             FileOutputStream fos = new FileOutputStream(file, true);
             fos.close();
             return true;
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
         return false;
     }
 }

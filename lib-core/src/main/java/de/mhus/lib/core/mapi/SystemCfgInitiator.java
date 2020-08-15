@@ -28,7 +28,7 @@ public class SystemCfgInitiator implements CfgInitiator {
         IConfig system = manager.getCfg("system");
         try {
             String key = MConstants.PROP_BASE_DIR;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) internal.setBaseDir(new File(name));
         } catch (Throwable t) {

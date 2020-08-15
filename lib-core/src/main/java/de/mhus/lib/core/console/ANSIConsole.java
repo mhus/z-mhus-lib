@@ -124,17 +124,15 @@ public class ANSIConsole extends Console {
     public String readPassword() throws IOException {
         return reader.readLine('*');
     }
-    
+
     @Override
     public String readLine(String prompt, LinkedList<String> history) {
         try {
-        	reader.getHistory().purge();
-        	if (history != null)
-        		history.forEach(i -> reader.getHistory().add(i));
+            reader.getHistory().purge();
+            if (history != null) history.forEach(i -> reader.getHistory().add(i));
             String ret = reader.readLine(prompt);
             if (history != null && MString.isSetTrim(ret) && !ret.startsWith(" ")) {
-            	if (history.size() == 0 || !history.getLast().equals(ret))
-            		history.add(ret);
+                if (history.size() == 0 || !history.getLast().equals(ret)) history.add(ret);
             }
             return ret;
         } catch (Exception e) {
@@ -319,7 +317,7 @@ public class ANSIConsole extends Console {
                 return "36";
             case MAGENTA:
                 return "35";
-                
+
             case BRIGHT_BLACK:
                 return "90";
             case BRIGHT_BLUE:
@@ -336,12 +334,12 @@ public class ANSIConsole extends Console {
                 return "96";
             case BRIGHT_MAGENTA:
                 return "95";
-                
+
             default:
                 return "37";
         }
     }
-    
+
     public static String ansiBGColorValue(COLOR col) {
         switch (col) {
             case BLACK:
@@ -377,12 +375,11 @@ public class ANSIConsole extends Console {
                 return "106";
             case BRIGHT_MAGENTA:
                 return "105";
-                
+
             default:
                 return "47";
         }
     }
-    
 
     @Override
     public void cleanup() {
@@ -432,11 +429,10 @@ public class ANSIConsole extends Console {
     public void setHeight(int h) {
         this.height = h;
     }
-    
+
     @Override
     public void beep() {
         print("\007");
         flush();
     }
-
 }

@@ -19,7 +19,7 @@ public class ShiroAccount implements Account {
     public ShiroAccount(Subject subject) {
         this.subject = subject;
     }
-    
+
     @Override
     public boolean hasGroup(String group) {
         return subject.hasRole(group);
@@ -98,5 +98,4 @@ public class ShiroAccount implements Account {
     public boolean isActive() {
         return true; // TODO
     }
-
 }

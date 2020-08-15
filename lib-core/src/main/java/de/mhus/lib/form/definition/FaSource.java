@@ -32,7 +32,7 @@ public class FaSource extends MConfig implements IDefAttribute {
 
     @Override
     public void inject(DefComponent root) throws MException {
-    	IConfig sources = root.getObject("sources");
+        IConfig sources = root.getObject("sources");
         if (sources == null) {
             sources = root.createObject("sources");
         }

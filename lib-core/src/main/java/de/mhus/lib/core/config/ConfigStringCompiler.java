@@ -17,7 +17,7 @@ public class ConfigStringCompiler extends StringCompiler {
     ConfigStringCompiler(MConfig rootConfig) {
         this.rootConfig = rootConfig;
     }
-    
+
     @Override
     protected StringPart createDefaultAttributePart(String part) {
         if (part.startsWith(">root:")) return new RootAttributePart(part);
@@ -33,7 +33,8 @@ public class ConfigStringCompiler extends StringCompiler {
         public RootAttributePart(String part) {
             name = MString.afterIndex(part, ':');
             config = rootConfig;
-            while (config.getParent() != null && config.getParent() != config) config = config.getParent();
+            while (config.getParent() != null && config.getParent() != config)
+                config = config.getParent();
             int pos = name.indexOf(',');
             if (pos > 0) {
                 def = name.substring(pos + 1);
@@ -102,7 +103,7 @@ public class ConfigStringCompiler extends StringCompiler {
                     .append(")");
         }
     }
-    
+
     static class ConfigMap implements Map<String, Object> {
 
         private int level;
@@ -176,5 +177,5 @@ public class ConfigStringCompiler extends StringCompiler {
         public Set<java.util.Map.Entry<String, Object>> entrySet() {
             return null;
         }
-    }    
+    }
 }

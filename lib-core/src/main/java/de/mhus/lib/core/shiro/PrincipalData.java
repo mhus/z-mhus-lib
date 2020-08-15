@@ -18,7 +18,7 @@ public class PrincipalData implements Map<String, String>, Serializable {
     public static final String DISPLAY_NAME = "_shiro.displayName";
     public static final String NAME = "_shiro.name";
     public static final String SESSION_KEY = "_shiro.principalData";
-//    private static final String READ_ONLY = "_ro";
+    //    private static final String READ_ONLY = "_ro";
 
     private Map<String, String> data = null;
 
@@ -27,7 +27,7 @@ public class PrincipalData implements Map<String, String>, Serializable {
     public PrincipalData(Map<String, String> data) {
         this.data = new HashMap<>(data);
     }
-    
+
     @Override
     public int size() {
         return data.size();
@@ -129,23 +129,29 @@ public class PrincipalData implements Map<String, String>, Serializable {
     }
 
     @Override
-    public String computeIfAbsent(String key, Function<? super String, ? extends String> mappingFunction) {
+    public String computeIfAbsent(
+            String key, Function<? super String, ? extends String> mappingFunction) {
         throw new NotSupportedException();
     }
 
     @Override
-    public String computeIfPresent(String key,
+    public String computeIfPresent(
+            String key,
             BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
         throw new NotSupportedException();
     }
 
     @Override
-    public String compute(String key, BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
+    public String compute(
+            String key,
+            BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
         throw new NotSupportedException();
     }
 
     @Override
-    public String merge(String key, String value,
+    public String merge(
+            String key,
+            String value,
             BiFunction<? super String, ? super String, ? extends String> remappingFunction) {
         throw new NotSupportedException();
     }
@@ -158,15 +164,13 @@ public class PrincipalData implements Map<String, String>, Serializable {
         return get(NAME);
     }
 
-    private void writeObject(java.io.ObjectOutputStream s)
-            throws IOException {
+    private void writeObject(java.io.ObjectOutputStream s) throws IOException {
         s.writeObject(data);
     }
 
     @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream s)
-        throws IOException, ClassNotFoundException {
+            throws IOException, ClassNotFoundException {
         data = (Map<String, String>) s.readObject();
     }
-    
 }

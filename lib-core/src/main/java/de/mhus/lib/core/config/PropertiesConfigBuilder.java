@@ -23,7 +23,7 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
 
     @Override
     public void write(IConfig config, OutputStream os) throws MException {
-        MProperties p =new MProperties(config);
+        MProperties p = new MProperties(config);
         try {
             p.save(os);
         } catch (IOException e) {
@@ -34,8 +34,7 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
     public IConfig readFromMap(Map<String, Object> map) {
         IConfig config = new MConfig();
         for (Entry<String, Object> entry : map.entrySet())
-            config.put(entry.getKey(),entry.getValue());
+            config.put(entry.getKey(), entry.getValue());
         return config;
     }
-
 }

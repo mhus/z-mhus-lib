@@ -96,8 +96,7 @@ public class StringCompiler implements Parser {
     }
 
     protected StringPart createAttributePart(String part) {
-        if (part.startsWith("#"))
-            return createExtraAttributePart(part);
+        if (part.startsWith("#")) return createExtraAttributePart(part);
         return createDefaultAttributePart(part);
     }
 

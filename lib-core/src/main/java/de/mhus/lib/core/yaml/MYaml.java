@@ -33,9 +33,9 @@ public class MYaml {
         return new YMap(obj);
     }
 
-    public synchronized static Yaml getYaml() {
+    public static synchronized Yaml getYaml() {
         if (yaml == null) {
-        	DumperOptions options = new DumperOptions();
+            DumperOptions options = new DumperOptions();
             options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             options.setPrettyFlow(true);
             yaml = new Yaml(options);
@@ -44,16 +44,14 @@ public class MYaml {
     }
 
     @SuppressWarnings("rawtypes")
-	public static YElement loadFromString(String content) {
+    public static YElement loadFromString(String content) {
         getYaml();
         Object obj = yaml.load(content);
-        if (obj instanceof Map)
-        	return new YMap((Map)obj);
-        if (obj instanceof List)
-        	return new YList((List)obj);
+        if (obj instanceof Map) return new YMap((Map) obj);
+        if (obj instanceof List) return new YList((List) obj);
         return new YElement(obj);
     }
-    
+
     public static YMap loadMapFromString(String content) {
         getYaml();
         YMap docE = new YMap(yaml.load(content));
@@ -65,11 +63,11 @@ public class MYaml {
         YList docE = new YList(yaml.load(content));
         return docE;
     }
-    
+
     public static YMap createMap() {
-        return new YMap(new LinkedHashMap<String,Object>());
+        return new YMap(new LinkedHashMap<String, Object>());
     }
-    
+
     public static YList createList() {
         return new YList(new LinkedList<>());
     }
@@ -79,16 +77,15 @@ public class MYaml {
             write(elemY, writer);
         }
     }
-    
+
     public static void write(YElement elemY, File file) throws IOException {
         try (Writer writer = new FileWriter(file)) {
             write(elemY, writer);
         }
     }
-    
+
     public static void write(YElement elemY, Writer writer) {
         getYaml();
         yaml.dump(elemY.getObject(), writer);
     }
-
 }

@@ -145,8 +145,7 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 
     private MProperties loadConfiguration() {
         MProperties properties =
-                MProperties.load(
-                        MApi.getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, null));
+                MProperties.load(MApi.getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, null));
         return properties;
     }
 

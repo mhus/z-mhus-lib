@@ -22,83 +22,72 @@ import java.nio.BufferOverflowException;
 
 import de.mhus.lib.core.util.AbstractByteBuffer;
 
-/**
- * Description of CircularByteBuffer.
- */
-public class CircularByteBuffer extends AbstractByteBuffer
-{
+/** Description of CircularByteBuffer. */
+public class CircularByteBuffer extends AbstractByteBuffer {
     /**
      * Constructs the CircularByteBuffer.
      *
      * @param size
      */
-    public CircularByteBuffer( int size )
-    {
+    public CircularByteBuffer(int size) {
         this.size = size;
         buf = new byte[size];
         clear();
     }
-    
+
     private final int size;
-    
+
     private final byte[] buf;
-    
+
     private int length;
-    
+
     private int nextGet;
-    
+
     private int nextPut;
-    
+
     @Override
-    public int size()
-    {
+    public int size() {
         return size;
     }
-    
+
     @Override
-    public int length()
-    {
+    public int length() {
         return length;
     }
-    
+
     @Override
-    public void clear()
-    {
+    public void clear() {
         length = 0;
         nextGet = 0;
         nextPut = 0;
     }
 
     @Override
-    public byte get() throws EOFException
-    {
+    public byte get() throws EOFException {
         if (isEmpty()) {
             throw new EOFException();
         }
         length--;
         byte b = buf[nextGet++];
-        if (nextGet >= size)
-            nextGet = 0;
+        if (nextGet >= size) nextGet = 0;
         return b;
     }
 
     @Override
-    public void put( byte b ) throws BufferOverflowException
-    {
-        if (isFull())
-            throw new BufferOverflowException();
-        
+    public void put(byte b) throws BufferOverflowException {
+        if (isFull()) throw new BufferOverflowException();
+
         length++;
         buf[nextPut++] = b;
-        if (nextPut >= size)
-            nextPut = 0;
+        if (nextPut >= size) nextPut = 0;
     }
 
     /**
      * check if space is nearly full and a next integer will not be able to be stored
+     *
      * @return true if nearly full
      */
     public boolean isNearlyFull() {
-        return  length() >= size() - 10;
+        return length() >= size() - 10;
     }
 }

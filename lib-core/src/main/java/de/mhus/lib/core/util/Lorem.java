@@ -38,8 +38,7 @@ public class Lorem {
 
     public static String createWithSize(int size) {
         StringBuilder sb = new StringBuilder();
-        while (sb.length() < size)
-            sb.append(create());
+        while (sb.length() < size) sb.append(create());
         sb.setLength(size);
         return sb.toString();
     }

@@ -148,7 +148,7 @@ public class TimerImpl extends MLog implements TimerIfc {
 
         @Override
         public void run() {
-            try (Scope scope = ITracer.get().enter(span, name )) { // XXX more tags?!
+            try (Scope scope = ITracer.get().enter(span, name)) { // XXX more tags?!
                 log().t("run", name, task);
                 task.run();
             } catch (Throwable t) {

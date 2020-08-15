@@ -60,7 +60,7 @@ public class PropertiesCfgFileWatch extends CfgProvider {
 
     private void load() {
         try {
-            config =  M.l(IConfigFactory.class).read(file);
+            config = M.l(IConfigFactory.class).read(file);
         } catch (MException e) {
             log().d(file, e);
         }
@@ -92,5 +92,4 @@ public class PropertiesCfgFileWatch extends CfgProvider {
         doStop();
         doStart();
     }
-
 }

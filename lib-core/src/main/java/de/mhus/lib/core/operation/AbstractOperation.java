@@ -105,19 +105,19 @@ public abstract class AbstractOperation extends MLog implements Operation {
      * @return
      */
     protected OperationDescription createDescription() {
-        
+
         Class<?> clazz = this.getClass();
         String title = clazz.getName();
         Version version = null;
         DefRoot form = null;
-        
+
         String group = clazz.getPackageName();
         String id = clazz.getSimpleName();
-        
-        de.mhus.lib.annotations.strategy.OperationService desc = getClass().getAnnotation(de.mhus.lib.annotations.strategy.OperationService.class);
+
+        de.mhus.lib.annotations.strategy.OperationService desc =
+                getClass().getAnnotation(de.mhus.lib.annotations.strategy.OperationService.class);
         if (desc != null) {
-            if (MString.isSet(desc.title()))
-                title = desc.title();
+            if (MString.isSet(desc.title())) title = desc.title();
             if (desc.clazz() != Object.class) {
                 clazz = desc.clazz();
                 group = clazz.getPackageName();
@@ -134,27 +134,23 @@ public abstract class AbstractOperation extends MLog implements Operation {
         }
 
         if (this instanceof IFormProvider) {
-            form = ((IFormProvider)this).getForm();
+            form = ((IFormProvider) this).getForm();
         }
 
         return new OperationDescription(getUuid(), group, id, version, this, title, form);
     }
 
-    public boolean validateParameters(
-            ParameterDefinitions definitions, TaskContext context) {
+    public boolean validateParameters(ParameterDefinitions definitions, TaskContext context) {
         if (definitions == null) return true;
         HashSet<String> sendKeys = null;
-        if (strictParameterCheck )
-            sendKeys = new HashSet<>(context.getParameters().keys());
+        if (strictParameterCheck) sendKeys = new HashSet<>(context.getParameters().keys());
         for (ParameterDefinition def : definitions.values()) {
             Object v = context.getParameters().get(def.getName());
             if (def.isMandatory() && v == null) return false;
             if (!def.validate(v)) return false;
-            if (strictParameterCheck)
-                sendKeys.remove(def.getName());
+            if (strictParameterCheck) sendKeys.remove(def.getName());
         }
-        if (strictParameterCheck && sendKeys.size() != 0)
-            return false;
+        if (strictParameterCheck && sendKeys.size() != 0) return false;
         return true;
     }
 

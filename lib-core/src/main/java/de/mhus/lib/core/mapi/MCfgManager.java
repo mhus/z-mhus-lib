@@ -41,14 +41,12 @@ public class MCfgManager {
     private LinkedList<File> mhusConfigFiles = new LinkedList<>();
 
     public MCfgManager() {
- // is done in MApi doRestart();
+        // is done in MApi doRestart();
     }
 
     /**
-     * Stop old provider
-     * Start new provider
-     * Update configurations
-     * 
+     * Stop old provider Start new provider Update configurations
+     *
      * @param provider
      */
     public void registerCfgProvider(CfgProvider provider) {
@@ -60,8 +58,8 @@ public class MCfgManager {
     }
 
     /**
-     * Stop old provider
-     * Update configuration
+     * Stop old provider Update configuration
+     *
      * @param name
      */
     public void unregisterCfgProvider(String name) {
@@ -80,9 +78,9 @@ public class MCfgManager {
     }
 
     /**
-     * The getConfig without default value will return an empty
-     * configuration and not null if the configuration is not found.
-     * 
+     * The getConfig without default value will return an empty configuration and not null if the
+     * configuration is not found.
+     *
      * @param owner
      * @return Always an configuration.
      */
@@ -91,10 +89,10 @@ public class MCfgManager {
         if (ret == null) ret = getConfigFactory().create();
         return ret;
     }
-    
+
     /**
      * Returns the found configuration or the default value.
-     * 
+     *
      * @param owner
      * @param def
      * @return The configuration or def
@@ -152,8 +150,10 @@ public class MCfgManager {
     public void doRestart() {
         CfgProvider system = configurations.get(MConstants.CFG_SYSTEM);
         if (system != null) {
-            for (CfgProvider v : new ArrayList<>(configurations.values())) // java.util.ConcurrentModificationException
-                v.doRestart();
+            for (CfgProvider v :
+                    new ArrayList<>(
+                            configurations.values())) // java.util.ConcurrentModificationException
+            v.doRestart();
         } else {
             initialConfiguration();
         }
@@ -165,23 +165,19 @@ public class MCfgManager {
     }
 
     public synchronized IConfigFactory getConfigFactory() {
-        if (configFactory == null)
-            configFactory = new DefaultConfigFactory();
+        if (configFactory == null) configFactory = new DefaultConfigFactory();
         return configFactory;
     }
 
-
     public class CentralMhusCfgProvider extends CfgProvider {
-
 
         private IConfig systemNode;
         private IConfig config;
 
-
         public CentralMhusCfgProvider() {
             super(MConstants.CFG_SYSTEM);
         }
-        
+
         @Override
         public synchronized IConfig getConfig() {
             return systemNode;
@@ -191,15 +187,15 @@ public class MCfgManager {
         public void doStart() {
             doRestart();
         }
-        
+
         @Override
         public void doRestart() {
-            
+
             LinkedList<File> fileList = new LinkedList<>();
-            
+
             File configFile = new File(MApi.getSystemProperty(MConstants.PROP_CONFIG_FILE, null));
             fileList.add(configFile);
-            
+
             if (configFile.exists() && configFile.isFile())
                 try {
                     MApi.dirtyLogInfo("Load config file", configFile);
@@ -213,7 +209,7 @@ public class MCfgManager {
                             if (!i.isAbsolute())
                                 i = new File(configFile.getParentFile(), includePattern);
                             for (File f : MFile.filter(i.getParentFile(), i.getName())) {
-                                
+
                                 if (f.getName().endsWith(".xml") || f.getName().endsWith(".yaml")) {
                                     MApi.dirtyLogInfo("Load config file", f);
                                     IConfig cc = getConfigFactory().read(f);
@@ -241,19 +237,20 @@ public class MCfgManager {
             MApi.dirtyLogDebug("*** MHUS Config file not found", configFile);
             config = new MConfig(); // set empty config
             systemNode = new MConfig();
-            
         }
 
         @Override
         public void doStop() {
-            configurations.values().forEach(v -> {
-                if (v instanceof PartialConfigProvider)
-                    unregisterCfgProvider(v.getName());
-            });
+            configurations
+                    .values()
+                    .forEach(
+                            v -> {
+                                if (v instanceof PartialConfigProvider)
+                                    unregisterCfgProvider(v.getName());
+                            });
         }
-
     }
-    
+
     private class PartialConfigProvider extends CfgProvider {
 
         private IConfig config;
@@ -269,17 +266,13 @@ public class MCfgManager {
         }
 
         @Override
-        public void doStart() {
-        }
+        public void doStart() {}
 
         @Override
-        public void doStop() {
-        }
+        public void doStop() {}
 
         @Override
-        public void doRestart() {
-        }
-
+        public void doRestart() {}
     }
 
     public List<String> getOwners() {
@@ -287,46 +280,45 @@ public class MCfgManager {
     }
 
     /**
-     * List of files for default mhus-config - inclusive includes. First entry is
-     * the mhus-config file
+     * List of files for default mhus-config - inclusive includes. First entry is the mhus-config
+     * file
+     *
      * @return List of files
      */
     public List<File> getMhusConfigFiles() {
         return mhusConfigFiles;
     }
 
-	public void reload(Object owner) {
-		
-	}
+    public void reload(Object owner) {}
 
-	/**
-	 * Return all entries of type key from the 'global' configuration section from inside the
-	 * providers configuration.
-	 * 
-	 * The method will ever return a list.
-	 * 
-	 * @param provider The provider where to search in.
-	 * @param key Name of the section
-	 * @return A list of configurations
-	 */
+    /**
+     * Return all entries of type key from the 'global' configuration section from inside the
+     * providers configuration.
+     *
+     * <p>The method will ever return a list.
+     *
+     * @param provider The provider where to search in.
+     * @param key Name of the section
+     * @return A list of configurations
+     */
     @SuppressWarnings("unchecked")
     public static List<IConfig> getGlobalConfigurations(CfgProvider provider, String key) {
         IConfig global = provider.getConfig().getObjectOrNull("global");
         if (global == null) return (List<IConfig>) MCollection.EMPTY_LIST;
         return global.getObjectList(key);
     }
-	
+
     /**
      * Return all entries of type key from the 'global' configuration section from all providers.
-     * 
-     * The method will ever return a list.
-     * 
+     *
+     * <p>The method will ever return a list.
+     *
      * @param key Name of the section
      * @return A list of configurations
      */
     public static List<IConfig> getGlobalConfigurations(String key) {
         LinkedList<IConfig> out = new LinkedList<>();
-        for (CfgProvider provider : new ArrayList<>( MApi.get().getCfgManager().getProviders() )) {
+        for (CfgProvider provider : new ArrayList<>(MApi.get().getCfgManager().getProviders())) {
             IConfig global = provider.getConfig().getObjectOrNull("global");
             if (global == null) continue;
             List<IConfig> list = global.getObjectList(key);
@@ -334,5 +326,4 @@ public class MCfgManager {
         }
         return out;
     }
-
 }

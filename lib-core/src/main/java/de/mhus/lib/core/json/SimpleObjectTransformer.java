@@ -78,7 +78,8 @@ public class SimpleObjectTransformer extends TransformStrategy {
 
                 } else if (aType == Boolean.class || aType == boolean.class)
                     attr.set(to, json.asBoolean(false), helper.isForce());
-                else if (aType == Integer.class || aType == int.class) attr.set(to, json.asInt(0), helper.isForce());
+                else if (aType == Integer.class || aType == int.class)
+                    attr.set(to, json.asInt(0), helper.isForce());
                 else if (aType == String.class) attr.set(to, json.asText(), helper.isForce());
                 else if (aType == UUID.class)
                     try {
@@ -130,7 +131,10 @@ public class SimpleObjectTransformer extends TransformStrategy {
                             Object obj = jsonToPojo(i, aType, helper);
                             l.add(obj);
                         }
-                        attr.set(to, l.toArray((Object[]) Array.newInstance(aType, l.size())), helper.isForce());
+                        attr.set(
+                                to,
+                                l.toArray((Object[]) Array.newInstance(aType, l.size())),
+                                helper.isForce());
                     } catch (IllegalArgumentException e) {
                         attr.set(to, null, helper.isForce());
                     }
@@ -249,5 +253,4 @@ public class SimpleObjectTransformer extends TransformStrategy {
 
         return to;
     }
-
 }

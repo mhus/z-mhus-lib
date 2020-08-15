@@ -25,14 +25,17 @@ import de.mhus.lib.core.logging.Log;
 
 public class Log4JAppender extends AbstractAppender {
 
-
-    public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions) {
-//        super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
-      super(name, filter, layout, ignoreExceptions);
+    public Log4JAppender(
+            String name,
+            Filter filter,
+            Layout<? extends Serializable> layout,
+            boolean ignoreExceptions) {
+        //        super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
+        super(name, filter, layout, ignoreExceptions);
     }
 
     public Log4JAppender(String name, Filter filter, Layout<? extends Serializable> layout) {
-//        super(name, filter, layout, true , Property.EMPTY_ARRAY);
+        //        super(name, filter, layout, true , Property.EMPTY_ARRAY);
         super(name, filter, layout, true);
     }
 
@@ -46,7 +49,7 @@ public class Log4JAppender extends AbstractAppender {
         Log logger = Log.getLog(loggerName);
 
         StackTraceElement location = evt.getSource();
-        String method = 
+        String method =
                 location.getClassName()
                         + "."
                         + location.getMethodName()
@@ -54,37 +57,30 @@ public class Log4JAppender extends AbstractAppender {
                         + location.getLineNumber();
 
         int l = level.intLevel();
-        if (l == Level.FATAL.intLevel())
-            logger.f(method, msg, t);
-        else if (l == Level.ERROR.intLevel())
-            logger.e(method, msg, t);
-        else if (l == Level.WARN.intLevel())
-            logger.w(method, msg, t);
-        else if (l == Level.INFO.intLevel())
-            logger.i(method, msg, t);
-        else if (l == Level.DEBUG.intLevel())
-            logger.d(method, msg, t);
-        else if (l == Level.TRACE.intLevel())
-            logger.t(method, msg, t);
-        else
-            logger.t(method, msg, t);
+        if (l == Level.FATAL.intLevel()) logger.f(method, msg, t);
+        else if (l == Level.ERROR.intLevel()) logger.e(method, msg, t);
+        else if (l == Level.WARN.intLevel()) logger.w(method, msg, t);
+        else if (l == Level.INFO.intLevel()) logger.i(method, msg, t);
+        else if (l == Level.DEBUG.intLevel()) logger.d(method, msg, t);
+        else if (l == Level.TRACE.intLevel()) logger.t(method, msg, t);
+        else logger.t(method, msg, t);
     }
-//
-//    @Override
-//    public void close() {}
-//
-//    @Override
-//    public boolean requiresLayout() {
-//        return false;
-//    }
-//
-//    public static void configure() {
-//
-//        Log4JAppender appender = new Log4JAppender();
-//        appender.setThreshold(Level.ALL);
-//        appender.setName("mlog2log4j");
-//        appender.activateOptions();
-//
-//        Logger.getRootLogger().addAppender(appender);
-//    }
+    //
+    //    @Override
+    //    public void close() {}
+    //
+    //    @Override
+    //    public boolean requiresLayout() {
+    //        return false;
+    //    }
+    //
+    //    public static void configure() {
+    //
+    //        Log4JAppender appender = new Log4JAppender();
+    //        appender.setThreshold(Level.ALL);
+    //        appender.setName("mlog2log4j");
+    //        appender.activateOptions();
+    //
+    //        Logger.getRootLogger().addAppender(appender);
+    //    }
 }

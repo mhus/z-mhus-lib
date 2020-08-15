@@ -37,7 +37,7 @@ public class LocalLock implements Lock {
                     try {
                         wait();
                     } catch (InterruptedException e) {
-    
+
                     }
                 }
                 lock = Thread.currentThread();
@@ -47,8 +47,7 @@ public class LocalLock implements Lock {
                 lockEvent(true);
             }
         } finally {
-            if (scope != null)
-                scope.close();
+            if (scope != null) scope.close();
         }
         return this;
     }
@@ -83,8 +82,7 @@ public class LocalLock implements Lock {
                 return true;
             }
         } finally {
-            if (scope != null)
-                scope.close();
+            if (scope != null) scope.close();
         }
     }
 

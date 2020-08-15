@@ -14,7 +14,7 @@ public interface IConfigFactory {
     IConfig read(File file) throws MException;
 
     IConfig read(URL url) throws MException;
-    
+
     IConfig create();
 
     void write(IConfig config, File file) throws MException;
@@ -28,7 +28,7 @@ public interface IConfigFactory {
      * @return The config object or null
      * @throws MException
      */
-    default public IConfig find(String path) throws MException {
+    public default IConfig find(String path) throws MException {
         File f = new File(path);
         return find(f.getParentFile(), f.getName());
     }
@@ -41,7 +41,7 @@ public interface IConfigFactory {
      * @return The config object or null
      * @throws MException
      */
-    default public IConfig find(File parent, String name) throws MException {
+    public default IConfig find(File parent, String name) throws MException {
         {
             File f = new File(parent, name + ".xml");
             if (f.exists() && f.isFile()) read(f);
@@ -68,5 +68,4 @@ public interface IConfigFactory {
         }
         return null;
     }
-
 }

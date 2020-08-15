@@ -98,9 +98,7 @@ public class MNlsFactory extends MNlsBundle {
             InputStream is = null;
             Properties properties = new Properties();
 
-            is =
-                    res
-                            .getInputStream(locale.toString() + "/" + resourceName + ".properties");
+            is = res.getInputStream(locale.toString() + "/" + resourceName + ".properties");
             String prefix = getResourcePrefix();
 
             if (searchAlternatives) {
@@ -108,21 +106,19 @@ public class MNlsFactory extends MNlsBundle {
                 if (prefix != null && is == null)
                     is =
                             res.getInputStream(
-                                            prefix
-                                                    + "/"
-                                                    + getDefaultLocale()
-                                                    + "/"
-                                                    + resourceName
-                                                    + ".properties");
+                                    prefix
+                                            + "/"
+                                            + getDefaultLocale()
+                                            + "/"
+                                            + resourceName
+                                            + ".properties");
                 if (is == null)
                     is =
                             res.getInputStream(
-                                            getDefaultLocale() + "/" + resourceName + ".properties");
+                                    getDefaultLocale() + "/" + resourceName + ".properties");
                 if (prefix != null && is == null)
-                    is =
-                            res.getInputStream(prefix + "/" + resourceName + ".properties");
-                if (is == null)
-                    is = res.getInputStream(resourceName + ".properties");
+                    is = res.getInputStream(prefix + "/" + resourceName + ".properties");
+                if (is == null) is = res.getInputStream(resourceName + ".properties");
             }
 
             if (is != null) {

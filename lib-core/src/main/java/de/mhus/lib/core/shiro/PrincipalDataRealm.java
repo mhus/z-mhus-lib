@@ -6,6 +6,5 @@ import org.apache.shiro.subject.Subject;
 
 public interface PrincipalDataRealm {
 
-    Map<String,String> getUserData(Subject subject);
-
+    Map<String, String> getUserData(Subject subject);
 }

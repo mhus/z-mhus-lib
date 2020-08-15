@@ -12,7 +12,7 @@ public class SeleniumPage {
         this.driver = driver;
     }
 
-    public boolean waitForText(String text, int sleep, int loops ) {
+    public boolean waitForText(String text, int sleep, int loops) {
         for (int i = 0; i < loops; i++) {
             MThread.sleep(sleep);
             if (driver.getPageSource().contains(text)) return true;
@@ -27,5 +27,4 @@ public class SeleniumPage {
     public boolean containsText(String text) {
         return driver.getPageSource().contains(text);
     }
-    
 }

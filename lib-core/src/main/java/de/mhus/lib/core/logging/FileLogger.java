@@ -23,11 +23,11 @@ public class FileLogger extends Log {
     private boolean rotate = true;
 
     public FileLogger(String name, File file) {
-        this(name,file,Log.LEVEL.INFO);
+        this(name, file, Log.LEVEL.INFO);
     }
 
     public FileLogger(String name, File file, boolean autoFlush) {
-        this(name,file,Log.LEVEL.INFO);
+        this(name, file, Log.LEVEL.INFO);
         this.autoFlush = autoFlush;
     }
 
@@ -45,59 +45,59 @@ public class FileLogger extends Log {
         this.level = level;
         return this;
     }
-    
+
     private class MyEngine extends LogEngine {
 
         public MyEngine(String name) {
             super(name);
         }
 
-            @Override
+        @Override
         public void debug(Object message) {
             if (!isDebugEnabled()) return;
-            print("DEBUG",message,null);
+            print("DEBUG", message, null);
         }
-    
+
         @Override
         public void debug(Object message, Throwable t) {
             if (!isDebugEnabled()) return;
-            print("DEBUG",message, t);
+            print("DEBUG", message, t);
         }
-    
+
         @Override
         public void error(Object message) {
             if (!isErrorEnabled()) return;
-            print("ERROR",message,null);
+            print("ERROR", message, null);
         }
-    
+
         @Override
         public void error(Object message, Throwable t) {
             if (!isErrorEnabled()) return;
-            print("ERROR",message,t);
+            print("ERROR", message, t);
         }
-    
+
         @Override
         public void fatal(Object message) {
             if (!isFatalEnabled()) return;
-            print("FATAL",message,null);
+            print("FATAL", message, null);
         }
-    
+
         @Override
         public void fatal(Object message, Throwable t) {
             if (!isFatalEnabled()) return;
-            print("FATAL",message,t);
+            print("FATAL", message, t);
         }
-        
+
         @Override
         public void info(Object message) {
             if (!isInfoEnabled()) return;
-            print("INFO",message,null);
+            print("INFO", message, null);
         }
-    
+
         @Override
         public void info(Object message, Throwable t) {
             if (!isInfoEnabled()) return;
-            print("INFO",message,t);
+            print("INFO", message, t);
         }
 
         @Override
@@ -133,46 +133,43 @@ public class FileLogger extends Log {
         @Override
         public void trace(Object message) {
             if (isTraceEnabled()) {
-                print("TRACE",message,null);
+                print("TRACE", message, null);
             }
         }
 
         @Override
         public void trace(Object message, Throwable t) {
             if (!isTraceEnabled()) return;
-            print("TRACE",message,t);
+            print("TRACE", message, t);
         }
 
         @Override
         public void warn(Object message) {
             if (!isWarnEnabled()) return;
-            print("WARN",message,null);
+            print("WARN", message, null);
         }
 
         @Override
         public void warn(Object message, Throwable t) {
             if (!isWarnEnabled()) return;
-            print("WARN",message,t);
+            print("WARN", message, t);
         }
 
         @Override
-        public void doInitialize(LogFactory logFactory) {
-        }
+        public void doInitialize(LogFactory logFactory) {}
 
         @Override
-        public void close() {
-        }
-        
+        public void close() {}
     }
-    
+
     protected synchronized void print(String level, Object message, Throwable t) {
         if (!check()) return;
         out.println(printTime() + "," + level + "," + getInfo() + "," + message);
-        
+
         if (message != null && message instanceof Throwable && traces)
-            ((Throwable)message).printStackTrace(out);
-        if (t!=null && traces) t.printStackTrace(out);
-        
+            ((Throwable) message).printStackTrace(out);
+        if (t != null && traces) t.printStackTrace(out);
+
         if (autoFlush) out.flush();
     }
 
@@ -181,32 +178,34 @@ public class FileLogger extends Log {
     }
 
     protected synchronized boolean check() {
-        
+
         doUpdateFile();
-        
+
         if (file == null) return false;
-        
-        if (isRotate() && out != null && file.exists() && file.isFile() && file.length() > maxFileSize) {
+
+        if (isRotate()
+                && out != null
+                && file.exists()
+                && file.isFile()
+                && file.length() > maxFileSize) {
             out.flush();
             out.close();
             out = null;
         }
-        
+
         if (out == null) {
-            if (file.exists() && file.isFile())
-                rotate();
+            if (file.exists() && file.isFile()) rotate();
             try {
                 out = new PrintStream(new BufferedOutputStream(new FileOutputStream(file)));
             } catch (FileNotFoundException e) {
                 MApi.dirtyLogError(e);
             }
         }
-        
+
         return out != null;
     }
 
-    protected void doUpdateFile() {
-    }
+    protected void doUpdateFile() {}
 
     protected void rotate() {
         if (!isRotate()) return;
@@ -220,9 +219,12 @@ public class FileLogger extends Log {
             return;
         }
         if (file.exists() && file.isFile())
-            file.renameTo(new File(file.getParentFile(), MDate.toFileFormat(new Date()) + "." + file.getName() ));
+            file.renameTo(
+                    new File(
+                            file.getParentFile(),
+                            MDate.toFileFormat(new Date()) + "." + file.getName()));
     }
-    
+
     public String printTime() {
         if (printTime) {
             return MCast.toString(new Date()); // TODO maybe more efficient
@@ -255,20 +257,20 @@ public class FileLogger extends Log {
     public void setMaxFileSize(long maxFileSize) {
         this.maxFileSize = maxFileSize;
     }
-    
+
     @Override
     public void update() {
         engine = new MyEngine(getName());
     }
-    
-//  @Override
-//  public void register() {
-//  }
-//  
-//  @Override
-//  public void unregister() {
-//  }
-    
+
+    //  @Override
+    //  public void register() {
+    //  }
+    //
+    //  @Override
+    //  public void unregister() {
+    //  }
+
     @Override
     public void close() {
         if (out != null) {
@@ -303,6 +305,4 @@ public class FileLogger extends Log {
         this.autoFlush = autoFlush;
         return this;
     }
-    
-    
 }

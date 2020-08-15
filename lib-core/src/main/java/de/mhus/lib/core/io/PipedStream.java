@@ -29,7 +29,7 @@ public class PipedStream implements Closeable {
     private long writeTimeout = -1;
     private long readTimeout = -1;
     private boolean closed = false;
-    
+
     public OutputStream getOut() {
         return out;
     }
@@ -53,21 +53,20 @@ public class PipedStream implements Closeable {
     public long getReadTimeout() {
         return readTimeout;
     }
-    
+
     private class Out extends OutputStream {
 
         @Override
         public void write(int b) throws IOException {
 
-//            if (closed) throw new EOFException();
+            //            if (closed) throw new EOFException();
             long start = System.currentTimeMillis();
             while (byteBuffer.isNearlyFull()) {
                 MThread.sleep(200);
-                if (MPeriod.isTimeOut(start, writeTimeout))
-                    throw new IOException("write timeout");
+                if (MPeriod.isTimeOut(start, writeTimeout)) throw new IOException("write timeout");
             }
             synchronized (PipedStream.this) {
-//                System.out.println("Write: " + (char)b + " (" + b + ")");
+                //                System.out.println("Write: " + (char)b + " (" + b + ")");
                 byteBuffer.putInt(b);
             }
         }
@@ -82,16 +81,15 @@ public class PipedStream implements Closeable {
             while (byteBuffer.isEmpty()) {
                 if (closed) return -1; // EOFException ?
                 MThread.sleep(200);
-                if (MPeriod.isTimeOut(start, readTimeout))
-                    throw new IOException("read timeout");
+                if (MPeriod.isTimeOut(start, readTimeout)) throw new IOException("read timeout");
             }
             synchronized (PipedStream.this) {
-               byte o = byteBuffer.get();
-//               System.err.println("Read: " + (char)o + "(" + o + ")");
-               return o;
+                byte o = byteBuffer.get();
+                //               System.err.println("Read: " + (char)o + "(" + o + ")");
+                return o;
             }
         }
-        
+
         @Override
         public int available() throws IOException {
             return byteBuffer.length();

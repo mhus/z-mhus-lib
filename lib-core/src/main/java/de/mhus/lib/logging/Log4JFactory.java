@@ -25,37 +25,33 @@ import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
 
-/**
- * Concrete subclass of {@link LogFactory} specific to log4j.
- *
- */
+/** Concrete subclass of {@link LogFactory} specific to log4j. */
 public final class Log4JFactory extends LogFactory {
-
 
     @Override
     public void init(IConfig config) throws Exception {
         if (config == null) return;
 
-        //ResourceNode<?> ccc = config.getNode("configuration");
+        // ResourceNode<?> ccc = config.getNode("configuration");
         String configFile = config.getExtracted("configuration");
 
         if (configFile != null) {
             LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
             ctx.setConfigLocation(URI.create(configFile));
-        } 
-//        if (ccc != null && ccc instanceof XmlConfig) {
-//            // MLog.t("configure inline");
-//            org.apache.logging.log4j.core.config.Configurator.
-//            DOMConfigurator.configure(((XmlConfig) ccc).getXmlElement());
-//        } else if (configFile == null) {
-//            // NOOP
-//        } else if (configFile.endsWith(".properties")) {
-//            // MLog.t("configure properties",configFile);
-//            PropertyConfigurator.configureAndWatch(configFile);
-//        } else if (configFile.endsWith(".xml")) {
-//            // MLog.t("configure xml",configFile);
-//            DOMConfigurator.configureAndWatch(configFile);
-//        }
+        }
+        //        if (ccc != null && ccc instanceof XmlConfig) {
+        //            // MLog.t("configure inline");
+        //            org.apache.logging.log4j.core.config.Configurator.
+        //            DOMConfigurator.configure(((XmlConfig) ccc).getXmlElement());
+        //        } else if (configFile == null) {
+        //            // NOOP
+        //        } else if (configFile.endsWith(".properties")) {
+        //            // MLog.t("configure properties",configFile);
+        //            PropertyConfigurator.configureAndWatch(configFile);
+        //        } else if (configFile.endsWith(".xml")) {
+        //            // MLog.t("configure xml",configFile);
+        //            DOMConfigurator.configureAndWatch(configFile);
+        //        }
     }
 
     public Log4JFactory() {
@@ -95,7 +91,7 @@ public final class Log4JFactory extends LogFactory {
          */
         @Override
         public void trace(Object message) {
-                getLogger().log(Level.TRACE, message, null);
+            getLogger().log(Level.TRACE, message, null);
         }
 
         /**

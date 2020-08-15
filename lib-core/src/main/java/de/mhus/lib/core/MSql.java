@@ -271,12 +271,12 @@ public class MSql {
             throw new SQLException("name is not a column identifier, possible injection");
         return name;
     }
-    
+
     /**
-     * Returns true if a column exists in the result set.
-     * The function is linear do not use it in every iteration of an result set. Try to cache the result.
-     * Be aware of case sensitive / not sensitive database implementations.
-     * 
+     * Returns true if a column exists in the result set. The function is linear do not use it in
+     * every iteration of an result set. Try to cache the result. Be aware of case sensitive / not
+     * sensitive database implementations.
+     *
      * @param rs Result Set to check
      * @param column Name of the column to that should exists
      * @return true if the column exists in the result set.

@@ -114,7 +114,6 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         public boolean isEditable() {
             return false;
         }
-
     }
 
     @Override
@@ -127,19 +126,19 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         return MSystem.getObjectId(this);
     }
 
-	@Override
-	public InputStream getInputStream(String key) {
+    @Override
+    public InputStream getInputStream(String key) {
         if (key == null) return loader.getResourceAsStream(key);
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public URL getUrl(String key) {
+    @Override
+    public URL getUrl(String key) {
         return loader.getResource(key);
-	}
+    }
 
-	@Override
-	public boolean isValid() {
-		return true;
-	}
+    @Override
+    public boolean isValid() {
+        return true;
+    }
 }

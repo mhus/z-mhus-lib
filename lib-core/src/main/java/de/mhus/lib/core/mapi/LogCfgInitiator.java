@@ -55,7 +55,7 @@ public class LogCfgInitiator implements CfgInitiator {
         MLogFactory mlogFactory = null;
         try {
             String key = MConstants.PROP_LOG_MLOG_FACTORY_CLASS;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) {
                 mlogFactory =
@@ -70,7 +70,7 @@ public class LogCfgInitiator implements CfgInitiator {
         LogFactory logFactory = null;
         try {
             String key = MConstants.PROP_LOG_FACTORY_CLASS;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) {
                 logFactory =
@@ -84,7 +84,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         try {
             String key = MConstants.PROP_LOG_LEVEL_MAPPER_CLASS;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
@@ -92,7 +92,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         try {
             String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE;
-            String size = system.getString(key,null);
+            String size = system.getString(key, null);
             if (size != null) {
                 logFactory.setMaxMessageSize(Integer.valueOf(size));
             }
@@ -102,7 +102,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         try {
             String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) {
                 logFactory.setParameterMapper(
@@ -139,7 +139,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         try {
             String key = MConstants.PROP_LOG_CONSOLE_REDIRECT;
-            String name = system.getString(key,null);
+            String name = system.getString(key, null);
             if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(name)) {
                 if ("true".equals(name)) {
@@ -153,7 +153,7 @@ public class LogCfgInitiator implements CfgInitiator {
 
         try {
             String key = MConstants.PROP_LOG_LEVEL;
-            String value = system.getString(key,null);
+            String value = system.getString(key, null);
             if (MString.isEmpty(value)) value = System.getProperty(MConstants.PROP_PREFIX + key);
             if (MString.isSet(value)) {
                 logFactory.setDefaultLevel(Log.LEVEL.valueOf(value.toUpperCase()));

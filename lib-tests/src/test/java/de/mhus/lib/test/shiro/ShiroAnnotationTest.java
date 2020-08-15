@@ -15,11 +15,10 @@ public class ShiroAnnotationTest {
 
     @RequiresGuest
     public void guest() {}
-    
+
     @RequiresRoles("admin")
     public void roleAdmin() {}
-    
+
     @RequiresRoles("user")
     public void roleUser() {}
-    
 }

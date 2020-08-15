@@ -27,7 +27,7 @@ public abstract class CfgProvider extends MLog {
     }
 
     public abstract void doRestart();
-    
+
     public abstract void doStart();
 
     public abstract void doStop();
@@ -40,5 +40,4 @@ public abstract class CfgProvider extends MLog {
     public String toString() {
         return name;
     }
-    
 }

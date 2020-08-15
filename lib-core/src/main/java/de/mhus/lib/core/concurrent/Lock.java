@@ -110,8 +110,7 @@ public interface Lock extends Closeable {
                 return true;
             }
         } finally {
-            if (scope != null)
-                scope.close();
+            if (scope != null) scope.close();
         }
     }
 

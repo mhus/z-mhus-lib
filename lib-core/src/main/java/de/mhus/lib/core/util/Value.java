@@ -74,5 +74,4 @@ public class Value<T> implements Valueable<T>, Serializable {
     public void setValue(T value) {
         this.value = value;
     }
-    
 }

@@ -30,23 +30,22 @@ public class MFileTest extends TestCase {
 
     @Test
     public void testSaveLoadHistory() throws MException, IOException {
-    	LinkedList<String> history = new LinkedList<>();
-    	history.add("first");
-    	history.add("multi\nline");
-    	history.add("last");
-    	System.out.println(history);
-    	
-    	File file = new File("target/history.lines");
-    	MFile.writeLinesEncoded(file, history, false);
-    	
-    	List<String> copy = MFile.readLinesEncoded(file, true);
-    	System.out.println(copy);
-    	assertEquals(history.size(), copy.size());
-    	assertEquals(history.get(0), copy.get(0));
-    	assertEquals(history.get(history.size()-1), copy.get(history.size()-1));
-    	
+        LinkedList<String> history = new LinkedList<>();
+        history.add("first");
+        history.add("multi\nline");
+        history.add("last");
+        System.out.println(history);
+
+        File file = new File("target/history.lines");
+        MFile.writeLinesEncoded(file, history, false);
+
+        List<String> copy = MFile.readLinesEncoded(file, true);
+        System.out.println(copy);
+        assertEquals(history.size(), copy.size());
+        assertEquals(history.get(0), copy.get(0));
+        assertEquals(history.get(history.size() - 1), copy.get(history.size() - 1));
     }
-    
+
     @Test
     public void testMimeTypes() {
         {

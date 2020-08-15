@@ -23,9 +23,8 @@ import de.mhus.lib.basics.ReadOnly;
 
 /**
  * An empty list. The list is unmodifiable.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
  * @param <E>
  */
 public class EmptyList<E> implements List<E>, ReadOnly {

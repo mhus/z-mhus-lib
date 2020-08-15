@@ -40,28 +40,27 @@ public class ConfigTest extends TestCase {
     @Test
     public void testProperties() throws MException {
         {
-        	IConfig c = new MConfig();
+            IConfig c = new MConfig();
             c.setString("test1", "wow");
             c.setString("test2", "alf");
-    
+
             derTeschd(c, false);
         }
         {
             IConfig c = new MConfig();
             c.setString("test1", "wow");
             c.setString("test2", "alf");
-            
+
             // save
             File file = new File("target/config.properties");
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
-            
+
             // read
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, false);
-
         }
     }
 
@@ -72,21 +71,21 @@ public class ConfigTest extends TestCase {
                 "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
         {
             Document doc = MXml.loadXml(xml);
-    
+
             IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
-    
+
             derTeschd(c, true);
         }
         {
             Document doc = MXml.loadXml(xml);
             IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
-            
+
             // save
             File file = new File("target/config.xml");
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
-            
+
             // read
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);
@@ -96,21 +95,21 @@ public class ConfigTest extends TestCase {
 
     @Test
     public void testYaml() throws Exception {
-        String yaml = 
+        String yaml =
                 "test1: wow\n"
-              + "test2: alf\n"
-              + "sub:\n"
-              + "- test1: wow1\n"
-              + "  test2: alf1\n"
-              + "- test1: wow2\n"
-              + "  test2: alf2\n"
-              + "- test1: wow3\n"
-              + "  test2: alf3\n"
-              + "projects:\n"
-              + "- properties:\n"
-              + "    name: name\n"
-              + "    url: http://test.de";
-        
+                        + "test2: alf\n"
+                        + "sub:\n"
+                        + "- test1: wow1\n"
+                        + "  test2: alf1\n"
+                        + "- test1: wow2\n"
+                        + "  test2: alf2\n"
+                        + "- test1: wow3\n"
+                        + "  test2: alf3\n"
+                        + "projects:\n"
+                        + "- properties:\n"
+                        + "    name: name\n"
+                        + "    url: http://test.de";
+
         {
             IConfig c = IConfig.readFromYamlString(yaml);
             derTeschd(c, true);
@@ -121,19 +120,19 @@ public class ConfigTest extends TestCase {
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
-            
+
             // read
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
-            
+
             // check file
             String content = MFile.readFile(file);
             System.out.println(content);
             assertFalse(content.contains("{"));
         }
     }
-    
+
     @Test
     public void testJson() throws Exception {
 
@@ -157,7 +156,7 @@ public class ConfigTest extends TestCase {
             DefaultConfigFactory dcf = new DefaultConfigFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
-            
+
             // read
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);
@@ -185,28 +184,29 @@ public class ConfigTest extends TestCase {
         derTeschd(c, true);
     }
 
-//    @Test
-//    public void testClone() throws Exception {
-//
-//        String xml =
-//                "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
-//        Document doc = MXml.loadXml(xml);
-//
-//        IConfig src = IConfig.createFromXml(doc.getDocumentElement());
-//
-//        IConfig tar1 = new IConfig();
-//        JsonConfig tar2 = new JsonConfig();
-//        XmlConfig tar3 = new XmlConfig();
-//
-//        builder.cloneConfig(src, tar1);
-//        builder.cloneConfig(src, tar2);
-//        builder.cloneConfig(src, tar3);
-//
-//        derTeschd(src, true);
-//        derTeschd(tar1, true);
-//        derTeschd(tar2, true);
-//        derTeschd(tar3, true);
-//    }
+    //    @Test
+    //    public void testClone() throws Exception {
+    //
+    //        String xml =
+    //                "<start test1='wow' test2='alf'><sub test1='wow1' test2='alf1'/><sub
+    // test1='wow2' test2='alf2'/><sub test1='wow3' test2='alf3'/></start>";
+    //        Document doc = MXml.loadXml(xml);
+    //
+    //        IConfig src = IConfig.createFromXml(doc.getDocumentElement());
+    //
+    //        IConfig tar1 = new IConfig();
+    //        JsonConfig tar2 = new JsonConfig();
+    //        XmlConfig tar3 = new XmlConfig();
+    //
+    //        builder.cloneConfig(src, tar1);
+    //        builder.cloneConfig(src, tar2);
+    //        builder.cloneConfig(src, tar3);
+    //
+    //        derTeschd(src, true);
+    //        derTeschd(tar1, true);
+    //        derTeschd(tar2, true);
+    //        derTeschd(tar3, true);
+    //    }
 
     @Test
     private void derTeschd(IConfig c, boolean testsub) throws MException {

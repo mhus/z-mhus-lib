@@ -109,16 +109,14 @@ public class Log {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
             if (mapping != null) {
                 switch (mapping) {
-                case "trace":
-                    if (level == LEVEL.TRACE)
-                        level = LEVEL.INFO;
-                case "debug":
-                    if (level == LEVEL.DEBUG)
-                        level = LEVEL.INFO;
+                    case "trace":
+                        if (level == LEVEL.TRACE) level = LEVEL.INFO;
+                    case "debug":
+                        if (level == LEVEL.DEBUG) level = LEVEL.INFO;
                 }
             }
         }
-        
+
         switch (level) {
             case DEBUG:
                 if (!engine.isDebugEnabled()) return;
@@ -310,16 +308,14 @@ public class Log {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
             if (mapping != null) {
                 switch (mapping) {
-                case "trace":
-                    if (level == LEVEL.TRACE)
-                        return engine.isInfoEnabled();
-                case "debug":
-                    if (level == LEVEL.DEBUG)
-                        return engine.isInfoEnabled();
+                    case "trace":
+                        if (level == LEVEL.TRACE) return engine.isInfoEnabled();
+                    case "debug":
+                        if (level == LEVEL.DEBUG) return engine.isInfoEnabled();
                 }
             }
         }
-        
+
         switch (level) {
             case DEBUG:
                 return engine.isDebugEnabled();

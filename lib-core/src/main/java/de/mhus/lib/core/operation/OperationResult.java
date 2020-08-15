@@ -112,16 +112,14 @@ public class OperationResult {
 
     public IProperties getResultAsMap() {
         if (result == null) return new MProperties();
-        if (result instanceof IProperties)
-            return (IProperties)result;
-        if (result instanceof Map)
-            return new MProperties((Map<?, ?>)result);
-        throw new UsageException("Can't cast result to map",result.getClass());
+        if (result instanceof IProperties) return (IProperties) result;
+        if (result instanceof Map) return new MProperties((Map<?, ?>) result);
+        throw new UsageException("Can't cast result to map", result.getClass());
     }
-    
+
     public String getResultAsString() {
         if (result == null) return "";
-        if (result instanceof String) return (String)result;
+        if (result instanceof String) return (String) result;
         return String.valueOf(result);
     }
 
@@ -157,22 +155,21 @@ public class OperationResult {
     public boolean isEmpty() {
         return result == null;
     }
-    
+
     @SuppressWarnings("unchecked")
     public IConfig getResultAsConfig() {
         if (result == null) return new MConfig();
         try {
-            if (result instanceof IConfig) return (IConfig)result;
-            if (result instanceof String)
-                return IConfig.readConfigFromString( (String)result );
+            if (result instanceof IConfig) return (IConfig) result;
+            if (result instanceof String) return IConfig.readConfigFromString((String) result);
             if (result instanceof Map)
                 return IConfig.readFromProperties((Map<String, Object>) result);
 
             // fallback
-            return IConfig.readConfigFromString( String.valueOf(result) );
+            return IConfig.readConfigFromString(String.valueOf(result));
 
         } catch (Exception e) {
-            throw new MRuntimeException(this,e); // or empty config?
+            throw new MRuntimeException(this, e); // or empty config?
         }
     }
 }

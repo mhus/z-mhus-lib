@@ -1490,7 +1490,7 @@ public class MString {
         // Since String is final, we could not add this method there.
         String s = Integer.toString(i);
         if (s.length() > len) {
-                /* return rightmost len chars */
+            /* return rightmost len chars */
             return s.substring(s.length() - len);
         } else if (s.length() < len)
         // pad on left with zeros
@@ -1635,7 +1635,8 @@ public class MString {
      *
      * @param in String to truncate
      * @param length Max length of the string
-     * @param cutPos positive position from left or negative position from right (lesser then -3 is recommended)
+     * @param cutPos positive position from left or negative position from right (lesser then -3 is
+     *     recommended)
      * @return truncated string
      */
     public static String truncateNice(String in, int length, int cutPos) {
@@ -1643,16 +1644,20 @@ public class MString {
         if (length < 4) return in.substring(0, length);
         if (cutPos < 0) {
             if (cutPos < -3 && length > -cutPos + 3)
-                return in.substring(0, length + cutPos) + "..." + in.substring(in.length() + cutPos + 3);
+                return in.substring(0, length + cutPos)
+                        + "..."
+                        + in.substring(in.length() + cutPos + 3);
         } else {
             if (length > cutPos + 3)
-                return in.substring(0, cutPos) + "..." + in.substring(in.length() - length + cutPos + 3);
+                return in.substring(0, cutPos)
+                        + "..."
+                        + in.substring(in.length() - length + cutPos + 3);
         }
         if (length > 3) return in.substring(0, length - 3) + "...";
         if (length > 0) return in.substring(0, length);
         return "";
     }
-    
+
     public static String truncateNiceLeft(String in, int length) {
         if (in == null || in.length() <= length) return in;
         int s = in.length();
@@ -2085,10 +2090,8 @@ public class MString {
                 sb.append("[");
                 boolean first = true;
                 for (Object p : (Object[]) o) {
-                	if (first)
-                		first = false;
-                	else
-                		sb.append(",");
+                    if (first) first = false;
+                    else sb.append(",");
                     error = serialize(sb, p, error);
                 }
                 sb.append("]");
@@ -2185,21 +2188,20 @@ public class MString {
 
     /**
      * Return true if the character is a-z or A-Z
-     * 
+     *
      * @param c
      * @return true if alphabetical
      */
-	public static boolean isAlphabeticalAscii(char c) {
-		return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
-	}
-	/**
-	 * Return true if c is between 0-9
-	 * 
-	 * @param c
-	 * @return True if digit
-	 */
-	public static boolean isDigit(char c) {
-		return c >= '0' && c <= '9';
-	}
-	
+    public static boolean isAlphabeticalAscii(char c) {
+        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+    }
+    /**
+     * Return true if c is between 0-9
+     *
+     * @param c
+     * @return True if digit
+     */
+    public static boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
 }

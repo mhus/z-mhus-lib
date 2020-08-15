@@ -151,33 +151,32 @@ public class MStringTest extends TestCase {
             assertEquals(test, deco);
         }
     }
-    
+
     @Test
     public void testTruncateNice() {
         {
             String test = "abcdefghijklmnopqrstuvwxyz";
-            String res =  MString.truncateNice(test, 10);
+            String res = MString.truncateNice(test, 10);
             assertEquals(10, res.length());
             assertEquals("ab...vwxyz", res);
         }
         {
             String test = "abcdefghijklmnopqrstuvwxyz";
-            String res =  MString.truncateNice(test, 10, 1);
+            String res = MString.truncateNice(test, 10, 1);
             assertEquals(10, res.length());
             assertEquals("a...uvwxyz", res);
         }
         {
             String test = "abcdefghijklmnopqrstuvwxyz";
-            String res =  MString.truncateNice(test, 10, -1);
+            String res = MString.truncateNice(test, 10, -1);
             assertEquals(10, res.length());
             assertEquals("abcdefg...", res);
         }
         {
             String test = "abcdefghijklmnopqrstuvwxyz";
-            String res =  MString.truncateNice(test, 10, -4);
+            String res = MString.truncateNice(test, 10, -4);
             assertEquals(10, res.length());
             assertEquals("abcdef...z", res);
         }
     }
-
 }

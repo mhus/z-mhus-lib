@@ -7,5 +7,4 @@ public class TooDeepStructuresException extends MRuntimeException {
     public TooDeepStructuresException(Object... in) {
         super(in);
     }
-
 }

@@ -43,14 +43,14 @@ public class ParameterDefinition {
         type = this.properties.getString("type", "");
         loadProperties();
     }
-    
+
     public ParameterDefinition(String line) {
         if (MString.isIndex(line, ',')) {
             name = MString.beforeIndex(line, ',');
             line = MString.afterIndex(line, ',');
-            
+
             properties = IProperties.explodeToMProperties(line.split(","), ':', (char) 0);
-            
+
         } else {
             name = line;
             if (name.startsWith("*")) {
@@ -69,16 +69,14 @@ public class ParameterDefinition {
         loadProperties();
     }
 
-
     private void loadProperties() {
         if (type == null) type = "";
         type = properties.getString("type", type);
-        
+
         mandatory = properties.getBoolean("mandatory", mandatory);
         def = properties.getString("default", null);
         mapping = properties.getString("mapping", null);
         format = properties.getString("format", null);
-
     }
 
     public String getName() {
@@ -157,39 +155,39 @@ public class ParameterDefinition {
 
     public boolean validate(Object v) {
         switch (type) {
-        case "int":
-        case "integer":
-            return MValidator.isInteger(v);
-        case "long":
-            return MValidator.isLong(v);
-        case "bool":
-        case "boolean":
-            return MValidator.isBoolean(v);
-        case "datestring":
-            {
-                Date date = MCast.toDate(v, MCast.toDate(def, null));
-                if (date == null) return false;
+            case "int":
+            case "integer":
+                return MValidator.isInteger(v);
+            case "long":
+                return MValidator.isLong(v);
+            case "bool":
+            case "boolean":
+                return MValidator.isBoolean(v);
+            case "datestring":
+                {
+                    Date date = MCast.toDate(v, MCast.toDate(def, null));
+                    if (date == null) return false;
+                    return true;
+                }
+            case "date":
+                {
+                    Date date = MCast.toDate(v, MCast.toDate(def, null));
+                    if (date == null) return false;
+                    return true;
+                }
+            case "enum":
+                {
+                    String[] parts = def.split(",");
+                    String val = String.valueOf(v).toLowerCase();
+                    for (String p : parts) if (val.equals(p.toLowerCase())) return true;
+                    return false;
+                }
+            case "string":
+            case "text":
                 return true;
-            }
-        case "date":
-            {
-                Date date = MCast.toDate(v, MCast.toDate(def, null));
-                if (date == null) return false;
-                return true;
-            }
-        case "enum":
-            {
-                String[] parts = def.split(",");
-                String val = String.valueOf(v).toLowerCase();
-                for (String p : parts) if (val.equals(p.toLowerCase())) return true;
-                return false;
-            }
-        case "string":
-        case "text":
-            return true;
-        default:
-            log.d("Unknown Type", name, type);
-    }
+            default:
+                log.d("Unknown Type", name, type);
+        }
         return true;
     }
 }

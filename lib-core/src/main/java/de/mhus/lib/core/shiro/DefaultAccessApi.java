@@ -19,35 +19,40 @@ import de.mhus.lib.core.cfg.CfgString;
 
 public class DefaultAccessApi extends MLog implements AccessApi {
 
-    public static CfgString CFG_CONFIG_FILE = new CfgString(AccessApi.class,"iniResourcePath", MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath() );
+    public static CfgString CFG_CONFIG_FILE =
+            new CfgString(
+                    AccessApi.class,
+                    "iniResourcePath",
+                    MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath());
     protected SecurityManager securityManager;
     protected Environment env;
-    
+
     public DefaultAccessApi() {
         initialize();
     }
-    
+
     protected void initialize() {
-    	try {
-    		log().d("Initialize shiro",CFG_CONFIG_FILE);
-    		env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
-    	} catch (Exception e) {
-    		log().d("Initialize empty shiro",CFG_CONFIG_FILE, e.toString());
-    		HashMap<String, Object> seed = new HashMap<>();
-    		seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, new EmptySecurityManager());
-    		env = new DefaultEnvironment(seed);
-    	}
+        try {
+            log().d("Initialize shiro", CFG_CONFIG_FILE);
+            env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+        } catch (Exception e) {
+            log().d("Initialize empty shiro", CFG_CONFIG_FILE, e.toString());
+            HashMap<String, Object> seed = new HashMap<>();
+            seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, new EmptySecurityManager());
+            env = new DefaultEnvironment(seed);
+        }
         SecurityUtils.setSecurityManager(env.getSecurityManager());
-//        Factory<SecurityManager> factory = new IniSecurityManagerFactory(CFG_CONFIG_FILE.value());
-//        securityManager = factory.getInstance();
-//        SecurityUtils.setSecurityManager(securityManager);
+        //        Factory<SecurityManager> factory = new
+        // IniSecurityManagerFactory(CFG_CONFIG_FILE.value());
+        //        securityManager = factory.getInstance();
+        //        SecurityUtils.setSecurityManager(securityManager);
     }
-    
+
     @Override
     public SecurityManager getSecurityManager() {
         return env.getSecurityManager();
     }
-    
+
     @Override
     public Subject createSubject() {
         return new Subject.Builder().buildSubject();
@@ -56,15 +61,17 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     @Override
     public void updateSessionLastAccessTime() {
         Subject subject = SecurityUtils.getSubject();
-        //Subject should never _ever_ be null, but just in case:
+        // Subject should never _ever_ be null, but just in case:
         if (subject != null) {
             Session session = subject.getSession(false);
             if (session != null) {
                 try {
                     session.touch();
                 } catch (Throwable t) {
-                    log().e("session.touch() method invocation has failed.  Unable to update " +
-                            "the corresponding session's last access time based on the incoming request.", t);
+                    log().e(
+                                    "session.touch() method invocation has failed.  Unable to update "
+                                            + "the corresponding session's last access time based on the incoming request.",
+                                    t);
                 }
             }
         }
@@ -74,7 +81,7 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     public Subject getSubject() {
         return SecurityUtils.getSubject();
     }
-    
+
     @Override
     public void restart() {
         // simply restart
@@ -86,13 +93,15 @@ public class DefaultAccessApi extends MLog implements AccessApi {
         try {
             Subject subject = getSubject();
             String sessionId = String.valueOf(subject.getSession().getId());
-            log().d("destroySession",sessionId);
+            log().d("destroySession", sessionId);
             subject.logout();
-            DefaultSecurityManager securityManager = (DefaultSecurityManager) SecurityUtils.getSecurityManager();
-            
-            DefaultSessionManager sessionManager = (DefaultSessionManager) securityManager.getSessionManager();
+            DefaultSecurityManager securityManager =
+                    (DefaultSecurityManager) SecurityUtils.getSecurityManager();
+
+            DefaultSessionManager sessionManager =
+                    (DefaultSessionManager) securityManager.getSessionManager();
             Collection<Session> activeSessions = sessionManager.getSessionDAO().getActiveSessions();
-            for (Session session: activeSessions){
+            for (Session session : activeSessions) {
                 if (sessionId.equals(session.getId())) {
                     session.stop();
                 }
@@ -101,5 +110,4 @@ public class DefaultAccessApi extends MLog implements AccessApi {
             log().d(t);
         }
     }
-
 }

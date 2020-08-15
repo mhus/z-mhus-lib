@@ -29,23 +29,25 @@ public class MConfigTest extends TestCase {
     private static String initiatorValue;
 
     @Test
-    public void testLoading() throws MException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        
+    public void testLoading()
+            throws MException, NoSuchFieldException, SecurityException, IllegalArgumentException,
+                    IllegalAccessException {
+
         MDirtyTricks.cleanupMApi();
-        
-        System.setProperty(MConstants.PROP_CONFIG_FILE, "src/test/resources/de/mhus/lib/test/mhus-config.xml");
+
+        System.setProperty(
+                MConstants.PROP_CONFIG_FILE, "src/test/resources/de/mhus/lib/test/mhus-config.xml");
 
         initiatorValue = "";
         assertEquals("", initiatorValue);
         //  start init
         MApi.get().getCfgManager();
-        
+
         assertEquals("abcdefghi", initiatorValue);
-        
     }
 
     public static void initiate(IConfig config) {
-        System.out.println("Initiate: "+config);
+        System.out.println("Initiate: " + config);
         initiatorValue = initiatorValue + config.getString("value", null);
     }
 }

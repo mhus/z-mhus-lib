@@ -99,22 +99,31 @@ public class MThread extends MObject implements Runnable {
         public Container() {
             try {
                 parentThreadId = Thread.currentThread().getId();
-                span = ITracer.get().current();;
+                span = ITracer.get().current();
+                ;
             } catch (Throwable t) {
             }
         }
 
         @Override
         public void run() {
-            try (Scope scope = ITracer.get().enter(span, name, "id", ""+thread.getId(), "parent", ""+parentThreadId)){
+            try (Scope scope =
+                    ITracer.get()
+                            .enter(
+                                    span,
+                                    name,
+                                    "id",
+                                    "" + thread.getId(),
+                                    "parent",
+                                    "" + parentThreadId)) {
                 log().t("###: NEW THREAD", parentThreadId, thread.getId());
-	            try {
-	                if (task != null) task.run();
-	            } catch (Throwable t) {
-	                taskError(t);
-	            }
+                try {
+                    if (task != null) task.run();
+                } catch (Throwable t) {
+                    taskError(t);
+                }
                 log.t("###: LEAVE THREAD", thread.getId());
-            } 
+            }
         }
     }
 
@@ -169,25 +178,24 @@ public class MThread extends MObject implements Runnable {
     }
 
     /**
-     * Sleeps _millisec milliseconds. On Interruption it will throw an InterruptedException.
-     * If thread is already interrupted, it will throw the exception directly.
+     * Sleeps _millisec milliseconds. On Interruption it will throw an InterruptedException. If
+     * thread is already interrupted, it will throw the exception directly.
      *
-     * This can be used in loops if a interrupt should be able to stop the loop.
+     * <p>This can be used in loops if a interrupt should be able to stop the loop.
      *
      * @param _millisec
      * @throws InterruptedException on interrupt
      */
     public static void sleepInLoop(long _millisec) throws InterruptedException {
-        if (Thread.interrupted())
-            throw new InterruptedException();
+        if (Thread.interrupted()) throw new InterruptedException();
         Thread.sleep(_millisec);
     }
-    
+
     /**
-     * Sleeps _millisec milliseconds. On Interruption it will print a debug stack trace but not break.
-     * It will leave the Thread.interrupted state to false
-     * see https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html
-     * 
+     * Sleeps _millisec milliseconds. On Interruption it will print a debug stack trace but not
+     * break. It will leave the Thread.interrupted state to false see
+     * https://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html
+     *
      * @param _millisec
      * @return true if the thread was interrupted in the sleep time
      */
@@ -203,7 +211,7 @@ public class MThread extends MObject implements Runnable {
                 try {
                     Thread.sleep(1); // clear interrupted state
                 } catch (InterruptedException e1) {
-                } 
+                }
                 log.d(e);
                 long done = System.currentTimeMillis() - start;
                 _millisec = _millisec - done;
@@ -211,7 +219,7 @@ public class MThread extends MObject implements Runnable {
             }
         }
     }
-    
+
     protected void taskError(Throwable t) {
         log().e(name, t);
     }
@@ -368,26 +376,27 @@ public class MThread extends MObject implements Runnable {
     }
 
     /**
-     * Check if the thread was interrupted an throws the InterruptedException
-     * exception.
+     * Check if the thread was interrupted an throws the InterruptedException exception.
+     *
      * @throws InterruptedException Throw if the thread was interrupted in the meantime.
      */
     public static void checkInterruptedException() throws InterruptedException {
-        if (Thread.interrupted())
-            throw new InterruptedException();
+        if (Thread.interrupted()) throw new InterruptedException();
     }
 
     public static void run(Runnable task) {
-        new Thread(new Runnable() {
-            
-            @Override
-            public void run() {
-                try {
-                    task.run();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            }
-        }).start();
+        new Thread(
+                        new Runnable() {
+
+                            @Override
+                            public void run() {
+                                try {
+                                    task.run();
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
     }
 }

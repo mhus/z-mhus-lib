@@ -25,7 +25,7 @@ import de.mhus.lib.core.logging.Log;
 public class MLog implements ILog {
 
     public static final String LOG_LEVEL_MAPPING = "loglevelmapping";
-	@Hidden private Log log;
+    @Hidden private Log log;
 
     @Override
     public synchronized Log log() {

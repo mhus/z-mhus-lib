@@ -192,11 +192,11 @@ public class MPassword {
     public static SecureString decodeSecure(String in) {
         return new SecureString(decode(in));
     }
-    
+
     public static SecureString decodeSecure(SecureString in) {
         return new SecureString(decode(in.value()));
     }
-    
+
     public static boolean validatePasswordMD5(String real, String md5) {
         if (md5 == null || real == null || md5.length() < 2) return false;
         if (md5.startsWith(PREFIX_HASH_MD5))
@@ -295,7 +295,7 @@ public class MPassword {
         if (givenPass.startsWith("`")) {
             // givenPass = decode(givenPass);
             return false; // given password can't be encoded, this will give the ability to use the
-                          // encoded string itself as password instead of clear text
+            // encoded string itself as password instead of clear text
         }
         if (storedPass.startsWith(PREFIX)) {
             if (storedPass.startsWith(PREFIX_HASH_MD5)) {

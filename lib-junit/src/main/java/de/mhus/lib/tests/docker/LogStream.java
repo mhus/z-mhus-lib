@@ -21,11 +21,11 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     private LinkedList<Byte> capture = null;
     private LogFilter filter = null;
     private boolean completed = false;
-    
+
     public LogStream(DockerScenario scenario, String contName) throws NotFoundException {
         this.cont = scenario.get(contName);
     }
-    
+
     public LogStream(DockerContainer cont) {
         this.cont = cont;
     }
@@ -42,13 +42,13 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
 
     @Override
     public void onComplete() {
-       // output.close();
-       // if (input != null)
-       //     input.close();
-       completed  = true;
-       super.onComplete();
+        // output.close();
+        // if (input != null)
+        //     input.close();
+        completed = true;
+        super.onComplete();
     }
-    
+
     @Override
     public void onNext(Frame item) {
         if (closed) return;
@@ -59,8 +59,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
                 for (byte b : item.getPayload())
                     if (b != 0) {
                         sb.add(b);
-                        if (capture != null)
-                            capture.add(b);
+                        if (capture != null) capture.add(b);
                     }
                 logStr = new String(MCast.toByteArray(sb), MString.CHARSET_CHARSET_UTF_8);
             }
@@ -74,34 +73,34 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     }
 
     /**
-     * No UTF8 encoding supported !!!!
-     * Use: 
-     * LinkedList<Byte> logArray = logStream.readLine();
-     * logArray.removeIf(v -> v == 0);
-     * String logStr = new String(MCast.toByteArray(logArray), MString.CHARSET_CHARSET_UTF_8);
-     * 
+     * No UTF8 encoding supported !!!! Use: LinkedList<Byte> logArray = logStream.readLine();
+     * logArray.removeIf(v -> v == 0); String logStr = new String(MCast.toByteArray(logArray),
+     * MString.CHARSET_CHARSET_UTF_8);
+     *
      * @return The next line until and inclusive LF \n, also inclusive 0 characters and CR \r
      */
     public LinkedList<Byte> readLineRaw() {
         LinkedList<Byte> sb = new LinkedList<>();
         try {
             while (true) {
-                int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
+                int c =
+                        output.getIn()
+                                .read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
                 if (c < 0) return sb;
-                sb.add((byte)c);
+                sb.add((byte) c);
                 if (c == '\n') {
-//                    String out = sb.toString();
-//                    System.err.print(step + ": " + sb );
+                    //                    String out = sb.toString();
+                    //                    System.err.print(step + ": " + sb );
                     return sb;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-//            System.err.print(step + ": " + sb );
+            //            System.err.print(step + ": " + sb );
             return sb;
         }
     }
-    
+
     public String readLine() {
         LinkedList<Byte> array = readLineRaw();
         array.removeIf(v -> v == 0);
@@ -116,12 +115,14 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
             while (true) {
                 int av = output.getIn().available();
                 if (av > 0) {
-                    int c = output.getIn().read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
+                    int c =
+                            output.getIn()
+                                    .read(); // no utf8 !! - utf8 fails because of a lot of 0 bytes
                     if (c < 0) return sb;
-                    sb.add((byte)c);
+                    sb.add((byte) c);
                 } else {
                     MThread.sleep(100);
-                    if (sb.size() > 0 && (av < 0 || closed || completed) ) return sb;
+                    if (sb.size() > 0 && (av < 0 || closed || completed)) return sb;
                 }
             }
         } catch (IOException e) {
@@ -144,7 +145,7 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
         super.close();
         output.close();
     }
-    
+
     public DockerContainer getContainer() {
         return cont;
     }
@@ -163,17 +164,14 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     }
 
     public LogStream setCapture(boolean capt) {
-        if (capt)
-            capture = new LinkedList<>();
-        else
-            capture = null;
+        if (capt) capture = new LinkedList<>();
+        else capture = null;
         return this;
     }
-    
+
     public String getCaptured() {
         if (capture == null) return null;
-        if (filter != null)
-            filter.doFilter(capture);
+        if (filter != null) filter.doFilter(capture);
         return new String(MCast.toByteArray(capture), MString.CHARSET_CHARSET_UTF_8);
     }
 
@@ -192,5 +190,4 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-    
 }

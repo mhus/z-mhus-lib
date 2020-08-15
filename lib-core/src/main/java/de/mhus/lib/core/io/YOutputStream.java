@@ -20,7 +20,7 @@ public class YOutputStream extends OutputStream {
 
     private OutputStream[] streams;
 
-    public YOutputStream(OutputStream ... pStreams) {
+    public YOutputStream(OutputStream... pStreams) {
         streams = pStreams;
     }
 

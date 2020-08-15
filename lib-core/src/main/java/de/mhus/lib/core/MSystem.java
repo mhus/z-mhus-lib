@@ -937,24 +937,24 @@ public class MSystem {
         return out;
     }
 
-    public static List<Method> findMethodsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+    public static List<Method> findMethodsWithAnnotation(
+            Class<?> clazz, Class<? extends Annotation> annotationClass) {
         LinkedList<Method> out = new LinkedList<>();
         for (Method method : clazz.getDeclaredMethods()) {
-            if (method.getAnnotation(annotationClass) != null)
-                out.add(method);
+            if (method.getAnnotation(annotationClass) != null) out.add(method);
         }
         return out;
     }
-    
-    public static List<Field> findFieldsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+
+    public static List<Field> findFieldsWithAnnotation(
+            Class<?> clazz, Class<? extends Annotation> annotationClass) {
         LinkedList<Field> out = new LinkedList<>();
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.getAnnotation(annotationClass) != null)
-                out.add(field);
+            if (field.getAnnotation(annotationClass) != null) out.add(field);
         }
         return out;
     }
-    
+
     public static Class<?> getClass(ClassLoader cl, String type) throws ClassNotFoundException {
         if (type == null) return null;
         if (type.equals("int") || type.equals("integer")) return int.class;
@@ -982,14 +982,14 @@ public class MSystem {
     }
 
     public static String currentStackTrace(String firstLine) {
-        return MCast.toString(firstLine,Thread.currentThread().getStackTrace());
+        return MCast.toString(firstLine, Thread.currentThread().getStackTrace());
     }
-    
-    public static int execute(String name, File rootDir, String cmd, ExecuteControl control) throws IOException {
-        
+
+    public static int execute(String name, File rootDir, String cmd, ExecuteControl control)
+            throws IOException {
+
         ProcessBuilder processBuilder = new ProcessBuilder();
-        if (rootDir != null)
-            processBuilder.directory(rootDir);
+        if (rootDir != null) processBuilder.directory(rootDir);
         if (MSystem.isWindows())
             // Windows
             processBuilder.command("cmd.exe", "/c", cmd);
@@ -1001,7 +1001,7 @@ public class MSystem {
 
             Process process = processBuilder.start();
 
-            control.stdin(new PrintWriter( new BufferedOutputStream( process.getOutputStream() ) ) );
+            control.stdin(new PrintWriter(new BufferedOutputStream(process.getOutputStream())));
 
             BufferedReader outReader =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -1009,18 +1009,21 @@ public class MSystem {
             final BufferedReader errReader =
                     new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-            Thread errorWriterTask = new Thread(new Runnable() {
+            Thread errorWriterTask =
+                    new Thread(
+                            new Runnable() {
 
-                @Override
-                public void run() {
-                    String line;
-                    try {
-                        while ((line = errReader.readLine()) != null) {
-                            control.stderr(line);
-                        }
-                    } catch (Throwable t) {}
-                }
-            });
+                                @Override
+                                public void run() {
+                                    String line;
+                                    try {
+                                        while ((line = errReader.readLine()) != null) {
+                                            control.stderr(line);
+                                        }
+                                    } catch (Throwable t) {
+                                    }
+                                }
+                            });
             errorWriterTask.start();
 
             String line;
@@ -1051,8 +1054,7 @@ public class MSystem {
     public static class DefaultExecuteControl implements ExecuteControl {
 
         @Override
-        public void stdin(PrintWriter writer) {
-        }
+        public void stdin(PrintWriter writer) {}
 
         @Override
         public void stderr(String line) {
@@ -1063,7 +1065,5 @@ public class MSystem {
         public void stdout(String line) {
             System.out.println(line);
         }
-
     }
-
 }

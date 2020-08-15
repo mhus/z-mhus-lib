@@ -21,9 +21,8 @@ import java.util.ListIterator;
 
 /**
  * A list with one single element. The list is unmodifiable.
- * 
- * @author mikehummel
  *
+ * @author mikehummel
  * @param <E>
  */
 public class SingleList<E> implements List<E> {
@@ -80,9 +79,7 @@ public class SingleList<E> implements List<E> {
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        for (Object i : c)
-            if (!element.equals(i)) 
-                return false;
+        for (Object i : c) if (!element.equals(i)) return false;
         return true;
     }
 

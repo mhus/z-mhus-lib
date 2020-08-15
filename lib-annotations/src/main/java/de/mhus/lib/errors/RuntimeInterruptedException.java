@@ -11,5 +11,4 @@ public class RuntimeInterruptedException extends RuntimeException {
     public RuntimeInterruptedException(Throwable cause) {
         super(cause);
     }
-
 }

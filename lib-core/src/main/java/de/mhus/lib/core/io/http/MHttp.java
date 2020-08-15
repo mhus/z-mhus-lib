@@ -96,7 +96,7 @@ public class MHttp {
     public static final String METHOD_TRACE = "TRACE";
     public static final String METHOD_PATCH = "PATCH";
     public static final String METHOD_CONNECT = "CONNECT";
-    
+
     public enum METHOD {
         GET,
         HEAD,

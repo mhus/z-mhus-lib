@@ -66,7 +66,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     @Override
     public String getString(String key) throws NotFoundException {
         Object out = getProperty(key);
-        if (out == null) throw new NotFoundException("value not found",key);
+        if (out == null) throw new NotFoundException("value not found", key);
         return String.valueOf(out);
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
     @Override
     public boolean getBoolean(String key) throws NotFoundException {
         Object out = getProperty(key);
-        if (out == null) throw new NotFoundException("value not found",key);
+        if (out == null) throw new NotFoundException("value not found", key);
         return MCast.toboolean(out, false);
     }
 
@@ -402,5 +402,4 @@ public abstract class AbstractProperties extends MObject implements IProperties 
         if (format == null) return def; // probably null
         return String.format(format, values);
     }
-
 }

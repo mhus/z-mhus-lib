@@ -421,14 +421,16 @@ public class MXml {
                 // http://xerces.apache.org/xerces2-j/features.html#disallow-doctype-decl
                 FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
                 dbf.setFeature(FEATURE, true);
-    
+
                 // If you can't completely disable DTDs, then at least do the following:
-                // Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-general-entities
-                // Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-general-entities
+                // Xerces 1 -
+                // http://xerces.apache.org/xerces-j/features.html#external-general-entities
+                // Xerces 2 -
+                // http://xerces.apache.org/xerces2-j/features.html#external-general-entities
                 // JDK7+ - http://xml.org/sax/features/external-general-entities
                 FEATURE = "http://xml.org/sax/features/external-general-entities";
                 dbf.setFeature(FEATURE, false);
-    
+
                 // Xerces 1 -
                 // http://xerces.apache.org/xerces-j/features.html#external-parameter-entities
                 // Xerces 2 -
@@ -436,25 +438,27 @@ public class MXml {
                 // JDK7+ - http://xml.org/sax/features/external-parameter-entities
                 FEATURE = "http://xml.org/sax/features/external-parameter-entities";
                 dbf.setFeature(FEATURE, false);
-    
+
                 // Disable external DTDs as well
                 FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
                 dbf.setFeature(FEATURE, false);
-    
+
                 // and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity
                 // Attacks"
                 dbf.setXIncludeAware(false);
                 dbf.setExpandEntityReferences(false);
-    
+
                 // And, per Timothy Morgan: "If for some reason support for inline DOCTYPEs are a
                 // requirement, then
-                // ensure the entity settings are disabled (as shown above) and beware that SSRF attacks
+                // ensure the entity settings are disabled (as shown above) and beware that SSRF
+                // attacks
                 // (http://cwe.mitre.org/data/definitions/918.html) and denial
-                // of service attacks (such as billion laughs or decompression bombs via "jar:") are a
+                // of service attacks (such as billion laughs or decompression bombs via "jar:") are
+                // a
                 // risk."
-    
+
                 // remaining parser logic
-                
+
                 dbf.setIgnoringComments(false);
                 dbf.setNamespaceAware(false);
 
@@ -523,13 +527,13 @@ public class MXml {
      *
      * @param e
      * @param out
-     * @throws TransformerFactoryConfigurationError 
-     * @throws TransformerException 
+     * @throws TransformerFactoryConfigurationError
+     * @throws TransformerException
      */
-    public static void saveXml(Node e, OutputStream out) throws TransformerFactoryConfigurationError, TransformerException {
+    public static void saveXml(Node e, OutputStream out)
+            throws TransformerFactoryConfigurationError, TransformerException {
         if (transformerFactory == null) {
             transformerFactory = TransformerFactory.newInstance();
-            
         }
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -541,14 +545,13 @@ public class MXml {
 
     public static void saveXml(Node e, OutputStream out, boolean intend) throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        if (intend)
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        if (intend) transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
         StreamResult result = new StreamResult(out);
         DOMSource source = new DOMSource(e);
         transformer.transform(source, result);
     }
-    
+
     public static void saveXml(Node e, File out) throws Exception {
 
         FileOutputStream fo = new FileOutputStream(out);
@@ -562,7 +565,7 @@ public class MXml {
         saveXml(e, fo, intend);
         fo.close();
     }
-    
+
     public static void saveXml(Node e, Writer out, boolean intend) throws Exception {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, intend ? "yes" : "no");
@@ -579,11 +582,10 @@ public class MXml {
     }
 
     /**
-     * Create and return a empty xml document.
-     * There is no document element created.
-     * 
+     * Create and return a empty xml document. There is no document element created.
+     *
      * @return xml model
-     * @throws ParserConfigurationException 
+     * @throws ParserConfigurationException
      */
     public static Document createDocument() throws ParserConfigurationException {
         DocumentBuilder builder = newBuilder();
@@ -597,7 +599,7 @@ public class MXml {
         doc.appendChild(rootNode);
         return doc;
     }
-    
+
     /**
      * Encode the default problematic characters in a string to store it in a xml value.
      *
@@ -1101,20 +1103,18 @@ public class MXml {
         return null;
     }
 
-	public static List<String> getValues(Element root, String name) {
-		LinkedList<String> ret = new LinkedList<>();
-		for (Element element : getLocalElementIterator(root, name)) {
-			ret.add( getValue(element, false) );
-		}
-		return ret;
-	}
+    public static List<String> getValues(Element root, String name) {
+        LinkedList<String> ret = new LinkedList<>();
+        for (Element element : getLocalElementIterator(root, name)) {
+            ret.add(getValue(element, false));
+        }
+        return ret;
+    }
 
     public static List<String> getAttributeNames(Element element) {
         NamedNodeMap attr = element.getAttributes();
         ArrayList<String> out = new ArrayList<>(attr.getLength());
-        for (int i = 0; i < attr.getLength(); i++)
-            out.add(attr.item(i).getNodeName());
+        for (int i = 0; i < attr.getLength(); i++) out.add(attr.item(i).getNodeName());
         return out;
     }
-	
 }

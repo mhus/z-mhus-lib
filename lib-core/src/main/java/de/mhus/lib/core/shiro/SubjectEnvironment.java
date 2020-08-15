@@ -18,18 +18,15 @@ public class SubjectEnvironment implements Closeable {
     public Subject getSubject() {
         return subject;
     }
-    
+
     @Override
     public void close() {
-        if (predecessor == null)
-            ThreadContext.remove();
-        else
-            ThreadContext.bind(predecessor);
+        if (predecessor == null) ThreadContext.remove();
+        else ThreadContext.bind(predecessor);
     }
 
     @Override
     public String toString() {
         return AccessUtil.toString(subject);
     }
-    
 }

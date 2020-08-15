@@ -78,56 +78,69 @@ public class MHttpClientBuilder extends MObject {
     }
 
     protected void configureTrace(HttpClientBuilder build) {
-    	if (tracing) {
-			build.addInterceptorFirst(new HttpRequestInterceptor() {
-				
-				@Override
-				public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-					try {
-						Span span = ITracer.get().current();
-						if (span != null) {
-							RequestLine line = request.getRequestLine();
-							Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
-							Tags.HTTP_URL.set(span, line.getUri() );
-							Tags.HTTP_METHOD.set(span, line.getMethod());
-							ITracer.get().tracer().inject(span.context(), Format.Builtin.HTTP_HEADERS, new TextMap() {
-		
-								@Override
-								public Iterator<Entry<String, String>> iterator() {
-									return null;
-								}
-		
-								@Override
-								public void put(String key, String value) {
-									request.setHeader(key, value);
-								}
-								
-							});
-						}
-					} catch (Throwable t) {}
-				}
-			});
-			build.addInterceptorLast(new HttpResponseInterceptor() {
-				
-				@Override
-				public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-					try {
-						Span span = ITracer.get().current();
-						if (span != null) {
-							Tags.HTTP_STATUS.set(span, response.getStatusLine().getStatusCode());
-						}
-					} catch (Throwable t) {}
-				}
-			});
-    	}
-	}
+        if (tracing) {
+            build.addInterceptorFirst(
+                    new HttpRequestInterceptor() {
 
-	protected void configureConnectionManager(HttpClientBuilder build) {
+                        @Override
+                        public void process(HttpRequest request, HttpContext context)
+                                throws HttpException, IOException {
+                            try {
+                                Span span = ITracer.get().current();
+                                if (span != null) {
+                                    RequestLine line = request.getRequestLine();
+                                    Tags.SPAN_KIND.set(span, Tags.SPAN_KIND_CLIENT);
+                                    Tags.HTTP_URL.set(span, line.getUri());
+                                    Tags.HTTP_METHOD.set(span, line.getMethod());
+                                    ITracer.get()
+                                            .tracer()
+                                            .inject(
+                                                    span.context(),
+                                                    Format.Builtin.HTTP_HEADERS,
+                                                    new TextMap() {
+
+                                                        @Override
+                                                        public Iterator<Entry<String, String>>
+                                                                iterator() {
+                                                            return null;
+                                                        }
+
+                                                        @Override
+                                                        public void put(String key, String value) {
+                                                            request.setHeader(key, value);
+                                                        }
+                                                    });
+                                }
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+            build.addInterceptorLast(
+                    new HttpResponseInterceptor() {
+
+                        @Override
+                        public void process(HttpResponse response, HttpContext context)
+                                throws HttpException, IOException {
+                            try {
+                                Span span = ITracer.get().current();
+                                if (span != null) {
+                                    Tags.HTTP_STATUS.set(
+                                            span, response.getStatusLine().getStatusCode());
+                                }
+                            } catch (Throwable t) {
+                            }
+                        }
+                    });
+        }
+    }
+
+    protected void configureConnectionManager(HttpClientBuilder build) {
         try { // XXX Legacy to httpclient 4.3.6
             build.setConnectionManagerShared(false);
         } catch (NoSuchMethodError e) {
-            
-        };
+
+        }
+        ;
         connManager = new PoolingHttpClientConnectionManager();
         ((PoolingHttpClientConnectionManager) connManager).setMaxTotal(100);
         ((PoolingHttpClientConnectionManager) connManager).setDefaultMaxPerRoute(100);
@@ -251,12 +264,12 @@ public class MHttpClientBuilder extends MObject {
         }
     }
 
-	public boolean isTracing() {
-		return tracing;
-	}
+    public boolean isTracing() {
+        return tracing;
+    }
 
-	public MHttpClientBuilder setTracing(boolean tracing) {
-		this.tracing = tracing;
-		return this;
-	}
+    public MHttpClientBuilder setTracing(boolean tracing) {
+        this.tracing = tracing;
+        return this;
+    }
 }

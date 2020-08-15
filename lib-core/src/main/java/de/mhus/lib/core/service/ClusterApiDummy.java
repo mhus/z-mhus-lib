@@ -14,5 +14,4 @@ public class ClusterApiDummy implements ClusterApi {
     public boolean isReady() {
         return true;
     }
-
 }

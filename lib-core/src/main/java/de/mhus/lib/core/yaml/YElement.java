@@ -14,54 +14,54 @@ public class YElement {
     public YMap asMap() {
         return new YMap(obj);
     }
-    
+
     public YList asList() {
         return new YList(obj);
     }
 
     @Override
     public String toString() {
-    	return obj == null ? null : obj.toString();
+        return obj == null ? null : obj.toString();
     }
 
-//    public String getString() {
-//        return getString(null);
-//    }
-//    
-//    public String getString(String def) {
-//        if (obj == null) return def;
-//        if (obj instanceof String) return (String) obj;
-//        return String.valueOf(obj);
-//    }
-//    
-//    public boolean getBoolean() {
-//        return getBoolean(false);
-//    }
-//    
-//    public boolean getBoolean(boolean def) {
-//        if (obj == null) return def;
-//        if (obj instanceof Boolean) return (Boolean) obj;
-//        return MCast.toboolean(obj, def);
-//    }
-//
-//    public int getInteger() {
-//        return getInteger(0);
-//    }
-//    
-//    public int getInteger(int def) {
-//        if (obj == null) return def;
-//        if (obj instanceof Number) return ((Number) obj).intValue();
-//        return MCast.toint(obj, def);
-//    }
+    //    public String getString() {
+    //        return getString(null);
+    //    }
+    //
+    //    public String getString(String def) {
+    //        if (obj == null) return def;
+    //        if (obj instanceof String) return (String) obj;
+    //        return String.valueOf(obj);
+    //    }
+    //
+    //    public boolean getBoolean() {
+    //        return getBoolean(false);
+    //    }
+    //
+    //    public boolean getBoolean(boolean def) {
+    //        if (obj == null) return def;
+    //        if (obj instanceof Boolean) return (Boolean) obj;
+    //        return MCast.toboolean(obj, def);
+    //    }
+    //
+    //    public int getInteger() {
+    //        return getInteger(0);
+    //    }
+    //
+    //    public int getInteger(int def) {
+    //        if (obj == null) return def;
+    //        if (obj instanceof Number) return ((Number) obj).intValue();
+    //        return MCast.toint(obj, def);
+    //    }
 
-//    public boolean isInteger() {
-//        if (obj == null) return false;
-//        return obj instanceof Number;
-//    }
-//    
-//    public boolean isString() {
-//        return obj instanceof String;
-//    }
+    //    public boolean isInteger() {
+    //        if (obj == null) return false;
+    //        return obj instanceof Number;
+    //    }
+    //
+    //    public boolean isString() {
+    //        return obj instanceof String;
+    //    }
 
     public boolean isList() {
         return obj instanceof List;
@@ -74,5 +74,4 @@ public class YElement {
     public Object getObject() {
         return obj;
     }
-
 }

@@ -71,7 +71,7 @@ public class SerializerTransformer extends TransformStrategy {
         if (from instanceof BooleanNode) return ((BooleanNode) from).asBoolean();
         if (from instanceof DoubleNode) return ((DoubleNode) from).asDouble();
         if (from instanceof NullNode) return null;
-        
+
         if (!(from instanceof ObjectNode)) throw new NotSupportedException("node type is unknown");
 
         String clazz = MJson.getValue(from, "_type", "");
@@ -255,5 +255,4 @@ public class SerializerTransformer extends TransformStrategy {
         else if (value instanceof Boolean) out.put(name, (Boolean) value);
         else out.put(name, pojoToJson(value, helper.incLevel()));
     }
-
 }

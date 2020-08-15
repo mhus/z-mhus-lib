@@ -92,7 +92,7 @@ public class SetCast<F, T> implements Set<T> {
     public void clear() {
         from.clear();
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(from);

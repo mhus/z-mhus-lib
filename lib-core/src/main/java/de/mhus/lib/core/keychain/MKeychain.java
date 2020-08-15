@@ -25,7 +25,7 @@ public interface MKeychain {
     static final String TYPE_AES_PRIVATE_KEY = "aes.cipher.private.key";
     static final String TYPE_AES_PUBLIC_KEY = "aes.cipher.public.key";
     static final String TYPE_DSA_PRIVATE_KEY = "dsa.sign.private.key";
-    
+
     static final String TYPE_DSA_PUBLIC_KEY = "dsa.sign.public.key";
     static final String TYPE_ECC_PRIVATE_KEY = "ecc.sign.private.key";
     static final String TYPE_ECC_PUBLIC_KEY = "ecc.sign.public.key";
@@ -33,9 +33,9 @@ public interface MKeychain {
     static final String TYPE_TEXT = "text";
     static final String TYPE_CIPHER = "cipher";
     static final String TYPE_SIGNATURE = "signature";
-    
+
     static final String SOURCE_DEFAULT = "default";
-    
+
     static final String SUFFIX_CIPHER_PRIVATE_KEY = ".cipher.private.key";
     static final String SUFFIX_CIPHER_PUBLIC_KEY = ".cipher.public.key";
     static final String SUFFIX_SIGN_PRIVATE_KEY = ".sign.private.key";

@@ -58,9 +58,8 @@ public interface MRandom {
      * @throws NotSupportedException If adaption was not possible.
      */
     <T> T adaptTo(Class<? extends T> ifc)
-            throws
-                    NotSupportedException; // adaptTo java.util.Random or java.secure.Random if
-                                           // available
+            throws NotSupportedException; // adaptTo java.util.Random or java.secure.Random if
+    // available
 
     /**
      * Return a random readable character

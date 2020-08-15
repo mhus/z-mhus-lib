@@ -26,7 +26,7 @@ public class ModelRange extends ModelPattern {
     public boolean matches(ModelPart model, Map<String, ?> map, String str) {
         setCondition(CONDITION.NONE);
         Version v = new Version(str);
-        return  pattern.includes(v);
+        return pattern.includes(v);
     }
 
     @Override

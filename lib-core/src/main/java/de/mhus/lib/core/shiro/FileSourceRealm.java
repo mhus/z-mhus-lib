@@ -45,10 +45,9 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     private String defaultRole;
     private boolean debugPermissions;
     private String rolePermission;
-    
-    public FileSourceRealm() {
-    }
-    
+
+    public FileSourceRealm() {}
+
     @Override
     protected void onInit() {
         userDir = new File(resourcesPath + File.separator + "users");
@@ -57,7 +56,6 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
         // setCachingEnabled(false); // true
     }
 
-    
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = getUsername(principals);
@@ -65,7 +63,8 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
+            throws AuthenticationException {
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         SimpleAccount account = getUser(upToken.getUsername());
 
@@ -78,7 +77,6 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                 String msg = "The credentials for account [" + account + "] are expired";
                 throw new ExpiredCredentialsException(msg);
             }
-
         }
 
         return account;
@@ -93,7 +91,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".txt");
             if (file.exists() && file.isFile()) {
-                log.d("load user",username,"txt");
+                log.d("load user", username, "txt");
                 List<String> lines = MFile.readLines(file, false);
                 String password = lines.get(0);
                 SimpleAccount account = new SimpleAccount(username, password, getName());
@@ -119,16 +117,15 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                 return account;
             }
         } catch (IOException e) {
-            log.d(username,e);
+            log.d(username, e);
             return null;
         }
-        
-        
+
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".xml");
             if (file.exists() && file.isFile()) {
-                log.d("load user",username,"xml");
+                log.d("load user", username, "xml");
                 Element xml = MXml.loadXml(file).getDocumentElement();
                 String password = MPassword.decode(xml.getAttribute("password"));
                 SimpleAccount account = new SimpleAccount(username, password, getName());
@@ -146,25 +143,25 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                         }
                     }
                 }
-                
+
                 return account;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            log.d(username,e);
+            log.d(username, e);
             return null;
         }
-        
-        log.d("user not found",username);
+
+        log.d("user not found", username);
         return null;
     }
-    
+
     public SimpleRole getRole(String rolename) {
-        
+
         try {
             // load from FS
             File file = new File(rolesDir, MFile.normalize(rolename) + ".txt");
             if (file.exists() && file.isFile()) {
-                log.d("load role",rolename,"txt");
+                log.d("load role", rolename, "txt");
                 SimpleRole role = new SimpleRole(rolename);
                 List<String> lines = MFile.readLines(file, false);
                 HashSet<String> perms = new HashSet<>();
@@ -173,20 +170,21 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                     if (MString.isEmpty(line) || line.startsWith("#")) continue;
                     perms.add(line);
                 }
-                Set<Permission> permissions = PermissionUtils.resolvePermissions(perms, getPermissionResolver());
+                Set<Permission> permissions =
+                        PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                 role.setPermissions(permissions);
                 return role;
             }
         } catch (IOException e) {
-            log.d(rolename,e);
+            log.d(rolename, e);
             return null;
         }
-        
+
         try {
             // load from FS
             File file = new File(rolesDir, MFile.normalize(rolename) + ".xml");
             if (file.exists() && file.isFile()) {
-                log.d("load role",rolename,"xml");
+                log.d("load role", rolename, "xml");
                 Element xml = MXml.loadXml(file).getDocumentElement();
                 SimpleRole role = new SimpleRole(rolename);
                 Element permsE = MXml.getElementByPath(xml, "perms");
@@ -194,19 +192,19 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                     HashSet<String> perms = new HashSet<>();
                     for (Element permE : MXml.getLocalElementIterator(permsE, "perm")) {
                         String perm = MXml.getValue(permE, false);
-                        if (MString.isSet(perm))
-                            perms.add(perm);
+                        if (MString.isSet(perm)) perms.add(perm);
                     }
-                    Set<Permission> permissions = PermissionUtils.resolvePermissions(perms, getPermissionResolver());
+                    Set<Permission> permissions =
+                            PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                     role.setPermissions(permissions);
                 }
                 return role;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            log.d(rolename,e);
+            log.d(rolename, e);
             return null;
         }
-        log.d("role not found",rolename);
+        log.d("role not found", rolename);
         return null;
     }
 
@@ -225,28 +223,27 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".properties");
             if (file.exists() && file.isFile()) {
-                log.d("load data",username,"properties");
+                log.d("load data", username, "properties");
                 MProperties prop = MProperties.load(file);
-                HashMap<String,String> ret = new HashMap<>();
-                for(Entry<String, Object> entry : prop.entrySet())
+                HashMap<String, String> ret = new HashMap<>();
+                for (Entry<String, Object> entry : prop.entrySet())
                     ret.put(entry.getKey(), String.valueOf(entry.getValue()));
                 return ret;
             }
         } catch (Exception e) {
-            log.d(username,e);
+            log.d(username, e);
             return null;
         }
 
-        
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".xml");
             if (file.exists() && file.isFile()) {
-                log.d("load data",username,"xml");
+                log.d("load data", username, "xml");
                 Element xml = MXml.loadXml(file).getDocumentElement();
                 Element dataE = MXml.getElementByPath(xml, "data");
                 if (dataE != null) {
-                    HashMap<String,String> ret = new HashMap<>();
+                    HashMap<String, String> ret = new HashMap<>();
                     for (Element datE : MXml.getLocalElementIterator(dataE)) {
                         String value = MXml.getValue(datE, false);
                         ret.put(datE.getNodeName(), value);
@@ -255,8 +252,8 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
-           log.d(username,e);
-           return null;
+            log.d(username, e);
+            return null;
         }
 
         return null;
@@ -269,30 +266,32 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     public void setDefaultRole(String defaultRole) {
         this.defaultRole = defaultRole;
     }
-    
+
     @Override
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions && !ret) {
-            log.d("perm access denied",AccessUtil.CURRENT_PRINCIPAL, permission);
+            log.d("perm access denied", AccessUtil.CURRENT_PRINCIPAL, permission);
         }
         return ret;
     }
 
     @Override
     protected boolean hasRole(String roleIdentifier, AuthorizationInfo info) {
-        //1. check role to permission mapping
-        if (rolePermission != null && isPermitted(new WildcardPermission(rolePermission + ":*:" + roleIdentifier), info))
+        // 1. check role to permission mapping
+        if (rolePermission != null
+                && isPermitted(
+                        new WildcardPermission(rolePermission + ":*:" + roleIdentifier), info))
             return true;
-        //2. check default role access
+        // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
-            log.d("role access denied",AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
+            log.d("role access denied", AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
         }
-        
+
         return ret;
     }
-    
+
     public boolean isDebugPermissions() {
         return debugPermissions;
     }
@@ -307,15 +306,14 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     /**
      * This option maps role access to permissions. Role access check is also active as next check.
-     * 
-     * Set the role permission to not null to enable general role permission check.
-     * If you set it to "admin" and give "admin:*" permission and a user have the permission then the user has access to all
-     * roles. Use "admin:*:user" to permit acess to the role "user".
-     * 
+     *
+     * <p>Set the role permission to not null to enable general role permission check. If you set it
+     * to "admin" and give "admin:*" permission and a user have the permission then the user has
+     * access to all roles. Use "admin:*:user" to permit acess to the role "user".
+     *
      * @param rolePermission
      */
     public void setRolePermission(String rolePermission) {
         this.rolePermission = rolePermission;
     }
-    
 }

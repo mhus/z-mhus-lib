@@ -9,10 +9,9 @@ public class MIterable<T> implements Iterable<T> {
     public MIterable(Iterator<T> iterator) {
         this.iterator = iterator;
     }
-    
+
     @Override
     public Iterator<T> iterator() {
         return iterator;
     }
-
 }

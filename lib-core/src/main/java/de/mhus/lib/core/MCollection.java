@@ -66,7 +66,7 @@ public class MCollection {
         }
         return -1;
     }
-    
+
     /**
      * Fills a list at the end with the values of an array, ignoring null values.
      *
@@ -581,37 +581,36 @@ public class MCollection {
 
     /**
      * Return an new map and add the attributes alternating key and value.
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param keyValues
      * @return A new Map filed with values
      */
     @SuppressWarnings("unchecked")
-    public static <K,V> Map<K,V> asMap(Object ... keyValues) {
-        HashMap<K,V> out = new HashMap<>();
-        for (int i = 0; i < keyValues.length-1; i=i+2)
-            out.put((K)keyValues[i], (V)keyValues[i+1]);
+    public static <K, V> Map<K, V> asMap(Object... keyValues) {
+        HashMap<K, V> out = new HashMap<>();
+        for (int i = 0; i < keyValues.length - 1; i = i + 2)
+            out.put((K) keyValues[i], (V) keyValues[i + 1]);
         return out;
     }
 
     /**
      * Transforms a map into a key - value pair string.
-     * 
+     *
      * @param map
      * @return a key-value list
      */
     public static String[] toPairs(Map<String, Object> map) {
-    	if (map == null) return null;
-    	String[] out = new String[map.size()*2];
-    	int cnt = 0;
-    	for (Entry<String, Object> entry : map.entrySet()) {
-    		out[cnt] = entry.getKey();
-    		cnt++;
-    		out[cnt] = String.valueOf(entry.getValue());
-    		cnt++;
-    	}
-    	return out;
+        if (map == null) return null;
+        String[] out = new String[map.size() * 2];
+        int cnt = 0;
+        for (Entry<String, Object> entry : map.entrySet()) {
+            out[cnt] = entry.getKey();
+            cnt++;
+            out[cnt] = String.valueOf(entry.getValue());
+            cnt++;
+        }
+        return out;
     }
-    
 }

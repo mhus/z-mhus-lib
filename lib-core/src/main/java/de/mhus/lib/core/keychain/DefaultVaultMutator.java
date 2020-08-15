@@ -38,10 +38,12 @@ public class DefaultVaultMutator implements KeyMutator {
             throws ParseException, NotSupportedException {
         if (entry.getType() != null) {
             try {
-                if (ifc == AsyncKey.class && MKeychain.TYPE_RSA_PRIVATE_KEY.equals(entry.getType())) {
+                if (ifc == AsyncKey.class
+                        && MKeychain.TYPE_RSA_PRIVATE_KEY.equals(entry.getType())) {
                     return (T) MCrypt.loadPrivateRsaKey(entry.getValue().value());
                 }
-                if (ifc == AsyncKey.class && MKeychain.TYPE_RSA_PUBLIC_KEY.equals(entry.getType())) {
+                if (ifc == AsyncKey.class
+                        && MKeychain.TYPE_RSA_PUBLIC_KEY.equals(entry.getType())) {
                     return (T) MCrypt.loadPrivateRsaKey(entry.getValue().value());
                 }
                 if (ifc == PemPriv.class

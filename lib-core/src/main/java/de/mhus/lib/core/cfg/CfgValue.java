@@ -116,9 +116,9 @@ public abstract class CfgValue<T> {
     }
 
     /**
-     * Set the onPostUpdate action. The action will be executed on every update.
-     * Use (v) is the new Value.
-     * 
+     * Set the onPostUpdate action. The action will be executed on every update. Use (v) is the new
+     * Value.
+     *
      * @param consumer
      * @return the called object
      */
@@ -148,5 +148,4 @@ public abstract class CfgValue<T> {
         if (p < 0) return getPath();
         return getPath().substring(p + 1);
     }
-
 }

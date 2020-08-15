@@ -516,7 +516,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
         fos.close();
         return ret;
     }
-    
+
     public String saveToString() {
         StringWriter out = new StringWriter();
         try {
@@ -536,9 +536,12 @@ public class MProperties extends AbstractProperties implements Externalizable {
         }
         return out.toString();
     }
-    
+
     public boolean save(OutputStream out, boolean addDate) throws IOException {
-        store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)), true, addDate);
+        store(
+                new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)),
+                true,
+                addDate);
         return true;
     }
 
@@ -546,12 +549,12 @@ public class MProperties extends AbstractProperties implements Externalizable {
         store(new BufferedWriter(new OutputStreamWriter(out, MString.CHARSET_UTF_8)), true, true);
         return true;
     }
-    
+
     private void store(BufferedWriter bw, boolean escUnicode, boolean addDate) throws IOException {
-    	if (addDate) {
-	        bw.write("#" + new Date().toString());
-	        bw.newLine();
-    	}
+        if (addDate) {
+            bw.write("#" + new Date().toString());
+            bw.newLine();
+        }
         synchronized (this) {
             for (String key : sortedKeys()) {
                 String val = (String) getString(key, "");
@@ -571,7 +574,7 @@ public class MProperties extends AbstractProperties implements Externalizable {
         return new TreeSet<String>(new SetCast<Object, String>(properties.keySet()));
     }
 
-	private String saveConvert(String value, boolean escapeSpace, boolean escapeUnicode) {
+    private String saveConvert(String value, boolean escapeSpace, boolean escapeUnicode) {
         int len = value.length();
         int bufLen = len * 2;
         if (bufLen < 0) bufLen = Integer.MAX_VALUE;

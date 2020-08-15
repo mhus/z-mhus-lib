@@ -17,10 +17,7 @@ public class PublicAnnotationHandler extends AuthorizingAnnotationHandler {
     @Override
     public void assertAuthorized(Annotation a) throws AuthorizationException {
         if (!(a instanceof Public)) return;
-        
-        if (!((Public)a).readable())
-            throw new UnauthenticatedException();
-        
-    }
 
+        if (!((Public) a).readable()) throw new UnauthenticatedException();
+    }
 }

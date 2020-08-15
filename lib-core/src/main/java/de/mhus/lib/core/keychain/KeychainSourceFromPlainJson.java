@@ -20,7 +20,8 @@ public class KeychainSourceFromPlainJson extends MapMutableVaultSource {
     private long fileModified;
     private boolean fileCanWrite;
 
-    public KeychainSourceFromPlainJson(File file, boolean editable, String name) throws IOException {
+    public KeychainSourceFromPlainJson(File file, boolean editable, String name)
+            throws IOException {
         this.file = file;
         this.name = name;
         this.editable = editable;

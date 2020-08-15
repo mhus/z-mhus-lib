@@ -286,7 +286,7 @@ public class CSVReader {
                 switch (state) {
                     case SEEKING_START:
                         {
-                                /* in blanks before field */
+                            /* in blanks before field */
                             switch (category) {
                                 case WHITESPACE:
                                     /* ignore */
@@ -323,7 +323,7 @@ public class CSVReader {
                         }
                     case IN_PLAIN:
                         {
-                                /* in middle of ordinary field */
+                            /* in middle of ordinary field */
                             switch (category) {
                                 case QUOTE:
                                     throw new IOException(
@@ -353,7 +353,7 @@ public class CSVReader {
 
                     case IN_QUOTED:
                         {
-                                /* in middle of field surrounded in quotes */
+                            /* in middle of field surrounded in quotes */
                             switch (category) {
                                 case QUOTE:
                                     state = AFTER_END_QUOTE;

@@ -29,7 +29,7 @@ public class CfgProperties extends CfgValue<IProperties> {
     @Override
     protected IProperties loadValue() {
 
-    	IConfig node = MApi.getCfg(getOwner(), null);
+        IConfig node = MApi.getCfg(getOwner(), null);
         if (node == null) return getDefault();
         if (MString.isEmpty(getPath())) return node;
 

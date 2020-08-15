@@ -96,8 +96,7 @@ public class FilterRequest {
 
     public IProperties toProperties() {
         MProperties ret = new MProperties(facets);
-        if (text != null && text.length > 0)
-        	ret.put("", text[0]);
+        if (text != null && text.length > 0) ret.put("", text[0]);
         return ret;
     }
 

@@ -268,11 +268,12 @@ public class MPojo {
     public static void jsonToPojo(JsonNode from, Object to, boolean force) throws IOException {
         jsonToPojo(from, to, getDefaultModelFactory(), force);
     }
-    
-    public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory) throws IOException {
+
+    public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory)
+            throws IOException {
         jsonToPojo(from, to, factory, false);
     }
-    
+
     @SuppressWarnings("unchecked")
     public static void jsonToPojo(JsonNode from, Object to, PojoModelFactory factory, boolean force)
             throws IOException {
@@ -290,8 +291,10 @@ public class MPojo {
 
                 } else if (type == Boolean.class || type == boolean.class)
                     attr.set(to, json.asBoolean(false), force);
-                else if (type == Integer.class || type == int.class) attr.set(to, json.asInt(0), force);
-                else if (type == Long.class || type == long.class) attr.set(to, json.asLong(0), force);
+                else if (type == Integer.class || type == int.class)
+                    attr.set(to, json.asInt(0), force);
+                else if (type == Long.class || type == long.class)
+                    attr.set(to, json.asLong(0), force);
                 else if (type == Double.class || type == double.class)
                     attr.set(to, json.asDouble(0), force);
                 else if (type == Float.class || type == float.class)
@@ -402,16 +405,19 @@ public class MPojo {
         xmlToPojo(from, to, getDefaultModelFactory(), act, false);
     }
 
-    public static void xmlToPojo(Element from, Object to, MActivator act, boolean force) throws IOException {
+    public static void xmlToPojo(Element from, Object to, MActivator act, boolean force)
+            throws IOException {
         xmlToPojo(from, to, getDefaultModelFactory(), act, force);
     }
-    
-    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act) throws IOException {
+
+    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act)
+            throws IOException {
         xmlToPojo(from, to, factory, act, false);
     }
-    
+
     @SuppressWarnings("unchecked")
-    public static void xmlToPojo(Element from, Object to, PojoModelFactory factory, MActivator act, boolean force)
+    public static void xmlToPojo(
+            Element from, Object to, PojoModelFactory factory, MActivator act, boolean force)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
 
@@ -588,10 +594,11 @@ public class MPojo {
         propertiesToPojo(from, to, getDefaultModelFactory(), null, false);
     }
 
-    public static void propertiesToPojo(IProperties from, Object to, boolean force) throws IOException {
+    public static void propertiesToPojo(IProperties from, Object to, boolean force)
+            throws IOException {
         propertiesToPojo(from, to, getDefaultModelFactory(), null, force);
     }
-    
+
     public static void propertiesToPojo(IProperties from, Object to, PojoModelFactory factory)
             throws IOException {
         propertiesToPojo(from, to, factory, null, false);
@@ -603,8 +610,7 @@ public class MPojo {
             Object to,
             PojoModelFactory factory,
             Caster<Object, Object> unknownHadler,
-            boolean force
-            )
+            boolean force)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
         for (PojoAttribute<Object> attr : model) {
@@ -638,7 +644,8 @@ public class MPojo {
                             to,
                             unknownHadler == null
                                     ? from.getString(name)
-                                    : unknownHadler.cast(from.get(name), null), force);
+                                    : unknownHadler.cast(from.get(name), null),
+                            force);
             } catch (Throwable t) {
                 log.d(MSystem.getClassName(to), name, t);
             }
@@ -702,13 +709,13 @@ public class MPojo {
             throws IOException, ClassNotFoundException {
         objectStreamToPojo(from, to, getDefaultModelFactory(), force);
     }
-    
+
     public static void objectStreamToPojo(
             ObjectInputStream from, Object to, PojoModelFactory factory)
             throws IOException, ClassNotFoundException {
         objectStreamToPojo(from, to, factory, false);
     }
-    
+
     @SuppressWarnings("unchecked")
     public static void objectStreamToPojo(
             ObjectInputStream from, Object to, PojoModelFactory factory, boolean force)

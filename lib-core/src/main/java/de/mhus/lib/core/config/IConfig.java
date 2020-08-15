@@ -19,13 +19,12 @@ import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
 /**
- * A IConfig extends the concept of properties to a object oriented structure.
- * A property can also be an object or array of objects. The IConfig will not
- * really separate objects and arrays. If you require an array and it's only a 
- * single objects you will get a list with a single object and vies versa.
- * 
- * @author mikehummel
+ * A IConfig extends the concept of properties to a object oriented structure. A property can also
+ * be an object or array of objects. The IConfig will not really separate objects and arrays. If you
+ * require an array and it's only a single objects you will get a list with a single object and vies
+ * versa.
  *
+ * @author mikehummel
  */
 public interface IConfig extends IProperties {
 
@@ -33,14 +32,14 @@ public interface IConfig extends IProperties {
 
     /**
      * Returns true if the key is an object.
-     * 
+     *
      * @param key
      * @return If the property is an object or array
      */
     boolean isObject(String key);
 
     IConfig getObjectOrNull(String key);
-    
+
     IConfig getObject(String key) throws NotFoundException;
 
     boolean isArray(String key);
@@ -70,19 +69,18 @@ public interface IConfig extends IProperties {
     List<String> getObjectKeys();
 
     /**
-     * Return in every case a list. An Array List or list with a single 
-     * Object or a object with nameless value or
-     * an empty list.
+     * Return in every case a list. An Array List or list with a single Object or a object with
+     * nameless value or an empty list.
+     *
      * @param key
      * @return A list
      */
     ConfigList getList(String key);
-    
+
     /**
-     * Return a iterator over a array or a single object.
-     * Return an empty iterator if not found.
-     * Use this function to iterate over arrays or objects.
-     * 
+     * Return a iterator over a array or a single object. Return an empty iterator if not found. Use
+     * this function to iterate over arrays or objects.
+     *
      * @param key
      * @return Never null.
      */
@@ -98,9 +96,8 @@ public interface IConfig extends IProperties {
 
     ConfigList createArray(String key);
 
-//    IConfig cloneObject(IConfig node);
-    
-    
+    //    IConfig cloneObject(IConfig node);
+
     /**
      * Return a config or null if the string is not understand.
      *
@@ -127,28 +124,26 @@ public interface IConfig extends IProperties {
         }
 
         if (configString.contains("=")) {
-            if (configString.contains("&")) 
+            if (configString.contains("&"))
                 return readFromProperties(new HashMap<>(MUri.explode(configString)));
             else return readFromProperties(IProperties.explodeToMProperties(configString));
         }
 
         return null;
     }
-    
+
     /**
      * Return a config or null if the string is not understand.
-     * 
+     *
      * @param configStrings
      * @return IConfig, never null
      * @throws MException
      */
     static IConfig readConfigFromString(String[] configStrings) throws MException {
         if (configStrings == null || configStrings.length == 0) return new MConfig();
-        if (configStrings.length == 1)
-            return readConfigFromString(configStrings[0]);
+        if (configStrings.length == 1) return readConfigFromString(configStrings[0]);
         return readFromProperties(IProperties.explodeToMProperties(configStrings));
     }
-
 
     static IConfig readFromProperties(Map<String, Object> lines) {
         return new PropertiesConfigBuilder().readFromMap(lines);
@@ -183,11 +178,11 @@ public interface IConfig extends IProperties {
         }
         return null;
     }
-    
+
     public static void merge(IConfig from, IConfig to) throws MException {
         merge(from, to, 0);
     }
-    
+
     private static void merge(IConfig from, IConfig to, int level) throws MException {
         if (level > 100) throw new TooDeepStructuresException();
         for (IConfig node : from.getObjects()) {
@@ -195,7 +190,7 @@ public interface IConfig extends IProperties {
             for (String name : node.getPropertyKeys()) {
                 n.put(name, node.get(name));
             }
-            merge(node, (IConfig) n, level+1);
+            merge(node, (IConfig) n, level + 1);
         }
         for (String key : from.getArrayKeys()) {
             ConfigList toArray = to.createArray(key);
@@ -204,10 +199,9 @@ public interface IConfig extends IProperties {
                 for (String name : node.getPropertyKeys()) {
                     n.put(name, node.get(name));
                 }
-                merge(node, (IConfig) n, level+1);
+                merge(node, (IConfig) n, level + 1);
             }
         }
-        
     }
 
     public static String[] toStringArray(Collection<IConfig> nodes, String key) {
@@ -218,5 +212,4 @@ public interface IConfig extends IProperties {
         }
         return out.toArray(new String[out.size()]);
     }
-
 }

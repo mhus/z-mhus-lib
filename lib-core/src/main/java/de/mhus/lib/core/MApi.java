@@ -90,23 +90,23 @@ public class MApi {
     }
 
     public static boolean isTrace(String name) {
-        //dirtyLog("Ask for trace", name);
+        // dirtyLog("Ask for trace", name);
         //		String value = System.getProperty(name+".trace");
         //		if (value != null) return "true".equals(value);
         return get().isTrace(name);
     }
 
-//    public static void doStartTrailLog(String source) {
-//        LevelMapper mapper = get().getLogFactory().getLevelMapper();
-//        if (mapper != null && mapper instanceof TrailLevelMapper)
-//            ((TrailLevelMapper) mapper).doConfigureTrail(source, MLogUtil.MAP_LABEL);
-//    }
-//
-//    public static void doStopTrailLog() {
-//        LevelMapper mapper = get().getLogFactory().getLevelMapper();
-//        if (mapper != null && mapper instanceof TrailLevelMapper)
-//            ((TrailLevelMapper) mapper).doResetTrail();
-//    }
+    //    public static void doStartTrailLog(String source) {
+    //        LevelMapper mapper = get().getLogFactory().getLevelMapper();
+    //        if (mapper != null && mapper instanceof TrailLevelMapper)
+    //            ((TrailLevelMapper) mapper).doConfigureTrail(source, MLogUtil.MAP_LABEL);
+    //    }
+    //
+    //    public static void doStopTrailLog() {
+    //        LevelMapper mapper = get().getLogFactory().getLevelMapper();
+    //        if (mapper != null && mapper instanceof TrailLevelMapper)
+    //            ((TrailLevelMapper) mapper).doResetTrail();
+    //    }
 
     //	public static void registerLogger(Log log) {
     //		synchronized (loggers) {
@@ -188,7 +188,7 @@ public class MApi {
         out.println("--- " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
     }
-    
+
     public static void dirtyLogDebug(Object... string) {
         if (log != null) {
             log.d(string);
@@ -219,7 +219,7 @@ public class MApi {
         err.println("*** " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
-    
+
     public static String getSystemProperty(String name, String def) {
         String value = System.getProperty(name);
         if (value == null) {
@@ -232,7 +232,11 @@ public class MApi {
                 case MConstants.PROP_TIMER_CONFIG_FILE:
                     {
                         String file = MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE;
-                        file = get().getCfgString(IApi.class, MConstants.PROP_TIMER_CONFIG_FILE, file);
+                        file =
+                                get().getCfgString(
+                                                IApi.class,
+                                                MConstants.PROP_TIMER_CONFIG_FILE,
+                                                file);
                         return getFile(MApi.SCOPE.ETC, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)
                                 .getAbsolutePath();
                     }
@@ -242,5 +246,4 @@ public class MApi {
         }
         return value;
     }
-    
 }

@@ -94,7 +94,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
             boolean logConfigReset = false;
             if (getLogTrailConfig() != null) {
-            	ITracer.setTrailConfig(getLogTrailConfig());
+                ITracer.setTrailConfig(getLogTrailConfig());
                 logConfigReset = true;
             }
             try {

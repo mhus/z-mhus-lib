@@ -20,22 +20,21 @@ import de.mhus.lib.core.config.IConfig;
 
 public interface IResourceProvider {
 
-	/**
-	 * Return a requested resource.
-	 *
-	 * @param path The name or path to the resource.
-	 * @return The resource or null if not found.
-	 */
+    /**
+     * Return a requested resource.
+     *
+     * @param path The name or path to the resource.
+     * @return The resource or null if not found.
+     */
     IConfig getResourceByPath(String path);
 
     IConfig getResourceById(String id);
 
     String getName();
-        
+
     InputStream getInputStream(String key);
 
     URL getUrl(String key);
 
     boolean isValid();
-    
 }

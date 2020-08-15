@@ -5,11 +5,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
- * Selenium helper for vaadin until version 8 with base gwt architecture. 
- * Not for vaadin flow architecture staring with version 10.
- * 
- * @author mikehummel
+ * Selenium helper for vaadin until version 8 with base gwt architecture. Not for vaadin flow
+ * architecture staring with version 10.
  *
+ * @author mikehummel
  */
 public class SeleniumVaadinGwt extends SeleniumPage {
 
@@ -23,11 +22,10 @@ public class SeleniumVaadinGwt extends SeleniumPage {
         ele.click();
         return ele;
     }
-    
+
     public WebElement findVaadinButton(String caption) {
         for (WebElement e : driver.findElements(By.className("v-button-caption"))) {
-            if (e.getText().equals(caption))
-                return e.findElement(By.xpath("./../.."));
+            if (e.getText().equals(caption)) return e.findElement(By.xpath("./../.."));
         }
         return null;
     }
@@ -47,5 +45,4 @@ public class SeleniumVaadinGwt extends SeleniumPage {
         }
         return null;
     }
-    
 }

@@ -436,7 +436,7 @@ public class SoftHashMap<K, V> implements Map<K, V>, Cloneable, Serializable {
         }
     }
 
-    public V getOrCreate(K key, Function<K, V> creator ) {
+    public V getOrCreate(K key, Function<K, V> creator) {
         V ret = get(key);
         if (ret == null) {
             ret = creator.apply(key);

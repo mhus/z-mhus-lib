@@ -9,5 +9,4 @@ public interface TrustApi {
     SecureString getPassword(String name);
 
     boolean validatePassword(String name, String password);
-
 }

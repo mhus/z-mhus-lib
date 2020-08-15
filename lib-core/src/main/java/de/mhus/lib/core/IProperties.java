@@ -30,7 +30,7 @@ public interface IProperties
                 Iterable<Map.Entry<String, Object>> {
 
     void setProperty(String name, Object value);
-    
+
     void setString(String name, String value);
 
     void setInt(String name, int value);
@@ -242,9 +242,9 @@ public interface IProperties
                     para = para.substring(0, pos);
                 }
             }
-        	Object obj = MCast.toType(para, t, null);
+            Object obj = MCast.toType(para, t, null);
             if (obj != null) ((Map<Object, Object>) p).put(IConfig.NAMELESS_VALUE, para);
-        	return;
+            return;
         }
         String k = para.substring(0, pos).trim();
         String v = para.substring(pos + 1);
@@ -259,5 +259,4 @@ public interface IProperties
         Object obj = MCast.toType(v, t, null);
         if (obj != null) ((Map<Object, Object>) p).put(k, obj);
     }
-    
 }

@@ -16,36 +16,40 @@ public class ConfigList extends LinkedList<IConfig> {
 
     @Override
     public boolean addAll(int index, Collection<? extends IConfig> c) {
-        c.forEach(i -> {((MConfig)i).name = name;((MConfig)i).parent = parent;} ); 
+        c.forEach(
+                i -> {
+                    ((MConfig) i).name = name;
+                    ((MConfig) i).parent = parent;
+                });
         return super.addAll(index, c);
     }
 
     @Override
     public boolean add(IConfig e) {
-        ((MConfig)e).name = name;
-        ((MConfig)e).parent = parent;
+        ((MConfig) e).name = name;
+        ((MConfig) e).parent = parent;
         return super.add(e);
     }
 
     @Override
     public void addFirst(IConfig e) {
-        ((MConfig)e).name = name;
-        ((MConfig)e).parent = parent;
+        ((MConfig) e).name = name;
+        ((MConfig) e).parent = parent;
         super.addFirst(e);
     }
 
     @Override
     public void addLast(IConfig e) {
-        ((MConfig)e).name = name;
-        ((MConfig)e).parent = parent;
+        ((MConfig) e).name = name;
+        ((MConfig) e).parent = parent;
         super.addLast(e);
     }
 
     @Override
     public IConfig set(int index, IConfig e) {
-        ((MConfig)e).name = name;
-        ((MConfig)e).parent = parent;
-        return super.set(index,e);
+        ((MConfig) e).name = name;
+        ((MConfig) e).parent = parent;
+        return super.set(index, e);
     }
 
     public IConfig createObject() {
@@ -53,5 +57,4 @@ public class ConfigList extends LinkedList<IConfig> {
         super.add(ret);
         return ret;
     }
-    
 }

@@ -38,15 +38,14 @@ public class DefaultActivator extends MActivator implements MutableActivator {
         super(loader);
         if (cactivator != null) {
             if (cactivator.isArray("map")) {
-            	for (IConfig entry : cactivator.getArray("map"))
-            		addMap(entry.getExtracted("name", ""), entry.getExtracted("class", ""));
+                for (IConfig entry : cactivator.getArray("map"))
+                    addMap(entry.getExtracted("name", ""), entry.getExtracted("class", ""));
             } else if (cactivator.isObject("map")) {
-            	IConfig obj = cactivator.getObject("map");
-            	for (String key : obj.getPropertyKeys())
-            		addMap(key, obj.getExtracted(key));
+                IConfig obj = cactivator.getObject("map");
+                for (String key : obj.getPropertyKeys()) addMap(key, obj.getExtracted(key));
             } else {
-            	for (String key : cactivator.getPropertyKeys())
-            		addMap(key, cactivator.getExtracted(key));
+                for (String key : cactivator.getPropertyKeys())
+                    addMap(key, cactivator.getExtracted(key));
             }
         }
     }
@@ -169,7 +168,7 @@ public class DefaultActivator extends MActivator implements MutableActivator {
     public String[] getObjectNames() {
         return instances.keySet().toArray(new String[mapper.size()]);
     }
-    
+
     public <T, D extends T> T lookup(Class<T> ifc, Class<D> def) {
         try {
             T ret = getObject(ifc);
@@ -193,5 +192,4 @@ public class DefaultActivator extends MActivator implements MutableActivator {
         }
         return null;
     }
-    
 }

@@ -40,41 +40,42 @@ public class ObjectToCalendar implements Caster<Object, Calendar> {
 
     private static final Log log = Log.getLog(ObjectToCalendar.class);
     private static HashMap<String, Integer> monthCatalog = new HashMap<>();
+
     static {
-    	monthCatalog.put("jan",0);
-		monthCatalog.put("januar",0);
-		monthCatalog.put("january",0);
-		monthCatalog.put("feb",1);
-		monthCatalog.put("februar",1);
-		monthCatalog.put("february",1);
-		monthCatalog.put("mrz",2);
-		monthCatalog.put("march",2);
-		monthCatalog.put("märz",2);
-		monthCatalog.put("apr",3);
-		monthCatalog.put("april",3);
-		monthCatalog.put("mai",4);
-		monthCatalog.put("may",4);
-		monthCatalog.put("jun",5);
-		monthCatalog.put("juni",5);
-		monthCatalog.put("june",5);
-		monthCatalog.put("jul",6);
-		monthCatalog.put("juli",6);
-		monthCatalog.put("july",6);
-		monthCatalog.put("aug",7);
-		monthCatalog.put("august",7);
-		monthCatalog.put("sep",8);
-		monthCatalog.put("september",8);
-		monthCatalog.put("septembre",8);
-		monthCatalog.put("okt",9);
-		monthCatalog.put("oct",9);
-		monthCatalog.put("oktober",9);
-		monthCatalog.put("october",9);
-		monthCatalog.put("nov",10);
-		monthCatalog.put("november",10);
-		monthCatalog.put("dez",11);
-		monthCatalog.put("dec",11);
-		monthCatalog.put("dezember",11);
-		monthCatalog.put("december",11);
+        monthCatalog.put("jan", 0);
+        monthCatalog.put("januar", 0);
+        monthCatalog.put("january", 0);
+        monthCatalog.put("feb", 1);
+        monthCatalog.put("februar", 1);
+        monthCatalog.put("february", 1);
+        monthCatalog.put("mrz", 2);
+        monthCatalog.put("march", 2);
+        monthCatalog.put("märz", 2);
+        monthCatalog.put("apr", 3);
+        monthCatalog.put("april", 3);
+        monthCatalog.put("mai", 4);
+        monthCatalog.put("may", 4);
+        monthCatalog.put("jun", 5);
+        monthCatalog.put("juni", 5);
+        monthCatalog.put("june", 5);
+        monthCatalog.put("jul", 6);
+        monthCatalog.put("juli", 6);
+        monthCatalog.put("july", 6);
+        monthCatalog.put("aug", 7);
+        monthCatalog.put("august", 7);
+        monthCatalog.put("sep", 8);
+        monthCatalog.put("september", 8);
+        monthCatalog.put("septembre", 8);
+        monthCatalog.put("okt", 9);
+        monthCatalog.put("oct", 9);
+        monthCatalog.put("oktober", 9);
+        monthCatalog.put("october", 9);
+        monthCatalog.put("nov", 10);
+        monthCatalog.put("november", 10);
+        monthCatalog.put("dez", 11);
+        monthCatalog.put("dec", 11);
+        monthCatalog.put("dezember", 11);
+        monthCatalog.put("december", 11);
     }
 
     @Override
@@ -134,47 +135,45 @@ public class ObjectToCalendar implements Caster<Object, Calendar> {
             // read DE: '1. Januar 2000 13:00:00'
             int spacePos = date.indexOf(' ');
             if (spacePos > 0 && spacePos < 4) {
-            	String part = date.substring(spacePos).trim();
-            	if (part.length() > 0 && MString.isAlphabeticalAscii(part.charAt(0))) {
-            		String dayStr = date.substring(0, spacePos);
-            		if (dayStr.endsWith(".")) dayStr = dayStr.substring(0,dayStr.length()-1);
-            		int day = MCast.toint(dayStr, 0);
-            		if (day <= 0 || day > 31) return null;
-            		spacePos = part.indexOf(' ');
-            		String monthStr = part;
-            		if (spacePos > 0) {
-            			monthStr = part.substring(0, spacePos);
-            			date = part.substring(spacePos);
-            		} else
-            			date = "";
-            		monthStr = monthStr.trim();
-            		int month = toMonth(monthStr);
-            		if (month < 0 || month > 11) return null;
-            		
-            		date = date.trim();
-            		int year = c.get(Calendar.YEAR);
-            		if (date.length() > 0) {
-            			spacePos = date.indexOf(' ');
-            			String yearStr = date;
-            			if (spacePos > 0) {
-            				yearStr = date.substring(0,spacePos);
-            				date = date.substring(spacePos);
-            			} else
-            				date = "";
-            			year = MCast.toint(yearStr, 0);
-            			if (year <= 0) return null;
-            		}
-            		c.set(year, month, day);
-            		
-            		date = date.trim();
-            		if (date.length() > 0) {
+                String part = date.substring(spacePos).trim();
+                if (part.length() > 0 && MString.isAlphabeticalAscii(part.charAt(0))) {
+                    String dayStr = date.substring(0, spacePos);
+                    if (dayStr.endsWith(".")) dayStr = dayStr.substring(0, dayStr.length() - 1);
+                    int day = MCast.toint(dayStr, 0);
+                    if (day <= 0 || day > 31) return null;
+                    spacePos = part.indexOf(' ');
+                    String monthStr = part;
+                    if (spacePos > 0) {
+                        monthStr = part.substring(0, spacePos);
+                        date = part.substring(spacePos);
+                    } else date = "";
+                    monthStr = monthStr.trim();
+                    int month = toMonth(monthStr);
+                    if (month < 0 || month > 11) return null;
+
+                    date = date.trim();
+                    int year = c.get(Calendar.YEAR);
+                    if (date.length() > 0) {
+                        spacePos = date.indexOf(' ');
+                        String yearStr = date;
+                        if (spacePos > 0) {
+                            yearStr = date.substring(0, spacePos);
+                            date = date.substring(spacePos);
+                        } else date = "";
+                        year = MCast.toint(yearStr, 0);
+                        if (year <= 0) return null;
+                    }
+                    c.set(year, month, day);
+
+                    date = date.trim();
+                    if (date.length() > 0) {
                         parseTime(c, date);
-            		}
-            		
-            		return c;
-            	}
+                    }
+
+                    return c;
+                }
             }
-            
+
             {
                 // US Format: 'Jan 1, 2000 1:00 am'
                 if (sep == ' ' && MString.isIndex(date, ',')) {
@@ -342,15 +341,15 @@ public class ObjectToCalendar implements Caster<Object, Calendar> {
         return null;
     }
 
-	public static void parseTime(Calendar c, String time) {
-		time = time.trim();
+    public static void parseTime(Calendar c, String time) {
+        time = time.trim();
         String apm = null;
         String zone = null;
         int millies = 0;
         int hour = 0;
         int min = 0;
         int sec = 0;
-        
+
         // zone
         char sep2 = '?';
         if (MString.isIndex(time, ' ')) sep2 = ' ';
@@ -416,10 +415,10 @@ public class ObjectToCalendar implements Caster<Object, Calendar> {
                 TimeZone tz = TimeZone.getTimeZone(zone);
                 c.setTimeZone(tz);
             }
-        }		
-	}
+        }
+    }
 
-	/**
+    /**
      * Return the value of the month 0 = Januar
      *
      * @param in name or number of the month 1 or 'jan' or 'jnuary' is 0
