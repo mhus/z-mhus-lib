@@ -35,4 +35,12 @@ public class Lorem {
         for (int i = 0; i < paragraphs; i++) sb.append("<p>").append(create()).append("</p>\n");
         return sb.toString();
     }
+
+    public static String createWithSize(int size) {
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() < size)
+            sb.append(create());
+        sb.setLength(size);
+        return sb.toString();
+    }
 }

@@ -13,6 +13,8 @@
  */
 package de.mhus.lib.core;
 
+import java.io.PrintStream;
+
 import de.mhus.lib.core.jmx.MJmx;
 import de.mhus.lib.core.service.UniqueId;
 
@@ -146,5 +148,13 @@ public class MStopWatch extends MJmx {
     
     public long getStop() {
         return stop;
+    }
+
+    public void print() {
+        print(System.out);
+    }
+
+    public void print(PrintStream out) {
+        out.println(toString());
     }
 }
