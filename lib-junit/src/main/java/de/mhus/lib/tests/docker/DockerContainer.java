@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.tests.docker;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;
@@ -67,6 +68,12 @@ public class DockerContainer {
 
     protected void buildConfig(ContainerBuilder config) {
         if (params == null) return;
+        
+//        ArrayList<Integer> size = new ArrayList<>();
+//        size.add(240);
+//        size.add(240);
+//        config.hostBuilder.withConsoleSize( size );
+        
         for (String param : params) {
             if (param.equals("privileged")) {
                 config.hostBuilder.withPrivileged(true);
