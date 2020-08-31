@@ -18,10 +18,13 @@ package de.mhus.lib.core.operation;
 import java.util.HashSet;
 import java.util.UUID;
 
+import org.apache.shiro.authz.AuthorizationException;
+
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.LogProperties;
+import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
@@ -37,24 +40,31 @@ public abstract class AbstractOperation extends MLog implements Operation {
     private UUID uuid = UUID.randomUUID();
 
     @Override
-    public boolean hasAccess() {
+    public boolean hasAccess(TaskContext context) {
+        try {
+            if (AccessUtil.isAnnotated(getClass()))
+                AccessUtil.checkPermission(getClass());
+        } catch (AuthorizationException e) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public final OperationResult doExecute(TaskContext context) throws Exception {
         log().d("execute", new LogProperties(context.getParameters()));
-        if (!hasAccess()) {
-            log().d("access denied", context, context.getErrorMessage());
-            return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
-        }
-        if (!canExecute(context)) {
-            log().d("execution denied", context.getErrorMessage());
-            return new NotSuccessful(
-                    this,
-                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute",
-                    OperationResult.NOT_EXECUTABLE);
-        }
+        // must be done by caller before
+//        if (!hasAccess()) {
+//            log().d("access denied", context, context.getErrorMessage());
+//            return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
+//        }
+//        if (!canExecute(context)) {
+//            log().d("execution denied", context.getErrorMessage());
+//            return new NotSuccessful(
+//                    this,
+//                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute",
+//                    OperationResult.NOT_EXECUTABLE);
+//        }
         OperationResult ret = doExecute2(context);
         log().d("result", ret);
         return ret;

@@ -27,7 +27,7 @@ public class Successful extends OperationResult {
         this(operation, msg, 0, result);
     }
 
-    public Successful(Operation operation, String msg, long rc, Object result) {
+    public Successful(Operation operation, String msg, int rc, Object result) {
         setOperationPath(operation.getDescription().getPath());
         setCaption(operation.getDescription().getCaption());
         setMsg(msg);
@@ -36,7 +36,7 @@ public class Successful extends OperationResult {
         setSuccessful(true);
     }
 
-    public Successful(String path, String msg, long rc, Object result) {
+    public Successful(String path, String msg, int rc, Object result) {
         setOperationPath(path);
         setCaption("");
         setMsg(msg);
@@ -53,7 +53,7 @@ public class Successful extends OperationResult {
         this(path, "ok", 0);
     }
 
-    public Successful(String path, String msg, long rc, String... keyValues) {
+    public Successful(String path, String msg, int rc, String... keyValues) {
         setOperationPath(path);
         setCaption("");
         setMsg(msg);

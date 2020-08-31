@@ -23,7 +23,7 @@ import de.mhus.lib.core.util.SerializedValue;
 
 public class SuccessfulSerialized extends Successful {
 
-    public SuccessfulSerialized(Operation operation, String msg, long rc, Object result) {
+    public SuccessfulSerialized(Operation operation, String msg, int rc, Object result) {
         super(operation, msg, rc, result);
     }
 
@@ -39,11 +39,11 @@ public class SuccessfulSerialized extends Successful {
         super(operation);
     }
 
-    public SuccessfulSerialized(String path, String msg, long rc, Object result) {
+    public SuccessfulSerialized(String path, String msg, int rc, Object result) {
         super(path, msg, rc, result);
     }
 
-    public SuccessfulSerialized(String path, String msg, long rc, String... keyValues) {
+    public SuccessfulSerialized(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, keyValues);
     }
 

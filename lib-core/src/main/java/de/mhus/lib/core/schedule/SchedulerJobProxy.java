@@ -82,8 +82,8 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
     }
 
     @Override
-    public boolean hasAccess() {
-        return instance.hasAccess();
+    public boolean hasAccess(TaskContext context) {
+        return instance.hasAccess(context);
     }
 
     @Override

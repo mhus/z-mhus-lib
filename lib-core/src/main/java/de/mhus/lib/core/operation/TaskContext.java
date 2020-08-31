@@ -15,18 +15,32 @@
  */
 package de.mhus.lib.core.operation;
 
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.config.IConfig;
 
 public interface TaskContext extends Monitor {
 
+    /**
+     * Return a local configuration object if exists or null if no configuration is present.
+     * @return The Configuration
+     */
     IConfig getConfig();
 
-    boolean isTestOnly();
+    /**
+     * Return the parameters of the current operation call.
+     * 
+     * @return The job parameters
+     */
+    IConfig getParameters();
 
-    IProperties getParameters();
-
+    /**
+     * Add a error message (will be appended to the error message).
+     * @param msg
+     */
     void addErrorMessage(String msg);
 
+    /**
+     * Return the current error message.
+     * @return The messages as one string.
+     */
     String getErrorMessage();
 }

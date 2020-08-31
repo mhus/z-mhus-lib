@@ -19,7 +19,7 @@ import de.mhus.lib.core.util.MUri;
 
 public class ProfessionalError extends OperationResult {
 
-    public ProfessionalError(String path, String msg, long rc) {
+    public ProfessionalError(String path, String msg, int rc) {
         setSuccessful(false);
         setMsg(MUri.implodeKeyValues("m", msg));
         setOperationPath(path);
@@ -29,7 +29,7 @@ public class ProfessionalError extends OperationResult {
         //		((HashMap)getResult()).put("successful", false);
     }
 
-    public ProfessionalError(String path, String msg, String caption, long rc) {
+    public ProfessionalError(String path, String msg, String caption, int rc) {
         setSuccessful(false);
         setMsg(MUri.implodeKeyValues("m", msg, "c", caption));
         setOperationPath(path);
@@ -39,7 +39,7 @@ public class ProfessionalError extends OperationResult {
         //		((HashMap)getResult()).put("successful", false);
     }
 
-    public ProfessionalError(Operation operation, String msg, long rc) {
+    public ProfessionalError(Operation operation, String msg, int rc) {
         setSuccessful(false);
         setMsg(MUri.implodeKeyValues("m", msg));
         if (rc >= 0) rc = INTERNAL_ERROR;
@@ -52,7 +52,7 @@ public class ProfessionalError extends OperationResult {
         //		((HashMap)getResult()).put("successful", false);
     }
 
-    public ProfessionalError(Operation operation, String msg, String caption, long rc) {
+    public ProfessionalError(Operation operation, String msg, String caption, int rc) {
         setSuccessful(false);
         setMsg(MUri.implodeKeyValues("m", msg, "c", caption));
         if (rc >= 0) rc = INTERNAL_ERROR;

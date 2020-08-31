@@ -27,11 +27,11 @@ public class SuccessfulForceMap extends Successful {
         super(operation, msg);
     }
 
-    public SuccessfulForceMap(String path, String msg, long rc, String... keyValues) {
+    public SuccessfulForceMap(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, keyValues);
     }
 
-    public SuccessfulForceMap(String path, String msg, long rc) {
+    public SuccessfulForceMap(String path, String msg, int rc) {
         super(path, msg, rc);
     }
 

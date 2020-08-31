@@ -47,7 +47,7 @@ public class OperationResult {
     private String msg;
     private Object result; // technical result
     private boolean successful;
-    private long returnCode = 0;
+    private int returnCode = 0;
 
     private OperationDescription nextOperation;
 
@@ -130,11 +130,11 @@ public class OperationResult {
         return MSystem.toString(this, operationPath, successful, msg, nextOperation); // result ?
     }
 
-    public long getReturnCode() {
+    public int getReturnCode() {
         return returnCode;
     }
 
-    public void setReturnCode(long returnCode) {
+    public void setReturnCode(int returnCode) {
         this.returnCode = returnCode;
     }
 

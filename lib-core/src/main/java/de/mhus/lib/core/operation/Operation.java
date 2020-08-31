@@ -22,7 +22,7 @@ import de.mhus.lib.core.util.Nls;
 
 public interface Operation extends MNlsProvider, Nls {
 
-    boolean hasAccess();
+    boolean hasAccess(TaskContext context);
 
     boolean canExecute(TaskContext context);
 

@@ -31,11 +31,11 @@ public class SuccessfulSerializedMap extends Successful {
         setResult(new SerializedValue(new MProperties()));
     }
 
-    public SuccessfulSerializedMap(String path, String msg, long rc) {
+    public SuccessfulSerializedMap(String path, String msg, int rc) {
         super(path, msg, rc, new MProperties());
     }
 
-    public SuccessfulSerializedMap(String path, String msg, long rc, String... keyValues) {
+    public SuccessfulSerializedMap(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, keyValues);
     }
 

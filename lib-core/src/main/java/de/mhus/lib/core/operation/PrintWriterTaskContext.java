@@ -17,14 +17,14 @@ package de.mhus.lib.core.operation;
 
 import java.io.PrintWriter;
 
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.PrintWriterLog;
 
 public class PrintWriterTaskContext implements TaskContext {
 
-    private MProperties attributes = new MProperties();
+    private IConfig attributes = new MConfig();
     private IConfig config;
     private boolean testOnly = false;
     private PrintWriter writer;
@@ -89,13 +89,12 @@ public class PrintWriterTaskContext implements TaskContext {
         return config;
     }
 
-    @Override
     public boolean isTestOnly() {
         return testOnly;
     }
 
     @Override
-    public MProperties getParameters() {
+    public IConfig getParameters() {
         return attributes;
     }
 
@@ -103,6 +102,7 @@ public class PrintWriterTaskContext implements TaskContext {
         return estimated;
     }
 
+    @Override
     public long getStep() {
         return step;
     }
