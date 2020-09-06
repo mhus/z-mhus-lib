@@ -145,8 +145,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
                         this,
                         this.getClass().getCanonicalName(),
                         form);
-        out.putParameter(OperationDescription.TAG_TECH, OperationDescription.TECH_JAVA);
-        initOperationDescription(out.getParameters());
+        out.putLabel(OperationDescription.TAG_TECH, OperationDescription.TECH_JAVA);
+        initOperationDescription(out.getLabels());
         return out;
     }
 }

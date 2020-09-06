@@ -41,7 +41,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
     private String title;
     private String group;
     private DefRoot form;
-    private HashMap<String, String> parameters;
+    private HashMap<String, String> labels;
 
     private ParameterDefinitions parameterDef;
 
@@ -141,6 +141,17 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
         this(uuid, group, id, version, nlsProvider, title, null);
     }
 
+    /**
+     * Create a clone with the same UUID, but it's possible to manipulate the labels.
+     * 
+     * @param uuid
+     * @param group
+     * @param id
+     * @param version
+     * @param nlsProvider
+     * @param title
+     * @param form
+     */
     public OperationDescription(
             UUID uuid,
             String group,
@@ -157,6 +168,22 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
         if (version == null) version = Version.V_0_0_0;
         this.version = version;
         if (form != null) setForm(form);
+    }
+
+    public OperationDescription(OperationDescription desc) {
+        this(
+                desc.getUuid(),
+                desc.getGroup(),
+                desc.getId(),
+                desc.getVersion(),
+                desc.nlsProvider,
+                desc.getTitle(),
+                desc.getForm()
+                );
+        if (desc.labels != null)
+            this.labels = new HashMap<>(desc.labels);
+        if (desc.parameterDef != null)
+            this.parameterDef = desc.parameterDef;
     }
 
     public String getId() {
@@ -188,17 +215,18 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
         return version;
     }
 
-    public HashMap<String, String> getParameters() {
-        return parameters;
+    public HashMap<String, String> getLabels() {
+        if (this.labels == null) this.labels = new HashMap<>();
+        return labels;
     }
 
-    public void setParameters(HashMap<String, String> parameters) {
-        this.parameters = parameters;
+    public void setLabels(HashMap<String, String> labels) {
+        this.labels = labels;
     }
 
-    public OperationDescription putParameter(String key, String value) {
-        if (this.parameters == null) this.parameters = new HashMap<>();
-        this.parameters.put(key, value);
+    public OperationDescription putLabel(String key, String value) {
+        if (this.labels == null) this.labels = new HashMap<>();
+        this.labels.put(key, value);
         return this;
     }
 
@@ -214,7 +242,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, group, id, parameters);
+        return MSystem.toString(this, group, id, labels);
     }
 
     @Override
