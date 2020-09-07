@@ -36,14 +36,16 @@ import de.mhus.lib.core.config.MConfig;
 @DefaultFactory(DefaultMApiFactory.class)
 public class MCfgManager {
 
-    private HashMap<String, CfgProvider> configurations = new HashMap<>();
+    protected HashMap<String, CfgProvider> configurations = new HashMap<>();
 
-    private IConfigFactory configFactory;
+    protected IConfigFactory configFactory;
 
-    private LinkedList<File> mhusConfigFiles = new LinkedList<>();
+    protected LinkedList<File> mhusConfigFiles = new LinkedList<>();
 
-    public MCfgManager() {
-        // is done in MApi doRestart();
+    protected IApiInternal internal;
+
+    public MCfgManager(IApiInternal internal) {
+        this.internal = internal;
     }
 
     /**
@@ -159,6 +161,7 @@ public class MCfgManager {
         } else {
             initialConfiguration();
         }
+        internal.updateSystemCfg(system);
     }
 
     protected void initialConfiguration() {

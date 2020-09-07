@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.logging;
 
+import java.util.List;
+
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
@@ -45,6 +47,7 @@ public class Log {
     protected String name;
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
+    private List<String> maxMsgSizeExceptions;
     //    protected UUID id = UUID.randomUUID();
     protected static int maxMsgSize = 0;
 
@@ -146,7 +149,7 @@ public class Log {
 
         StringBuilder sb = new StringBuilder();
         prepare(sb);
-        Throwable error = MString.serialize(sb, msg, maxMsgSize);
+        Throwable error = MString.serialize(sb, msg, maxMsgSize, maxMsgSizeExceptions);
 
         switch (level) {
             case DEBUG:
@@ -286,6 +289,7 @@ public class Log {
         localTrace = MApi.isTrace(name);
         parameterMapper = MApi.get().getLogFactory().getParameterMapper();
         maxMsgSize = MApi.get().getLogFactory().getMaxMessageSize();
+        maxMsgSizeExceptions = MApi.get().getLogFactory().getMaxMessageSizeExceptions();
     }
 
     public ParameterMapper getParameterMapper() {

@@ -18,6 +18,7 @@ package de.mhus.lib.core.mapi;
 import java.io.File;
 import java.util.Set;
 
+import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
 
@@ -30,4 +31,6 @@ public interface IApiInternal {
     void setBaseDir(File file);
 
     void setMLogFactory(MLogFactory mlogFactory);
+
+    void updateSystemCfg(CfgProvider system);
 }

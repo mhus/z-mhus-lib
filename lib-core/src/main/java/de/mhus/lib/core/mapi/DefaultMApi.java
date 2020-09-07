@@ -29,6 +29,7 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.cfg.CfgInitiator;
+import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
@@ -81,7 +82,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     }
 
     protected MCfgManager createMCfgManager() {
-        return new MCfgManager();
+        return new MCfgManager(this);
     }
 
     @Override
@@ -200,5 +201,10 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     @Override
     public DefaultActivator getLookupActivator() {
         return base;
+    }
+
+    @Override
+    public void updateSystemCfg(CfgProvider system) {
+        if (system == null) return;
     }
 }

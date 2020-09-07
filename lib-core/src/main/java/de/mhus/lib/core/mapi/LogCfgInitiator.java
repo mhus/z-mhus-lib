@@ -19,6 +19,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
@@ -102,6 +103,16 @@ public class LogCfgInitiator implements CfgInitiator {
             MApi.dirtyLogDebug(t);
         }
 
+        try {
+            String key = MConstants.PROP_LOG_MAX_MESSAGE_SIZE_EXCEPTIONS;
+            String val = system.getString(key, null);
+            if (val != null) {
+                logFactory.setMaxMessageSizeExceptions(MCollection.toList(val.split("\\|")));
+            }
+        } catch (Throwable t) {
+            MApi.dirtyLogDebug(t);
+        }
+        
         try {
             String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
             String name = system.getString(key, null);

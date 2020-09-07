@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.logging;
 
+import java.util.List;
 import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
@@ -31,6 +32,7 @@ public abstract class LogFactory {
     // protected LevelMapper levelMapper;
     private ParameterMapper parameterMapper;
     private int maxMsgSize = 1024 * 100; // 100kb default max
+    private List<String> maxMsgSizeExceptions = null;
 
     /**
      * Convenience method to derive a name from the specified class and call <code>
@@ -135,6 +137,14 @@ public abstract class LogFactory {
 
     public void setMaxMessageSize(int max) {
         maxMsgSize = max;
+    }
+
+    public List<String> getMaxMessageSizeExceptions() {
+        return maxMsgSizeExceptions;
+    }
+
+    public void setMaxMessageSizeExceptions(List<String> maxMsgSizeExceptions) {
+        this.maxMsgSizeExceptions = maxMsgSizeExceptions;
     }
 
     //    public void update(Observable o, Object arg) {

@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.tests.docker;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import com.github.dockerjava.api.command.CreateContainerCmd;

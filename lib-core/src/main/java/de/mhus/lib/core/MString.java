@@ -2104,11 +2104,23 @@ public class MString {
     }
 
     public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
+        return serialize(sb, msg, maxMsgSize, null);
+    }
+
+    public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize, List<String> exceptions) {
         Throwable error = null;
         if (msg == null) return null;
         for (Object o : msg) {
             error = serialize(sb, o, error);
             if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
+                // check for exceptions
+                if (exceptions != null) {
+                    for (String exception : exceptions)
+                        if (sb.indexOf(exception) > -1) {
+                            maxMsgSize = Integer.MAX_VALUE;
+                            continue;
+                        }
+                }
                 sb.setLength(maxMsgSize);
                 sb.append("...");
                 break;
