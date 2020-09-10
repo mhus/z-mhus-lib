@@ -15,6 +15,10 @@
  */
 package de.mhus.lib.core.operation;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -28,7 +32,7 @@ import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinitions;
 import de.mhus.lib.core.util.Version;
 
-public class OperationDescription implements MNlsProvider, Nls, Versioned {
+public class OperationDescription implements MNlsProvider, Nls, Versioned, Externalizable {
 
     public static final String TAGS = "tags";
 
@@ -37,9 +41,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
     private static Log log = Log.getLog(OperationDescription.class);
 
-    private String id;
     private String title;
-    private String group;
     private DefRoot form;
     private HashMap<String, String> labels;
 
@@ -50,6 +52,8 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
     private Version version;
     private UUID uuid;
+
+    private String path;
 
     public OperationDescription() {}
 
@@ -76,8 +80,8 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
     }
 
     public OperationDescription(
-            Operation owner, String group, String id, String title, DefRoot form) {
-        this(owner.getUuid(), group, id, null, owner, title, form);
+            Operation owner, String path, String title, DefRoot form) {
+        this(owner.getUuid(), path, null, owner, title, form);
     }
 
     public OperationDescription(
@@ -89,8 +93,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
             DefRoot form) {
         this(
                 uuid,
-                clazz.getPackage().getName(),
-                clazz.getSimpleName(),
+                clazz.getCanonicalName(),
                 version,
                 nlsProvider,
                 title,
@@ -113,7 +116,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
             //			String formStr = MXml.toString(de, false);
             this.form = form;
         } catch (Exception e) {
-            log.w("invalid form", group, id, version, e);
+            log.w("invalid form", path, version, e);
         }
     }
 
@@ -123,30 +126,18 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
     public OperationDescription(
             UUID uuid,
-            OperationGroupDescription group,
-            String id,
+            String path,
             Version version,
             MNlsProvider nlsProvider,
             String title) {
-        this(uuid, group.getGroup(), id, version, nlsProvider, title, null);
-    }
-
-    public OperationDescription(
-            UUID uuid,
-            String group,
-            String id,
-            Version version,
-            MNlsProvider nlsProvider,
-            String title) {
-        this(uuid, group, id, version, nlsProvider, title, null);
+        this(uuid, path, version, nlsProvider, title, null);
     }
 
     /**
      * Create a clone with the same UUID, but it's possible to manipulate the labels.
      * 
      * @param uuid
-     * @param group
-     * @param id
+     * @param path
      * @param version
      * @param nlsProvider
      * @param title
@@ -154,15 +145,13 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
      */
     public OperationDescription(
             UUID uuid,
-            String group,
-            String id,
+            String path,
             Version version,
             MNlsProvider nlsProvider,
             String title,
             DefRoot form) {
         this.uuid = uuid;
-        this.id = id;
-        this.group = group;
+        this.path = path;
         this.nlsProvider = nlsProvider;
         this.title = title;
         if (version == null) version = Version.V_0_0_0;
@@ -173,8 +162,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
     public OperationDescription(OperationDescription desc) {
         this(
                 desc.getUuid(),
-                desc.getGroup(),
-                desc.getId(),
+                desc.getPath(),
                 desc.getVersion(),
                 desc.nlsProvider,
                 desc.getTitle(),
@@ -186,16 +174,8 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
             this.parameterDef = desc.parameterDef;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public String getGroup() {
-        return group;
     }
 
     public DefRoot getForm() {
@@ -203,7 +183,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
     }
 
     public String getPath() {
-        return group + '.' + id;
+        return path;
     }
 
     @Override
@@ -235,14 +215,14 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
         if (o == null) return false;
         if (o instanceof OperationDescription) {
             OperationDescription od = (OperationDescription) o;
-            return MSystem.equals(group, od.group) && MSystem.equals(id, od.id);
+            return MSystem.equals(path, od.path);
         }
         return super.equals(o);
     }
 
     @Override
     public String toString() {
-        return MSystem.toString(this, group, id, labels);
+        return MSystem.toString(this, path, labels);
     }
 
     @Override
@@ -262,5 +242,31 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(1);
+        out.writeObject(title);
+        out.writeObject(form);
+        out.writeObject(labels);
+        out.writeObject(parameterDef);
+        out.writeObject(version);
+        out.writeObject(path);
+        out.writeObject(uuid);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        in.readInt(); // 1
+        title = (String)in.readObject();
+        form = (DefRoot)in.readObject();
+        labels = (HashMap<String, String>)in.readObject();
+        parameterDef = (ParameterDefinitions)in.readObject();
+        version = (Version)in.readObject();
+        path = (String)in.readObject();
+        path = (String)in.readObject();
+        uuid = (UUID)in.readObject();
     }
 }

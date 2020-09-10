@@ -15,20 +15,30 @@
  */
 package de.mhus.lib.form;
 
+import java.util.Map;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import de.mhus.lib.core.M;
+import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
 public class ModelUtil {
-
+    
+    private static Log log = Log.getLog(ModelUtil.class);
+    
     public static DefRoot toModel(Element xml) {
         DefRoot root = new DefRoot();
 
@@ -69,7 +79,7 @@ public class ModelUtil {
 
             return doc;
         } catch (Throwable t) {
-
+            log.d(t);
         }
         return null;
     }
@@ -83,4 +93,47 @@ public class ModelUtil {
             toXml(next, nextXml);
         }
     }
+    
+    public static ObjectNode toJson(IConfig model) {
+        try {
+            ObjectNode root = MJson.createObjectNode();
+            toJson(model, root);
+
+            return root;
+        } catch (Throwable t) {
+            log.d(t);
+        }
+        return null;
+    }
+
+    private static void toJson(IConfig node, ObjectNode json) throws DOMException, MException {
+        for (String key : node.getPropertyKeys()) json.put(key, node.getString(key, ""));
+
+        for (IConfig next : node.getObjects()) {
+            ObjectNode nextJson = MJson.createObjectNode();
+            toJson(next, nextJson);
+            json.set(next.getName(), nextJson);
+        }
+    }
+
+    public static DefRoot toModel(ObjectNode json) {
+        DefRoot root = new DefRoot();
+        toModel(json, root);
+        return root;
+    }
+
+    private static void toModel(ObjectNode json, DefComponent root) {
+
+        for (Map.Entry<String, JsonNode> field : M.iterate(json.fields())) {
+            if (field.getValue().isValueNode()) {
+                root.addAttribute(field.getKey(), field.getValue().asText());
+            } else
+            if (field.getValue().isObject()) {
+                DefComponent nextNode = new DefComponent(field.getKey());
+                ObjectNode nextJson = (ObjectNode)field.getValue();
+                toModel(nextJson, nextNode);
+            }
+        }
+    }
+
 }

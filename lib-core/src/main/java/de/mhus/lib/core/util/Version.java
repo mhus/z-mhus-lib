@@ -15,11 +15,16 @@
  */
 package de.mhus.lib.core.util;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
 
-public class Version implements Comparable<Version> {
+public class Version implements Comparable<Version>, Externalizable {
 
     public static final Version V_0_0_0 = new Version("0.0.0");
     public static final Version V_1_0_0 = new Version("1.0.0");
@@ -95,6 +100,21 @@ public class Version implements Comparable<Version> {
     public String getOriginal() {
         return original;
     }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(1);
+        out.writeObject(original);
+        out.writeObject(versions);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        in.readInt(); // 1
+        original = (String)in.readObject();
+        versions = (long[])in.readObject();
+    }
+    
 }
 
 /*

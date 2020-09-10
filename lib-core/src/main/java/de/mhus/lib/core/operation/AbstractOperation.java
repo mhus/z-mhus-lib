@@ -123,8 +123,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
         Version version = null;
         DefRoot form = null;
 
-        String group = clazz.getPackageName();
-        String id = clazz.getSimpleName();
+        String path = clazz.getCanonicalName();
 
         de.mhus.lib.annotations.strategy.OperationService desc =
                 getClass().getAnnotation(de.mhus.lib.annotations.strategy.OperationService.class);
@@ -132,12 +131,10 @@ public abstract class AbstractOperation extends MLog implements Operation {
             if (MString.isSet(desc.title())) title = desc.title();
             if (desc.clazz() != Object.class) {
                 clazz = desc.clazz();
-                group = clazz.getPackageName();
-                id = clazz.getSimpleName();
+                path = clazz.getCanonicalName();
             }
             if (MString.isSet(desc.path())) {
-                group = MString.beforeLastIndex(desc.path(), '.');
-                id = MString.afterLastIndex(desc.path(), '.');
+                path = desc.path();
             }
             if (MString.isSet(desc.version())) {
                 version = new Version(desc.version());
@@ -149,7 +146,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
             form = ((IFormProvider) this).getForm();
         }
 
-        return new OperationDescription(getUuid(), group, id, version, this, title, form);
+        return new OperationDescription(getUuid(), path, version, this, title, form);
     }
 
     public boolean validateParameters(ParameterDefinitions definitions, TaskContext context) {
@@ -158,11 +155,20 @@ public abstract class AbstractOperation extends MLog implements Operation {
         if (strictParameterCheck) sendKeys = new HashSet<>(context.getParameters().keys());
         for (ParameterDefinition def : definitions.values()) {
             Object v = context.getParameters().get(def.getName());
-            if (def.isMandatory() && v == null) return false;
-            if (!def.validate(v)) return false;
+            if (def.isMandatory() && v == null) {
+                context.addErrorMessage("Mandatory: " + def.getName());
+                return false;
+            }
+            if (!def.validate(v)) {
+                context.addErrorMessage("Not valid: " + def.getName());
+                return false;
+            }
             if (strictParameterCheck) sendKeys.remove(def.getName());
         }
-        if (strictParameterCheck && sendKeys.size() != 0) return false;
+        if (strictParameterCheck && sendKeys.size() != 0) {
+            context.addErrorMessage("Unknown parameters: " + sendKeys);
+            return false;
+        }
         return true;
     }
 

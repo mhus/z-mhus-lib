@@ -53,6 +53,9 @@ public class MJson {
     public static final TransformStrategy DEFAULT_STRATEGY = new SerializerTransformer();
     private static ObjectMapper mapper = new ObjectMapper();
     private static JsonFactory factory = new JsonFactory();
+    {
+
+    }
 
     public static void save(JsonNode json, File file)
             throws JsonGenerationException, JsonMappingException, IOException {
@@ -82,6 +85,12 @@ public class MJson {
 
     public static JsonNode load(InputStream r) throws JsonProcessingException, IOException {
         JsonParser parser = factory.createParser(r);
+        parser.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        parser.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        parser.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        parser.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
+        parser.configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
+        parser.configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, false);
         JsonNode in = mapper.readTree(parser);
         return in;
     }
@@ -93,6 +102,12 @@ public class MJson {
 
     public static JsonNode load(Reader r) throws JsonProcessingException, IOException {
         JsonParser parser = factory.createParser(r);
+        parser.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        parser.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+        parser.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        parser.configure(JsonParser.Feature.ALLOW_YAML_COMMENTS, true);
+        parser.configure(JsonParser.Feature.IGNORE_UNDEFINED, true);
+        parser.configure(JsonParser.Feature.STRICT_DUPLICATE_DETECTION, false);
         JsonNode in = mapper.readTree(parser);
         return in;
     }

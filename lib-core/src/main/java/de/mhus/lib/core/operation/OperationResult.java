@@ -55,7 +55,7 @@ public class OperationResult {
 
     public OperationResult(OperationDescription description) {
         if (description != null) {
-            setOperationPath(description.getGroup() + "/" + description.getId());
+            setOperationPath(description.getPath());
             setCaption(description.getCaption());
         }
     }

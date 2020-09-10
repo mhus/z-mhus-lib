@@ -16,12 +16,16 @@
 package de.mhus.lib.core;
 
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.core.util.EnumerationIterator;
+import de.mhus.lib.core.util.Iterate;
 
 /**
  * This is a shortcut class to call methods without obfuscating the source code. For some reasons
@@ -150,4 +154,13 @@ public class M {
             throw t;
         }
     }
+    
+    public static <E> Iterable<E> iterate(Iterator<E> iterator) {
+        return new Iterate<>(iterator);
+    }
+    
+    public static <E> Iterable<E> iterate(Enumeration<E> enu) {
+        return new EnumerationIterator<E>(enu);
+    }
+
 }

@@ -15,6 +15,10 @@
  */
 package de.mhus.lib.core.util;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -28,7 +32,7 @@ import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
-public class ParameterDefinition {
+public class ParameterDefinition implements Externalizable {
     private static Log log = Log.getLog(ParameterDefinition.class);
 
     private String name;
@@ -191,5 +195,29 @@ public class ParameterDefinition {
                 log.d("Unknown Type", name, type);
         }
         return true;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(1);
+        out.writeObject(name);
+        out.writeObject(type);
+        out.writeObject(def);
+        out.writeBoolean(mandatory);
+        out.writeObject(mapping);
+        out.writeObject(format);
+        out.writeObject(properties);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        in.readInt(); // 1
+        name = (String)in.readObject();
+        type = (String)in.readObject();
+        def = (String)in.readObject();
+        mandatory = in.readBoolean();
+        mapping = (String)in.readObject();
+        format = (String)in.readObject();
+        properties = (IReadProperties) in.readObject();
     }
 }

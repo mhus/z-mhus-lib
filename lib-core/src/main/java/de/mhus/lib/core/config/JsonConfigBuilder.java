@@ -37,28 +37,32 @@ public class JsonConfigBuilder extends IConfigBuilder {
     public IConfig read(InputStream is) throws MException {
         try {
             JsonNode docJ = MJson.load(is);
-            MConfig config = new MConfig();
-            if (docJ.isArray()) {
-                ConfigList array = config.createArray(IConfig.NAMELESS_VALUE);
-                for (JsonNode itemJ : docJ) {
-                    IConfig obj = array.createObject();
-                    fill(obj, "", itemJ, 0);
-                }
-            } else if (docJ.isObject()) {
-                fill(config, "", docJ, 0);
-            } else if (docJ.isValueNode()) {
-                // TODO separate for each type
-                config.setString(IConfig.NAMELESS_VALUE, docJ.asText());
-            } else {
-                throw new MException("Unknown basic json object type");
-            }
-
-            return config;
+            return fromJson(docJ);
         } catch (IOException e) {
             throw new MException(e);
         }
     }
 
+    public IConfig fromJson(JsonNode docJ) throws MException {
+        MConfig config = new MConfig();
+        if (docJ.isArray()) {
+            ConfigList array = config.createArray(IConfig.NAMELESS_VALUE);
+            for (JsonNode itemJ : docJ) {
+                IConfig obj = array.createObject();
+                fill(obj, "", itemJ, 0);
+            }
+        } else if (docJ.isObject()) {
+            fill(config, "", docJ, 0);
+        } else if (docJ.isValueNode()) {
+            // TODO separate for each type
+            config.setString(IConfig.NAMELESS_VALUE, docJ.asText());
+        } else {
+            throw new MException("Unknown basic json object type");
+        }
+
+        return config;
+    }
+    
     private void fill(IConfig config, String name, JsonNode json, int level) {
 
         if (level > 100) throw new TooDeepStructuresException();

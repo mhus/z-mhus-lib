@@ -64,4 +64,19 @@ public class TestUtil {
                         + "::"
                         + (method == null || method.isEmpty() ? "?" : method.get().getName()));
     }
+    
+    public static void stop(TestInfo testInfo) {
+        if (testInfo == null) {
+            System.out.println("<<< unknown");
+            return;
+        }
+        Optional<Class<?>> clazz = testInfo.getTestClass();
+        Optional<Method> method = testInfo.getTestMethod();
+        System.out.println(
+                "<<< "
+                        + (clazz == null || clazz.isEmpty() ? "?" : clazz.get().getCanonicalName())
+                        + "::"
+                        + (method == null || method.isEmpty() ? "?" : method.get().getName()));
+    }
+    
 }

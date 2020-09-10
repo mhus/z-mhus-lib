@@ -2218,4 +2218,15 @@ public class MString {
     public static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
+    /**
+     * A lighter version of String.valueOf(Object). It will not create a new
+     * object if the object is already a string.
+     * @param in Transform this to string
+     * @return null or the string representation
+     */
+    public static String valueOf(Object in) {
+        if (in == null) return null;
+        if (in instanceof String) return (String) in;
+        return in.toString();
+    }
 }

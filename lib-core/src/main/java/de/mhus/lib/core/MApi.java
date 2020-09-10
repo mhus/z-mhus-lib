@@ -18,6 +18,7 @@ package de.mhus.lib.core;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Date;
 
 import de.mhus.lib.core.cfg.MCfgUpdater;
 import de.mhus.lib.core.config.IConfig;
@@ -69,11 +70,14 @@ public class MApi {
                 }
                 api = obj;
             } catch (Throwable t) {
-                if (isDirtyTrace()) t.printStackTrace();
+                if (isDirtyTrace()) {
+                    System.err.println(MDate.toIsoDateTime(new Date()) + " ERROR getting IApi");
+                    t.printStackTrace();
+                }
             }
             if (api == null) api = new DefaultMApi();
             if (isDirtyTrace())
-                System.out.println("--- MApi: " + api.getClass().getCanonicalName());
+                System.out.println(MDate.toIsoDateTime(new Date()) + " MApi implementation: " + api.getClass().getCanonicalName());
             if (api instanceof ApiInitialize)
                 ((ApiInitialize) api).doInitialize(DummyClass.class.getClassLoader());
             // init local log at the end
@@ -187,8 +191,8 @@ public class MApi {
             return;
         }
         if (string == null || !isDirtyTrace()) return;
-        out.println("--- " + Arrays.toString(string));
-        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
+        err.println(MDate.toIsoDateTime(new Date()) + " TRACE " + Arrays.toString(string));
+        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
 
     public static void dirtyLogDebug(Object... string) {
@@ -197,8 +201,8 @@ public class MApi {
             return;
         }
         if (string == null || !isDirtyTrace()) return;
-        out.println("--- " + Arrays.toString(string));
-        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
+        err.println(MDate.toIsoDateTime(new Date()) + " DEBUG " + Arrays.toString(string));
+        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
 
     public static void dirtyLogInfo(Object... string) {
@@ -208,8 +212,8 @@ public class MApi {
         }
         if (!isDirtyTrace()) return;
         if (string == null) return;
-        out.println("--- " + Arrays.toString(string));
-        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(out);
+        err.println(MDate.toIsoDateTime(new Date()) + " INFO " + Arrays.toString(string));
+        for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
 
     public static void dirtyLogError(Object... string) {
@@ -218,7 +222,7 @@ public class MApi {
             return;
         }
         if (string == null) return;
-        err.println("*** " + Arrays.toString(string));
+        err.println(MDate.toIsoDateTime(new Date()) + " ERROR " + Arrays.toString(string));
         for (Object s : string) if (s instanceof Throwable) ((Throwable) s).printStackTrace(err);
     }
 

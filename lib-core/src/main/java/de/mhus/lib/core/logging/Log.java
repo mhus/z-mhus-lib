@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.logging;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.mhus.lib.core.MApi;
@@ -48,6 +50,7 @@ public class Log {
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     private List<String> maxMsgSizeExceptions;
+    private boolean reportedTracerProblem = false;
     //    protected UUID id = UUID.randomUUID();
     protected static int maxMsgSize = 0;
 
@@ -105,6 +108,12 @@ public class Log {
             lookingForSpan.set("");
             try {
                 span = ITracer.get().current();
+            } catch (Throwable t) {
+                if (!reportedTracerProblem || MApi.isDirtyTrace()) {
+                    System.err.println(toIsoDateTime(new Date()) + " REPORT LOG TRACER PROBLEM");
+                    t.printStackTrace();
+                }
+                reportedTracerProblem  = true;
             } finally {
                 lookingForSpan.remove();
             }
@@ -179,6 +188,32 @@ public class Log {
                     MCast.toString("stacktracetrace", Thread.currentThread().getStackTrace());
             engine.debug(stacktrace);
         }
+    }
+
+    // toos from MDate
+    protected static String toIsoDateTime(Date _in) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(_in);
+        return toIsoDateTime(c);
+    }
+    protected static String toIsoDateTime(Calendar _in) {
+        return _in.get(Calendar.YEAR)
+                + "-"
+                + toDigits(_in.get(Calendar.MONTH) + 1, 2)
+                + "-"
+                + toDigits(_in.get(Calendar.DAY_OF_MONTH), 2)
+                + " "
+                + toDigits(_in.get(Calendar.HOUR_OF_DAY), 2)
+                + ":"
+                + toDigits(_in.get(Calendar.MINUTE), 2)
+                + ":"
+                + toDigits(_in.get(Calendar.SECOND), 2)
+        ;
+    }
+    protected static String toDigits(int _in, int _digits) {
+        StringBuilder out = new StringBuilder().append(Integer.toString(_in));
+        while (out.length() < _digits) out.insert(0, '0');
+        return out.toString();
     }
 
     //	/**

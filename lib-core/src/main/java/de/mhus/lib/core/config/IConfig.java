@@ -164,6 +164,14 @@ public interface IConfig extends IProperties {
         return new PropertiesConfigBuilder().readFromMap(lines);
     }
 
+    static IConfig readFromMap(Map<?, ?> lines) {
+        return new PropertiesConfigBuilder().readFromMap(lines);
+    }
+
+    static IConfig readFromCollection(Collection<?> lines) {
+        return new PropertiesConfigBuilder().readFromCollection(lines);
+    }
+
     static IConfig readFromJsonString(String json) throws MException {
         return new JsonConfigBuilder().readFromString(json);
     }
@@ -178,20 +186,18 @@ public interface IConfig extends IProperties {
 
     static String toCompactJsonString(IConfig config) throws MException {
         try {
-            MJson.toString(new JsonConfigBuilder().writeToJsonNode(config));
+            return MJson.toString(new JsonConfigBuilder().writeToJsonNode(config));
         } catch (IOException e) {
             throw new MException(e);
         }
-        return null;
     }
 
     static String toPrettyJsonString(IConfig config) throws MException {
         try {
-            MJson.toPrettyString(new JsonConfigBuilder().writeToJsonNode(config));
+            return MJson.toPrettyString(new JsonConfigBuilder().writeToJsonNode(config));
         } catch (IOException e) {
             throw new MException(e);
         }
-        return null;
     }
 
     public static void merge(IConfig from, IConfig to) throws MException {
@@ -227,4 +233,5 @@ public interface IConfig extends IProperties {
         }
         return out.toArray(new String[out.size()]);
     }
+
 }
