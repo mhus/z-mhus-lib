@@ -20,9 +20,16 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.basics.Versioned;
+import de.mhus.lib.core.M;
+import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.Log;
@@ -31,6 +38,7 @@ import de.mhus.lib.core.util.MNlsProvider;
 import de.mhus.lib.core.util.Nls;
 import de.mhus.lib.core.util.ParameterDefinitions;
 import de.mhus.lib.core.util.Version;
+import de.mhus.lib.form.ModelUtil;
 
 public class OperationDescription implements MNlsProvider, Nls, Versioned, Externalizable {
 
@@ -269,4 +277,47 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
         path = (String)in.readObject();
         uuid = (UUID)in.readObject();
     }
+    
+    public ObjectNode toJson() throws Exception {
+        ObjectNode json = MJson.createObjectNode();
+
+        json.put("path", getPath());
+        json.put("uuid", getUuid().toString());
+        json.put("title", getTitle());
+        json.put("version", getVersionString());
+        DefRoot form = getForm();
+        if (form != null) {
+            form.build();
+            ObjectNode formJson = ModelUtil.toJson(form);
+            json.set("form", formJson);
+        }
+        ObjectNode labelsJson = MJson.createObjectNode();
+        for (Entry<String, String> label : getLabels().entrySet()) {
+            labelsJson.put(label.getKey(), label.getValue());
+        }
+        json.set("labels", labelsJson);
+
+        return json;
+    }
+
+    public static OperationDescription fromJson(JsonNode json) {
+        UUID uuid = UUID.fromString(json.get("uuid").asText());
+        String path = json.get("path").asText();
+        String title = json.get("title").asText();
+        Version version = new Version( json.get("version").asText() );
+        
+        OperationDescription desc = new OperationDescription(uuid, path, version, null, title);
+        
+        if (json.has("form")) {
+            DefRoot form = ModelUtil.toModel((ObjectNode)json.get("form"));
+            desc.setForm(form);
+        }
+        
+        HashMap<String, String> labels = desc.getLabels();
+        for (Map.Entry<String, JsonNode> field : M.iterate(json.get("labels").fields())) {
+            labels.put(field.getKey(), field.getValue().asText());
+        }
+        return desc;
+    }
+
 }

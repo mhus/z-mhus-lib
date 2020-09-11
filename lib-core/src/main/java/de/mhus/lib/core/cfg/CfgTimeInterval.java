@@ -49,4 +49,8 @@ public class CfgTimeInterval extends CfgValue<String> {
     public long interval() {
         return interval;
     }
+
+    public boolean isTimeOut(long start) {
+        return MPeriod.isTimeOut(start, interval);
+    }
 }

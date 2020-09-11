@@ -122,7 +122,9 @@ public class JsonConfigBuilder extends IConfigBuilder {
                     fill(newJ, arrC, level + 1);
                 }
             } else if (itemC.isObject(key)) {
-
+                ObjectNode newJ = MJson.createObjectNode();
+                fill(newJ, itemC.getObjectOrNull(key), level + 1);
+                objectJ.set(key, newJ);
             } else if (itemC.get(key) instanceof NullValue) objectJ.putNull(key);
             else objectJ.put(key, itemC.getString(key, null));
         }

@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Consts;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -185,5 +187,13 @@ public class MHttp {
         if (str.startsWith("{") || str.startsWith("[")) return MFile.getMimeType("json", def);
         
         return def;
+    }
+
+    public static String getHeader(HttpResponse response, String name, String def) {
+        if (response == null) return def;
+        Header[] header = response.getHeaders(name);
+        if (header == null | header.length == 0) return def;
+
+        return header[0].getValue();
     }
 }
