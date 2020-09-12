@@ -146,7 +146,26 @@ public abstract class AbstractOperation extends MLog implements Operation {
             form = ((IFormProvider) this).getForm();
         }
 
-        return new OperationDescription(getUuid(), path, version, this, title, form);
+        OperationDescription ret = new OperationDescription(getUuid(), path, version, this, title, form);
+        if (desc != null) {
+            String[] labels = desc.labels();
+            for (String label : labels) {
+                int pos = label.indexOf('=');
+                if (pos > 0) {
+                    ret.getLabels().put(label.substring(0, pos), label.substring(pos+1));
+                }
+            }
+        }
+        prepareCreatedDescription(ret);
+        return ret;
+    }
+
+    /**
+     * Overwrite to manipulate created description.
+     * @param desc
+     */
+    protected void prepareCreatedDescription(OperationDescription desc) {
+        
     }
 
     public boolean validateParameters(ParameterDefinitions definitions, TaskContext context) {
