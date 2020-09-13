@@ -16,6 +16,7 @@
 package de.mhus.lib.core;
 
 import java.util.Vector;
+import java.util.function.Consumer;
 
 /**
  * @author hummel
@@ -120,4 +121,37 @@ public class MThreadPoolDaemon extends MThreadPool implements Runnable {
         }
         return size;
     }
+    
+    public static void run(Runnable task) {
+        new MThreadPoolDaemon(
+                        new Runnable() {
+
+                            @Override
+                            public void run() {
+                                try {
+                                    task.run();
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
+    }
+    
+    public static void run(Consumer<Thread> consumer) {
+        new MThreadPoolDaemon(
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            consumer.accept(Thread.currentThread());
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
+                    }
+                })
+        .start();
+    }
+
 }

@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core;
 
+import java.util.function.Consumer;
+
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MObject;
@@ -249,4 +251,37 @@ public class MThreadPool extends MObject implements Runnable {
             sleep(200);
         }
     }
+    
+    public static void run(Runnable task) {
+        new MThreadPool(
+                        new Runnable() {
+
+                            @Override
+                            public void run() {
+                                try {
+                                    task.run();
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
+    }
+    
+    public static void run(Consumer<Thread> consumer) {
+        new MThreadPool(
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            consumer.accept(Thread.currentThread());
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
+                    }
+                })
+        .start();
+    }
+
 }
