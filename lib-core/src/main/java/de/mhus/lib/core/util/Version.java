@@ -23,11 +23,13 @@ import java.io.ObjectOutput;
 import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.errors.MRuntimeException;
 
 public class Version implements Comparable<Version>, Externalizable {
 
     public static final Version V_0_0_0 = new Version("0.0.0");
     public static final Version V_1_0_0 = new Version("1.0.0");
+    public static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 
     private String original;
     private long[] versions;
@@ -115,6 +117,44 @@ public class Version implements Comparable<Version>, Externalizable {
         versions = (long[])in.readObject();
     }
     
+    public boolean isSnapshot() {
+        return original.toUpperCase().endsWith(SNAPSHOT_SUFFIX);
+    }
+
+    public Version nextMajor() {
+        if (versions.length < 1) throw new MRuntimeException("malformed version, can't create next major version",original);
+        long[] v2 = new long[versions.length];
+        v2[0] = versions[0] + 1;
+        return new Version(MString.join(v2, '.'));
+    }
+
+    public Version nextMinor() {
+        if (versions.length < 2) throw new MRuntimeException("malformed version, can't create next minor version",original);
+        long[] v2 = new long[versions.length];
+        v2[0] = versions[0];
+        v2[1] = versions[1] + 1;
+        return new Version(MString.join(v2, '.'));
+    }
+
+    public Version previousMajor() {
+        if (versions.length < 1 || versions[0] <= 0) throw new MRuntimeException("malformed version, can't create previous major version",original);
+        long[] v2 = new long[versions.length];
+        v2[0] = versions[0] - 1;
+        return new Version(MString.join(v2, '.'));
+    }
+
+    public Version previousMinor() {
+        if (versions.length < 2 || versions[1] <= 0) throw new MRuntimeException("malformed version, can't create previous minor version",original);
+        long[] v2 = new long[versions.length];
+        v2[0] = versions[0];
+        v2[1] = versions[1] - 1;
+        return new Version(MString.join(v2, '.'));
+    }
+    
+    public Version withoutSuffix() {
+        return new Version(MString.join(versions, '.'));
+    }
+
 }
 
 /*

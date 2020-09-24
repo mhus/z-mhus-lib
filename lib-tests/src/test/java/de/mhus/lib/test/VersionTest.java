@@ -68,30 +68,55 @@ public class VersionTest extends TestCase {
             System.out.println(r);
             assertEquals(false, r.isRange());
             assertEquals(true, r.includes(v));
+            assertEquals(false, r.includes( new Version("1.0.0")));
+            assertEquals(false, r.includes( new Version("1.5.0")));
+            assertEquals(false, r.includes( new Version("2.0.0")));
         }
         {
             VersionRange r = new VersionRange("[1.2.3,2.0.0]");
             System.out.println(r);
             assertEquals(true, r.isRange());
             assertEquals(true, r.includes(v));
+            assertEquals(false, r.includes( new Version("1.0.0")));
+            assertEquals(true, r.includes( new Version("1.5.0")));
+            assertEquals(true, r.includes( new Version("2.0.0")));
         }
         {
             VersionRange r = new VersionRange("1.2.3,2.0.0");
             System.out.println(r);
             assertEquals(true, r.isRange());
             assertEquals(true, r.includes(v));
+            assertEquals(false, r.includes( new Version("1.0.0")));
+            assertEquals(true, r.includes( new Version("1.5.0")));
+            assertEquals(false, r.includes( new Version("2.0.0")));
         }
         {
             VersionRange r = new VersionRange("[1.0.0,1.2.3)");
             System.out.println(r);
             assertEquals(true, r.isRange());
             assertEquals(false, r.includes(v));
+            assertEquals(true, r.includes( new Version("1.0.0")));
+            assertEquals(false, r.includes( new Version("1.5.0")));
+            assertEquals(false, r.includes( new Version("2.0.0")));
         }
         {
             VersionRange r = new VersionRange("(1.2.3,2.0.0)");
             System.out.println(r);
             assertEquals(true, r.isRange());
             assertEquals(false, r.includes(v));
+            assertEquals(false, r.includes( new Version("1.0.0")));
+            assertEquals(true, r.includes( new Version("1.5.0")));
+            assertEquals(false, r.includes( new Version("2.0.0")));
+        }
+        
+        {
+            VersionRange r = new VersionRange("1.2.3+"); // [1.2.3,2.0.0)
+            System.out.println(r);
+            assertEquals(true, r.isRange());
+            assertEquals(true, r.includes(v));
+            assertEquals(false, r.includes( new Version("1.0.0")));
+            assertEquals(true, r.includes( new Version("1.5.0")));
+            assertEquals(false, r.includes( new Version("2.0.0")));
         }
     }
 
@@ -107,9 +132,15 @@ public class VersionTest extends TestCase {
         v = new Version("0");
         System.out.println(v);
         assertEquals(false, r.includes(v));
-        v = new Version("2");
+        v = new Version("1");
+        System.out.println(v);
+        assertEquals(false, r.includes(v));
+        v = new Version("1.2.3"); // exact match (ignores suffixes)
         System.out.println(v);
         assertEquals(true, r.includes(v));
+        v = new Version("2");
+        System.out.println(v);
+        assertEquals(false, r.includes(v));
     }
 
     @Test

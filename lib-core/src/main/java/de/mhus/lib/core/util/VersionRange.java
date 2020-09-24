@@ -49,6 +49,12 @@ public class VersionRange {
             if (string.endsWith("[")) // ...,2.0.0[
             string = string.substring(0, string.length() - 1) + ")";
             else if (!string.endsWith("]") && !string.endsWith(")")) string = string + ")";
+        } else
+        if (string.endsWith("+")) {
+            string = string.substring(0, string.length()-1);
+            Version v = new Version(string);
+            Version next = v.nextMajor();
+            string = "[" + v.withoutSuffix() + "," + next + ")";
         }
 
         Matcher m = RANGE.matcher(string);
@@ -105,7 +111,7 @@ public class VersionRange {
 
     public boolean includes(Version v) {
         if (!isRange()) {
-            return low.compareTo(v) <= 0;
+            return low.compareTo(v) == 0; // need exact match
         }
         if (includeLow()) {
             if (v.compareTo(low) < 0) return false;
