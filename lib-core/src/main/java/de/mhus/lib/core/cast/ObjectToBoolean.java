@@ -46,34 +46,34 @@ public class ObjectToBoolean implements Caster<Object, Boolean> {
         String ins = in.toString().toLowerCase().trim();
 
         if (ins.equals("yes")
-                || ins.equals("on")
                 || ins.equals("true")
+                || ins.equals("1")
+                || ins.equals("y")
+                || ins.equals("on")
+                || ins.equals("t")
                 || ins.equals("ja") // :-)
                 || ins.equals("tak") // :-)
                 || ins.equals("oui") // :-)
                 || ins.equals("si") // :-)
                 || ins.equals("\u4fc2") // :-) chinese
                 || ins.equals("HIja'") // :-) // klingon
-                || ins.equals("1")
-                || ins.equals("t")
-                || ins.equals("y")
                 || ins.equals("\u2612")) {
             if (ret != null) ret.setValue(true);
             return true;
         }
 
         if (ins.equals("no")
-                || ins.equals("off")
                 || ins.equals("false")
+                || ins.equals("0")
+                || ins.equals("off")
+                || ins.equals("n")
+                || ins.equals("f")
+                || ins.equals("-1")
                 || ins.equals("nein") // :-)
                 || ins.equals("nie") // :-)
                 || ins.equals("non") // :-)
                 || ins.equals("\u5514\u4fc2") // :-) chinese
                 || ins.equals("Qo'") // :-) klingon
-                || ins.equals("0")
-                || ins.equals("-1")
-                || ins.equals("f")
-                || ins.equals("n")
                 || ins.equals("\u2610")) {
             if (ret != null) ret.setValue(false);
             return false;
