@@ -793,24 +793,50 @@ public class MSystem {
     }
 
     /**
-     * For completeness. The same functionality like System.getProperty()
-     *
+     * Like System.setProperty(). Sets the property with to a value. But this one accepts also null
+     * values and will clear the property in this case.
+     * Key is ownerClass + _ + key
+     * @param owner 
      * @param key
-     * @return Current value or null
+     * @param value
+     * @return Previous value
      */
-    public static String getProperty(String key) {
-        return System.getProperty(key);
+    public static String setProperty(Object owner, String key, String value) {
+        String name = getOwnerName(owner) + "_" + key;
+        if (value == null) return System.clearProperty(name);
+        else return System.setProperty(name, value);
     }
 
     /**
-     * For completeness. The same functionality like System.getProperty()
-     *
+     * Load from System.getProperty() or the fallback from Sytsem.getenv and with prefix from owner.
+     * Key is ownerClass + _ + key
+     * @param owner 
+     * @param key
+     * @return Current value or null
+     */
+    public static String getProperty(Object owner, String key) {
+        String name = getOwnerName(owner) + "_" + key;
+        String ret = System.getProperty(getOwnerName(owner) + "_" + key);
+        if (ret != null) return ret;
+        ret = System.getenv(name);
+        return ret;
+    }
+
+    /**
+     * Load from System.getProperty() or the fallback from Sytsem.getenv and with prefix from owner.
+     * Key is ownerClass + _ + key
+     * @param owner 
      * @param key
      * @param def
      * @return Current value or def
      */
-    public static String getProperty(String key, String def) {
-        return System.getProperty(key, def);
+    public static String getProperty(Object owner, String key, String def) {
+        String name = getOwnerName(owner).replace('.', '_').replace('@', '_').replace('$', '_') + "_" + key;
+        String ret = System.getProperty(getOwnerName(owner) + "_" + key);
+        if (ret != null) return ret;
+        ret = System.getenv(name);
+        if (ret != null) return ret;
+        return def;
     }
 
     /**
@@ -1067,5 +1093,16 @@ public class MSystem {
         public void stdout(String line) {
             System.out.println(line);
         }
+    }
+
+    public static String getOwnerName(Object owner) {
+        if (owner == null) return "?";
+        if (owner instanceof Class)
+            return getCanonicalClassName((Class<?>)owner);
+
+        if (owner instanceof String)
+            return (String)owner;
+
+        return getCanonicalClassName(owner.getClass());
     }
 }

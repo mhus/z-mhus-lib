@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.mhus.lib.basics.ReadOnly;
 import de.mhus.lib.core.IProperties;
@@ -126,5 +127,10 @@ public class PropertiesReadOnly implements IReadProperties, ReadOnly {
     @Override
     public Number getNumber(String name, Number def) {
         return parent.getNumber(name, def);
+    }
+
+    @Override
+    public String getStringOrCreate(String name, Function<String, String> def) {
+        return parent.getStringOrCreate(name, def);
     }
 }

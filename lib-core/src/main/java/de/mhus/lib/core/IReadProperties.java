@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.mhus.lib.errors.MException;
 
@@ -27,26 +28,44 @@ public interface IReadProperties {
 
     String getString(String name, String def);
 
+    String getStringOrCreate(String name, Function<String, String> def);
+    
     String getString(String name) throws MException;
 
     boolean getBoolean(String name, boolean def);
 
+//    boolean getBooleanOrCreate(String name, Function<String, Boolean> def);
+    
     boolean getBoolean(String name) throws MException;
 
     int getInt(String name, int def);
 
+//    int getIntOrCreate(String name, Function<String, Integer> def);
+    
     long getLong(String name, long def);
 
+//    long getLongOrCreate(String name, Function<String, Long> def);
+    
     float getFloat(String name, float def);
 
+//    float getFloatOrCreate(String name, Function<String, Float> def);
+    
     double getDouble(String name, double def);
 
+//    double getDoubleOrCreate(String name, Function<String, Double> def);
+    
     Calendar getCalendar(String name) throws MException;
 
+//    Calendar getCalendarOrCreate(String name, Function<String, Calendar> def) throws MException;
+    
     Date getDate(String name);
 
+//    Date getDateOrCreate(String name, Function<String, Date> def);
+    
     Number getNumber(String name, Number def);
 
+//    Number getNumberOrCreate(String name, Function<String, Number> def);
+    
     boolean isProperty(String name);
 
     Set<String> keys();

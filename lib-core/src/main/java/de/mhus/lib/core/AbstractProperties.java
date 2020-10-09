@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import de.mhus.lib.basics.IsNull;
 import de.mhus.lib.core.util.MObject;
@@ -404,4 +405,17 @@ public abstract class AbstractProperties extends MObject implements IProperties 
         if (format == null) return def; // probably null
         return String.format(format, values);
     }
+    
+    @Override
+    public String getStringOrCreate(String name, Function<String, String> def) {
+        Object out;
+        try {
+            out = getProperty(name);
+        } catch (Throwable e) {
+            return def.apply(name);
+        }
+        if (out == null) return def.apply(name);
+        return String.valueOf(out);
+    }
+
 }

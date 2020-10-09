@@ -30,6 +30,7 @@ public class MCfgUpdater {
     @SuppressWarnings("rawtypes")
     protected synchronized WeakHashMap<CfgValue, String> getCfgContainer(
             String owner, String path) {
+        if (path == null) path = "";
         HashMap<String, WeakHashMap<CfgValue, String>> ownerContainer = registry.get(owner);
         if (ownerContainer == null) {
             ownerContainer = new HashMap<>();

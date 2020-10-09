@@ -20,13 +20,23 @@ import de.mhus.lib.core.config.IConfig;
 
 public class CfgNode extends CfgValue<IConfig> {
 
+    /**
+     * Link an node of the configuration to this configuration object.
+     * @param owner
+     * @param path Path or null/empty for the main node
+     * @param def
+     */
     public CfgNode(Object owner, String path, IConfig def) {
         super(owner, path, def);
     }
 
     @Override
     protected IConfig loadValue() {
-        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath());
+        IConfig node = null;
+        if (getPath().length() == 0)
+            node = MApi.getCfg(getOwner(), null);
+        else
+            node = MApi.getCfg(getOwner()).getObjectByPath(getPath());
         if (node == null) return getDefault();
         return node;
     }
