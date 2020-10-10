@@ -15,11 +15,17 @@
  */
 package de.mhus.lib.core.crypt.pem;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Base64;
 
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.parser.ParseException;
+import de.mhus.lib.errors.MRuntimeException;
 
 public class PemBlockModel extends MProperties implements PemBlock {
 
@@ -210,4 +216,51 @@ public class PemBlockModel extends MProperties implements PemBlock {
         //		return Base64.decode(getBlock());
         return Base64.getDecoder().decode(block);
     }
+    
+    @Override
+    public boolean save(File file) throws IOException {
+        return MFile.writeFile(file, toString());
+    }
+
+    @Override
+    public boolean save(File file, boolean addDate) throws IOException {
+        return MFile.writeFile(file, toString());
+    }
+
+    @Override
+    public String saveToString() {
+        return toString();
+    }
+
+    @Override
+    public String saveToString(boolean addDate) {
+        return toString();
+    }
+
+    @Override
+    public boolean save(OutputStream out, boolean addDate) throws IOException {
+        return MFile.writeFile(out, toString());
+    }
+
+    @Override
+    public boolean save(OutputStream out) throws IOException {
+        return MFile.writeFile(out, toString());
+    }
+
+    public static PemBlockModel load(File f) {
+        try {
+            return new PemBlockModel().parse(MFile.readFile(f));
+        } catch (ParseException e) {
+            throw new MRuntimeException(f,e);
+        }
+    }
+
+    public static MProperties load(InputStream inStream) throws IOException {
+        try {
+            return new PemBlockModel().parse(MFile.readFile(inStream));
+        } catch (ParseException e) {
+            throw new MRuntimeException(e);
+        }
+    }
+
 }

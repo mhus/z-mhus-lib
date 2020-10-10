@@ -16,7 +16,9 @@
 package de.mhus.lib.core.mapi;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -46,6 +48,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     protected File baseDir = new File(".");
     protected MLogFactory mlogFactory;
     protected DefaultActivator base = new DefaultActivator();
+    private Map<SCOPE,File> fileScopeCache = new HashMap<>();
 
     @Override
     public void doInitialize(ClassLoader coreLoader) {
@@ -167,13 +170,25 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     @Override
     public File getFile(SCOPE scope, String dir) {
         dir = MFile.normalizePath(dir);
-        if (scope == SCOPE.TMP)
-            return new File(MSystem.getTmpDirectory() + File.pathSeparator + dir);
-        if (scope == SCOPE.LOG) {
-            File log = new File(baseDir, "logs");
-            if (log.exists() && log.isDirectory()) return new File(log, dir);
+        File scopeDir = fileScopeCache.get(scope);
+        if (scopeDir == null) {
+            String dirStr = MSystem.getProperty(IApi.class, "directory_" + scope.name());
+            if (dirStr == null) {
+                if (scope == SCOPE.TMP)
+                    dirStr = MSystem.getTmpDirectory();
+                else
+                if (scope == SCOPE.LOG) {
+                    File log = new File(baseDir, "logs");
+                    if (log.exists() && log.isDirectory()) dirStr = log.getAbsolutePath();
+                }
+                if (dirStr == null)
+                    dirStr = baseDir.getAbsolutePath();
+                scopeDir = new File(dirStr);
+                fileScopeCache.put(scope, scopeDir);
+            }
         }
-        return new File(baseDir, dir);
+
+        return new File (scopeDir, dir);
     }
 
     @Override

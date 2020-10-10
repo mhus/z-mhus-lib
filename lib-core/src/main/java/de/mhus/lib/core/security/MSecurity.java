@@ -15,11 +15,25 @@
  */
 package de.mhus.lib.core.security;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.Principal;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.security.auth.Subject;
+
+import de.mhus.lib.core.crypt.pem.PemBlock;
+import de.mhus.lib.core.crypt.pem.PemBlockModel;
 
 public class MSecurity {
 
@@ -67,4 +81,45 @@ public class MSecurity {
         }
         return out;
     }
+
+    public static void writeKey(File file, Key key, String id) throws IOException {
+        
+        String type = "";
+        if (key instanceof PrivateKey)
+            type = " PRIVATE";
+        else
+        if (key instanceof PublicKey)
+            type = " PUBLIC";
+        type = key.getAlgorithm() + type + " KEY";
+        PemBlockModel pem = new PemBlockModel(type, key.getEncoded());
+        if (id != null)
+            pem.set(PemBlock.IDENT, id);
+        pem.save(file);
+    }
+
+    public static PublicKey readPublicKey(File file, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+
+        PemBlockModel pem = PemBlockModel.load(file);
+        byte[] encKey = pem.getBytesBlock();
+        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
+        KeyFactory keyFactory = KeyFactory.getInstance(alorithm, provider);
+        PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+        return pubKey;
+    }
+
+    public static PrivateKey readPrivateKey(File file, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+
+        PemBlockModel pem = PemBlockModel.load(file);
+        byte[] encKey = pem.getBytesBlock();
+        PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(encKey);
+        KeyFactory keyFactory = KeyFactory.getInstance(alorithm, provider);
+        PrivateKey privKey = keyFactory.generatePrivate(encodedKeySpec);
+        return privKey;
+    }
+
+    public static PemBlock readKey(File file) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+        PemBlockModel pem = PemBlockModel.load(file);
+        return pem;
+    }
+    
 }

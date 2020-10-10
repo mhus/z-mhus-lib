@@ -18,6 +18,16 @@ package de.mhus.lib.core.shiro;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.ShiroException;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.BearerToken;
+import org.apache.shiro.authc.ExpiredCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.SimpleAccount;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.WildcardPermission;
@@ -26,9 +36,10 @@ import org.apache.shiro.realm.text.IniRealm;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.logging.Log;
 
-public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
+public class IniDataRealm extends IniRealm implements PrincipalDataRealm, BearerRealm {
 
     public static final String DATA_SECTION_NAME = "data";
     private static final transient Log log = Log.getLog(IniDataRealm.class);
@@ -39,14 +50,55 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
 
     public IniDataRealm() {
         super();
+        setCredentialsMatcher(new CombiCredentialsMatcher() );
     }
 
     public IniDataRealm(Ini ini) {
         super(ini);
+        setCredentialsMatcher(new CombiCredentialsMatcher() );
     }
 
     public IniDataRealm(String resourcePath) {
         super(resourcePath);
+        setCredentialsMatcher(new CombiCredentialsMatcher() );
+    }
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        if (token != null && BearerToken.class.isAssignableFrom(token.getClass()))
+            return true;
+        return super.supports(token);
+    }
+
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        
+        if (token instanceof UsernamePasswordToken)
+            return super.doGetAuthenticationInfo(token);
+        
+        if (token instanceof BearerToken) {
+            String tokenStr = ((BearerToken)token).getToken();
+            JwsData jwtToken = M.l(JwsProvider.class).readToken(tokenStr);
+            String username = jwtToken.getSubject();
+            if (username != null) {
+                SimpleAccount account = getUser(username);
+
+                if (account != null) {
+
+                    if (account.isLocked()) {
+                        throw new LockedAccountException("Account [" + account + "] is locked.");
+                    }
+                    if (account.isCredentialsExpired()) {
+                        String msg = "The credentials for account [" + account + "] are expired";
+                        throw new ExpiredCredentialsException(msg);
+                    }
+                    return account;
+                }
+            }
+        }
+
+//      throw new UnknownAccountException(username);
+      return null;
     }
 
     @Override
@@ -147,5 +199,14 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm {
      */
     public void setRolePermission(String rolePermission) {
         this.rolePermission = rolePermission;
+    }
+
+    @Override
+    public String createBearerToken(Subject subject, BearerConfiguration configuration) throws ShiroException {
+        String userName = AccessUtil.getPrincipal(subject);
+        Map<String, String> data = userData.get(userName);
+        if (data != null)
+            return M.l(JwsProvider.class).createBearerToken(userName, configuration);
+        throw new UnknownAccountException("User unknown: " + userName);
     }
 }

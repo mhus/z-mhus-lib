@@ -173,7 +173,7 @@ public class AccessUtil {
             return Collections.emptyList();
         }
     }
-
+    
     public static PrincipalData loadPrincipalDataFromRealm(Subject subject) {
         if (!subject.isAuthenticated()) return null;
         for (Realm realm : getRealms()) {

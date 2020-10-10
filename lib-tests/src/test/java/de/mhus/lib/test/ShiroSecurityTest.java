@@ -17,9 +17,13 @@ package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
+
+import org.apache.shiro.authc.BearerToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.Realm;
@@ -28,9 +32,13 @@ import org.apache.shiro.subject.Subject;
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.crypt.MBouncy;
+import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
+import de.mhus.lib.core.shiro.BearerRealm;
 import de.mhus.lib.core.shiro.DefaultAccessApi;
 import de.mhus.lib.core.shiro.PrincipalData;
 import de.mhus.lib.core.shiro.SubjectEnvironment;
@@ -336,6 +344,49 @@ public class ShiroSecurityTest extends TestCase {
         System.out.println("DisplayName: " + data.getDisplayName());
 
         assertEquals("Administrator", data.getDisplayName());
+    }
+    
+    @Test
+    public void testJWToken() {
+        ((IApiInternal)MApi.get()).setBaseDir(new File("target"));
+        MFile.deleteDir(new File("target/keys")); // remove old if exists
+        init("classpath:de/mhus/lib/test/shiro-data.ini");
+        MBouncy.init();
+
+//        Provider provider = Security.getProvider("BC");
+//        for (java.security.Provider.Service service : provider.getServices()) {
+//            System.out.println(service.getType() + ": " + service.getAlgorithm());
+//        }
+        
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        // login
+        UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+        AccessUtil.getSubject().login(token);
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        
+        // create token
+        String jwt = null;
+        for (Realm realm : AccessUtil.getRealms()) {
+            if (realm instanceof BearerRealm) {
+                jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject());
+                System.out.println(jwt);
+
+            }
+        }
+        assertNotNull(jwt);
+        
+        // logout
+        AccessUtil.getSubject().logout();
+        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        
+        // login with token
+        BearerToken jwtToken = new BearerToken(jwt);
+        AccessUtil.getSubject().login(jwtToken);
+        assertTrue(AccessUtil.getSubject().isAuthenticated());
+        
+        AccessUtil.getSubject().logout();
+        
+        
     }
 
     private void init(String config) {

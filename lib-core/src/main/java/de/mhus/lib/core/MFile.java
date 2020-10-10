@@ -1054,4 +1054,11 @@ public class MFile {
         }
         return false;
     }
+
+    public static void mkParentDir(File f) {
+        if (f == null) return;
+        File dir = f.getParentFile();
+        if (!dir.exists())
+            dir.mkdirs();
+    }
 }

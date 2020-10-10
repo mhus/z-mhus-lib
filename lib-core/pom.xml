@@ -59,11 +59,18 @@
 		            *
 	            </Import-Package>
 	            <Private-Package>
-	               net.bytebuddy*
+	                net.bytebuddy*,
+                    io.jsonwebtoken*
 	            </Private-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
-				<Embed-Dependency>byte-buddy,byte-buddy-agent</Embed-Dependency>
+				<Embed-Dependency>
+					byte-buddy,
+					byte-buddy-agent,
+					jjwt-api,
+					jjwt-impl,
+					jjwt-jackson
+				</Embed-Dependency>
 
 	          </instructions>
 	        </configuration>
@@ -131,7 +138,22 @@
         <version>1.7.21</version>
         <scope>test</scope>
     </dependency>
-    
+
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <scope>compile</scope>
+    </dependency>
+
     <dependency>
         <groupId>org.yaml</groupId>
         <artifactId>snakeyaml</artifactId>

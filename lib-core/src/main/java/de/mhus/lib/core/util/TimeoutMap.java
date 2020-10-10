@@ -37,6 +37,14 @@ public class TimeoutMap<K, V> implements Map<K, V> {
     private Invalidator<K, V> invalidator;
     private boolean refreshOnAccess;
 
+    public TimeoutMap() {
+    }
+    
+    public TimeoutMap(long timeout) {
+        this.timeout = timeout;
+        checkTimeout = timeout;
+    }
+    
     @Override
     public int size() {
         return map.size();
