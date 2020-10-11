@@ -2,10 +2,10 @@ package de.mhus.lib.core.shiro;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 
-@DefaultImplementation(JwsProviderImpl.class)
-public interface JwsProvider {
+@DefaultImplementation(JwtProviderImpl.class)
+public interface JwtProvider {
 
-    String createBearerToken(String username, BearerConfiguration configuration);
+    String createBearerToken(String username, String issuer, BearerConfiguration configuration);
 
     JwsData readToken(String tokenStr);
 

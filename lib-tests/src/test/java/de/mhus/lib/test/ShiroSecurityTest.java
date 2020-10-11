@@ -31,15 +31,20 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.junit.jupiter.api.Test;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
+import de.mhus.lib.core.shiro.BearerConfiguration;
 import de.mhus.lib.core.shiro.BearerRealm;
 import de.mhus.lib.core.shiro.DefaultAccessApi;
+import de.mhus.lib.core.shiro.JwtProvider;
+import de.mhus.lib.core.shiro.JwtProviderImpl;
 import de.mhus.lib.core.shiro.PrincipalData;
 import de.mhus.lib.core.shiro.SubjectEnvironment;
 import de.mhus.lib.core.util.MDirtyTricks;
@@ -349,7 +354,7 @@ public class ShiroSecurityTest extends TestCase {
     @Test
     public void testJWToken() {
         ((IApiInternal)MApi.get()).setBaseDir(new File("target"));
-        MFile.deleteDir(new File("target/keys")); // remove old if exists
+        MFile.deleteDir(new File("target/de.mhus.lib.core.vault.FolderVaultSource")); // remove old if exists
         init("classpath:de/mhus/lib/test/shiro-data.ini");
         MBouncy.init();
 
@@ -357,36 +362,106 @@ public class ShiroSecurityTest extends TestCase {
 //        for (java.security.Provider.Service service : provider.getServices()) {
 //            System.out.println(service.getType() + ": " + service.getAlgorithm());
 //        }
-        
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
-        // login
-        UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        
-        // create token
-        String jwt = null;
-        for (Realm realm : AccessUtil.getRealms()) {
-            if (realm instanceof BearerRealm) {
-                jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject());
-                System.out.println(jwt);
-
+        {
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            // login
+            UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+            AccessUtil.getSubject().login(token);
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            
+            // create token
+            String jwt = null;
+            for (Realm realm : AccessUtil.getRealms()) {
+                if (realm instanceof BearerRealm) {
+                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
+                    System.out.println(jwt);
+    
+                }
             }
+            assertNotNull(jwt);
+            
+            // logout
+            AccessUtil.getSubject().logout();
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            
+            // login with token
+            BearerToken jwtToken = new BearerToken(jwt);
+            AccessUtil.getSubject().login(jwtToken);
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            
+            AccessUtil.getSubject().logout();
         }
-        assertNotNull(jwt);
+        // -----------
+        // reset JwtProvider internal and try again with loading from keychain
+        ((JwtProviderImpl)M.l(JwtProvider.class)).clear();
+        {
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            // login
+            UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+            AccessUtil.getSubject().login(token);
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            
+            // create token
+            String jwt = null;
+            for (Realm realm : AccessUtil.getRealms()) {
+                if (realm instanceof BearerRealm) {
+                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
+                    System.out.println(jwt);
+    
+                }
+            }
+            assertNotNull(jwt);
+            
+            // logout
+            AccessUtil.getSubject().logout();
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            
+            // login with token
+            BearerToken jwtToken = new BearerToken(jwt);
+            AccessUtil.getSubject().login(jwtToken);
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            
+            AccessUtil.getSubject().logout();
+        }
         
-        // logout
-        AccessUtil.getSubject().logout();
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
-        
-        // login with token
-        BearerToken jwtToken = new BearerToken(jwt);
-        AccessUtil.getSubject().login(jwtToken);
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        
-        AccessUtil.getSubject().logout();
-        
-        
+        // ---------------
+        // test timeout
+        {
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            // login
+            UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
+            AccessUtil.getSubject().login(token);
+            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            
+            // create token
+            String jwt = null;
+            for (Realm realm : AccessUtil.getRealms()) {
+                if (realm instanceof BearerRealm) {
+                    BearerConfiguration config = new BearerConfiguration(1);
+                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null, config);
+                    System.out.println(jwt);
+    
+                }
+            }
+            assertNotNull(jwt);
+            
+            // logout
+            AccessUtil.getSubject().logout();
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+
+            MThread.sleep(500);
+            
+            // login with token
+            BearerToken jwtToken = new BearerToken(jwt);
+            try {
+                AccessUtil.getSubject().login(jwtToken);
+                fail();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            AccessUtil.getSubject().logout();
+        }        
     }
 
     private void init(String config) {

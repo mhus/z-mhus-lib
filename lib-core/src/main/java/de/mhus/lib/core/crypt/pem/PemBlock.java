@@ -22,6 +22,7 @@ import de.mhus.lib.core.IReadProperties;
 public interface PemBlock extends IReadProperties, Map<String, Object> {
 
     String BLOCK_CIPHER = "CIPHER";
+    String ALGORITHM = "Algorithm";
     String METHOD = "Method";
     String BLOCK_SIGN = "SIGNATURE";
     String BLOCK_PRIV = "PRIVATE KEY";

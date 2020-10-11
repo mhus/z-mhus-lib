@@ -255,9 +255,17 @@ public class PemBlockModel extends MProperties implements PemBlock {
         }
     }
 
-    public static MProperties load(InputStream inStream) throws IOException {
+    public static PemBlockModel load(InputStream inStream) throws IOException {
         try {
             return new PemBlockModel().parse(MFile.readFile(inStream));
+        } catch (ParseException e) {
+            throw new MRuntimeException(e);
+        }
+    }
+
+    public static PemBlockModel loadFromString(String content) {
+        try {
+            return new PemBlockModel().parse(content);
         } catch (ParseException e) {
             throw new MRuntimeException(e);
         }

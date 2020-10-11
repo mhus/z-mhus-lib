@@ -1,8 +1,10 @@
 package de.mhus.lib.core.shiro;
 
+import de.mhus.lib.core.MPeriod;
+
 public class BearerConfiguration {
 
-    private long timeout = 0;
+    private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 15; // TODO configurable
 
     public BearerConfiguration() {}
     
