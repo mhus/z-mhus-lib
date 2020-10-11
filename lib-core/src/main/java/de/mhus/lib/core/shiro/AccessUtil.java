@@ -538,10 +538,10 @@ public class AccessUtil {
         return false;
     }
 
-    public static String createBearerToken(Subject subject, Object object) throws ShiroException {
+    public static String createBearerToken(Subject subject, String issuer) throws ShiroException {
         for (Realm realm : AccessUtil.getRealms()) {
             if (realm instanceof BearerRealm) {
-                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
+                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), issuer);
             }
         }
         return null;
@@ -550,7 +550,7 @@ public class AccessUtil {
     public static String createBearerToken(Subject subject, String issuer, BearerConfiguration configuration) throws ShiroException {
         for (Realm realm : AccessUtil.getRealms()) {
             if (realm instanceof BearerRealm) {
-                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null, configuration);
+                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), issuer, configuration);
             }
         }
         return null;
