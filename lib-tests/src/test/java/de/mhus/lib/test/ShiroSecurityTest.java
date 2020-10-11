@@ -41,7 +41,6 @@ import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.core.shiro.BearerConfiguration;
-import de.mhus.lib.core.shiro.BearerRealm;
 import de.mhus.lib.core.shiro.DefaultAccessApi;
 import de.mhus.lib.core.shiro.JwtProvider;
 import de.mhus.lib.core.shiro.JwtProviderImpl;
@@ -370,14 +369,8 @@ public class ShiroSecurityTest extends TestCase {
             assertTrue(AccessUtil.getSubject().isAuthenticated());
             
             // create token
-            String jwt = null;
-            for (Realm realm : AccessUtil.getRealms()) {
-                if (realm instanceof BearerRealm) {
-                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
-                    System.out.println(jwt);
-    
-                }
-            }
+            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
+            System.out.println(jwt);
             assertNotNull(jwt);
             
             // logout
@@ -402,14 +395,8 @@ public class ShiroSecurityTest extends TestCase {
             assertTrue(AccessUtil.getSubject().isAuthenticated());
             
             // create token
-            String jwt = null;
-            for (Realm realm : AccessUtil.getRealms()) {
-                if (realm instanceof BearerRealm) {
-                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
-                    System.out.println(jwt);
-    
-                }
-            }
+            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
+            System.out.println(jwt);
             assertNotNull(jwt);
             
             // logout
@@ -434,15 +421,9 @@ public class ShiroSecurityTest extends TestCase {
             assertTrue(AccessUtil.getSubject().isAuthenticated());
             
             // create token
-            String jwt = null;
-            for (Realm realm : AccessUtil.getRealms()) {
-                if (realm instanceof BearerRealm) {
-                    BearerConfiguration config = new BearerConfiguration(1);
-                    jwt = ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null, config);
-                    System.out.println(jwt);
-    
-                }
-            }
+            BearerConfiguration config = new BearerConfiguration(1);
+            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null, config);
+            System.out.println(jwt);
             assertNotNull(jwt);
             
             // logout

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
@@ -536,4 +537,23 @@ public class AccessUtil {
         }
         return false;
     }
+
+    public static String createBearerToken(Subject subject, Object object) throws ShiroException {
+        for (Realm realm : AccessUtil.getRealms()) {
+            if (realm instanceof BearerRealm) {
+                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null);
+            }
+        }
+        return null;
+    }
+    
+    public static String createBearerToken(Subject subject, String issuer, BearerConfiguration configuration) throws ShiroException {
+        for (Realm realm : AccessUtil.getRealms()) {
+            if (realm instanceof BearerRealm) {
+                return ((BearerRealm)realm).createBearerToken(AccessUtil.getSubject(), null, configuration);
+            }
+        }
+        return null;
+    }
+
 }
