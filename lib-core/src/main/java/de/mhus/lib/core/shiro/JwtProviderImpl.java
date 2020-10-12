@@ -16,6 +16,7 @@ import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MValidator;
 import de.mhus.lib.core.cfg.CfgString;
+import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.crypt.pem.PemBlock;
 import de.mhus.lib.core.crypt.pem.PemBlockModel;
 import de.mhus.lib.core.keychain.DefaultEntry;
@@ -60,6 +61,10 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
         }
     };
 
+    public JwtProviderImpl() {
+        MBouncy.init();
+    }
+    
     public String createToken(String username, String issuer,BearerConfiguration configuration, Key privateKey, String keyId) {
 
         JwtBuilder builder = Jwts.builder().setSubject(username).signWith(privateKey);

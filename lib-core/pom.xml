@@ -59,17 +59,13 @@
 		            *
 	            </Import-Package>
 	            <Private-Package>
-	                net.bytebuddy*,
-                    io.jsonwebtoken*
+	                net.bytebuddy*
 	            </Private-Package>
 	            <DynamicImport-Package>*</DynamicImport-Package>
 
 				<Embed-Dependency>
 					byte-buddy,
-					byte-buddy-agent,
-					jjwt-api,
-					jjwt-impl,
-					jjwt-jackson
+					byte-buddy-agent
 				</Embed-Dependency>
 
 	          </instructions>
@@ -146,12 +142,10 @@
     <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-impl</artifactId>
-        <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-jackson</artifactId>
-        <scope>compile</scope>
     </dependency>
 
     <dependency>

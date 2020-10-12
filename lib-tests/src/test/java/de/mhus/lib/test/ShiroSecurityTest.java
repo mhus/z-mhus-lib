@@ -36,7 +36,6 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MThread;
-import de.mhus.lib.core.crypt.MBouncy;
 import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.shiro.AccessApi;
 import de.mhus.lib.core.shiro.AccessUtil;
@@ -355,7 +354,7 @@ public class ShiroSecurityTest extends TestCase {
         ((IApiInternal)MApi.get()).setBaseDir(new File("target"));
         MFile.deleteDir(new File("target/de.mhus.lib.core.vault.FolderVaultSource")); // remove old if exists
         init("classpath:de/mhus/lib/test/shiro-data.ini");
-        MBouncy.init();
+//        MBouncy.init();
 
 //        Provider provider = Security.getProvider("BC");
 //        for (java.security.Provider.Service service : provider.getServices()) {

@@ -204,8 +204,8 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     @Override
     public String createBearerToken(Subject subject, String issuer, BearerConfiguration configuration) throws ShiroException {
         String userName = AccessUtil.getPrincipal(subject);
-        Map<String, String> data = userData.get(userName);
-        if (data != null)
+        SimpleAccount user = getUser(userName);
+        if (user != null)
             return M.l(JwtProvider.class).createBearerToken(userName, issuer, configuration);
         throw new UnknownAccountException("User unknown: " + userName);
     }
