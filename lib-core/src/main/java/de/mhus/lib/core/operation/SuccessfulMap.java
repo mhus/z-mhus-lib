@@ -27,12 +27,12 @@ public class SuccessfulMap extends Successful {
         setResult(new MProperties());
     }
 
-    public SuccessfulMap(String path, String msg, int rc) {
-        super(path, msg, rc, new MProperties());
-    }
-
     public SuccessfulMap(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, keyValues);
+    }
+
+    public SuccessfulMap(Operation operation, String msg, int rc, String... keyValues) {
+        super(operation, msg, rc, keyValues);
     }
 
     @SuppressWarnings("unchecked")
