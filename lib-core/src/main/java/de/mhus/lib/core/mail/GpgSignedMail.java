@@ -278,14 +278,13 @@ public class GpgSignedMail implements Mail {
         return new AuthorityKeyIdentifier(info);
     }
 
-    @SuppressWarnings("resource")
     static SubjectKeyIdentifier createSubjectKeyId(PublicKey pub) throws IOException {
         ByteArrayInputStream bIn = new ByteArrayInputStream(pub.getEncoded());
 
         SubjectPublicKeyInfo info =
                 new SubjectPublicKeyInfo((ASN1Sequence) new ASN1InputStream(bIn).readObject());
 
-        return new SubjectKeyIdentifier(info);
+        return new SubjectKeyIdentifier(info.getEncoded());
     }
 
     public KeyPair getOrigKP() {
