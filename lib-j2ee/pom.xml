@@ -26,6 +26,9 @@
         <artifactId>mhus-lib</artifactId>
         <version>7.2.0-SNAPSHOT</version>
   </parent>
+    <properties>
+      <site.path>..</site.path>
+    </properties>
 
    <build>
     <plugins>

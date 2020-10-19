@@ -36,6 +36,8 @@
         <!-- Legacy 
         <httpcomponents.httpclient.version>4.3.6</httpcomponents.httpclient.version>
         -->
+       <maven-site-plugin.skip>false</maven-site-plugin.skip>
+       <site.path>.</site.path>
     </properties>
     
 	<licenses>

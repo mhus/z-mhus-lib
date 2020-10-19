@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="test6">
+
+    <target name="check">
+        <condition property="site.exists">
+          <available file="${basedir}/src/site" type="dir"/>
+        </condition>
+    </target>
+    <target name="prepare" if="site.exists" depends="check">
+         <mkdir dir="${basedir}/target/site/manual"/>
+         <copy todir="${basedir}/target/site/manual">
+           <fileset dir="${basedir}/manual/target/generated-docs" includes="**/*" />
+         </copy>
+    </target>
+    
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="https://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://maven.apache.org/DECORATION/1.8.0 https://maven.apache.org/xsd/decoration-1.8.0.xsd">
+
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.9</version>
+  </skin>
+  <custom>
+    <fluidoSkin>
+      <gitHub>
+        <projectId>mhus/${project.artifactId}</projectId>
+        <ribbonOrientation>right</ribbonOrientation>
+        <ribbonColor>gray</ribbonColor>
+      </gitHub>
+    </fluidoSkin>
+  </custom>
+
+  <body>
+
+    <menu ref="parent"/>
+
+    <menu name="Overview">
+      <item name="Introduction" href="./index.html"/>
+      <item name="Manual" href="${site.path}/manual/index.html"/>
+      <item name="License" href="http://www.apache.org/licenses/"/>
+    </menu>
+
+    <menu ref="modules" />
+    <menu ref="reports"/>
+
+  </body>
+
+</project>

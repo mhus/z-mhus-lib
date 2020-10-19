@@ -26,6 +26,9 @@
         <groupId>de.mhus.lib</groupId>
         <version>7.2.0-SNAPSHOT</version>
     </parent>
+    <properties>
+	  <site.path>..</site.path>
+    </properties>
 
     <dependencies>
         <dependency>
