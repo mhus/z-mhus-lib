@@ -28,7 +28,9 @@ public class Karaf extends DockerContainer {
     @Override
     protected boolean buildConfigParam(ContainerBuilder config, String param) {
         if (param.equals("debug")) {
-            config.volumes.add(MSystem.getUserHome() + File.separator + ".m2:/home/user/.m2");
+            String m2home = System.getenv("KARAF_M2_HOME");
+            if (m2home == null) m2home = MSystem.getUserHome() + File.separator + ".m2";
+            config.volumes.add(m2home + ":/home/user/.m2");
             config.cmd.add("debug");
             config.ports.add("15005+:5005");
             return true;
