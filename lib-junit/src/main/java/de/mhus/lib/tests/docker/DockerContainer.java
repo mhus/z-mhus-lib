@@ -122,6 +122,9 @@ public class DockerContainer {
 
     @SuppressWarnings("resource")
     public int getPortBinding(int exposed) {
+        if (scenario.isDockerInDockerMode()) {
+            return exposed;
+        }
         for (Map.Entry<ExposedPort, Binding[]> binding :
                 scenario.getClient()
                         .inspectContainerCmd(id)
@@ -138,7 +141,16 @@ public class DockerContainer {
         return 0;
     }
 
+    @SuppressWarnings("deprecation")
     public String getExternalHost() {
+        if (scenario.isDockerInDockerMode()) {
+            return scenario.getClient()
+            .inspectContainerCmd(id)
+            .exec()
+            .getNetworkSettings()
+            .getIpAddress();
+        }
+
         return scenario.getExternalHost();
     }
 }

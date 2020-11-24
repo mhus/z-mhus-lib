@@ -48,6 +48,7 @@ import com.github.dockerjava.transport.DockerHttpClient;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.mapi.DockerInitializer;
 import de.mhus.lib.errors.NotFoundException;
 
 // https://github.com/docker-java/docker-java
@@ -502,6 +503,13 @@ public class DockerScenario {
             return "localhost";
         }
         return System.getenv("DOCKER_HOST");
+    }
+    
+    boolean isDockerInDockerMode() {
+        if (System.getenv("DOCKER_MODE") == null)
+            return DockerInitializer.isDockerEnabled();
+
+        return "DOCKER".equals(System.getenv("DOCKER_MODE"));
     }
 
     public int cnt() {

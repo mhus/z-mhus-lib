@@ -30,6 +30,25 @@ public class DockerInitializer implements CfgInitiator {
 
     @Override
     public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
+
+        loadData();
+        
+        if (containerId != null) {
+            System.out.println("Container: " + containerId);
+            ServerIdent.getAttributes().setString("containerId", containerId);
+            ServerIdent.getAttributes().setString("containerShortId", containerId.substring(0, 12));
+        } else {
+            System.out.println("WARNING: docker environment not found");
+        }
+    }
+
+    public static boolean isDockerEnabled() {
+        loadData();
+        return containerId != null;
+    }
+    
+    static void loadData() {
+        if (containerId != null) return;
         // get docker id
         File cgroup = new File("/proc/self/cgroup");
         if (cgroup.exists()) {
@@ -50,17 +69,10 @@ public class DockerInitializer implements CfgInitiator {
                 e.printStackTrace();
             }
         }
-
-        if (containerId != null) {
-            System.out.println("Container: " + containerId);
-            ServerIdent.getAttributes().setString("containerId", containerId);
-            ServerIdent.getAttributes().setString("containerShortId", containerId.substring(0, 12));
-        } else {
-            System.out.println("WARNING: docker environment not found");
-        }
     }
 
     public static String getContainerId() {
+        loadData();
         return containerId;
     }
 }
