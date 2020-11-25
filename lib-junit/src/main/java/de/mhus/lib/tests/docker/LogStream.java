@@ -74,7 +74,10 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
                 for (byte b : item.getPayload())
                     if (b != 0) {
                         sb.add(b);
-                        if (capture != null) capture.add(b);
+                        if (capture != null)
+                            synchronized (this) {
+                                capture.add(b);
+                            }
                     }
                 logStr = new String(MCast.toByteArray(sb), MString.CHARSET_CHARSET_UTF_8);
             }
@@ -179,15 +182,19 @@ public class LogStream extends com.github.dockerjava.api.async.ResultCallback.Ad
     }
 
     public LogStream setCapture(boolean capt) {
-        if (capt) capture = new LinkedList<>();
-        else capture = null;
-        return this;
+        synchronized (this) {
+            if (capt) capture = new LinkedList<>();
+            else capture = null;
+            return this;
+        }
     }
 
     public String getCaptured() {
-        if (capture == null) return null;
-        if (filter != null) filter.doFilter(capture);
-        return new String(MCast.toByteArray(capture), MString.CHARSET_CHARSET_UTF_8);
+        synchronized (this) {
+            if (capture == null) return null;
+            if (filter != null) filter.doFilter(capture);
+            return new String(MCast.toByteArray(capture), MString.CHARSET_CHARSET_UTF_8);
+        }
     }
 
     public LogFilter getFilter() {
