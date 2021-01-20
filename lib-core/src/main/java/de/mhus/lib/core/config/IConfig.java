@@ -233,5 +233,4 @@ public interface IConfig extends IProperties {
         }
         return out.toArray(new String[out.size()]);
     }
-
 }

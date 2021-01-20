@@ -112,7 +112,7 @@ public class LogCfgInitiator implements CfgInitiator {
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
         }
-        
+
         try {
             String key = MConstants.PROP_LOG_PARAMETER_MAPPER_CLASS;
             String name = system.getString(key, null);

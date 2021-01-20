@@ -55,12 +55,11 @@ public @interface OperationService {
      * @return true for strict check
      */
     boolean strictParameterCheck() default false;
-    
+
     /**
      * Define default labels in format key=value
-     * 
+     *
      * @return array of labels
      */
     String[] labels() default {};
-    
 }

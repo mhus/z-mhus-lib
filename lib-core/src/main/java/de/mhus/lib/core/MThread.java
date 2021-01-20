@@ -403,21 +403,20 @@ public class MThread extends MObject implements Runnable {
                         })
                 .start();
     }
-    
+
     public static void run(Consumer<Thread> consumer) {
         new Thread(
-                new Runnable() {
+                        new Runnable() {
 
-                    @Override
-                    public void run() {
-                        try {
-                            consumer.accept(Thread.currentThread());
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }
-                    }
-                })
-        .start();
+                            @Override
+                            public void run() {
+                                try {
+                                    consumer.accept(Thread.currentThread());
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
     }
-
 }

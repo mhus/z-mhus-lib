@@ -405,7 +405,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
         if (format == null) return def; // probably null
         return String.format(format, values);
     }
-    
+
     @Override
     public String getStringOrCreate(String name, Function<String, String> def) {
         Object out;
@@ -417,5 +417,4 @@ public abstract class AbstractProperties extends MObject implements IProperties 
         if (out == null) return def.apply(name);
         return String.valueOf(out);
     }
-
 }

@@ -62,7 +62,7 @@ public class JsonConfigBuilder extends IConfigBuilder {
 
         return config;
     }
-    
+
     private void fill(IConfig config, String name, JsonNode json, int level) {
 
         if (level > 100) throw new TooDeepStructuresException();

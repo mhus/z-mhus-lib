@@ -171,21 +171,21 @@ public class MHttp {
 
     /**
      * Try to get analyze content and return the mime type.
-     * 
-     * Currently a pure implementation.
-     * 
-     * TODO use external library
-     * 
+     *
+     * <p>Currently a pure implementation.
+     *
+     * <p>TODO use external library
+     *
      * @param str
-     * @param def 
+     * @param def
      * @return The mime type
      */
     public static String findMimeType(String str, String def) {
         if (str == null || str.length() == 0) return def;
-        
+
         if (str.startsWith("<")) return MFile.getMimeType("xml", def);
         if (str.startsWith("{") || str.startsWith("[")) return MFile.getMimeType("json", def);
-        
+
         return def;
     }
 

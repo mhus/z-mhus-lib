@@ -66,7 +66,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     private String rolePermission;
 
     public FileSourceRealm() {
-        setCredentialsMatcher(new CombiCredentialsMatcher() );
+        setCredentialsMatcher(new CombiCredentialsMatcher());
     }
 
     @Override
@@ -85,22 +85,20 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        if (token != null && BearerToken.class.isAssignableFrom(token.getClass()))
-            return true;
+        if (token != null && BearerToken.class.isAssignableFrom(token.getClass())) return true;
         return super.supports(token);
     }
-    
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
             throws AuthenticationException {
-        
+
         String username = null;
         if (token instanceof UsernamePasswordToken) {
             UsernamePasswordToken upToken = (UsernamePasswordToken) token;
             username = upToken.getUsername();
-        } else
-        if (token instanceof BearerToken) {
-            String tokenStr = ((BearerToken)token).getToken();
+        } else if (token instanceof BearerToken) {
+            String tokenStr = ((BearerToken) token).getToken();
             JwsData jwtToken = M.l(JwtProvider.class).readToken(tokenStr);
             username = jwtToken.getSubject();
         }
@@ -121,7 +119,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             }
         }
 
-//        throw new UnknownAccountException(username);
+        //        throw new UnknownAccountException(username);
         return null;
     }
 
@@ -361,7 +359,9 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     }
 
     @Override
-    public String createBearerToken(Subject subject, String issuer, BearerConfiguration configuration) throws ShiroException {
+    public String createBearerToken(
+            Subject subject, String issuer, BearerConfiguration configuration)
+            throws ShiroException {
         String username = AccessUtil.getPrincipal(subject);
         File file1 = new File(userDir, MFile.normalize(username) + ".properties");
         File file2 = new File(userDir, MFile.normalize(username) + ".xml");
@@ -369,5 +369,4 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             return M.l(JwtProvider.class).createBearerToken(username, issuer, configuration);
         throw new UnknownAccountException("User unknown: " + username);
     }
-
 }

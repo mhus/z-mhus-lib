@@ -767,11 +767,10 @@ public final class MCast {
 
         if (type.isEnum()) {
             String strValue = String.valueOf(in);
-            for (Object c : type.getEnumConstants())
-                if (c.toString().equals(strValue)) return c;
+            for (Object c : type.getEnumConstants()) if (c.toString().equals(strValue)) return c;
             return def;
         }
-        
+
         // is there a exact caster for the from-to pair ?
         Caster<?, ?> caster = casters.get(in.getClass(), type);
         if (caster == null) {

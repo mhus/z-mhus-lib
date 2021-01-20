@@ -47,7 +47,10 @@ public class HtmlParserTest extends TestCase {
         parser.parse(in, listener);
 
         assertTrue(listener.pi.getFirst().equals("xml version=\"1.0\" encoding=\"ISO-8859-1\""));
-        assertTrue(listener.note.get(1).equals("Edited")); // first node is "Copyright Note", second is "Edited"
+        assertTrue(
+                listener.note
+                        .get(1)
+                        .equals("Edited")); // first node is "Copyright Note", second is "Edited"
         assertTrue(listener.open.size() == listener.close.size());
         assertTrue(listener.single.size() == 1);
         assertTrue(listener.text.getFirst().equals("You"));

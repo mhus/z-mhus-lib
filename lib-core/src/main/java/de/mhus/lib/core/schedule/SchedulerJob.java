@@ -112,17 +112,20 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                     try {
                         if (!hasAccess(context)) {
                             log.d("access denied", context, context.getErrorMessage());
-                            res = new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
-                        } else
-                        if (!canExecute(context)) {
+                            res =
+                                    new NotSuccessful(
+                                            this, "access denied", OperationResult.ACCESS_DENIED);
+                        } else if (!canExecute(context)) {
                             log.d("execution denied", context.getErrorMessage());
-                            res = new NotSuccessful(
-                                    this,
-                                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute",
-                                    OperationResult.NOT_EXECUTABLE);
-                        } else
-                            res = doExecute(context);
-                        log.d("Finished",res);
+                            res =
+                                    new NotSuccessful(
+                                            this,
+                                            context.getErrorMessage() != null
+                                                    ? context.getErrorMessage()
+                                                    : "can't execute",
+                                            OperationResult.NOT_EXECUTABLE);
+                        } else res = doExecute(context);
+                        log.d("Finished", res);
                     } catch (Throwable e) {
                         log.d("Error", getName(), e);
                         doError(e);
@@ -158,18 +161,20 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     @Override
     public final OperationResult doExecute(TaskContext context) throws Exception {
         log.d("execute", getClass(), context.getParameters());
-// must be done by caller
-//        if (!hasAccess(context)) {
-//            log.d("access denied", context, context.getErrorMessage());
-//            return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
-//        }
-//        if (!canExecute(context)) {
-//            log.d("execution denied", context.getErrorMessage());
-//            return new NotSuccessful(
-//                    this,
-//                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute",
-//                    OperationResult.NOT_EXECUTABLE);
-//        }
+        // must be done by caller
+        //        if (!hasAccess(context)) {
+        //            log.d("access denied", context, context.getErrorMessage());
+        //            return new NotSuccessful(this, "access denied",
+        // OperationResult.ACCESS_DENIED);
+        //        }
+        //        if (!canExecute(context)) {
+        //            log.d("execution denied", context.getErrorMessage());
+        //            return new NotSuccessful(
+        //                    this,
+        //                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't
+        // execute",
+        //                    OperationResult.NOT_EXECUTABLE);
+        //        }
         OperationResult ret = doExecute2(context);
         log.t("result", getClass(), ret);
         return ret;

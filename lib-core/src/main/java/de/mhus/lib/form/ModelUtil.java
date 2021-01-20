@@ -36,9 +36,9 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 
 public class ModelUtil {
-    
+
     private static Log log = Log.getLog(ModelUtil.class);
-    
+
     public static DefRoot toModel(Element xml) {
         DefRoot root = new DefRoot();
 
@@ -93,7 +93,7 @@ public class ModelUtil {
             toXml(next, nextXml);
         }
     }
-    
+
     public static ObjectNode toJson(IConfig model) {
         try {
             ObjectNode root = MJson.createObjectNode();
@@ -127,13 +127,11 @@ public class ModelUtil {
         for (Map.Entry<String, JsonNode> field : M.iterate(json.fields())) {
             if (field.getValue().isValueNode()) {
                 root.addAttribute(field.getKey(), field.getValue().asText());
-            } else
-            if (field.getValue().isObject()) {
+            } else if (field.getValue().isObject()) {
                 DefComponent nextNode = new DefComponent(field.getKey());
-                ObjectNode nextJson = (ObjectNode)field.getValue();
+                ObjectNode nextJson = (ObjectNode) field.getValue();
                 toModel(nextJson, nextNode);
             }
         }
     }
-
 }

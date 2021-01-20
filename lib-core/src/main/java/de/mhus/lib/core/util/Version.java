@@ -113,23 +113,27 @@ public class Version implements Comparable<Version>, Externalizable {
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         in.readInt(); // 1
-        original = (String)in.readObject();
-        versions = (long[])in.readObject();
+        original = (String) in.readObject();
+        versions = (long[]) in.readObject();
     }
-    
+
     public boolean isSnapshot() {
         return original.toUpperCase().endsWith(SNAPSHOT_SUFFIX);
     }
 
     public Version nextMajor() {
-        if (versions.length < 1) throw new MRuntimeException("malformed version, can't create next major version",original);
+        if (versions.length < 1)
+            throw new MRuntimeException(
+                    "malformed version, can't create next major version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] + 1;
         return new Version(MString.join(v2, '.'));
     }
 
     public Version nextMinor() {
-        if (versions.length < 2) throw new MRuntimeException("malformed version, can't create next minor version",original);
+        if (versions.length < 2)
+            throw new MRuntimeException(
+                    "malformed version, can't create next minor version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];
         v2[1] = versions[1] + 1;
@@ -137,24 +141,27 @@ public class Version implements Comparable<Version>, Externalizable {
     }
 
     public Version previousMajor() {
-        if (versions.length < 1 || versions[0] <= 0) throw new MRuntimeException("malformed version, can't create previous major version",original);
+        if (versions.length < 1 || versions[0] <= 0)
+            throw new MRuntimeException(
+                    "malformed version, can't create previous major version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] - 1;
         return new Version(MString.join(v2, '.'));
     }
 
     public Version previousMinor() {
-        if (versions.length < 2 || versions[1] <= 0) throw new MRuntimeException("malformed version, can't create previous minor version",original);
+        if (versions.length < 2 || versions[1] <= 0)
+            throw new MRuntimeException(
+                    "malformed version, can't create previous minor version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];
         v2[1] = versions[1] - 1;
         return new Version(MString.join(v2, '.'));
     }
-    
+
     public Version withoutSuffix() {
         return new Version(MString.join(versions, '.'));
     }
-
 }
 
 /*

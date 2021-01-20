@@ -67,12 +67,12 @@ public class DockerContainer {
 
     protected void buildConfig(ContainerBuilder config) {
         if (params == null) return;
-        
-//        ArrayList<Integer> size = new ArrayList<>();
-//        size.add(240);
-//        size.add(240);
-//        config.hostBuilder.withConsoleSize( size );
-        
+
+        //        ArrayList<Integer> size = new ArrayList<>();
+        //        size.add(240);
+        //        size.add(240);
+        //        config.hostBuilder.withConsoleSize( size );
+
         for (String param : params) {
             if (param.equals("privileged")) {
                 config.hostBuilder.withPrivileged(true);
@@ -145,10 +145,10 @@ public class DockerContainer {
     public String getExternalHost() {
         if (scenario.isDockerInDockerMode()) {
             return scenario.getClient()
-            .inspectContainerCmd(id)
-            .exec()
-            .getNetworkSettings()
-            .getIpAddress();
+                    .inspectContainerCmd(id)
+                    .exec()
+                    .getNetworkSettings()
+                    .getIpAddress();
         }
 
         return scenario.getExternalHost();

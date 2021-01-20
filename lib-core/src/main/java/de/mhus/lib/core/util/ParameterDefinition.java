@@ -212,12 +212,12 @@ public class ParameterDefinition implements Externalizable {
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         in.readInt(); // 1
-        name = (String)in.readObject();
-        type = (String)in.readObject();
-        def = (String)in.readObject();
+        name = (String) in.readObject();
+        type = (String) in.readObject();
+        def = (String) in.readObject();
         mandatory = in.readBoolean();
-        mapping = (String)in.readObject();
-        format = (String)in.readObject();
+        mapping = (String) in.readObject();
+        format = (String) in.readObject();
         properties = (IReadProperties) in.readObject();
     }
 }

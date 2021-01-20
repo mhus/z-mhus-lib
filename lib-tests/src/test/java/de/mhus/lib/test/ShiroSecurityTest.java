@@ -348,68 +348,70 @@ public class ShiroSecurityTest extends TestCase {
 
         assertEquals("Administrator", data.getDisplayName());
     }
-    
+
     @Test
     public void testJWToken() {
-        ((IApiInternal)MApi.get()).setBaseDir(new File("target"));
-        MFile.deleteDir(new File("target/de.mhus.lib.core.vault.FolderVaultSource")); // remove old if exists
+        ((IApiInternal) MApi.get()).setBaseDir(new File("target"));
+        MFile.deleteDir(
+                new File(
+                        "target/de.mhus.lib.core.vault.FolderVaultSource")); // remove old if exists
         init("classpath:de/mhus/lib/test/shiro-data.ini");
-//        MBouncy.init();
+        //        MBouncy.init();
 
-//        Provider provider = Security.getProvider("BC");
-//        for (java.security.Provider.Service service : provider.getServices()) {
-//            System.out.println(service.getType() + ": " + service.getAlgorithm());
-//        }
+        //        Provider provider = Security.getProvider("BC");
+        //        for (java.security.Provider.Service service : provider.getServices()) {
+        //            System.out.println(service.getType() + ": " + service.getAlgorithm());
+        //        }
         {
             assertFalse(AccessUtil.getSubject().isAuthenticated());
             // login
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
             AccessUtil.getSubject().login(token);
             assertTrue(AccessUtil.getSubject().isAuthenticated());
-            
+
             // create token
             String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
             System.out.println(jwt);
             assertNotNull(jwt);
-            
+
             // logout
             AccessUtil.getSubject().logout();
             assertFalse(AccessUtil.getSubject().isAuthenticated());
-            
+
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
             AccessUtil.getSubject().login(jwtToken);
             assertTrue(AccessUtil.getSubject().isAuthenticated());
-            
+
             AccessUtil.getSubject().logout();
         }
         // -----------
         // reset JwtProvider internal and try again with loading from keychain
-        ((JwtProviderImpl)M.l(JwtProvider.class)).clear();
+        ((JwtProviderImpl) M.l(JwtProvider.class)).clear();
         {
             assertFalse(AccessUtil.getSubject().isAuthenticated());
             // login
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
             AccessUtil.getSubject().login(token);
             assertTrue(AccessUtil.getSubject().isAuthenticated());
-            
+
             // create token
             String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
             System.out.println(jwt);
             assertNotNull(jwt);
-            
+
             // logout
             AccessUtil.getSubject().logout();
             assertFalse(AccessUtil.getSubject().isAuthenticated());
-            
+
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
             AccessUtil.getSubject().login(jwtToken);
             assertTrue(AccessUtil.getSubject().isAuthenticated());
-            
+
             AccessUtil.getSubject().logout();
         }
-        
+
         // ---------------
         // test timeout
         {
@@ -418,19 +420,19 @@ public class ShiroSecurityTest extends TestCase {
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
             AccessUtil.getSubject().login(token);
             assertTrue(AccessUtil.getSubject().isAuthenticated());
-            
+
             // create token
             BearerConfiguration config = new BearerConfiguration(1);
             String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null, config);
             System.out.println(jwt);
             assertNotNull(jwt);
-            
+
             // logout
             AccessUtil.getSubject().logout();
             assertFalse(AccessUtil.getSubject().isAuthenticated());
 
             MThread.sleep(500);
-            
+
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
             try {
@@ -441,7 +443,7 @@ public class ShiroSecurityTest extends TestCase {
             }
             assertFalse(AccessUtil.getSubject().isAuthenticated());
             AccessUtil.getSubject().logout();
-        }        
+        }
     }
 
     private void init(String config) {

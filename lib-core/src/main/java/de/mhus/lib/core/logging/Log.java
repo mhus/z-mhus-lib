@@ -100,7 +100,7 @@ public class Log {
                     System.err.println(toIsoDateTime(new Date()) + " REPORT LOG TRACER PROBLEM");
                     t.printStackTrace();
                 }
-                reportedTracerProblem  = true;
+                reportedTracerProblem = true;
             } finally {
                 lookingForSpan.remove();
             }
@@ -183,6 +183,7 @@ public class Log {
         c.setTime(_in);
         return toIsoDateTime(c);
     }
+
     protected static String toIsoDateTime(Calendar _in) {
         return _in.get(Calendar.YEAR)
                 + "-"
@@ -194,9 +195,9 @@ public class Log {
                 + ":"
                 + toDigits(_in.get(Calendar.MINUTE), 2)
                 + ":"
-                + toDigits(_in.get(Calendar.SECOND), 2)
-        ;
+                + toDigits(_in.get(Calendar.SECOND), 2);
     }
+
     protected static String toDigits(int _in, int _digits) {
         StringBuilder out = new StringBuilder().append(Integer.toString(_in));
         while (out.length() < _digits) out.insert(0, '0');

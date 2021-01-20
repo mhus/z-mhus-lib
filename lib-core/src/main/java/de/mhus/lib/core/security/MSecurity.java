@@ -83,37 +83,32 @@ public class MSecurity {
         return out;
     }
 
-    public static void writeKey(File file, Key key, Map<String, Object> parameters) throws IOException {
-        
+    public static void writeKey(File file, Key key, Map<String, Object> parameters)
+            throws IOException {
+
         String type = "";
-        if (key instanceof PrivateKey)
-            type = " PRIVATE";
-        else
-        if (key instanceof PublicKey)
-            type = " PUBLIC";
+        if (key instanceof PrivateKey) type = " PRIVATE";
+        else if (key instanceof PublicKey) type = " PUBLIC";
         type = key.getAlgorithm() + type + " KEY";
         PemBlockModel pem = new PemBlockModel(type, key.getEncoded());
-        if (parameters != null)
-            pem.putAll(parameters);
+        if (parameters != null) pem.putAll(parameters);
         pem.save(file);
     }
 
     public static String keyToString(Key key, Map<String, Object> parameters) throws IOException {
-        
+
         String type = "";
-        if (key instanceof PrivateKey)
-            type = " PRIVATE";
-        else
-        if (key instanceof PublicKey)
-            type = " PUBLIC";
+        if (key instanceof PrivateKey) type = " PRIVATE";
+        else if (key instanceof PublicKey) type = " PUBLIC";
         type = key.getAlgorithm() + type + " KEY";
         PemBlockModel pem = new PemBlockModel(type, key.getEncoded());
-        if (parameters != null)
-            pem.putAll(parameters);
+        if (parameters != null) pem.putAll(parameters);
         return pem.toString();
     }
-    
-    public static PublicKey readPublicKey(File file, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+
+    public static PublicKey readPublicKey(File file, String alorithm, String provider)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
 
         PemBlockModel pem = PemBlockModel.load(file);
         byte[] encKey = pem.getBytesBlock();
@@ -123,7 +118,9 @@ public class MSecurity {
         return pubKey;
     }
 
-    public static PublicKey readPublicKey(String textPem, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+    public static PublicKey readPublicKey(String textPem, String alorithm, String provider)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
 
         PemBlockModel pem = PemBlockModel.loadFromString(textPem);
         byte[] encKey = pem.getBytesBlock();
@@ -132,8 +129,10 @@ public class MSecurity {
         PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
         return pubKey;
     }
-    
-    public static PrivateKey readPrivateKey(File file, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+
+    public static PrivateKey readPrivateKey(File file, String alorithm, String provider)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
 
         PemBlockModel pem = PemBlockModel.load(file);
         byte[] encKey = pem.getBytesBlock();
@@ -143,7 +142,9 @@ public class MSecurity {
         return privKey;
     }
 
-    public static PrivateKey readPrivateKey(String textPem, String alorithm, String provider) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+    public static PrivateKey readPrivateKey(String textPem, String alorithm, String provider)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
 
         PemBlockModel pem = PemBlockModel.loadFromString(textPem);
         byte[] encKey = pem.getBytesBlock();
@@ -152,10 +153,11 @@ public class MSecurity {
         PrivateKey privKey = keyFactory.generatePrivate(encodedKeySpec);
         return privKey;
     }
-    
-    public static PemBlock readKey(File file) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException, NoSuchProviderException {
+
+    public static PemBlock readKey(File file)
+            throws IOException, InvalidKeySpecException, NoSuchAlgorithmException,
+                    NoSuchProviderException {
         PemBlockModel pem = PemBlockModel.load(file);
         return pem;
     }
-    
 }

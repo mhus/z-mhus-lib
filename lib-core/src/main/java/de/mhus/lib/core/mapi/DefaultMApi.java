@@ -48,7 +48,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     protected File baseDir = new File(".");
     protected MLogFactory mlogFactory;
     protected DefaultActivator base = new DefaultActivator();
-    private Map<SCOPE,File> fileScopeCache = new HashMap<>();
+    private Map<SCOPE, File> fileScopeCache = new HashMap<>();
 
     @Override
     public void doInitialize(ClassLoader coreLoader) {
@@ -174,21 +174,18 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
         if (scopeDir == null) {
             String dirStr = MSystem.getProperty(IApi.class, "directory_" + scope.name());
             if (dirStr == null) {
-                if (scope == SCOPE.TMP)
-                    dirStr = MSystem.getTmpDirectory();
-                else
-                if (scope == SCOPE.LOG) {
+                if (scope == SCOPE.TMP) dirStr = MSystem.getTmpDirectory();
+                else if (scope == SCOPE.LOG) {
                     File log = new File(baseDir, "logs");
                     if (log.exists() && log.isDirectory()) dirStr = log.getAbsolutePath();
                 }
-                if (dirStr == null)
-                    dirStr = baseDir.getAbsolutePath();
+                if (dirStr == null) dirStr = baseDir.getAbsolutePath();
                 scopeDir = new File(dirStr);
                 fileScopeCache.put(scope, scopeDir);
             }
         }
 
-        return new File (scopeDir, dir);
+        return new File(scopeDir, dir);
     }
 
     @Override

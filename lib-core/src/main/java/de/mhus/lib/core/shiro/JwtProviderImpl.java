@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2020 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.mhus.lib.core.shiro;
 
 import java.security.Key;
@@ -43,42 +58,48 @@ import io.jsonwebtoken.security.Keys;
 // https://github.com/jwtk/jjwt
 public class JwtProviderImpl extends MLog implements JwtProvider {
 
-//    protected static final String ALGORITHM = "SHA256WITHECDSA";
+    //    protected static final String ALGORITHM = "SHA256WITHECDSA";
     protected static final String ALGORITHM = "ECDSA";
     protected static final String PROVIDER = "BC";
-    
-    private CfgString CFG_SOURCE_SEC = new CfgString(JwtProvider.class, "privateSource", MKeychain.SOURCE_DEFAULT);
-    private CfgString CFG_SOURCE_PUB = new CfgString(JwtProvider.class, "publicSource", MKeychain.SOURCE_DEFAULT);
-    
+
+    private CfgString CFG_SOURCE_SEC =
+            new CfgString(JwtProvider.class, "privateSource", MKeychain.SOURCE_DEFAULT);
+    private CfgString CFG_SOURCE_PUB =
+            new CfgString(JwtProvider.class, "publicSource", MKeychain.SOURCE_DEFAULT);
+
     private Key jwtPrivateKey;
     private String jwtKeyId;
-    private Map<String, PublicKey > publicKeyCache = Collections.synchronizedMap(new TimeoutMap<>(MPeriod.MINUTE_IN_MILLISECOUNDS * 10));
-    private SigningKeyResolverAdapter jwtKeyResolver = new SigningKeyResolverAdapter() {
-        @Override
-        public Key resolveSigningKey(@SuppressWarnings("rawtypes") JwsHeader jwsHeader, Claims claims) {
-            String kid = jwsHeader.getKeyId();
-            return getJwtPublicKeyById(kid);
-        }
-    };
+    private Map<String, PublicKey> publicKeyCache =
+            Collections.synchronizedMap(new TimeoutMap<>(MPeriod.MINUTE_IN_MILLISECOUNDS * 10));
+    private SigningKeyResolverAdapter jwtKeyResolver =
+            new SigningKeyResolverAdapter() {
+                @Override
+                public Key resolveSigningKey(
+                        @SuppressWarnings("rawtypes") JwsHeader jwsHeader, Claims claims) {
+                    String kid = jwsHeader.getKeyId();
+                    return getJwtPublicKeyById(kid);
+                }
+            };
 
     public JwtProviderImpl() {
         MBouncy.init();
     }
-    
-    public String createToken(String username, String issuer,BearerConfiguration configuration, Key privateKey, String keyId) {
+
+    public String createToken(
+            String username,
+            String issuer,
+            BearerConfiguration configuration,
+            Key privateKey,
+            String keyId) {
 
         JwtBuilder builder = Jwts.builder().setSubject(username).signWith(privateKey);
 
-        if (issuer != null)
-            builder.setIssuer(issuer);
-        else
-            builder.setIssuer(getServerIdent());
-        
-        if (keyId != null)
-            builder.setHeaderParam(JwsHeader.KEY_ID, keyId);
+        if (issuer != null) builder.setIssuer(issuer);
+        else builder.setIssuer(getServerIdent());
 
-        if (configuration.isTimeout())
-            builder.setExpiration(new Date(configuration.getTTL()));
+        if (keyId != null) builder.setHeaderParam(JwsHeader.KEY_ID, keyId);
+
+        if (configuration.isTimeout()) builder.setExpiration(new Date(configuration.getTTL()));
         return builder.compact();
     }
 
@@ -89,13 +110,14 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
 
     public Jws<Claims> readToken(String tokenStr, SigningKeyResolver jwtKeyResolver) {
         try {
-            Jws<Claims> jws = Jwts.parserBuilder()
-                    .setSigningKeyResolver(jwtKeyResolver)
-                    .build()
-                    .parseClaimsJws(tokenStr);
-            
+            Jws<Claims> jws =
+                    Jwts.parserBuilder()
+                            .setSigningKeyResolver(jwtKeyResolver)
+                            .build()
+                            .parseClaimsJws(tokenStr);
+
             // we can safely trust the JWT
-             return jws;
+            return jws;
         } catch (JwtException ex) {
             // we *cannot* use the JWT as intended by its creator
             log().d(ex);
@@ -104,28 +126,33 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
     }
 
     @Override
-    public String createBearerToken(String username, String issuer, BearerConfiguration configuration) throws ShiroException {
+    public String createBearerToken(
+            String username, String issuer, BearerConfiguration configuration)
+            throws ShiroException {
         try {
             Key jwtPrivateKey = getJwtPrivateKey();
             return createToken(username, issuer, configuration, jwtPrivateKey, jwtKeyId);
         } catch (Throwable e) {
             log().d(username, e);
-            throw new ShiroException(username,e);
+            throw new ShiroException(username, e);
         }
     }
 
     protected synchronized Key getJwtPrivateKey() throws ShiroException {
-        
+
         try {
             MKeychain chain = MKeychainUtil.loadDefault();
-            
+
             if (jwtPrivateKey == null) {
                 String privName = "jws." + getServerIdent() + ".sec";
                 KeyEntry entry = chain.getEntry(privName);
                 if (entry != null) {
                     log().i("Load JWT key");
-                    jwtKeyId = PemBlockModel.loadFromString(entry.getValue().value()).getString(PemBlockModel.PUB_ID);
-                    jwtPrivateKey = MSecurity.readPrivateKey(entry.getValue().value(), ALGORITHM, PROVIDER);
+                    jwtKeyId =
+                            PemBlockModel.loadFromString(entry.getValue().value())
+                                    .getString(PemBlockModel.PUB_ID);
+                    jwtPrivateKey =
+                            MSecurity.readPrivateKey(entry.getValue().value(), ALGORITHM, PROVIDER);
                 } else {
                     log().i("Create JWT keys");
                     // create key pair and save
@@ -138,10 +165,11 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
                         parameters.put(PemBlock.PUB_ID, pubId);
                         parameters.put(PemBlock.ALGORITHM, ALGORITHM);
                         String pem = MSecurity.keyToString(keyPair.getPrivate(), parameters);
-                        
+
                         KeychainSource source = chain.getSource(CFG_SOURCE_SEC.value());
                         MutableVaultSource mutable = source.getEditable();
-                        DefaultEntry e = new DefaultEntry(
+                        DefaultEntry e =
+                                new DefaultEntry(
                                         privId,
                                         MKeychainUtil.getType(pem),
                                         privName,
@@ -152,16 +180,17 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
                     }
                     {
                         String pubName = "jws." + getServerIdent() + ".pub";
-                        
+
                         MProperties parameters = new MProperties();
                         parameters.put(PemBlock.IDENT, pubId);
                         parameters.put(PemBlock.PRIV_ID, privId);
                         parameters.put(PemBlock.ALGORITHM, ALGORITHM);
                         String pem = MSecurity.keyToString(keyPair.getPublic(), parameters);
-                        
+
                         KeychainSource source = chain.getSource(CFG_SOURCE_PUB.value());
                         MutableVaultSource mutable = source.getEditable();
-                        DefaultEntry e = new DefaultEntry(
+                        DefaultEntry e =
+                                new DefaultEntry(
                                         pubId,
                                         MKeychainUtil.getType(pem),
                                         pubName,
@@ -170,7 +199,7 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
                         mutable.addEntry(e);
                         mutable.doSave();
                     }
-                    
+
                     jwtPrivateKey = keyPair.getPrivate();
                     jwtKeyId = pubId.toString();
                 }
@@ -182,38 +211,34 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
             throw new ShiroException(t);
         }
     }
-    
+
     protected String getServerIdent() {
-        return MSystem.getHostname(); //TODO ?
+        return MSystem.getHostname(); // TODO ?
     }
 
     protected Key getJwtPublicKeyById(String kid) {
-        
+
         PublicKey key = publicKeyCache.get(kid);
         if (key != null) return key;
-        
+
         try {
             MKeychain chain = MKeychainUtil.loadDefault();
             KeychainSource source = chain.getSource(CFG_SOURCE_PUB.value());
             KeyEntry e = null;
-            if (MValidator.isUUID(kid))
-                e = source.getEntry(UUID.fromString(kid));
-            else
-                e = source.getEntry("jwt." + kid + ".pub");
-            
-            if (e == null)
-                throw new MRuntimeException("Key unknown",kid);
-            
+            if (MValidator.isUUID(kid)) e = source.getEntry(UUID.fromString(kid));
+            else e = source.getEntry("jwt." + kid + ".pub");
+
+            if (e == null) throw new MRuntimeException("Key unknown", kid);
+
             String pem = e.getValue().value();
             key = MSecurity.readPublicKey(pem, ALGORITHM, PROVIDER);
             publicKeyCache.put(kid, key);
             return key;
         } catch (Exception e) {
-            throw new MRuntimeException(kid,e);
+            throw new MRuntimeException(kid, e);
         }
     }
 
-    
     private static class JwsDataImpl implements JwsData {
 
         private Jws<Claims> jws;
@@ -226,7 +251,6 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
         public String getSubject() {
             return jws.getBody().getSubject();
         }
-        
     }
 
     @Override
@@ -240,5 +264,4 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
         jwtKeyId = null;
         publicKeyCache.clear();
     }
-
 }

@@ -77,7 +77,10 @@ public class MApi {
             }
             if (api == null) api = new DefaultMApi();
             if (isDirtyTrace())
-                System.out.println(MDate.toIsoDateTime(new Date()) + " MApi implementation: " + api.getClass().getCanonicalName());
+                System.out.println(
+                        MDate.toIsoDateTime(new Date())
+                                + " MApi implementation: "
+                                + api.getClass().getCanonicalName());
             if (api instanceof ApiInitialize)
                 ((ApiInitialize) api).doInitialize(DummyClass.class.getClassLoader());
             // init local log at the end

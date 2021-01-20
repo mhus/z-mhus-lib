@@ -794,9 +794,9 @@ public class MSystem {
 
     /**
      * Like System.setProperty(). Sets the property with to a value. But this one accepts also null
-     * values and will clear the property in this case.
-     * Key is ownerClass + _ + key
-     * @param owner 
+     * values and will clear the property in this case. Key is ownerClass + _ + key
+     *
+     * @param owner
      * @param key
      * @param value
      * @return Previous value
@@ -810,7 +810,8 @@ public class MSystem {
     /**
      * Load from System.getProperty() or the fallback from Sytsem.getenv and with prefix from owner.
      * Key is ownerClass + _ + key
-     * @param owner 
+     *
+     * @param owner
      * @param key
      * @return Current value or null
      */
@@ -825,13 +826,17 @@ public class MSystem {
     /**
      * Load from System.getProperty() or the fallback from Sytsem.getenv and with prefix from owner.
      * Key is ownerClass + _ + key
-     * @param owner 
+     *
+     * @param owner
      * @param key
      * @param def
      * @return Current value or def
      */
     public static String getProperty(Object owner, String key, String def) {
-        String name = getOwnerName(owner).replace('.', '_').replace('@', '_').replace('$', '_') + "_" + key;
+        String name =
+                getOwnerName(owner).replace('.', '_').replace('@', '_').replace('$', '_')
+                        + "_"
+                        + key;
         String ret = System.getProperty(getOwnerName(owner) + "_" + key);
         if (ret != null) return ret;
         ret = System.getenv(name);
@@ -1097,11 +1102,9 @@ public class MSystem {
 
     public static String getOwnerName(Object owner) {
         if (owner == null) return "?";
-        if (owner instanceof Class)
-            return getCanonicalClassName((Class<?>)owner);
+        if (owner instanceof Class) return getCanonicalClassName((Class<?>) owner);
 
-        if (owner instanceof String)
-            return (String)owner;
+        if (owner instanceof String) return (String) owner;
 
         return getCanonicalClassName(owner.getClass());
     }

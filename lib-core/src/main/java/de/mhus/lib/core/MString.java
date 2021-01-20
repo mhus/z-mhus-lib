@@ -2107,7 +2107,8 @@ public class MString {
         return serialize(sb, msg, maxMsgSize, null);
     }
 
-    public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize, List<String> exceptions) {
+    public static Throwable serialize(
+            StringBuilder sb, Object[] msg, int maxMsgSize, List<String> exceptions) {
         Throwable error = null;
         if (msg == null) return null;
         for (Object o : msg) {
@@ -2219,8 +2220,9 @@ public class MString {
         return c >= '0' && c <= '9';
     }
     /**
-     * A lighter version of String.valueOf(Object). It will not create a new
-     * object if the object is already a string.
+     * A lighter version of String.valueOf(Object). It will not create a new object if the object is
+     * already a string.
+     *
      * @param in Transform this to string
      * @return null or the string representation
      */

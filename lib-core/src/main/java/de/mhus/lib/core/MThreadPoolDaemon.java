@@ -121,7 +121,7 @@ public class MThreadPoolDaemon extends MThreadPool implements Runnable {
         }
         return size;
     }
-    
+
     public static void run(Runnable task) {
         new MThreadPoolDaemon(
                         new Runnable() {
@@ -137,21 +137,20 @@ public class MThreadPoolDaemon extends MThreadPool implements Runnable {
                         })
                 .start();
     }
-    
+
     public static void run(Consumer<Thread> consumer) {
         new MThreadPoolDaemon(
-                new Runnable() {
+                        new Runnable() {
 
-                    @Override
-                    public void run() {
-                        try {
-                            consumer.accept(Thread.currentThread());
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }
-                    }
-                })
-        .start();
+                            @Override
+                            public void run() {
+                                try {
+                                    consumer.accept(Thread.currentThread());
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
     }
-
 }

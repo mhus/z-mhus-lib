@@ -504,10 +504,9 @@ public class DockerScenario {
         }
         return System.getenv("DOCKER_HOST");
     }
-    
+
     boolean isDockerInDockerMode() {
-        if (System.getenv("DOCKER_MODE") == null)
-            return DockerInitializer.isDockerEnabled();
+        if (System.getenv("DOCKER_MODE") == null) return DockerInitializer.isDockerEnabled();
 
         return "DOCKER".equals(System.getenv("DOCKER_MODE"));
     }

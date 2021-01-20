@@ -154,13 +154,12 @@ public class M {
             throw t;
         }
     }
-    
+
     public static <E> Iterable<E> iterate(Iterator<E> iterator) {
         return new Iterate<>(iterator);
     }
-    
+
     public static <E> Iterable<E> iterate(Enumeration<E> enu) {
         return new EnumerationIterator<E>(enu);
     }
-
 }

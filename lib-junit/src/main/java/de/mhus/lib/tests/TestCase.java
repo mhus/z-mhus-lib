@@ -43,29 +43,28 @@ public class TestCase {
         Optional<Class<?>> clazz = testInfo.getTestClass();
         if (clazz.isPresent())
             System.out.println("START TEST FOR " + clazz.get().getCanonicalName());
-        else
-            System.out.println("START TEST FOR UNKNOWN");
+        else System.out.println("START TEST FOR UNKNOWN");
         out = System.out;
         err = System.err;
         in = System.in;
         if (MCast.toboolean(System.getenv().getOrDefault("test.waitBeforeExecute", ""), false))
             waitBeforeExecute = true;
     }
+
     @BeforeEach
     public void beforeEach(TestInfo testInfo) throws SkipTestException {
-        
+
         if (out != null) System.setOut(out);
         if (err != null) System.setErr(err);
         if (in != null) System.setIn(in);
-        
-        if (skipTest)
-            throw new SkipTestException();
-        
+
+        if (skipTest) throw new SkipTestException();
+
         System.out.println();
         System.out.println("--------------------------------------------------");
         TestUtil.start(testInfo);
         System.out.println("--------------------------------------------------");
-        
+
         if (waitBeforeExecute) {
             System.out.println("Press ENTER to start test");
             Scanner scanner = new Scanner(System.in);
@@ -78,16 +77,15 @@ public class TestCase {
     @AfterEach
     public void afterEach(TestInfo testInfo) {
         timer.stop();
-        
+
         if (out != null) System.setOut(out);
         if (err != null) System.setErr(err);
         if (in != null) System.setIn(in);
-        
+
         System.out.println();
         System.out.println("--------------------------------------------------");
         TestUtil.stop(testInfo);
         System.out.println("Time: " + timer.getCurrentTimeAsString());
         System.out.println("--------------------------------------------------");
     }
-
 }

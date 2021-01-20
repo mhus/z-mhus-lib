@@ -87,8 +87,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
         this(owner.getUuid(), owner.getClass(), owner, null, title, form);
     }
 
-    public OperationDescription(
-            Operation owner, String path, String title, DefRoot form) {
+    public OperationDescription(Operation owner, String path, String title, DefRoot form) {
         this(owner.getUuid(), path, null, owner, title, form);
     }
 
@@ -99,13 +98,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
             Version version,
             String title,
             DefRoot form) {
-        this(
-                uuid,
-                clazz.getCanonicalName(),
-                version,
-                nlsProvider,
-                title,
-                form);
+        this(uuid, clazz.getCanonicalName(), version, nlsProvider, title, form);
     }
 
     public void setForm(DefRoot form) {
@@ -133,17 +126,13 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
     }
 
     public OperationDescription(
-            UUID uuid,
-            String path,
-            Version version,
-            MNlsProvider nlsProvider,
-            String title) {
+            UUID uuid, String path, Version version, MNlsProvider nlsProvider, String title) {
         this(uuid, path, version, nlsProvider, title, null);
     }
 
     /**
      * Create a clone with the same UUID, but it's possible to manipulate the labels.
-     * 
+     *
      * @param uuid
      * @param path
      * @param version
@@ -174,12 +163,9 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
                 desc.getVersion(),
                 desc.nlsProvider,
                 desc.getTitle(),
-                desc.getForm()
-                );
-        if (desc.labels != null)
-            this.labels = new HashMap<>(desc.labels);
-        if (desc.parameterDef != null)
-            this.parameterDef = desc.parameterDef;
+                desc.getForm());
+        if (desc.labels != null) this.labels = new HashMap<>(desc.labels);
+        if (desc.parameterDef != null) this.parameterDef = desc.parameterDef;
     }
 
     public String getTitle() {
@@ -268,16 +254,16 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         in.readInt(); // 1
-        title = (String)in.readObject();
-        form = (DefRoot)in.readObject();
-        labels = (HashMap<String, String>)in.readObject();
-        parameterDef = (ParameterDefinitions)in.readObject();
-        version = (Version)in.readObject();
-        path = (String)in.readObject();
-        path = (String)in.readObject();
-        uuid = (UUID)in.readObject();
+        title = (String) in.readObject();
+        form = (DefRoot) in.readObject();
+        labels = (HashMap<String, String>) in.readObject();
+        parameterDef = (ParameterDefinitions) in.readObject();
+        version = (Version) in.readObject();
+        path = (String) in.readObject();
+        path = (String) in.readObject();
+        uuid = (UUID) in.readObject();
     }
-    
+
     public ObjectNode toJson() throws Exception {
         ObjectNode json = MJson.createObjectNode();
 
@@ -304,20 +290,19 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
         UUID uuid = UUID.fromString(json.get("uuid").asText());
         String path = json.get("path").asText();
         String title = json.get("title").asText();
-        Version version = new Version( json.get("version").asText() );
-        
+        Version version = new Version(json.get("version").asText());
+
         OperationDescription desc = new OperationDescription(uuid, path, version, null, title);
-        
+
         if (json.has("form")) {
-            DefRoot form = ModelUtil.toModel((ObjectNode)json.get("form"));
+            DefRoot form = ModelUtil.toModel((ObjectNode) json.get("form"));
             desc.setForm(form);
         }
-        
+
         HashMap<String, String> labels = desc.getLabels();
         for (Map.Entry<String, JsonNode> field : M.iterate(json.get("labels").fields())) {
             labels.put(field.getKey(), field.getValue().asText());
         }
         return desc;
     }
-
 }

@@ -251,7 +251,7 @@ public class MThreadPool extends MObject implements Runnable {
             sleep(200);
         }
     }
-    
+
     public static void run(Runnable task) {
         new MThreadPool(
                         new Runnable() {
@@ -267,21 +267,20 @@ public class MThreadPool extends MObject implements Runnable {
                         })
                 .start();
     }
-    
+
     public static void run(Consumer<Thread> consumer) {
         new MThreadPool(
-                new Runnable() {
+                        new Runnable() {
 
-                    @Override
-                    public void run() {
-                        try {
-                            consumer.accept(Thread.currentThread());
-                        } catch (Throwable t) {
-                            t.printStackTrace();
-                        }
-                    }
-                })
-        .start();
+                            @Override
+                            public void run() {
+                                try {
+                                    consumer.accept(Thread.currentThread());
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        })
+                .start();
     }
-
 }

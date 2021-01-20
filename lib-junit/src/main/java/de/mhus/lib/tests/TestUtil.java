@@ -64,7 +64,7 @@ public class TestUtil {
                         + "::"
                         + (method == null || method.isEmpty() ? "?" : method.get().getName()));
     }
-    
+
     public static void stop(TestInfo testInfo) {
         if (testInfo == null) {
             System.out.println("<<< unknown");
@@ -78,5 +78,4 @@ public class TestUtil {
                         + "::"
                         + (method == null || method.isEmpty() ? "?" : method.get().getName()));
     }
-    
 }

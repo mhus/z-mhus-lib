@@ -53,8 +53,8 @@ public class MJson {
     public static final TransformStrategy DEFAULT_STRATEGY = new SerializerTransformer();
     private static ObjectMapper mapper = new ObjectMapper();
     private static JsonFactory factory = new JsonFactory();
-    {
 
+    {
     }
 
     public static void save(JsonNode json, File file)

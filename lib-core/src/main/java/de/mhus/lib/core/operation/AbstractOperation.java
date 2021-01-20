@@ -42,8 +42,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
     @Override
     public boolean hasAccess(TaskContext context) {
         try {
-            if (AccessUtil.isAnnotated(getClass()))
-                AccessUtil.checkPermission(getClass());
+            if (AccessUtil.isAnnotated(getClass())) AccessUtil.checkPermission(getClass());
         } catch (AuthorizationException e) {
             return false;
         }
@@ -54,17 +53,19 @@ public abstract class AbstractOperation extends MLog implements Operation {
     public final OperationResult doExecute(TaskContext context) throws Exception {
         log().d("execute", new LogProperties(context.getParameters()));
         // must be done by caller before
-//        if (!hasAccess()) {
-//            log().d("access denied", context, context.getErrorMessage());
-//            return new NotSuccessful(this, "access denied", OperationResult.ACCESS_DENIED);
-//        }
-//        if (!canExecute(context)) {
-//            log().d("execution denied", context.getErrorMessage());
-//            return new NotSuccessful(
-//                    this,
-//                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't execute",
-//                    OperationResult.NOT_EXECUTABLE);
-//        }
+        //        if (!hasAccess()) {
+        //            log().d("access denied", context, context.getErrorMessage());
+        //            return new NotSuccessful(this, "access denied",
+        // OperationResult.ACCESS_DENIED);
+        //        }
+        //        if (!canExecute(context)) {
+        //            log().d("execution denied", context.getErrorMessage());
+        //            return new NotSuccessful(
+        //                    this,
+        //                    context.getErrorMessage() != null ? context.getErrorMessage() : "can't
+        // execute",
+        //                    OperationResult.NOT_EXECUTABLE);
+        //        }
         OperationResult ret = doExecute2(context);
         log().d("result", ret);
         return ret;
@@ -146,13 +147,14 @@ public abstract class AbstractOperation extends MLog implements Operation {
             form = ((IFormProvider) this).getForm();
         }
 
-        OperationDescription ret = new OperationDescription(getUuid(), path, version, this, title, form);
+        OperationDescription ret =
+                new OperationDescription(getUuid(), path, version, this, title, form);
         if (desc != null) {
             String[] labels = desc.labels();
             for (String label : labels) {
                 int pos = label.indexOf('=');
                 if (pos > 0) {
-                    ret.getLabels().put(label.substring(0, pos), label.substring(pos+1));
+                    ret.getLabels().put(label.substring(0, pos), label.substring(pos + 1));
                 }
             }
         }
@@ -162,11 +164,10 @@ public abstract class AbstractOperation extends MLog implements Operation {
 
     /**
      * Overwrite to manipulate created description.
+     *
      * @param desc
      */
-    protected void prepareCreatedDescription(OperationDescription desc) {
-        
-    }
+    protected void prepareCreatedDescription(OperationDescription desc) {}
 
     public boolean validateParameters(ParameterDefinitions definitions, TaskContext context) {
         if (definitions == null) return true;

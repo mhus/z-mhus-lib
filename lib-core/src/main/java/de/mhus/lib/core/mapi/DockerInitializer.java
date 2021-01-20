@@ -32,7 +32,7 @@ public class DockerInitializer implements CfgInitiator {
     public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
 
         loadData();
-        
+
         if (containerId != null) {
             System.out.println("Container: " + containerId);
             ServerIdent.getAttributes().setString("containerId", containerId);
@@ -46,7 +46,7 @@ public class DockerInitializer implements CfgInitiator {
         loadData();
         return containerId != null;
     }
-    
+
     static void loadData() {
         if (containerId != null) return;
         // get docker id

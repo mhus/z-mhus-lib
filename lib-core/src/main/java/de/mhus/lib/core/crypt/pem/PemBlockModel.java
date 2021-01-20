@@ -216,7 +216,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
         //		return Base64.decode(getBlock());
         return Base64.getDecoder().decode(block);
     }
-    
+
     @Override
     public boolean save(File file) throws IOException {
         return MFile.writeFile(file, toString());
@@ -251,7 +251,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
         try {
             return new PemBlockModel().parse(MFile.readFile(f));
         } catch (ParseException e) {
-            throw new MRuntimeException(f,e);
+            throw new MRuntimeException(f, e);
         }
     }
 
@@ -270,5 +270,4 @@ public class PemBlockModel extends MProperties implements PemBlock {
             throw new MRuntimeException(e);
         }
     }
-
 }

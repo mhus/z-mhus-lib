@@ -29,23 +29,24 @@ public interface Monitor {
 
     /**
      * Set the amount of known steps.
+     *
      * @param steps
      */
     void setSteps(long steps);
 
     /**
      * Set the current step pointer.
+     *
      * @param step
      */
     void setStep(long step);
 
-    /**
-     * Increment the current step pointer.
-     */
+    /** Increment the current step pointer. */
     void incrementStep();
-    
+
     /**
      * Return the current step pointer.
+     *
      * @return current step pointer
      */
     long getStep();

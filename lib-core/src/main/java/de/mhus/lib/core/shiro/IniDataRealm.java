@@ -50,34 +50,33 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     public IniDataRealm() {
         super();
-        setCredentialsMatcher(new CombiCredentialsMatcher() );
+        setCredentialsMatcher(new CombiCredentialsMatcher());
     }
 
     public IniDataRealm(Ini ini) {
         super(ini);
-        setCredentialsMatcher(new CombiCredentialsMatcher() );
+        setCredentialsMatcher(new CombiCredentialsMatcher());
     }
 
     public IniDataRealm(String resourcePath) {
         super(resourcePath);
-        setCredentialsMatcher(new CombiCredentialsMatcher() );
+        setCredentialsMatcher(new CombiCredentialsMatcher());
     }
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        if (token != null && BearerToken.class.isAssignableFrom(token.getClass()))
-            return true;
+        if (token != null && BearerToken.class.isAssignableFrom(token.getClass())) return true;
         return super.supports(token);
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        
-        if (token instanceof UsernamePasswordToken)
-            return super.doGetAuthenticationInfo(token);
-        
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
+            throws AuthenticationException {
+
+        if (token instanceof UsernamePasswordToken) return super.doGetAuthenticationInfo(token);
+
         if (token instanceof BearerToken) {
-            String tokenStr = ((BearerToken)token).getToken();
+            String tokenStr = ((BearerToken) token).getToken();
             JwsData jwtToken = M.l(JwtProvider.class).readToken(tokenStr);
             String username = jwtToken.getSubject();
             if (username != null) {
@@ -97,8 +96,8 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             }
         }
 
-//      throw new UnknownAccountException(username);
-      return null;
+        //      throw new UnknownAccountException(username);
+        return null;
     }
 
     @Override
@@ -202,7 +201,9 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     }
 
     @Override
-    public String createBearerToken(Subject subject, String issuer, BearerConfiguration configuration) throws ShiroException {
+    public String createBearerToken(
+            Subject subject, String issuer, BearerConfiguration configuration)
+            throws ShiroException {
         String userName = AccessUtil.getPrincipal(subject);
         SimpleAccount user = getUser(userName);
         if (user != null)
