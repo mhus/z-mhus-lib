@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.cast;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -41,6 +43,10 @@ public class ObjectToDate implements Caster<Object, Date> {
         if (in instanceof Date) return (Date) in;
         if (in instanceof Calendar) return ((Calendar) in).getTime();
         if (in instanceof Long) return new Date((Long) in);
+        if (in instanceof LocalDateTime)
+            return java.sql.Timestamp.valueOf((LocalDateTime)in);
+        if (in instanceof LocalDate)
+            return java.sql.Date.valueOf((LocalDate)in);
         try {
             String ins = String.valueOf(in);
             Calendar c = ObjectToCalendar.toCalendar(ins, locale);
