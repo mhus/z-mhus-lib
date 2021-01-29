@@ -43,10 +43,8 @@ public class ObjectToDate implements Caster<Object, Date> {
         if (in instanceof Date) return (Date) in;
         if (in instanceof Calendar) return ((Calendar) in).getTime();
         if (in instanceof Long) return new Date((Long) in);
-        if (in instanceof LocalDateTime)
-            return java.sql.Timestamp.valueOf((LocalDateTime)in);
-        if (in instanceof LocalDate)
-            return java.sql.Date.valueOf((LocalDate)in);
+        if (in instanceof LocalDateTime) return java.sql.Timestamp.valueOf((LocalDateTime) in);
+        if (in instanceof LocalDate) return java.sql.Date.valueOf((LocalDate) in);
         try {
             String ins = String.valueOf(in);
             Calendar c = ObjectToCalendar.toCalendar(ins, locale);

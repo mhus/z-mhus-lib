@@ -55,10 +55,9 @@ public abstract class ConstantParsingPart extends StringParsingPart {
         MString.appendRepeating(level, ' ', out);
         out.append(getClass().getCanonicalName()).append(" ").append(content).append("\n");
     }
-    
+
     @Override
     public String toString() {
-        return MSystem.toString(this,content);
+        return MSystem.toString(this, content);
     }
-
 }
