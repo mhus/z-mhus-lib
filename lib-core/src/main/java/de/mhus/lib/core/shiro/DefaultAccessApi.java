@@ -39,8 +39,8 @@ public class DefaultAccessApi extends MLog implements AccessApi {
                     AccessApi.class,
                     "iniResourcePath",
                     MApi.getFile(MApi.SCOPE.ETC, "shiro.ini").getPath());
-    protected SecurityManager securityManager;
     protected Environment env;
+    private ResourceManager resourceManager;
 
     public DefaultAccessApi() {
         initialize();
@@ -49,12 +49,20 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     protected void initialize() {
         try {
             log().d("Initialize shiro", CFG_CONFIG_FILE);
-            env = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+            BasicIniEnvironment basicEnv = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+            env = basicEnv;
+            try {
+                resourceManager = basicEnv.getObject(LOG_LEVEL_MAPPING, ResourceManager.class);
+            } catch (Throwable t) {
+                log().d("Use default resource manager",t.toString());
+                resourceManager = new DefaultResourceManager();
+            }
         } catch (Exception e) {
             log().d("Initialize empty shiro", CFG_CONFIG_FILE, e.toString());
             HashMap<String, Object> seed = new HashMap<>();
             seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, new EmptySecurityManager());
             env = new DefaultEnvironment(seed);
+            resourceManager = new DefaultResourceManager();
         }
         SecurityUtils.setSecurityManager(env.getSecurityManager());
         //        Factory<SecurityManager> factory = new
@@ -124,5 +132,10 @@ public class DefaultAccessApi extends MLog implements AccessApi {
         } catch (Throwable t) {
             log().d(t);
         }
+    }
+
+    @Override
+    public ResourceManager getResourceManager() {
+        return resourceManager;
     }
 }

@@ -18,8 +18,10 @@ package de.mhus.lib.core.schedule;
 import java.util.UUID;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.logging.ITracer;
@@ -31,6 +33,9 @@ import de.mhus.lib.core.operation.OperationDescription;
 import de.mhus.lib.core.operation.OperationResult;
 import de.mhus.lib.core.operation.TaskContext;
 import de.mhus.lib.core.util.MNls;
+import io.opentracing.References;
+import io.opentracing.Scope;
+import io.opentracing.SpanContext;
 
 public abstract class SchedulerJob extends MTimerTask implements Operation {
 
@@ -52,10 +57,12 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     private MNls nls;
     private String info;
     private TimerTaskInterceptor intercepter;
-    private String logTrailConfig;
+    private MProperties logTrailConfig;
     private UUID uuid = UUID.randomUUID();
 
     public SchedulerJob(ITimerTask task) {
+        if (ITracer.get().current() != null)
+            logTrailConfig  = ITracer.serialize(ITracer.get().current().context());
         setTask(task);
         if (task == null) setName("null");
         else if (task instanceof Named) setName(((Named) task).getName());
@@ -94,12 +101,20 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
         if (forced || isExecutionTimeReached()) {
 
-            boolean logConfigReset = false;
-            if (getLogTrailConfig() != null) {
-                ITracer.setTrailConfig(getLogTrailConfig());
-                logConfigReset = true;
-            }
-            try {
+            SpanContext ctx = null;
+            Scope scope = null;
+            if (getLogTrailConfig() != null)
+                ctx = ITracer.deserialize(getLogTrailConfig());
+            if (ctx == null) 
+                scope = ITracer.get().tracer().buildSpan(getName()).startActive(true);
+            else 
+                scope =
+                        ITracer.get()
+                                .tracer()
+                                .buildSpan(getName())
+                                .addReference(References.FOLLOWS_FROM, ctx)
+                                .startActive(true);
+            try (Scope scopeFinal = scope) {
                 boolean doIt = true;
                 if (intercepter != null) {
                     log.d("Intercepter beforeExecution", getName());
@@ -147,8 +162,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                 }
                 context.clear();
                 setDone(true);
-            } finally {
-                if (logConfigReset) ITracer.releaseTrailConfig();
             }
         } else {
             log.d("Execution delayed", task);
@@ -392,12 +405,8 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
         if (intercepter != null) intercepter.initialize(this);
     }
 
-    public String getLogTrailConfig() {
+    public IProperties getLogTrailConfig() {
         return logTrailConfig;
-    }
-
-    public void setLogTrailConfig(String logTrailConfig) {
-        this.logTrailConfig = logTrailConfig;
     }
 
     @Override

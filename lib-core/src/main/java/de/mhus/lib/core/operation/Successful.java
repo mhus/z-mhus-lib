@@ -16,18 +16,27 @@
 package de.mhus.lib.core.operation;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Successful extends OperationResult {
 
     public Successful(Operation operation) {
-        this(operation, "", 0, null);
+        this(operation, "", 0, (String)null);
     }
 
-    public Successful(Operation operation, String msg, Object result) {
+    public Successful(Operation operation, String msg) {
+        this(operation, msg, 0, (String)null);
+    }
+
+    public Successful(Operation operation, String msg, int rc) {
+        this(operation, msg, rc, (String)null);
+    }
+    
+    public Successful(Operation operation, String msg, Map<?,?> result) {
         this(operation, msg, 0, result);
     }
 
-    public Successful(Operation operation, String msg, int rc, Object result) {
+    public Successful(Operation operation, String msg, int rc, Map<?,?> result) {
         setOperationPath(operation.getDescription().getPath());
         setCaption(operation.getDescription().getCaption());
         setMsg(msg);
@@ -36,7 +45,29 @@ public class Successful extends OperationResult {
         setSuccessful(true);
     }
 
-    public Successful(String path, String msg, int rc, Object result) {
+    public Successful(String path, String msg, int rc, Map<?,?> result) {
+        setOperationPath(path);
+        setCaption("");
+        setMsg(msg);
+        setResult(result);
+        setReturnCode(rc);
+        setSuccessful(true);
+    }
+
+    public Successful(Operation operation, String msg, String result) {
+        this(operation, msg, 0, result);
+    }
+
+    public Successful(Operation operation, String msg, int rc, String result) {
+        setOperationPath(operation.getDescription().getPath());
+        setCaption(operation.getDescription().getCaption());
+        setMsg(msg);
+        setResult(result);
+        setReturnCode(rc);
+        setSuccessful(true);
+    }
+
+    public Successful(String path, String msg, int rc, String result) {
         setOperationPath(path);
         setCaption("");
         setMsg(msg);

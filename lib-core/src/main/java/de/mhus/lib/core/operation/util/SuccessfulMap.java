@@ -21,27 +21,26 @@ import java.util.Set;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.Successful;
-import de.mhus.lib.core.util.SerializedValue;
 
-// TODO use de.mhus.lib.core.strategy.SuccessfulSerializedMap in mhu-lib 3.6.2
-public class SuccessfulSerializedMap extends Successful {
+public class SuccessfulMap extends Successful {
 
-    public SuccessfulSerializedMap(Operation operation, String msg) {
+    public SuccessfulMap(Operation operation, String msg) {
         super(operation, msg);
-        setResult(new SerializedValue(new MProperties()));
+        setResult(new MProperties());
     }
 
-    public SuccessfulSerializedMap(String path, String msg, int rc) {
-        super(path, msg, rc, new MProperties());
-    }
-
-    public SuccessfulSerializedMap(String path, String msg, int rc, String... keyValues) {
+    public SuccessfulMap(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, keyValues);
+    }
+
+    public SuccessfulMap(Operation operation, String msg, int rc, String... keyValues) {
+        super(operation.getDescription().getPath(), msg, rc, keyValues);
+        setCaption(operation.getDescription().getCaption());
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> getMap() {
-        return (Map<String, Object>) ((SerializedValue) getResult()).getValue();
+        return ((Map<String, Object>) getResult());
     }
 
     public void put(String key, Object value) {

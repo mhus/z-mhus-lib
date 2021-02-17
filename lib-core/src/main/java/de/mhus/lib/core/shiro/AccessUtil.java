@@ -87,6 +87,14 @@ public class AccessUtil {
                             RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler(),
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
 
+    public static boolean hasAccess(String object) {
+        return hasAccess(getSubject(), object);
+    }
+
+    public static boolean hasAccess(Subject subject, String object) {
+        return M.l(AccessApi.class).getResourceManager().hasAccess(subject, object);
+    }
+
     public static boolean isAdmin() {
         try {
             Subject subject = M.l(AccessApi.class).getSubject(); // init

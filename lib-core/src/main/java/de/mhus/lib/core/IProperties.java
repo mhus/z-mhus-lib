@@ -94,6 +94,15 @@ public interface IProperties
     }
 
     /**
+     * This will transfer the property to a string using Rfc1738 url encoding
+     * @param properties
+     * @return The String
+     */
+    public static String implode(IProperties properties) {
+        return MUri.implode(properties);
+    }
+
+    /**
      * This will handle the strings like properties. Means a string without separator will be stored
      * as value with an increasing key as integer, e.g. [val1, val2, a=b] will be 0=val1, 1=val2,
      * a=b

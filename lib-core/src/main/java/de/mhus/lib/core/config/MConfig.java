@@ -188,7 +188,10 @@ public class MConfig extends MProperties implements IConfig {
 
     @Override
     public void setObject(String key, IConfig object) {
-        // TODO Warn if already bound ? - clone?
+        if (object == null) {
+            remove(key);
+            return;
+        }
         ((MConfig) object).parent = this;
         ((MConfig) object).name = key;
         put(key, object);
@@ -215,6 +218,17 @@ public class MConfig extends MProperties implements IConfig {
             setObject(key, object);
             return;
         }
+    }
+
+    @Override
+    public IConfig setObject(String key, ConfigSerializable object) {
+        IConfig cfg = createObject(key);
+        try {
+            object.writeSerializableConfig(cfg);
+        } catch (Exception e) {
+            throw new MRuntimeException(e);
+        }
+        return cfg;
     }
 
     @Override

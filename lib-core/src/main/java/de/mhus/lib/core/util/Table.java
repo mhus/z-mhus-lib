@@ -27,9 +27,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.mhus.lib.core.config.ConfigList;
+import de.mhus.lib.core.config.ConfigSerializable;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
 
-public class Table implements Serializable, Externalizable {
+public class Table implements Serializable, Externalizable, ConfigSerializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -201,5 +204,41 @@ public class Table implements Serializable, Externalizable {
                 rows.add(row);
             }
         }
+    }
+
+    @Override
+    public void readSerializableConfig(IConfig cfg) throws Exception {
+        name = cfg.getString("name", null);
+        
+        columns = new LinkedList<>();
+        columnsIndex = new HashMap<>();
+        
+        for (IConfig col : cfg.getArrayOrCreate("columns")) {
+            TableColumn tc = new TableColumn();
+            tc.readSerializableConfig(col);
+            columns.add(tc);
+            columnsIndex.put(tc.getName(), columns.size());
+        }
+        
+        for (IConfig row : cfg.getArrayOrCreate("rows")) {
+            TableRow tr = new TableRow();
+            tr.setTable(this);
+            tr.readSerializableConfig(row);
+            rows.add(tr);
+        }
+    }
+
+    @Override
+    public void writeSerializableConfig(IConfig cfg) throws Exception {
+        cfg.setString("name", name);
+        ConfigList arr = cfg.createArray("columns");
+        for (TableColumn v : columns)
+            v.writeSerializableConfig( arr.createObject() );
+        
+        arr = cfg.createArray("rows");
+        for (TableRow tr : rows) {
+            tr.writeSerializableConfig(arr.createObject() );
+        }
+        
     }
 }

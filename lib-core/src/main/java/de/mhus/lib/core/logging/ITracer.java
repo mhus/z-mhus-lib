@@ -15,12 +15,22 @@
  */
 package de.mhus.lib.core.logging;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MProperties;
 import io.opentracing.Scope;
 import io.opentracing.Span;
+import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
 
 @DefaultImplementation(DefaultTracer.class)
 public interface ITracer {
@@ -74,16 +84,6 @@ public interface ITracer {
      */
     Tracer tracer();
 
-    public static void setTrailConfig(String logTrailConfig) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public static void releaseTrailConfig() {
-        // TODO Auto-generated method stub
-
-    }
-
     /**
      * Fast access to tracer
      *
@@ -96,4 +96,45 @@ public interface ITracer {
     void activate(String activation);
 
     SpanBuilder createSpan(Span parent, String spanName, Object... tagPairs);
+    
+    public static MProperties serialize(SpanContext context) {
+        MProperties out = new MProperties();
+        get().tracer().inject(context, Format.Builtin.TEXT_MAP, new TextMap() {
+
+            @Override
+            public Iterator<Entry<String, String>> iterator() {
+                return null;
+            }
+
+            @Override
+            public void put(String key, String value) {
+                out.put(key, value);
+            }
+            
+        });
+        return out;
+    }
+    
+    public static SpanContext deserialize(IProperties prop) {
+        Map<String, String> copy = new HashMap<String,String>();
+        prop.forEach((k,v) -> copy.put(k, String.valueOf(v)));
+        SpanContext parentSpanCtx =
+                ITracer.get()
+                        .tracer()
+                        .extract(
+                                Format.Builtin.TEXT_MAP,
+                                new TextMap() {
+
+                                    @Override
+                                    public Iterator<Entry<String, String>> iterator() {
+                                        return copy.entrySet().iterator();
+                                    }
+
+                                    @Override
+                                    public void put(String key, String value) {
+                                    }
+                                });
+        return parentSpanCtx;
+    }
+    
 }

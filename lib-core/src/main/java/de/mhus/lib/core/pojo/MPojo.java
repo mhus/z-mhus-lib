@@ -47,6 +47,9 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
+import de.mhus.lib.core.config.ConfigList;
+import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Base64;
@@ -101,6 +104,252 @@ public class MPojo {
         return defaultModelFactory;
     }
 
+    public static IConfig pojoToConfig(Object from) throws IOException {
+        MConfig to = new MConfig();
+        pojoToConfig(from, to, getDefaultModelFactory(), false, 0);
+        return to;
+    }
+    
+    public static void pojoToConfig(Object from, IConfig to) throws IOException {
+        pojoToConfig(from, to, getDefaultModelFactory(), false, 0);
+    }
+    
+    public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory) throws IOException {
+        pojoToConfig(from, to, factory, false, 0);
+    }
+    
+    public static void pojoToConfig(Object from, IConfig to, boolean usePublic) throws IOException {
+        pojoToConfig(from, to, getDefaultModelFactory(), usePublic, 0);
+    }
+    
+    public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean usePublic, int level) throws IOException {
+        if (level > MAX_LEVEL) return;
+        PojoModel model = factory.createPojoModel(from.getClass());
+        for (PojoAttribute<?> attr : model) {
+            boolean deep = false;
+            if (!attr.canRead()) continue;
+            if (usePublic) {
+                Public pub = attr.getAnnotation(Public.class);
+                if (pub != null) {
+                    if (!pub.readable()) continue;
+                    if (MCollection.contains(pub.hints(), MPojo.DEEP)) deep = true;
+                }
+            }
+            Object value = attr.get(from);
+            String name = attr.getName();
+            setConfigValue(to, name, value, factory, usePublic, deep, level + 1);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void setConfigValue(
+            IConfig to,
+            String name,
+            Object value,
+            PojoModelFactory factory,
+            boolean usePublic,
+            boolean deep,
+            int level)
+            throws IOException {
+        if (level > MAX_LEVEL) return;
+        try {
+            if (value == null) {}
+            else if (value instanceof Boolean) to.setBoolean(name, (boolean) value);
+            else if (value instanceof Integer) to.setInt(name, (int) value);
+            else if (value instanceof String) to.setString(name, (String) value);
+            else if (value instanceof Long) to.setLong(name, (long) value);
+//            else if (value instanceof byte[]) to.put(name, (byte[]) value);
+            else if (value instanceof Float) to.setFloat(name, (float) value);
+            else if (value instanceof Double) to.setDouble(name, (double) value);
+            else if (value instanceof Short) to.setInt(name, (short) value);
+            else if (value instanceof Date) to.setLong(name, ((Date)value).getTime());
+            else if (value instanceof Character)
+                to.put(name, Character.toString((Character) value));
+            else if (value instanceof Date) {
+                to.put(name, ((Date) value).getTime());
+                to.put(name + "_", MDate.toIso8601((Date) value));
+            } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
+            else if (value instanceof IConfig) to.addObject(name, (IConfig) value);
+            else if (value.getClass().isEnum()) {
+                to.put(name, ((Enum<?>) value).ordinal());
+                to.put(name + "_", ((Enum<?>) value).name());
+            } else if (value instanceof Map) {
+                IConfig obj = to.createObject(name);
+                for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
+                    setConfigValue(
+                            obj,
+                            String.valueOf(entry.getKey()),
+                            entry.getValue(),
+                            factory,
+                            usePublic,
+                            true,
+                            level + 1);
+                }
+            } else if (value.getClass().isArray()) {
+                ConfigList array = to.createArray(name);
+                for (Object o : (Object[]) value) {
+                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                }
+            } else if (value instanceof Collection) {
+                ConfigList array = to.createArray(name);
+                for (Object o : ((Collection<Object>) value)) {
+                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                }
+            } else {
+                if (deep) {
+                    IConfig too = to.createObject(name);
+                    pojoToConfig(value, too, factory, usePublic, level + 1);
+                } else {
+                    to.put(name, String.valueOf(value));
+                }
+            }
+        } catch (Throwable t) {
+            log.t(t);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static void addConfigValue(
+            ConfigList to,
+            Object value,
+            PojoModelFactory factory,
+            boolean usePublic,
+            boolean deep,
+            int level)
+            throws IOException {
+        if (level > MAX_LEVEL) return;
+        try {
+            IConfig oo = to.createObject();
+            
+            if (value == null) {}
+            else if (value instanceof Boolean) oo.setBoolean(IConfig.NAMELESS_VALUE, (boolean) value);
+            else if (value instanceof Integer) oo.setInt(IConfig.NAMELESS_VALUE, (int) value);
+            else if (value instanceof String) oo.setString(IConfig.NAMELESS_VALUE, (String) value);
+            else if (value instanceof Long) oo.setLong(IConfig.NAMELESS_VALUE, (Long) value);
+            else if (value instanceof Date) {
+                oo.setLong("_", ((Date) value).getTime());
+                oo.setString(IConfig.NAMELESS_VALUE, MDate.toIso8601((Date)value));
+            }
+//            else if (value instanceof byte[]) oo.set(IConfig.NAMELESS_VALUE, (byte[]) value);
+            else if (value instanceof Float) oo.setFloat(IConfig.NAMELESS_VALUE, (Float) value);
+//            else if (value instanceof BigDecimal) oo.set(IConfig.NAMELESS_VALUE, (BigDecimal) value);
+            else if (value instanceof IConfig) oo.addObject(IConfig.NAMELESS_VALUE, (IConfig) value);
+            else if (value.getClass().isEnum()) {
+                oo.setInt("_", ((Enum<?>) value).ordinal());
+                oo.setString(IConfig.NAMELESS_VALUE, ((Enum<?>)value).name());
+            } else if (value instanceof Map) {
+                for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
+                    setConfigValue(
+                            oo,
+                            String.valueOf(entry.getKey()),
+                            entry.getValue(),
+                            factory,
+                            usePublic,
+                            true,
+                            level + 1);
+                }
+            } else if (value instanceof Collection) {
+                ConfigList array = oo.createArray(IConfig.NAMELESS_VALUE);
+                for (Object o : ((Collection<Object>) value)) {
+                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                }
+            } else {
+                if (deep) {
+                    pojoToConfig(value, oo, factory, usePublic, level + 1);
+                } else {
+                    oo.setString(IConfig.NAMELESS_VALUE, String.valueOf(value));
+                }
+            }
+        } catch (Throwable t) {
+            log.t(t);
+        }
+    }
+    
+    public static void configToPojo(IConfig from, Object to) throws IOException {
+        configToPojo(from, to, getDefaultModelFactory(), false);
+    }
+
+    public static void configToPojo(IConfig from, Object to, boolean force) throws IOException {
+        configToPojo(from, to, getDefaultModelFactory(), force);
+    }
+
+    public static void configToPojo(IConfig from, Object to, PojoModelFactory factory)
+            throws IOException {
+        configToPojo(from, to, factory, false);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static void configToPojo(IConfig from, Object to, PojoModelFactory factory, boolean force)
+            throws IOException {
+        PojoModel model = factory.createPojoModel(to.getClass());
+        for (PojoAttribute<Object> attr : model) {
+
+            if (!attr.canWrite()) continue;
+
+            String name = attr.getName();
+            Class<?> type = attr.getType();
+
+            try {
+                if (!from.containsKey(name) || !attr.canWrite()) {
+
+                } else if (type == Boolean.class || type == boolean.class)
+                    attr.set(to, from.getBoolean(name, false), force);
+                else if (type == Integer.class || type == int.class)
+                    attr.set(to, from.getInt(name, 0), force);
+                else if (type == Long.class || type == long.class)
+                    attr.set(to, from.getLong(name, 0), force);
+                else if (type == Double.class || type == double.class)
+                    attr.set(to, from.getDouble(name, 0), force);
+                else if (type == Float.class || type == float.class)
+                    attr.set(to, from.getFloat(name, 0), force);
+                else if (type == Byte.class || type == byte.class)
+                    attr.set(to, (byte)from.getInt(name, 0), force);
+                else if (type == Short.class || type == short.class)
+                    attr.set(to, (short)from.getInt(name, 0), force);
+                else if (type == Character.class || type == char.class)
+                    attr.set(to, (char) from.getInt(name, 0), force);
+                else if (type == Date.class)
+                    attr.set(to, new Date( from.getLong(name, 0) ), force);
+                else if (type == String.class) attr.set(to, from.getString(name, null), force);
+                else if (type == UUID.class)
+                    try {
+                        attr.set(to, UUID.fromString(from.getString(name, null)), force);
+                    } catch (IllegalArgumentException e) {
+                        attr.set(to, null, force);
+                    }
+                else if (type.isEnum()) {
+                    Object[] cons = type.getEnumConstants();
+                    int ord = from.getObject(name).getInt("_", 0);
+                    Object c = cons.length > 0 ? cons[0] : null;
+                    if (ord >= 0 && ord < cons.length) c = cons[ord];
+                    attr.set(to, c, force);
+                } else if (type.isAssignableFrom(Map.class)) {
+                    IConfig obj = from.getObjectOrNull(name);
+                    if (obj != null) {
+                        Map inst = (Map)type.getConstructor().newInstance();
+                        inst.putAll(obj);
+                    }
+                } else if (type.isAssignableFrom(Collection.class)) {
+                    ConfigList array = from.getArrayOrNull(name);
+                    if (array != null) {
+                        Collection inst = (Collection)type.getConstructor().newInstance();
+                        for (IConfig obj : array) {
+                            if (obj.containsKey(IConfig.NAMELESS_VALUE))
+                                inst.add(obj.get(IConfig.NAMELESS_VALUE));
+                            else {
+//                                oo = // not possible, cant cenerate a complex object from no type
+                            }
+                        }
+                    }
+                } else attr.set(to, from.getString(name, null), force);
+            } catch (Throwable t) {
+                log.d(MSystem.getClassName(to), name, t);
+            }
+        }
+    }
+    
+    
+    
     public static void pojoToJson(Object from, ObjectNode to) throws IOException {
         pojoToJson(from, to, getDefaultModelFactory());
     }

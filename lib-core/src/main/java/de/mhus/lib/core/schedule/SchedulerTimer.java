@@ -137,9 +137,6 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
                         job.doReschedule(this, SchedulerJob.CALCULATE_NEXT);
                     }
                 }
-                if (vv.length > 1 && vv[1].length() > 0) {
-                    job.setLogTrailConfig(vv[1]);
-                }
                 return;
             }
         }

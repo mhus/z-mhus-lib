@@ -18,6 +18,9 @@ package de.mhus.lib.core.config;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.errors.MRuntimeException;
+
 public class ConfigList extends LinkedList<IConfig> {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +49,23 @@ public class ConfigList extends LinkedList<IConfig> {
         return super.add(e);
     }
 
+    public boolean add(IProperties e) {
+        MConfig config = new MConfig();
+        config.parent = parent;
+        config.putAll(e);
+        return super.add(config);
+    }
+    
+    public IConfig add(ConfigSerializable object) {
+        IConfig cfg = createObject();
+        try {
+            object.writeSerializableConfig(cfg);
+        } catch (Exception e) {
+            throw new MRuntimeException(e);
+        }
+        return cfg;
+    }
+
     @Override
     public void addFirst(IConfig e) {
         ((MConfig) e).name = name;
@@ -62,8 +82,10 @@ public class ConfigList extends LinkedList<IConfig> {
 
     @Override
     public IConfig set(int index, IConfig e) {
-        ((MConfig) e).name = name;
-        ((MConfig) e).parent = parent;
+        if (e instanceof MConfig) {
+            ((MConfig) e).name = name;
+            ((MConfig) e).parent = parent;
+        }
         return super.set(index, e);
     }
 

@@ -95,7 +95,12 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
         try {
             Object ret = method.invoke(obj, params);
 
-            return new Successful(this, "", ret);
+            OperationResult result = new OperationResult(this.getDescription());
+            result.setSuccessful(true);
+            result.setMsg("");
+            result.setResult(ret);
+            return result;
+
         } catch (InvocationTargetException e) {
             log().d(clazz, obj.getClass(), e);
             Throwable t = e;

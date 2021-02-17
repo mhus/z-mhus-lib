@@ -44,6 +44,9 @@ import de.mhus.lib.errors.TooDeepStructuresException;
 public interface IConfig extends IProperties {
 
     public static final String NAMELESS_VALUE = "";
+    public static final String VALUE = "value";
+    public static final String VALUES = "values";
+    public static final String ID = "id";
 
     /**
      * Returns true if the key is an object.
@@ -71,7 +74,14 @@ public interface IConfig extends IProperties {
 
     void setObject(String key, IConfig object);
 
+    /**
+     * Add the Object to a list of objects named with key.
+     * @param key
+     * @param object
+     */
     void addObject(String key, IConfig object);
+
+    IConfig setObject(String key, ConfigSerializable object);
 
     IConfig createObject(String key);
 
@@ -206,6 +216,7 @@ public interface IConfig extends IProperties {
 
     private static void merge(IConfig from, IConfig to, int level) throws MException {
         if (level > 100) throw new TooDeepStructuresException();
+        
         for (IConfig node : from.getObjects()) {
             IConfig n = to.createObject(node.getName());
             for (String name : node.getPropertyKeys()) {
@@ -217,12 +228,16 @@ public interface IConfig extends IProperties {
             ConfigList toArray = to.createArray(key);
             for (IConfig node : from.getArrayOrNull(key)) {
                 IConfig n = toArray.createObject();
-                for (String name : node.getPropertyKeys()) {
+                for (String name : ((IConfig)node).getPropertyKeys()) {
                     n.put(name, node.get(name));
                 }
                 merge(node, (IConfig) n, level + 1);
             }
         }
+        for (String name : from.getPropertyKeys()) {
+            to.put(name, from.get(name));
+        }
+
     }
 
     public static String[] toStringArray(Collection<IConfig> nodes, String key) {
@@ -233,4 +248,6 @@ public interface IConfig extends IProperties {
         }
         return out.toArray(new String[out.size()]);
     }
+
+    
 }

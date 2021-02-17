@@ -26,10 +26,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MJson;
+import de.mhus.lib.core.config.ConfigList;
+import de.mhus.lib.core.config.ConfigSerializable;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundRuntimeException;
 
-public class TableRow implements Serializable {
+public class TableRow implements Serializable, ConfigSerializable {
 
     private static final long serialVersionUID = 1L;
     LinkedList<Object> data = new LinkedList<>();
@@ -81,6 +84,31 @@ public class TableRow implements Serializable {
                 MPojo.jsonToPojo(json, obj);
                 data.add(obj);
             }
+        }
+    }
+
+    @Override
+    public void readSerializableConfig(IConfig cfg) throws Exception {
+        for (IConfig line : cfg.getArrayOrCreate("data")) {
+            String clazzName = line.getString("_class", null);
+            Object obj;
+            try {
+                obj = MApi.get().lookup(MActivator.class).createObject(clazzName);
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
+            MPojo.configToPojo(line, obj);
+            data.add(obj);
+        }
+    }
+
+    @Override
+    public void writeSerializableConfig(IConfig cfg) throws Exception {
+        ConfigList arr = cfg.createArray("data");
+        for (Object d : data) {
+            IConfig line = arr.createObject();
+            line.setString("_class", d.getClass().getCanonicalName());
+            MPojo.pojoToConfig(d, line);
         }
     }
 
