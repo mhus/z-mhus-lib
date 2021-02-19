@@ -19,13 +19,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInt;
+import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
 public class PropertiesConfigBuilder extends IConfigBuilder {
@@ -69,16 +74,8 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
 
         ConfigList arr = config.createArray(key);
         for (Object item : col) {
-            if (item instanceof IConfig) {
-                arr.add((IConfig) item);
-            } else if (item instanceof Map) {
-                IConfig obj = readFromMap((Map<?, ?>) item, level);
-                arr.add(obj);
-            } else {
-                MConfig obj = new MConfig();
-                obj.put(IConfig.NAMELESS_VALUE, item);
-                arr.add(obj);
-            }
+            IConfig obj = readObject(item, level);
+            arr.add(obj);
         }
     }
 
@@ -90,15 +87,67 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = MString.valueOf(entry.getKey());
             Object val = entry.getValue();
-            if (val instanceof IConfig) {
-                config.addObject(key, (IConfig) val);
-            } else if (val instanceof Map) {
-                IConfig obj = readFromMap((Map<?, ?>) val, level);
-                config.addObject(key, obj);
-            } else if (val instanceof Collection) {
-                readFromCollection(config, key, (Collection<?>) val, level);
-            } else config.put(key, val);
+            IConfig obj = readObject(val, level);
+            config.addObject(key, obj);
         }
         return config;
     }
+    
+    public IConfig readObject(Object item) {
+        return readObject(item, 0);
+    }
+    
+    protected IConfig readObject(Object item, int level) {
+        level++;
+        if (level > CFG_MAX_LEVEL.value()) throw new TooDeepStructuresException();
+
+        if (item == null) {
+            MConfig obj = new MConfig();
+            obj.setBoolean(IConfig.NULL, true);
+            return obj;
+        } else
+        if (item instanceof ConfigSerializable) {
+            MConfig obj = new MConfig();
+            try {
+                ((ConfigSerializable)item).writeSerializableConfig(obj);
+            } catch (Exception e) {
+                throw new MRuntimeException(item,e);
+            }
+            return obj;
+        } else
+        if (item instanceof IConfig) {
+            return (IConfig) item;
+        } else if (item instanceof Map) {
+            IConfig obj = readFromMap((Map<?, ?>) item, level);
+            return obj;
+        } else if (item instanceof String || item.getClass().isPrimitive() || item instanceof Number || item instanceof Date){
+            MConfig obj = new MConfig();
+            obj.put(IConfig.NAMELESS_VALUE, item);
+            return obj;
+        } else if (item instanceof Date){
+            MConfig obj = new MConfig();
+            obj.put(IConfig.NAMELESS_VALUE, ((Date)item).getTime());
+            obj.put(IConfig.HELPER_VALUE, MDate.toIso8601( (Date)item ));
+            return obj;
+        } else if (item.getClass().isArray()) {
+            MConfig obj = new MConfig();
+            obj.setString(IConfig.CLASS, item.getClass().getCanonicalName());
+            readFromCollection( obj, IConfig.NAMELESS_VALUE, MCollection.toList(((Object[])item)), level );
+            return obj;
+        } else if (item instanceof Collection) {
+            MConfig obj = new MConfig();
+            obj.setString(IConfig.CLASS, item.getClass().getCanonicalName());
+            readFromCollection( obj, IConfig.NAMELESS_VALUE, (Collection<?>)item, level );
+            return obj;
+        } else {
+            MConfig obj = new MConfig();
+            try {
+                MPojo.pojoToConfig(item, obj);
+            } catch (IOException e) {
+                throw new MRuntimeException(item,e);
+            }
+            return obj;
+        }
+    }
+    
 }

@@ -21,6 +21,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.config.ConfigSerializable;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.util.MUri;
@@ -158,12 +159,23 @@ public class OperationResult {
         return result == null;
     }
 
+    /**
+     * Try to convert the result into a IConfig object. Therefore a string is analyzed to be a
+     * json or xml and will be readed as IConfig. Also IConfig or IProperty will be transformed.
+     * 
+     * @return A IConfig object or a RuntimeException
+     */
     @SuppressWarnings("unchecked")
     public IConfig getResultAsConfig() {
         if (result == null) return new MConfig();
         try {
-            if (result instanceof IConfig) return (IConfig) result;
             if (result instanceof String) return IConfig.readConfigFromString((String) result);
+            if (result instanceof IConfig) return (IConfig) result;
+            if (result instanceof IProperties) {
+                MConfig ret = new MConfig();
+                ret.putAll( (IProperties)result );
+                return ret;
+            }
             if (result instanceof Map)
                 return IConfig.readFromProperties((Map<String, Object>) result);
 
@@ -174,4 +186,22 @@ public class OperationResult {
             throw new MRuntimeException(this, e); // or empty config?
         }
     }
+
+    /**
+     * Get a IConfig result and load it via ConfigSynchronize mechanism into the given object.
+     * @param <T> Type of the given object, must be ConfigSerializable
+     * @param fillIn The object to fill
+     * @return The filled Object given in fillIn
+     */
+    public <T extends ConfigSerializable> T loadResult(T fillIn) {
+        if (result == null) return fillIn;
+        IConfig cfg = getResultAsConfig();
+        try {
+            fillIn.readSerializableConfig(cfg);
+        } catch (Exception e) {
+            throw new MRuntimeException(this, e);
+        }
+        return fillIn;
+    }
+
 }

@@ -124,6 +124,11 @@ public class MPojo {
     
     public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean usePublic, int level) throws IOException {
         if (level > MAX_LEVEL) return;
+        if (from == null) {
+            to.setBoolean(IConfig.NULL, true);
+            return;
+        }
+        to.setString(IConfig.CLASS, from.getClass().getCanonicalName());
         PojoModel model = factory.createPojoModel(from.getClass());
         for (PojoAttribute<?> attr : model) {
             boolean deep = false;
@@ -153,7 +158,11 @@ public class MPojo {
             throws IOException {
         if (level > MAX_LEVEL) return;
         try {
-            if (value == null) {}
+            if (value != null)
+                to.setString(IConfig.CLASS, value.getClass().getCanonicalName());
+            if (value == null) {
+                to.setBoolean(IConfig.NULL, true);
+            }
             else if (value instanceof Boolean) to.setBoolean(name, (boolean) value);
             else if (value instanceof Integer) to.setInt(name, (int) value);
             else if (value instanceof String) to.setString(name, (String) value);
@@ -167,12 +176,12 @@ public class MPojo {
                 to.put(name, Character.toString((Character) value));
             else if (value instanceof Date) {
                 to.put(name, ((Date) value).getTime());
-                to.put(name + "_", MDate.toIso8601((Date) value));
+                to.put("_" + name, MDate.toIso8601((Date) value));
             } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
             else if (value instanceof IConfig) to.addObject(name, (IConfig) value);
             else if (value.getClass().isEnum()) {
                 to.put(name, ((Enum<?>) value).ordinal());
-                to.put(name + "_", ((Enum<?>) value).name());
+                to.put("_" + name, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 IConfig obj = to.createObject(name);
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
@@ -220,22 +229,25 @@ public class MPojo {
         if (level > MAX_LEVEL) return;
         try {
             IConfig oo = to.createObject();
-            
-            if (value == null) {}
+            if (value != null)
+                oo.setString(IConfig.CLASS, value.getClass().getCanonicalName());
+            if (value == null) {
+                oo.setBoolean(IConfig.NULL, true);
+            }
             else if (value instanceof Boolean) oo.setBoolean(IConfig.NAMELESS_VALUE, (boolean) value);
             else if (value instanceof Integer) oo.setInt(IConfig.NAMELESS_VALUE, (int) value);
             else if (value instanceof String) oo.setString(IConfig.NAMELESS_VALUE, (String) value);
             else if (value instanceof Long) oo.setLong(IConfig.NAMELESS_VALUE, (Long) value);
             else if (value instanceof Date) {
-                oo.setLong("_", ((Date) value).getTime());
-                oo.setString(IConfig.NAMELESS_VALUE, MDate.toIso8601((Date)value));
+                oo.setLong(IConfig.NAMELESS_VALUE, ((Date) value).getTime());
+                oo.setString(IConfig.HELPER_VALUE, MDate.toIso8601((Date)value));
             }
 //            else if (value instanceof byte[]) oo.set(IConfig.NAMELESS_VALUE, (byte[]) value);
             else if (value instanceof Float) oo.setFloat(IConfig.NAMELESS_VALUE, (Float) value);
 //            else if (value instanceof BigDecimal) oo.set(IConfig.NAMELESS_VALUE, (BigDecimal) value);
             else if (value instanceof IConfig) oo.addObject(IConfig.NAMELESS_VALUE, (IConfig) value);
             else if (value.getClass().isEnum()) {
-                oo.setInt("_", ((Enum<?>) value).ordinal());
+                oo.setInt(IConfig.HELPER_VALUE, ((Enum<?>) value).ordinal());
                 oo.setString(IConfig.NAMELESS_VALUE, ((Enum<?>)value).name());
             } else if (value instanceof Map) {
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
@@ -319,7 +331,7 @@ public class MPojo {
                     }
                 else if (type.isEnum()) {
                     Object[] cons = type.getEnumConstants();
-                    int ord = from.getObject(name).getInt("_", 0);
+                    int ord = from.getObject(name).getInt(IConfig.HELPER_VALUE, 0);
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
                     attr.set(to, c, force);
@@ -467,12 +479,12 @@ public class MPojo {
                 to.put(name, Character.toString((Character) value));
             else if (value instanceof Date) {
                 to.put(name, ((Date) value).getTime());
-                to.put(name + "_", MDate.toIso8601((Date) value));
+                to.put("_" + name, MDate.toIso8601((Date) value));
             } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
             else if (value instanceof JsonNode) to.set(name, (JsonNode) value);
             else if (value.getClass().isEnum()) {
                 to.put(name, ((Enum<?>) value).ordinal());
-                to.put(name + "_", ((Enum<?>) value).name());
+                to.put("_" + name, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 ObjectNode obj = to.objectNode();
                 to.set(name, obj);

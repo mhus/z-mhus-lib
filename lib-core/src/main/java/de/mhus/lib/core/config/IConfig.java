@@ -28,8 +28,10 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
@@ -46,7 +48,10 @@ public interface IConfig extends IProperties {
     public static final String NAMELESS_VALUE = "";
     public static final String VALUE = "value";
     public static final String VALUES = "values";
-    public static final String ID = "id";
+    public static final String ID = "_id";
+    public static final String HELPER_VALUE = "_";
+    public static final String CLASS = "_class";
+    public static final String NULL = "_null";
 
     /**
      * Returns true if the key is an object.
@@ -123,6 +128,16 @@ public interface IConfig extends IProperties {
 
     //    IConfig cloneObject(IConfig node);
 
+    default <T extends ConfigSerializable> T load(T fillIn) {
+        if (fillIn == null) return null;
+        try {
+            fillIn.readSerializableConfig(this);
+        } catch (Exception e) {
+            throw new MRuntimeException(fillIn,this,e);
+        }
+        return fillIn;
+    }
+    
     /**
      * Return a config or null if the string is not understand.
      *
@@ -249,5 +264,40 @@ public interface IConfig extends IProperties {
         return out.toArray(new String[out.size()]);
     }
 
-    
+    /**
+     * Try to un serialize the object with the config. If it fails null will be returned.
+     * @param <T> Type
+     * @param cfg Config with serialized data
+     * @param fillIn The object to fill
+     * @return The fillIn object or null
+     */
+    public static <T extends ConfigSerializable> T loadOrNull(IConfig cfg, T fillIn) {
+        if (fillIn == null || cfg == null) return null;
+        try {
+            fillIn.readSerializableConfig(cfg);
+        } catch (Exception e) {
+            MLogUtil.log().d(cfg,e);
+            return null;
+        }
+        return fillIn;
+    }
+
+    /**
+     * Un serialize the object with the config.
+     * @param <T> Type
+     * @param cfg Config with serialized data
+     * @param fillIn The object to fill
+     * @return The fillIn object
+     */
+    public static <T extends ConfigSerializable> T load(IConfig cfg, T fillIn) {
+        if (fillIn == null || cfg == null) return null;
+        try {
+            fillIn.readSerializableConfig(cfg);
+        } catch (Exception e) {
+            MLogUtil.log().d(cfg,e);
+            return null;
+        }
+        return fillIn;
+    }
+
 }
