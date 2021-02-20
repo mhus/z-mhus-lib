@@ -59,6 +59,9 @@ public class ConfigTest extends TestCase {
             System.out.println("C1: " + c);
             dcf.write(c, file);
 
+            System.out.println("---");
+            System.out.println(MFile.readFile(file));
+            System.out.println("---");
             // read
             IConfig c2 = dcf.read(file);
             System.out.println("C2: " + c2);

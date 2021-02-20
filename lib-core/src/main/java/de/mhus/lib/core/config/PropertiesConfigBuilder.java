@@ -29,6 +29,7 @@ import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.TooDeepStructuresException;
@@ -87,8 +88,22 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = MString.valueOf(entry.getKey());
             Object val = entry.getValue();
-            IConfig obj = readObject(val, level);
-            config.addObject(key, obj);
+            if (val == null || val instanceof NullValue) {
+                // null object or ignore ?
+            } else
+            if (val instanceof String || val.getClass().isPrimitive() || val instanceof Number || val instanceof Date || val instanceof Boolean) {
+                config.put(key, val);
+            } else {
+                IConfig obj = readObject(val, level);
+                if (obj.isProperty(IConfig.NAMELESS_VALUE)) {
+                    config.put(key, obj.get(IConfig.NAMELESS_VALUE));
+                    if (config.isProperty(IConfig.HELPER_VALUE))
+                        config.put(IConfig.HELPER_VALUE + key, config.get(IConfig.HELPER_VALUE));
+                } else if (obj.isObject(IConfig.NAMELESS_VALUE)) {
+                    config.addObject(key, obj.getObjectOrNull(IConfig.NAMELESS_VALUE));
+                } else
+                    config.addObject(key, obj);
+            }
         }
         return config;
     }
@@ -120,7 +135,7 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
         } else if (item instanceof Map) {
             IConfig obj = readFromMap((Map<?, ?>) item, level);
             return obj;
-        } else if (item instanceof String || item.getClass().isPrimitive() || item instanceof Number || item instanceof Date){
+        } else if (item instanceof String || item.getClass().isPrimitive() || item instanceof Number || item instanceof Date || item instanceof Boolean){
             MConfig obj = new MConfig();
             obj.put(IConfig.NAMELESS_VALUE, item);
             return obj;
