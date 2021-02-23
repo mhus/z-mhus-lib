@@ -61,6 +61,9 @@ import de.mhus.lib.core.util.Value;
 
 public class AccessUtil {
 
+    public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
+    public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
+
     private static final Log log = Log.getLog(AccessUtil.class);
     public static final CfgString ROLE_ADMIN =
             new CfgString(AccessApi.class, "adminRole", "GLOBAL_ADMIN");
@@ -105,6 +108,15 @@ public class AccessUtil {
         }
     }
 
+    public static boolean isAdmin(Subject subject) {
+        try {
+            return subject.hasRole(ROLE_ADMIN.value());
+        } catch (Throwable t) {
+            log.d(t);
+            return false;
+        }
+    }
+    
     public static Subject getSubject() {
         try {
             Subject subject = M.l(AccessApi.class).getSubject(); // init
@@ -156,8 +168,8 @@ public class AccessUtil {
     }
 
     public static String toString(Subject subject) {
-        if (subject == null) return "null";
-        if (!subject.isAuthenticated()) return "[guest]";
+        if (subject == null) return "[null]";
+        if (!subject.isAuthenticated()) return "["+USER_GUEST.value()+"]";
         Object p = subject.getPrincipal();
         if (p == null) return "[?]";
         return String.valueOf(p);
@@ -399,6 +411,47 @@ public class AccessUtil {
         return String.valueOf(ret);
     }
 
+    public static Object getSessionAttribute(Subject subject, String key) {
+        Session session = subject.getSession(false);
+        if (session == null) return null;
+        Object res = session.getAttribute(key);
+        if (res != null) return res;
+        PrincipalData data = (PrincipalData) session.getAttribute(PrincipalData.SESSION_KEY);
+        if (data != null) {}
+
+        return null;
+    }
+
+    public static String getSessionAttribute(Subject subject, String key, String def) {
+        Object ret = getSessionAttribute(subject, key);
+        if (ret == null) return def;
+        if (ret instanceof String) return (String) ret;
+        return String.valueOf(ret);
+    }
+    
+    /**
+     * Set an attribute to the current session context.
+     * 
+     * @param key
+     * @param value
+     */
+    public static void setSessionAttribute(String key, Object value) {
+        Session session = getSubject().getSession();
+        session.setAttribute(key, value);
+    }
+
+    /**
+     * Set an attribute to the current session context.
+     * @param subject 
+     * 
+     * @param key
+     * @param value
+     */
+    public static void setSessionAttribute(Subject subject, String key, Object value) {
+        Session session = subject.getSession();
+        session.setAttribute(key, value);
+    }
+
     /**
      * Login and load user data from source (if needed and possible).
      *
@@ -472,6 +525,18 @@ public class AccessUtil {
             return subject;
         }
         throw new AuthorizationException("unknown ticket type");
+    }
+
+    /**
+     * Create a plain subject without authentication. 
+     * @param account
+     * @return A new Subject
+     */
+    public static Subject createSubjectWithoutCheck(String account) {
+        return new Subject.Builder()
+                .authenticated(true)
+                .principals(new SimplePrincipalCollection(account, "trust"))
+                .buildSubject();
     }
 
     public static boolean hasRole(String role) {
