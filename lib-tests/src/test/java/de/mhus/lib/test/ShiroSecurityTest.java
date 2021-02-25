@@ -279,7 +279,7 @@ public class ShiroSecurityTest extends TestCase {
         assertEquals("lonestarr", AccessUtil.getPrincipal());
 
         // use a different subject for a while
-        try (SubjectEnvironment env = AccessUtil.useSubject(subject)) {
+        try (SubjectEnvironment env = AccessUtil.asSubject(subject)) {
             System.out.println("5 Env: " + env);
             System.out.println("5 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
             assertTrue(AccessUtil.getSubject().isAuthenticated());

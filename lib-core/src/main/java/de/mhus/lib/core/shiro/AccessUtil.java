@@ -63,6 +63,7 @@ public class AccessUtil {
 
     public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
+    public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
 
     private static final Log log = Log.getLog(AccessUtil.class);
     public static final CfgString ROLE_ADMIN =
@@ -179,7 +180,15 @@ public class AccessUtil {
         ThreadContext.remove();
     }
 
-    public static SubjectEnvironment useSubject(Subject subject) {
+    public static SubjectEnvironment asAdmin() {
+        return asSubject(getAdminSubject());
+    }
+    
+    private static Subject getAdminSubject() {
+        return createSubjectWithoutCheck(USER_ADMIN.value());
+    }
+
+    public static SubjectEnvironment asSubject(Subject subject) {
         Subject current = ThreadContext.getSubject();
         ThreadContext.bind(subject);
         return new SubjectEnvironment(subject, current);
@@ -514,7 +523,7 @@ public class AccessUtil {
             M.l(TrustApi.class).validatePassword(parts[1], parts[3]);
             return new Subject.Builder()
                     .authenticated(true)
-                    .principals(new SimplePrincipalCollection(parts[2], "trust"))
+                    .principals(new SimplePrincipalCollection(parts[2], REALM_TRUST.value()))
                     .buildSubject();
         }
         if (parts[0].equals(TICKET_PREFIX_ACCOUNT)) {
@@ -535,7 +544,7 @@ public class AccessUtil {
     public static Subject createSubjectWithoutCheck(String account) {
         return new Subject.Builder()
                 .authenticated(true)
-                .principals(new SimplePrincipalCollection(account, "trust"))
+                .principals(new SimplePrincipalCollection(account, REALM_TRUST.value()))
                 .buildSubject();
     }
 
