@@ -91,12 +91,39 @@ public class AccessUtil {
                             RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler(),
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
 
-    public static boolean hasAccess(String object) {
-        return hasAccess(getSubject(), object);
+    public static boolean hasAccess(String resource) {
+        return hasAccess(getSubject(), resource);
     }
 
-    public static boolean hasAccess(Subject subject, String object) {
-        return M.l(AccessApi.class).getResourceManager().hasAccess(subject, object);
+    /**
+     * Return true if the subject has access to the resource. 
+     * In the Background the resource manager will decide if access
+     * is granted or not.
+     * 
+     * Format for the resource is:
+     * domain:actions:instances
+     * 
+     * Examples:
+     * 
+     * "printer:print:laserjet4400n"
+     * "printer:print:*"
+     * "printer:print,query:*"
+     * "printer" equals "printer:*:*"
+     * "printer:*:laserjet4400n"
+     * "*"
+     * 
+     * "user:*"
+     * "user:delete"
+     * "user:*:12345"
+     * "user:update:12345"
+     * 
+     * @see "https://shiro.apache.org/permissions.html"
+     * @param subject
+     * @param resource
+     * @return True if access is granted
+     */
+    public static boolean hasAccess(Subject subject, String resource) {
+        return M.l(AccessApi.class).getResourceManager().hasAccess(subject, resource);
     }
 
     public static boolean isAdmin() {
@@ -552,6 +579,10 @@ public class AccessUtil {
         return getSubject().hasRole(role);
     }
 
+    public static boolean hasRole(Subject subject, String role) {
+        return subject.hasRole(role);
+    }
+    
     public static boolean hasPermission(Subject subject, Class<?> clazz) {
         return hasPermission(subject, clazz.getAnnotations());
     }

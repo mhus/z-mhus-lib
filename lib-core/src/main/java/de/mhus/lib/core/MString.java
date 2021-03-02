@@ -43,6 +43,15 @@ public class MString {
 
     public static final Charset CHARSET_CHARSET_UTF_8 = Charset.forName("UTF-8");
     public static final Charset CHARSET_CHARSET_UTF_16 = Charset.forName("UTF-16");
+    /**
+     * Use this char set to encode binary data as it is in encodings. It supports 8 bits from \u0000 to u00FF.
+     * The 'US-ASCII' only supports 7 bits, from \u0000 to \u007F. 
+     * 
+     * This is also known as Latin-1 and is the
+     * western European encoding standard including German characters. If you plant to read and write binary
+     * data with character streams there is no matter which encoding you use (as long as it is readable - could
+     * fail with utf-8) but you have to read and write it with the same encoding.
+     */
     public static final Charset CHARSET_CHARSET_ISO_8859_1 = Charset.forName("ISO-8859-1");
 
     public static final char[] WHITESPACE = new char[] {' ', '\n', '\r', '\t'};

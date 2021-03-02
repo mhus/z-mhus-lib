@@ -185,6 +185,18 @@ public class MFile {
     }
 
     /**
+     * Write an byte array to a Writer byte after byte. No encoding will be used.
+     * 
+     * @param array
+     * @param writer
+     * @throws IOException
+     */
+    public static void writeBinary(byte[] array, Writer writer) throws IOException {
+        for (byte b : array)
+            writer.write(b);
+    }
+
+    /**
      * Open and read a file. It returns the content of the file as string.
      *
      * @param _f
