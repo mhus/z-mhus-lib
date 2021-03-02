@@ -51,6 +51,7 @@ import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.cfg.CfgString;
@@ -670,5 +671,58 @@ public class Aaa {
             }
         }
         return null;
+    }
+
+    // for individual access lists
+    public static boolean hasAccessByList(String list, Subject account, String objectIdent) {
+        List<String> map = MCollection.toList(list.split(";"));
+        return hasAccessByList(map, account, objectIdent);
+    }
+
+    // for individual access lists
+    public static boolean hasAccessByList(List<String> map, Subject account, String objectIdent) {
+        boolean access = false;
+        String principal = getPrincipal(account);
+        for (String g : map) {
+            
+            g = g.trim();
+            if (g.length() == 0) continue;
+            
+            if (g.startsWith("policy:")) {
+                access = MCast.toboolean(g.substring(7), access);
+            } else
+            if (g.startsWith("user:")) {
+                if (g.substring(5).equals( principal ) ) {
+                    log.d("access granted",objectIdent,g);
+                    access = true;
+                    break;
+                }
+            } else
+            if (g.startsWith("notuser:")) {
+                if (g.substring(8).equals( principal ) ) {
+                    log.d("access denied",objectIdent,g);
+                    access = false;
+                    break;
+                }
+            } else
+            if (g.startsWith("not:")) {
+                if ( account.hasRole(g.substring(4)) ) {
+                    log.d("access denied",objectIdent,g);
+                    access = false;
+                    break;
+                }
+            } else
+            if (g.equals("*")) {
+                log.d("access granted",objectIdent,g);
+                access = true;
+                break;
+            } else
+            if ( account.hasRole(g) ) {
+                log.d("access granted",objectIdent,g);
+                access = true;
+                break;
+            };
+        }
+        return access;
     }
 }

@@ -55,15 +55,44 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.logging.Log;
 
+/**
+ * Load user and role definitions from txt or xml files.
+ * 
+ * XML User Format:
+ * 
+ * <user password="">
+ *   <roles>
+ *     <role>role name</role>
+ *   </roles>
+ *   <perms>
+ *     <perm>Permission</perm>
+ *   </perms>
+ *   <data>
+ *     <key>value</key>
+ *   </data>
+ * </user>
+ * 
+ * 
+ * XML Role Format:
+ * 
+ * <role>
+ *   <perms>
+ *     <perm>Permission</perm>
+ *   </perms>
+ * </role>
+ * 
+ * @author mikehummel
+ *
+ */
 public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRealm, BearerRealm {
 
     private static Log log = Log.getLog(FileSourceRealm.class);
-    private String resourcesPath;
-    private File userDir;
-    private File rolesDir;
-    private String defaultRole;
-    private boolean debugPermissions;
-    private String rolePermission;
+    protected String resourcesPath;
+    protected File userDir;
+    protected File rolesDir;
+    protected String defaultRole;
+    protected boolean debugPermissions;
+    protected String rolePermission;
 
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
@@ -185,6 +214,18 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                     }
                 }
 
+                Element permsE = MXml.getElementByPath(xml, "perms");
+                if (permsE != null) {
+                    HashSet<String> perms = new HashSet<>();
+                    for (Element permE : MXml.getLocalElementIterator(permsE, "perm")) {
+                        String perm = MXml.getValue(permE, false);
+                        if (MString.isSet(perm)) perms.add(perm);
+                    }
+                    Set<Permission> permissions =
+                            PermissionUtils.resolvePermissions(perms, getPermissionResolver());
+                    account.addObjectPermissions(permissions);
+                }
+                
                 return account;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
