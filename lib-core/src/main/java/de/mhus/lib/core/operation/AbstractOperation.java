@@ -22,9 +22,9 @@ import org.apache.shiro.authz.AuthorizationException;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.LogProperties;
-import de.mhus.lib.core.shiro.AccessUtil;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.ParameterDefinition;
 import de.mhus.lib.core.util.ParameterDefinitions;
@@ -42,7 +42,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
     @Override
     public boolean hasAccess(TaskContext context) {
         try {
-            if (AccessUtil.isAnnotated(getClass())) AccessUtil.checkPermission(getClass());
+            if (Aaa.isAnnotated(getClass())) Aaa.checkPermission(getClass());
         } catch (AuthorizationException e) {
             return false;
         }

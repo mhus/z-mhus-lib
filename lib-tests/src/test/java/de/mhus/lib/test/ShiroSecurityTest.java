@@ -36,15 +36,15 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MThread;
+import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.aaa.AccessApi;
+import de.mhus.lib.core.aaa.BearerConfiguration;
+import de.mhus.lib.core.aaa.DefaultAccessApi;
+import de.mhus.lib.core.aaa.JwtProvider;
+import de.mhus.lib.core.aaa.JwtProviderImpl;
+import de.mhus.lib.core.aaa.PrincipalData;
+import de.mhus.lib.core.aaa.SubjectEnvironment;
 import de.mhus.lib.core.mapi.IApiInternal;
-import de.mhus.lib.core.shiro.AccessApi;
-import de.mhus.lib.core.shiro.AccessUtil;
-import de.mhus.lib.core.shiro.BearerConfiguration;
-import de.mhus.lib.core.shiro.DefaultAccessApi;
-import de.mhus.lib.core.shiro.JwtProvider;
-import de.mhus.lib.core.shiro.JwtProviderImpl;
-import de.mhus.lib.core.shiro.PrincipalData;
-import de.mhus.lib.core.shiro.SubjectEnvironment;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.test.shiro.ShiroAnnotationTest;
 import de.mhus.lib.tests.TestCase;
@@ -58,75 +58,75 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-data.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+            Aaa.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
             fail();
         } catch (AuthorizationException e) {
         }
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+            Aaa.checkPermission(test.getClass().getMethod("authentication"));
             fail();
         } catch (AuthorizationException e) {
         }
 
-        AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+        Aaa.checkPermission(test.getClass().getMethod("guest"));
 
         // admin ---------------------------------------------
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+        Aaa.checkPermission(test.getClass().getMethod("authentication"));
 
-        AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+        Aaa.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+            Aaa.checkPermission(test.getClass().getMethod("guest"));
             fail();
         } catch (AuthorizationException e) {
         }
 
-        AccessUtil.checkPermission(test.getClass().getMethod("roleAdmin"));
+        Aaa.checkPermission(test.getClass().getMethod("roleAdmin"));
 
         // none admin -----------------------------------------
 
         // cleanup shiro and test new subject
-        AccessUtil.subjectCleanup();
-        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Aaa.subjectCleanup();
+        System.out.println("3 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login lonestarr
         token = new UsernamePasswordToken("lonestarr", "vespa");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("lonestarr", Aaa.getPrincipal());
 
-        AccessUtil.checkPermission(test.getClass().getMethod("authentication"));
+        Aaa.checkPermission(test.getClass().getMethod("authentication"));
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
+            Aaa.checkPermission(test.getClass().getMethod("permissionPrinterPrint"));
             fail();
         } catch (AuthorizationException e) {
         }
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("guest"));
+            Aaa.checkPermission(test.getClass().getMethod("guest"));
             fail();
         } catch (AuthorizationException e) {
         }
 
         try {
-            AccessUtil.checkPermission(test.getClass().getMethod("roleAdmin"));
+            Aaa.checkPermission(test.getClass().getMethod("roleAdmin"));
             fail();
         } catch (AuthorizationException e) {
         }
@@ -140,38 +140,38 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-data.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // admin ---------------------------------------------
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        assertTrue(AccessUtil.hasRole("admin"));
-        assertFalse(AccessUtil.hasRole("user")); // should have all roles!!
+        assertTrue(Aaa.hasRole("admin"));
+        assertFalse(Aaa.hasRole("user")); // should have all roles!!
 
         // none admin -----------------------------------------
 
         // cleanup shiro and test new subject
-        AccessUtil.subjectCleanup();
-        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Aaa.subjectCleanup();
+        System.out.println("3 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login lonestarr
         token = new UsernamePasswordToken("lonestarr", "vespa");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("lonestarr", Aaa.getPrincipal());
 
-        assertFalse(AccessUtil.hasRole("admin"));
+        assertFalse(Aaa.hasRole("admin"));
     }
 
     @Test
@@ -179,37 +179,37 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-data.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // admin ---------------------------------------------
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        assertTrue(AccessUtil.isPermitted("printer", "print", null));
+        assertTrue(Aaa.isPermitted("printer", "print", null));
 
         // none admin -----------------------------------------
 
         // cleanup shiro and test new subject
-        AccessUtil.subjectCleanup();
-        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Aaa.subjectCleanup();
+        System.out.println("3 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login lonestarr
         token = new UsernamePasswordToken("lonestarr", "vespa");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("lonestarr", Aaa.getPrincipal());
 
-        assertFalse(AccessUtil.isPermitted("printer", "print", null));
+        assertFalse(Aaa.isPermitted("printer", "print", null));
     }
 
     @Test
@@ -217,34 +217,34 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        String sessionId = AccessUtil.getSessionId(true);
-        System.out.println("2 Session: " + AccessUtil.getSessionId(false));
+        String sessionId = Aaa.getSessionId(true);
+        System.out.println("2 Session: " + Aaa.getSessionId(false));
         // cleanup shiro and test new subject
-        AccessUtil.subjectCleanup();
-        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        System.out.println("3 Session: " + AccessUtil.getSessionId(false));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Aaa.subjectCleanup();
+        System.out.println("3 Subject: " + Aaa.toString(Aaa.getSubject()));
+        System.out.println("3 Session: " + Aaa.getSessionId(false));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // recreate session
-        Subject session = AccessUtil.createSubjectFromSessionId(sessionId);
+        Subject session = Aaa.createSubjectFromSessionId(sessionId);
         session.execute(
                 () -> {
                     System.out.println(
-                            "4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-                    System.out.println("4 Session: " + AccessUtil.getSessionId(false));
-                    assertTrue(AccessUtil.getSubject().isAuthenticated());
-                    assertEquals("admin", AccessUtil.getPrincipal());
+                            "4 Subject: " + Aaa.toString(Aaa.getSubject()));
+                    System.out.println("4 Session: " + Aaa.getSessionId(false));
+                    assertTrue(Aaa.getSubject().isAuthenticated());
+                    assertEquals("admin", Aaa.getPrincipal());
                 });
     }
 
@@ -253,43 +253,43 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
 
         // init shiro and get subject
-        Subject subject = AccessUtil.getSubject();
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Subject subject = Aaa.getSubject();
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
         // cleanup shiro and test new subject
-        AccessUtil.subjectCleanup();
-        System.out.println("3 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Aaa.subjectCleanup();
+        System.out.println("3 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login
         token = new UsernamePasswordToken("lonestarr", "vespa");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("4 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("lonestarr", Aaa.getPrincipal());
 
         // use a different subject for a while
-        try (SubjectEnvironment env = AccessUtil.asSubject(subject)) {
+        try (SubjectEnvironment env = Aaa.asSubject(subject)) {
             System.out.println("5 Env: " + env);
-            System.out.println("5 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
-            assertEquals("admin", AccessUtil.getPrincipal());
+            System.out.println("5 Subject: " + Aaa.toString(Aaa.getSubject()));
+            assertTrue(Aaa.getSubject().isAuthenticated());
+            assertEquals("admin", Aaa.getPrincipal());
         }
 
         // check if subject was restored
-        System.out.println("6 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("lonestarr", AccessUtil.getPrincipal());
+        System.out.println("6 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("lonestarr", Aaa.getPrincipal());
     }
 
     @Test
@@ -297,19 +297,19 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-simple.ini");
 
         // init shiro and get subject
-        Subject subject = AccessUtil.getSubject();
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        Subject subject = Aaa.getSubject();
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        for (Realm realm : AccessUtil.getRealms()) {
+        for (Realm realm : Aaa.getRealms()) {
             System.out.println(realm);
         }
 
@@ -324,7 +324,7 @@ public class ShiroSecurityTest extends TestCase {
             }
         }
 
-        AccessUtil.getPrincipalData();
+        Aaa.getPrincipalData();
     }
 
     @Test
@@ -332,18 +332,18 @@ public class ShiroSecurityTest extends TestCase {
         init("classpath:de/mhus/lib/test/shiro-data.ini");
 
         // init shiro and get subject
-        System.out.println("1 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertFalse(AccessUtil.getSubject().isAuthenticated());
+        System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertFalse(Aaa.getSubject().isAuthenticated());
 
         // login
         UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-        AccessUtil.getSubject().login(token);
+        Aaa.getSubject().login(token);
         // test
-        System.out.println("2 Subject: " + AccessUtil.toString(AccessUtil.getSubject()));
-        assertTrue(AccessUtil.getSubject().isAuthenticated());
-        assertEquals("admin", AccessUtil.getPrincipal());
+        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+        assertTrue(Aaa.getSubject().isAuthenticated());
+        assertEquals("admin", Aaa.getPrincipal());
 
-        PrincipalData data = AccessUtil.getPrincipalData();
+        PrincipalData data = Aaa.getPrincipalData();
         System.out.println("DisplayName: " + data.getDisplayName());
 
         assertEquals("Administrator", data.getDisplayName());
@@ -363,86 +363,86 @@ public class ShiroSecurityTest extends TestCase {
         //            System.out.println(service.getType() + ": " + service.getAlgorithm());
         //        }
         {
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            assertFalse(Aaa.getSubject().isAuthenticated());
             // login
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-            AccessUtil.getSubject().login(token);
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().login(token);
+            assertTrue(Aaa.getSubject().isAuthenticated());
 
             // create token
-            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
+            String jwt = Aaa.createBearerToken(Aaa.getSubject(), null);
             System.out.println(jwt);
             assertNotNull(jwt);
 
             // logout
-            AccessUtil.getSubject().logout();
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().logout();
+            assertFalse(Aaa.getSubject().isAuthenticated());
 
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
-            AccessUtil.getSubject().login(jwtToken);
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().login(jwtToken);
+            assertTrue(Aaa.getSubject().isAuthenticated());
 
-            AccessUtil.getSubject().logout();
+            Aaa.getSubject().logout();
         }
         // -----------
         // reset JwtProvider internal and try again with loading from keychain
         ((JwtProviderImpl) M.l(JwtProvider.class)).clear();
         {
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            assertFalse(Aaa.getSubject().isAuthenticated());
             // login
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-            AccessUtil.getSubject().login(token);
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().login(token);
+            assertTrue(Aaa.getSubject().isAuthenticated());
 
             // create token
-            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null);
+            String jwt = Aaa.createBearerToken(Aaa.getSubject(), null);
             System.out.println(jwt);
             assertNotNull(jwt);
 
             // logout
-            AccessUtil.getSubject().logout();
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().logout();
+            assertFalse(Aaa.getSubject().isAuthenticated());
 
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
-            AccessUtil.getSubject().login(jwtToken);
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().login(jwtToken);
+            assertTrue(Aaa.getSubject().isAuthenticated());
 
-            AccessUtil.getSubject().logout();
+            Aaa.getSubject().logout();
         }
 
         // ---------------
         // test timeout
         {
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            assertFalse(Aaa.getSubject().isAuthenticated());
             // login
             UsernamePasswordToken token = new UsernamePasswordToken("admin", "secret");
-            AccessUtil.getSubject().login(token);
-            assertTrue(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().login(token);
+            assertTrue(Aaa.getSubject().isAuthenticated());
 
             // create token
             BearerConfiguration config = new BearerConfiguration(1);
-            String jwt = AccessUtil.createBearerToken(AccessUtil.getSubject(), null, config);
+            String jwt = Aaa.createBearerToken(Aaa.getSubject(), null, config);
             System.out.println(jwt);
             assertNotNull(jwt);
 
             // logout
-            AccessUtil.getSubject().logout();
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
+            Aaa.getSubject().logout();
+            assertFalse(Aaa.getSubject().isAuthenticated());
 
             MThread.sleep(500);
 
             // login with token
             BearerToken jwtToken = new BearerToken(jwt);
             try {
-                AccessUtil.getSubject().login(jwtToken);
+                Aaa.getSubject().login(jwtToken);
                 fail();
             } catch (Throwable t) {
                 t.printStackTrace();
             }
-            assertFalse(AccessUtil.getSubject().isAuthenticated());
-            AccessUtil.getSubject().logout();
+            assertFalse(Aaa.getSubject().isAuthenticated());
+            Aaa.getSubject().logout();
         }
     }
 
@@ -453,7 +453,7 @@ public class ShiroSecurityTest extends TestCase {
         MDirtyTricks.setTestLogging();
         // cleanup shiro
         MApi.get().getLookupActivator().removeObject(AccessApi.class, null);
-        AccessUtil.subjectCleanup();
+        Aaa.subjectCleanup();
         // touch class
         DefaultAccessApi.CFG_CONFIG_FILE.value();
         // patch value

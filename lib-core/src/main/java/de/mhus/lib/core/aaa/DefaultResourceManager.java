@@ -1,4 +1,4 @@
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
 import org.apache.shiro.subject.Subject;
 

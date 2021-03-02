@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
-import de.mhus.lib.annotations.activator.DefaultImplementation;
+import java.util.Map;
 
-@DefaultImplementation(JwtProviderImpl.class)
-public interface JwtProvider {
+import org.apache.shiro.subject.Subject;
 
-    String createBearerToken(String username, String issuer, BearerConfiguration configuration);
+public interface PrincipalDataRealm {
 
-    JwsData readToken(String tokenStr);
-
-    String getSubject(String tokenStr);
+    Map<String, String> getUserData(Subject subject);
 }

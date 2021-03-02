@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
 import java.util.Date;
 import java.util.Map.Entry;
@@ -42,7 +42,7 @@ public class ShiroAccount implements Account {
 
     @Override
     public String getName() {
-        return AccessUtil.getPrincipal(subject);
+        return Aaa.getPrincipal(subject);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ShiroAccount implements Account {
 
     @Override
     public String getDisplayName() {
-        return AccessUtil.getPrincipalData().getDisplayName();
+        return Aaa.getPrincipalData().getDisplayName();
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
 import java.io.File;
 import java.io.IOException;
@@ -259,7 +259,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     @Override
     public Map<String, String> getUserData(Subject subject) {
-        String username = AccessUtil.getPrincipal(subject);
+        String username = Aaa.getPrincipal(subject);
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".properties");
@@ -312,7 +312,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions && !ret) {
-            log.d("perm access denied", AccessUtil.CURRENT_PRINCIPAL, permission);
+            log.d("perm access denied", Aaa.CURRENT_PRINCIPAL, permission);
         }
         return ret;
     }
@@ -327,7 +327,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
-            log.d("role access denied", AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
+            log.d("role access denied", Aaa.CURRENT_PRINCIPAL, roleIdentifier);
         }
 
         return ret;
@@ -362,7 +362,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     public String createBearerToken(
             Subject subject, String issuer, BearerConfiguration configuration)
             throws ShiroException {
-        String username = AccessUtil.getPrincipal(subject);
+        String username = Aaa.getPrincipal(subject);
         File file1 = new File(userDir, MFile.normalize(username) + ".properties");
         File file2 = new File(userDir, MFile.normalize(username) + ".xml");
         if (file1.exists() && file1.isFile() || file2.exists() && file2.isFile())

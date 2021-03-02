@@ -13,13 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
-import java.util.Map;
-
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 
-public interface PrincipalDataRealm {
+import de.mhus.lib.annotations.activator.DefaultImplementation;
 
-    Map<String, String> getUserData(Subject subject);
+@DefaultImplementation(DefaultAccessApi.class)
+public interface AccessApi {
+
+    SecurityManager getSecurityManager();
+
+    Subject createSubject();
+
+    void updateSessionLastAccessTime();
+
+    Subject getSubject();
+
+    void restart();
+
+    void destroySession();
+
+    ResourceManager getResourceManager();
+    
 }

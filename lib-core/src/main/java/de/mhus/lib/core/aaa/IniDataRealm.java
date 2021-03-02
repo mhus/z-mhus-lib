@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +102,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     @Override
     public Map<String, String> getUserData(Subject subject) {
-        String userName = AccessUtil.getPrincipal(subject);
+        String userName = Aaa.getPrincipal(subject);
         Map<String, String> data = userData.get(userName);
         if (data == null) return null;
         return data;
@@ -155,7 +155,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions && !ret) {
-            log.d("perm access denied", AccessUtil.CURRENT_PRINCIPAL, permission);
+            log.d("perm access denied", Aaa.CURRENT_PRINCIPAL, permission);
         }
         return ret;
     }
@@ -170,7 +170,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
-            log.d("role access denied", AccessUtil.CURRENT_PRINCIPAL, roleIdentifier);
+            log.d("role access denied", Aaa.CURRENT_PRINCIPAL, roleIdentifier);
         }
         return ret;
     }
@@ -204,7 +204,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     public String createBearerToken(
             Subject subject, String issuer, BearerConfiguration configuration)
             throws ShiroException {
-        String userName = AccessUtil.getPrincipal(subject);
+        String userName = Aaa.getPrincipal(subject);
         SimpleAccount user = getUser(userName);
         if (user != null)
             return M.l(JwtProvider.class).createBearerToken(userName, issuer, configuration);

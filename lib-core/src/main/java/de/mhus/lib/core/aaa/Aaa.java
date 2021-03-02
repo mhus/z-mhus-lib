@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.shiro;
+package de.mhus.lib.core.aaa;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -59,13 +59,13 @@ import de.mhus.lib.core.security.TrustApi;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.util.Value;
 
-public class AccessUtil {
+public class Aaa {
 
     public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
     public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
 
-    private static final Log log = Log.getLog(AccessUtil.class);
+    private static final Log log = Log.getLog(Aaa.class);
     public static final CfgString ROLE_ADMIN =
             new CfgString(AccessApi.class, "adminRole", "GLOBAL_ADMIN");
     private static final String ATTR_LOCALE = "locale";
@@ -531,7 +531,7 @@ public class AccessUtil {
                 + ":"
                 + trust
                 + ":"
-                + AccessUtil.getPrincipal(subject)
+                + Aaa.getPrincipal(subject)
                 + ":"
                 + password.value();
     }
@@ -652,9 +652,9 @@ public class AccessUtil {
     }
 
     public static String createBearerToken(Subject subject, String issuer) throws ShiroException {
-        for (Realm realm : AccessUtil.getRealms()) {
+        for (Realm realm : Aaa.getRealms()) {
             if (realm instanceof BearerRealm) {
-                return ((BearerRealm) realm).createBearerToken(AccessUtil.getSubject(), issuer);
+                return ((BearerRealm) realm).createBearerToken(Aaa.getSubject(), issuer);
             }
         }
         return null;
@@ -663,10 +663,10 @@ public class AccessUtil {
     public static String createBearerToken(
             Subject subject, String issuer, BearerConfiguration configuration)
             throws ShiroException {
-        for (Realm realm : AccessUtil.getRealms()) {
+        for (Realm realm : Aaa.getRealms()) {
             if (realm instanceof BearerRealm) {
                 return ((BearerRealm) realm)
-                        .createBearerToken(AccessUtil.getSubject(), issuer, configuration);
+                        .createBearerToken(Aaa.getSubject(), issuer, configuration);
             }
         }
         return null;
