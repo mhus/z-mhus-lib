@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.form;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.w3c.dom.DOMException;
@@ -23,6 +24,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -39,7 +41,7 @@ public class ModelUtil {
 
     private static Log log = Log.getLog(ModelUtil.class);
 
-    public static DefRoot toModel(Element xml) {
+    public static DefRoot fromXml(Element xml) {
         DefRoot root = new DefRoot();
 
         NamedNodeMap attrList = xml.getAttributes();
@@ -116,13 +118,20 @@ public class ModelUtil {
         }
     }
 
-    public static DefRoot toModel(ObjectNode json) {
+    public static DefRoot fromJson(String content) throws JsonProcessingException, IOException {
+        JsonNode model = MJson.load(content);
+        if (! (model instanceof ObjectNode))
+            throw new IOException("json is not an object");
+        return fromJson((ObjectNode)model);
+    }
+
+    public static DefRoot fromJson(ObjectNode json) {
         DefRoot root = new DefRoot();
-        toModel(json, root);
+        fromJson(json, root);
         return root;
     }
 
-    private static void toModel(ObjectNode json, DefComponent root) {
+    private static void fromJson(ObjectNode json, DefComponent root) {
 
         for (Map.Entry<String, JsonNode> field : M.iterate(json.fields())) {
             if (field.getValue().isValueNode()) {
@@ -130,7 +139,7 @@ public class ModelUtil {
             } else if (field.getValue().isObject()) {
                 DefComponent nextNode = new DefComponent(field.getKey());
                 ObjectNode nextJson = (ObjectNode) field.getValue();
-                toModel(nextJson, nextNode);
+                fromJson(nextJson, nextNode);
             }
         }
     }

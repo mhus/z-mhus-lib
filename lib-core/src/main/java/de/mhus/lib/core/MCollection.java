@@ -615,4 +615,39 @@ public class MCollection {
         }
         return out;
     }
+
+    /**
+     * Extract the keys starting with prefix in a new HashMap.
+     * Will return an empty map if prefix or map is null.
+     * 
+     * @param <V> Type of the value
+     * @param prefix Prefix of the key to extract
+     * @param map Map of all entries
+     * @return Extracted subset
+     */
+    public static <V> HashMap<String, V> subset(String prefix, Map<String, V> map) {
+        HashMap<String, V> out = new HashMap<>();
+        if (prefix == null || map == null) return out;
+        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k, v); } );
+        return out;
+    }
+    
+    /**
+     * Extract the keys starting with prefix in a new HashMap.
+     * It removes the prefix from the keys.
+     * Will return an empty map if prefix or map is null.
+     * 
+     * @param <V> Type of the value
+     * @param prefix Prefix of the key to extract
+     * @param map Map of all entries
+     * @return Extracted subset
+     */
+    public static <V> HashMap<String, V> subsetCrop(String prefix, Map<String, V> map) {
+        HashMap<String, V> out = new HashMap<>();
+        if (prefix == null || map == null) return out;
+        int l = prefix.length();
+        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k.substring(l), v); } );
+        return out;
+    }
+
 }

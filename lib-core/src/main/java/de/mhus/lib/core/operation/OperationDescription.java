@@ -295,7 +295,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
         OperationDescription desc = new OperationDescription(uuid, path, version, null, title);
 
         if (json.has("form")) {
-            DefRoot form = ModelUtil.toModel((ObjectNode) json.get("form"));
+            DefRoot form = ModelUtil.fromJson((ObjectNode) json.get("form"));
             desc.setForm(form);
         }
 
