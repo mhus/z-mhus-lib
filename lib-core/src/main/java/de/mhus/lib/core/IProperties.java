@@ -207,7 +207,7 @@ public interface IProperties
      *
      * @param in
      */
-    public static void updateFunctional(Map<String, Object> in) {
+    public static <V> void updateFunctional(Map<String, V> in) {
         in.keySet().removeIf(k -> isFunctional(k));
         for (String key : new LinkedList<>(in.keySet()))
             if (key.startsWith("_")) in.put(key.substring(1), in.remove(key));
@@ -270,4 +270,38 @@ public interface IProperties
         Object obj = MCast.toType(v, t, null);
         if (obj != null) ((Map<Object, Object>) p).put(k, obj);
     }
+
+    /**
+     * Extract the keys starting with prefix in a new HashMap.
+     * Will return an empty map if prefix or map is null.
+     * 
+     * @param prefix Prefix of the key to extract
+     * @param map Map of all entries
+     * @return Extracted subset
+     */
+    static IProperties subset(String prefix, Map<String, ?> map) {
+    	MProperties out = new MProperties();
+        if (prefix == null || map == null) return out;
+        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k, v); } );
+        return out;
+    }
+    
+    /**
+     * Extract the keys starting with prefix in a new HashMap.
+     * It removes the prefix from the keys.
+     * Will return an empty map if prefix or map is null.
+     * 
+     * @param <V> Type of the value
+     * @param prefix Prefix of the key to extract
+     * @param map Map of all entries
+     * @return Extracted subset
+     */
+    static IProperties subsetCrop(String prefix, Map<String, ?> map) {
+    	MProperties out = new MProperties();
+        if (prefix == null || map == null) return out;
+        int l = prefix.length();
+        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k.substring(l), v); } );
+        return out;
+    }
+    
 }

@@ -26,9 +26,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MStopWatch;
 
-public class TestCase {
+public class TestCase extends MLog {
 
     private MStopWatch timer;
     protected boolean skipTest = false;

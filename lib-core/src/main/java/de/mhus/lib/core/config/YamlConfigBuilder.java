@@ -32,7 +32,12 @@ public class YamlConfigBuilder extends IConfigBuilder {
     public IConfig read(InputStream is) {
         YMap itemY = MYaml.load(is);
         MConfig itemC = new MConfig();
-        fill(itemC, itemY, 0);
+        if (itemY.isList()) {
+        	ConfigList arrayC = itemC.createArray(IConfig.NAMELESS_VALUE);
+    		fill(arrayC, new YList(itemY.getObject()), 0);
+        } else
+    	if (itemY.isMap())
+    		fill(itemC, itemY, 0);
         return itemC;
     }
 

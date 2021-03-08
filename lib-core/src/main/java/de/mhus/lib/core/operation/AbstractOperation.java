@@ -20,7 +20,9 @@ import java.util.UUID;
 
 import org.apache.shiro.authz.AuthorizationException;
 
+import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MLog;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.definition.DefRoot;
@@ -147,17 +149,12 @@ public abstract class AbstractOperation extends MLog implements Operation {
             form = ((IFormProvider) this).getForm();
         }
 
-        OperationDescription ret =
-                new OperationDescription(getUuid(), path, version, this, title, form);
+        MProperties labels = null;
         if (desc != null) {
-            String[] labels = desc.labels();
-            for (String label : labels) {
-                int pos = label.indexOf('=');
-                if (pos > 0) {
-                    ret.getLabels().put(label.substring(0, pos), label.substring(pos + 1));
-                }
-            }
+        	labels = IProperties.explodeToMProperties(desc.labels());
         }
+        OperationDescription ret =
+                new OperationDescription(getUuid(), path, version, this, title, labels, form);
         prepareCreatedDescription(ret);
         return ret;
     }

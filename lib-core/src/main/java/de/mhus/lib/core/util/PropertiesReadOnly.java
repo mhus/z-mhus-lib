@@ -18,6 +18,8 @@ package de.mhus.lib.core.util;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -133,4 +135,9 @@ public class PropertiesReadOnly implements IReadProperties, ReadOnly {
     public String getStringOrCreate(String name, Function<String, String> def) {
         return parent.getStringOrCreate(name, def);
     }
+
+	@Override
+	public Iterator<Entry<String, Object>> iterator() {
+		return parent.iterator();
+	}
 }

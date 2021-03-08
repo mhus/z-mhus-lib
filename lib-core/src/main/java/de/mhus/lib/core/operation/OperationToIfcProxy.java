@@ -19,10 +19,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
 
 import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.util.Version;
@@ -48,7 +49,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 
     protected abstract Version getInterfaceVersion();
 
-    protected abstract void initOperationDescription(HashMap<String, String> parameters);
+    protected abstract void initOperationDescription(IReadProperties parameters);
 
     @Override
     protected OperationResult doExecute2(TaskContext context) throws Exception {
@@ -141,6 +142,9 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
             //			}
         }
 
+        MProperties labels = new MProperties();
+        labels.put(OperationDescription.TAG_TECH, OperationDescription.TECH_JAVA);
+        
         OperationDescription out =
                 new OperationDescription(
                         getUuid(),
@@ -148,8 +152,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
                         getInterfaceVersion(),
                         this,
                         this.getClass().getCanonicalName(),
+                        labels,
                         form);
-        out.putLabel(OperationDescription.TAG_TECH, OperationDescription.TECH_JAVA);
         initOperationDescription(out.getLabels());
         return out;
     }
