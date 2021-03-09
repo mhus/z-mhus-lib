@@ -39,6 +39,8 @@ public class LogProperties extends MProperties {
     public LogProperties(Map<String, Object> parameters) {
         super(parameters);
 
+        if (parameters == null) return;
+        
         String[] ignore = CFG_IGNORE.value() == null ? null : CFG_IGNORE.value().split(",");
         String[] stringSize =
                 CFG_STRING_SIZE.value() == null ? null : CFG_STRING_SIZE.value().split(",");
