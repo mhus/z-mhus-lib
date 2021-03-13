@@ -59,6 +59,7 @@
                     org.yaml.snakeyaml.*;resolution:=optional,
                     org.apache.maven.plugin.*;resolution:=optional,
                     io.opentracing.*;resolution:=optional,
+                    jdk.internal.*;resolution:=optional,
 		            *
 	            </Import-Package>
 	            <Private-Package>
