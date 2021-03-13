@@ -50,7 +50,8 @@ public class Log {
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     private List<String> maxMsgSizeExceptions;
-    private boolean reportedTracerProblem = false;
+	private ITracer tracer;
+	private boolean tracerInError = false;
     //    protected UUID id = UUID.randomUUID();
     protected static int maxMsgSize = 0;
 
@@ -58,6 +59,7 @@ public class Log {
 
         name = MSystem.getOwnerName(owner);
         localTrace = MApi.isTrace(name);
+        tracer = getITracer();
 
         update();
 
@@ -90,19 +92,13 @@ public class Log {
 
         // level mapping
         Span span = null;
-        // avoid stack overloading
+        // avoid stack overload
         if (lookingForSpan.get() == null) {
-            lookingForSpan.set("");
-            try {
-                span = ITracer.get().current();
-            } catch (Throwable t) {
-                if (!reportedTracerProblem || MApi.isDirtyTrace()) {
-                    System.err.println(toIsoDateTime(new Date()) + " REPORT LOG TRACER PROBLEM");
-                    t.printStackTrace();
-                }
-                reportedTracerProblem = true;
+        	try {
+        		lookingForSpan.set("");
+            	span = getITracer().current();
             } finally {
-                lookingForSpan.remove();
+            	lookingForSpan.remove();
             }
         }
 
@@ -177,7 +173,24 @@ public class Log {
         }
     }
 
-    // toos from MDate
+    private ITracer getITracer() {
+    	if (!tracerInError) {
+	    	try {
+	    		tracer = ITracer.get();
+	    	} catch (ClassCastException e) {
+	    		// The exception occurs if because of class loader conflicts the tracer is no more compatible to the interface
+	    		// in this case use the last loaded for further actions
+	    		tracerInError = true;
+	    		System.out.println(new Date() + " ERROR: ITRACER IN ERROR " + e + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
+	    		if (tracer == null)
+	    			System.out.println(new Date() + " FATAL: *** CAN'T LOAD ITRACER FOR: " + name);
+	    	}
+	    	
+    	}
+		return tracer;
+	}
+
+	// toos from MDate
     protected static String toIsoDateTime(Date _in) {
         Calendar c = Calendar.getInstance();
         c.setTime(_in);
@@ -332,7 +345,16 @@ public class Log {
         if (localTrace) level = LEVEL.INFO;
 
         // level mapping
-        Span span = ITracer.get().current();
+        Span span = null;
+        // avoid stack overload
+        if (lookingForSpan.get() == null) {
+        	try {
+        		lookingForSpan.set("");
+            	span = getITracer().current();
+            } finally {
+            	lookingForSpan.remove();
+            }
+        }
         if (span != null) {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
             if (mapping != null) {
