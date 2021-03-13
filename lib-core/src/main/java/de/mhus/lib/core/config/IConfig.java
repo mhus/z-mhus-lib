@@ -300,4 +300,15 @@ public interface IConfig extends IProperties {
         return fillIn;
     }
 
+    /**
+     * Return a wrapped parameter to config object. If the wrapped
+     * object is changes also values in the original object will be changed.
+     * 
+     * @param parameters
+     * @return
+     */
+	static IConfig wrap(IProperties parameters) {
+		return new MConfigWrapper(parameters);
+	}
+
 }

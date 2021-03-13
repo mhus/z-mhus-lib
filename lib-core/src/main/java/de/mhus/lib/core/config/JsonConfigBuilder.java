@@ -28,7 +28,6 @@ import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.util.MIterable;
 import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MException;
-import de.mhus.lib.errors.NotSupportedException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
 public class JsonConfigBuilder extends IConfigBuilder {
@@ -89,21 +88,21 @@ public class JsonConfigBuilder extends IConfigBuilder {
     @Override
     public void write(IConfig config, OutputStream os) throws MException {
         try {
-            ObjectNode objectJ = writeToJsonNode(config);
+            JsonNode objectJ = writeToJsonNode(config);
             MJson.save(objectJ, os);
         } catch (IOException e) {
             throw new MException(e);
         }
     }
 
-    public ObjectNode writeToJsonNode(IConfig config) {
+    public JsonNode writeToJsonNode(IConfig config) {
         if (config.isArray(IConfig.NAMELESS_VALUE)) {
-            //          ArrayNode arrayJ = MJson.createArrayNode();
-            //          for (IConfig itemC : config.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
-            //
-            //          }
-            //          MJson.save(arrayJ, os);
-            throw new NotSupportedException("first config node as array is not supported");
+	          ArrayNode arrayJ = MJson.createArrayNode();
+	          for (IConfig itemC : config.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
+	        	  ObjectNode objectJ = arrayJ.addObject();
+	        	  fill(objectJ, itemC, 1);
+	          }
+	          return arrayJ;
         } else {
             ObjectNode objectJ = MJson.createObjectNode();
             fill(objectJ, config, 0);
