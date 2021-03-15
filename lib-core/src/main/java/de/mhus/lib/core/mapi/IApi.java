@@ -64,4 +64,7 @@ public interface IApi {
     <T, D extends T> T lookup(Class<T> ifc, Class<D> def);
 
     DefaultActivator getLookupActivator();
+
+    <T> void cleanupLookup(Class<T> ifc);
+
 }

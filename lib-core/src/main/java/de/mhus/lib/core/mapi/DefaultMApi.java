@@ -219,4 +219,9 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
     public void updateSystemCfg(CfgProvider system) {
         if (system == null) return;
     }
+
+    @Override
+    public <T> void cleanupLookup(Class<T> ifc) {
+        base.removeObject(ifc, null);
+    }
 }
