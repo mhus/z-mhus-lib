@@ -1,6 +1,6 @@
 package de.mhus.lib.core.cache;
 
-public class LocalCacheConfig {
+public class CacheConfig {
 
     private int heapSize = 0;
     private boolean serializable = false;
@@ -10,7 +10,7 @@ public class LocalCacheConfig {
         return heapSize;
     }
 
-    public LocalCacheConfig setHeapSize(int heapSize) {
+    public CacheConfig setHeapSize(int heapSize) {
         this.heapSize = heapSize;
         return this;
     }
@@ -19,7 +19,7 @@ public class LocalCacheConfig {
         return serializable;
     }
 
-    public LocalCacheConfig setSerializable(boolean serializable) {
+    public CacheConfig setSerializable(boolean serializable) {
         this.serializable = serializable;
         return this;
     }
@@ -28,7 +28,7 @@ public class LocalCacheConfig {
         return ttl;
     }
 
-    public LocalCacheConfig setTTL(long ttl) {
+    public CacheConfig setTTL(long ttl) {
         this.ttl = ttl;
         return this;
     }

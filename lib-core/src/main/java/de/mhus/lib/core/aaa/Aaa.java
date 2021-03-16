@@ -56,9 +56,9 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.cache.LocalCache;
-import de.mhus.lib.core.cache.LocalCacheConfig;
-import de.mhus.lib.core.cache.LocalCacheService;
+import de.mhus.lib.core.cache.ICache;
+import de.mhus.lib.core.cache.CacheConfig;
+import de.mhus.lib.core.cache.ICacheService;
 import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
@@ -111,7 +111,7 @@ public class Aaa {
                             RequiresUser.class.getCanonicalName(), new UserAnnotationHandler(),
                             RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler(),
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
-    private static LocalCache<String, Boolean> accessCacheApi;
+    private static ICache<String, Boolean> accessCacheApi;
 
     public static boolean hasAccess(String resource) {
         return hasAccess(getSubject(), resource);
@@ -162,14 +162,14 @@ public class Aaa {
     private synchronized static void initAccessCache() {
         if (accessCacheApi != null) return;
         try {
-            LocalCacheService cacheService = M.l(LocalCacheService.class);
+            ICacheService cacheService = M.l(ICacheService.class);
             accessCacheApi =
                 cacheService.createCache(
                         new Aaa(),
                         "aaaAccess",
                         String.class,
                         Boolean.class,
-                        new LocalCacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
+                        new CacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
                         );
         } catch (Throwable t) {
             MApi.dirtyLogDebug("Aaa:initAccessCache",t.toString());

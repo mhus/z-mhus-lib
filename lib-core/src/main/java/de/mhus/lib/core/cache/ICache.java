@@ -15,23 +15,10 @@
  */
 package de.mhus.lib.core.cache;
 
-import java.util.List;
+import java.io.Closeable;
 
-public interface LocalCacheService {
+import javax.cache.Cache;
 
-    // ccb -> ccb.withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(5)))
+public interface ICache<K, V> extends Cache<K, V>, Closeable {
 
-//    CacheManagerBuilder<CacheManager> getCacheBuilder();
-
-    <K, V> LocalCache<K, V> createCache(
-            Object owner,
-            String name,
-            Class<K> keyType,
-            Class<V> valueType,
-            LocalCacheConfig config
-            );
-
-    List<String> getCacheNames();
-
-    <K, V> LocalCache<K, V> getCache(String name);
 }

@@ -15,14 +15,19 @@
  */
 package de.mhus.lib.core.cache;
 
-import java.io.Closeable;
+import java.util.List;
 
-import javax.cache.Cache;
-import javax.cache.CacheManager;
+public interface ICacheService {
 
-public interface LocalCache<K, V> extends Cache<K, V>, Closeable {
+    <K, V> ICache<K, V> createCache(
+            Object owner,
+            String name,
+            Class<K> keyType,
+            Class<V> valueType,
+            CacheConfig config
+            );
 
-    CacheManager getCacheManager();
+    List<String> getCacheNames();
 
-    // Bundle getBundle();
+    <K, V> ICache<K, V> getCache(String name);
 }

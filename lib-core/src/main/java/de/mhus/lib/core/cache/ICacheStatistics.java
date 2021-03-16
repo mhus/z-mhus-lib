@@ -2,7 +2,7 @@ package de.mhus.lib.core.cache;
 
 import javax.cache.management.CacheStatisticsMXBean;
 
-public interface LocalCacheStatistics extends CacheStatisticsMXBean {
+public interface ICacheStatistics extends CacheStatisticsMXBean {
 
     long getCacheSize();
     
