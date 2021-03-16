@@ -35,6 +35,6 @@ public interface AccessApi {
 
     void destroySession();
 
-    ResourceManager getResourceManager();
+//    ResourceManager getResourceManager();
     
 }

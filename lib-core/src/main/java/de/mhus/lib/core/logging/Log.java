@@ -97,6 +97,8 @@ public class Log {
         	try {
         		lookingForSpan.set("");
             	span = getITracer().current();
+        	} catch (Throwable t) {
+        	    System.out.println("*** Error looking for ITracer span: " + name + " " + t);
             } finally {
             	lookingForSpan.remove();
             }

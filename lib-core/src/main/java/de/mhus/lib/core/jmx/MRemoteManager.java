@@ -29,23 +29,24 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MHousekeeper;
 import de.mhus.lib.core.MHousekeeperTask;
 import de.mhus.lib.core.cfg.CfgBoolean;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
 public class MRemoteManager extends MObject {
 
-    private static CfgBoolean jmxEnabled = new CfgBoolean(MRemoteManager.class, "enabled", false);
+    private static CfgBoolean CFG_ENABLED = new CfgBoolean(MRemoteManager.class, "enabled", false);
+    private static CfgLong CFG_HOUSEKEEPER_SLEEP = new CfgLong(MRemoteManager.class, "housekeeper_sleep", 30000);
     private MBeanServer mbs;
     private HashMap<ObjectName, Object> registry = new HashMap<ObjectName, Object>();
 
     private Housekeeper housekeeper;
 
     public MRemoteManager() throws MException {
-        housekeeper = new Housekeeper(this);
-        IConfig config = M.l(MCfgManager.class).getCfg(this);
-        M.l(MHousekeeper.class).register(housekeeper, config.getLong("housekeeper_sleep", 30000));
+        if (CFG_ENABLED.value()) {
+            housekeeper = new Housekeeper(this);
+            M.l(MHousekeeper.class).register(housekeeper, CFG_HOUSEKEEPER_SLEEP.value());
+        }
     }
 
     public void register(JmxObject object) throws Exception {
@@ -53,7 +54,7 @@ public class MRemoteManager extends MObject {
     }
 
     public void register(JmxObject object, boolean weak) throws Exception {
-        if (!jmxEnabled.value()) return; // disabled
+        if (!CFG_ENABLED.value()) return; // disabled
         open();
         if (object instanceof JmxPackage) {
             ((JmxPackage) object).open(this);

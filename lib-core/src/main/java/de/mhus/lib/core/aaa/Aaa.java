@@ -124,7 +124,7 @@ public class Aaa {
      * @return True if access is granted
      */
     public static boolean hasAccess(Subject subject, String resource) {
-        return M.l(AccessApi.class).getResourceManager().hasAccess(subject, resource);
+        return subject.isPermitted(resource);
     }
 
     public static boolean isAdmin() {
