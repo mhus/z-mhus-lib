@@ -25,6 +25,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.NotSupportedException;
 
 public class PrincipalData implements Map<String, String>, Serializable {
@@ -187,5 +188,10 @@ public class PrincipalData implements Map<String, String>, Serializable {
     private void readObject(java.io.ObjectInputStream s)
             throws IOException, ClassNotFoundException {
         data = (Map<String, String>) s.readObject();
+    }
+    
+    @Override
+    public String toString() {
+        return MSystem.toString(this, data);
     }
 }

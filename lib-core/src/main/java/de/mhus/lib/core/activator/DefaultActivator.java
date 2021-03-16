@@ -172,25 +172,27 @@ public class DefaultActivator extends MActivator implements MutableActivator {
     }
 
     public <T, D extends T> T lookup(Class<T> ifc, Class<D> def) {
-        try {
-            T ret = getObject(ifc);
-            if (ret != null) return ret;
-
-        } catch (Exception e) {
-            MApi.dirtyLogDebug("info: fallback to default", ifc, def, e);
-        }
-
-        if (def == null) return null;
-
-        try {
-            return def.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException
-                | IllegalAccessException
-                | IllegalArgumentException
-                | InvocationTargetException
-                | NoSuchMethodException
-                | SecurityException e) {
-            MApi.dirtyLogDebug(ifc, e);
+        synchronized (ifc) {
+            try {
+                T ret = getObject(ifc);
+                if (ret != null) return ret;
+    
+            } catch (Exception e) {
+                MApi.dirtyLogDebug("info: fallback to default", ifc, def, e);
+            }
+    
+            if (def == null) return null;
+    
+            try {
+                return def.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException
+                    | IllegalAccessException
+                    | IllegalArgumentException
+                    | InvocationTargetException
+                    | NoSuchMethodException
+                    | SecurityException e) {
+                MApi.dirtyLogDebug(ifc, e);
+            }
         }
         return null;
     }
