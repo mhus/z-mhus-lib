@@ -17,6 +17,7 @@ package de.mhus.lib.core.aaa;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,12 +49,20 @@ import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.cache.LocalCache;
+import de.mhus.lib.core.cache.LocalCacheService;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
@@ -65,6 +74,18 @@ public class Aaa {
     public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
     public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
+    
+    private static final CfgBoolean CFG_USE_ACCESS_CACHE = new CfgBoolean(AccessApi.class, "accessCacheEnabled", true);
+    private static final CfgLong CFG_ACCESS_CACHE_SIZE =
+            new CfgLong(
+                    AccessApi.class,
+                    "accessCacheSize",
+                    1000000); 
+    private static final CfgLong CFG_ACCESS_CACHE_TTL =
+            new CfgLong(
+                    AccessApi.class,
+                    "accessCacheTTL",
+                    MPeriod.MINUTE_IN_MILLISECOUNDS * 15); 
 
     private static final Log log = Log.getLog(Aaa.class);
     public static final CfgString ROLE_ADMIN =
@@ -91,6 +112,7 @@ public class Aaa {
                             RequiresUser.class.getCanonicalName(), new UserAnnotationHandler(),
                             RequiresGuest.class.getCanonicalName(), new GuestAnnotationHandler(),
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
+    private static LocalCache<String, Boolean> accessCacheApi;
 
     public static boolean hasAccess(String resource) {
         return hasAccess(getSubject(), resource);
@@ -124,13 +146,53 @@ public class Aaa {
      * @return True if access is granted
      */
     public static boolean hasAccess(Subject subject, String resource) {
-        return subject.isPermitted(resource);
+        Boolean cached = getCachedAccess(subject, "access" , resource);
+        if (cached != null) return cached;
+        boolean value = subject.isPermitted(resource);
+        doCacheAccess(subject, "access", resource, value);
+        return value;
+    }
+
+    private static void doCacheAccess(Subject subject, String action, String resource, boolean value) {
+        if (!CFG_USE_ACCESS_CACHE.value()) return;
+        initAccessCache();
+        if (accessCacheApi == null) return;
+        accessCacheApi.put(subject.getPrincipal() + ":" + action + "@" + resource, value);
+    }
+
+    private synchronized static void initAccessCache() {
+        if (accessCacheApi != null) return;
+        try {
+            LocalCacheService cacheService = M.l(LocalCacheService.class);
+            accessCacheApi =
+                cacheService.createCache(
+                        new Aaa(),
+                        "aaaAccess",
+                        String.class,
+                        Boolean.class,
+                        ResourcePoolsBuilder.heap(CFG_ACCESS_CACHE_SIZE.value()),
+                        ccb -> ccb.withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration( Duration.ofMillis( CFG_ACCESS_CACHE_TTL.value() )))
+                        );
+        } catch (Throwable t) {
+            MApi.dirtyLogDebug("Aaa:initAccessCache",t.toString());
+        }
+    }
+
+    private static Boolean getCachedAccess(Subject subject, String action, String resource) {
+        if (!CFG_USE_ACCESS_CACHE.value()) return null;
+        initAccessCache();
+        if (accessCacheApi == null) return null;
+        return accessCacheApi.get(subject.getPrincipal() + ":" + action + "@" + resource);
     }
 
     public static boolean isAdmin() {
         try {
             Subject subject = M.l(AccessApi.class).getSubject(); // init
-            return subject.hasRole(ROLE_ADMIN.value());
+            Boolean cached = getCachedAccess(subject, "admin" , "");
+            if (cached != null) return cached;
+            boolean value = subject.hasRole(ROLE_ADMIN.value());
+            doCacheAccess(subject, "admin", "", value);
+            return value;
         } catch (Throwable t) {
             log.d(t);
             return false;
@@ -139,7 +201,11 @@ public class Aaa {
 
     public static boolean isAdmin(Subject subject) {
         try {
-            return subject.hasRole(ROLE_ADMIN.value());
+            Boolean cached = getCachedAccess(subject, "admin" , "");
+            if (cached != null) return cached;
+            boolean value = subject.hasRole(ROLE_ADMIN.value());
+            doCacheAccess(subject, "admin", "", value);
+            return value;
         } catch (Throwable t) {
             log.d(t);
             return false;
