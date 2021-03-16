@@ -609,8 +609,12 @@ public class Aaa {
     public static Subject login(String ticket) {
         M.l(AccessApi.class); // init
         if (ticket == null) throw new AuthorizationException("ticket not set");
-        String[] parts = ticket.split(":");
-        if (parts[0].equals(TICKET_PREFIX_TRUST)) {
+        int p = ticket.indexOf(':');
+        if (p < 0) throw new AuthorizationException("ticket not valide (3)");
+        String type = ticket.substring(0, p);
+        
+        if (type.equals(TICKET_PREFIX_TRUST)) {
+            String[] parts = ticket.split(":", 4);
             if (parts.length != 4) throw new AuthorizationException("ticket not valide (1)");
             M.l(TrustApi.class).validatePassword(parts[1], parts[3]);
             return new Subject.Builder()
@@ -618,10 +622,11 @@ public class Aaa {
                     .principals(new SimplePrincipalCollection(parts[2], REALM_TRUST.value()))
                     .buildSubject();
         }
-        if (parts[0].equals(TICKET_PREFIX_ACCOUNT)) {
+        if (type.equals(TICKET_PREFIX_ACCOUNT)) {
+            String[] parts = ticket.split(":", 3);
             if (parts.length != 3) throw new AuthorizationException("ticket not valide (2)");
             Subject subject = M.l(AccessApi.class).createSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken(parts[1], parts[2]);
+            UsernamePasswordToken token = new UsernamePasswordToken(parts[1], MPassword.decode(parts[2]));
             subject.login(token);
             return subject;
         }

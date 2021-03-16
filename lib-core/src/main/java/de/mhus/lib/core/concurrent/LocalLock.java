@@ -23,11 +23,11 @@ import io.opentracing.Scope;
 
 public class LocalLock implements Lock {
 
-    protected Thread lock = null;
+    protected volatile Thread lock = null;
     protected String name;
-    protected long lockTime = 0;
-    protected long cnt = 0;
-    protected String stacktrace;
+    protected volatile long lockTime = 0;
+    protected volatile long cnt = 0;
+    protected volatile String stacktrace;
 
     public LocalLock() {}
 

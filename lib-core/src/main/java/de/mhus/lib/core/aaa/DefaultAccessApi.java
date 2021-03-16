@@ -51,7 +51,8 @@ public class DefaultAccessApi extends MLog implements AccessApi {
             BasicIniEnvironment basicEnv = new BasicIniEnvironment(CFG_CONFIG_FILE.value());
             env = basicEnv;
         } catch (Exception e) {
-            log().d("Initialize empty shiro", CFG_CONFIG_FILE, e.toString());
+            log().i("Initialize empty shiro", CFG_CONFIG_FILE, e.toString());
+            log().d(e);
             HashMap<String, Object> seed = new HashMap<>();
             seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, new EmptySecurityManager());
             env = new DefaultEnvironment(seed);
@@ -65,7 +66,8 @@ public class DefaultAccessApi extends MLog implements AccessApi {
 
     @Override
     public SecurityManager getSecurityManager() {
-        return env.getSecurityManager();
+//        return env.getSecurityManager();
+        return SecurityUtils.getSecurityManager();
     }
 
     @Override
