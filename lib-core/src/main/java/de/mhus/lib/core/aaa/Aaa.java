@@ -17,7 +17,6 @@ package de.mhus.lib.core.aaa;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,8 +48,6 @@ import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.ehcache.config.builders.ExpiryPolicyBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.M;
@@ -60,8 +57,10 @@ import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.cache.LocalCache;
+import de.mhus.lib.core.cache.LocalCacheConfig;
 import de.mhus.lib.core.cache.LocalCacheService;
 import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
@@ -76,8 +75,8 @@ public class Aaa {
     public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
     
     private static final CfgBoolean CFG_USE_ACCESS_CACHE = new CfgBoolean(AccessApi.class, "accessCacheEnabled", true);
-    private static final CfgLong CFG_ACCESS_CACHE_SIZE =
-            new CfgLong(
+    private static final CfgInt CFG_ACCESS_CACHE_SIZE =
+            new CfgInt(
                     AccessApi.class,
                     "accessCacheSize",
                     1000000); 
@@ -170,8 +169,7 @@ public class Aaa {
                         "aaaAccess",
                         String.class,
                         Boolean.class,
-                        ResourcePoolsBuilder.heap(CFG_ACCESS_CACHE_SIZE.value()),
-                        ccb -> ccb.withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration( Duration.ofMillis( CFG_ACCESS_CACHE_TTL.value() )))
+                        new LocalCacheConfig().setHeapSize(CFG_ACCESS_CACHE_SIZE.value()).setTTL(CFG_ACCESS_CACHE_TTL.value())
                         );
         } catch (Throwable t) {
             MApi.dirtyLogDebug("Aaa:initAccessCache",t.toString());

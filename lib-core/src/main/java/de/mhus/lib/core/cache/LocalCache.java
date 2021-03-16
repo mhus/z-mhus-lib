@@ -17,8 +17,8 @@ package de.mhus.lib.core.cache;
 
 import java.io.Closeable;
 
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
+import javax.cache.Cache;
+import javax.cache.CacheManager;
 
 public interface LocalCache<K, V> extends Cache<K, V>, Closeable {
 
