@@ -50,9 +50,13 @@ import org.xml.sax.SAXException;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.cache.CacheConfig;
+import de.mhus.lib.core.cache.ICache;
+import de.mhus.lib.core.cache.ICacheService;
 import de.mhus.lib.core.logging.Log;
 
 /**
@@ -93,6 +97,11 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     protected String defaultRole;
     protected boolean debugPermissions;
     protected String rolePermission;
+    private boolean useCache;
+    private long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
+    private ICache<String, SimpleAccount> userCacheApi;
+    private ICache<String, SimpleRole> roleCacheApi;
+    private ICache<String, Map> dataCacheApi;
 
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
@@ -157,6 +166,15 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     }
 
     protected SimpleAccount getUser(String username) {
+        
+        if (useCache) {
+            initCache();
+            if (userCacheApi != null) {
+                SimpleAccount cached = userCacheApi.get(username);
+                if (cached != null) return cached;
+            }
+        }
+        
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".txt");
@@ -184,6 +202,10 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                         account.addObjectPermissions(role.getPermissions());
                     }
                 }
+                
+                if (useCache && userCacheApi != null)
+                    userCacheApi.put(username, account);
+                
                 return account;
             }
         } catch (IOException e) {
@@ -226,6 +248,9 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                     account.addObjectPermissions(permissions);
                 }
                 
+                if (useCache && userCacheApi != null)
+                    userCacheApi.put(username, account);
+
                 return account;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -237,7 +262,43 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
         return null;
     }
 
+    protected synchronized void initCache() {
+        if (userCacheApi != null) return;
+        try {
+            ICacheService cacheService = M.l(ICacheService.class);
+            if (cacheService == null) return;
+            userCacheApi = cacheService.createCache(
+                    this, 
+                    getClass().getCanonicalName() + ":" + getName() + ":user", 
+                    String.class, 
+                    SimpleAccount.class, 
+                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+            roleCacheApi = cacheService.createCache(
+                    this, 
+                    getClass().getCanonicalName() + ":" + getName() + ":role", 
+                    String.class, 
+                    SimpleRole.class, 
+                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+            dataCacheApi = cacheService.createCache(
+                    this, 
+                    getClass().getCanonicalName() + ":" + getName() + ":data", 
+                    String.class, 
+                    Map.class, 
+                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+        } catch (Throwable t) {
+            
+        }
+    }
+
     public SimpleRole getRole(String rolename) {
+
+        if (useCache) {
+            initCache();
+            if (roleCacheApi != null) {
+                SimpleRole cached = roleCacheApi.get(rolename);
+                if (cached != null) return cached;
+            }
+        }
 
         try {
             // load from FS
@@ -255,6 +316,10 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                 Set<Permission> permissions =
                         PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                 role.setPermissions(permissions);
+                
+                if (useCache && roleCacheApi != null)
+                    roleCacheApi.put(rolename, role);
+                
                 return role;
             }
         } catch (IOException e) {
@@ -280,6 +345,10 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                             PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                     role.setPermissions(permissions);
                 }
+                
+                if (useCache && roleCacheApi != null)
+                    roleCacheApi.put(rolename, role);
+
                 return role;
             }
         } catch (ParserConfigurationException | SAXException | IOException e) {
@@ -301,6 +370,15 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     @Override
     public Map<String, String> getUserData(Subject subject) {
         String username = Aaa.getPrincipal(subject);
+        
+        if (useCache) {
+            initCache();
+            if (dataCacheApi != null) {
+                Map<String, String> cached = dataCacheApi.get(username);
+                if (cached != null) return cached;
+            }
+        }
+
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".properties");
@@ -310,6 +388,10 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                 HashMap<String, String> ret = new HashMap<>();
                 for (Entry<String, Object> entry : prop.entrySet())
                     ret.put(entry.getKey(), String.valueOf(entry.getValue()));
+                
+                if (useCache && dataCacheApi != null)
+                    dataCacheApi.put(username, ret);
+                
                 return ret;
             }
         } catch (Exception e) {
@@ -330,6 +412,10 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
                         String value = MXml.getValue(datE, false);
                         ret.put(datE.getNodeName(), value);
                     }
+                    
+                    if (useCache && dataCacheApi != null)
+                        dataCacheApi.put(username, ret);
+
                     return ret;
                 }
             }
@@ -409,5 +495,21 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
         if (file1.exists() && file1.isFile() || file2.exists() && file2.isFile())
             return M.l(JwtProvider.class).createBearerToken(username, issuer, configuration);
         throw new UnknownAccountException("User unknown: " + username);
+    }
+
+    public boolean isUseCache() {
+        return useCache;
+    }
+
+    public void setUseCache(boolean useCache) {
+        this.useCache = useCache;
+    }
+
+    public long getCacheTTL() {
+        return cacheTTL;
+    }
+
+    public void setCacheTTL(long cacheTTL) {
+        this.cacheTTL = cacheTTL;
     }
 }

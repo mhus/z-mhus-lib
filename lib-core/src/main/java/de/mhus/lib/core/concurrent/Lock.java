@@ -26,11 +26,36 @@ public interface Lock extends Closeable {
 
     Lock lock();
 
+    /**
+     * The method will throw an exception after the timeout is reached.
+     * @param timeout
+     * @return The lock itself
+     * @throws TimeoutException If timeout is reached
+     */
     default Lock lockWithException(long timeout) throws TimeoutException {
         if (lock(timeout)) return this;
         throw new TimeoutException(getName());
     }
 
+    /**
+     * The method will unlock the resource automatically and try to gain access after timeout is reached.
+     * 
+     * @param timeout
+     * @return The lock itself
+     */
+    default Lock lockWithUnlock(long timeout) {
+        while (true) {
+            if (lock(timeout)) return this;
+            unlockHard();
+        }
+    }
+
+    /**
+     * Try to lock the resource or return false if tmeout is reached.
+     * 
+     * @param timeout
+     * @return false if timeout is reached. true if locked.
+     */
     boolean lock(long timeout);
 
     /**

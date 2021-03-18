@@ -305,7 +305,7 @@ public interface IConfig extends IProperties {
      * object is changes also values in the original object will be changed.
      * 
      * @param parameters
-     * @return
+     * @return A wrapping IConfig object
      */
 	static IConfig wrap(IProperties parameters) {
 		return new MConfigWrapper(parameters);

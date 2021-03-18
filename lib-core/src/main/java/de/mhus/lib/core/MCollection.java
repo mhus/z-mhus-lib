@@ -36,12 +36,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import de.mhus.lib.core.util.EmptyList;
+import de.mhus.lib.core.util.EmptySet;
 import de.mhus.lib.core.util.ReadOnlyList;
 import de.mhus.lib.errors.MRuntimeException;
 
 public class MCollection {
 
     public static final List<?> EMPTY_LIST = new EmptyList<>();
+    public static final Set<?> EMPTY_SET = new EmptySet<>();
+    public static final Map<?,?> EMPTY_MAP = new EmptyMap<>();
 
     /**
      * Returns true of array is not null and the value of item is included in the array. It compares

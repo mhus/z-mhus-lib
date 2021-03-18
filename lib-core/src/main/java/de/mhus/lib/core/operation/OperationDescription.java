@@ -156,6 +156,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
      * @param version
      * @param nlsProvider
      * @param title
+     * @param labels 
      * @param form
      */
     public OperationDescription(

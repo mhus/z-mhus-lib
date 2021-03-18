@@ -17,11 +17,12 @@ package de.mhus.lib.core.concurrent;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.service.LockManager;
 import io.opentracing.Scope;
 
-public class LocalLock implements Lock {
+public class LocalLock extends MLog implements Lock {
 
     protected volatile Thread lock = null;
     protected String name;
@@ -77,6 +78,7 @@ public class LocalLock implements Lock {
     @SuppressWarnings("resource")
     @Override
     public boolean lock(long timeout) {
+        log().t("lock",name,timeout);
         Scope scope = null;
         try {
             synchronized (this) {
@@ -88,12 +90,16 @@ public class LocalLock implements Lock {
                         wait(timeout);
                     } catch (InterruptedException e) {
                     }
-                    if (System.currentTimeMillis() - start >= timeout) return false;
+                    if (System.currentTimeMillis() - start >= timeout) {
+                        log().t("timeout lock",name);
+                        return false;
+                    }
                 }
                 lock = Thread.currentThread();
                 stacktrace = MCast.toString("", lock.getStackTrace());
                 lockTime = System.currentTimeMillis();
                 lockEvent(true);
+                log().t("gain lock",name);
                 return true;
             }
         } finally {
@@ -108,6 +114,7 @@ public class LocalLock implements Lock {
      */
     @Override
     public boolean unlock() {
+        log().t("unlock",name);
         synchronized (this) {
             if (lock != Thread.currentThread()) return false;
             lockEvent(false);
@@ -122,6 +129,7 @@ public class LocalLock implements Lock {
     /** Unlock in every case !!! This can break a locked area. */
     @Override
     public void unlockHard() {
+        log().d("unlockHard",name);
         synchronized (this) {
             lockEvent(false);
             lock = null;

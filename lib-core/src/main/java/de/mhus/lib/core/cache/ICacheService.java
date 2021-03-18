@@ -15,10 +15,23 @@
  */
 package de.mhus.lib.core.cache;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface ICacheService {
 
+    /**
+     * Create or get a cache handler also for in memory usage
+     * 
+     * @param <K>
+     * @param <V>
+     * @param owner
+     * @param name
+     * @param keyType
+     * @param valueType
+     * @param config
+     * @return New or existing cache handler
+     */
     <K, V> ICache<K, V> createCache(
             Object owner,
             String name,
@@ -26,6 +39,30 @@ public interface ICacheService {
             Class<V> valueType,
             CacheConfig config
             );
+
+    /**
+     * Create a cache handler to be stored or shared.
+     * 
+     * @param <K>
+     * @param <V>
+     * @param owner
+     * @param name
+     * @param keyType
+     * @param valueType
+     * @param config
+     * @return New or existing cache handler
+     */
+    default <K extends Serializable, V extends Serializable> ICache<K, V> createSerilizableCache(
+            Object owner,
+            String name,
+            Class<K> keyType,
+            Class<V> valueType,
+            CacheConfig config
+            ) {
+        if (config == null) config = new CacheConfig();
+        config.setSerializable(true);
+        return createCache(owner, name, keyType, valueType, config);
+    }
 
     List<String> getCacheNames();
 

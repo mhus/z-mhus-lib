@@ -291,7 +291,6 @@ public interface IProperties
      * It removes the prefix from the keys.
      * Will return an empty map if prefix or map is null.
      * 
-     * @param <V> Type of the value
      * @param prefix Prefix of the key to extract
      * @param map Map of all entries
      * @return Extracted subset

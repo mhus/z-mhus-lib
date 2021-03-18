@@ -23,11 +23,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.BearerToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -53,13 +51,13 @@ import de.mhus.lib.tests.TestCase;
 
 public class ShiroSecurityTest extends TestCase {
     
-    @Test
-    public void envTest() throws NoSuchMethodException, SecurityException {
-
-        init("classpath:de/mhus/lib/test/shiro-data.ini");
-        SecurityManager manager = SecurityUtils.getSecurityManager();
-        AccessApi api = M.l(AccessApi.class);
-    }
+//    @Test
+//    public void envTest() throws NoSuchMethodException, SecurityException {
+//
+//        init("classpath:de/mhus/lib/test/shiro-data.ini");
+//        SecurityManager manager = SecurityUtils.getSecurityManager();
+//        AccessApi api = M.l(AccessApi.class);
+//    }
 
     @Test
     public void annotationsTest() throws NoSuchMethodException, SecurityException {
