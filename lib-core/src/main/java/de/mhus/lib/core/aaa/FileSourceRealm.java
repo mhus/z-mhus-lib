@@ -285,19 +285,19 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             if (cacheService == null) return;
             userCacheApi = cacheService.createCache(
                     this, 
-                    getClass().getCanonicalName() + ":" + getName() + ":user", 
+                    getName() + ":user", 
                     String.class, 
                     SimpleAccount.class, 
                     new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
             roleCacheApi = cacheService.createCache(
                     this, 
-                    getClass().getCanonicalName() + ":" + getName() + ":role", 
+                    getName() + ":role", 
                     String.class, 
                     SimpleRole.class, 
                     new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
             dataCacheApi = cacheService.createCache(
                     this, 
-                    getClass().getCanonicalName() + ":" + getName() + ":data", 
+                    getName() + ":data", 
                     String.class, 
                     Map.class, 
                     new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
