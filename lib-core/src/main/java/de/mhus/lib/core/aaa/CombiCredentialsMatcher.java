@@ -33,6 +33,17 @@ public class CombiCredentialsMatcher extends SimpleCredentialsMatcher {
             String infoSubject = info.getPrincipals().toString();
             return tokenSubject != null && tokenSubject.equals(infoSubject);
         }
+        if (token instanceof TrustedToken) {
+            return true;
+        }
+        
+        Object credentials = token.getCredentials();
+        Object principal = token.getPrincipal();
+        if (credentials == null || principal == null) {
+            return false;
+        }
+        
+        if (Aaa.USER_ADMIN.value().equals(principal)) return false; // admin can't login directly
 
         return super.doCredentialsMatch(token, info);
     }

@@ -101,7 +101,9 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     private long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
     private ICache<String, SimpleAccount> userCacheApi;
     private ICache<String, SimpleRole> roleCacheApi;
+    @SuppressWarnings("rawtypes")
     private ICache<String, Map> dataCacheApi;
+    protected SimpleAccount ADMIN;
 
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
@@ -111,6 +113,11 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     protected void onInit() {
         userDir = new File(resourcesPath + File.separator + "users");
         rolesDir = new File(resourcesPath + File.separator + "roles");
+
+        ADMIN = new SimpleAccount(Aaa.USER_ADMIN.value(),"secret","");
+        ADMIN.addRole(Aaa.ROLE_ADMIN.value());
+        ADMIN.addStringPermission("*");
+
         super.onInit();
         // setCachingEnabled(false); // true
     }
@@ -123,7 +130,12 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        if (token != null && BearerToken.class.isAssignableFrom(token.getClass())) return true;
+        if (token != null && 
+                (
+                        token instanceof TrustedToken
+                        ||
+                        token instanceof BearerToken
+                    )) return true;
         return super.supports(token);
     }
 
@@ -139,6 +151,8 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
             String tokenStr = ((BearerToken) token).getToken();
             JwsData jwtToken = M.l(JwtProvider.class).readToken(tokenStr);
             username = jwtToken.getSubject();
+        } else if (token instanceof TrustedToken) {
+            username = (String)((TrustedToken)token).getPrincipal();
         }
 
         if (username != null) {
@@ -166,6 +180,8 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
     }
 
     protected SimpleAccount getUser(String username) {
+        
+        if (Aaa.USER_ADMIN.value().equals(username)) return ADMIN;
         
         if (useCache) {
             initCache();
@@ -374,6 +390,7 @@ public class FileSourceRealm extends AuthorizingRealm implements PrincipalDataRe
         if (useCache) {
             initCache();
             if (dataCacheApi != null) {
+                @SuppressWarnings("unchecked")
                 Map<String, String> cached = dataCacheApi.get(username);
                 if (cached != null) return cached;
             }

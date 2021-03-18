@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -73,7 +74,7 @@ public class Aaa {
     public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
     public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
-    
+
     private static final CfgBoolean CFG_USE_ACCESS_CACHE = new CfgBoolean(AccessApi.class, "accessCacheEnabled", true);
     private static final CfgInt CFG_ACCESS_CACHE_SIZE =
             new CfgInt(
@@ -639,10 +640,9 @@ public class Aaa {
      * @return A new Subject
      */
     public static Subject createSubjectWithoutCheck(String account) {
-        return new Subject.Builder()
-                .authenticated(true)
-                .principals(new SimplePrincipalCollection(account, REALM_TRUST.value()))
-                .buildSubject();
+        Subject subject = M.l(AccessApi.class).createSubject();
+        subject.login(new TrustedToken(account));
+        return subject;
     }
 
     public static boolean hasRole(String role) {
