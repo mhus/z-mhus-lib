@@ -183,9 +183,11 @@ public class Log {
 	    		// The exception occurs if because of class loader conflicts the tracer is no more compatible to the interface
 	    		// in this case use the last loaded for further actions
 	    		tracerInError = true;
-	    		System.out.println(new Date() + " ERROR: ITRACER IN ERROR " + e + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
+	    		System.out.println(new Date() + " ERROR: 1 ITRACER IN ERROR " + e + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
 	    		if (tracer == null)
 	    			System.out.println(new Date() + " FATAL: *** CAN'T LOAD ITRACER FOR: " + name);
+	    	} catch (Throwable t) {
+                System.out.println(new Date() + " ERROR: 2 ITRACER IN ERROR " + t + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
 	    	}
 	    	
     	}
