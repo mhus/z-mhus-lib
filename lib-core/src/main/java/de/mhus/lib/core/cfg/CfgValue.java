@@ -103,6 +103,14 @@ public abstract class CfgValue<T> {
         this.value = newValue;
         onPostUpdate(value);
     }
+    
+    /**
+     * Calls the update action (again).
+     * This could be used to initial values using the update action.
+     */
+    public void doUpdateAction() {
+        onPostUpdate(value);
+    }
 
     @Override
     public String toString() {

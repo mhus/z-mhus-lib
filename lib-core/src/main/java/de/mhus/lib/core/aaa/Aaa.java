@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -93,11 +92,11 @@ public class Aaa {
     private static final String ATTR_LOCALE = "locale";
     private static final String TICKET_PREFIX_TRUST = "tru";
     private static final String TICKET_PREFIX_ACCOUNT = "acc";
-    public static final Object CURRENT_PRINCIPAL =
+    public static final Object CURRENT_PRINCIPAL_OR_GUEST =
             new Object() {
                 @Override
                 public String toString() {
-                    return getPrincipal();
+                    return getPrincipalOrGuest();
                 }
             };
 
@@ -250,6 +249,24 @@ public class Aaa {
         }
     }
 
+    public static String getPrincipalOrGuest() {
+        try {
+            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            if (subject == null)
+                return USER_GUEST.value();
+            String ret = getPrincipal(subject);
+            if (ret == null)
+                return USER_GUEST.value();
+            return ret;
+        } catch (UnknownSessionException e) {
+            M.l(AccessApi.class).destroySession();
+            return USER_GUEST.value();
+        } catch (Throwable t) {
+            log.d(t);
+            return USER_GUEST.value();
+        }
+    }
+    
     public static String getPrincipal(Subject subject) {
         try {
             Object p = subject.getPrincipal();
@@ -640,6 +657,18 @@ public class Aaa {
      * @return A new Subject
      */
     public static Subject createSubjectWithoutCheck(String account) {
+        
+        Subject current = getSubject();
+        if (current.getPrincipal() == null) {
+            // first login as guest to get guest privileges
+            Subject guest = M.l(AccessApi.class).createSubject();
+            guest.login(new TrustedToken(USER_GUEST.value()));
+            try (SubjectEnvironment access = asSubject(guest)) {
+                Subject subject = M.l(AccessApi.class).createSubject();
+                subject.login(new TrustedToken(account));
+                return subject;
+            }
+        }
         Subject subject = M.l(AccessApi.class).createSubject();
         subject.login(new TrustedToken(account));
         return subject;

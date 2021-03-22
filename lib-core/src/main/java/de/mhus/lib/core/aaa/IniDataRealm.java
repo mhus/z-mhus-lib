@@ -155,7 +155,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions && !ret) {
-            log.d("perm access denied", Aaa.CURRENT_PRINCIPAL, permission);
+            log.d("perm access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, permission);
         }
         return ret;
     }
@@ -170,7 +170,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
-            log.d("role access denied", Aaa.CURRENT_PRINCIPAL, roleIdentifier);
+            log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
         }
         return ret;
     }
