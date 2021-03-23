@@ -59,7 +59,7 @@ public class Log {
 
         name = MSystem.getOwnerName(owner);
         localTrace = MApi.isTrace(name);
-        tracer = getITracer();
+//        tracer = getITracer(); - causes stack loop
 
         update();
 

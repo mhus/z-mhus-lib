@@ -167,6 +167,13 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                     context.clear();
                     setDone(true);
                 }
+            } catch (Throwable e) {
+                // reshedule in case of an exception - this will prevent amok behavior 
+                synchronized (this) {
+                    doCaclulateNextExecution();
+                    log.d("Scheduled to", getName(), getNextExecutionTime());
+                }
+                throw e;
             }
         } else {
             log.d("Execution delayed", task);

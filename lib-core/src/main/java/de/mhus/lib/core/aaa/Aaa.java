@@ -20,14 +20,18 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -56,6 +60,7 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MPeriod;
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cache.CacheConfig;
 import de.mhus.lib.core.cache.ICache;
 import de.mhus.lib.core.cache.ICacheService;
@@ -74,7 +79,7 @@ public class Aaa {
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
     public static final CfgString REALM_TRUST = new CfgString(AccessApi.class, "realmTrust", "trust");
 
-    private static final CfgBoolean CFG_USE_ACCESS_CACHE = new CfgBoolean(AccessApi.class, "accessCacheEnabled", true);
+    private static final CfgBoolean CFG_USE_ACCESS_CACHE = new CfgBoolean(AccessApi.class, "accessCacheEnabled", false); // to false for debug reasons
     private static final CfgInt CFG_ACCESS_CACHE_SIZE =
             new CfgInt(
                     AccessApi.class,
@@ -113,6 +118,58 @@ public class Aaa {
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
     private static ICache<String, Boolean> accessCacheApi;
 
+    
+    public static final SimpleAccount ADMIN = new SimpleAccount(USER_ADMIN.value(),UUID.randomUUID().toString(),"");
+    public static final SimpleAccount GUEST = new SimpleAccount(USER_GUEST.value(),UUID.randomUUID().toString(),"");
+
+    public static final CfgString PERMS_GUEST = new CfgString(AccessApi.class, "permsGuest", 
+            "de.mhus.lib.core.aaa.TrustedToken:admin:de.mhus.karaf.commands.impl.CmdAccessAdmin;" +
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin;" +
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.schedule.SchedulerJob"
+            ).updateAction(
+            v -> {
+                if (v != null) {
+                    HashSet<Permission> perms = new HashSet<>();
+                    for (String r : v.split(";"))
+                        if (MString.isSetTrim(r))
+                            perms.add(new WildcardPermission(r.trim()));
+                    GUEST.setObjectPermissions(perms);
+                }
+            });
+    
+    public static final CfgString ROLES_GUEST = new CfgString(AccessApi.class, "rolesGuest", "").updateAction(
+            v -> {
+                if (v != null) {
+                    HashSet<String> roles = new HashSet<>();
+                    for (String r : v.split(";"))
+                        if (MString.isSetTrim(r))
+                            roles.add(r.trim());
+                    GUEST.setRoles(roles);
+                }
+            });
+
+    public static final CfgString ROLES_ADMIN = new CfgString(AccessApi.class, "rolesAdmin", "").updateAction(
+            v -> {
+                if (v != null) {
+                    HashSet<String> roles = new HashSet<>();
+                    roles.add(Aaa.ROLE_ADMIN.value());
+                    for (String r : v.split(";"))
+                        if (MString.isSetTrim(r))
+                            roles.add(r.trim());
+                    ADMIN.setRoles(roles);
+                }
+            });
+    
+    static {
+
+        ADMIN.addStringPermission("*");
+        ROLES_ADMIN.doUpdateAction();
+
+        PERMS_GUEST.doUpdateAction();
+        ROLES_GUEST.doUpdateAction();
+
+    }
+    
     public static boolean hasAccess(String resource) {
         return hasAccess(getSubject(), resource);
     }

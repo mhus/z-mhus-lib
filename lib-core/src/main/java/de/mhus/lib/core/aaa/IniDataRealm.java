@@ -23,8 +23,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.BearerToken;
-import org.apache.shiro.authc.ExpiredCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -33,6 +31,7 @@ import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.realm.text.IniRealm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
 
@@ -42,11 +41,12 @@ import de.mhus.lib.core.logging.Log;
 public class IniDataRealm extends IniRealm implements PrincipalDataRealm, BearerRealm {
 
     public static final String DATA_SECTION_NAME = "data";
-    private static final transient Log log = Log.getLog(IniDataRealm.class);
+    private final transient Log log = Log.getLog(getClass());
 
     private HashMap<String, Map<String, String>> userData = new HashMap<>();
-    private boolean debugPermissions;
     private String rolePermission;
+
+    protected boolean debugPermissions;
 
     public IniDataRealm() {
         super();
@@ -65,7 +65,12 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        if (token != null && BearerToken.class.isAssignableFrom(token.getClass())) return true;
+        if (token != null && 
+                (
+                        token instanceof TrustedToken
+                        ||
+                        token instanceof BearerToken
+                    )) return true;
         return super.supports(token);
     }
 
@@ -73,31 +78,41 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
             throws AuthenticationException {
 
-        if (token instanceof UsernamePasswordToken) return super.doGetAuthenticationInfo(token);
-
-        if (token instanceof BearerToken) {
+        String username = null;
+        if (token instanceof UsernamePasswordToken) {
+            UsernamePasswordToken upToken = (UsernamePasswordToken) token;
+            username = upToken.getUsername();
+        } else if (token instanceof BearerToken) {
             String tokenStr = ((BearerToken) token).getToken();
             JwsData jwtToken = M.l(JwtProvider.class).readToken(tokenStr);
-            String username = jwtToken.getSubject();
-            if (username != null) {
-                SimpleAccount account = getUser(username);
+            username = jwtToken.getSubject();
+        } else if (token instanceof TrustedToken) {
+            username = (String)((TrustedToken)token).getPrincipal();
 
-                if (account != null) {
+            if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
+            // check permissions to use trusted token
 
-                    if (account.isLocked()) {
-                        throw new LockedAccountException("Account [" + account + "] is locked.");
-                    }
-                    if (account.isCredentialsExpired()) {
-                        String msg = "The credentials for account [" + account + "] are expired";
-                        throw new ExpiredCredentialsException(msg);
-                    }
-                    return account;
-                }
+            boolean access = ((TrustedToken)token).hasAccess(debugPermissions);
+
+            if (!access) {
+                if (debugPermissions)
+                    log.i("TrustedToken access denied (3)");
+                throw new AuthenticationException("TrustedToken access denied (3)");
             }
+            if (debugPermissions)
+                log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
+        
         }
 
-        //      throw new UnknownAccountException(username);
-        return null;
+        if (username == null)
+            throw new AuthenticationException("User or Token not found");
+        
+        return doGetAuthenticationInfo(username, token);
+        
+    }
+
+    private AuthenticationInfo doGetAuthenticationInfo(String username, AuthenticationToken token) {
+        return getUser(username);
     }
 
     @Override
@@ -110,7 +125,9 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     @Override
     protected void onInit() {
+        
         super.onInit();
+        
         Ini ini = getIni();
 
         processDefinitions(ini);
@@ -155,7 +172,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions && !ret) {
-            log.d("perm access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, permission);
+            log.i("perm access denied", info, permission);
         }
         return ret;
     }
@@ -170,17 +187,9 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions && !ret) {
-            log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
+            log.i("role access denied", info, roleIdentifier);
         }
         return ret;
-    }
-
-    public boolean isDebugPermissions() {
-        return debugPermissions;
-    }
-
-    public void setDebugPermissions(boolean debugPermissions) {
-        this.debugPermissions = debugPermissions;
     }
 
     public String getRolePermission() {
@@ -210,4 +219,23 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             return M.l(JwtProvider.class).createBearerToken(userName, issuer, configuration);
         throw new UnknownAccountException("User unknown: " + userName);
     }
+
+    public boolean isDebugPermissions() {
+        return debugPermissions;
+    }
+
+    public void setDebugPermissions(boolean debugPermissions) {
+        this.debugPermissions = debugPermissions;
+    }
+
+    @Override
+    protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
+
+        String username = getUsername(principals);
+        if (username.equals(Aaa.USER_ADMIN.value())) return Aaa.ADMIN;
+        if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
+
+        return super.getAuthorizationInfo(principals);
+    }
+    
 }

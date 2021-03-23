@@ -47,6 +47,7 @@ import org.xml.sax.SAXException;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
@@ -94,7 +95,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     private ICache<String, SimpleRole> roleCacheApi;
     @SuppressWarnings("rawtypes")
     private ICache<String, Map> dataCacheApi;
-    
+
+    protected boolean useCache;
+    protected long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
+
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
     }
@@ -133,14 +137,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         return null;
     }
 
-    protected String getUsername(PrincipalCollection principals) {
-        return getAvailablePrincipal(principals).toString();
-    }
-
     protected SimpleAccount getUser(String username) {
         
-        if (Aaa.USER_ADMIN.value().equals(username)) return ADMIN;
-        if (Aaa.USER_GUEST.value().equals(username)) return GUEST;
+        if (Aaa.USER_ADMIN.value().equals(username)) return Aaa.ADMIN;
+        if (Aaa.USER_GUEST.value().equals(username)) return Aaa.GUEST;
         
         if (useCache) {
             initCache();
@@ -464,4 +464,21 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         throw new UnknownAccountException("User unknown: " + username);
     }
 
+    public boolean isUseCache() {
+        return useCache;
+    }
+
+    public void setUseCache(boolean useCache) {
+        this.useCache = useCache;
+    }
+
+    public long getCacheTTL() {
+        return cacheTTL;
+    }
+
+    public void setCacheTTL(long cacheTTL) {
+        this.cacheTTL = cacheTTL;
+    }
+
+    
 }

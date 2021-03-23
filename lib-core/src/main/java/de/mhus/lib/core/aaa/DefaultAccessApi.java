@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.env.BasicIniEnvironment;
 import org.apache.shiro.env.DefaultEnvironment;
 import org.apache.shiro.env.Environment;
 import org.apache.shiro.mgt.DefaultSecurityManager;
@@ -45,12 +44,12 @@ public class DefaultAccessApi extends MLog implements AccessApi {
         initialize();
     }
 
-    protected void initialize() {
+    protected synchronized void initialize() {
         try {
             log().d("Initialize shiro", CFG_CONFIG_FILE);
             env = createEnvironment();
         } catch (Exception e) {
-            log().d(e);
+            log().i(e);
         }
         if (env == null || env.getSecurityManager() instanceof EmptySecurityManager) {
             log().i("Initialize empty shiro", CFG_CONFIG_FILE);
@@ -66,7 +65,7 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     }
 
     protected Environment createEnvironment() {
-        return new BasicIniEnvironment(CFG_CONFIG_FILE.value());
+        return new IniDataEnvironment(CFG_CONFIG_FILE.value());
     }
 
     @Override
