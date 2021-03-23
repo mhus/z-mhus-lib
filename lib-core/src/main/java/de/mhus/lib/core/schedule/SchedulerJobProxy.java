@@ -208,4 +208,10 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
             return ((MutableSchedulerJob) instance).doReconfigure(config);
         return false;
     }
+
+    @Override
+    public void setUsername(String username) {
+        instance.setUsername(username);
+    }
+
 }

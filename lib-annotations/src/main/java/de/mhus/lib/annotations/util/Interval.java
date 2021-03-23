@@ -26,4 +26,6 @@ public @interface Interval {
     Class<?> cfgOwner() default Class.class;
 
     String cfgPath() default "";
+
+    String runAs() default "";
 }

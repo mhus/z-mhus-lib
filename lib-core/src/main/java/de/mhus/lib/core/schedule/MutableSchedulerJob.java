@@ -29,4 +29,6 @@ public interface MutableSchedulerJob {
     boolean doReconfigure(String config);
 
     void setScheduledTime(long scheduledTime);
+    
+    void setUsername(String name);
 }

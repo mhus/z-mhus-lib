@@ -291,11 +291,15 @@ public class Aaa {
     }
 
     public static SubjectEnvironment asAdmin() {
-        return asSubject(getAdminSubject());
+        Subject subject = createSubjectWithoutCheck(USER_ADMIN.value());
+        return asSubject(subject);
     }
-    
-    private static Subject getAdminSubject() {
-        return createSubjectWithoutCheck(USER_ADMIN.value());
+
+    public static SubjectEnvironment asSubject(String username) {
+        if (username == null)
+            username = USER_GUEST.value();
+        Subject subject = createSubjectWithoutCheck(username);
+        return asSubject(subject);
     }
 
     public static SubjectEnvironment asSubject(Subject subject) {
@@ -657,7 +661,7 @@ public class Aaa {
      * @return A new Subject
      */
     public static Subject createSubjectWithoutCheck(String account) {
-        
+
         Subject current = getSubject();
         if (current.getPrincipal() == null) {
             // first login as guest to get guest privileges

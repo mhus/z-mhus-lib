@@ -39,7 +39,8 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
 
     protected final CfgString PERMS_GUEST = new CfgString(AccessApi.class, "permsGuest", 
             "de.mhus.lib.core.aaa.TrustedToken:admin:de.mhus.karaf.commands.impl.CmdAccessAdmin;" +
-            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin"
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin;" +
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.schedule.SchedulerJob"
             ).updateAction(
             v -> {
                 if (GUEST != null && v != null) {
@@ -115,10 +116,10 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
             username = jwtToken.getSubject();
         } else if (token instanceof TrustedToken) {
             username = (String)((TrustedToken)token).getPrincipal();
-            
+
             if (username.equals(Aaa.USER_GUEST.value())) return GUEST;
             // check permissions to use trusted token
-            
+
             // create caller ident for cache
             StringBuilder sb = new StringBuilder();
             StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -174,7 +175,8 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
                 throw new AuthenticationException("TrustedToken access denied (3)");
             }
             if (debugPermissions)
-                log.i("TrustedToken access granted",Aaa.getPrincipalOrGuest(),username,callerName);
+                log.i("TrustedToken access granted",Aaa.getPrincipal(),username,callerName);
+        
         }
 
         if (username == null)

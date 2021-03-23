@@ -24,6 +24,8 @@ import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MTimerTask;
+import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.aaa.SubjectEnvironment;
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.operation.DefaultTaskContext;
@@ -59,6 +61,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     private TimerTaskInterceptor intercepter;
     private MProperties logTrailConfig;
     private UUID uuid = UUID.randomUUID();
+    private String username = null;
 
     public SchedulerJob(ITimerTask task) {
         if (ITracer.get().current() != null)
@@ -101,67 +104,69 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
         if (forced || isExecutionTimeReached()) {
 
-            SpanContext ctx = null;
-            Scope scope = null;
-            if (getLogTrailConfig() != null)
-                ctx = ITracer.deserialize(getLogTrailConfig());
-            if (ctx == null) 
-                scope = ITracer.get().tracer().buildSpan(getName()).startActive(true);
-            else 
-                scope =
-                        ITracer.get()
-                                .tracer()
-                                .buildSpan(getName())
-                                .addReference(References.FOLLOWS_FROM, ctx)
-                                .startActive(true);
-            try (Scope scopeFinal = scope) {
-                boolean doIt = true;
-                if (intercepter != null) {
-                    log.d("Intercepter beforeExecution", getName());
-                    doIt = intercepter.beforeExecution(this, context, forced);
-                }
-                if (doIt) {
-                    thread = Thread.currentThread();
-                    lastExecutionStart = System.currentTimeMillis();
-                    OperationResult res = null;
-                    try {
-                        if (!hasAccess(context)) {
-                            log.d("access denied", context, context.getErrorMessage());
-                            res =
-                                    new NotSuccessful(
-                                            this, "access denied", OperationResult.ACCESS_DENIED);
-                        } else if (!canExecute(context)) {
-                            log.d("execution denied", context.getErrorMessage());
-                            res =
-                                    new NotSuccessful(
-                                            this,
-                                            context.getErrorMessage() != null
-                                                    ? context.getErrorMessage()
-                                                    : "can't execute",
-                                            OperationResult.NOT_EXECUTABLE);
-                        } else res = doExecute(context);
-                        log.d("Finished", res);
-                    } catch (Throwable e) {
-                        log.d("Error", getName(), e);
-                        doError(e);
-                        if (intercepter != null) intercepter.onError(this, context, e);
-                    }
-                    lastExecutionStop = System.currentTimeMillis();
-
-                    thread = null;
-                }
-                synchronized (this) {
-                    doCaclulateNextExecution();
-                    log.d("Scheduled to", getName(), getNextExecutionTime());
-                }
-                if (doIt) {
+            try (SubjectEnvironment access = Aaa.asSubject(username)) {
+                SpanContext ctx = null;
+                Scope scope = null;
+                if (getLogTrailConfig() != null)
+                    ctx = ITracer.deserialize(getLogTrailConfig());
+                if (ctx == null) 
+                    scope = ITracer.get().tracer().buildSpan(getName()).startActive(true);
+                else 
+                    scope =
+                            ITracer.get()
+                                    .tracer()
+                                    .buildSpan(getName())
+                                    .addReference(References.FOLLOWS_FROM, ctx)
+                                    .startActive(true);
+                try (Scope scopeFinal = scope) {
+                    boolean doIt = true;
                     if (intercepter != null) {
-                        log.d("Intercepter afterExecution", getName());
-                        intercepter.afterExecution(this, context);
+                        log.d("Intercepter beforeExecution", getName());
+                        doIt = intercepter.beforeExecution(this, context, forced);
                     }
+                    if (doIt) {
+                        thread = Thread.currentThread();
+                        lastExecutionStart = System.currentTimeMillis();
+                        OperationResult res = null;
+                        try {
+                            if (!hasAccess(context)) {
+                                log.d("access denied", context, context.getErrorMessage());
+                                res =
+                                        new NotSuccessful(
+                                                this, "access denied", OperationResult.ACCESS_DENIED);
+                            } else if (!canExecute(context)) {
+                                log.d("execution denied", context.getErrorMessage());
+                                res =
+                                        new NotSuccessful(
+                                                this,
+                                                context.getErrorMessage() != null
+                                                        ? context.getErrorMessage()
+                                                        : "can't execute",
+                                                OperationResult.NOT_EXECUTABLE);
+                            } else res = doExecute(context);
+                            log.d("Finished", res);
+                        } catch (Throwable e) {
+                            log.d("Error", getName(), e);
+                            doError(e);
+                            if (intercepter != null) intercepter.onError(this, context, e);
+                        }
+                        lastExecutionStop = System.currentTimeMillis();
+    
+                        thread = null;
+                    }
+                    synchronized (this) {
+                        doCaclulateNextExecution();
+                        log.d("Scheduled to", getName(), getNextExecutionTime());
+                    }
+                    if (doIt) {
+                        if (intercepter != null) {
+                            log.d("Intercepter afterExecution", getName());
+                            intercepter.afterExecution(this, context);
+                        }
+                    }
+                    context.clear();
+                    setDone(true);
                 }
-                context.clear();
-                setDone(true);
             }
         } else {
             log.d("Execution delayed", task);
@@ -413,4 +418,13 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     public UUID getUuid() {
         return uuid;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    protected void setUsername(String username) {
+        this.username = username;
+    }
+
 }
