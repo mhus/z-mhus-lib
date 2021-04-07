@@ -232,7 +232,13 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
 
         String username = getUsername(principals);
-        if (username.equals(Aaa.USER_ADMIN.value())) return Aaa.ADMIN;
+        if (username.equals(Aaa.USER_ADMIN.value())) {
+            if (Aaa.ADMIN_LOGIN_ALLOWED.value()) { // admin should be a regular user
+                AuthorizationInfo info = super.getAuthorizationInfo(principals);
+                if (info != null) return info;
+            }
+            return Aaa.ADMIN;
+        }
         if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
 
         return super.getAuthorizationInfo(principals);

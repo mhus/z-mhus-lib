@@ -160,6 +160,8 @@ public class Aaa {
                 }
             });
     
+    public static final CfgBoolean ADMIN_LOGIN_ALLOWED = new CfgBoolean(AccessApi.class, "allowAdminLogin", false);
+    
     static {
 
         ADMIN.addStringPermission("*");

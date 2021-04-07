@@ -464,7 +464,8 @@ public class ShiroSecurityTest extends TestCase {
         Aaa.subjectCleanup();
         // touch class
         DefaultAccessApi.CFG_CONFIG_FILE.value();
-        // patch value
+        // patch values
         assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "iniResourcePath", config));
+        assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "allowAdminLogin", "true"));
     }
 }
