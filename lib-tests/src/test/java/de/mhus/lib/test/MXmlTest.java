@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -90,6 +91,7 @@ public class MXmlTest extends TestCase {
 
     @Test
     public void testEntityDisabled() throws Exception {
+        Locale.setDefault(Locale.ENGLISH);
         try {
             Document doc =
                     MXml.loadXml(
@@ -111,6 +113,7 @@ public class MXmlTest extends TestCase {
 
     @Test
     public void testEntityExpansion() throws Exception {
+        Locale.setDefault(Locale.ENGLISH);
         try {
             Document doc =
                     MXml.loadXml(
