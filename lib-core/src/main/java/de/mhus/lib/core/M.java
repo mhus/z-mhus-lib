@@ -18,6 +18,8 @@ package de.mhus.lib.core;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -35,6 +37,85 @@ import de.mhus.lib.core.util.Iterate;
  */
 public class M {
 
+    public static final UUID EMPTY_UUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
+    public static final int[] EMPTY_INT_ARRAY = new int[0];
+    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+    public static final long[] EMPTY_LONG_ARRAY = new long[0];
+
+    public static final Locale LOCALE_DE_DE = new Locale("de", "DE");
+    public static final Locale LOCALE_EN_US = new Locale("en", "US");
+
+    public static final String PROP_PREFIX = "mhus.lib.";
+
+    public static final String PROP_DIRTY_TRACE = "mhu.lib.api.trace";
+    public static final String PROP_API_FACTORY_CLASS = "mhus.api.factory";
+    //  public static final String PROP_FILE_WATCH = "mhus.config.watch";
+    public static final String PROP_CONFIG_FILE = PROP_PREFIX + "config.file";
+
+    public static final String DEFAULT_MHUS_CONFIG_FILE = "mhus-config.xml";
+
+    public static final String PROP_LOG_FACTORY_CLASS = "log.factory";
+
+    public static final String PROP_LOG_MLOG_FACTORY_CLASS = "log.mlog.factory";
+
+    public static final String PROP_LOG_LEVEL_MAPPER_CLASS = "level.mapper";
+
+    public static final String PROP_LOG_PARAMETER_MAPPER_CLASS = "parameter.mapper";
+
+    public static final String PROP_LOG_PARAMETER_ENTRY_MAPPER_CLASS = "parameter.entry.mapper";
+
+    public static final String PROP_BASE_DIR = "base.dir";
+
+    public static final String PROP_LOG_CONSOLE_REDIRECT = "log.console.redirect";
+
+    public static final String DEFAULT_MHUS_TIMER_CONFIG_FILE = "mhus-timer.properties";
+
+    public static final String PROP_TIMER_CONFIG_FILE = "timer.config.file";
+
+    public static final String PROP_LOG_MAX_MESSAGE_SIZE = "log.max.message.size";
+
+    public static final String PROP_LOG_MAX_MESSAGE_SIZE_EXCEPTIONS =
+            "log.max.message.size.exceptions";
+
+    public static final String PROP_LOG_LEVEL = "log.level";
+
+    public static final int MAX_DEPTH_LEVEL = 20;
+
+    public static final String ADDR_EMAIL = "email";
+    public static final String ADDR_SALUTATION = "salutation";
+    public static final String ADDR_NAME_TITLE = "nameTitle";
+    public static final String ADDR_FIRST_NAME = "firstName";
+    public static final String ADDR_NAME_MID = "nameMid";
+    public static final String ADDR_LAST_NAME = "lastName";
+    public static final String ADDR_NAME_AFFIX = "nameAffix";
+    public static final String ADDR_TOWN = "town";
+    public static final String ADDR_ZIP = "zip";
+    public static final String ADDR_STREET = "street";
+    public static final String ADDR_HOUSE_NUMBER = "houseNumber";
+    public static final String ADDR_PHONE = "phone";
+    public static final String ADDR_MOBILE = "mobile";
+    public static final String ADDR_COUNTRY = "country";
+
+    public static final String ADDR_DISPLAY_NAME = "displayName";
+
+    public static enum ADDR_SCOPE {
+        PRIVATE,
+        WORK
+    }
+
+    public static final String TYPE_DATE = "date";
+    public static final String TYPE_RAW = "raw";
+    public static final String TYPE_BOOL = "bool";
+    public static final String TYPE_INT = "int";
+    public static final String TYPE_TEXT = "text";
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_LONG = "long";
+    public static final String TYPE_FLOAT = "float";
+    public static final String TYPE_DOUBLE = "double";
+
+    public static final String CFG_SYSTEM = "system";
+    
     /**
      * Return a string cascading the names of the getters (without 'get' prefix). and joined with
      * underscore.

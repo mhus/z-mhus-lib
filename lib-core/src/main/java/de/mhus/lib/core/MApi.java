@@ -61,7 +61,7 @@ public class MApi {
                 IApi obj = null;
                 String path = "de.mhus.lib.mutable.MApiFactory";
                 if (System.getProperty("mhu.lib.api.factory") != null)
-                    path = System.getProperty(MConstants.PROP_API_FACTORY_CLASS);
+                    path = System.getProperty(M.PROP_API_FACTORY_CLASS);
                 dirtyLogDebug("MApiFactory", path);
                 IApiFactory factory =
                         (IApiFactory) Class.forName(path).getDeclaredConstructor().newInstance();
@@ -90,7 +90,7 @@ public class MApi {
     }
 
     public static boolean isDirtyTrace() {
-        if (trace == null) trace = "true".equals(System.getProperty(MConstants.PROP_DIRTY_TRACE));
+        if (trace == null) trace = "true".equals(System.getProperty(M.PROP_DIRTY_TRACE));
         return trace;
     }
 
@@ -233,20 +233,20 @@ public class MApi {
         String value = System.getProperty(name);
         if (value == null) {
             switch (name) {
-                case MConstants.PROP_CONFIG_FILE:
+                case M.PROP_CONFIG_FILE:
                     {
-                        String file = MConstants.DEFAULT_MHUS_CONFIG_FILE;
+                        String file = M.DEFAULT_MHUS_CONFIG_FILE;
                         return getFile(MApi.SCOPE.ETC, file).getAbsolutePath();
                     }
-                case MConstants.PROP_TIMER_CONFIG_FILE:
+                case M.PROP_TIMER_CONFIG_FILE:
                     {
-                        String file = MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE;
+                        String file = M.DEFAULT_MHUS_TIMER_CONFIG_FILE;
                         file =
                                 get().getCfgString(
                                                 IApi.class,
-                                                MConstants.PROP_TIMER_CONFIG_FILE,
+                                                M.PROP_TIMER_CONFIG_FILE,
                                                 file);
-                        return getFile(MApi.SCOPE.ETC, MConstants.DEFAULT_MHUS_TIMER_CONFIG_FILE)
+                        return getFile(MApi.SCOPE.ETC, M.DEFAULT_MHUS_TIMER_CONFIG_FILE)
                                 .getAbsolutePath();
                     }
                 default:

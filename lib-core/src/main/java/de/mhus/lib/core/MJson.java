@@ -202,7 +202,7 @@ public class MJson {
     }
 
     private static void setValues(ObjectNode node, Map<?, ?> map, int level) {
-        if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+        if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
         level++;
         if (map == null) return;
         for (Map.Entry<?, ?> e : map.entrySet())
@@ -214,7 +214,7 @@ public class MJson {
     }
 
     private static void setValue(ObjectNode node, String name, Object value, int level) {
-        if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+        if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
         level++;
         if (value == null || value instanceof NullValue) {
             node.putNull(name);
@@ -282,7 +282,7 @@ public class MJson {
     }
 
     private static void setValues(ArrayNode array, Object[] value, int level) {
-        if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+        if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
         level++;
         for (Object obj : value) {
             if (obj == null || obj instanceof NullValue) {
@@ -325,7 +325,7 @@ public class MJson {
     }
 
     private static void setValues(ArrayNode array, Collection<?> value, int level) {
-        if (level > MConstants.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+        if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
         level++;
         for (Object obj : value) {
             if (obj == null || obj instanceof NullValue) {

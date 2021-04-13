@@ -23,9 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.mhus.lib.annotations.activator.DefaultFactory;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCollection;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.cfg.CfgProvider;
 import de.mhus.lib.core.config.DefaultConfigFactory;
@@ -152,7 +152,7 @@ public class MCfgManager {
     }
 
     public void doRestart() {
-        CfgProvider system = configurations.get(MConstants.CFG_SYSTEM);
+        CfgProvider system = configurations.get(M.CFG_SYSTEM);
         if (system != null) {
             for (CfgProvider v :
                     new ArrayList<>(
@@ -180,7 +180,7 @@ public class MCfgManager {
         private IConfig config;
 
         public CentralMhusCfgProvider() {
-            super(MConstants.CFG_SYSTEM);
+            super(M.CFG_SYSTEM);
         }
 
         @Override
@@ -198,14 +198,14 @@ public class MCfgManager {
 
             LinkedList<File> fileList = new LinkedList<>();
 
-            File configFile = new File(MApi.getSystemProperty(MConstants.PROP_CONFIG_FILE, null));
+            File configFile = new File(MApi.getSystemProperty(M.PROP_CONFIG_FILE, null));
             fileList.add(configFile);
 
             if (configFile.exists() && configFile.isFile())
                 try {
                     MApi.dirtyLogInfo("Load config file", configFile);
                     config = getConfigFactory().read(configFile);
-                    systemNode = config.getObject(MConstants.CFG_SYSTEM);
+                    systemNode = config.getObject(M.CFG_SYSTEM);
                     if (systemNode != null) {
                         String includePattern = systemNode.getString("include", null);
                         if (includePattern != null) {
@@ -229,7 +229,7 @@ public class MCfgManager {
                     }
 
                     for (IConfig owner : config.getObjects()) {
-                        if (!owner.getName().equals(MConstants.CFG_SYSTEM)) {
+                        if (!owner.getName().equals(M.CFG_SYSTEM)) {
                             registerCfgProvider(new PartialConfigProvider(owner));
                         }
                     }

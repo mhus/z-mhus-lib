@@ -18,8 +18,8 @@ package de.mhus.lib.core.schedule;
 import java.util.Date;
 import java.util.TimerTask;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.service.TimerIfc;
@@ -144,7 +144,7 @@ public class SchedulerTimer extends Scheduler implements TimerIfc {
 
     private MProperties loadConfiguration() {
         MProperties properties =
-                MProperties.load(MApi.getSystemProperty(MConstants.PROP_TIMER_CONFIG_FILE, null));
+                MProperties.load(MApi.getSystemProperty(M.PROP_TIMER_CONFIG_FILE, null));
         return properties;
     }
 

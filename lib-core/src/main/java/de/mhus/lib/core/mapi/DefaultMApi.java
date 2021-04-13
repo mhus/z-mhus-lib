@@ -26,7 +26,6 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MApi.SCOPE;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
@@ -104,7 +103,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
         // init initiators
         try {
-            IConfig system = configProvider.getCfg(MConstants.CFG_SYSTEM);
+            IConfig system = configProvider.getCfg(M.CFG_SYSTEM);
             MApi.setDirtyTrace(system.getBoolean("log.trace", false));
             Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
 

@@ -17,8 +17,8 @@ package de.mhus.lib.core.mapi;
 
 import java.io.File;
 
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.config.IConfig;
@@ -29,9 +29,9 @@ public class SystemCfgInitiator implements CfgInitiator {
     public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
         IConfig system = manager.getCfg("system");
         try {
-            String key = MConstants.PROP_BASE_DIR;
+            String key = M.PROP_BASE_DIR;
             String name = system.getString(key, null);
-            if (MString.isEmpty(name)) name = System.getProperty(MConstants.PROP_PREFIX + key);
+            if (MString.isEmpty(name)) name = System.getProperty(M.PROP_PREFIX + key);
             if (MString.isSet(name)) internal.setBaseDir(new File(name));
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);

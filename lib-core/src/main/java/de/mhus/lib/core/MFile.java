@@ -75,6 +75,20 @@ public class MFile {
     }
 
     /**
+     * Create a file from path like new File(path) but will
+     * check and resolve user home prefix ~/
+     * 
+     * @param path Path to the file
+     * @return The file
+     */
+    public static File toFile(String path) {
+        if (path == null) return new File(".");
+        if (path.startsWith("~/")) {
+            return new File(MSystem.getUserHome(), path.substring(2));
+        }
+        return new File(path);
+    }
+    /**
      * Set unix like permissions to a file. Only possible in unix like systems. Check
      * MSystem.isWindows
      *

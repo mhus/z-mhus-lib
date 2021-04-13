@@ -26,7 +26,6 @@ import de.mhus.lib.annotations.generic.Public;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.MConstants;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.config.IConfigFactory;
@@ -59,59 +58,59 @@ public class Address implements Externalizable {
     }
 
     public Address.SALUTATION getSalutation() {
-        return toSalutation(attributes.getString(MConstants.ADDR_SALUTATION, null));
+        return toSalutation(attributes.getString(M.ADDR_SALUTATION, null));
     }
 
     public String getEmail() {
-        return attributes.getString(MConstants.ADDR_EMAIL, null);
+        return attributes.getString(M.ADDR_EMAIL, null);
     }
 
     public String getNameTitle() {
-        return attributes.getString(MConstants.ADDR_NAME_TITLE, null);
+        return attributes.getString(M.ADDR_NAME_TITLE, null);
     }
 
     public String getFirstName() {
-        return attributes.getString(MConstants.ADDR_FIRST_NAME, null);
+        return attributes.getString(M.ADDR_FIRST_NAME, null);
     }
 
     public String getLastName() {
-        return attributes.getString(MConstants.ADDR_LAST_NAME, null);
+        return attributes.getString(M.ADDR_LAST_NAME, null);
     }
 
     public String getNameMid() {
-        return attributes.getString(MConstants.ADDR_NAME_MID, null);
+        return attributes.getString(M.ADDR_NAME_MID, null);
     }
 
     public String getNameAffix() {
-        return attributes.getString(MConstants.ADDR_NAME_AFFIX, null);
+        return attributes.getString(M.ADDR_NAME_AFFIX, null);
     }
 
     public String getStreet() {
-        return attributes.getString(MConstants.ADDR_STREET, null);
+        return attributes.getString(M.ADDR_STREET, null);
     }
 
     public String getHouseNumber() {
-        return attributes.getString(MConstants.ADDR_HOUSE_NUMBER, null);
+        return attributes.getString(M.ADDR_HOUSE_NUMBER, null);
     }
 
     public String getTown() {
-        return attributes.getString(MConstants.ADDR_TOWN, null);
+        return attributes.getString(M.ADDR_TOWN, null);
     }
 
     public String getCountry() {
-        return attributes.getString(MConstants.ADDR_COUNTRY, null);
+        return attributes.getString(M.ADDR_COUNTRY, null);
     }
 
     public String getZip() {
-        return attributes.getString(MConstants.ADDR_ZIP, null);
+        return attributes.getString(M.ADDR_ZIP, null);
     }
 
     public String getPhone() {
-        return attributes.getString(MConstants.ADDR_PHONE, null);
+        return attributes.getString(M.ADDR_PHONE, null);
     }
 
     public String getMobile() {
-        return attributes.getString(MConstants.ADDR_MOBILE, null);
+        return attributes.getString(M.ADDR_MOBILE, null);
     }
 
     public String getFullName(Locale l) {

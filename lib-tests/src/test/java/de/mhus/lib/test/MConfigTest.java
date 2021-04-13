@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.MConstants;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.errors.MException;
@@ -38,7 +38,7 @@ public class MConfigTest extends TestCase {
         MDirtyTricks.cleanupMApi();
 
         System.setProperty(
-                MConstants.PROP_CONFIG_FILE, "src/test/resources/de/mhus/lib/test/mhus-config.xml");
+                M.PROP_CONFIG_FILE, "src/test/resources/de/mhus/lib/test/mhus-config.xml");
 
         initiatorValue = "";
         assertEquals("", initiatorValue);
