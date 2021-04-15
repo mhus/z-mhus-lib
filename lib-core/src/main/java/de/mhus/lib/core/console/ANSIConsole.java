@@ -397,9 +397,18 @@ public class ANSIConsole extends Console {
     }
 
     @Override
+    public void clearTerminal() {
+        //      print("\033[H\033[2J");
+        print(ansiClear());
+    }
+
+    public static String ansiClear() {
+        return (char) 27 + "[2J" + (char) 27 + "[H";
+    }
+
+    @Override
     public void resetTerminal() {
         // \033c
-        //		print("\033[H\033[2J");
         print(ansiReset());
     }
 
