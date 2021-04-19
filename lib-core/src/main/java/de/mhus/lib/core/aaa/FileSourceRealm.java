@@ -205,7 +205,9 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                             SimpleRole role = getRole(rolename);
                             if (role != null) {
                                 account.addRole(rolename);
-                                account.addObjectPermissions(role.getPermissions());
+                                Set<Permission> perm = role.getPermissions();
+                                if (perm != null)
+                                    account.addObjectPermissions(perm);
                             }
                         }
                     }
