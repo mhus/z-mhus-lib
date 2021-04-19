@@ -886,4 +886,12 @@ public class Aaa {
         }
         return access;
     }
+
+    public static String normalize(String action) {
+        if (action == null) return "";
+        if (action.contains(":"))
+            return action.replace(':', '_');
+        return action;
+    }
+    
 }
