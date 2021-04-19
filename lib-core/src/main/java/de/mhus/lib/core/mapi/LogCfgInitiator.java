@@ -136,14 +136,19 @@ public class LogCfgInitiator implements CfgInitiator {
                 for (IConfig mapper : mappers) {
                     String name = mapper.getString("name");
                     String clazz = mapper.getString("class");
-                    if (MString.isSet(name) && MString.isSet(clazz))
+                    if (MString.isSet(name) && MString.isSet(clazz)) {
+                    	ParameterEntryMapper inst = null;
+                    	try {
+	                    	inst = (ParameterEntryMapper)Class.forName(clazz.trim())
+	                                .getDeclaredConstructor()
+	                                .newInstance();
+                    	} catch (Throwable t) {
+                    		MApi.dirtyLogDebug("LogCfgInitiator:UseProxy",name,clazz,t.getMessage());
+                    		inst = new ParameterEntryMapperProxy(clazz);
+                    	}
                         ((MutableParameterMapper) logFactory.getParameterMapper())
-                                .put(
-                                        name,
-                                        (ParameterEntryMapper)
-                                                Class.forName(clazz.trim())
-                                                        .getDeclaredConstructor()
-                                                        .newInstance());
+                                .put(name, inst);
+                    }
                 }
             } catch (Throwable t) {
                 MApi.dirtyLogDebug(t);
