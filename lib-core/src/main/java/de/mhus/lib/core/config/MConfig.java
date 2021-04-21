@@ -20,18 +20,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import de.mhus.lib.basics.IsNull;
+import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.parser.CompiledString;
-import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.SingleList;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
+import de.mhus.lib.errors.MaxDepthReached;
 import de.mhus.lib.errors.NotFoundException;
 
 public class MConfig extends MProperties implements IConfig {
 
-    public static final List<IConfig> EMPTY_LIST = new EmptyList<>();
     protected String name;
     protected IConfig parent;
     protected ConfigStringCompiler compiler;
@@ -59,6 +62,22 @@ public class MConfig extends MProperties implements IConfig {
         throw new NotFoundException("value is not an IConfig", key);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public IConfig getAsObject(String key) {
+        Object val = get(key);
+        if (val == null) return null;
+        if (val instanceof IConfig) return (IConfig) val;
+        if (val instanceof IProperties) return new MConfigWrapper((IProperties) val);
+
+        MConfig ret = new MConfig();
+        if (val instanceof Map) {
+            ret.putAll((Map)val);
+        } else
+            ret.put(NAMELESS_VALUE, val);
+        return ret;
+    }
+    
     @Override
     public IConfig getObjectOrNull(String key) {
         Object val = get(key);
@@ -101,11 +120,11 @@ public class MConfig extends MProperties implements IConfig {
     @Override
     public List<IConfig> getObjectList(String key) {
         Object val = get(key);
-        if (val == null) return MConfig.EMPTY_LIST;
+        if (val == null) return M.EMPTY_LIST;
         // if (val == null) throw new NotFoundException("value not found",key);
         if (val instanceof IConfig) return new SingleList<IConfig>((IConfig) val);
         if (val instanceof ConfigList) return Collections.unmodifiableList((ConfigList) val);
-        return EMPTY_LIST;
+        return M.EMPTY_LIST;
         // throw new NotFoundException("value is not a ConfigList or IConfig",key);
     }
 
@@ -302,4 +321,46 @@ public class MConfig extends MProperties implements IConfig {
     public synchronized String toString() {
         return name + super.toString();
     }
+
+    @Override
+    public boolean isProperties() {
+        for (Object val : values())
+            if ((val instanceof ConfigList) || (val instanceof IConfig))
+                return false;
+        return true;
+    }
+    
+
+    public void putMapToConfig(Map<?, ?> m) {
+        putMapToConfig(m, 0);
+    }
+
+    protected void putMapToConfig(Map<?, ?> m, int level) {
+        if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
+        for (Map.Entry<?, ?> e : m.entrySet())
+            if (e.getValue() instanceof IsNull) remove(e.getKey());
+            else {
+                if (e.getValue() instanceof Map) {
+                    MConfig cfg = new MConfig();
+                    cfg.putMapToConfig((Map<?,?>)e.getValue(), level+1);
+                    put(String.valueOf(e.getKey()), cfg);
+                } else
+                if (e.getValue() instanceof List) {
+                    ConfigList list = new ConfigList(String.valueOf(e.getKey()), null);
+                    for (Object obj : ((List<?>)e.getValue())) {
+                        if (obj instanceof IConfig) {
+                            list.add((IConfig)obj);
+                        } else {
+                            MConfig cfg = (MConfig) list.createObject();
+                            if (obj instanceof Map) {
+                                cfg.putMapToConfig((Map<?,?>)obj, level+1);
+                            } else
+                                cfg.put(NAMELESS_VALUE, obj);
+                        }
+                    }
+                } else
+                    put(String.valueOf(e.getKey()), e.getValue());
+            }
+    }
+
 }

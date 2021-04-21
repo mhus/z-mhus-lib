@@ -15,7 +15,11 @@
  */
 package de.mhus.lib.core.security;
 
+import org.apache.shiro.subject.Subject;
+
 import de.mhus.lib.annotations.activator.DefaultImplementation;
+import de.mhus.lib.core.M;
+import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.util.SecureString;
 
 @DefaultImplementation(TrustFromConfiguration.class)
@@ -23,5 +27,20 @@ public interface TrustApi {
 
     SecureString getPassword(String name);
 
-    boolean validatePassword(String name, String password);
+    String createToken(String source, Object target, Subject subject);
+
+    default String createTrustTicket(String trust, Subject subject) {
+        // TODO encode with rsa
+        SecureString password = M.l(TrustApi.class).getPassword(trust);
+        return Aaa.TICKET_PREFIX_TRUST
+                + ":"
+                + trust
+                + ":"
+                + Aaa.getPrincipal(subject)
+                + ":"
+                + password.value();
+    }
+
+    Subject login(String ticket);
+
 }

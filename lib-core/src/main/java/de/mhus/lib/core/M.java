@@ -18,14 +18,17 @@ package de.mhus.lib.core;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.basics.consts.Identifier;
+import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.EnumerationIterator;
 import de.mhus.lib.core.util.Iterate;
 
@@ -42,6 +45,7 @@ public class M {
     public static final int[] EMPTY_INT_ARRAY = new int[0];
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final long[] EMPTY_LONG_ARRAY = new long[0];
+    public static final List<IConfig> EMPTY_LIST = new EmptyList<>();
 
     public static final Locale LOCALE_DE_DE = new Locale("de", "DE");
     public static final Locale LOCALE_EN_US = new Locale("en", "US");
@@ -79,6 +83,7 @@ public class M {
             "log.max.message.size.exceptions";
 
     public static final String PROP_LOG_LEVEL = "log.level";
+    public static final String PROP_LOG_VERBOSE = "log.verbose";
 
     public static final int MAX_DEPTH_LEVEL = 20;
 
@@ -115,6 +120,7 @@ public class M {
     public static final String TYPE_DOUBLE = "double";
 
     public static final String CFG_SYSTEM = "system";
+    public static final String PARAM_AUTH_TOKEN = "auth_token";
     
     /**
      * Return a string cascading the names of the getters (without 'get' prefix). and joined with

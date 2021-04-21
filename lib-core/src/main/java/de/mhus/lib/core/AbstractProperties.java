@@ -381,6 +381,12 @@ public abstract class AbstractProperties extends MObject implements IProperties 
             else put(e.getKey(), e.getValue());
     }
 
+    public void putMap(Map<?, ?> m) {
+        for (Map.Entry<?, ?> e : m.entrySet())
+            if (e.getValue() instanceof IsNull) remove(e.getKey());
+            else put(String.valueOf(e.getKey()), e.getValue());
+    }
+
     public void putReadProperties(IReadProperties m) {
         for (Map.Entry<? extends String, ? extends Object> e : m.entrySet())
             if (e.getValue() instanceof IsNull) remove(e.getKey());

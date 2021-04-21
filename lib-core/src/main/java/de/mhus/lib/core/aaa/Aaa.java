@@ -28,6 +28,7 @@ import java.util.UUID;
 
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.BearerToken;
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
@@ -49,7 +50,6 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
@@ -70,7 +70,6 @@ import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
-import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.util.Value;
 
 public class Aaa {
@@ -95,8 +94,9 @@ public class Aaa {
     public static final CfgString ROLE_ADMIN =
             new CfgString(AccessApi.class, "adminRole", "GLOBAL_ADMIN");
     private static final String ATTR_LOCALE = "locale";
-    private static final String TICKET_PREFIX_TRUST = "tru";
-    private static final String TICKET_PREFIX_ACCOUNT = "acc";
+    public static final String TICKET_PREFIX_TRUST = "tru";
+    public static final String TICKET_PREFIX_ACCOUNT = "acc";
+    public static final String TICKET_PREFIX_BEARER = "jwt";
     public static final Object CURRENT_PRINCIPAL_OR_GUEST =
             new Object() {
                 @Override
@@ -162,6 +162,8 @@ public class Aaa {
     
     public static final CfgBoolean ADMIN_LOGIN_ALLOWED = new CfgBoolean(AccessApi.class, "allowAdminLogin", false);
     
+    private static Subject DUMMY_SUBJECT = null;
+
     static {
 
         ADMIN.addStringPermission("*");
@@ -367,6 +369,24 @@ public class Aaa {
         return new SubjectEnvironment(subject, current);
     }
 
+    /**
+     * Run as subject or if subject is null use the current
+     * subject.
+     * @param subject
+     * @return Closeable environment object
+     */
+    public static SubjectEnvironment asSubjectOrAnonymous(Subject subject) {
+        if (subject == null) {
+            if (DUMMY_SUBJECT == null) {
+                DUMMY_SUBJECT = createNewSubject();
+            }
+            subject = DUMMY_SUBJECT;
+        }
+        Subject current = ThreadContext.getSubject();
+        ThreadContext.bind(subject);
+        return new SubjectEnvironment(subject, current);
+    }
+    
     public static Collection<Realm> getRealms() {
         try {
             SecurityManager securityManager = M.l(AccessApi.class).getSecurityManager();
@@ -670,18 +690,6 @@ public class Aaa {
         return true;
     }
 
-    public static String createTrustTicket(String trust, Subject subject) {
-        // TODO encode with rsa
-        SecureString password = M.l(TrustApi.class).getPassword(trust);
-        return TICKET_PREFIX_TRUST
-                + ":"
-                + trust
-                + ":"
-                + Aaa.getPrincipal(subject)
-                + ":"
-                + password.value();
-    }
-
     public static String createAccountTicket(String account, String password) {
         // TODO encode with rsa
         return TICKET_PREFIX_ACCOUNT + ":" + account + ":" + MPassword.encode(password);
@@ -697,17 +705,20 @@ public class Aaa {
         if (type.equals(TICKET_PREFIX_TRUST)) {
             String[] parts = ticket.split(":", 4);
             if (parts.length != 4) throw new AuthorizationException("ticket not valide (1)");
-            M.l(TrustApi.class).validatePassword(parts[1], parts[3]);
-            return new Subject.Builder()
-                    .authenticated(true)
-                    .principals(new SimplePrincipalCollection(parts[2], REALM_TRUST.value()))
-                    .buildSubject();
+            return M.l(TrustApi.class).login(ticket.substring(p+1));
         }
         if (type.equals(TICKET_PREFIX_ACCOUNT)) {
             String[] parts = ticket.split(":", 3);
             if (parts.length != 3) throw new AuthorizationException("ticket not valide (2)");
             Subject subject = M.l(AccessApi.class).createSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(parts[1], MPassword.decode(parts[2]));
+            subject.login(token);
+            return subject;
+        }
+        if (type.equals(TICKET_PREFIX_BEARER)) {
+            String bearer = ticket.substring(p+1);
+            Subject subject = M.l(AccessApi.class).createSubject();
+            BearerToken token = new BearerToken(bearer);
             subject.login(token);
             return subject;
         }
@@ -892,6 +903,11 @@ public class Aaa {
         if (action.contains(":"))
             return action.replace(':', '_');
         return action;
+    }
+    
+    public static Subject createNewSubject() {
+        Subject subject = M.l(AccessApi.class).createSubject();
+        return subject;
     }
     
 }

@@ -54,6 +54,7 @@ public class Log {
 	private boolean tracerInError = false;
     //    protected UUID id = UUID.randomUUID();
     protected static int maxMsgSize = 0;
+    private static boolean verbose = false;
 
     public Log(Object owner) {
 
@@ -103,7 +104,10 @@ public class Log {
             	lookingForSpan.remove();
             }
         }
-
+        if (verbose) {
+            if (level == LEVEL.DEBUG)
+                level = LEVEL.INFO;
+        }
         if (span != null) {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
             if (mapping != null) {
@@ -402,6 +406,14 @@ public class Log {
 
     public static void setStacktraceTrace(boolean stacktraceTrace) {
         Log.stacktraceTrace = stacktraceTrace;
+    }
+
+    public static boolean isVerbose() {
+        return verbose;
+    }
+
+    public static void setVerbose(boolean verbose) {
+        Log.verbose = verbose;
     }
 
     //	public UUID getId() {

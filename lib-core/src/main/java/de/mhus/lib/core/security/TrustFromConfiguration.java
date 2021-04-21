@@ -15,9 +15,17 @@
  */
 package de.mhus.lib.core.security;
 
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPassword;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.aaa.BearerConfiguration;
+import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgNode;
 import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.SecureString;
@@ -26,6 +34,11 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
 
 // TODO Use hashed passwords
 public class TrustFromConfiguration extends MLog implements TrustApi {
+
+    public static final BearerConfiguration BEARER_CONFIG = new BearerConfiguration();
+    @SuppressWarnings("unused")
+    private static final CfgLong CFG_BEARER_CONFIG_TIMEOUT = new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECOUNDS)
+            .updateAction(v -> BEARER_CONFIG.setTimeout(v) ).doUpdateAction();
 
     private SoftHashMap<String, SecureString> cache = new SoftHashMap<>();
     private CfgNode config =
@@ -60,8 +73,23 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
     }
 
     @Override
+    public Subject login(String ticket) {
+        String[] parts = ticket.split(":",3);
+        validatePassword(parts[0], parts[2]);
+        return new Subject.Builder()
+                .authenticated(true)
+                .principals(new SimplePrincipalCollection(parts[1], Aaa.REALM_TRUST.value()))
+                .buildSubject();
+    }
+    
     public boolean validatePassword(String name, String password) {
         SecureString trustPassword = getPassword(name);
         return password.equals(trustPassword.value());
+    }
+
+    @Override
+    public String createToken(String source, Object target, Subject subject) {
+        String tokenStr = Aaa.createBearerToken(subject, MSystem.getHostname(), BEARER_CONFIG );
+        return Aaa.TICKET_PREFIX_BEARER + ":" + tokenStr;
     }
 }

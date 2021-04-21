@@ -54,7 +54,8 @@ public interface IConfig extends IProperties {
     public static final String NULL = "_null";
 
     /**
-     * Returns true if the key is an object.
+     * Returns true if t@Override
+    he key is an object.
      *
      * @param key
      * @return If the property is an object or array
@@ -310,5 +311,23 @@ public interface IConfig extends IProperties {
 	static IConfig wrap(IProperties parameters) {
 		return new MConfigWrapper(parameters);
 	}
+
+	/**
+	 * Return true if no value is in list from type IConfig or ConfigList.
+	 * Other Objects will be seen as flat.
+	 * 
+	 * @return true if compatible with IProperties
+	 */
+    boolean isProperties();
+
+    /**
+     * Return the value in every case as IConfig object. Even if it's not found it will return null.
+     * The result could be a new object not attached to the underlying map. Changes may have no affect to the
+     * parent config.
+     * 
+     * @param key
+     * @return The IConfig
+     */
+    IConfig getAsObject(String key);
 
 }

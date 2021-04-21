@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
@@ -130,7 +131,7 @@ public class LogCfgInitiator implements CfgInitiator {
                 && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
             try {
                 Collection<IConfig> mappers =
-                        system.getArrayOrCreate(M.PROP_LOG_PARAMETER_MAPPER_CLASS);
+                        system.getArrayOrCreate(M.PROP_LOG_PARAMETER_ENTRY_MAPPER_CLASS);
                 if (mappers.size() > 0)
                     ((MutableParameterMapper) logFactory.getParameterMapper()).clear();
                 for (IConfig mapper : mappers) {
@@ -180,6 +181,15 @@ public class LogCfgInitiator implements CfgInitiator {
             MApi.dirtyLogDebug(t);
         }
 
+        try {
+            String key = M.PROP_LOG_VERBOSE;
+            boolean value = system.getBoolean(key, false);
+            if (!value) value = MCast.toboolean(System.getProperty(M.PROP_PREFIX + key), false);
+            Log.setVerbose(value);
+        } catch (Throwable t) {
+            MApi.dirtyLogDebug(t);
+        }
+        
         internal.setLogFactory(logFactory);
 
         MApi.updateLoggers();

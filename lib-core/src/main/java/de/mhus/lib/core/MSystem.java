@@ -63,6 +63,7 @@ public class MSystem {
 
     private static Log log = Log.getLog(MSystem.class);
     private static ThreadMXBean tmxb = ManagementFactory.getThreadMXBean();
+    private static String hostname; // cached hostname
 
     /**
      * Returns the name of the current system. COMPUTERNAME or HOSTNAME.
@@ -70,14 +71,17 @@ public class MSystem {
      * @return the hosts name
      */
     public static String getHostname() {
-        String out = System.getenv().get("COMPUTERNAME");
-        if (out == null) out = System.getenv().get("HOSTNAME");
-        if (out == null) {
-            RuntimeMXBean rt = ManagementFactory.getRuntimeMXBean();
-            String name = rt.getName();
-            out = MString.afterIndex(name, '@');
+        if (hostname == null) {
+            String out = System.getenv().get("COMPUTERNAME");
+            if (out == null) out = System.getenv().get("HOSTNAME");
+            if (out == null) {
+                RuntimeMXBean rt = ManagementFactory.getRuntimeMXBean();
+                String name = rt.getName();
+                out = MString.afterIndex(name, '@');
+            }
+            hostname = out;
         }
-        return out;
+        return hostname;
     }
 
     /**
