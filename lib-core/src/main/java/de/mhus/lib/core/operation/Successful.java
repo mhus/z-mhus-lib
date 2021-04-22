@@ -36,6 +36,7 @@ public class Successful extends OperationResult {
         this(operation, msg, 0, result);
     }
 
+    @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, Map<?,?> result) {
         setOperationPath(operation.getDescription().getPath());
         setCaption(operation.getDescription().getCaption());
@@ -45,6 +46,7 @@ public class Successful extends OperationResult {
         setSuccessful(true);
     }
 
+    @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, Map<?,?> result) {
         setOperationPath(path);
         setCaption("");
@@ -58,6 +60,7 @@ public class Successful extends OperationResult {
         this(operation, msg, 0, result);
     }
 
+    @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, String result) {
         setOperationPath(operation.getDescription().getPath());
         setCaption(operation.getDescription().getCaption());
@@ -67,6 +70,7 @@ public class Successful extends OperationResult {
         setSuccessful(true);
     }
 
+    @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String result) {
         setOperationPath(path);
         setCaption("");
@@ -84,6 +88,7 @@ public class Successful extends OperationResult {
         this(path, "ok", 0);
     }
 
+    @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String... keyValues) {
         setOperationPath(path);
         setCaption("");

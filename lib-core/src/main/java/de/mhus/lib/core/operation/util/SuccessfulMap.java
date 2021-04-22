@@ -24,6 +24,7 @@ import de.mhus.lib.core.operation.Successful;
 
 public class SuccessfulMap extends Successful {
 
+    @SuppressWarnings("deprecation")
     public SuccessfulMap(Operation operation, String msg) {
         super(operation, msg);
         setResult(new MProperties());
@@ -38,7 +39,7 @@ public class SuccessfulMap extends Successful {
         setCaption(operation.getDescription().getCaption());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public Map<String, Object> getMap() {
         return ((Map<String, Object>) getResult());
     }

@@ -14,31 +14,37 @@ import de.mhus.lib.errors.NotFoundException;
 
 public class SuccessfulConfig extends Successful {
     
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(Operation operation, String msg) {
         super(operation, msg, 0, (String)null);
         setResult(new MConfig());
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(Operation operation, String msg, IConfig config) {
         super(operation, msg, 0, (String)null);
         setResult(config);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(Operation operation, String msg, int rc, IConfig config) {
         super(operation, msg, rc, (String)null);
         setResult(config);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(String path, String msg, IConfig config) {
         super(path, msg, 0, (String)null);
         setResult(config);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(String path, String msg, int rc, IConfig config) {
         super(path, msg, rc, (String)null);
         setResult(config);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(Operation operation, String msg, ConfigSerializable object) {
         super(operation, msg, 0, (String)null);
         MConfig cfg = new MConfig();
@@ -51,6 +57,7 @@ public class SuccessfulConfig extends Successful {
         setResult(cfg);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(Operation operation, String msg, int rc, ConfigSerializable object) {
         super(operation, msg, rc, (String)null);
         MConfig cfg = new MConfig();
@@ -63,6 +70,7 @@ public class SuccessfulConfig extends Successful {
         setResult(cfg);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(String path, String msg, ConfigSerializable object) {
         super(path, msg, 0, (String)null);
         MConfig cfg = new MConfig();
@@ -75,6 +83,7 @@ public class SuccessfulConfig extends Successful {
         setResult(cfg);
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(String path, String msg, int rc, ConfigSerializable object) {
         super(path, msg, rc, (String)null);
         MConfig cfg = new MConfig();
@@ -92,6 +101,7 @@ public class SuccessfulConfig extends Successful {
         setCaption(operation.getDescription().getCaption());
     }
 
+    @SuppressWarnings("deprecation")
     public SuccessfulConfig(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, (String)null);
         setOperationPath(path);
@@ -112,6 +122,7 @@ public class SuccessfulConfig extends Successful {
         setCaption(operation.getDescription().getCaption());
     }
 
+    @SuppressWarnings("deprecation")
     public IConfig getConfig() {
         return (IConfig) getResult();
     }

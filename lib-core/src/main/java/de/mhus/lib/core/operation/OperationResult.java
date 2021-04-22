@@ -101,10 +101,20 @@ public class OperationResult {
         this.nextOperation = nextOperation;
     }
 
+    /**
+     * Return the raw result. Don't use this method directly.
+     * @return The resulting object
+     */
+    @Deprecated
     public Object getResult() {
         return result;
     }
 
+    /**
+     * Set the result as object. Don't use it directly. Should be stored as IConfig or Map.
+     * @param result
+     */
+    @Deprecated
     public void setResult(Object result) {
         this.result = result;
     }

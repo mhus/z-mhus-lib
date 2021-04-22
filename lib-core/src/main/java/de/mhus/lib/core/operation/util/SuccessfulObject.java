@@ -3,6 +3,7 @@ package de.mhus.lib.core.operation.util;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.OperationResult;
 
+@Deprecated
 public class SuccessfulObject extends OperationResult {
 
     public SuccessfulObject(Operation operation, String msg, Object result) {

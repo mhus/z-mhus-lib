@@ -35,12 +35,13 @@ public class SuccessfulForceMap extends Successful {
         super(path, msg, rc);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setResult(Object result) {
         super.setResult(new MapValue((Map<?, ?>) result));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "deprecation" })
     public Map<String, Object> getMap() {
         return (Map<String, Object>) ((MapValue) getResult()).getValue();
     }

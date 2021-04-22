@@ -19,6 +19,7 @@ import de.mhus.lib.core.operation.OperationResult;
 
 public class OperationResultProxy extends OperationResult {
 
+    @SuppressWarnings("deprecation")
     public OperationResultProxy(OperationResult instance) {
         setSuccessful(instance.isSuccessful());
         setReturnCode(instance.getReturnCode());
