@@ -50,7 +50,6 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
                                 }
                             });
 
-    @Override
     public SecureString getPassword(String name) {
         if (MString.isSet(name)) {
             synchronized (cache) {

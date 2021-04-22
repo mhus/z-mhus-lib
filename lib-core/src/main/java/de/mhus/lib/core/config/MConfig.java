@@ -347,6 +347,7 @@ public class MConfig extends MProperties implements IConfig {
                 } else
                 if (e.getValue() instanceof List) {
                     ConfigList list = new ConfigList(String.valueOf(e.getKey()), null);
+                    put(String.valueOf(e.getKey()), list);
                     for (Object obj : ((List<?>)e.getValue())) {
                         if (obj instanceof IConfig) {
                             list.add((IConfig)obj);

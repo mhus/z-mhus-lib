@@ -118,25 +118,17 @@ public class Aaa {
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
     private static ICache<String, Boolean> accessCacheApi;
 
-    
     public static final SimpleAccount ADMIN = new SimpleAccount(USER_ADMIN.value(),UUID.randomUUID().toString(),"");
     public static final SimpleAccount GUEST = new SimpleAccount(USER_GUEST.value(),UUID.randomUUID().toString(),"");
 
-    public static final CfgString PERMS_GUEST = new CfgString(AccessApi.class, "permsGuest", 
+    private static final CfgString PERMS_GUEST_INT = new CfgString(AccessApi.class, "permsGuestInt", 
             "de.mhus.lib.core.aaa.TrustedToken:admin:de.mhus.karaf.commands.impl.CmdAccessAdmin;" +
             "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin;" +
-            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.schedule.SchedulerJob"
-            ).updateAction(
-            v -> {
-                if (v != null) {
-                    HashSet<Permission> perms = new HashSet<>();
-                    for (String r : v.split(";"))
-                        if (MString.isSetTrim(r))
-                            perms.add(new WildcardPermission(r.trim()));
-                    GUEST.setObjectPermissions(perms);
-                }
-            });
-    
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.schedule.SchedulerJob;" +
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.osgi.dev.dev.CmdAccessTool"
+            ).updateAction(v -> updateGuestPerms() );
+    public static final CfgString PERMS_GUEST = new CfgString(AccessApi.class, "permsGuest", "").updateAction(v -> updateGuestPerms() );
+
     public static final CfgString ROLES_GUEST = new CfgString(AccessApi.class, "rolesGuest", "").updateAction(
             v -> {
                 if (v != null) {
@@ -174,6 +166,27 @@ public class Aaa {
 
     }
     
+    private static synchronized void updateGuestPerms() {
+        HashSet<Permission> perms = new HashSet<>();
+        {
+            String v = PERMS_GUEST_INT.value();
+            if (MString.isSetTrim(v)) {
+                for (String r : v.split(";"))
+                    if (MString.isSetTrim(r))
+                        perms.add(new WildcardPermission(r.trim()));
+            }
+        }
+        {
+            String v = PERMS_GUEST.value();
+            if (MString.isSetTrim(v)) {
+                for (String r : v.split(";"))
+                    if (MString.isSetTrim(r))
+                        perms.add(new WildcardPermission(r.trim()));
+            }
+        }
+        GUEST.setObjectPermissions(perms);
+    }
+
     public static boolean hasAccess(String resource) {
         return hasAccess(getSubject(), resource);
     }

@@ -59,9 +59,13 @@ public class TrustedToken implements AuthenticationToken {
 
     
     private static boolean hasAccess(boolean debugPermissions, String username) {
-        
+
+        // you can sudo to your own
+        if (username.equals(Aaa.getPrincipal())) return true;
+
         // create caller ident for cache
         StringBuilder sb = new StringBuilder();
+        sb.append(Aaa.getPrincipalOrGuest()).append(':');
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (StackTraceElement element : stackTrace) {
             String clazz = element.getClassName();
@@ -90,7 +94,7 @@ public class TrustedToken implements AuthenticationToken {
                     } else {
                         if (debugPermissions)
                             log.i("TrustedToken access denied (2)",callerName);
-                        throw new AuthenticationException("TrustedToken access denied (2)");
+                        return false;
                     }
                 }
             }

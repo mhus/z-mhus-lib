@@ -106,33 +106,35 @@ public class MPojo {
 
     public static IConfig pojoToConfig(Object from) throws IOException {
         MConfig to = new MConfig();
-        pojoToConfig(from, to, getDefaultModelFactory(), false, 0);
+        pojoToConfig(from, to, getDefaultModelFactory(), false, false, 0);
         return to;
     }
     
     public static void pojoToConfig(Object from, IConfig to) throws IOException {
-        pojoToConfig(from, to, getDefaultModelFactory(), false, 0);
+        pojoToConfig(from, to, getDefaultModelFactory(), false, false, 0);
     }
     
     public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory) throws IOException {
-        pojoToConfig(from, to, factory, false, 0);
+        pojoToConfig(from, to, factory, false, false, 0);
     }
     
-    public static void pojoToConfig(Object from, IConfig to, boolean usePublic) throws IOException {
-        pojoToConfig(from, to, getDefaultModelFactory(), usePublic, 0);
+    public static void pojoToConfig(Object from, IConfig to, boolean verbose, boolean usePublic) throws IOException {
+        pojoToConfig(from, to, getDefaultModelFactory(), verbose, usePublic, 0);
     }
     
-    public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean usePublic, int level) throws IOException {
+    public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean verbose, boolean usePublic, int level) throws IOException {
         if (level > MAX_LEVEL) return;
         if (from == null) {
             to.setBoolean(IConfig.NULL, true);
             return;
         }
-        to.setString(IConfig.CLASS, from.getClass().getCanonicalName());
+        if (verbose)
+            to.setString(IConfig.CLASS, from.getClass().getCanonicalName());
         PojoModel model = factory.createPojoModel(from.getClass());
         for (PojoAttribute<?> attr : model) {
             boolean deep = false;
             if (!attr.canRead()) continue;
+            if (attr.getName().equals("class")) continue;
             if (usePublic) {
                 Public pub = attr.getAnnotation(Public.class);
                 if (pub != null) {
@@ -142,7 +144,7 @@ public class MPojo {
             }
             Object value = attr.get(from);
             String name = attr.getName();
-            setConfigValue(to, name, value, factory, usePublic, deep, level + 1);
+            setConfigValue(to, name, value, factory, verbose, usePublic, deep, level + 1);
         }
     }
 
@@ -152,16 +154,19 @@ public class MPojo {
             String name,
             Object value,
             PojoModelFactory factory,
+            boolean verbose,
             boolean usePublic,
             boolean deep,
             int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
         try {
-            if (value != null)
-                to.setString(IConfig.CLASS, value.getClass().getCanonicalName());
-            if (value == null) {
-                to.setBoolean(IConfig.NULL, true);
+            if (verbose) {
+                if (value != null)
+                    to.setString(IConfig.CLASS + "_" + name, value.getClass().getCanonicalName());
+                if (value == null) {
+                    to.setBoolean(IConfig.NULL + "_" + name, true);
+                }
             }
             else if (value instanceof Boolean) to.setBoolean(name, (boolean) value);
             else if (value instanceof Integer) to.setInt(name, (int) value);
@@ -175,13 +180,13 @@ public class MPojo {
             else if (value instanceof Character)
                 to.put(name, Character.toString((Character) value));
             else if (value instanceof Date) {
-                to.put(name, ((Date) value).getTime());
-                to.put("_" + name, MDate.toIso8601((Date) value));
+                to.put("_" + name, ((Date) value).getTime());
+                to.put(name, MDate.toIso8601((Date) value));
             } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
             else if (value instanceof IConfig) to.addObject(name, (IConfig) value);
             else if (value.getClass().isEnum()) {
-                to.put(name, ((Enum<?>) value).ordinal());
-                to.put("_" + name, ((Enum<?>) value).name());
+                to.put("_" + name, ((Enum<?>) value).ordinal());
+                to.put(name, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 IConfig obj = to.createObject(name);
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
@@ -190,6 +195,7 @@ public class MPojo {
                             String.valueOf(entry.getKey()),
                             entry.getValue(),
                             factory,
+                            verbose,
                             usePublic,
                             true,
                             level + 1);
@@ -197,17 +203,17 @@ public class MPojo {
             } else if (value.getClass().isArray()) {
                 ConfigList array = to.createArray(name);
                 for (Object o : (Object[]) value) {
-                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
                 }
             } else if (value instanceof Collection) {
                 ConfigList array = to.createArray(name);
                 for (Object o : ((Collection<Object>) value)) {
-                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
                 }
             } else {
                 if (deep) {
                     IConfig too = to.createObject(name);
-                    pojoToConfig(value, too, factory, usePublic, level + 1);
+                    pojoToConfig(value, too, factory, verbose, usePublic, level + 1);
                 } else {
                     to.put(name, String.valueOf(value));
                 }
@@ -222,6 +228,7 @@ public class MPojo {
             ConfigList to,
             Object value,
             PojoModelFactory factory,
+            boolean verbose,
             boolean usePublic,
             boolean deep,
             int level)
@@ -229,10 +236,12 @@ public class MPojo {
         if (level > MAX_LEVEL) return;
         try {
             IConfig oo = to.createObject();
-            if (value != null)
-                oo.setString(IConfig.CLASS, value.getClass().getCanonicalName());
-            if (value == null) {
-                oo.setBoolean(IConfig.NULL, true);
+            if (verbose) {
+                if (value != null)
+                    oo.setString(IConfig.CLASS, value.getClass().getCanonicalName());
+                if (value == null) {
+                    oo.setBoolean(IConfig.NULL, true);
+                }
             }
             else if (value instanceof Boolean) oo.setBoolean(IConfig.NAMELESS_VALUE, (boolean) value);
             else if (value instanceof Integer) oo.setInt(IConfig.NAMELESS_VALUE, (int) value);
@@ -256,6 +265,7 @@ public class MPojo {
                             String.valueOf(entry.getKey()),
                             entry.getValue(),
                             factory,
+                            verbose,
                             usePublic,
                             true,
                             level + 1);
@@ -263,11 +273,11 @@ public class MPojo {
             } else if (value instanceof Collection) {
                 ConfigList array = oo.createArray(IConfig.NAMELESS_VALUE);
                 for (Object o : ((Collection<Object>) value)) {
-                    addConfigValue(array, o, factory, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
                 }
             } else {
                 if (deep) {
-                    pojoToConfig(value, oo, factory, usePublic, level + 1);
+                    pojoToConfig(value, oo, factory, verbose, usePublic, level + 1);
                 } else {
                     oo.setString(IConfig.NAMELESS_VALUE, String.valueOf(value));
                 }
