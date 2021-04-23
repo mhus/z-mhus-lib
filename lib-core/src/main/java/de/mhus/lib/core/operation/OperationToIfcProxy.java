@@ -31,6 +31,13 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.form.definition.FmText;
 
+/**
+ * This class use java serialization to transport objects. Do not use it if you want to connect it to
+ * other programming languages then java.
+ * 
+ * @author mikehummel
+ *
+ */
 public abstract class OperationToIfcProxy extends AbstractOperation {
 
     public static final String METHOD = "method";
@@ -98,8 +105,8 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
 
             OperationResult result = new OperationResult(this.getDescription());
             result.setSuccessful(true);
-            result.setMsg("");
-            result.setResult(ret);
+            result.setMsg("serialized");
+            result.setResultString(toSerialized(ret));
             return result;
 
         } catch (InvocationTargetException e) {
@@ -112,6 +119,10 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
         }
     }
 
+    private String toSerialized(Object in) throws IOException {
+        return MCast.serializeToString(in);
+    }
+    
     private Object toObject(Object value, String type, ClassLoader cl)
             throws ClassNotFoundException, IOException {
         if (type != null && type.equals(NULL)) {

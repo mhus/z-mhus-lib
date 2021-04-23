@@ -36,6 +36,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.annotations.generic.Public;
+import de.mhus.lib.annotations.pojo.Embedded;
+import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MActivator;
@@ -105,24 +107,32 @@ public class MPojo {
     }
 
     public static IConfig pojoToConfig(Object from) throws IOException {
-        MConfig to = new MConfig();
-        pojoToConfig(from, to, getDefaultModelFactory(), false, false, 0);
-        return to;
+        return pojoToConfig(from, getDefaultModelFactory(), false, false);
+    }
+
+    public static IConfig pojoToConfig(Object from, boolean verbose, boolean useAnnotations) throws IOException {
+        return pojoToConfig(from, getDefaultModelFactory(), verbose, useAnnotations);
     }
     
+    public static IConfig pojoToConfig(Object from, PojoModelFactory factory, boolean verbose, boolean useAnnotations) throws IOException {
+        MConfig to = new MConfig();
+        pojoToConfig(from, to, factory, verbose, useAnnotations, "", 0);
+        return to;
+    }
+
     public static void pojoToConfig(Object from, IConfig to) throws IOException {
-        pojoToConfig(from, to, getDefaultModelFactory(), false, false, 0);
+        pojoToConfig(from, to, getDefaultModelFactory(), false, false, "", 0);
     }
     
     public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory) throws IOException {
-        pojoToConfig(from, to, factory, false, false, 0);
+        pojoToConfig(from, to, factory, false, false, "", 0);
     }
     
-    public static void pojoToConfig(Object from, IConfig to, boolean verbose, boolean usePublic) throws IOException {
-        pojoToConfig(from, to, getDefaultModelFactory(), verbose, usePublic, 0);
+    public static void pojoToConfig(Object from, IConfig to, boolean verbose, boolean useAnnotations) throws IOException {
+        pojoToConfig(from, to, getDefaultModelFactory(), verbose, useAnnotations, "", 0);
     }
     
-    public static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean verbose, boolean usePublic, int level) throws IOException {
+    private static void pojoToConfig(Object from, IConfig to, PojoModelFactory factory, boolean verbose, boolean useAnnotations, String prefix, int level) throws IOException {
         if (level > MAX_LEVEL) return;
         if (from == null) {
             to.setBoolean(IConfig.NULL, true);
@@ -135,60 +145,71 @@ public class MPojo {
             boolean deep = false;
             if (!attr.canRead()) continue;
             if (attr.getName().equals("class")) continue;
-            if (usePublic) {
+            if (useAnnotations) {
+                Hidden hidden = attr.getAnnotation(Hidden.class);
+                if (hidden != null)
+                    continue;
                 Public pub = attr.getAnnotation(Public.class);
                 if (pub != null) {
                     if (!pub.readable()) continue;
                     if (MCollection.contains(pub.hints(), MPojo.DEEP)) deep = true;
                 }
+                Embedded emb = attr.getAnnotation(Embedded.class); // experimental
+                if (emb != null) {
+                    Object value = attr.get(from);
+                    String name = attr.getName();
+                    pojoToConfig(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
+                    continue;
+                }
             }
             Object value = attr.get(from);
             String name = attr.getName();
-            setConfigValue(to, name, value, factory, verbose, usePublic, deep, level + 1);
+            setConfigValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static void setConfigValue(
+    private static void setConfigValue(
             IConfig to,
             String name,
             Object value,
             PojoModelFactory factory,
             boolean verbose,
-            boolean usePublic,
+            boolean useAnnotations,
             boolean deep,
+            String prefix,
             int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
         try {
             if (verbose) {
                 if (value != null)
-                    to.setString(IConfig.CLASS + "_" + name, value.getClass().getCanonicalName());
+                    to.setString(IConfig.CLASS + "_" + prefix + name, value.getClass().getCanonicalName());
                 if (value == null) {
-                    to.setBoolean(IConfig.NULL + "_" + name, true);
+                    to.setBoolean(IConfig.NULL + "_" + prefix + name, true);
                 }
             }
-            else if (value instanceof Boolean) to.setBoolean(name, (boolean) value);
-            else if (value instanceof Integer) to.setInt(name, (int) value);
-            else if (value instanceof String) to.setString(name, (String) value);
-            else if (value instanceof Long) to.setLong(name, (long) value);
-//            else if (value instanceof byte[]) to.put(name, (byte[]) value);
-            else if (value instanceof Float) to.setFloat(name, (float) value);
-            else if (value instanceof Double) to.setDouble(name, (double) value);
-            else if (value instanceof Short) to.setInt(name, (short) value);
-            else if (value instanceof Date) to.setLong(name, ((Date)value).getTime());
+            else if (value instanceof Boolean) to.setBoolean(prefix + name, (boolean) value);
+            else if (value instanceof Integer) to.setInt(prefix + name, (int) value);
+            else if (value instanceof String) to.setString(prefix + name, (String) value);
+            else if (value instanceof Long) to.setLong(prefix + name, (long) value);
+//            else if (value instanceof byte[]) to.put(prefix + name, (byte[]) value);
+            else if (value instanceof Float) to.setFloat(prefix + name, (float) value);
+            else if (value instanceof Double) to.setDouble(prefix + name, (double) value);
+            else if (value instanceof Short) to.setInt(prefix + name, (short) value);
+            else if (value instanceof Date) to.setLong(prefix + name, ((Date)value).getTime());
             else if (value instanceof Character)
-                to.put(name, Character.toString((Character) value));
+                to.put(prefix + name, Character.toString((Character) value));
             else if (value instanceof Date) {
-                to.put("_" + name, ((Date) value).getTime());
-                to.put(name, MDate.toIso8601((Date) value));
-            } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
-            else if (value instanceof IConfig) to.addObject(name, (IConfig) value);
+                to.put("_" + prefix + name, MDate.toIso8601((Date) value));
+                to.put(prefix + name, ((Date) value).getTime());
+            } else if (value instanceof BigDecimal) to.put(prefix + name, (BigDecimal) value);
+            else if (value instanceof IConfig) to.addObject(prefix + name, (IConfig) value);
             else if (value.getClass().isEnum()) {
-                to.put("_" + name, ((Enum<?>) value).ordinal());
-                to.put(name, ((Enum<?>) value).name());
+                to.put(prefix + name, ((Enum<?>) value).ordinal());
+                to.put("_" + prefix + name, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
-                IConfig obj = to.createObject(name);
+                IConfig obj = to.createObject(prefix + name);
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
                     setConfigValue(
                             obj,
@@ -196,26 +217,27 @@ public class MPojo {
                             entry.getValue(),
                             factory,
                             verbose,
-                            usePublic,
+                            useAnnotations,
                             true,
+                            prefix,
                             level + 1);
                 }
             } else if (value.getClass().isArray()) {
-                ConfigList array = to.createArray(name);
+                ConfigList array = to.createArray(prefix + name);
                 for (Object o : (Object[]) value) {
-                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else if (value instanceof Collection) {
-                ConfigList array = to.createArray(name);
+                ConfigList array = to.createArray(prefix + name);
                 for (Object o : ((Collection<Object>) value)) {
-                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
-                    IConfig too = to.createObject(name);
-                    pojoToConfig(value, too, factory, verbose, usePublic, level + 1);
+                    IConfig too = to.createObject(prefix + name);
+                    pojoToConfig(value, too, factory, verbose, useAnnotations, prefix, level + 1);
                 } else {
-                    to.put(name, String.valueOf(value));
+                    to.put(prefix + name, String.valueOf(value));
                 }
             }
         } catch (Throwable t) {
@@ -229,8 +251,9 @@ public class MPojo {
             Object value,
             PojoModelFactory factory,
             boolean verbose,
-            boolean usePublic,
+            boolean useAnnotations,
             boolean deep,
+            String prefix,
             int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
@@ -266,18 +289,19 @@ public class MPojo {
                             entry.getValue(),
                             factory,
                             verbose,
-                            usePublic,
+                            useAnnotations,
                             true,
+                            prefix,
                             level + 1);
                 }
             } else if (value instanceof Collection) {
                 ConfigList array = oo.createArray(IConfig.NAMELESS_VALUE);
                 for (Object o : ((Collection<Object>) value)) {
-                    addConfigValue(array, o, factory, verbose, usePublic, true, level + 1);
+                    addConfigValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
-                    pojoToConfig(value, oo, factory, verbose, usePublic, level + 1);
+                    pojoToConfig(value, oo, factory, verbose, useAnnotations, prefix, level + 1);
                 } else {
                     oo.setString(IConfig.NAMELESS_VALUE, String.valueOf(value));
                 }
@@ -378,33 +402,49 @@ public class MPojo {
 
     public static void pojoToJson(Object from, ObjectNode to, PojoModelFactory factory)
             throws IOException {
-        pojoToJson(from, to, factory, false, 0);
+        pojoToJson(from, to, factory, false, false, "", 0);
     }
 
     public static void pojoToJson(
-            Object from, ObjectNode to, PojoModelFactory factory, boolean usePublic)
+            Object from, ObjectNode to, PojoModelFactory factory, boolean useAnnotations)
             throws IOException {
-        pojoToJson(from, to, factory, usePublic, 0);
+        pojoToJson(from, to, factory, false, useAnnotations, "", 0);
     }
 
     public static void pojoToJson(
-            Object from, ObjectNode to, PojoModelFactory factory, boolean usePublic, int level)
+            Object from, ObjectNode to, PojoModelFactory factory, boolean verbose, boolean useAnnotations)
+            throws IOException {
+        pojoToJson(from, to, factory, verbose, useAnnotations, "", 0);
+    }
+    
+    private static void pojoToJson(
+            Object from, ObjectNode to, PojoModelFactory factory, boolean verbose, boolean useAnnotations, String prefix, int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
         PojoModel model = factory.createPojoModel(from.getClass());
         for (PojoAttribute<?> attr : model) {
             boolean deep = false;
             if (!attr.canRead()) continue;
-            if (usePublic) {
+            if (useAnnotations) {
+                Hidden hidden = attr.getAnnotation(Hidden.class);
+                if (hidden != null)
+                    continue;
                 Public pub = attr.getAnnotation(Public.class);
                 if (pub != null) {
                     if (!pub.readable()) continue;
                     if (MCollection.contains(pub.hints(), MPojo.DEEP)) deep = true;
                 }
+                Embedded emb = attr.getAnnotation(Embedded.class);
+                if (emb != null) {
+                    Object value = attr.get(from);
+                    String name = attr.getName();
+                    pojoToJson(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
+                    continue;
+                }
             }
             Object value = attr.get(from);
             String name = attr.getName();
-            setJsonValue(to, name, value, factory, usePublic, deep, level + 1);
+            setJsonValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
         }
     }
 
@@ -413,8 +453,10 @@ public class MPojo {
             ArrayNode to,
             Object value,
             PojoModelFactory factory,
-            boolean usePublic,
+            boolean verbose,
+            boolean useAnnotations,
             boolean deep,
+            String prefix,
             int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
@@ -440,21 +482,23 @@ public class MPojo {
                             String.valueOf(entry.getKey()),
                             entry.getValue(),
                             factory,
-                            usePublic,
+                            verbose,
+                            useAnnotations,
                             true,
+                            prefix,
                             level + 1);
                 }
             } else if (value instanceof Collection) {
                 ArrayNode array = to.arrayNode();
                 to.add(array);
                 for (Object o : ((Collection<Object>) value)) {
-                    addJsonValue(array, o, factory, usePublic, true, level + 1);
+                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
                     ObjectNode too = to.objectNode();
                     to.add(too);
-                    pojoToJson(value, too, factory, usePublic, level + 1);
+                    pojoToJson(value, too, factory, verbose, useAnnotations, prefix, level + 1);
                 } else {
                     to.add(String.valueOf(value));
                 }
@@ -464,69 +508,89 @@ public class MPojo {
         }
     }
 
+    public static void setJsonValue(
+            ObjectNode to,
+            String name,
+            Object value,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            boolean deep)
+            throws IOException {
+                setJsonValue(to, name, value, factory, verbose, useAnnotations, deep, "",0);
+    }
+
     @SuppressWarnings("unchecked")
     public static void setJsonValue(
             ObjectNode to,
             String name,
             Object value,
             PojoModelFactory factory,
-            boolean usePublic,
+            boolean verbose,
+            boolean useAnnotations,
             boolean deep,
+            String prefix,
             int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
         try {
-            if (value == null) to.putNull(name);
-            else if (value instanceof Boolean) to.put(name, (boolean) value);
-            else if (value instanceof Integer) to.put(name, (int) value);
-            else if (value instanceof String) to.put(name, (String) value);
-            else if (value instanceof Long) to.put(name, (long) value);
-            else if (value instanceof byte[]) to.put(name, (byte[]) value);
-            else if (value instanceof Float) to.put(name, (float) value);
-            else if (value instanceof Double) to.put(name, (double) value);
-            else if (value instanceof Short) to.put(name, (short) value);
+            if (verbose) {
+                if (value != null)
+                    to.put(IConfig.CLASS, value.getClass().getCanonicalName());
+            }
+            if (value == null) to.putNull(prefix + name);
+            else if (value instanceof Boolean) to.put(prefix + name, (boolean) value);
+            else if (value instanceof Integer) to.put(prefix + name, (int) value);
+            else if (value instanceof String) to.put(prefix + name, (String) value);
+            else if (value instanceof Long) to.put(prefix + name, (long) value);
+            else if (value instanceof byte[]) to.put(prefix + name, (byte[]) value);
+            else if (value instanceof Float) to.put(prefix + name, (float) value);
+            else if (value instanceof Double) to.put(prefix + name, (double) value);
+            else if (value instanceof Short) to.put(prefix + name, (short) value);
             else if (value instanceof Character)
-                to.put(name, Character.toString((Character) value));
+                to.put(prefix + name, Character.toString((Character) value));
             else if (value instanceof Date) {
-                to.put(name, ((Date) value).getTime());
-                to.put("_" + name, MDate.toIso8601((Date) value));
-            } else if (value instanceof BigDecimal) to.put(name, (BigDecimal) value);
-            else if (value instanceof JsonNode) to.set(name, (JsonNode) value);
+                to.put(prefix + name, ((Date) value).getTime());
+                to.put("_" + prefix + name, MDate.toIso8601((Date) value));
+            } else if (value instanceof BigDecimal) to.put(prefix + name, (BigDecimal) value);
+            else if (value instanceof JsonNode) to.set(prefix + name, (JsonNode) value);
             else if (value.getClass().isEnum()) {
-                to.put(name, ((Enum<?>) value).ordinal());
-                to.put("_" + name, ((Enum<?>) value).name());
+                to.put(prefix + name, ((Enum<?>) value).ordinal());
+                to.put("_" + prefix + name, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 ObjectNode obj = to.objectNode();
-                to.set(name, obj);
+                to.set(prefix + name, obj);
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
                     setJsonValue(
                             obj,
                             String.valueOf(entry.getKey()),
                             entry.getValue(),
                             factory,
-                            usePublic,
+                            verbose,
+                            useAnnotations,
                             true,
+                            prefix,
                             level + 1);
                 }
             } else if (value.getClass().isArray()) {
                 ArrayNode array = to.arrayNode();
-                to.set(name, array);
+                to.set(prefix + name, array);
                 for (Object o : (Object[]) value) {
-                    addJsonValue(array, o, factory, usePublic, true, level + 1);
+                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else if (value instanceof Collection) {
                 ArrayNode array = to.arrayNode();
-                to.set(name, array);
+                to.set(prefix + name, array);
                 for (Object o : ((Collection<Object>) value)) {
-                    addJsonValue(array, o, factory, usePublic, true, level + 1);
+                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
                     ObjectNode too = to.objectNode();
-                    to.set(name, too);
-                    pojoToJson(value, too, factory, usePublic, level + 1);
+                    to.set(prefix + name, too);
+                    pojoToJson(value, too, factory, verbose, useAnnotations, prefix, level + 1);
                 } else {
-                    to.put(name, String.valueOf(value));
+                    to.put(prefix + name, String.valueOf(value));
                 }
             }
         } catch (Throwable t) {

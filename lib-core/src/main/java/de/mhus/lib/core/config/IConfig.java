@@ -131,6 +131,8 @@ public interface IConfig extends IProperties {
 
     default <T extends ConfigSerializable> T load(T fillIn) {
         if (fillIn == null) return null;
+        if (getBoolean(NULL, false))
+            return null;
         try {
             fillIn.readSerializableConfig(this);
         } catch (Exception e) {
@@ -138,7 +140,23 @@ public interface IConfig extends IProperties {
         }
         return fillIn;
     }
-    
+
+    /**
+     * Transform a object into IConfig.
+     * 
+     * @param object
+     * @return IConfig 
+     * @throws Exception
+     */
+    static IConfig read(ConfigSerializable object) throws Exception {
+        IConfig cfg = new MConfig();
+        if (object == null)
+            cfg.setBoolean(IConfig.NULL, true);
+        else
+            object.writeSerializableConfig(cfg);
+        return cfg;
+    }
+
     /**
      * Return a config or null if the string is not understand.
      *
@@ -194,8 +212,16 @@ public interface IConfig extends IProperties {
         return new PropertiesConfigBuilder().readFromMap(lines);
     }
 
+    static <V extends ConfigSerializable> Map<String,V> loadToMap(IConfig source, Class<V> target) throws Exception {
+        return new PropertiesConfigBuilder().loadToMap(source, target);
+    }
+    
     static IConfig readFromCollection(Collection<?> lines) {
         return new PropertiesConfigBuilder().readFromCollection(lines);
+    }
+
+    static <T extends ConfigSerializable> List<T> loadToCollection(IConfig source, Class<T> target) throws Exception {
+        return new PropertiesConfigBuilder().loadToCollection(source, target);
     }
 
     static IConfig readFromJsonString(String json) throws MException {

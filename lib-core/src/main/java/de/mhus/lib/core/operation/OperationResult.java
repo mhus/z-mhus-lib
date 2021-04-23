@@ -119,6 +119,15 @@ public class OperationResult {
         this.result = result;
     }
 
+    public void setResultConfig(Map<String, Object> result) {
+        this.result = result;
+    }
+
+    public void setResultString(String result) {
+        this.result = result;
+    }
+
+    @Deprecated
     public boolean isResult(Class<?> clazz) {
         return result != null && clazz.isInstance(result);
     }
@@ -130,6 +139,10 @@ public class OperationResult {
         throw new UsageException("Can't cast result to map", result.getClass());
     }
 
+    public boolean isResultNull() {
+        return result == null;
+    }
+    
     public String getResultAsString() {
         if (result == null) return "";
         if (result instanceof String) return (String) result;
@@ -138,7 +151,7 @@ public class OperationResult {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, operationPath, successful, msg, nextOperation); // result ?
+        return MSystem.toString(this, operationPath, successful, msg, nextOperation, result);
     }
 
     public int getReturnCode() {

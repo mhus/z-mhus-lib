@@ -18,8 +18,11 @@ package de.mhus.lib.core.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -163,6 +166,26 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
             }
             return obj;
         }
+    }
+
+    public <T extends ConfigSerializable> List<T> loadToCollection(IConfig source, Class<T> target) throws Exception {
+        ArrayList<T> out = new ArrayList<>();
+        for (IConfig entry : source.getArray(IConfig.NAMELESS_VALUE)) {
+            T inst = target.getConstructor().newInstance();
+            inst.readSerializableConfig(entry);
+            out.add(inst);
+        }
+        return out;
+    }
+
+    public <V extends ConfigSerializable> Map<String,V> loadToMap(IConfig source, Class<V> target) throws Exception {
+        HashMap<String, V> out = new HashMap<>();
+        for (IConfig entry : source.getObjects()) {
+            V inst = target.getConstructor().newInstance();
+            inst.readSerializableConfig(entry);
+            out.put(entry.getName(), inst);
+        }
+        return out;
     }
     
 }
