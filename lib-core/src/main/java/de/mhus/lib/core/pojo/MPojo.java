@@ -448,8 +448,19 @@ public class MPojo {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public static void addJsonValue(
+            ArrayNode to,
+            Object value,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            boolean deep)
+            throws IOException {
+        addJsonValue(to, value, factory, verbose, useAnnotations, deep, "", 0);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static void addJsonValue(
             ArrayNode to,
             Object value,
             PojoModelFactory factory,
