@@ -16,8 +16,8 @@
 package de.mhus.lib.form;
 
 import de.mhus.lib.annotations.form.ALayoutModel;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.DefaultFilter;
 import de.mhus.lib.core.pojo.PojoAction;
 import de.mhus.lib.core.pojo.PojoModel;
@@ -40,7 +40,7 @@ public class PojoForm extends MutableMForm {
         else setDataSource(new ModelDataSource(new PojoDataSource(pojo)));
     }
 
-    protected IConfig createModel(Object pojo, String modelName) throws Exception {
+    protected INode createModel(Object pojo, String modelName) throws Exception {
 
         PojoModel pojoModel =
                 new PojoParser()

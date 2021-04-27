@@ -24,10 +24,10 @@ import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.Log.LEVEL;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.logging.MutableParameterMapper;
@@ -45,9 +45,9 @@ public class LogCfgInitiator implements CfgInitiator {
     }
 
     @Override
-    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, INode config) {
 
-        IConfig system = manager.getCfg("system");
+        INode system = manager.getCfg("system");
 
         if (system == null) system = manager.getConfigFactory().create(); // empty
 
@@ -130,11 +130,11 @@ public class LogCfgInitiator implements CfgInitiator {
         if (logFactory.getParameterMapper() != null
                 && logFactory.getParameterMapper() instanceof MutableParameterMapper) {
             try {
-                Collection<IConfig> mappers =
+                Collection<INode> mappers =
                         system.getArrayOrCreate(M.PROP_LOG_PARAMETER_ENTRY_MAPPER_CLASS);
                 if (mappers.size() > 0)
                     ((MutableParameterMapper) logFactory.getParameterMapper()).clear();
-                for (IConfig mapper : mappers) {
+                for (INode mapper : mappers) {
                     String name = mapper.getString("name");
                     String clazz = mapper.getString("class");
                     if (MString.isSet(name) && MString.isSet(clazz)) {

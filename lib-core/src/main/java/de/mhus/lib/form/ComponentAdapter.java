@@ -15,11 +15,11 @@
  */
 package de.mhus.lib.form;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public interface ComponentAdapter {
 
-    UiComponent createAdapter(IConfig config);
+    UiComponent createAdapter(INode config);
 
     ComponentDefinition getDefinition();
 }

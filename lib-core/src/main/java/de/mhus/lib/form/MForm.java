@@ -18,8 +18,8 @@ package de.mhus.lib.form;
 import java.util.Locale;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MNls;
 import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.core.util.MNlsProvider;
@@ -36,7 +36,7 @@ public class MForm extends MObject implements MNlsProvider {
 
     protected Locale locale = Locale.getDefault();
     protected ComponentAdapterProvider adapterProvider;
-    protected IConfig model;
+    protected INode model;
     protected DataSource dataSource;
     protected ActionHandler actionHandler;
     protected MNlsBundle nlsBundle;
@@ -46,7 +46,7 @@ public class MForm extends MObject implements MNlsProvider {
 
     public MForm() {}
 
-    public MForm(Locale locale, ComponentAdapterProvider adapterProvider, IConfig model) {
+    public MForm(Locale locale, ComponentAdapterProvider adapterProvider, INode model) {
         if (locale != null) this.locale = locale;
         this.adapterProvider = adapterProvider;
         if (model == null) new NullPointerException("model could not be null");
@@ -66,7 +66,7 @@ public class MForm extends MObject implements MNlsProvider {
         return adapterProvider;
     }
 
-    public IConfig getModel() {
+    public INode getModel() {
         return model;
     }
 

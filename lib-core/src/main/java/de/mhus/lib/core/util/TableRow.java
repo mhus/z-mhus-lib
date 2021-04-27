@@ -26,13 +26,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MJson;
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.ConfigSerializable;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundRuntimeException;
 
-public class TableRow implements Serializable, ConfigSerializable {
+public class TableRow implements Serializable, NodeSerializable {
 
     private static final long serialVersionUID = 1L;
     LinkedList<Object> data = new LinkedList<>();
@@ -88,8 +88,8 @@ public class TableRow implements Serializable, ConfigSerializable {
     }
 
     @Override
-    public void readSerializableConfig(IConfig cfg) throws Exception {
-        for (IConfig line : cfg.getArrayOrCreate("data")) {
+    public void readSerializabledNode(INode cfg) throws Exception {
+        for (INode line : cfg.getArrayOrCreate("data")) {
             String clazzName = line.getString("_class", null);
             Object obj;
             try {
@@ -97,18 +97,18 @@ public class TableRow implements Serializable, ConfigSerializable {
             } catch (Exception e) {
                 throw new IOException(e);
             }
-            MPojo.configToPojo(line, obj);
+            MPojo.nodeToPojo(line, obj);
             data.add(obj);
         }
     }
 
     @Override
-    public void writeSerializableConfig(IConfig cfg) throws Exception {
-        ConfigList arr = cfg.createArray("data");
+    public void writeSerializabledNode(INode cfg) throws Exception {
+        NodeList arr = cfg.createArray("data");
         for (Object d : data) {
-            IConfig line = arr.createObject();
+            INode line = arr.createObject();
             line.setString("_class", d.getClass().getCanonicalName());
-            MPojo.pojoToConfig(d, line);
+            MPojo.pojoToNode(d, line);
         }
     }
 

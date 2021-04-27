@@ -16,7 +16,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class CfgLong extends CfgValue<Long> {
 
@@ -26,7 +26,7 @@ public class CfgLong extends CfgValue<Long> {
 
     @Override
     protected Long loadValue() {
-        IConfig node = getNode();
+        INode node = getNode();
         if (node == null) return getDefault();
         return node.getLong(getParameterName(), getDefault());
     }

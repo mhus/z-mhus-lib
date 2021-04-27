@@ -1,4 +1,4 @@
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -16,11 +16,11 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 
-public class MConfigWrapper extends MConfig {
+public class MNodeWrapper extends MNode {
 
 	private IProperties parameters;
 
-	public MConfigWrapper(IProperties parameters) {
+	public MNodeWrapper(IProperties parameters) {
 		this.parameters = parameters;
 	}
 

@@ -27,7 +27,7 @@ import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.aaa.BearerConfiguration;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgNode;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.SecureString;
 import de.mhus.lib.core.util.SoftHashMap;
 import de.mhus.lib.errors.NotFoundRuntimeException;
@@ -55,9 +55,9 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
             synchronized (cache) {
                 SecureString ret = cache.get(name);
                 if (ret == null) {
-                    IConfig node = config.value();
+                    INode node = config.value();
                     if (node != null) {
-                        for (IConfig trust : node.getObjects()) {
+                        for (INode trust : node.getObjects()) {
                             if (trust.getString("name", "").equals(name)) {
                                 ret = MPassword.decodeSecure(trust.getString("password", ""));
                                 cache.put(name, ret);

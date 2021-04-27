@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.service.ServerIdent;
 
 public class DockerInitializer implements CfgInitiator {
@@ -29,7 +29,7 @@ public class DockerInitializer implements CfgInitiator {
     private static String containerId;
 
     @Override
-    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, INode config) {
 
         loadData();
 

@@ -31,12 +31,12 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.activator.DefaultActivator;
 import de.mhus.lib.core.cfg.CfgInitiator;
 import de.mhus.lib.core.cfg.CfgProvider;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.ConsoleFactory;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
 import de.mhus.lib.core.logging.MLogFactory;
 import de.mhus.lib.core.logging.PrintStreamFactory;
+import de.mhus.lib.core.node.INode;
 
 public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
@@ -103,12 +103,12 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
 
         // init initiators
         try {
-            IConfig system = configProvider.getCfg(M.CFG_SYSTEM);
+            INode system = configProvider.getCfg(M.CFG_SYSTEM);
             MApi.setDirtyTrace(system.getBoolean("log.trace", false));
             Log.setStacktraceTrace(system.getBoolean("stacktraceTrace", false));
 
             MActivator activator = MApi.get().createActivator();
-            for (IConfig node : MCfgManager.getGlobalConfigurations("initiator")) {
+            for (INode node : MCfgManager.getGlobalConfigurations("initiator")) {
                 try {
                     String clazzName = node.getString("class");
                     String name = node.getString("name", clazzName);
@@ -132,7 +132,7 @@ public class DefaultMApi implements IApi, ApiInitialize, IApiInternal {
             for (Object[] initiator : initiators.values())
                 try {
                     CfgInitiator i = (CfgInitiator) initiator[0];
-                    IConfig c = (IConfig) initiator[1];
+                    INode c = (INode) initiator[1];
                     MApi.dirtyLogInfo("run initiator", initiator[0].getClass());
                     i.doInitialize(this, configProvider, c);
                 } catch (Throwable t) {

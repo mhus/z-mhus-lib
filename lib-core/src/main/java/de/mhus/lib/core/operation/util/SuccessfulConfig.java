@@ -3,10 +3,10 @@ package de.mhus.lib.core.operation.util;
 import java.util.List;
 import java.util.Set;
 
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.ConfigSerializable;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.Successful;
 import de.mhus.lib.errors.MRuntimeException;
@@ -16,71 +16,71 @@ public class SuccessfulConfig extends Successful {
     
     public SuccessfulConfig(Operation operation, String msg) {
         super(operation, msg, 0, (String)null);
-        setResultConfig(new MConfig());
+        setResultConfig(new MNode());
     }
 
-    public SuccessfulConfig(Operation operation, String msg, IConfig config) {
+    public SuccessfulConfig(Operation operation, String msg, INode config) {
         super(operation, msg, 0, (String)null);
         setResultConfig(config);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, int rc, IConfig config) {
+    public SuccessfulConfig(Operation operation, String msg, int rc, INode config) {
         super(operation, msg, rc, (String)null);
         setResultConfig(config);
     }
 
-    public SuccessfulConfig(String path, String msg, IConfig config) {
+    public SuccessfulConfig(String path, String msg, INode config) {
         super(path, msg, 0, (String)null);
         setResultConfig(config);
     }
 
-    public SuccessfulConfig(String path, String msg, int rc, IConfig config) {
+    public SuccessfulConfig(String path, String msg, int rc, INode config) {
         super(path, msg, rc, (String)null);
         setResultConfig(config);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, ConfigSerializable object) {
+    public SuccessfulConfig(Operation operation, String msg, NodeSerializable object) {
         super(operation, msg, 0, (String)null);
-        MConfig cfg = new MConfig();
+        MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializableConfig(cfg);
+                object.readSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
         setResultConfig(cfg);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, int rc, ConfigSerializable object) {
+    public SuccessfulConfig(Operation operation, String msg, int rc, NodeSerializable object) {
         super(operation, msg, rc, (String)null);
-        MConfig cfg = new MConfig();
+        MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializableConfig(cfg);
+                object.readSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
         setResultConfig(cfg);
     }
 
-    public SuccessfulConfig(String path, String msg, ConfigSerializable object) {
+    public SuccessfulConfig(String path, String msg, NodeSerializable object) {
         super(path, msg, 0, (String)null);
-        MConfig cfg = new MConfig();
+        MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializableConfig(cfg);
+                object.readSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
         setResultConfig(cfg);
     }
 
-    public SuccessfulConfig(String path, String msg, int rc, ConfigSerializable object) {
+    public SuccessfulConfig(String path, String msg, int rc, NodeSerializable object) {
         super(path, msg, rc, (String)null);
-        MConfig cfg = new MConfig();
+        MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializableConfig(cfg);
+                object.readSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
@@ -99,7 +99,7 @@ public class SuccessfulConfig extends Successful {
         setMsg(msg);
         setReturnCode(rc);
         setSuccessful(true);
-        MConfig r = new MConfig();
+        MNode r = new MNode();
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
                 if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
@@ -112,7 +112,7 @@ public class SuccessfulConfig extends Successful {
         setCaption(operation.getDescription().getCaption());
     }
 
-    public IConfig getConfig() {
+    public INode getConfig() {
         return getResultAsConfig();
     }
 
@@ -140,11 +140,11 @@ public class SuccessfulConfig extends Successful {
         return getConfig().isObject(key);
     }
 
-    public IConfig getObjectOrNull(String key) {
+    public INode getObjectOrNull(String key) {
         return getConfig().getObjectOrNull(key);
     }
 
-    public IConfig getObject(String key) throws NotFoundException {
+    public INode getObject(String key) throws NotFoundException {
         return getConfig().getObject(key);
     }
 
@@ -152,11 +152,11 @@ public class SuccessfulConfig extends Successful {
         return getConfig().isArray(key);
     }
 
-    public ConfigList getArray(String key) throws NotFoundException {
+    public NodeList getArray(String key) throws NotFoundException {
         return getConfig().getArray(key);
     }
 
-    public IConfig getObjectByPath(String path) {
+    public INode getObjectByPath(String path) {
         return getConfig().getObjectByPath(path);
     }
 
@@ -168,19 +168,19 @@ public class SuccessfulConfig extends Successful {
         return getConfig().getExtracted(key);
     }
 
-    public List<IConfig> getObjects() {
+    public List<INode> getObjects() {
         return getConfig().getObjects();
     }
 
-    public void setObject(String key, IConfig object) {
+    public void setObject(String key, INode object) {
         getConfig().setObject(key, object);
     }
 
-    public void setObject(String key, ConfigSerializable object) {
+    public void setObject(String key, NodeSerializable object) {
         getConfig().setObject(key, object);
     }
     
-    public IConfig createObject(String key) {
+    public INode createObject(String key) {
         return getConfig().createObject(key);
     }
 
@@ -199,7 +199,7 @@ public class SuccessfulConfig extends Successful {
      * @param key
      * @return A list
      */
-    public ConfigList getList(String key) {
+    public NodeList getList(String key) {
         return getConfig().getList(key);
     }
 
@@ -210,7 +210,7 @@ public class SuccessfulConfig extends Successful {
      * @param key
      * @return Never null.
      */
-    public List<IConfig> getObjectList(String key) {
+    public List<INode> getObjectList(String key) {
         return getConfig().getObjectList(key);
     }
 
@@ -222,15 +222,15 @@ public class SuccessfulConfig extends Successful {
         return getConfig().getArrayKeys();
     }
 
-    public ConfigList getArrayOrNull(String key) {
+    public NodeList getArrayOrNull(String key) {
         return getConfig().getArrayOrNull(key);
     }
 
-    public ConfigList getArrayOrCreate(String key) {
+    public NodeList getArrayOrCreate(String key) {
         return getConfig().getArrayOrCreate(key);
     }
 
-    public ConfigList createArray(String key) {
+    public NodeList createArray(String key) {
         return getConfig().createArray(key);
     }
 

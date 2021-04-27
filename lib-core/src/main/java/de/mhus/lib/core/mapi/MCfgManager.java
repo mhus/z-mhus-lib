@@ -28,17 +28,17 @@ import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.cfg.CfgProvider;
-import de.mhus.lib.core.config.DefaultConfigFactory;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.IConfigFactory;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.DefaultNodeFactory;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.INodeFactory;
+import de.mhus.lib.core.node.MNode;
 
 @DefaultFactory(DefaultMApiFactory.class)
 public class MCfgManager {
 
     protected HashMap<String, CfgProvider> configurations = new HashMap<>();
 
-    protected IConfigFactory configFactory;
+    protected INodeFactory configFactory;
 
     protected LinkedList<File> mhusConfigFiles = new LinkedList<>();
 
@@ -88,8 +88,8 @@ public class MCfgManager {
      * @param owner
      * @return Always an configuration.
      */
-    public IConfig getCfg(Object owner) {
-        IConfig ret = getCfg(owner, null);
+    public INode getCfg(Object owner) {
+        INode ret = getCfg(owner, null);
         if (ret == null) ret = getConfigFactory().create();
         return ret;
     }
@@ -101,12 +101,12 @@ public class MCfgManager {
      * @param def
      * @return The configuration or def
      */
-    public IConfig getCfg(Object owner, IConfig def) {
+    public INode getCfg(Object owner, INode def) {
 
         Class<?> c = null;
         if (owner instanceof String) {
             String name = (String) owner;
-            IConfig cClass = getCfg(name);
+            INode cClass = getCfg(name);
             if (cClass != null) {
                 //				log().t("found (1)",name);
                 return cClass;
@@ -118,7 +118,7 @@ public class MCfgManager {
         }
         while (c != null) {
             String name = c.getCanonicalName();
-            IConfig cClass = getCfg(name);
+            INode cClass = getCfg(name);
             if (cClass != null) {
                 //				log().t("found (2)",owner.getClass(),name);
                 return cClass;
@@ -130,19 +130,19 @@ public class MCfgManager {
         return def;
     }
 
-    public IConfig getCfg(String owner) {
+    public INode getCfg(String owner) {
 
         CfgProvider p = configurations.get(owner);
         if (p != null) {
-            IConfig cOwner = p.getConfig();
+            INode cOwner = p.getConfig();
             if (cOwner != null) return cOwner;
         }
-        return new MConfig();
+        return new MNode();
     }
 
-    public IConfig getCfg(String owner, IConfig def) {
+    public INode getCfg(String owner, INode def) {
 
-        IConfig cClass = getCfg(owner);
+        INode cClass = getCfg(owner);
         if (cClass != null) {
             //			log().t("found (3)",owner.getClass(),owner);
             return cClass;
@@ -169,22 +169,22 @@ public class MCfgManager {
         registerCfgProvider(provider);
     }
 
-    public synchronized IConfigFactory getConfigFactory() {
-        if (configFactory == null) configFactory = new DefaultConfigFactory();
+    public synchronized INodeFactory getConfigFactory() {
+        if (configFactory == null) configFactory = new DefaultNodeFactory();
         return configFactory;
     }
 
     public class CentralMhusCfgProvider extends CfgProvider {
 
-        private IConfig systemNode;
-        private IConfig config;
+        private INode systemNode;
+        private INode config;
 
         public CentralMhusCfgProvider() {
             super(M.CFG_SYSTEM);
         }
 
         @Override
-        public synchronized IConfig getConfig() {
+        public synchronized INode getConfig() {
             return systemNode;
         }
 
@@ -217,18 +217,18 @@ public class MCfgManager {
 
                                 if (f.getName().endsWith(".xml") || f.getName().endsWith(".yaml")) {
                                     MApi.dirtyLogInfo("Load config file", f);
-                                    IConfig cc = getConfigFactory().read(f);
+                                    INode cc = getConfigFactory().read(f);
                                     cc.setString("_source", f.getAbsolutePath());
-                                    IConfig.merge(cc, config);
+                                    INode.merge(cc, config);
                                     fileList.add(f);
                                 }
                             }
                         }
                     } else {
-                        systemNode = new MConfig();
+                        systemNode = new MNode();
                     }
 
-                    for (IConfig owner : config.getObjects()) {
+                    for (INode owner : config.getObjects()) {
                         if (!owner.getName().equals(M.CFG_SYSTEM)) {
                             registerCfgProvider(new PartialConfigProvider(owner));
                         }
@@ -240,8 +240,8 @@ public class MCfgManager {
                 }
 
             MApi.dirtyLogDebug("*** MHUS Config file not found", configFile);
-            config = new MConfig(); // set empty config
-            systemNode = new MConfig();
+            config = new MNode(); // set empty config
+            systemNode = new MNode();
         }
 
         @Override
@@ -258,15 +258,15 @@ public class MCfgManager {
 
     private class PartialConfigProvider extends CfgProvider {
 
-        private IConfig config;
+        private INode config;
 
-        public PartialConfigProvider(IConfig config) {
+        public PartialConfigProvider(INode config) {
             super(config.getName());
             this.config = config;
         }
 
         @Override
-        public IConfig getConfig() {
+        public INode getConfig() {
             return config;
         }
 
@@ -307,9 +307,9 @@ public class MCfgManager {
      * @return A list of configurations
      */
     @SuppressWarnings("unchecked")
-    public static List<IConfig> getGlobalConfigurations(CfgProvider provider, String key) {
-        IConfig global = provider.getConfig().getObjectOrNull("global");
-        if (global == null) return (List<IConfig>) MCollection.EMPTY_LIST;
+    public static List<INode> getGlobalConfigurations(CfgProvider provider, String key) {
+        INode global = provider.getConfig().getObjectOrNull("global");
+        if (global == null) return (List<INode>) MCollection.EMPTY_LIST;
         return global.getObjectList(key);
     }
 
@@ -321,12 +321,12 @@ public class MCfgManager {
      * @param key Name of the section
      * @return A list of configurations
      */
-    public static List<IConfig> getGlobalConfigurations(String key) {
-        LinkedList<IConfig> out = new LinkedList<>();
+    public static List<INode> getGlobalConfigurations(String key) {
+        LinkedList<INode> out = new LinkedList<>();
         for (CfgProvider provider : new ArrayList<>(MApi.get().getCfgManager().getProviders())) {
-            IConfig global = provider.getConfig().getObjectOrNull("global");
+            INode global = provider.getConfig().getObjectOrNull("global");
             if (global == null) continue;
-            List<IConfig> list = global.getObjectList(key);
+            List<INode> list = global.getObjectList(key);
             out.addAll(list);
         }
         return out;

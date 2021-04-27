@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MUri;
 
 public interface IProperties
@@ -254,7 +254,7 @@ public interface IProperties
                 }
             }
             Object obj = MCast.toType(para, t, null);
-            if (obj != null) ((Map<Object, Object>) p).put(IConfig.NAMELESS_VALUE, para);
+            if (obj != null) ((Map<Object, Object>) p).put(INode.NAMELESS_VALUE, para);
             return;
         }
         String k = para.substring(0, pos).trim();

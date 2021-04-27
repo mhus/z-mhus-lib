@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.util.MDirtyTricks;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.tests.TestCase;
@@ -48,7 +48,7 @@ public class MConfigTest extends TestCase {
         assertEquals("abcdefghi", initiatorValue);
     }
 
-    public static void initiate(IConfig config) {
+    public static void initiate(INode config) {
         System.out.println("Initiate: " + config);
         initiatorValue = initiatorValue + config.getString("value", null);
     }

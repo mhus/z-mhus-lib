@@ -31,10 +31,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class ModelUtil {
@@ -70,7 +70,7 @@ public class ModelUtil {
         }
     }
 
-    public static Document toXml(IConfig model) {
+    public static Document toXml(INode model) {
 
         try {
             Document doc = MXml.createDocument();
@@ -86,17 +86,17 @@ public class ModelUtil {
         return null;
     }
 
-    private static void toXml(IConfig node, Element xml) throws DOMException, MException {
+    private static void toXml(INode node, Element xml) throws DOMException, MException {
         for (String key : node.getPropertyKeys()) xml.setAttribute(key, node.getString(key, ""));
 
-        for (IConfig next : node.getObjects()) {
+        for (INode next : node.getObjects()) {
             Element nextXml = xml.getOwnerDocument().createElement(next.getName());
             xml.appendChild(nextXml);
             toXml(next, nextXml);
         }
     }
 
-    public static ObjectNode toJson(IConfig model) {
+    public static ObjectNode toJson(INode model) {
         try {
             ObjectNode root = MJson.createObjectNode();
             toJson(model, root);
@@ -108,10 +108,10 @@ public class ModelUtil {
         return null;
     }
 
-    private static void toJson(IConfig node, ObjectNode json) throws DOMException, MException {
+    private static void toJson(INode node, ObjectNode json) throws DOMException, MException {
         for (String key : node.getPropertyKeys()) json.put(key, node.getString(key, ""));
 
-        for (IConfig next : node.getObjects()) {
+        for (INode next : node.getObjects()) {
             ObjectNode nextJson = MJson.createObjectNode();
             toJson(next, nextJson);
             json.set(next.getName(), nextJson);

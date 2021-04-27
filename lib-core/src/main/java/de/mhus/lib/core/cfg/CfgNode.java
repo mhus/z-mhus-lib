@@ -16,9 +16,9 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
-public class CfgNode extends CfgValue<IConfig> {
+public class CfgNode extends CfgValue<INode> {
 
     /**
      * Link an node of the configuration to this configuration object.
@@ -27,13 +27,13 @@ public class CfgNode extends CfgValue<IConfig> {
      * @param path Path or null/empty for the main node
      * @param def
      */
-    public CfgNode(Object owner, String path, IConfig def) {
+    public CfgNode(Object owner, String path, INode def) {
         super(owner, path, def);
     }
 
     @Override
-    protected IConfig loadValue() {
-        IConfig node = null;
+    protected INode loadValue() {
+        INode node = null;
         if (getPath().length() == 0) node = MApi.getCfg(getOwner(), null);
         else node = MApi.getCfg(getOwner()).getObjectByPath(getPath());
         if (node == null) return getDefault();
@@ -41,7 +41,7 @@ public class CfgNode extends CfgValue<IConfig> {
     }
 
     @Override
-    protected IConfig loadValue(String value) {
+    protected INode loadValue(String value) {
         return null;
     }
 }

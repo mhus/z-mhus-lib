@@ -19,7 +19,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.PropertiesSubset;
 
 public class CfgProperties extends CfgValue<IProperties> {
@@ -31,7 +31,7 @@ public class CfgProperties extends CfgValue<IProperties> {
     @Override
     protected IProperties loadValue() {
 
-        IConfig node = MApi.getCfg(getOwner(), null);
+        INode node = MApi.getCfg(getOwner(), null);
         if (node == null) return getDefault();
         if (MString.isEmpty(getPath())) return node;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,16 +33,16 @@ import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.MaxDepthReached;
 import de.mhus.lib.errors.NotFoundException;
 
-public class MConfig extends MProperties implements IConfig {
+public class MNode extends MProperties implements INode {
 
     protected String name;
-    protected IConfig parent;
-    protected ConfigStringCompiler compiler;
+    protected INode parent;
+    protected NodeStringCompiler compiler;
     protected HashMap<String, CompiledString> compiledCache;
 
-    public MConfig() {}
+    public MNode() {}
 
-    public MConfig(String name, IConfig parent) {
+    public MNode(String name, INode parent) {
         this.name = name;
         this.parent = parent;
     }
@@ -51,26 +51,26 @@ public class MConfig extends MProperties implements IConfig {
     public boolean isObject(String key) {
         Object val = get(key);
         if (val == null) return false;
-        return val instanceof IConfig;
+        return val instanceof INode;
     }
 
     @Override
-    public IConfig getObject(String key) throws NotFoundException {
+    public INode getObject(String key) throws NotFoundException {
         Object val = get(key);
         if (val == null) throw new NotFoundException("value not found", key);
-        if (val instanceof IConfig) return (IConfig) val;
-        throw new NotFoundException("value is not an IConfig", key);
+        if (val instanceof INode) return (INode) val;
+        throw new NotFoundException("value is not an INode", key);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public IConfig getAsObject(String key) {
+    public INode getAsObject(String key) {
         Object val = get(key);
         if (val == null) return null;
-        if (val instanceof IConfig) return (IConfig) val;
-        if (val instanceof IProperties) return new MConfigWrapper((IProperties) val);
+        if (val instanceof INode) return (INode) val;
+        if (val instanceof IProperties) return new MNodeWrapper((IProperties) val);
 
-        MConfig ret = new MConfig();
+        MNode ret = new MNode();
         if (val instanceof Map) {
             ret.putAll((Map)val);
         } else
@@ -79,10 +79,10 @@ public class MConfig extends MProperties implements IConfig {
     }
     
     @Override
-    public IConfig getObjectOrNull(String key) {
+    public INode getObjectOrNull(String key) {
         Object val = get(key);
         if (val == null) return null;
-        if (val instanceof IConfig) return (IConfig) val;
+        if (val instanceof INode) return (INode) val;
         return null;
     }
 
@@ -90,53 +90,53 @@ public class MConfig extends MProperties implements IConfig {
     public boolean isArray(String key) {
         Object val = get(key);
         if (val == null) return false;
-        return val instanceof ConfigList;
+        return val instanceof NodeList;
     }
 
     @Override
-    public ConfigList getArray(String key) throws NotFoundException {
+    public NodeList getArray(String key) throws NotFoundException {
         Object val = get(key);
         if (val == null) throw new NotFoundException("value not found", key);
-        if (val instanceof List) return (ConfigList) val;
-        throw new NotFoundException("value is not a ConfigList", key);
+        if (val instanceof List) return (NodeList) val;
+        throw new NotFoundException("value is not a NodeList", key);
     }
 
     @Override
-    public ConfigList getArrayOrNull(String key) {
+    public NodeList getArrayOrNull(String key) {
         Object val = get(key);
         if (val == null) return null;
-        if (val instanceof ConfigList) return (ConfigList) val;
+        if (val instanceof NodeList) return (NodeList) val;
         return null;
     }
 
     @Override
-    public ConfigList getArrayOrCreate(String key) {
+    public NodeList getArrayOrCreate(String key) {
         Object val = get(key);
         if (val == null) return createArray(key);
-        if (val instanceof ConfigList) return (ConfigList) val;
+        if (val instanceof NodeList) return (NodeList) val;
         return createArray(key);
     }
 
     @Override
-    public List<IConfig> getObjectList(String key) {
+    public List<INode> getObjectList(String key) {
         Object val = get(key);
         if (val == null) return M.EMPTY_LIST;
         // if (val == null) throw new NotFoundException("value not found",key);
-        if (val instanceof IConfig) return new SingleList<IConfig>((IConfig) val);
-        if (val instanceof ConfigList) return Collections.unmodifiableList((ConfigList) val);
+        if (val instanceof INode) return new SingleList<INode>((INode) val);
+        if (val instanceof NodeList) return Collections.unmodifiableList((NodeList) val);
         return M.EMPTY_LIST;
-        // throw new NotFoundException("value is not a ConfigList or IConfig",key);
+        // throw new NotFoundException("value is not a NodeList or INode",key);
     }
 
     @Override
-    public IConfig getObjectByPath(String path) {
+    public INode getObjectByPath(String path) {
         if (path == null) return null;
         if (path.equals("") || path.equals(".")) return this;
         while (path.startsWith("/")) path = path.substring(1);
         if (path.length() == 0) return this;
         int p = path.indexOf('/');
         if (p < 0) return getObjectOrNull(path);
-        IConfig next = getObjectOrNull(path.substring(0, p));
+        INode next = getObjectOrNull(path.substring(0, p));
         if (next == null) return null;
         return next.getObjectByPath(path.substring(p + 1));
     }
@@ -152,21 +152,21 @@ public class MConfig extends MProperties implements IConfig {
     }
 
     @Override
-    public ConfigList getList(String key) {
+    public NodeList getList(String key) {
         if (isArray(key)) return getArrayOrNull(key);
         if (isObject(key)) {
-            ConfigList ret = new ConfigList(key, this);
+            NodeList ret = new NodeList(key, this);
             ret.add(getObjectOrNull(key));
             return ret;
         }
         if (containsKey(key)) {
-            ConfigList ret = new ConfigList(key, this);
-            MConfig obj = new MConfig(key, this);
+            NodeList ret = new NodeList(key, this);
+            MNode obj = new MNode(key, this);
             obj.put(NAMELESS_VALUE, get(key));
             ret.add(obj);
             return ret;
         }
-        return new ConfigList(key, this);
+        return new NodeList(key, this);
     }
 
     protected String getExtracted(String key, String def, int level) {
@@ -180,7 +180,7 @@ public class MConfig extends MProperties implements IConfig {
 
         synchronized (this) {
             if (compiler == null) {
-                compiler = new ConfigStringCompiler(this);
+                compiler = new NodeStringCompiler(this);
                 compiledCache = new HashMap<String, CompiledString>();
             }
             CompiledString cached = compiledCache.get(key);
@@ -189,7 +189,7 @@ public class MConfig extends MProperties implements IConfig {
                 compiledCache.put(key, cached);
             }
             try {
-                return cached.execute(new ConfigStringCompiler.ConfigMap(level, this));
+                return cached.execute(new NodeStringCompiler.NodeMap(level, this));
             } catch (MException e) {
                 throw new MRuntimeException(key, e);
             }
@@ -197,39 +197,39 @@ public class MConfig extends MProperties implements IConfig {
     }
 
     @Override
-    public List<IConfig> getObjects() {
-        ArrayList<IConfig> out = new ArrayList<>();
+    public List<INode> getObjects() {
+        ArrayList<INode> out = new ArrayList<>();
         for (Object val : values()) {
-            if (val instanceof IConfig) out.add((IConfig) val);
+            if (val instanceof INode) out.add((INode) val);
         }
         return Collections.unmodifiableList(out);
     }
 
     @Override
-    public void setObject(String key, IConfig object) {
+    public void setObject(String key, INode object) {
         if (object == null) {
             remove(key);
             return;
         }
-        ((MConfig) object).parent = this;
-        ((MConfig) object).name = key;
+        ((MNode) object).parent = this;
+        ((MNode) object).name = key;
         put(key, object);
     }
 
     @Override
-    public void addObject(String key, IConfig object) {
+    public void addObject(String key, INode object) {
         Object obj = get(key);
         if (obj != null) {
-            if (obj instanceof ConfigList) {
-                ((ConfigList) obj).add(object);
-            } else if (obj instanceof IConfig) {
+            if (obj instanceof NodeList) {
+                ((NodeList) obj).add(object);
+            } else if (obj instanceof INode) {
                 LinkedList<Object> list = new LinkedList<>();
                 list.add(obj);
                 put(key, obj);
                 list.add(object);
             } else {
                 // overwrite non object and arrays
-                ConfigList list = new ConfigList(key, this);
+                NodeList list = new NodeList(key, this);
                 put(key, list);
                 list.add(object);
             }
@@ -240,10 +240,10 @@ public class MConfig extends MProperties implements IConfig {
     }
 
     @Override
-    public IConfig setObject(String key, ConfigSerializable object) {
-        IConfig cfg = createObject(key);
+    public INode setObject(String key, NodeSerializable object) {
+        INode cfg = createObject(key);
         try {
-            object.writeSerializableConfig(cfg);
+            object.writeSerializabledNode(cfg);
         } catch (Exception e) {
             throw new MRuntimeException(e);
         }
@@ -251,15 +251,15 @@ public class MConfig extends MProperties implements IConfig {
     }
 
     @Override
-    public IConfig createObject(String key) {
-        IConfig obj = new MConfig();
+    public INode createObject(String key) {
+        INode obj = new MNode();
         addObject(key, obj);
         return obj;
     }
 
     @Override
-    public ConfigList createArray(String key) {
-        ConfigList list = new ConfigList(key, this);
+    public NodeList createArray(String key) {
+        NodeList list = new NodeList(key, this);
         put(key, list);
         return list;
     }
@@ -273,7 +273,7 @@ public class MConfig extends MProperties implements IConfig {
     public List<String> getPropertyKeys() {
         ArrayList<String> out = new ArrayList<>();
         for (Entry<String, Object> entry : entrySet()) {
-            if (!(entry.getValue() instanceof IConfig) && !(entry.getValue() instanceof ConfigList))
+            if (!(entry.getValue() instanceof INode) && !(entry.getValue() instanceof NodeList))
                 out.add(entry.getKey());
         }
         return Collections.unmodifiableList(out);
@@ -285,7 +285,7 @@ public class MConfig extends MProperties implements IConfig {
     }
 
     @Override
-    public IConfig getParent() {
+    public INode getParent() {
         return parent;
     }
 
@@ -293,7 +293,7 @@ public class MConfig extends MProperties implements IConfig {
     public List<String> getObjectKeys() {
         ArrayList<String> out = new ArrayList<>();
         for (Entry<String, Object> entry : entrySet()) {
-            if (entry.getValue() instanceof IConfig) out.add(entry.getKey());
+            if (entry.getValue() instanceof INode) out.add(entry.getKey());
         }
         return Collections.unmodifiableList(out);
     }
@@ -302,7 +302,7 @@ public class MConfig extends MProperties implements IConfig {
     public List<String> getArrayKeys() {
         ArrayList<String> out = new ArrayList<>();
         for (Entry<String, Object> entry : entrySet()) {
-            if (entry.getValue() instanceof ConfigList) out.add(entry.getKey());
+            if (entry.getValue() instanceof NodeList) out.add(entry.getKey());
         }
         return Collections.unmodifiableList(out);
     }
@@ -311,7 +311,7 @@ public class MConfig extends MProperties implements IConfig {
     public List<String> getObjectAndArrayKeys() {
         ArrayList<String> out = new ArrayList<>();
         for (Entry<String, Object> entry : entrySet()) {
-            if (entry.getValue() instanceof IConfig || entry.getValue() instanceof ConfigList)
+            if (entry.getValue() instanceof INode || entry.getValue() instanceof NodeList)
                 out.add(entry.getKey());
         }
         return Collections.unmodifiableList(out);
@@ -325,36 +325,36 @@ public class MConfig extends MProperties implements IConfig {
     @Override
     public boolean isProperties() {
         for (Object val : values())
-            if ((val instanceof ConfigList) || (val instanceof IConfig))
+            if ((val instanceof NodeList) || (val instanceof INode))
                 return false;
         return true;
     }
     
 
-    public void putMapToConfig(Map<?, ?> m) {
-        putMapToConfig(m, 0);
+    public void putMapToNode(Map<?, ?> m) {
+        putMapToNode(m, 0);
     }
 
-    protected void putMapToConfig(Map<?, ?> m, int level) {
+    protected void putMapToNode(Map<?, ?> m, int level) {
         if (level > M.MAX_DEPTH_LEVEL) throw new MaxDepthReached();
         for (Map.Entry<?, ?> e : m.entrySet())
             if (e.getValue() instanceof IsNull) remove(e.getKey());
             else {
                 if (e.getValue() instanceof Map) {
-                    MConfig cfg = new MConfig();
-                    cfg.putMapToConfig((Map<?,?>)e.getValue(), level+1);
+                    MNode cfg = new MNode();
+                    cfg.putMapToNode((Map<?,?>)e.getValue(), level+1);
                     put(String.valueOf(e.getKey()), cfg);
                 } else
                 if (e.getValue() instanceof List) {
-                    ConfigList list = new ConfigList(String.valueOf(e.getKey()), null);
+                    NodeList list = new NodeList(String.valueOf(e.getKey()), null);
                     put(String.valueOf(e.getKey()), list);
                     for (Object obj : ((List<?>)e.getValue())) {
-                        if (obj instanceof IConfig) {
-                            list.add((IConfig)obj);
+                        if (obj instanceof INode) {
+                            list.add((INode)obj);
                         } else {
-                            MConfig cfg = (MConfig) list.createObject();
+                            MNode cfg = (MNode) list.createObject();
                             if (obj instanceof Map) {
-                                cfg.putMapToConfig((Map<?,?>)obj, level+1);
+                                cfg.putMapToNode((Map<?,?>)obj, level+1);
                             } else
                                 cfg.put(NAMELESS_VALUE, obj);
                         }

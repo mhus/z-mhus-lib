@@ -18,14 +18,14 @@ package de.mhus.lib.logging;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.node.INode;
 
 public class JavaLoggerFactory extends LogFactory {
 
     @Override
-    public void init(IConfig config) throws Exception {}
+    public void init(INode config) throws Exception {}
 
     @Override
     public LogEngine createInstance(String name) {

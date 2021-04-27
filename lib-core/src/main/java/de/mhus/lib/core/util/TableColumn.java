@@ -17,10 +17,10 @@ package de.mhus.lib.core.util;
 
 import java.io.Serializable;
 
-import de.mhus.lib.core.config.ConfigSerializable;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.core.node.INode;
 
-public class TableColumn implements Serializable, ConfigSerializable {
+public class TableColumn implements Serializable, NodeSerializable {
 
     private static final long serialVersionUID = 1L;
     private String name;
@@ -52,14 +52,14 @@ public class TableColumn implements Serializable, ConfigSerializable {
     }
 
     @Override
-    public void readSerializableConfig(IConfig cfg) throws Exception {
+    public void readSerializabledNode(INode cfg) throws Exception {
         name = cfg.getString("name", null);
         type =cfg.getString("type", null);
         note = cfg.getString("note", null);
     }
 
     @Override
-    public void writeSerializableConfig(IConfig cfg) throws Exception {
+    public void writeSerializabledNode(INode cfg) throws Exception {
         cfg.setString("name", name);
         cfg.setString("type", type);
         cfg.setString("note", note);

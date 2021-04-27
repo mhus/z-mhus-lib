@@ -18,7 +18,7 @@ package de.mhus.lib.core.cfg;
 import java.math.BigDecimal;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class CfgBigDecimal extends CfgValue<BigDecimal> {
 
@@ -36,7 +36,7 @@ public class CfgBigDecimal extends CfgValue<BigDecimal> {
             } catch (NumberFormatException e) {
                 return getDefault();
             }
-        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
+        INode node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         try {
             return new BigDecimal(

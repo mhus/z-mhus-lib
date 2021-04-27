@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class CfgString extends CfgValue<String> {
 
@@ -25,7 +25,7 @@ public class CfgString extends CfgValue<String> {
 
     @Override
     protected String loadValue() {
-        IConfig node = getNode();
+        INode node = getNode();
         if (node == null) return getDefault();
         return node.getString(getParameterName(), getDefault());
     }

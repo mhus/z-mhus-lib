@@ -18,8 +18,8 @@ package de.mhus.lib.core.console;
 import java.io.IOException;
 
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class JmxConsole extends VirtualConsole {
@@ -32,7 +32,7 @@ public class JmxConsole extends VirtualConsole {
         width = 80;
         height = 40;
         echo = true;
-        IConfig config = M.l(MCfgManager.class).getCfg(this, null);
+        INode config = M.l(MCfgManager.class).getCfg(this, null);
         if (config != null) {
             width = config.getInt("width", width);
             height = config.getInt("height", height);

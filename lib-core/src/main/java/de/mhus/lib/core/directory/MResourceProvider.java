@@ -16,7 +16,7 @@
 package de.mhus.lib.core.directory;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.MNode;
 
 @DefaultImplementation(ClassLoaderResourceProvider.class)
-public abstract class MResourceProvider extends MConfig implements IResourceProvider {}
+public abstract class MResourceProvider extends MNode implements IResourceProvider {}

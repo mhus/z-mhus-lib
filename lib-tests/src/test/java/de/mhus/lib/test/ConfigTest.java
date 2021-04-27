@@ -30,10 +30,10 @@ import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.DefaultConfigFactory;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.DefaultNodeFactory;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.tests.TestCase;
 
@@ -42,20 +42,20 @@ public class ConfigTest extends TestCase {
     @Test
     public void testProperties() throws MException {
         {
-            IConfig c = new MConfig();
+            INode c = new MNode();
             c.setString("test1", "wow");
             c.setString("test2", "alf");
 
             derTeschd(c, false);
         }
         {
-            IConfig c = new MConfig();
+            INode c = new MNode();
             c.setString("test1", "wow");
             c.setString("test2", "alf");
 
             // save
             File file = new File("target/config.properties");
-            DefaultConfigFactory dcf = new DefaultConfigFactory();
+            DefaultNodeFactory dcf = new DefaultNodeFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
 
@@ -63,7 +63,7 @@ public class ConfigTest extends TestCase {
             System.out.println(MFile.readFile(file));
             System.out.println("---");
             // read
-            IConfig c2 = dcf.read(file);
+            INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, false);
         }
@@ -77,22 +77,22 @@ public class ConfigTest extends TestCase {
         {
             Document doc = MXml.loadXml(xml);
 
-            IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
+            INode c = INode.readFromXmlString(doc.getDocumentElement());
 
             derTeschd(c, true);
         }
         {
             Document doc = MXml.loadXml(xml);
-            IConfig c = IConfig.readFromXmlString(doc.getDocumentElement());
+            INode c = INode.readFromXmlString(doc.getDocumentElement());
 
             // save
             File file = new File("target/config.xml");
-            DefaultConfigFactory dcf = new DefaultConfigFactory();
+            DefaultNodeFactory dcf = new DefaultNodeFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
 
             // read
-            IConfig c2 = dcf.read(file);
+            INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
         }
@@ -116,18 +116,18 @@ public class ConfigTest extends TestCase {
                         + "    url: http://test.de";
 
         {
-            IConfig c = IConfig.readFromYamlString(yaml);
+            INode c = INode.readFromYamlString(yaml);
             derTeschd(c, true);
         }
         {
-            IConfig c = IConfig.readFromYamlString(yaml);
+            INode c = INode.readFromYamlString(yaml);
             File file = new File("target/config.yaml");
-            DefaultConfigFactory dcf = new DefaultConfigFactory();
+            DefaultNodeFactory dcf = new DefaultNodeFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
 
             // read
-            IConfig c2 = dcf.read(file);
+            INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
 
@@ -152,18 +152,18 @@ public class ConfigTest extends TestCase {
                         "'",
                         "\"");
         {
-            IConfig c = IConfig.readFromJsonString(json);
+            INode c = INode.readFromJsonString(json);
             derTeschd(c, true);
         }
         {
-            IConfig c = IConfig.readFromJsonString(json);
+            INode c = INode.readFromJsonString(json);
             File file = new File("target/config.json");
-            DefaultConfigFactory dcf = new DefaultConfigFactory();
+            DefaultNodeFactory dcf = new DefaultNodeFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
 
             // read
-            IConfig c2 = dcf.read(file);
+            INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
         }
@@ -172,11 +172,11 @@ public class ConfigTest extends TestCase {
     @Test
     public void testHash() throws Exception {
 
-        IConfig c = new MConfig();
+        INode c = new MNode();
         c.setString("test1", "wow");
         c.setString("test2", "alf");
-        ConfigList a = c.createArray("sub");
-        IConfig s = a.createObject();
+        NodeList a = c.createArray("sub");
+        INode s = a.createObject();
         s.setString("test1", "wow1");
         s.setString("test2", "alf1");
         s = a.createObject();
@@ -214,7 +214,7 @@ public class ConfigTest extends TestCase {
     //    }
 
     @Test
-    private void derTeschd(IConfig c, boolean testsub) throws MException {
+    private void derTeschd(INode c, boolean testsub) throws MException {
         System.out.println(MSystem.findCallingMethod(3) + ": " + c);
         assertEquals("wow", c.getString("test1", "no"));
         assertEquals("alf", c.getString("test2", "no"));
@@ -226,11 +226,11 @@ public class ConfigTest extends TestCase {
 
         // sub config tests
 
-        Collection<IConfig> list = c.getArray("sub");
+        Collection<INode> list = c.getArray("sub");
         assertEquals(3, list.size());
 
-        Iterator<IConfig> listIter = list.iterator();
-        IConfig sub = listIter.next();
+        Iterator<INode> listIter = list.iterator();
+        INode sub = listIter.next();
         assertEquals("wow1", sub.getString("test1", "no"));
         assertEquals("alf1", sub.getString("test2", "no"));
         assertEquals("no", sub.getString("test3", "no"));

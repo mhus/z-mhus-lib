@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,13 +37,13 @@ import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
-public class PropertiesConfigBuilder extends IConfigBuilder {
+public class PropertiesNodeBuilder extends INodeBuilder {
 
     protected static final CfgInt CFG_MAX_LEVEL =
-            new CfgInt(PropertiesConfigBuilder.class, "maxLevel", 100);
+            new CfgInt(PropertiesNodeBuilder.class, "maxLevel", 100);
 
     @Override
-    public IConfig read(InputStream is) throws MException {
+    public INode read(InputStream is) throws MException {
         try {
             MProperties p = MProperties.load(is);
             return readFromMap(p);
@@ -53,8 +53,8 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
     }
 
     @Override
-    public void write(IConfig config, OutputStream os) throws MException {
-        MProperties p = new MProperties(config);
+    public void write(INode node, OutputStream os) throws MException {
+        MProperties p = new MProperties(node);
         try {
             p.save(os);
         } catch (IOException e) {
@@ -62,32 +62,32 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
         }
     }
 
-    public IConfig readFromMap(Map<?, ?> map) {
+    public INode readFromMap(Map<?, ?> map) {
         return readFromMap(map, 0);
     }
 
-    public IConfig readFromCollection(Collection<?> col) {
-        IConfig config = new MConfig();
-        readFromCollection(config, IConfig.NAMELESS_VALUE, col, 0);
-        return config;
+    public INode readFromCollection(Collection<?> col) {
+        INode node = new MNode();
+        readFromCollection(node, INode.NAMELESS_VALUE, col, 0);
+        return node;
     }
 
-    protected void readFromCollection(IConfig config, String key, Collection<?> col, int level) {
+    protected void readFromCollection(INode node, String key, Collection<?> col, int level) {
         level++;
         if (level > CFG_MAX_LEVEL.value()) throw new TooDeepStructuresException();
 
-        ConfigList arr = config.createArray(key);
+        NodeList arr = node.createArray(key);
         for (Object item : col) {
-            IConfig obj = readObject(item, level);
+            INode obj = readObject(item, level);
             arr.add(obj);
         }
     }
 
-    protected IConfig readFromMap(Map<?, ?> map, int level) {
+    protected INode readFromMap(Map<?, ?> map, int level) {
         level++;
         if (level > CFG_MAX_LEVEL.value()) throw new TooDeepStructuresException();
 
-        IConfig config = new MConfig();
+        INode node = new MNode();
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = MString.valueOf(entry.getKey());
             Object val = entry.getValue();
@@ -95,72 +95,72 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
                 // null object or ignore ?
             } else
             if (val instanceof String || val.getClass().isPrimitive() || val instanceof Number || val instanceof Date || val instanceof Boolean) {
-                config.put(key, val);
+                node.put(key, val);
             } else {
-                IConfig obj = readObject(val, level);
-                if (obj.isProperty(IConfig.NAMELESS_VALUE)) {
-                    config.put(key, obj.get(IConfig.NAMELESS_VALUE));
-                    if (config.isProperty(IConfig.HELPER_VALUE))
-                        config.put(IConfig.HELPER_VALUE + key, config.get(IConfig.HELPER_VALUE));
-                } else if (obj.isObject(IConfig.NAMELESS_VALUE)) {
-                    config.addObject(key, obj.getObjectOrNull(IConfig.NAMELESS_VALUE));
+                INode obj = readObject(val, level);
+                if (obj.isProperty(INode.NAMELESS_VALUE)) {
+                    node.put(key, obj.get(INode.NAMELESS_VALUE));
+                    if (node.isProperty(INode.HELPER_VALUE))
+                        node.put(INode.HELPER_VALUE + key, node.get(INode.HELPER_VALUE));
+                } else if (obj.isObject(INode.NAMELESS_VALUE)) {
+                    node.addObject(key, obj.getObjectOrNull(INode.NAMELESS_VALUE));
                 } else
-                    config.addObject(key, obj);
+                    node.addObject(key, obj);
             }
         }
-        return config;
+        return node;
     }
     
-    public IConfig readObject(Object item) {
+    public INode readObject(Object item) {
         return readObject(item, 0);
     }
     
-    protected IConfig readObject(Object item, int level) {
+    protected INode readObject(Object item, int level) {
         level++;
         if (level > CFG_MAX_LEVEL.value()) throw new TooDeepStructuresException();
 
         if (item == null) {
-            MConfig obj = new MConfig();
-            obj.setBoolean(IConfig.NULL, true);
+            MNode obj = new MNode();
+            obj.setBoolean(INode.NULL, true);
             return obj;
         } else
-        if (item instanceof ConfigSerializable) {
-            MConfig obj = new MConfig();
+        if (item instanceof NodeSerializable) {
+            MNode obj = new MNode();
             try {
-                ((ConfigSerializable)item).writeSerializableConfig(obj);
+                ((NodeSerializable)item).writeSerializabledNode(obj);
             } catch (Exception e) {
                 throw new MRuntimeException(item,e);
             }
             return obj;
         } else
-        if (item instanceof IConfig) {
-            return (IConfig) item;
+        if (item instanceof INode) {
+            return (INode) item;
         } else if (item instanceof Map) {
-            IConfig obj = readFromMap((Map<?, ?>) item, level);
+            INode obj = readFromMap((Map<?, ?>) item, level);
             return obj;
         } else if (item instanceof String || item.getClass().isPrimitive() || item instanceof Number || item instanceof Date || item instanceof Boolean){
-            MConfig obj = new MConfig();
-            obj.put(IConfig.NAMELESS_VALUE, item);
+            MNode obj = new MNode();
+            obj.put(INode.NAMELESS_VALUE, item);
             return obj;
         } else if (item instanceof Date){
-            MConfig obj = new MConfig();
-            obj.put(IConfig.NAMELESS_VALUE, ((Date)item).getTime());
-            obj.put(IConfig.HELPER_VALUE, MDate.toIso8601( (Date)item ));
+            MNode obj = new MNode();
+            obj.put(INode.NAMELESS_VALUE, ((Date)item).getTime());
+            obj.put(INode.HELPER_VALUE, MDate.toIso8601( (Date)item ));
             return obj;
         } else if (item.getClass().isArray()) {
-            MConfig obj = new MConfig();
-            obj.setString(IConfig.CLASS, item.getClass().getCanonicalName());
-            readFromCollection( obj, IConfig.NAMELESS_VALUE, MCollection.toList(((Object[])item)), level );
+            MNode obj = new MNode();
+            obj.setString(INode.CLASS, item.getClass().getCanonicalName());
+            readFromCollection( obj, INode.NAMELESS_VALUE, MCollection.toList(((Object[])item)), level );
             return obj;
         } else if (item instanceof Collection) {
-            MConfig obj = new MConfig();
-            obj.setString(IConfig.CLASS, item.getClass().getCanonicalName());
-            readFromCollection( obj, IConfig.NAMELESS_VALUE, (Collection<?>)item, level );
+            MNode obj = new MNode();
+            obj.setString(INode.CLASS, item.getClass().getCanonicalName());
+            readFromCollection( obj, INode.NAMELESS_VALUE, (Collection<?>)item, level );
             return obj;
         } else {
-            MConfig obj = new MConfig();
+            MNode obj = new MNode();
             try {
-                MPojo.pojoToConfig(item, obj);
+                MPojo.pojoToNode(item, obj);
             } catch (IOException e) {
                 throw new MRuntimeException(item,e);
             }
@@ -168,21 +168,21 @@ public class PropertiesConfigBuilder extends IConfigBuilder {
         }
     }
 
-    public <T extends ConfigSerializable> List<T> loadToCollection(IConfig source, Class<T> target) throws Exception {
+    public <T extends NodeSerializable> List<T> loadToCollection(INode source, Class<T> target) throws Exception {
         ArrayList<T> out = new ArrayList<>();
-        for (IConfig entry : source.getArray(IConfig.NAMELESS_VALUE)) {
+        for (INode entry : source.getArray(INode.NAMELESS_VALUE)) {
             T inst = target.getConstructor().newInstance();
-            inst.readSerializableConfig(entry);
+            inst.readSerializabledNode(entry);
             out.add(inst);
         }
         return out;
     }
 
-    public <V extends ConfigSerializable> Map<String,V> loadToMap(IConfig source, Class<V> target) throws Exception {
+    public <V extends NodeSerializable> Map<String,V> loadToMap(INode source, Class<V> target) throws Exception {
         HashMap<String, V> out = new HashMap<>();
-        for (IConfig entry : source.getObjects()) {
+        for (INode entry : source.getObjects()) {
             V inst = target.getConstructor().newInstance();
-            inst.readSerializableConfig(entry);
+            inst.readSerializabledNode(entry);
             out.put(entry.getName(), inst);
         }
         return out;

@@ -15,11 +15,11 @@
  */
 package de.mhus.lib.core.cfg;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.mapi.IApiInternal;
 import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.node.INode;
 
 public interface CfgInitiator {
 
-    void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config);
+    void doInitialize(IApiInternal internal, MCfgManager manager, INode config);
 }

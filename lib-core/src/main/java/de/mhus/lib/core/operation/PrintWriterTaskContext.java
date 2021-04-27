@@ -17,15 +17,15 @@ package de.mhus.lib.core.operation;
 
 import java.io.PrintWriter;
 
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.PrintWriterLog;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 
 public class PrintWriterTaskContext implements TaskContext {
 
-    private IConfig attributes = new MConfig();
-    private IConfig config;
+    private INode attributes = new MNode();
+    private INode config;
     private boolean testOnly = false;
     private PrintWriter writer;
     private long estimated;
@@ -34,14 +34,14 @@ public class PrintWriterTaskContext implements TaskContext {
     private String errorMessage;
 
     public PrintWriterTaskContext(
-            String name, PrintWriter writer, IConfig config, boolean testOnly) {
+            String name, PrintWriter writer, INode config, boolean testOnly) {
         log = new PrintWriterLog(name, writer);
         this.writer = writer;
         this.config = config;
         this.testOnly = testOnly;
     }
 
-    public PrintWriterTaskContext(PrintWriterLog log, IConfig config, boolean testOnly) {
+    public PrintWriterTaskContext(PrintWriterLog log, INode config, boolean testOnly) {
         this.log = log;
         this.writer = log.getWriter();
         this.config = config;
@@ -85,7 +85,7 @@ public class PrintWriterTaskContext implements TaskContext {
     }
 
     @Override
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 
@@ -94,7 +94,7 @@ public class PrintWriterTaskContext implements TaskContext {
     }
 
     @Override
-    public IConfig getParameters() {
+    public INode getParameters() {
         return attributes;
     }
 

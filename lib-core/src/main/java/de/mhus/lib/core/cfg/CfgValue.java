@@ -19,8 +19,8 @@ import java.util.function.Consumer;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.node.INode;
 
 public abstract class CfgValue<T> {
 
@@ -150,10 +150,10 @@ public abstract class CfgValue<T> {
         return calling;
     }
 
-    protected IConfig getNode() {
+    protected INode getNode() {
         int p = getPath().indexOf('@');
         if (p < 0) return MApi.getCfg(getOwner());
-        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
+        INode node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         return node;
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,13 +28,13 @@ import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
 
-public abstract class IConfigBuilder extends MLog {
+public abstract class INodeBuilder extends MLog {
 
-    public abstract IConfig read(InputStream is) throws MException;
+    public abstract INode read(InputStream is) throws MException;
 
-    public abstract void write(IConfig config, OutputStream os) throws MException;
+    public abstract void write(INode node, OutputStream os) throws MException;
 
-    public IConfig readFromFile(File file) throws MException {
+    public INode readFromFile(File file) throws MException {
         try (FileInputStream is = new FileInputStream(file)) {
             return read(is);
         } catch (IOException e) {
@@ -42,21 +42,21 @@ public abstract class IConfigBuilder extends MLog {
         }
     }
 
-    public IConfig readFromString(String content) throws MException {
+    public INode readFromString(String content) throws MException {
         return read(new ByteArrayInputStream(MString.toBytes(content)));
     }
 
-    public void writeToFile(IConfig config, File file) throws MException {
+    public void writeToFile(INode node, File file) throws MException {
         try (FileOutputStream os = new FileOutputStream(file)) {
-            write(config, os);
+            write(node, os);
         } catch (IOException e) {
             throw new MException(file, e);
         }
     }
 
-    public String writeToString(IConfig config) throws MException {
+    public String writeToString(INode node) throws MException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        write(config, os);
+        write(node, os);
         return MString.byteToString(os.toByteArray());
     }
 }

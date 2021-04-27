@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.form;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public abstract class UiComponent {
@@ -26,9 +26,9 @@ public abstract class UiComponent {
     private static final String WIZARD = "wizard";
 
     private MForm form;
-    private IConfig config;
+    private INode config;
 
-    public void doInit(MForm form, IConfig config) {
+    public void doInit(MForm form, INode config) {
         this.form = form;
         this.config = config;
     }
@@ -37,7 +37,7 @@ public abstract class UiComponent {
         return form;
     }
 
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 
@@ -83,7 +83,7 @@ public abstract class UiComponent {
     public abstract void clearError();
 
     public String getConfigString(String name, String def) {
-        IConfig c = getConfig();
+        INode c = getConfig();
         if (c == null) return def;
         return c.getString(name, def);
     }

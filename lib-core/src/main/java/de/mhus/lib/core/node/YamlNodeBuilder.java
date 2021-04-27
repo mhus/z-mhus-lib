@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,14 +26,14 @@ import de.mhus.lib.core.yaml.YMap;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
-public class YamlConfigBuilder extends IConfigBuilder {
+public class YamlNodeBuilder extends INodeBuilder {
 
     @Override
-    public IConfig read(InputStream is) {
+    public INode read(InputStream is) {
         YMap itemY = MYaml.load(is);
-        MConfig itemC = new MConfig();
+        MNode itemC = new MNode();
         if (itemY.isList()) {
-        	ConfigList arrayC = itemC.createArray(IConfig.NAMELESS_VALUE);
+        	NodeList arrayC = itemC.createArray(INode.NAMELESS_VALUE);
     		fill(arrayC, new YList(itemY.getObject()), 0);
         } else
     	if (itemY.isMap())
@@ -41,15 +41,15 @@ public class YamlConfigBuilder extends IConfigBuilder {
         return itemC;
     }
 
-    private void fill(IConfig elemC, YMap elemY, int level) {
+    private void fill(INode elemC, YMap elemY, int level) {
         if (level > 100) throw new TooDeepStructuresException();
 
         for (String key : elemY.getKeys()) {
             if (elemY.isList(key)) {
-                ConfigList arrayC = elemC.createArray(key);
+                NodeList arrayC = elemC.createArray(key);
                 fill(arrayC, elemY.getList(key), level + 1);
             } else if (elemY.isMap(key)) {
-                IConfig objC = elemC.createObject(key);
+                INode objC = elemC.createObject(key);
                 YMap objY = elemY.getMap(key);
                 fill(objC, objY, level + 1);
             } else {
@@ -58,26 +58,26 @@ public class YamlConfigBuilder extends IConfigBuilder {
         }
     }
 
-    private void fill(ConfigList listC, YList listY, int level) {
+    private void fill(NodeList listC, YList listY, int level) {
         if (level > 100) throw new TooDeepStructuresException();
 
         for (YElement itemY : listY) {
-            IConfig itemC = listC.createObject();
+            INode itemC = listC.createObject();
             if (itemY.isMap()) {
                 fill(itemC, itemY.asMap(), level + 1);
             } else if (itemY.isList()) {
                 // nameless list in list - not really supported - but ...
-                ConfigList arrayY2 = itemC.createArray(IConfig.NAMELESS_VALUE);
+                NodeList arrayY2 = itemC.createArray(INode.NAMELESS_VALUE);
                 fill(arrayY2, itemY.asList(), level + 1);
             } else {
-                itemC.put(IConfig.NAMELESS_VALUE, itemY.getObject());
+                itemC.put(INode.NAMELESS_VALUE, itemY.getObject());
             }
         }
     }
 
     @Override
-    public void write(IConfig config, OutputStream os) throws MException {
-        YElement elemY = create(config, 0);
+    public void write(INode node, OutputStream os) throws MException {
+        YElement elemY = create(node, 0);
         try {
             MYaml.write(elemY, os);
         } catch (IOException e) {
@@ -85,21 +85,21 @@ public class YamlConfigBuilder extends IConfigBuilder {
         }
     }
 
-    private YElement create(IConfig elemC, int level) {
+    private YElement create(INode elemC, int level) {
 
         if (level > 100) throw new TooDeepStructuresException();
 
-        if (elemC.containsKey(IConfig.NAMELESS_VALUE)) {
-            if (elemC.isArray(IConfig.NAMELESS_VALUE)) {
+        if (elemC.containsKey(INode.NAMELESS_VALUE)) {
+            if (elemC.isArray(INode.NAMELESS_VALUE)) {
                 YList out = MYaml.createList();
-                for (IConfig itemC : elemC.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
+                for (INode itemC : elemC.getArrayOrNull(INode.NAMELESS_VALUE)) {
                     YElement itemY = create(itemC, level + 1);
                     out.add(itemY);
                 }
                 return out;
-            } else if (elemC.isObject(IConfig.NAMELESS_VALUE)) {
-                return create(elemC.getObjectOrNull(IConfig.NAMELESS_VALUE), level + 1);
-            } else return new YElement(elemC.get(IConfig.NAMELESS_VALUE));
+            } else if (elemC.isObject(INode.NAMELESS_VALUE)) {
+                return create(elemC.getObjectOrNull(INode.NAMELESS_VALUE), level + 1);
+            } else return new YElement(elemC.get(INode.NAMELESS_VALUE));
         }
 
         YMap elemY = MYaml.createMap();
@@ -109,7 +109,7 @@ public class YamlConfigBuilder extends IConfigBuilder {
 
         for (String key : elemC.getArrayKeys()) {
             YList listY = MYaml.createList();
-            for (IConfig itemC : elemC.getArrayOrNull(key)) {
+            for (INode itemC : elemC.getArrayOrNull(key)) {
                 YElement itemY = create(itemC, level + 1);
                 listY.add(itemY);
             }
@@ -117,7 +117,7 @@ public class YamlConfigBuilder extends IConfigBuilder {
         }
 
         for (String key : elemC.getObjectKeys()) {
-            IConfig itemC = elemC.getObjectOrNull(key);
+            INode itemC = elemC.getObjectOrNull(key);
             YElement itemY = create(itemC, level + 1);
             elemY.put(key, itemY);
         }

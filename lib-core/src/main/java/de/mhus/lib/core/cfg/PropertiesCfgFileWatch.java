@@ -19,16 +19,16 @@ import java.io.File;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.io.FileWatch;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.INodeFactory;
 import de.mhus.lib.errors.MException;
 
 public class PropertiesCfgFileWatch extends CfgProvider {
 
     private FileWatch fileWatch;
     private File file;
-    private IConfig config;
+    private INode config;
 
     public PropertiesCfgFileWatch(String name, File file) {
         super(name);
@@ -62,7 +62,7 @@ public class PropertiesCfgFileWatch extends CfgProvider {
 
     private void load() {
         try {
-            config = M.l(IConfigFactory.class).read(file);
+            config = M.l(INodeFactory.class).read(file);
         } catch (MException e) {
             log().d(file, e);
         }
@@ -77,7 +77,7 @@ public class PropertiesCfgFileWatch extends CfgProvider {
     }
 
     @Override
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 

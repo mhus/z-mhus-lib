@@ -22,8 +22,8 @@ import java.io.PrintStream;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class PrintStreamFactory extends LogFactory {
@@ -34,7 +34,7 @@ public class PrintStreamFactory extends LogFactory {
     private boolean printTime = true;
 
     @SuppressWarnings("unused")
-    private IConfig config;
+    private INode config;
 
     public PrintStreamFactory() {
         out = MApi.out;
@@ -45,7 +45,7 @@ public class PrintStreamFactory extends LogFactory {
         return new ConsoleLog(name);
     }
 
-    public PrintStreamFactory(IConfig config) throws Exception {
+    public PrintStreamFactory(INode config) throws Exception {
         //		name = config.getExtracted("name","");
         init(config);
     }
@@ -58,7 +58,7 @@ public class PrintStreamFactory extends LogFactory {
     }
 
     @Override
-    public void init(IConfig config) throws Exception {
+    public void init(INode config) throws Exception {
         if (config == null) return;
 
         this.config = config;

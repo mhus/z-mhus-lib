@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,20 +26,20 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.NotFoundException;
 
-public class DefaultConfigFactory implements IConfigFactory {
+public class DefaultNodeFactory implements INodeFactory {
 
-    private HashMap<String, IConfigBuilder> registry = new HashMap<>();
+    private HashMap<String, INodeBuilder> registry = new HashMap<>();
 
-    public DefaultConfigFactory() {
-        registry.put("xml", new XmlConfigBuilder());
-        registry.put("json", new JsonConfigBuilder());
-        registry.put("yml", new YamlConfigBuilder());
-        registry.put("yaml", new YamlConfigBuilder());
-        registry.put("properties", new PropertiesConfigBuilder());
+    public DefaultNodeFactory() {
+        registry.put("xml", new XmlNodeBuilder());
+        registry.put("json", new JsonNodeBuilder());
+        registry.put("yml", new YamlNodeBuilder());
+        registry.put("yaml", new YamlNodeBuilder());
+        registry.put("properties", new PropertiesNodeBuilder());
     }
 
     @Override
-    public IConfig read(Class<?> owner, String fileName) throws MException {
+    public INode read(Class<?> owner, String fileName) throws MException {
         try {
             URL url = MSystem.locateResource(owner, fileName);
             return read(url);
@@ -49,18 +49,18 @@ public class DefaultConfigFactory implements IConfigFactory {
     }
 
     @Override
-    public IConfig read(File file) throws MException {
+    public INode read(File file) throws MException {
         String ext = MFile.getFileExtension(file);
-        IConfigBuilder builder = getBuilder(ext);
+        INodeBuilder builder = getBuilder(ext);
         if (builder == null)
             throw new NotFoundException("builder for resource not found", file.getName());
         return builder.readFromFile(file);
     }
 
     @Override
-    public IConfig read(URL url) throws MException {
+    public INode read(URL url) throws MException {
         String ext = MFile.getFileExtension(url.getPath());
-        IConfigBuilder builder = getBuilder(ext);
+        INodeBuilder builder = getBuilder(ext);
         if (builder == null) throw new NotFoundException("builder for resource not found", url);
         try (InputStream is = url.openStream()) {
             return builder.read(is);
@@ -70,22 +70,22 @@ public class DefaultConfigFactory implements IConfigFactory {
     }
 
     @Override
-    public IConfigBuilder getBuilder(String ext) {
+    public INodeBuilder getBuilder(String ext) {
         ext = ext.toLowerCase().trim(); // paranoia
         return registry.get(ext);
     }
 
     @Override
-    public IConfig create() {
-        return new MConfig();
+    public INode create() {
+        return new MNode();
     }
 
     @Override
-    public void write(IConfig config, File file) throws MException {
+    public void write(INode node, File file) throws MException {
         String ext = MFile.getFileExtension(file);
-        IConfigBuilder builder = getBuilder(ext);
+        INodeBuilder builder = getBuilder(ext);
         if (builder == null)
             throw new NotFoundException("builder for resource not found", file.getName());
-        builder.writeToFile(config, file);
+        builder.writeToFile(node, file);
     }
 }

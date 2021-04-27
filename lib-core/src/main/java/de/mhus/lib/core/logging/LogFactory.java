@@ -20,9 +20,9 @@ import java.util.WeakHashMap;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.core.M;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log.LEVEL;
 import de.mhus.lib.core.mapi.MCfgManager;
+import de.mhus.lib.core.node.INode;
 
 @DefaultImplementation(ConsoleFactory.class)
 public abstract class LogFactory {
@@ -45,10 +45,10 @@ public abstract class LogFactory {
         return getInstance(clazz.getCanonicalName());
     }
 
-    public abstract void init(IConfig config) throws Exception;
+    public abstract void init(INode config) throws Exception;
 
     public void init() throws Exception {
-        IConfig config = M.l(MCfgManager.class).getCfg(this, null);
+        INode config = M.l(MCfgManager.class).getCfg(this, null);
         init(config);
     }
 

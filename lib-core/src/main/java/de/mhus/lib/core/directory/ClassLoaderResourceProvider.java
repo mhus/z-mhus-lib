@@ -22,9 +22,9 @@ import java.util.List;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 
 public class ClassLoaderResourceProvider extends MResourceProvider {
 
@@ -40,7 +40,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
     }
 
     @Override
-    public IConfig getResourceByPath(String name) {
+    public INode getResourceByPath(String name) {
         return new CLResourceNode(name);
     }
 
@@ -52,7 +52,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         this.loader = loader;
     }
 
-    private static class CLResourceNode extends MConfig {
+    private static class CLResourceNode extends MNode {
 
         private static final long serialVersionUID = 1L;
         private String name;
@@ -67,18 +67,18 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         }
 
         @Override
-        public IConfig getObject(String key) {
+        public INode getObject(String key) {
             return null;
         }
 
         @Override
-        public List<IConfig> getObjects() {
+        public List<INode> getObjects() {
             return MCollection.getEmptyList();
         }
 
         @Override
-        public ConfigList getArray(String key) {
-            return new ConfigList(key, this);
+        public NodeList getArray(String key) {
+            return new NodeList(key, this);
         }
 
         @Override
@@ -92,7 +92,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
         }
 
         @Override
-        public IConfig getParent() {
+        public INode getParent() {
             return null;
         }
 
@@ -119,7 +119,7 @@ public class ClassLoaderResourceProvider extends MResourceProvider {
     }
 
     @Override
-    public IConfig getResourceById(String id) {
+    public INode getResourceById(String id) {
         return getResourceByPath(id);
     }
 

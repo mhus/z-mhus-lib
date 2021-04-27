@@ -19,13 +19,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.service.ServerIdent;
 
 public class LocalIpInitializer implements CfgInitiator {
 
     @Override
-    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
+    public void doInitialize(IApiInternal internal, MCfgManager manager, INode config) {
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             System.out.println(

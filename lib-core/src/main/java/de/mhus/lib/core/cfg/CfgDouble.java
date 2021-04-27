@@ -16,7 +16,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class CfgDouble extends CfgValue<Double> {
 
@@ -26,7 +26,7 @@ public class CfgDouble extends CfgValue<Double> {
 
     @Override
     protected Double loadValue() {
-        IConfig node = getNode();
+        INode node = getNode();
         if (node == null) return getDefault();
         return node.getDouble(getParameterName(), getDefault());
     }

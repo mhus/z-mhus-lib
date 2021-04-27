@@ -17,9 +17,9 @@ package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.console.Console;
 import de.mhus.lib.core.console.Console.COLOR;
+import de.mhus.lib.core.node.INode;
 
 public class ConsoleFactory extends LogFactory {
 
@@ -42,7 +42,7 @@ public class ConsoleFactory extends LogFactory {
     private static COLOR COLOR_MESSAGE = COLOR.BRIGHT_WHITE;
 
     @SuppressWarnings("unused")
-    private IConfig config;
+    private INode config;
 
     public ConsoleFactory() {
         out = Console.get();
@@ -53,7 +53,7 @@ public class ConsoleFactory extends LogFactory {
         return new ConsoleLog(name);
     }
 
-    public ConsoleFactory(IConfig config) throws Exception {
+    public ConsoleFactory(INode config) throws Exception {
         //		name = config.getExtracted("name","");
         init(config);
     }
@@ -66,7 +66,7 @@ public class ConsoleFactory extends LogFactory {
     }
 
     @Override
-    public void init(IConfig config) throws Exception {
+    public void init(INode config) throws Exception {
         if (config == null) return;
 
         this.config = config;

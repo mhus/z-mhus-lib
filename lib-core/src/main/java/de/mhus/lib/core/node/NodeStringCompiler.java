@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.util.Collection;
 import java.util.Map;
@@ -25,31 +25,31 @@ import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
 import de.mhus.lib.errors.MException;
 
-public class ConfigStringCompiler extends StringCompiler {
+public class NodeStringCompiler extends StringCompiler {
 
-    private MConfig rootConfig;
+    private MNode rootNode;
 
-    ConfigStringCompiler(MConfig rootConfig) {
-        this.rootConfig = rootConfig;
+    NodeStringCompiler(MNode rootNode) {
+        this.rootNode = rootNode;
     }
 
     @Override
     protected StringPart createDefaultAttributePart(String part) {
         if (part.startsWith(">root:")) return new RootAttributePart(part);
         if (part.startsWith(">js:")) return new DefaultScriptPart(part);
-        return new ConfigAttributePart(part);
+        return new NodeAttributePart(part);
     }
 
     private class RootAttributePart implements StringPart {
         private String name;
         private String def;
-        private IConfig config;
+        private INode node;
 
         public RootAttributePart(String part) {
             name = MString.afterIndex(part, ':');
-            config = rootConfig;
-            while (config.getParent() != null && config.getParent() != config)
-                config = config.getParent();
+            node = rootNode;
+            while (node.getParent() != null && node.getParent() != node)
+                node = node.getParent();
             int pos = name.indexOf(',');
             if (pos > 0) {
                 def = name.substring(pos + 1);
@@ -59,7 +59,7 @@ public class ConfigStringCompiler extends StringCompiler {
 
         @Override
         public void execute(StringBuilder out, Map<String, Object> attributes) throws MException {
-            out.append(config.getString(name, def));
+            out.append(node.getString(name, def));
         }
 
         @Override
@@ -73,39 +73,39 @@ public class ConfigStringCompiler extends StringCompiler {
         }
     }
 
-    private class ConfigAttributePart implements StringPart {
+    private class NodeAttributePart implements StringPart {
 
         private String name;
         private String def;
-        private MConfig config;
+        private MNode node;
 
-        public ConfigAttributePart(String part) {
+        public NodeAttributePart(String part) {
             name = part;
             int pos = name.indexOf(',');
             if (pos > 0) {
                 def = name.substring(pos + 1);
                 name = name.substring(0, pos);
             }
-            config = rootConfig;
+            node = rootNode;
             if (name.startsWith("/")) {
-                while (config.getParent() != null) config = (MConfig) config.getParent();
+                while (node.getParent() != null) node = (MNode) node.getParent();
                 name = name.substring(1);
             } else
                 while (name.startsWith("../")) {
-                    config = (MConfig) config.getParent();
+                    node = (MNode) node.getParent();
                     name = name.substring(3);
-                    if (config == null) break;
+                    if (node == null) break;
                 }
         }
 
         @Override
         public void execute(StringBuilder out, Map<String, Object> attributes) throws MException {
             int level = 0;
-            if (attributes != null && attributes instanceof ConfigMap) {
-                level = ((ConfigMap) attributes).getLevel();
+            if (attributes != null && attributes instanceof NodeMap) {
+                level = ((NodeMap) attributes).getLevel();
             }
-            if (config == null) out.append(def);
-            else out.append(config.getExtracted(name, def, level));
+            if (node == null) out.append(def);
+            else out.append(node.getExtracted(name, def, level));
         }
 
         @Override
@@ -119,23 +119,23 @@ public class ConfigStringCompiler extends StringCompiler {
         }
     }
 
-    static class ConfigMap implements Map<String, Object> {
+    static class NodeMap implements Map<String, Object> {
 
         private int level;
-        private MConfig config;
+        private MNode node;
 
-        ConfigMap(int level) {
+        NodeMap(int level) {
             this.level = level;
         }
 
-        ConfigMap(int level, MConfig config) {
+        NodeMap(int level, MNode node) {
             this.level = level;
-            this.config = config;
+            this.node = node;
         }
 
         @Override
         public int size() {
-            return config == null ? 0 : config.size();
+            return node == null ? 0 : node.size();
         }
 
         public int getLevel() {
@@ -144,22 +144,22 @@ public class ConfigStringCompiler extends StringCompiler {
 
         @Override
         public boolean isEmpty() {
-            return config == null ? true : config.isEmpty();
+            return node == null ? true : node.isEmpty();
         }
 
         @Override
         public boolean containsKey(Object key) {
-            return config == null ? false : config.containsKey(key);
+            return node == null ? false : node.containsKey(key);
         }
 
         @Override
         public boolean containsValue(Object value) {
-            return config == null ? false : config.containsValue(value);
+            return node == null ? false : node.containsValue(value);
         }
 
         @Override
         public Object get(Object key) {
-            return config == null ? null : config.get(key);
+            return node == null ? null : node.get(key);
         }
 
         @Override
@@ -180,7 +180,7 @@ public class ConfigStringCompiler extends StringCompiler {
 
         @Override
         public Set<String> keySet() {
-            return config == null ? null : config.keySet();
+            return node == null ? null : node.keySet();
         }
 
         @Override

@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 
@@ -38,7 +38,7 @@ public class ContentCache extends MObject {
     private File root;
     private boolean saveWrite = false; // enable thread / process save write
 
-    public ContentCache(IConfig config) throws MException {
+    public ContentCache(INode config) throws MException {
         if (config != null) {
             String rootString = config.getExtracted("root");
             saveWrite = config.getBoolean("save", saveWrite);

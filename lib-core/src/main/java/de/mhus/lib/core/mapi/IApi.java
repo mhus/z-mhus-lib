@@ -20,9 +20,9 @@ import java.io.File;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.activator.DefaultActivator;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.node.INode;
 
 public interface IApi {
 
@@ -52,7 +52,7 @@ public interface IApi {
     default String getCfgString(Class<?> owner, String path, String def) {
         int p = path.indexOf('@');
         if (p < 0) return MApi.getCfg(owner).getString(path, def);
-        IConfig node = MApi.getCfg(owner).getObjectByPath(path.substring(0, p));
+        INode node = MApi.getCfg(owner).getObjectByPath(path.substring(0, p));
         if (node == null) return def;
         return node.getString(path.substring(p + 1), def);
     }

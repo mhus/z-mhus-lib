@@ -15,13 +15,13 @@
  */
 package de.mhus.lib.form;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class ComponentDefinition {
 
     private boolean fullSizeComponent;
     private String wizzard;
-    private IConfig configurationForm;
+    private INode configurationForm;
 
     public boolean isFullSizeComonent() {
         return fullSizeComponent;
@@ -31,7 +31,7 @@ public class ComponentDefinition {
         return wizzard;
     }
 
-    public IConfig getConfigurationForm() {
+    public INode getConfigurationForm() {
         return configurationForm;
     }
 }

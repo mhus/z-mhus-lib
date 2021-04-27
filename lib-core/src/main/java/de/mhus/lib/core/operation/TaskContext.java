@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.operation;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public interface TaskContext extends Monitor {
 
@@ -24,14 +24,14 @@ public interface TaskContext extends Monitor {
      *
      * @return The Configuration
      */
-    IConfig getConfig();
+    INode getConfig();
 
     /**
      * Return the parameters of the current operation call.
      *
      * @return The job parameters
      */
-    IConfig getParameters();
+    INode getParameters();
 
     /**
      * Add a error message (will be appended to the error message).

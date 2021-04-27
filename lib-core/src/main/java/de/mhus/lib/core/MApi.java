@@ -21,13 +21,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 import de.mhus.lib.core.cfg.MCfgUpdater;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.mapi.ApiInitialize;
 import de.mhus.lib.core.mapi.DefaultMApi;
 import de.mhus.lib.core.mapi.DummyClass;
 import de.mhus.lib.core.mapi.IApi;
 import de.mhus.lib.core.mapi.IApiFactory;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.TimeoutRuntimeException;
 
 public class MApi {
@@ -142,7 +142,7 @@ public class MApi {
         //		}
     }
 
-    public static IConfig getCfg(Object owner, IConfig def) {
+    public static INode getCfg(Object owner, INode def) {
         return get().getCfgManager().getCfg(owner, def);
     }
 
@@ -152,7 +152,7 @@ public class MApi {
      * @param owner
      * @return the config
      */
-    public static IConfig getCfg(Object owner) {
+    public static INode getCfg(Object owner) {
         return get().getCfgManager().getCfg(owner);
     }
 

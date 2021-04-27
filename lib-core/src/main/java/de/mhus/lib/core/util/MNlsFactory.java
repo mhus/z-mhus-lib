@@ -25,21 +25,21 @@ import java.util.Properties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.directory.ClassLoaderResourceProvider;
 import de.mhus.lib.core.directory.MResourceProvider;
+import de.mhus.lib.core.node.INode;
 
 public class MNlsFactory extends MNlsBundle {
 
     @SuppressWarnings("unused")
-    private IConfig config;
+    private INode config;
 
     public MNlsFactory() {
         this(null);
         //		forkBase();
     }
 
-    public MNlsFactory(IConfig config) {
+    public MNlsFactory(INode config) {
         this.config = config;
     }
 

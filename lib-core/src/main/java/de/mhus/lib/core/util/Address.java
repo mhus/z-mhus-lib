@@ -27,9 +27,9 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.IConfigFactory;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.INodeFactory;
 import de.mhus.lib.errors.MException;
 
 public class Address implements Externalizable {
@@ -43,11 +43,11 @@ public class Address implements Externalizable {
         COUPLE
     }
 
-    private static IConfig definition;
+    private static INode definition;
 
     private static HashMap<String, SALUTATION> mapping;
 
-    private static HashMap<String, IConfig> locales;
+    private static HashMap<String, INode> locales;
 
     @Public protected IProperties attributes;
 
@@ -114,13 +114,13 @@ public class Address implements Externalizable {
     }
 
     public String getFullName(Locale l) {
-        IConfig locale = getLocaleConfig(l);
+        INode locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cAssemble = locale.getObjectOrNull("assemble");
+            INode cAssemble = locale.getObjectOrNull("assemble");
             if (cAssemble != null) {
-                IConfig cSal = cAssemble.getObjectOrNull(getSalutation().name().toLowerCase());
+                INode cSal = cAssemble.getObjectOrNull(getSalutation().name().toLowerCase());
                 if (cSal != null) {
-                    String template = cSal.getString(IConfig.NAMELESS_VALUE, "");
+                    String template = cSal.getString(INode.NAMELESS_VALUE, "");
                     String out = MString.compileAndExecute(template, getAttributes(), "");
                     while (out.indexOf("  ") > -1) out = out.replace("  ", " ");
                     return out;
@@ -132,10 +132,10 @@ public class Address implements Externalizable {
         return getFirstName() + " " + getLastName();
     }
 
-    private static IConfig getLocaleConfig(Locale l) {
+    private static INode getLocaleConfig(Locale l) {
         getDefinition();
         if (l == null) l = Locale.getDefault();
-        IConfig locale = locales.get(l.getLanguage());
+        INode locale = locales.get(l.getLanguage());
         if (locale == null) locale = locales.get("en");
         return locale;
     }
@@ -160,13 +160,13 @@ public class Address implements Externalizable {
     }
 
     public static String toSalutationString(SALUTATION salutation, Locale l) {
-        IConfig locale = getLocaleConfig(l);
+        INode locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cSingular = locale.getObjectOrNull("singular");
+            INode cSingular = locale.getObjectOrNull("singular");
             if (cSingular != null) {
-                IConfig cSal = cSingular.getObjectOrNull(salutation.name().toLowerCase());
+                INode cSal = cSingular.getObjectOrNull(salutation.name().toLowerCase());
                 if (cSal != null) {
-                    return cSal.getString(IConfig.NAMELESS_VALUE, "");
+                    return cSal.getString(INode.NAMELESS_VALUE, "");
                 }
             }
         }
@@ -190,13 +190,13 @@ public class Address implements Externalizable {
     }
 
     public String getLetterSalutation(Locale l) {
-        IConfig locale = getLocaleConfig(l);
+        INode locale = getLocaleConfig(l);
         if (locale != null) {
-            IConfig cLetter = locale.getObjectOrNull("letter");
+            INode cLetter = locale.getObjectOrNull("letter");
             if (cLetter != null) {
-                IConfig cSal = cLetter.getObjectOrNull(getSalutation().name().toLowerCase());
+                INode cSal = cLetter.getObjectOrNull(getSalutation().name().toLowerCase());
                 if (cSal != null) {
-                    String template = cSal.getString(IConfig.NAMELESS_VALUE, "");
+                    String template = cSal.getString(INode.NAMELESS_VALUE, "");
                     return MString.compileAndExecute(template, getAttributes(), "");
                 }
             }
@@ -227,28 +227,28 @@ public class Address implements Externalizable {
         return SALUTATION.values()[salutation];
     }
 
-    public static synchronized IConfig getDefinition() {
+    public static synchronized INode getDefinition() {
         if (definition == null) {
             try {
-                definition = M.l(IConfigFactory.class).read(Address.class, "address.xml");
+                definition = M.l(INodeFactory.class).read(Address.class, "address.xml");
             } catch (MException e) {
                 MLogUtil.log().w(Address.class, e);
-                definition = M.l(IConfigFactory.class).create(); // empty config
+                definition = M.l(INodeFactory.class).create(); // empty config
             }
 
             // load data
             mapping = new HashMap<>();
             locales = new HashMap<>();
-            for (IConfig locale : definition.getObjectList("locale")) {
+            for (INode locale : definition.getObjectList("locale")) {
                 String lang = locale.getString("language", "").toLowerCase();
                 locales.put(lang, locale);
                 {
-                    IConfig cMapping = locale.getObjectOrNull("mapping");
+                    INode cMapping = locale.getObjectOrNull("mapping");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getObjects()) {
+                        for (INode cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(IConfig.NAMELESS_VALUE, null);
+                                String val = cMap.getString(INode.NAMELESS_VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }
@@ -256,12 +256,12 @@ public class Address implements Externalizable {
                     }
                 }
                 {
-                    IConfig cMapping = locale.getObjectOrNull("plural");
+                    INode cMapping = locale.getObjectOrNull("plural");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getObjects()) {
+                        for (INode cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(IConfig.NAMELESS_VALUE, null);
+                                String val = cMap.getString(INode.NAMELESS_VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }
@@ -269,12 +269,12 @@ public class Address implements Externalizable {
                     }
                 }
                 {
-                    IConfig cMapping = locale.getObjectOrNull("singular");
+                    INode cMapping = locale.getObjectOrNull("singular");
                     if (cMapping != null) {
-                        for (IConfig cMap : cMapping.getObjects()) {
+                        for (INode cMap : cMapping.getObjects()) {
                             try {
                                 SALUTATION sal = SALUTATION.valueOf(cMap.getName().toUpperCase());
-                                String val = cMap.getString(IConfig.NAMELESS_VALUE, null);
+                                String val = cMap.getString(INode.NAMELESS_VALUE, null);
                                 if (MString.isSet(val)) mapping.put(val.toLowerCase().trim(), sal);
                             } catch (Throwable t) {
                             }

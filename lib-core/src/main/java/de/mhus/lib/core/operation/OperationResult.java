@@ -21,9 +21,9 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.config.ConfigSerializable;
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.util.MUri;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
@@ -189,21 +189,21 @@ public class OperationResult {
      * @return A IConfig object or a RuntimeException
      */
     @SuppressWarnings("unchecked")
-    public IConfig getResultAsConfig() {
-        if (result == null) return new MConfig();
+    public INode getResultAsConfig() {
+        if (result == null) return new MNode();
         try {
-            if (result instanceof String) return IConfig.readConfigFromString((String) result);
-            if (result instanceof IConfig) return (IConfig) result;
+            if (result instanceof String) return INode.readNodeFromString((String) result);
+            if (result instanceof INode) return (INode) result;
             if (result instanceof IProperties) {
-                MConfig ret = new MConfig();
+                MNode ret = new MNode();
                 ret.putAll( (IProperties)result );
                 return ret;
             }
             if (result instanceof Map)
-                return IConfig.readFromProperties((Map<String, Object>) result);
+                return INode.readFromProperties((Map<String, Object>) result);
 
             // fallback
-            return IConfig.readConfigFromString(String.valueOf(result));
+            return INode.readNodeFromString(String.valueOf(result));
 
         } catch (Exception e) {
             throw new MRuntimeException(this, e); // or empty config?
@@ -216,11 +216,11 @@ public class OperationResult {
      * @param fillIn The object to fill
      * @return The filled Object given in fillIn
      */
-    public <T extends ConfigSerializable> T loadResult(T fillIn) {
+    public <T extends NodeSerializable> T loadResult(T fillIn) {
         if (result == null) return fillIn;
-        IConfig cfg = getResultAsConfig();
+        INode cfg = getResultAsConfig();
         try {
-            fillIn.readSerializableConfig(cfg);
+            fillIn.readSerializabledNode(cfg);
         } catch (Exception e) {
             throw new MRuntimeException(this, e);
         }

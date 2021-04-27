@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.File;
 import java.net.URL;
@@ -21,29 +21,29 @@ import java.net.URL;
 import de.mhus.lib.annotations.activator.DefaultImplementation;
 import de.mhus.lib.errors.MException;
 
-@DefaultImplementation(DefaultConfigFactory.class)
-public interface IConfigFactory {
+@DefaultImplementation(DefaultNodeFactory.class)
+public interface INodeFactory {
 
-    IConfig read(Class<?> owner, String fileName) throws MException;
+    INode read(Class<?> owner, String fileName) throws MException;
 
-    IConfig read(File file) throws MException;
+    INode read(File file) throws MException;
 
-    IConfig read(URL url) throws MException;
+    INode read(URL url) throws MException;
 
-    IConfig create();
+    INode create();
 
-    void write(IConfig config, File file) throws MException;
+    void write(INode node, File file) throws MException;
 
-    IConfigBuilder getBuilder(String ext);
+    INodeBuilder getBuilder(String ext);
 
     /**
      * This will search a file with different file extensions
      *
      * @param path Path to file without file extension
-     * @return The config object or null
+     * @return The node object or null
      * @throws MException
      */
-    public default IConfig find(String path) throws MException {
+    public default INode find(String path) throws MException {
         File f = new File(path);
         return find(f.getParentFile(), f.getName());
     }
@@ -53,10 +53,10 @@ public interface IConfigFactory {
      *
      * @param parent
      * @param name Name of file without file extension
-     * @return The config object or null
+     * @return The node object or null
      * @throws MException
      */
-    public default IConfig find(File parent, String name) throws MException {
+    public default INode find(File parent, String name) throws MException {
         {
             File f = new File(parent, name + ".xml");
             if (f.exists() && f.isFile()) read(f);

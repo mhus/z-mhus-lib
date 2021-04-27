@@ -16,7 +16,7 @@
 package de.mhus.lib.form;
 
 import de.mhus.lib.core.MActivator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class ActivatorAdapterProvider implements ComponentAdapterProvider {
 
@@ -27,7 +27,7 @@ public class ActivatorAdapterProvider implements ComponentAdapterProvider {
     }
 
     @Override
-    public UiComponent createComponent(String id, IConfig config) throws Exception {
+    public UiComponent createComponent(String id, INode config) throws Exception {
         return getAdapter(id).createAdapter(config);
     }
 

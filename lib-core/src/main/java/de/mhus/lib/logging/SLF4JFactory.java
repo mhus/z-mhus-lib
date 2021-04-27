@@ -18,9 +18,9 @@ package de.mhus.lib.logging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.LogEngine;
 import de.mhus.lib.core.logging.LogFactory;
+import de.mhus.lib.core.node.INode;
 
 public class SLF4JFactory extends LogFactory {
 
@@ -30,7 +30,7 @@ public class SLF4JFactory extends LogFactory {
     }
 
     @Override
-    public void init(IConfig config) throws Exception {}
+    public void init(INode config) throws Exception {}
 
     private class SLF4JLog extends LogEngine {
 

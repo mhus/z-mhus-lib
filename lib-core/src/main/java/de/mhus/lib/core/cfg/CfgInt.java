@@ -16,7 +16,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MCast;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class CfgInt extends CfgValue<Integer> {
 
@@ -26,7 +26,7 @@ public class CfgInt extends CfgValue<Integer> {
 
     @Override
     protected Integer loadValue() {
-        IConfig node = getNode();
+        INode node = getNode();
         if (node == null) return getDefault();
         return node.getInt(getParameterName(), getDefault());
     }

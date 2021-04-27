@@ -16,13 +16,13 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public abstract class CfgProvider extends MLog {
 
     private String name;
 
-    public abstract IConfig getConfig();
+    public abstract INode getConfig();
 
     public CfgProvider(String name) {
         this.name = name;

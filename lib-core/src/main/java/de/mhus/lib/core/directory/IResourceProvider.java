@@ -18,7 +18,7 @@ package de.mhus.lib.core.directory;
 import java.io.InputStream;
 import java.net.URL;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public interface IResourceProvider {
 
@@ -28,9 +28,9 @@ public interface IResourceProvider {
      * @param path The name or path to the resource.
      * @return The resource or null if not found.
      */
-    IConfig getResourceByPath(String path);
+    INode getResourceByPath(String path);
 
-    IConfig getResourceById(String id);
+    INode getResourceById(String id);
 
     String getName();
 

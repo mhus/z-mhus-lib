@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -21,45 +21,45 @@ import java.util.LinkedList;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.MRuntimeException;
 
-public class ConfigList extends LinkedList<IConfig> {
+public class NodeList extends LinkedList<INode> {
 
     private static final long serialVersionUID = 1L;
     private String name;
-    private MConfig parent;
+    private MNode parent;
 
-    public ConfigList(String name, MConfig parent) {
+    public NodeList(String name, MNode parent) {
         this.name = name;
         this.parent = parent;
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends IConfig> c) {
+    public boolean addAll(int index, Collection<? extends INode> c) {
         c.forEach(
                 i -> {
-                    ((MConfig) i).name = name;
-                    ((MConfig) i).parent = parent;
+                    ((MNode) i).name = name;
+                    ((MNode) i).parent = parent;
                 });
         return super.addAll(index, c);
     }
 
     @Override
-    public boolean add(IConfig e) {
-        ((MConfig) e).name = name;
-        ((MConfig) e).parent = parent;
+    public boolean add(INode e) {
+        ((MNode) e).name = name;
+        ((MNode) e).parent = parent;
         return super.add(e);
     }
 
     public boolean add(IProperties e) {
-        MConfig config = new MConfig();
-        config.parent = parent;
-        config.putAll(e);
-        return super.add(config);
+        MNode node = new MNode();
+        node.parent = parent;
+        node.putAll(e);
+        return super.add(node);
     }
     
-    public IConfig add(ConfigSerializable object) {
-        IConfig cfg = createObject();
+    public INode add(NodeSerializable object) {
+        INode cfg = createObject();
         try {
-            object.writeSerializableConfig(cfg);
+            object.writeSerializabledNode(cfg);
         } catch (Exception e) {
             throw new MRuntimeException(e);
         }
@@ -67,30 +67,30 @@ public class ConfigList extends LinkedList<IConfig> {
     }
 
     @Override
-    public void addFirst(IConfig e) {
-        ((MConfig) e).name = name;
-        ((MConfig) e).parent = parent;
+    public void addFirst(INode e) {
+        ((MNode) e).name = name;
+        ((MNode) e).parent = parent;
         super.addFirst(e);
     }
 
     @Override
-    public void addLast(IConfig e) {
-        ((MConfig) e).name = name;
-        ((MConfig) e).parent = parent;
+    public void addLast(INode e) {
+        ((MNode) e).name = name;
+        ((MNode) e).parent = parent;
         super.addLast(e);
     }
 
     @Override
-    public IConfig set(int index, IConfig e) {
-        if (e instanceof MConfig) {
-            ((MConfig) e).name = name;
-            ((MConfig) e).parent = parent;
+    public INode set(int index, INode e) {
+        if (e instanceof MNode) {
+            ((MNode) e).name = name;
+            ((MNode) e).parent = parent;
         }
         return super.set(index, e);
     }
 
-    public IConfig createObject() {
-        MConfig ret = new MConfig(name, parent);
+    public INode createObject() {
+        MNode ret = new MNode(name, parent);
         super.add(ret);
         return ret;
     }

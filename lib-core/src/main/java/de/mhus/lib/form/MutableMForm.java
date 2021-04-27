@@ -17,8 +17,8 @@ package de.mhus.lib.form;
 
 import java.util.Locale;
 
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.definition.DefRoot;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.MNlsBundle;
 import de.mhus.lib.errors.MException;
 
@@ -32,7 +32,7 @@ public class MutableMForm extends MForm {
         super(model);
     }
 
-    public MutableMForm(Locale locale, ComponentAdapterProvider adapterProvider, IConfig model) {
+    public MutableMForm(Locale locale, ComponentAdapterProvider adapterProvider, INode model) {
         super(locale, adapterProvider, model);
     }
 

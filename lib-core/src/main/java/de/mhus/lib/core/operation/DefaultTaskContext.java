@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.operation;
 
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
 
@@ -23,25 +23,25 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
         super(owner);
     }
 
-    protected IConfig config;
+    protected INode config;
     protected boolean test = false;
-    protected IConfig parameters;
+    protected INode parameters;
     protected String errorMessage;
 
     public void setTestOnly(boolean test) {
         this.test = test;
     }
 
-    public void setConfig(IConfig config) {
+    public void setConfig(INode config) {
         this.config = config;
     }
 
-    public void setParameters(IConfig parameters) {
+    public void setParameters(INode parameters) {
         this.parameters = parameters;
     }
 
     @Override
-    public IConfig getConfig() {
+    public INode getConfig() {
         return config;
     }
 
@@ -50,7 +50,7 @@ public class DefaultTaskContext extends DefaultMonitor implements TaskContext {
     }
 
     @Override
-    public IConfig getParameters() {
+    public INode getParameters() {
         return parameters;
     }
 

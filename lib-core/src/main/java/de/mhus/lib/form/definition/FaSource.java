@@ -15,13 +15,13 @@
  */
 package de.mhus.lib.form.definition;
 
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
 import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 
-public class FaSource extends MConfig implements IDefAttribute {
+public class FaSource extends MNode implements IDefAttribute {
 
     private static final long serialVersionUID = 1L;
     private String tag;
@@ -34,7 +34,7 @@ public class FaSource extends MConfig implements IDefAttribute {
 
     @Override
     public void inject(DefComponent root) throws MException {
-        IConfig sources = root.getObject("sources");
+        INode sources = root.getObject("sources");
         if (sources == null) {
             sources = root.createObject("sources");
         }

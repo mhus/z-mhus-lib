@@ -16,7 +16,7 @@
 package de.mhus.lib.core.cfg;
 
 import de.mhus.lib.core.MApi;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.util.SecureString;
 
 public class CfgSecure extends CfgValue<SecureString> {
@@ -35,7 +35,7 @@ public class CfgSecure extends CfgValue<SecureString> {
         if (p < 0)
             return new SecureString(
                     MApi.getCfg(getOwner()).getString(getPath(), strValueOf(getDefault())));
-        IConfig node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
+        INode node = MApi.getCfg(getOwner()).getObjectByPath(getPath().substring(0, p));
         if (node == null) return getDefault();
         return new SecureString(
                 node.getString(getPath().substring(p + 1), strValueOf(getDefault())));

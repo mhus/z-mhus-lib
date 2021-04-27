@@ -21,13 +21,13 @@ import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.cfg.CfgInitiator;
-import de.mhus.lib.core.config.IConfig;
+import de.mhus.lib.core.node.INode;
 
 public class SystemCfgInitiator implements CfgInitiator {
 
     @Override
-    public void doInitialize(IApiInternal internal, MCfgManager manager, IConfig config) {
-        IConfig system = manager.getCfg("system");
+    public void doInitialize(IApiInternal internal, MCfgManager manager, INode config) {
+        INode system = manager.getCfg("system");
         try {
             String key = M.PROP_BASE_DIR;
             String name = system.getString(key, null);

@@ -27,12 +27,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.mhus.lib.core.config.ConfigList;
-import de.mhus.lib.core.config.ConfigSerializable;
-import de.mhus.lib.core.config.IConfig;
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.core.node.INode;
 
-public class Table implements Serializable, Externalizable, ConfigSerializable {
+public class Table implements Serializable, Externalizable, NodeSerializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -207,37 +207,37 @@ public class Table implements Serializable, Externalizable, ConfigSerializable {
     }
 
     @Override
-    public void readSerializableConfig(IConfig cfg) throws Exception {
+    public void readSerializabledNode(INode cfg) throws Exception {
         name = cfg.getString("name", null);
         
         columns = new LinkedList<>();
         columnsIndex = new HashMap<>();
         
-        for (IConfig col : cfg.getArrayOrCreate("columns")) {
+        for (INode col : cfg.getArrayOrCreate("columns")) {
             TableColumn tc = new TableColumn();
-            tc.readSerializableConfig(col);
+            tc.readSerializabledNode(col);
             columns.add(tc);
             columnsIndex.put(tc.getName(), columns.size());
         }
         
-        for (IConfig row : cfg.getArrayOrCreate("rows")) {
+        for (INode row : cfg.getArrayOrCreate("rows")) {
             TableRow tr = new TableRow();
             tr.setTable(this);
-            tr.readSerializableConfig(row);
+            tr.readSerializabledNode(row);
             rows.add(tr);
         }
     }
 
     @Override
-    public void writeSerializableConfig(IConfig cfg) throws Exception {
+    public void writeSerializabledNode(INode cfg) throws Exception {
         cfg.setString("name", name);
-        ConfigList arr = cfg.createArray("columns");
+        NodeList arr = cfg.createArray("columns");
         for (TableColumn v : columns)
-            v.writeSerializableConfig( arr.createObject() );
+            v.writeSerializabledNode( arr.createObject() );
         
         arr = cfg.createArray("rows");
         for (TableRow tr : rows) {
-            tr.writeSerializableConfig(arr.createObject() );
+            tr.writeSerializabledNode(arr.createObject() );
         }
         
     }

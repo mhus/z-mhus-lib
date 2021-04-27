@@ -18,11 +18,11 @@ package de.mhus.lib.core.definition;
 import java.util.LinkedList;
 import java.util.Properties;
 
-import de.mhus.lib.core.config.IConfig;
-import de.mhus.lib.core.config.MConfig;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 
-public class DefComponent extends MConfig implements IDefDefinition {
+public class DefComponent extends MNode implements IDefDefinition {
 
     private static final long serialVersionUID = 1L;
     private String tag;
@@ -73,8 +73,8 @@ public class DefComponent extends MConfig implements IDefDefinition {
         fill(this, p);
     }
 
-    private void fill(IConfig config, Properties p) throws MException {
-        for (IConfig c : config.getObjects()) {
+    private void fill(INode config, Properties p) throws MException {
+        for (INode c : config.getObjects()) {
             if (c instanceof DefComponent) ((DefComponent) c).fillNls(p);
             else fill(c, p);
         }

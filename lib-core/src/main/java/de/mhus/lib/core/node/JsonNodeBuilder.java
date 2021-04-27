@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.mhus.lib.core.config;
+package de.mhus.lib.core.node;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,10 +30,10 @@ import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TooDeepStructuresException;
 
-public class JsonConfigBuilder extends IConfigBuilder {
+public class JsonNodeBuilder extends INodeBuilder {
 
     @Override
-    public IConfig read(InputStream is) throws MException {
+    public INode read(InputStream is) throws MException {
         try {
             JsonNode docJ = MJson.load(is);
             return fromJson(docJ);
@@ -42,81 +42,81 @@ public class JsonConfigBuilder extends IConfigBuilder {
         }
     }
 
-    public IConfig fromJson(JsonNode docJ) throws MException {
-        MConfig config = new MConfig();
+    public INode fromJson(JsonNode docJ) throws MException {
+        MNode node = new MNode();
         if (docJ.isArray()) {
-            ConfigList array = config.createArray(IConfig.NAMELESS_VALUE);
+            NodeList array = node.createArray(INode.NAMELESS_VALUE);
             for (JsonNode itemJ : docJ) {
-                IConfig obj = array.createObject();
+                INode obj = array.createObject();
                 fill(obj, "", itemJ, 0);
             }
         } else if (docJ.isObject()) {
-            fill(config, "", docJ, 0);
+            fill(node, "", docJ, 0);
         } else if (docJ.isValueNode()) {
             // TODO separate for each type
-            config.setString(IConfig.NAMELESS_VALUE, docJ.asText());
+            node.setString(INode.NAMELESS_VALUE, docJ.asText());
         } else {
             throw new MException("Unknown basic json object type");
         }
 
-        return config;
+        return node;
     }
 
-    private void fill(IConfig config, String name, JsonNode json, int level) {
+    private void fill(INode node, String name, JsonNode json, int level) {
 
         if (level > 100) throw new TooDeepStructuresException();
 
         if (json.isValueNode()) {
-            config.put(IConfig.NAMELESS_VALUE, json.asText());
+            node.put(INode.NAMELESS_VALUE, json.asText());
             return;
         }
 
         for (Map.Entry<String, JsonNode> itemJ : new MIterable<>(json.fields())) {
             if (itemJ.getValue().isArray()) {
-                ConfigList array = config.createArray(itemJ.getKey());
+                NodeList array = node.createArray(itemJ.getKey());
                 for (JsonNode item2J : itemJ.getValue()) {
-                    IConfig obj = array.createObject();
+                    INode obj = array.createObject();
                     fill(obj, itemJ.getKey(), item2J, level + 1);
                 }
             } else if (itemJ.getValue().isObject()) {
-                IConfig obj = config.createObject(itemJ.getKey());
+                INode obj = node.createObject(itemJ.getKey());
                 fill(obj, itemJ.getKey(), itemJ.getValue(), level + 1);
-            } else config.put(itemJ.getKey(), itemJ.getValue().asText());
+            } else node.put(itemJ.getKey(), itemJ.getValue().asText());
         }
     }
 
     @Override
-    public void write(IConfig config, OutputStream os) throws MException {
+    public void write(INode node, OutputStream os) throws MException {
         try {
-            JsonNode objectJ = writeToJsonNode(config);
+            JsonNode objectJ = writeToJsonNode(node);
             MJson.save(objectJ, os);
         } catch (IOException e) {
             throw new MException(e);
         }
     }
 
-    public JsonNode writeToJsonNode(IConfig config) {
-        if (config.isArray(IConfig.NAMELESS_VALUE)) {
+    public JsonNode writeToJsonNode(INode node) {
+        if (node.isArray(INode.NAMELESS_VALUE)) {
 	          ArrayNode arrayJ = MJson.createArrayNode();
-	          for (IConfig itemC : config.getArrayOrNull(IConfig.NAMELESS_VALUE)) {
+	          for (INode itemC : node.getArrayOrNull(INode.NAMELESS_VALUE)) {
 	        	  ObjectNode objectJ = arrayJ.addObject();
 	        	  fill(objectJ, itemC, 1);
 	          }
 	          return arrayJ;
         } else {
             ObjectNode objectJ = MJson.createObjectNode();
-            fill(objectJ, config, 0);
+            fill(objectJ, node, 0);
             return objectJ;
         }
     }
 
-    private void fill(ObjectNode objectJ, IConfig itemC, int level) {
+    private void fill(ObjectNode objectJ, INode itemC, int level) {
         if (level > 100) throw new TooDeepStructuresException();
 
         for (String key : itemC.keys()) {
             if (itemC.isArray(key)) {
                 ArrayNode arrJ = objectJ.putArray(key);
-                for (IConfig arrC : itemC.getArrayOrNull(key)) {
+                for (INode arrC : itemC.getArrayOrNull(key)) {
                     ObjectNode newJ = arrJ.addObject();
                     fill(newJ, arrC, level + 1);
                 }
