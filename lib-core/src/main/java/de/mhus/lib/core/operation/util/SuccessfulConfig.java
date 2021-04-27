@@ -16,27 +16,27 @@ public class SuccessfulConfig extends Successful {
     
     public SuccessfulConfig(Operation operation, String msg) {
         super(operation, msg, 0, (String)null);
-        setResultConfig(new MNode());
+        setResultNode(new MNode());
     }
 
     public SuccessfulConfig(Operation operation, String msg, INode config) {
         super(operation, msg, 0, (String)null);
-        setResultConfig(config);
+        setResultNode(config);
     }
 
     public SuccessfulConfig(Operation operation, String msg, int rc, INode config) {
         super(operation, msg, rc, (String)null);
-        setResultConfig(config);
+        setResultNode(config);
     }
 
     public SuccessfulConfig(String path, String msg, INode config) {
         super(path, msg, 0, (String)null);
-        setResultConfig(config);
+        setResultNode(config);
     }
 
     public SuccessfulConfig(String path, String msg, int rc, INode config) {
         super(path, msg, rc, (String)null);
-        setResultConfig(config);
+        setResultNode(config);
     }
 
     public SuccessfulConfig(Operation operation, String msg, NodeSerializable object) {
@@ -48,7 +48,7 @@ public class SuccessfulConfig extends Successful {
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
-        setResultConfig(cfg);
+        setResultNode(cfg);
     }
 
     public SuccessfulConfig(Operation operation, String msg, int rc, NodeSerializable object) {
@@ -60,7 +60,7 @@ public class SuccessfulConfig extends Successful {
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
-        setResultConfig(cfg);
+        setResultNode(cfg);
     }
 
     public SuccessfulConfig(String path, String msg, NodeSerializable object) {
@@ -72,7 +72,7 @@ public class SuccessfulConfig extends Successful {
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
-        setResultConfig(cfg);
+        setResultNode(cfg);
     }
 
     public SuccessfulConfig(String path, String msg, int rc, NodeSerializable object) {
@@ -84,7 +84,7 @@ public class SuccessfulConfig extends Successful {
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
-        setResultConfig(cfg);
+        setResultNode(cfg);
     }
     
     public SuccessfulConfig(Operation operation, String msg, String... keyValues) {
@@ -103,7 +103,7 @@ public class SuccessfulConfig extends Successful {
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
                 if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
-            setResultConfig(r);
+            setResultNode(r);
         }
     }
 
@@ -113,7 +113,7 @@ public class SuccessfulConfig extends Successful {
     }
 
     public INode getConfig() {
-        return getResultAsConfig();
+        return getResultAsNode();
     }
 
     public void put(String key, Object value) {

@@ -26,7 +26,7 @@ public class SuccessfulMap extends Successful {
 
     public SuccessfulMap(Operation operation, String msg) {
         super(operation, msg);
-        setResultConfig(new MProperties());
+        setResultNode(new MProperties());
     }
 
     public SuccessfulMap(String path, String msg, int rc, String... keyValues) {

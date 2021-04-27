@@ -111,7 +111,7 @@ public class OperationResult {
     }
 
     /**
-     * Set the result as object. Don't use it directly. Should be stored as IConfig or Map.
+     * Set the result as object. Don't use it directly. Should be stored as INode or Map.
      * @param result
      */
     @Deprecated
@@ -119,7 +119,7 @@ public class OperationResult {
         this.result = result;
     }
 
-    public void setResultConfig(Map<String, Object> result) {
+    public void setResultNode(Map<String, Object> result) {
         this.result = result;
     }
 
@@ -183,13 +183,13 @@ public class OperationResult {
     }
 
     /**
-     * Try to convert the result into a IConfig object. Therefore a string is analyzed to be a
-     * json or xml and will be readed as IConfig. Also IConfig or IProperty will be transformed.
+     * Try to convert the result into a INode object. Therefore a string is analyzed to be a
+     * json or xml and will be readed as INode. Also INode or IProperty will be transformed.
      * 
-     * @return A IConfig object or a RuntimeException
+     * @return A INode object or a RuntimeException
      */
     @SuppressWarnings("unchecked")
-    public INode getResultAsConfig() {
+    public INode getResultAsNode() {
         if (result == null) return new MNode();
         try {
             if (result instanceof String) return INode.readNodeFromString((String) result);
@@ -206,19 +206,19 @@ public class OperationResult {
             return INode.readNodeFromString(String.valueOf(result));
 
         } catch (Exception e) {
-            throw new MRuntimeException(this, e); // or empty config?
+            throw new MRuntimeException(this, e); // or empty node?
         }
     }
 
     /**
-     * Get a IConfig result and load it via ConfigSynchronize mechanism into the given object.
-     * @param <T> Type of the given object, must be ConfigSerializable
+     * Get a INode result and load it via NodeSynchronize mechanism into the given object.
+     * @param <T> Type of the given object, must be NodeSerializable
      * @param fillIn The object to fill
      * @return The filled Object given in fillIn
      */
     public <T extends NodeSerializable> T loadResult(T fillIn) {
         if (result == null) return fillIn;
-        INode cfg = getResultAsConfig();
+        INode cfg = getResultAsNode();
         try {
             fillIn.readSerializabledNode(cfg);
         } catch (Exception e) {
