@@ -104,6 +104,8 @@ public class M {
 
     public static final String ADDR_DISPLAY_NAME = "displayName";
 
+    public enum DEBUG {NO,YES,TRACE}
+    
     public static enum ADDR_SCOPE {
         PRIVATE,
         WORK

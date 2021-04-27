@@ -45,15 +45,19 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.M.DEBUG;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cache.CacheConfig;
 import de.mhus.lib.core.cache.ICache;
 import de.mhus.lib.core.cache.ICacheService;
+import de.mhus.lib.core.cfg.CfgBoolean;
+import de.mhus.lib.core.cfg.CfgLong;
 
 /**
  * Load user and role definitions from txt or xml files.
@@ -98,6 +102,11 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
 
     protected boolean useCache;
     protected long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
+
+    @SuppressWarnings("unused")
+    private CfgBoolean CFG_USE_CACHE = new CfgBoolean(getClass(), "cacheEnabled", true).updateAction(v -> setUseCache(v) ).doUpdateAction();
+    @SuppressWarnings("unused")
+    private CfgLong CFG_CACHE_TTL = new CfgLong(getClass(), "cacheTTL", MPeriod.MINUTE_IN_MILLISECOUNDS * 30).updateAction(v -> setCacheTTL(v)).doUpdateAction();
 
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
@@ -416,8 +425,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     @Override
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
-        if (debugPermissions && !ret) {
+        if (debugPermissions != DEBUG.NO && !ret) {
             log.d("perm access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, permission);
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
         return ret;
     }
@@ -431,8 +442,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
             return true;
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
-        if (debugPermissions && !ret) {
+        if (debugPermissions != DEBUG.NO && !ret) {
             log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
 
         return ret;

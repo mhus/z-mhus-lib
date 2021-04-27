@@ -36,6 +36,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.CollectionUtils;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.M.DEBUG;
 import de.mhus.lib.core.logging.Log;
 
 public class IniDataRealm extends IniRealm implements PrincipalDataRealm, BearerRealm {
@@ -46,7 +48,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     private HashMap<String, Map<String, String>> userData = new HashMap<>();
     private String rolePermission;
 
-    protected boolean debugPermissions;
+    protected DEBUG debugPermissions;
 
     public IniDataRealm() {
         super();
@@ -95,13 +97,14 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             boolean access = ((TrustedToken)token).hasAccess(debugPermissions);
 
             if (!access) {
-                if (debugPermissions)
+                if (debugPermissions != DEBUG.NO)
                     log.i("TrustedToken access denied (3)");
                 throw new AuthenticationException("TrustedToken access denied (3)");
             }
-            if (debugPermissions)
+            if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
-        
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
 
         if (username == null)
@@ -171,8 +174,10 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
     @Override
     protected boolean isPermitted(Permission permission, AuthorizationInfo info) {
         boolean ret = super.isPermitted(permission, info);
-        if (debugPermissions && !ret) {
+        if (debugPermissions != DEBUG.NO && !ret) {
             log.i("perm access denied", info, permission);
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
         return ret;
     }
@@ -186,8 +191,10 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             return true;
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
-        if (debugPermissions && !ret) {
+        if (debugPermissions != DEBUG.NO && !ret) {
             log.i("role access denied", info, roleIdentifier);
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
         return ret;
     }
@@ -220,11 +227,11 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         throw new UnknownAccountException("User unknown: " + userName);
     }
 
-    public boolean isDebugPermissions() {
+    public DEBUG getDebugPermissions() {
         return debugPermissions;
     }
 
-    public void setDebugPermissions(boolean debugPermissions) {
+    public void setDebugPermissions(DEBUG debugPermissions) {
         this.debugPermissions = debugPermissions;
     }
 

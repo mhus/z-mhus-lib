@@ -4,6 +4,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.M.DEBUG;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.cache.CacheConfig;
@@ -53,12 +54,12 @@ public class TrustedToken implements AuthenticationToken {
         return "";
     }
 
-    public final boolean hasAccess(boolean debugPermissions) {
+    public final boolean hasAccess(DEBUG debugPermissions) {
         return hasAccess(debugPermissions, principal);
     }
 
     
-    private static boolean hasAccess(boolean debugPermissions, String username) {
+    private static boolean hasAccess(DEBUG debugPermissions, String username) {
 
         // you can sudo to your own
         if (username.equals(Aaa.getPrincipal())) return true;
@@ -76,7 +77,7 @@ public class TrustedToken implements AuthenticationToken {
 //                }
         }
         if (sb.length() == 0) {
-            if (debugPermissions)
+            if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access denied (1)",stackTrace);
             throw new AuthenticationException("TrustedToken access denied (1)");
         }
@@ -88,12 +89,16 @@ public class TrustedToken implements AuthenticationToken {
                 Boolean cached = callerCache.get(callerName);
                 if (cached != null) {
                     if (cached) {
-                        if (debugPermissions)
+                        if (debugPermissions != DEBUG.NO)
                             log.i("TrustedToken access granted by cache",callerName);
+                        if (debugPermissions != DEBUG.TRACE)
+                            log.d(MSystem.currentStackTrace(null));
                         return true;
                     } else {
-                        if (debugPermissions)
+                        if (debugPermissions != DEBUG.NO)
                             log.i("TrustedToken access denied (2)",callerName);
+                        if (debugPermissions != DEBUG.TRACE)
+                            log.d(MSystem.currentStackTrace(null));
                         return false;
                     }
                 }

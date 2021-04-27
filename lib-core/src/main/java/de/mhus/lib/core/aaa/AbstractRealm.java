@@ -9,6 +9,9 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import de.mhus.lib.core.M;
+import de.mhus.lib.core.M.DEBUG;
+import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.cfg.CfgString;
 import de.mhus.lib.core.logging.Log;
 
 public abstract class AbstractRealm extends AuthorizingRealm implements BearerRealm {
@@ -20,7 +23,23 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
 
     protected final Log log = Log.getLog(getClass());
 
-    protected boolean debugPermissions;
+    protected DEBUG debugPermissions;
+
+    @SuppressWarnings("unused")
+    private CfgString CFG_DEBUG_PERMISSIONS = new CfgString(getClass(), "debugPermissions", "trace").updateAction(v -> {
+        switch (v) {
+        case "trace":
+        case "true":
+            setDebugPermissions(DEBUG.TRACE);
+            break;
+        case "yes":
+            setDebugPermissions(DEBUG.YES);
+            break;
+        default:
+            setDebugPermissions(DEBUG.NO);
+            break;
+        }
+    }).doUpdateAction();
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -54,13 +73,14 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
             boolean access = ((TrustedToken)token).hasAccess(debugPermissions);
 
             if (!access) {
-                if (debugPermissions)
+                if (debugPermissions != DEBUG.NO)
                     log.i("TrustedToken access denied (3)");
                 throw new AuthenticationException("TrustedToken access denied (3)");
             }
-            if (debugPermissions)
+            if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
-
+            if (debugPermissions != DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(null));
         }
 
         if (username == null)
@@ -75,11 +95,11 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
         return getAvailablePrincipal(principals).toString();
     }
 
-    public boolean isDebugPermissions() {
+    public DEBUG getDebugPermissions() {
         return debugPermissions;
     }
 
-    public void setDebugPermissions(boolean debugPermissions) {
+    public void setDebugPermissions(DEBUG debugPermissions) {
         this.debugPermissions = debugPermissions;
     }
 

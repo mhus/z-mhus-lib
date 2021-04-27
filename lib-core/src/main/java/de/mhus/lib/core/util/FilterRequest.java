@@ -25,6 +25,7 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
+import de.mhus.lib.core.MSystem;
 
 public class FilterRequest {
 
@@ -108,5 +109,10 @@ public class FilterRequest {
 
     public boolean isFacet(String key) {
         return facets != null && facets.containsKey(key);
+    }
+    
+    @Override
+    public String toString() {
+        return MSystem.toString(this, facets, text);
     }
 }
