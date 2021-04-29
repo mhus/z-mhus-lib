@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.pojo;
 
+import java.awt.List;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,10 +23,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.w3c.dom.CDATASection;
@@ -40,6 +43,7 @@ import de.mhus.lib.annotations.pojo.Embedded;
 import de.mhus.lib.annotations.pojo.Hidden;
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.IProperties;
+import de.mhus.lib.core.M;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MCollection;
@@ -64,6 +68,8 @@ public class MPojo {
     private static Log log = Log.getLog(MPojo.class);
     private static PojoModelFactory defaultModelFactory;
 
+    private static PojoModelFactory attributesModelFactory;
+
     public static synchronized PojoModelFactory getDefaultModelFactory() {
         if (defaultModelFactory == null)
             defaultModelFactory =
@@ -84,6 +90,26 @@ public class MPojo {
         return defaultModelFactory;
     }
 
+    public static synchronized PojoModelFactory getAttributesModelFactory() {
+        if (attributesModelFactory == null)
+            attributesModelFactory =
+                    new PojoModelFactory() {
+
+                        @Override
+                        public PojoModel createPojoModel(Class<?> pojoClass) {
+                            PojoModel model =
+                                    new PojoParser()
+                                            .parse(pojoClass, new AttributesStrategy(true, true, "_", null))
+                                            .filter(
+                                                    new DefaultFilter(
+                                                            true, false, false, false, true))
+                                            .getModel();
+                            return model;
+                        }
+                    };
+        return attributesModelFactory;
+    }
+    
     public static synchronized PojoModelFactory getAttributeModelFactory() {
         if (defaultModelFactory == null)
             defaultModelFactory =
@@ -168,6 +194,18 @@ public class MPojo {
         }
     }
 
+    public static void setNodeValue(
+            INode to,
+            String name,
+            Object value,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            boolean deep)
+            throws IOException {
+        setNodeValue(to, name, value, factory, verbose, useAnnotations, deep, "", 0);
+    }
+    
     @SuppressWarnings("unchecked")
     private static void setNodeValue(
             INode to,
@@ -189,7 +227,7 @@ public class MPojo {
                     to.setBoolean(INode.NULL + "_" + prefix + name, true);
                 }
             }
-            else if (value instanceof Boolean) to.setBoolean(prefix + name, (boolean) value);
+            if (value instanceof Boolean) to.setBoolean(prefix + name, (boolean) value);
             else if (value instanceof Integer) to.setInt(prefix + name, (int) value);
             else if (value instanceof String) to.setString(prefix + name, (String) value);
             else if (value instanceof Long) to.setLong(prefix + name, (long) value);
@@ -245,8 +283,19 @@ public class MPojo {
         }
     }
     
-    @SuppressWarnings("unchecked")
     public static void addNodeValue(
+            NodeList to,
+            Object value,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            boolean deep)
+            throws IOException {
+        addNodeValue(to, value, factory, verbose, useAnnotations, deep, "", 0);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static void addNodeValue(
             NodeList to,
             Object value,
             PojoModelFactory factory,
@@ -312,31 +361,44 @@ public class MPojo {
     }
     
     public static void nodeToPojo(INode from, Object to) throws IOException {
-        nodeToPojo(from, to, getDefaultModelFactory(), false);
+        nodeToPojo(from, to, getDefaultModelFactory(), false, false);
     }
 
     public static void nodeToPojo(INode from, Object to, boolean force) throws IOException {
-        nodeToPojo(from, to, getDefaultModelFactory(), force);
+        nodeToPojo(from, to, getDefaultModelFactory(), force, false);
+    }
+
+    public static void nodeToPojo(INode from, Object to, boolean force, boolean verbose) throws IOException {
+        nodeToPojo(from, to, getDefaultModelFactory(), force, verbose);
     }
 
     public static void nodeToPojo(INode from, Object to, PojoModelFactory factory)
             throws IOException {
-        nodeToPojo(from, to, factory, false);
+        nodeToPojo(from, to, factory, false, false);
     }
 
+    /**
+     * 
+     * @param from
+     * @param to
+     * @param factory
+     * @param force
+     * @param verbose Use verbose hints from serialization to create the correct object
+     * @throws IOException
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void nodeToPojo(INode from, Object to, PojoModelFactory factory, boolean force)
+    public static void nodeToPojo(INode from, Object to, PojoModelFactory factory, boolean force, boolean verbose)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
         for (PojoAttribute<Object> attr : model) {
 
-            if (!attr.canWrite()) continue;
+            if (!force && !attr.canWrite()) continue;
 
             String name = attr.getName();
             Class<?> type = attr.getType();
 
             try {
-                if (!from.containsKey(name) || !attr.canWrite()) {
+                if (!from.containsKey(name)) {
 
                 } else if (type == Boolean.class || type == boolean.class)
                     attr.set(to, from.getBoolean(name, false), force);
@@ -365,27 +427,51 @@ public class MPojo {
                     }
                 else if (type.isEnum()) {
                     Object[] cons = type.getEnumConstants();
-                    int ord = from.getObject(name).getInt(INode.HELPER_VALUE, 0);
+                    int ord = from.getInt(name, 0);
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
                     attr.set(to, c, force);
                 } else if (type.isAssignableFrom(Map.class)) {
                     INode obj = from.getObjectOrNull(name);
                     if (obj != null) {
-                        Map inst = (Map)type.getConstructor().newInstance();
-                        inst.putAll(obj);
+                        Map inst = null;
+                        if (type == Map.class)
+                            inst = new HashMap<>();
+                        else
+                            inst = (Map)type.getConstructor().newInstance();
+                        if (verbose)
+                            for (Entry<String, Object> entry : obj.entrySet()) {
+                                if (!entry.getKey().startsWith("_")) {
+                                    String hint = obj.getString(INode.CLASS + "_" + entry.getKey(), null);
+                                    addNodeValue(inst, entry.getKey(), entry.getValue(), hint, factory, force, verbose);
+                                }
+                            }
+                        else
+                            inst.putAll(obj);
+                        attr.set(to, inst, force);
                     }
                 } else if (type.isAssignableFrom(Collection.class)) {
                     NodeList array = from.getArrayOrNull(name);
                     if (array != null) {
-                        Collection inst = (Collection)type.getConstructor().newInstance();
+                        Collection inst = null;
+                        if (type == Collection.class || type == List.class)
+                            inst = new ArrayList<>();
+                        else
+                            inst = (Collection)type.getConstructor().newInstance();
                         for (INode obj : array) {
+                            if (verbose) {
+                                String hint = obj.getString(INode.CLASS, null);
+                                Object val = toNodeValue(model, hint, factory, force, verbose);
+                                if (val != null)
+                                    inst.add(val);
+                            } else
                             if (obj.containsKey(INode.NAMELESS_VALUE))
                                 inst.add(obj.get(INode.NAMELESS_VALUE));
                             else {
-//                                oo = // not possible, cant cenerate a complex object from no type
+//                                oo = // not possible, cant generate a complex object from no type
                             }
                         }
+                        attr.set(to, inst, force);
                     }
                 } else attr.set(to, from.getString(name, null), force);
             } catch (Throwable t) {
@@ -396,6 +482,53 @@ public class MPojo {
     
     
     
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static void addNodeValue(Map inst, String name, Object value, String hint, PojoModelFactory factory,
+            boolean force, boolean verbose) {
+        Object val = toNodeValue(value, hint, factory, force, verbose);
+        if (val != null)
+            inst.put(name, val);
+    }
+    
+    public static Object toNodeValue(Object value, String hint, PojoModelFactory factory,
+            boolean force, boolean verbose) {
+        Object val = value;
+        if (MString.isEmptyTrim(hint)) {
+            // nothing
+        } else {
+            val = MCast.to(value, hint);
+            if (val == null && value instanceof INode) {
+                try {
+                    val = M.l(MActivator.class).createObject(hint);
+                    nodeToPojo((INode)value, val, factory, force, verbose );
+                } catch (Throwable t) {
+                    log.d(hint, t);
+                }
+            } else
+            if (val == null) {
+                try {
+                    // try enum
+                    int p = hint.lastIndexOf('.');
+                    if (p > 0) {
+                        String className = hint.substring(0, p) + "$" + hint.substring(p+1);
+                        Class<?> type = M.l(MActivator.class).getClazz(className);
+                        if (type.isEnum()) {
+                            Object[] cons = type.getEnumConstants();
+                            int ord = MCast.toint(value, 0);
+                            val = cons.length > 0 ? cons[0] : null;
+                            if (ord >= 0 && ord < cons.length) val = cons[ord];
+                        }
+                    }
+                } catch (Throwable t) {
+                    log.d(hint, t);
+                }
+                if (val == null)
+                    val = value; // fallback
+            }
+        }
+        return val;
+    }
+
     public static void pojoToJson(Object from, ObjectNode to) throws IOException {
         pojoToJson(from, to, getDefaultModelFactory());
     }

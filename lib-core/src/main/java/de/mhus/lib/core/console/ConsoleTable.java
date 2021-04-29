@@ -567,4 +567,8 @@ public class ConsoleTable {
                     }
                 });
     }
+
+    public void clear() {
+        content.clear();
+    }
 }

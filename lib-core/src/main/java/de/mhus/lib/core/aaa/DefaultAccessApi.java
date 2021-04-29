@@ -49,7 +49,7 @@ public class DefaultAccessApi extends MLog implements AccessApi {
             log().d("Initialize shiro", CFG_CONFIG_FILE);
             env = createEnvironment();
         } catch (Exception e) {
-            log().i(e);
+            log().d(e);
         }
         if (env == null || env.getSecurityManager() instanceof EmptySecurityManager) {
             log().i("Initialize empty shiro", CFG_CONFIG_FILE);
