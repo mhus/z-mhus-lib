@@ -216,8 +216,8 @@ public class Table implements Serializable, Externalizable, NodeSerializable {
         for (INode col : cfg.getArrayOrCreate("columns")) {
             TableColumn tc = new TableColumn();
             tc.readSerializabledNode(col);
-            columns.add(tc);
             columnsIndex.put(tc.getName(), columns.size());
+            columns.add(tc);
         }
         
         for (INode row : cfg.getArrayOrCreate("rows")) {

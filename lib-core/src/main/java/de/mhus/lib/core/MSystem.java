@@ -855,7 +855,7 @@ public class MSystem {
      * @return The name of the class
      */
     public static String getCanonicalClassName(Class<?> clazz) {
-
+        if (clazz == null) return "null";
         if (clazz.isLocalClass()) return clazz.getCanonicalName();
 
         if (clazz.isAnonymousClass()) return clazz.getName();
@@ -1111,5 +1111,17 @@ public class MSystem {
         if (owner instanceof String) return (String) owner;
 
         return getCanonicalClassName(owner.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Enum<?>> getEnum(String className, MActivator activator) throws Exception {
+        if (activator == null) activator = M.l(MActivator.class);
+        int p = className.lastIndexOf('.');
+        if (p > 0) {
+            className = className.substring(0, p) + "$" + className.substring(p+1);
+            Class<?> type = activator.getClazz(className);
+            if (type.isEnum()) return (Class<? extends Enum<?>>) type;
+        }
+        return null;
     }
 }

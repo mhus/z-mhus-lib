@@ -64,4 +64,9 @@ public class TableColumn implements Serializable, NodeSerializable {
         cfg.setString("type", type);
         cfg.setString("note", note);
     }
+
+    @Override
+    public String toString() {
+        return name + ":" + type;
+    }
 }

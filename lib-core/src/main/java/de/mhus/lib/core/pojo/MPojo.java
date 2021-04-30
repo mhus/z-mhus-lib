@@ -55,9 +55,9 @@ import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cast.Caster;
 import de.mhus.lib.core.json.TransformHelper;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
+import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.util.Base64;
 
 public class MPojo {
@@ -69,6 +69,8 @@ public class MPojo {
     private static PojoModelFactory defaultModelFactory;
 
     private static PojoModelFactory attributesModelFactory;
+
+    private static MActivator defaultActivator;
 
     public static synchronized PojoModelFactory getDefaultModelFactory() {
         if (defaultModelFactory == null)
@@ -166,31 +168,87 @@ public class MPojo {
         }
         if (verbose)
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-        PojoModel model = factory.createPojoModel(from.getClass());
-        for (PojoAttribute<?> attr : model) {
-            boolean deep = false;
-            if (!attr.canRead()) continue;
-            if (attr.getName().equals("class")) continue;
-            if (useAnnotations) {
-                Hidden hidden = attr.getAnnotation(Hidden.class);
-                if (hidden != null)
-                    continue;
-                Public pub = attr.getAnnotation(Public.class);
-                if (pub != null) {
-                    if (!pub.readable()) continue;
-                    if (MCollection.contains(pub.hints(), MPojo.DEEP)) deep = true;
+
+        if (from instanceof String) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setString(INode.NAMELESS_VALUE, (String)from);
+        } else
+        if (from instanceof Long) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setLong(INode.NAMELESS_VALUE, (Long)from);
+        } else
+        if (from instanceof Integer) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setInt(INode.NAMELESS_VALUE, (Integer)from);
+        } else
+        if (from instanceof Boolean) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setBoolean(INode.NAMELESS_VALUE, (Boolean)from);
+        } else
+        if (from instanceof Float) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setFloat(INode.NAMELESS_VALUE, (Float)from);
+        } else
+        if (from instanceof Short) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setInt(INode.NAMELESS_VALUE, (Short)from);
+        } else
+        if (from instanceof Byte) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setLong(INode.NAMELESS_VALUE, (Byte)from);
+        } else
+        if (from instanceof java.sql.Timestamp) {
+            to.setString(INode.CLASS, "java.sql.Timestamp");
+            to.setLong(INode.NAMELESS_VALUE, ((java.sql.Timestamp)from).getTime());
+        } else
+        if (from instanceof Date) {
+            to.setString(INode.CLASS, "java.util.Date");
+            to.setLong(INode.NAMELESS_VALUE, ((Date)from).getTime());
+        } else
+        if (from instanceof Enum) {
+            to.setString(INode.CLASS, "java.lang.Enum");
+            to.setString(INode.CLASS + "_", from.getClass().getCanonicalName());
+            to.setInt(INode.NAMELESS_VALUE, ((Enum<?>)from).ordinal());
+            to.setString(INode.HELPER_VALUE, ((Enum<?>)from).toString());
+        } else
+        if (from instanceof Character) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setInt(INode.NAMELESS_VALUE, (Character)from);
+        } else
+        if (from instanceof Double) {
+            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+            to.setDouble(INode.NAMELESS_VALUE, (Double)from);
+        } else
+        if (from instanceof UUID) {
+            to.setString(INode.CLASS, "java.util.UUID");
+            to.setString(INode.NAMELESS_VALUE, ((UUID)from).toString());
+        } else {
+            PojoModel model = factory.createPojoModel(from.getClass());
+            for (PojoAttribute<?> attr : model) {
+                boolean deep = false;
+                if (!attr.canRead()) continue;
+                if (attr.getName().equals("class")) continue;
+                if (useAnnotations) {
+                    Hidden hidden = attr.getAnnotation(Hidden.class);
+                    if (hidden != null)
+                        continue;
+                    Public pub = attr.getAnnotation(Public.class);
+                    if (pub != null) {
+                        if (!pub.readable()) continue;
+                        if (MCollection.contains(pub.hints(), MPojo.DEEP)) deep = true;
+                    }
+                    Embedded emb = attr.getAnnotation(Embedded.class); // experimental
+                    if (emb != null) {
+                        Object value = attr.get(from);
+                        String name = attr.getName();
+                        pojoToNode(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
+                        continue;
+                    }
                 }
-                Embedded emb = attr.getAnnotation(Embedded.class); // experimental
-                if (emb != null) {
-                    Object value = attr.get(from);
-                    String name = attr.getName();
-                    pojoToNode(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
-                    continue;
-                }
+                Object value = attr.get(from);
+                String name = attr.getName();
+                setNodeValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
             }
-            Object value = attr.get(from);
-            String name = attr.getName();
-            setNodeValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
         }
     }
 
@@ -377,6 +435,77 @@ public class MPojo {
         nodeToPojo(from, to, factory, false, false);
     }
 
+    public static Object nodeToPojoObject(INode from) throws Exception {
+        return nodeToPojoObject(from, getDefaultModelFactory(), null, false, false);
+    }
+
+    public static Object nodeToPojoObject(INode from, boolean force) throws Exception {
+        return nodeToPojoObject(from, getDefaultModelFactory(), null, force, false);
+    }
+
+    public static Object nodeToPojoObject(INode from, boolean force, boolean verbose) throws Exception {
+        return nodeToPojoObject(from, getDefaultModelFactory(), null, force, verbose);
+    }
+
+    public static Object nodeToPojoObject(INode from, PojoModelFactory factory)
+            throws Exception {
+        return nodeToPojoObject(from, factory, null, false, false);
+    }
+    
+    public static Object nodeToPojoObject(INode from, PojoModelFactory factory, MActivator activator, boolean force, boolean verbose)
+            throws Exception {
+
+        if (activator == null) activator = getDefaultActivator();
+        if (from.getBoolean(INode.NULL, false))
+            return null;
+        String clazz = from.getString(INode.CLASS, null);
+        if (clazz == null) return null;
+        switch (clazz) {
+        case "java.lang.Boolean":
+            return from.getBoolean(INode.NAMELESS_VALUE, false);
+        case "java.lang.Integer":
+            return from.getInt(INode.NAMELESS_VALUE, 0);
+        case "java.lang.Long":
+            return from.getLong(INode.NAMELESS_VALUE, 0);
+        case "java.lang.Short":
+            return (short)from.getInt(INode.NAMELESS_VALUE, 0);
+        case "java.lang.Double":
+            return from.getDouble(INode.NAMELESS_VALUE, 0);
+        case "java.lang.Float":
+            return from.getFloat(INode.NAMELESS_VALUE, 0);
+        case "java.lang.Byte":
+            return (byte)from.getInt(INode.NAMELESS_VALUE, 0);
+        case "java.lang.String":
+            return from.getString(INode.NAMELESS_VALUE);
+        case "java.util.Date":
+            return new Date( from.getLong(INode.NAMELESS_VALUE, 0) );
+        case "java.lang.Character":
+            return (char)from.getInt(INode.NAMELESS_VALUE, 0);
+        case "java.util.UUID":
+            return UUID.fromString(from.getString(INode.NAMELESS_VALUE));
+        case "java.sql.Timestamp":
+            return new java.sql.Timestamp(from.getLong(INode.NAMELESS_VALUE, 0));
+        case "java.lang.Enum":
+            String enuName = from.getString(INode.CLASS + "_");
+            Class<? extends Enum<?>> type = MSystem.getEnum(enuName, activator);
+            if (type != null) {
+                Object[] cons = type.getEnumConstants();
+                int ord = from.getInt(INode.NAMELESS_VALUE, 0);
+                if (ord >= 0 && ord < cons.length) return cons[ord];
+            }
+            return null;
+        }
+        Object obj = activator.createObject(clazz);
+        nodeToPojo(from, obj, factory, force, verbose);
+        return obj;
+    }
+
+    private static synchronized MActivator getDefaultActivator() {
+        if (defaultActivator == null)
+            defaultActivator = M.l(MActivator.class);
+        return defaultActivator;
+    }
+
     /**
      * 
      * @param from
@@ -499,7 +628,7 @@ public class MPojo {
             val = MCast.to(value, hint);
             if (val == null && value instanceof INode) {
                 try {
-                    val = M.l(MActivator.class).createObject(hint);
+                    val = getDefaultActivator().createObject(hint);
                     nodeToPojo((INode)value, val, factory, force, verbose );
                 } catch (Throwable t) {
                     log.d(hint, t);
@@ -508,16 +637,12 @@ public class MPojo {
             if (val == null) {
                 try {
                     // try enum
-                    int p = hint.lastIndexOf('.');
-                    if (p > 0) {
-                        String className = hint.substring(0, p) + "$" + hint.substring(p+1);
-                        Class<?> type = M.l(MActivator.class).getClazz(className);
-                        if (type.isEnum()) {
-                            Object[] cons = type.getEnumConstants();
-                            int ord = MCast.toint(value, 0);
-                            val = cons.length > 0 ? cons[0] : null;
-                            if (ord >= 0 && ord < cons.length) val = cons[ord];
-                        }
+                    Class<?> type = MSystem.getEnum(hint, null);
+                    if (type != null) {
+                        Object[] cons = type.getEnumConstants();
+                        int ord = MCast.toint(value, 0);
+                        val = cons.length > 0 ? cons[0] : null;
+                        if (ord >= 0 && ord < cons.length) val = cons[ord];
                     }
                 } catch (Throwable t) {
                     log.d(hint, t);

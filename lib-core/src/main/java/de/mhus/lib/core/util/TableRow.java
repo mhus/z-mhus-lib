@@ -26,9 +26,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.mhus.lib.core.MActivator;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MJson;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.NodeSerializable;
-import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.errors.NotFoundRuntimeException;
 
@@ -89,15 +89,8 @@ public class TableRow implements Serializable, NodeSerializable {
 
     @Override
     public void readSerializabledNode(INode cfg) throws Exception {
-        for (INode line : cfg.getArrayOrCreate("data")) {
-            String clazzName = line.getString("_class", null);
-            Object obj;
-            try {
-                obj = MApi.get().lookup(MActivator.class).createObject(clazzName);
-            } catch (Exception e) {
-                throw new IOException(e);
-            }
-            MPojo.nodeToPojo(line, obj);
+        for (INode cell : cfg.getArrayOrCreate("data")) {
+            Object obj = MPojo.nodeToPojoObject(cell);
             data.add(obj);
         }
     }
@@ -106,9 +99,8 @@ public class TableRow implements Serializable, NodeSerializable {
     public void writeSerializabledNode(INode cfg) throws Exception {
         NodeList arr = cfg.createArray("data");
         for (Object d : data) {
-            INode line = arr.createObject();
-            line.setString("_class", d.getClass().getCanonicalName());
-            MPojo.pojoToNode(d, line);
+            INode cell = arr.createObject();
+            MPojo.pojoToNode(d, cell, true, false);
         }
     }
 
