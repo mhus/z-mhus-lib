@@ -44,7 +44,7 @@ public class SuccessfulConfig extends Successful {
         MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializabledNode(cfg);
+                object.writeSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
@@ -56,7 +56,7 @@ public class SuccessfulConfig extends Successful {
         MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializabledNode(cfg);
+                object.writeSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
@@ -68,7 +68,7 @@ public class SuccessfulConfig extends Successful {
         MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializabledNode(cfg);
+                object.writeSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
@@ -80,7 +80,7 @@ public class SuccessfulConfig extends Successful {
         MNode cfg = new MNode();
         if (object != null)
             try {   
-                object.readSerializabledNode(cfg);
+                object.writeSerializabledNode(cfg);
             } catch (Exception e) {
                 throw new MRuntimeException(getOperationPath(), msg,e);
             }
