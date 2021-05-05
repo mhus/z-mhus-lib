@@ -15,7 +15,10 @@
  */
 package de.mhus.lib.core.security;
 
-import org.apache.shiro.subject.SimplePrincipalCollection;
+import java.util.Collections;
+import java.util.Map;
+
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 
 import de.mhus.lib.core.MLog;
@@ -25,6 +28,7 @@ import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.aaa.BearerConfiguration;
+import de.mhus.lib.core.aaa.TrustedToken;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgNode;
 import de.mhus.lib.core.node.INode;
@@ -35,52 +39,70 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
 // TODO Use hashed passwords
 public class TrustFromConfiguration extends MLog implements TrustApi {
 
+    public enum TYPE { PLAIN, JWT };
+    
     public static final BearerConfiguration BEARER_CONFIG = new BearerConfiguration();
     @SuppressWarnings("unused")
     private static final CfgLong CFG_BEARER_CONFIG_TIMEOUT = new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECOUNDS)
             .updateAction(v -> BEARER_CONFIG.setTimeout(v) ).doUpdateAction();
 
-    private SoftHashMap<String, SecureString> cache = new SoftHashMap<>();
+    private Map<String, SecureString> passwordCache = Collections.synchronizedMap( new SoftHashMap<>());
+    private Map<String, TYPE> typeCache = Collections.synchronizedMap(new SoftHashMap<>());
+    private Map<String, String> targetCache = Collections.synchronizedMap(new SoftHashMap<>());
+    
     private CfgNode config =
             new CfgNode(TrustApi.class, "", null)
                     .updateAction(
                             (c) -> {
-                                synchronized (cache) {
-                                    cache.clear();
+                                synchronized (passwordCache) {
+                                    passwordCache.clear();
                                 }
                             });
 
     public SecureString getPassword(String name) {
         if (MString.isSet(name)) {
-            synchronized (cache) {
-                SecureString ret = cache.get(name);
-                if (ret == null) {
-                    INode node = config.value();
-                    if (node != null) {
-                        for (INode trust : node.getObjects()) {
-                            if (trust.getString("name", "").equals(name)) {
-                                ret = MPassword.decodeSecure(trust.getString("password", ""));
-                                cache.put(name, ret);
-                            }
+            SecureString ret = passwordCache.get(name);
+            if (ret == null) {
+                INode node = config.value();
+                if (node != null) {
+                    for (INode trust : node.getObjects()) {
+                        if (trust.getString("name", "").equals(name)) {
+                            ret = MPassword.decodeSecure(trust.getString("password", ""));
+                            passwordCache.put(name, ret);
                         }
                     }
                 }
-                if (ret != null) return ret;
+            }
+            if (ret != null) return ret;
+        }
+        throw new NotFoundRuntimeException("unknown trust", name);
+    }
+    
+    public TYPE getType(String name) {
+        TYPE ret = typeCache.get(name);
+        if (ret == null) {
+            INode node = config.value();
+            if (node != null) {
+                for (INode trust : node.getObjects()) {
+                    if (trust.getString("name", "").equals(name)) {
+                        String str = trust.getString("type", "JWT");
+                        ret = TYPE.valueOf(str);
+                        typeCache.put(name, ret);
+                    }
+                }
             }
         }
+        if (ret != null) return ret;
         throw new NotFoundRuntimeException("unknown trust", name);
     }
 
     @Override
-    public Subject login(String ticket) {
+    public AuthenticationToken createToken(String ticket) {
         String[] parts = ticket.split(":",3);
         validatePassword(parts[0], parts[2]);
-        return new Subject.Builder()
-                .authenticated(true)
-                .principals(new SimplePrincipalCollection(parts[1], Aaa.REALM_TRUST.value()))
-                .buildSubject();
+        return new TrustedToken(parts[1]);
     }
-    
+
     public boolean validatePassword(String name, String password) {
         SecureString trustPassword = getPassword(name);
         return password.equals(trustPassword.value());
@@ -88,7 +110,34 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
 
     @Override
     public String createToken(String source, Object target, Subject subject) {
-        String tokenStr = Aaa.createBearerToken(subject, MSystem.getHostname(), BEARER_CONFIG );
-        return Aaa.TICKET_PREFIX_BEARER + ":" + tokenStr;
+        String trust = getTrustFor(source, target);
+        switch (getType(trust)) {
+        case PLAIN:
+            return createTrustTicket(trust, getPassword(trust), subject);
+        case JWT:
+            String tokenStr = Aaa.createBearerToken(subject, MSystem.getHostname(), BEARER_CONFIG );
+            return Aaa.TICKET_PREFIX_BEARER + ":" + tokenStr;
+        }
+        throw new NotFoundRuntimeException("unknown trust type", trust);
+    }
+
+    public String getTrustFor(String source, Object target) {
+        String name = source + ":" + target;
+        String ret = targetCache.get(name);
+        if (ret == null) {
+            INode node = config.value();
+            if (node != null) {
+                for (INode trust : node.getObjects()) {
+                    if (trust.getString("source", "").matches(source)) {
+                        ret = trust.getString("name",null);
+                        targetCache.put(name, ret);
+                        break;
+                    }
+                }
+                if (ret == null) 
+                    throw new NotFoundRuntimeException("trust not found for source", source);
+            }
+        }
+        return ret;
     }
 }

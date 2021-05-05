@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.security;
 
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 
 import de.mhus.lib.annotations.activator.DefaultImplementation;
@@ -28,7 +29,6 @@ public interface TrustApi {
     String createToken(String source, Object target, Subject subject);
 
     default String createTrustTicket(String trust, SecureString password, Subject subject) {
-        // TODO encode with rsa
         return Aaa.TICKET_PREFIX_TRUST
                 + ":"
                 + trust
@@ -38,6 +38,6 @@ public interface TrustApi {
                 + MPassword.encode(password.value());
     }
 
-    Subject login(String ticket);
+    AuthenticationToken createToken(String ticket);
 
 }

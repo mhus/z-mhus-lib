@@ -107,9 +107,12 @@ public class TrustedToken implements AuthenticationToken {
         
         // really check access
         boolean access = false;
+        String prefix = TrustedToken.class.getCanonicalName() + ":" + username + ":";
         for (StackTraceElement element : stackTrace) {
             String clazz = element.getClassName();
-            if (Aaa.hasAccess( TrustedToken.class.getCanonicalName() + ":" + username + ":" + clazz )) {
+            if (debugPermissions != DEBUG.NO)
+                log.i("hasAccess",Aaa.getPrincipal(),prefix + clazz);
+            if (Aaa.hasAccess( prefix + clazz )) {
                 access = true;
                 break;
             }
