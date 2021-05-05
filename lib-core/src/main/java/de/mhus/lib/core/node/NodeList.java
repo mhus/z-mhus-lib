@@ -25,7 +25,7 @@ public class NodeList extends LinkedList<INode> {
 
     private static final long serialVersionUID = 1L;
     private String name;
-    private MNode parent;
+    private INode parent;
 
     public NodeList(String name, MNode parent) {
         this.name = name;
@@ -90,8 +90,16 @@ public class NodeList extends LinkedList<INode> {
     }
 
     public INode createObject() {
-        MNode ret = new MNode(name, parent);
+        MNode ret = new MNode(name, this);
         super.add(ret);
         return ret;
     }
+
+	public INode getParent() {
+		return parent;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

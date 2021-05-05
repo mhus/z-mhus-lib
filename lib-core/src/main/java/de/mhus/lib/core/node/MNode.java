@@ -39,9 +39,21 @@ public class MNode extends MProperties implements INode {
     protected INode parent;
     protected NodeStringCompiler compiler;
     protected HashMap<String, CompiledString> compiledCache;
+    protected NodeList array;
 
     public MNode() {}
 
+    public MNode(String name) {
+        this.name = name;
+    }
+    
+    public MNode(String name, NodeList array) {
+        this.name = name;
+        this.array = array;
+        if (array != null)
+        	this.parent = array.getParent();
+    }
+    
     public MNode(String name, INode parent) {
         this.name = name;
         this.parent = parent;
@@ -290,6 +302,11 @@ public class MNode extends MProperties implements INode {
     }
 
     @Override
+    public NodeList getParentArray() {
+        return array;
+    }
+    
+    @Override
     public List<String> getObjectKeys() {
         ArrayList<String> out = new ArrayList<>();
         for (Entry<String, Object> entry : entrySet()) {
@@ -319,7 +336,7 @@ public class MNode extends MProperties implements INode {
 
     @Override
     public synchronized String toString() {
-        return name + super.toString();
+        return (name == null || array != null ? "" : name + ":") + super.toString();
     }
 
     @Override

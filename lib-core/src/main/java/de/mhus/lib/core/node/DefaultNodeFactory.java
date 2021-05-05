@@ -32,7 +32,7 @@ public class DefaultNodeFactory implements INodeFactory {
 
     public DefaultNodeFactory() {
         registry.put("xml", new XmlNodeBuilder());
-        registry.put("json", new JsonNodeBuilder());
+        registry.put("json", new JsonStreamNodeBuilder());
         registry.put("yml", new YamlNodeBuilder());
         registry.put("yaml", new YamlNodeBuilder());
         registry.put("properties", new PropertiesNodeBuilder());

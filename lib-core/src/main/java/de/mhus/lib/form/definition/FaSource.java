@@ -27,7 +27,7 @@ public class FaSource extends MNode implements IDefAttribute {
     private String tag;
 
     public FaSource(String tag, String name) {
-        super(tag, null);
+        super(tag);
         this.tag = tag;
         setString("name", name);
     }

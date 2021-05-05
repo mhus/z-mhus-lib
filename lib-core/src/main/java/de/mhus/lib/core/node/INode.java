@@ -15,7 +15,7 @@
  */
 package de.mhus.lib.core.node;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,7 +25,6 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 import de.mhus.lib.core.IProperties;
-import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.logging.MLogUtil;
@@ -225,7 +224,7 @@ public interface INode extends IProperties {
     }
 
     static INode readFromJsonString(String json) throws MException {
-        return new JsonNodeBuilder().readFromString(json);
+        return new JsonStreamNodeBuilder().readFromString(json);
     }
 
     static INode readFromXmlString(Element documentElement) throws MException {
@@ -238,16 +237,24 @@ public interface INode extends IProperties {
 
     static String toCompactJsonString(INode node) throws MException {
         try {
-            return MJson.toString(new JsonNodeBuilder().writeToJsonNode(node));
-        } catch (IOException e) {
+        	ByteArrayOutputStream os = new ByteArrayOutputStream();
+        	JsonStreamNodeBuilder builder = new JsonStreamNodeBuilder();
+        	builder.setPretty(false);
+        	builder.write(node, os);
+        	return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
+        } catch (Exception e) {
             throw new MException(e);
         }
     }
 
     static String toPrettyJsonString(INode node) throws MException {
         try {
-            return MJson.toPrettyString(new JsonNodeBuilder().writeToJsonNode(node));
-        } catch (IOException e) {
+        	ByteArrayOutputStream os = new ByteArrayOutputStream();
+        	JsonStreamNodeBuilder builder = new JsonStreamNodeBuilder();
+        	builder.setPretty(true);
+        	builder.write(node, os);
+        	return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
+        } catch (Exception e) {
             throw new MException(e);
         }
     }
@@ -355,5 +362,7 @@ public interface INode extends IProperties {
      * @return The INode
      */
     INode getAsObject(String key);
+
+	NodeList getParentArray();
 
 }

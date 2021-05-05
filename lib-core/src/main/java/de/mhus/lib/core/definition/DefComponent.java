@@ -29,7 +29,7 @@ public class DefComponent extends MNode implements IDefDefinition {
     private LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
 
     public DefComponent(String tag, IDefDefinition... definitions) {
-        super(tag, null);
+        super(tag);
         this.tag = tag;
         addDefinition(definitions);
     }

@@ -161,7 +161,7 @@ public class ConfigTest extends TestCase {
             DefaultNodeFactory dcf = new DefaultNodeFactory();
             System.out.println("C1: " + c);
             dcf.write(c, file);
-
+            System.out.println("File: " + MFile.readFile(file));
             // read
             INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
