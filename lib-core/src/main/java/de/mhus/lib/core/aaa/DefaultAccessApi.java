@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.aaa;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -52,7 +53,6 @@ public class DefaultAccessApi extends MLog implements AccessApi {
             log().d(e);
         }
         if (env == null || env.getSecurityManager() instanceof EmptySecurityManager) {
-            log().i("Initialize empty shiro", CFG_CONFIG_FILE);
             HashMap<String, Object> seed = new HashMap<>();
             seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, createDefaultSecurityManager() );
             env = new DefaultEnvironment(seed);
@@ -65,7 +65,13 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     }
 
     protected Environment createEnvironment() {
-        return new IniDataEnvironment(CFG_CONFIG_FILE.value());
+        if (new File(CFG_CONFIG_FILE.value()).exists()) {
+            log().i("Initialize shiro ini", CFG_CONFIG_FILE);
+            return new IniDataEnvironment(CFG_CONFIG_FILE.value());
+        } else {
+            log().i("Initialize shiro dummy");
+            return new DummyEnvironment();
+        }
     }
 
     @Override
@@ -98,7 +104,6 @@ public class DefaultAccessApi extends MLog implements AccessApi {
         }
     }
 
-    @Override
     public Subject getSubject() {
         return SecurityUtils.getSubject();
     }

@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -55,6 +56,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
 import de.mhus.lib.annotations.generic.Public;
+import de.mhus.lib.annotations.lang.Function0;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
@@ -127,6 +129,7 @@ public class Aaa {
             "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.schedule.SchedulerJob;" +
             "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.osgi.dev.dev.CmdAccessTool;" +
             "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.jms.ServerJms;" +
+            "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.lib.core.aaa.TrustedAaa;" +
             "de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.rest.core.impl.RestServlet"
             ).updateAction(v -> updateGuestPerms() );
     public static final CfgString PERMS_GUEST = new CfgString(AccessApi.class, "permsGuest", "").updateAction(v -> updateGuestPerms() );
@@ -158,6 +161,7 @@ public class Aaa {
     
     private static Subject DUMMY_SUBJECT = null;
     private static Subject GUEST_SUBJECT;
+    private static boolean doInitGuestSubject;
 
     static {
 
@@ -224,7 +228,7 @@ public class Aaa {
      */
     public static boolean hasAccess(Subject subject, String resource) {
         if (subject.getPrincipal() == null)
-            subject = getGuestSubject();
+            subject = getGuestSubject(false);
         Boolean cached = getCachedAccess(subject, "access" , resource);
         if (cached != null) return cached;
 
@@ -233,10 +237,30 @@ public class Aaa {
         return value;
     }
 
-    private static synchronized Subject getGuestSubject() {
-        if (GUEST_SUBJECT == null) {
-            GUEST_SUBJECT = M.l(AccessApi.class).createSubject();
-            GUEST_SUBJECT.login(new TrustedToken(USER_GUEST.value()));
+    private static synchronized Subject getGuestSubject(boolean careful) {
+        if (GUEST_SUBJECT == null || !isPrincipal(GUEST_SUBJECT, careful)) {
+            if (careful) return null;
+            if (doInitGuestSubject) {
+                MApi.dirtyLogDebug("Aaa.getGuestSubject prevent infinitiy loop - return null");
+                return null;
+            }
+            try {
+                doInitGuestSubject = true;
+                GUEST_SUBJECT = M.l(AccessApi.class).createSubject();
+                if (GUEST_SUBJECT == null || USER_GUEST == null || USER_GUEST.value() == null) {
+                    MApi.dirtyLogDebug("Aaa.getGuestSubject can't initialize guest subject - return null");
+                    GUEST_SUBJECT = null;
+                    return null;
+                }
+                    GUEST_SUBJECT.login(new TrustedToken(USER_GUEST.value()));
+            } catch (Throwable t) {
+                MApi.dirtyLogDebug("Aaa.getGuestSubject can't initialize guest subject - return null: " + t);
+                MApi.dirtyLogDebug(t);
+                GUEST_SUBJECT = null;
+                return null;
+            } finally {
+                doInitGuestSubject = false;
+            }
         }
         return GUEST_SUBJECT;
     }
@@ -274,7 +298,8 @@ public class Aaa {
 
     public static boolean isAdmin() {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            Subject subject = getSubject(); // init
+            if (subject == null) return false;
             Boolean cached = getCachedAccess(subject, "admin" , "");
             if (cached != null) return cached;
             boolean value = subject.hasRole(ROLE_ADMIN.value());
@@ -301,8 +326,15 @@ public class Aaa {
     
     public static Subject getSubject() {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            SecurityUtils.getSecurityManager(); // not initialized,  M.l() will loop or fail with NPE
+            //Subject subject = M.l(AccessApi.class).getSubject(); // cause a infinity loop in M.l()
+            Subject subject = SecurityUtils.getSubject();
             return subject;
+        } catch (org.apache.shiro.UnavailableSecurityManagerException e) {
+            // not initialized,  M.l() will loop or fail with NPE
+//            log.d(e.toString()); log causes an NPE
+//            log.t(e);
+            return null;
         } catch (UnknownSessionException e) {
             M.l(AccessApi.class).destroySession();
             return null;
@@ -314,8 +346,8 @@ public class Aaa {
 
     public static boolean isAuthenticated() {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
-            return subject.isAuthenticated();
+            Subject subject = getSubject(); // init
+            return subject != null && subject.isAuthenticated();
         } catch (UnknownSessionException e) {
             M.l(AccessApi.class).destroySession();
             return false;
@@ -327,7 +359,8 @@ public class Aaa {
 
     public static String getPrincipal() {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            Subject subject = getSubject(); // init
+            if (subject == null) return null;
             return getPrincipal(subject);
         } catch (UnknownSessionException e) {
             M.l(AccessApi.class).destroySession();
@@ -340,7 +373,7 @@ public class Aaa {
 
     public static String getPrincipalOrGuest() {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            Subject subject = getSubject(); // init
             if (subject == null)
                 return USER_GUEST.value();
             String ret = getPrincipal(subject);
@@ -367,6 +400,19 @@ public class Aaa {
         }
     }
 
+    public static boolean isPrincipal(Subject subject, boolean careful) {
+        if (subject == null) return false;
+        try {
+            Object p = subject.getPrincipal();
+            if (p == null) return false;
+            return true;
+        } catch (UnknownSessionException e) {
+            if (!careful)
+                M.l(AccessApi.class).destroySession();
+            return false;
+        }
+    }
+    
     public static String toString(Subject subject) {
         if (subject == null) return "[null]";
         if (!subject.isAuthenticated()) return "["+USER_GUEST.value()+"]";
@@ -485,8 +531,15 @@ public class Aaa {
      * @return true if access is granted
      */
     public static boolean isPermitted(String permission, String level, String instance) {
+        Subject subject = getSubject();
+        if (subject == null)
+            subject = getGuestSubject(false);
+        return isPermitted(subject, permission, level, instance);
+    }
+
+    public static boolean isPermitted(Subject subject, String permission, String level, String instance) {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
+            if (subject == null) return false;
             permission = normalizeWildcardPart(permission);
             StringBuilder wildcardString = new StringBuilder().append(permission);
             if (level != null || instance != null) {
@@ -514,8 +567,14 @@ public class Aaa {
     }
 
     public static boolean isPermitted(String wildcardString) {
+        Subject subject = getSubject();
+        if (subject == null)
+            subject = getGuestSubject(false);
+        return isPermitted(subject, wildcardString);
+    }
+    
+    public static boolean isPermitted(Subject subject, String wildcardString) {
         try {
-            Subject subject = M.l(AccessApi.class).getSubject(); // init
             return subject.isPermitted(new WildcardPermission(wildcardString));
         } catch (Throwable t) {
             log.d(t);
@@ -528,12 +587,14 @@ public class Aaa {
     }
 
     public static Locale getLocale(Subject subject) {
-        Session session = subject.getSession(false);
-        if (session != null) {
-            Object locale = session.getAttribute(ATTR_LOCALE);
-            if (locale != null) {
-                if (locale instanceof Locale) return (Locale) locale;
-                if (locale instanceof String) return Locale.forLanguageTag((String) locale);
+        if (subject != null) {
+            Session session = subject.getSession(false);
+            if (session != null) {
+                Object locale = session.getAttribute(ATTR_LOCALE);
+                if (locale != null) {
+                    if (locale instanceof Locale) return (Locale) locale;
+                    if (locale instanceof String) return Locale.forLanguageTag((String) locale);
+                }
             }
         }
         return Locale.getDefault();
@@ -544,17 +605,22 @@ public class Aaa {
     }
 
     public static void setLocale(Subject subject, Locale locale) {
+        if (subject == null) return;
         Session session = subject.getSession();
         session.setAttribute(ATTR_LOCALE, locale);
     }
 
     public static void setLocale(Subject subject, String locale) {
+        if (subject == null) return;
         Session session = subject.getSession();
         session.setAttribute(ATTR_LOCALE, Locale.forLanguageTag(locale));
     }
 
     public static Object getSessionAttribute(String key) {
-        Session session = getSubject().getSession(false);
+        Subject subject = getSubject();
+        if (subject == null)
+            subject = getGuestSubject(false);
+        Session session = subject.getSession(false);
         if (session == null) return null;
         Object res = session.getAttribute(key);
         if (res != null) return res;
@@ -572,6 +638,7 @@ public class Aaa {
     }
 
     public static Object getSessionAttribute(Subject subject, String key) {
+        if (subject == null) return null;
         Session session = subject.getSession(false);
         if (session == null) return null;
         Object res = session.getAttribute(key);
@@ -596,7 +663,9 @@ public class Aaa {
      * @param value
      */
     public static void setSessionAttribute(String key, Object value) {
-        Session session = getSubject().getSession();
+        Subject subject = getSubject();
+        if (subject == null) return;
+        Session session = subject.getSession();
         session.setAttribute(key, value);
     }
 
@@ -608,6 +677,7 @@ public class Aaa {
      * @param value
      */
     public static void setSessionAttribute(Subject subject, String key, Object value) {
+        if (subject == null) return;
         Session session = subject.getSession();
         session.setAttribute(key, value);
     }
@@ -638,6 +708,7 @@ public class Aaa {
         UsernamePasswordToken token = new UsernamePasswordToken(user, MPassword.decode(pass));
         token.setRememberMe(rememberMe);
         try {
+            // do not need a proper environment for username tokens
             subject.login(token);
         } catch (AuthenticationException e) {
             log.d(e);
@@ -654,21 +725,21 @@ public class Aaa {
     }
 
     public static Subject login(String ticket) {
-        AuthenticationToken token = createToken(ticket);
-        Subject current = getSubject();
-        if (current.getPrincipal() == null) {
-            // first login as guest to get guest privileges
-            try (SubjectEnvironment access = asSubject(getGuestSubject())) {
-                Subject subject = M.l(AccessApi.class).createSubject();
-                subject.login(token);
-                return subject;
-            }
-        }
-        Subject subject = M.l(AccessApi.class).createSubject();
-        subject.login(token);
-        return subject;
+        return properEnvironment(() -> {
+            AuthenticationToken token = createToken(ticket);
+            Subject subject = M.l(AccessApi.class).createSubject();
+            subject.login(token);
+            return subject;
+        }, false);
     }
-    
+
+    public static void login(Subject subject, AuthenticationToken authToken) {
+        properEnvironment(() -> {
+            subject.login(authToken);
+            return null;
+        }, false);
+    }
+
     public static AuthenticationToken createToken(String ticket) {
         M.l(AccessApi.class); // init
         if (ticket == null) throw new AuthorizationException("ticket not set");
@@ -708,30 +779,24 @@ public class Aaa {
      */
     public static Subject createSubjectWithoutCheck(String account) {
 
-        Subject current = getSubject();
-        if (current.getPrincipal() == null) {
-            // first login as guest to get guest privileges
-            try (SubjectEnvironment access = asSubject(getGuestSubject())) {
-                Subject subject = M.l(AccessApi.class).createSubject();
-                subject.login(new TrustedToken(account));
-                return subject;
-            }
-        }
-        Subject subject = M.l(AccessApi.class).createSubject();
-        subject.login(new TrustedToken(account));
-        return subject;
+        return properEnvironment(() -> {
+            Subject subject = M.l(AccessApi.class).createSubject();
+            subject.login(new TrustedToken(account));
+            return subject;
+        }, false);
+
     }
 
     public static boolean hasRole(String role) {
         Subject subject = getSubject();
         if (subject.getPrincipal() == null)
-            subject = getGuestSubject();
+            subject = getGuestSubject(false);
         return subject.hasRole(role);
     }
 
     public static boolean hasRole(Subject subject, String role) {
         if (subject.getPrincipal() == null)
-            subject = getGuestSubject();
+            subject = getGuestSubject(false);
         return subject.hasRole(role);
     }
     
@@ -744,8 +809,9 @@ public class Aaa {
     }
 
     public static boolean hasPermission(Subject subject, Annotation[] annotations) {
+
         if (subject.getPrincipal() == null)
-            subject = getGuestSubject();
+            subject = getGuestSubject(false);
         Value<Boolean> perm = new Value<>(true);
         subject.execute(
                 () -> {
@@ -778,12 +844,43 @@ public class Aaa {
     }
 
     public static void checkPermission(Annotation[] annotations) throws AuthorizationException {
-        for (Annotation classAnno : annotations) {
-            AuthorizingAnnotationHandler handler =
-                    shiroAnnotations.get(classAnno.annotationType().getCanonicalName());
-            if (handler == null) continue;
-            handler.assertAuthorized(classAnno);
+        
+        properEnvironment( () -> {
+        
+            for (Annotation classAnno : annotations) {
+                AuthorizingAnnotationHandler handler =
+                        shiroAnnotations.get(classAnno.annotationType().getCanonicalName());
+                if (handler == null) continue;
+                handler.assertAuthorized(classAnno);
+            }
+            return null;
+        }, true); // must be careful otherwise startup in osgi will fail
+    }
+
+    /**
+     * Do the action even as the current user or guest environment. An anonymous
+     * environment will be surrounded with guest.
+     * 
+     * @param <R> Return type
+     * @param action The action to do
+     * @param careful Set to careful will not create anything
+     * @return Return of the action
+     */
+    public static <R> R properEnvironment(Function0<R> action, boolean careful) {
+
+        // check if we are in anonymous environment
+        final Subject subject = getSubject();
+        if (!isPrincipal(subject, careful)) {
+            // surround with guest environment
+            final Subject guest = getGuestSubject(careful);
+            if (guest == null)
+                return action.apply(); // fallback to prevent loops
+            try (SubjectEnvironment access = asSubject(guest)) {
+                return action.apply();
+            }
         }
+        // leave existing
+        return action.apply();
     }
 
     public static boolean isAnnotated(Class<?> clazz) {
@@ -836,7 +933,7 @@ public class Aaa {
     public static boolean hasAccessByList(List<String> map, Subject account, String objectIdent) {
         boolean access = false;
         if (account.getPrincipal() == null)
-            account = getGuestSubject();
+            account = getGuestSubject(false);
         String principal = getPrincipal(account);
         for (String g : map) {
             
@@ -964,8 +1061,7 @@ public class Aaa {
     }
     
     public static Collection<String> getPerms(Subject subject) {
-        if (subject == null || !(subject instanceof SimpleAccount)) return null;
-        return Collections.unmodifiableCollection(((SimpleAccount)subject).getStringPermissions());
+        return TrustedAaa.getPerms(subject);
     }
-    
+
 }

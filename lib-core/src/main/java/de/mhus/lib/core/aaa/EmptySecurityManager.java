@@ -20,6 +20,6 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 public class EmptySecurityManager extends DefaultSecurityManager {
 
     public EmptySecurityManager() {
-        setRealm(new EmptyRealm());
+        setRealm(new DummyRealm());
     }
 }

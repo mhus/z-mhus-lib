@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import de.mhus.lib.basics.consts.Identifier;
 import de.mhus.lib.core.logging.Log;
-import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.pojo.MPojo;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.EnumerationIterator;
@@ -45,7 +44,7 @@ public class M {
     public static final int[] EMPTY_INT_ARRAY = new int[0];
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final long[] EMPTY_LONG_ARRAY = new long[0];
-    public static final List<INode> EMPTY_LIST = new EmptyList<>();
+    public static final List<?> EMPTY_LIST = new EmptyList<>();
 
     public static final Locale LOCALE_DE_DE = new Locale("de", "DE");
     public static final Locale LOCALE_EN_US = new Locale("en", "US");

@@ -129,14 +129,15 @@ public class MNode extends MProperties implements INode {
         return createArray(key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<INode> getObjectList(String key) {
         Object val = get(key);
-        if (val == null) return M.EMPTY_LIST;
+        if (val == null) return (List<INode>) M.EMPTY_LIST;
         // if (val == null) throw new NotFoundException("value not found",key);
         if (val instanceof INode) return new SingleList<INode>((INode) val);
         if (val instanceof NodeList) return Collections.unmodifiableList((NodeList) val);
-        return M.EMPTY_LIST;
+        return (List<INode>) M.EMPTY_LIST;
         // throw new NotFoundException("value is not a NodeList or INode",key);
     }
 

@@ -111,7 +111,7 @@ public class TrustedToken implements AuthenticationToken {
         for (StackTraceElement element : stackTrace) {
             String clazz = element.getClassName();
             if (debugPermissions != DEBUG.NO)
-                log.i("hasAccess",Aaa.getPrincipal(),prefix + clazz);
+                log.d("hasAccess",Aaa.getPrincipal(),prefix, clazz);
             if (Aaa.hasAccess( prefix + clazz )) {
                 access = true;
                 break;
