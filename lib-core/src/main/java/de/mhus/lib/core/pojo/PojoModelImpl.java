@@ -38,6 +38,10 @@ public class PojoModelImpl implements PojoModel {
         actions.put(attr.getName(), attr);
     }
 
+    public void addAction(String name, PojoAction attr) {
+        actions.put(name, attr);
+    }
+    
     @SuppressWarnings("rawtypes")
     @Override
     public Iterator<PojoAttribute> iterator() {

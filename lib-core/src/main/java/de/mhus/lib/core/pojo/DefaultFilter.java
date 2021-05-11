@@ -61,8 +61,14 @@ public class DefaultFilter implements PojoFilter {
 
         for (String name : model.getActionNames()) {
             PojoAction action = model.getAction(name);
-            if (removeNoActions && action.getAnnotation(Action.class) == null)
+            Action anno = action.getAnnotation(Action.class);
+            if (removeNoActions && anno == null)
                 model.removeAction(name);
+            if (anno != null && anno.value().length() > 0) {
+                // rename
+                model.removeAction(name);
+                model.addAction(anno.value(), action);
+            }
         }
     }
 }

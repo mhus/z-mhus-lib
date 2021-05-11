@@ -23,7 +23,7 @@ public interface PojoAction {
 
     Object doExecute(Object pojo, Object... args) throws Exception;
 
-    Annotation getAnnotation(Class<? extends Annotation> annotationClass);
+    <A extends Annotation> A getAnnotation(Class<? extends A> annotationClass);
 
     Class<?> getManagedClass();
 

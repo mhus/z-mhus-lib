@@ -53,9 +53,9 @@ public class FunctionAction implements PojoAction {
     }
 
     @Override
-    public Annotation getAnnotation(Class<? extends Annotation> annotationClass) {
+    public <A extends Annotation> A getAnnotation(Class<? extends A> annotationClass) {
 
-        Annotation out = action.getAnnotation(annotationClass);
+        A out = action.getAnnotation(annotationClass);
         if (out != null) return out;
 
         Set<Method> res = MethodAnalyser.getMethodsForMethod(clazz, action.getName());
