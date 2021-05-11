@@ -146,6 +146,7 @@ public class OperationResult {
     public String getResultAsString() {
         if (result == null) return "";
         if (result instanceof String) return (String) result;
+        if (result instanceof byte[]) return new String( (byte[])result, MString.CHARSET_CHARSET_UTF_8 );
         return String.valueOf(result);
     }
 

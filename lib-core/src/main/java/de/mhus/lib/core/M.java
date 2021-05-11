@@ -195,6 +195,10 @@ public class M {
         return MCast.toDate(in, def);
     }
 
+    public static String to(Object in, String def) {
+        return MCast.toString(in, def);
+    }
+
     /**
      * M.l()
      *
