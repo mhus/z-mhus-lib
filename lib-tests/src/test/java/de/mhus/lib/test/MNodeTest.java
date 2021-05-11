@@ -18,6 +18,7 @@ package de.mhus.lib.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.Collection;
@@ -37,7 +38,7 @@ import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.tests.TestCase;
 
-public class ConfigTest extends TestCase {
+public class MNodeTest extends TestCase {
 
     @Test
     public void testProperties() throws MException {
@@ -139,11 +140,11 @@ public class ConfigTest extends TestCase {
     }
 
     @Test
-    public void testJson() throws Exception {
+    public void testJsonStream() throws Exception {
 
         String json =
                 MString.replaceAll(
-                        "{'test1':'wow','test2':'alf',"
+                        "{'test1':'wow','test2':'alf','boolon':true,'booloff':false,"
                                 + "'sub': [  "
                                 + "{'test1':'wow1','test2':'alf1'} , "
                                 + "{'test1':'wow2','test2':'alf2'} , "
@@ -154,6 +155,8 @@ public class ConfigTest extends TestCase {
         {
             INode c = INode.readFromJsonString(json);
             derTeschd(c, true);
+            assertTrue(c.getBoolean("boolon"));
+            assertFalse(c.getBoolean("booloff"));
         }
         {
             INode c = INode.readFromJsonString(json);
@@ -166,6 +169,8 @@ public class ConfigTest extends TestCase {
             INode c2 = dcf.read(file);
             System.out.println("C2: " + c2);
             derTeschd(c2, true);
+            assertTrue(c.getBoolean("boolon"));
+            assertFalse(c.getBoolean("booloff"));
         }
     }
 

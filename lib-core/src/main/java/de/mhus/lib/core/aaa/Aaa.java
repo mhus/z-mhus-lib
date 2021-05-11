@@ -334,6 +334,7 @@ public class Aaa {
             // not initialized,  M.l() will loop or fail with NPE
 //            log.d(e.toString()); log causes an NPE
 //            log.t(e);
+            MApi.dirtyLogDebug(e.toString());
             return null;
         } catch (UnknownSessionException e) {
             M.l(AccessApi.class).destroySession();

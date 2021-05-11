@@ -95,7 +95,7 @@ public class JsonStreamNodeBuilder extends INodeBuilder {
 	    					array.createObject().setBoolean(jsonParser.getCurrentName(), false);
 	    				else
 	    				if (token == JsonToken.VALUE_TRUE)
-	    					array.createObject().setBoolean(jsonParser.getCurrentName(), false);
+	    					array.createObject().setBoolean(jsonParser.getCurrentName(), true);
 	    				else
 	    				if (token == JsonToken.VALUE_NUMBER_FLOAT)
 	    					array.createObject().setDouble(jsonParser.getCurrentName(), jsonParser.getDoubleValue());
@@ -133,7 +133,7 @@ public class JsonStreamNodeBuilder extends INodeBuilder {
 	    					node.setBoolean(jsonParser.getCurrentName(), false);
 	    				else
 	    				if (token == JsonToken.VALUE_TRUE)
-	    					node.setBoolean(jsonParser.getCurrentName(), false);
+	    					node.setBoolean(jsonParser.getCurrentName(), true);
 	    				else
 	    				if (token == JsonToken.VALUE_NUMBER_FLOAT)
 	    					node.setDouble(jsonParser.getCurrentName(), jsonParser.getDoubleValue());

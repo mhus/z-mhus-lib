@@ -467,5 +467,6 @@ public class ShiroSecurityTest extends TestCase {
         // patch values
         assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "iniResourcePath", config));
         assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "allowAdminLogin", "true"));
+        M.l(AccessApi.class);
     }
 }

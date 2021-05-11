@@ -65,7 +65,7 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     }
 
     protected Environment createEnvironment() {
-        if (new File(CFG_CONFIG_FILE.value()).exists()) {
+        if (CFG_CONFIG_FILE.value().startsWith("classpath:") || new File(CFG_CONFIG_FILE.value()).exists()) {
             log().i("Initialize shiro ini", CFG_CONFIG_FILE);
             return new IniDataEnvironment(CFG_CONFIG_FILE.value());
         } else {
