@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.form;
 
+import java.lang.reflect.InvocationTargetException;
+
 public interface IFormInformation extends IFormProvider {
 
     /**
@@ -30,4 +32,12 @@ public interface IFormInformation extends IFormProvider {
      * @return Form Control
      */
     Class<? extends FormControl> getFormControl();
+
+    default FormControl createFormControl() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return getFormControl().getConstructor().newInstance();
+    }
+    
+    default ActionHandler createActionHandler() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return getActionHandler().getConstructor().newInstance();
+    }
 }

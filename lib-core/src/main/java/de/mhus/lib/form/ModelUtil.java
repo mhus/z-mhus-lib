@@ -26,6 +26,7 @@ import org.w3c.dom.Node;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.mhus.lib.core.M;
@@ -35,6 +36,8 @@ import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.JsonNodeBuilder;
+import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.errors.MException;
 
 public class ModelUtil {
@@ -98,24 +101,11 @@ public class ModelUtil {
 
     public static ObjectNode toJson(INode model) {
         try {
-            ObjectNode root = MJson.createObjectNode();
-            toJson(model, root);
-
-            return root;
+            return new JsonNodeBuilder().writeToJsonNodeObject(model);
         } catch (Throwable t) {
             log.d(t);
         }
         return null;
-    }
-
-    private static void toJson(INode node, ObjectNode json) throws DOMException, MException {
-        for (String key : node.getPropertyKeys()) json.put(key, node.getString(key, ""));
-
-        for (INode next : node.getObjects()) {
-            ObjectNode nextJson = MJson.createObjectNode();
-            toJson(next, nextJson);
-            json.set(next.getName(), nextJson);
-        }
     }
 
     public static DefRoot fromJson(String content) throws JsonProcessingException, IOException {
@@ -136,10 +126,22 @@ public class ModelUtil {
         for (Map.Entry<String, JsonNode> field : M.iterate(json.fields())) {
             if (field.getValue().isValueNode()) {
                 root.addAttribute(field.getKey(), field.getValue().asText());
+                root.setString(field.getKey(), field.getValue().asText());
             } else if (field.getValue().isObject()) {
                 DefComponent nextNode = new DefComponent(field.getKey());
+                root.setObject(field.getKey(), nextNode);
                 ObjectNode nextJson = (ObjectNode) field.getValue();
                 fromJson(nextJson, nextNode);
+            } else if (field.getValue().isArray()) {
+                ArrayNode nextArray = (ArrayNode) field.getValue();
+                NodeList array = root.createArray(field.getKey());
+                for (JsonNode nextJson : nextArray) {
+                    if (nextJson instanceof ObjectNode) {
+                        DefComponent nextNode = new DefComponent(null);
+                        array.add(nextNode);
+                        fromJson((ObjectNode) nextJson, nextNode);
+                    }
+                }
             }
         }
     }

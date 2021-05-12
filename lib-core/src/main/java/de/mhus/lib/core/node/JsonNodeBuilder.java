@@ -96,7 +96,7 @@ public class JsonNodeBuilder extends INodeBuilder {
     }
 
     public JsonNode writeToJsonNode(INode node) {
-        if (node.isArray(INode.NAMELESS_VALUE)) {
+        if (node.isArray(INode.NAMELESS_VALUE) && node.size() == 1) {
 	          ArrayNode arrayJ = MJson.createArrayNode();
 	          for (INode itemC : node.getArrayOrNull(INode.NAMELESS_VALUE)) {
 	        	  ObjectNode objectJ = arrayJ.addObject();
@@ -110,6 +110,12 @@ public class JsonNodeBuilder extends INodeBuilder {
         }
     }
 
+    public ObjectNode writeToJsonNodeObject(INode node) {
+        ObjectNode objectJ = MJson.createObjectNode();
+        fill(objectJ, node, 0);
+        return objectJ;
+    }
+    
     private void fill(ObjectNode objectJ, INode itemC, int level) {
         if (level > 100) throw new TooDeepStructuresException();
 
