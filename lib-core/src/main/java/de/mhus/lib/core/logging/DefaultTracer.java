@@ -96,7 +96,7 @@ public class DefaultTracer extends MLog implements ITracer {
             for (int i = 0; i < tagPairs.length - 1; i = i + 2)
                 span.withTag(String.valueOf(tagPairs[i]), MString.toString(tagPairs[i + 1]));
             span.withTag("ident", IdentUtil.getFullIdent());
-            span.withTag("pricipal", Aaa.getPrincipal());
+            span.withTag("principal", Aaa.getPrincipal());
             if (parent != null) span.asChildOf(parent);
             return span;
         } catch (Throwable t) {
