@@ -16,12 +16,10 @@
 package de.mhus.lib.core.operation.util;
 
 import java.util.Map;
-import java.util.Set;
 
 import de.mhus.lib.core.operation.Operation;
-import de.mhus.lib.core.operation.Successful;
 
-public class SuccessfulForceMap extends Successful {
+public class SuccessfulForceMap extends SuccessfulMap {
 
     public SuccessfulForceMap(Operation operation, String msg) {
         super(operation, msg);
@@ -41,28 +39,16 @@ public class SuccessfulForceMap extends Successful {
         super.setResult(new MapValue((Map<?, ?>) result));
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void setResultNode(Map<String, Object> result) {
+        super.setResult(new MapValue(result));
+    }
+
+    @Override
     @SuppressWarnings({ "unchecked", "deprecation" })
     public Map<String, Object> getMap() {
         return (Map<String, Object>) ((MapValue) getResult()).getValue();
     }
 
-    public void put(String key, Object value) {
-        getMap().put(key, value);
-    }
-
-    public Object get(String key) {
-        return getMap().get(key);
-    }
-
-    public void remove(String key) {
-        getMap().remove(key);
-    }
-
-    public Set<String> keySet() {
-        return getMap().keySet();
-    }
-
-    public int size() {
-        return getMap().size();
-    }
 }
