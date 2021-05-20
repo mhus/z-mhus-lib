@@ -46,20 +46,24 @@ public class MKeychainUtil {
     }
 
     public static void main(String[] in) throws IOException {
-        MArgs args = new MArgs(in);
+        MArgs args = new MArgs(
+        		in,
+        		MArgs.opt("f", "file", 1, false, "File" ),
+        		MArgs.opt("p", "passphrase", 1, false, "Passphrase")
+        		);
 
         MKeychain vault = loadDefault();
 
         KeychainSource source = null;
-        if (args.contains("file")) {
-            String vp = args.getValue("passphrase", "setit", 0);
-            File f = new File(args.getValue("file", 0));
+        if (args.hasOption("file")) {
+            String vp = args.getOption("p").getValue("setit");
+            File f = new File(args.getOption("file").getValue());
             source = new KeychainSourceFromSecFile(f, vp);
             vault.registerSource(source);
         }
         if (source == null) source = vault.getSource(MKeychain.SOURCE_DEFAULT);
 
-        String cmd = args.getValue(MArgs.DEFAULT, "help", 0);
+        String cmd = args.getArgument(1).getValue();
 
         switch (cmd) {
             case "help":

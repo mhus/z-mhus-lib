@@ -15,10 +15,13 @@
  */
 package de.mhus.lib.core;
 
-import java.util.Hashtable;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.Map;
+
+import de.mhus.lib.errors.UsageException;
 
 /**
  * The class is a parser for program argument lists, like you get in the main(args) method. You can
@@ -35,10 +38,9 @@ import java.util.Vector;
  */
 public class MArgs {
 
-    public static final String DEFAULT = "";
-
-    private Hashtable<String, Vector<String>> values = new Hashtable<String, Vector<String>>();
-    private Hashtable<String, String> usage;
+    private Map<String, Usage> values = new HashMap<>();
+    private Usage[] usage;
+    private boolean valid = true;
 
     /**
      * Use the argument array to parse arguments.
@@ -46,159 +48,484 @@ public class MArgs {
      * @param args
      */
     public MArgs(String[] args) {
-        this(args, null);
-    }
-
-    public MArgs(String[] args, String[] pUsage) {
-
-        String name = DEFAULT;
-        if (pUsage != null) {
-            usage = new Hashtable<String, String>();
-            for (int i = 0; i < pUsage.length; i += 3) usage.put(pUsage[i], pUsage[i + 1]);
-        }
-        // parse
-        boolean printUsage = false;
-
-        for (int i = 0; i < args.length; i++) {
-
-            String n = args[i];
-
-            if (n.startsWith("-") && n.length() > 1) {
-                // it's a new key
-
-                name = n.substring(1);
-                if (name.startsWith("\"") && name.endsWith("\"")
-                        || name.startsWith("'") && name.endsWith("'"))
-                    name = name.substring(1, name.length() - 1);
-
-                if (values.get(name) == null) {
-                    values.put(name, new Vector<String>());
-                }
-
-                if (usage != null && !usage.containsKey(name)) printUsage = true;
-
-            } else {
-                // it's a value
-
-                if (usage != null
-                        && (usage.get(name) == null || ((String) usage.get(name)).length() != 0))
-                    printUsage = true;
-
-                if (n.startsWith("\"") && n.endsWith("\"") || n.startsWith("'") && n.endsWith("'"))
-                    n = n.substring(1, n.length() - 1);
-
-                Vector<String> v = values.get(name);
-                if (v == null) {
-                    // for DEFAULT !!!
-                    v = new Vector<String>();
-                    values.put(name, v);
-                }
-                v.add(n);
-                name = DEFAULT;
-            }
-        }
-
-        if (usage != null && (printUsage || contains("?"))) {
-            // print usage
-            System.out.print("Usage: ");
-            if (usage.containsKey(DEFAULT)) System.out.println(usage.get(DEFAULT));
-            else System.out.println();
-
-            for (int i = 0; i < pUsage.length; i += 3) {
-                if (pUsage[i].length() != 0) {
-                    String u = pUsage[i] + ' ' + pUsage[i + 1];
-                    System.out.print("  -" + u + "   ");
-                    for (int j = u.length(); j < 20; j++) System.out.print(' ');
-                    System.out.println(pUsage[i + 2]);
-                }
-            }
-            System.exit(0);
-        }
+        this(args, (Usage[])null);
     }
 
     /**
-     * Returns true if the argument list contains the key.
+     * Usage:
+     * : <param1> : Command description\ncontaining line breaks
+     * :: param1 : Parameter description
+     * option1: Option description
+     * option2: <param> : Option with mandatory parameter
+     * option3: [param] : Option with optional parameter
+     * option4: <param>* : Option allowed multiple times
+     * A line without colon will be printed in the usage as it is.
+     * e.g.
+     * 
+     * :ls [options] [file]*: list directory contents
+     * ::file: For each operand that names a file of a type other than directory, ls displays its name as well as any requested, associated information.
+     * l: List in long format.  (See below.)  A total sum for all the file sizes is output on a line before the long listing.
+     * 
+     * @param args
+     * @param pUsage
+     */
+    public MArgs(String[] args, Usage ... pUsage) {
+
+        this.usage = pUsage;
+        
+        if (usage != null) {
+        	int index = 1;
+        	for (Usage u : usage) {
+        		if (u.getIntName() != null) {
+        			if (u instanceof Argument) {
+        				((Argument)u).setIndex(index);
+        				index++;
+        			}
+        			values.put(u.getIntName(), u);
+        		}
+        		if (u.getAliasName() != null)
+        			values.put(u.getAliasName(), u);
+        	}
+        }
+        
+        // parse
+        Usage current = null;
+        Usage currentArg = null;
+        boolean printUsage = false;
+        int index = 1;
+        
+        try {
+	        for (int i = 0; i < args.length; i++) {
+	
+	            String n = args[i];
+	
+	            if (n.startsWith("--") && n.length() > 2) {
+	                // it's a new key
+	            	
+	            	if (current != null) {
+	            		current.noMoreValues();
+	            		current = null;
+	            	}
+	            	
+	            	n = n.substring(2);
+	            	n = encaps(n);
+	            	if (n.equals("help")) {
+	            		printUsage = true;
+	            		break;
+	            	}
+	            	
+	            	Usage opt = values.get("--" + n);
+	            	
+	            	if (opt == null)
+	            		throw new UsageException("unknown operation",n);
+	            	
+	            	opt.set();
+	            	
+	            	if (opt.hasValue())
+	            		current = opt;
+
+	            } else
+	            if (n.startsWith("-") && n.length() > 1) {
+	                // it's a new key
+	
+	            	if (current != null) {
+	            		current.noMoreValues();
+	            		current = null;
+	            	}
+	            	
+	            	n = n.substring(1);
+	            	n = encaps(n);
+	            	
+	            	String[] parts = n.split("");
+	            	
+	            	for (String p : parts) {
+	            		
+		            	if (current != null) {
+		            		current.noMoreValues();
+		            		current = null;
+		            	}
+
+		            	Usage opt = values.get("-" + p);
+		            	if (opt == null && usage == null) {
+		            		opt = new Option(p);
+		            		values.put(opt.getIntName(), opt);
+		            	}
+		            	if (opt == null)
+		            		throw new UsageException("unknown operation",n);
+		            	
+		            	opt.set();
+		            	
+		            	if (opt.hasValue())
+		            		current = opt;
+	            	}
+	            } else
+	            if (current != null) {
+	            	n = encaps(n);
+	            	current.add(n);
+	            	if (!current.moreValues())
+	            		current = null;
+	            } else
+            	if (currentArg != null) {
+	            	n = encaps(n);
+	            	currentArg.add(n);
+	            	if (!currentArg.moreValues())
+	            		currentArg = null;
+	            } else {
+	            	
+	            	Usage arg = values.get("#" + index);
+	            	
+	            	if (arg == null && usage == null) {
+	            		arg = new Argument("" + index);
+	            		((Argument)arg).setIndex(index);
+	            		values.put(arg.getIntName(), arg);
+	            	}
+	            	
+	            	if (arg == null)
+	            		throw new UsageException("Argument not supported", index);
+	            	
+	            	n = encaps(n);
+	            	arg.add(n);
+	            	if (arg.hasValue())
+	            		currentArg = arg;
+	            	index++;
+	            }
+	        }
+	        
+	        values.forEach((k,v) -> v.noMoreValues() );
+	        
+        } catch (UsageException e) {
+        	printUsage = true;
+        	System.out.println("Usage error: " + e.getMessage());
+        }
+        
+        if (printUsage) {
+            // print usage
+        	printUsage(System.out);
+        	valid = false;
+        }
+    }
+
+    public void printUsage(PrintStream out) {
+    	if (usage != null) {
+    		System.out.println("Usage: ");
+    		for (Usage u : usage)
+    			u.printUsage(out);
+    	} else {
+    		System.out.println("Unknown usage");
+    	}
+	}
+
+	private String encaps(String name) {
+        if (name.startsWith("\"") && name.endsWith("\"")
+                || name.startsWith("'") && name.endsWith("'"))
+            name = name.substring(1, name.length() - 1);
+		return name;
+	}
+
+	/**
+     * Returns true if the options list contains the key.
      *
      * @param name
      * @return if is included
      */
-    public boolean contains(String name) {
-        return values.get(name) != null;
+    public boolean hasOption(String name) {
+        Usage opt = values.get("-" + name);
+        if (opt == null) return false;
+        return opt.isSet();
     }
 
-    /**
-     * Returns a List of the arguments for the given key. If the key was not set it returns null. Do
-     * not change the list.
-     *
-     * @param name
-     * @return
-     */
-    protected List<String> getArgValues(String name) {
-        return values.get(name);
+    public Option getOption(String name) {
+        Usage opt = values.get("-" + name);
+        return (Option) opt;
     }
 
-    /**
-     * Returns the amount of attributes for this key.
-     *
-     * @param name
-     * @return the size
-     */
-    public int getSize(String name) {
-        if (!contains(name)) return 0;
-        return getArgValues(name).size();
+    public Argument getArgument(int index) {
+    	Usage arg = values.get("#" + index);
+    	return (Argument) arg;
     }
-
-    /**
-     * Returns the "index" parameter for this key. If the parameter is not set in this index it
-     * returns "def".
-     *
-     * @param name
-     * @param def
-     * @param index
-     * @return the value
-     */
-    public String getValue(String name, String def, int index) {
-        String ret = getValue(name, index);
-        return ret == null ? def : ret;
+    
+    public Argument getArgument(String name) {
+    	if (usage == null) return null;
+    	for (Usage u : usage)
+    		if (u instanceof Argument && name.equals(u.getName()))
+    			return (Argument) u;
+    	return null;
     }
-
-    /**
-     * Returns the "index" parameter for this key. If the parameter is not set in this index it
-     * returns null.
-     *
-     * @param name
-     * @param index
-     * @return the value
-     */
-    public String getValue(String name, int index) {
-        String[] ret = getValues(name);
-        if (ret == null) return null;
-        if (ret.length <= index) return null;
-        return ret[index];
-    }
-
-    /**
-     * Return all values for this parameter as a array. If not set it will return an empty array.
-     *
-     * @param name
-     * @return the value
-     */
-    public String[] getValues(String name) {
-        if (!contains(name)) return new String[0];
-        return (String[]) getArgValues(name).toArray(new String[0]);
-    }
-
-    /**
-     * Return a iterable set of existing keys.
-     *
-     * @return the keys
-     */
-    public Set<String> getKeys() {
-        return values.keySet();
-    }
-
+    
     @Override
     public String toString() {
         return values.toString();
     }
+    
+    public abstract static class Usage {
+
+    	protected String name;
+    	protected List<String> values = new LinkedList<String>();
+    	protected boolean set = false;
+    	protected boolean more = false;
+    	protected boolean hasValue = false;
+
+		public Usage(String name) {
+    		this.name = name;
+    	}
+
+    	public abstract String getIntName();
+
+    	public abstract String getAliasName();
+    	
+		protected Object getName() {
+			return name;
+		}
+
+		public List<String> getValues() {
+			return values;
+		}
+
+		public boolean isSet() {
+			return set;
+		}
+
+		protected boolean moreValues() {
+			return more;
+		}
+
+		protected void add(String n) {
+			values.add(n);
+		}
+
+		protected abstract void noMoreValues();
+
+		protected boolean hasValue() {
+			return hasValue;
+		}
+
+		protected void set() {
+			set = true;
+		}
+
+		protected abstract void printUsage(PrintStream out);
+    	
+	    @Override
+	    public String toString() {
+	        return getClass().getSimpleName() + ":" + name + "=" + values;
+	    }
+
+    }
+    
+    public static class Option extends Usage {
+
+		private String desc;
+		private int valueCnt;
+		private boolean mandatory;
+		private String alias;
+
+		public Option(String name) {
+			this(null, name, -1, false, null);
+		}
+		
+		public Option(String name, String alias, int valueCnt, boolean mandatory, String desc) {
+			super(name);
+			this.desc = desc;
+			this.valueCnt = valueCnt;
+			this.mandatory = mandatory;
+			this.alias = alias;
+			hasValue = valueCnt != 0;
+			more = false;
+		}
+
+		@Override
+		public String getIntName() {
+			return "-" + name;
+		}
+
+		@Override
+		public String getAliasName() {
+			if (alias == null) return null;
+			return "--" + alias;
+		}
+		
+		@Override
+		protected void noMoreValues() {
+			if (valueCnt > 0 && mandatory && values.size() < valueCnt)
+				throw new UsageException("Argument mandatory", name);
+		}
+
+		@Override
+		protected void printUsage(PrintStream out) {
+			out.println("-" + name + (alias != null ? ", --" + alias : "") + (valueCnt > 0 ? " <value> (max. " + valueCnt + ")" : ""));
+			if (desc != null)
+				out.println(toDesc(desc));
+		}
+
+		public String getValue() {
+			if (values.size() == 0) return null;
+			return values.get(0);
+		}
+
+		public String getValue(String def) {
+			if (values.size() == 0) return def;
+			return values.get(0);
+		}
+		
+		protected void add(String n) {
+			if (valueCnt > -1 && values.size() >= valueCnt)
+				throw new UsageException("Too much values for option",name);
+			super.add(n);
+		}
+    }
+    
+    public static class Argument extends Usage {
+
+		private String desc;
+		private int valueCnt;
+		private boolean mandatory;
+
+		public Argument(String name) {
+			this(name, 0, false, null);
+		}
+		
+		public Argument(String name, int valueCnt, boolean mandatory, String desc) {
+			super(name);
+			this.desc = desc;
+			this.valueCnt = valueCnt;
+			this.mandatory = mandatory;
+			if (valueCnt < 0 || valueCnt > 1)
+				hasValue = true;
+		}
+
+		private int index;
+		
+		private void setIndex(int index) {
+			this.index = index;
+		}
+    	
+		@Override
+		public String getIntName() {
+			return "#" + index;
+		}
+
+		@Override
+		protected void noMoreValues() {
+			if (valueCnt > 0 && mandatory && values.size() < valueCnt)
+				throw new UsageException( );
+		}
+
+		@Override
+		protected void printUsage(PrintStream out) {
+			out.println("Argument #" + index + " " + name);
+			if (desc != null)
+				out.println(toDesc(desc));
+		}
+
+		@Override
+		public String getAliasName() {
+			return null;
+		}
+
+		protected void add(String n) {
+			if (valueCnt > 1 && values.size() >= valueCnt)
+				throw new UsageException("Too much values for option",name);
+			super.add(n);
+			more = valueCnt == -1 || values.size() < valueCnt;
+		}
+
+		public String getValue() {
+			if (values.size() == 0) return null;
+			return values.get(0);
+		}
+
+		public String getValue(String def) {
+			if (values.size() == 0) return def;
+			return values.get(0);
+		}
+		
+		public String getValue(int index, String def) {
+			if (values.size() <= index) return def;
+			return values.get(index);
+		}
+    }
+    
+    public static class Help extends Usage {
+
+		public Help(String help) {
+			super(help);
+		}
+
+		@Override
+		public String getIntName() {
+			return null;
+		}
+
+		@Override
+		protected void noMoreValues() {
+		}
+
+		@Override
+		protected void printUsage(PrintStream out) {
+			out.println(name);
+		}
+
+		@Override
+		public String getAliasName() {
+			return null;
+		}
+    	
+    }
+
+	protected static String toDesc(String desc) {
+		return "    " + desc.replace("\n", "\n    ");
+	}
+
+	public List<Argument> getArguments() {
+		LinkedList<Argument> out = new LinkedList<>();
+		for (int index = 1;values.containsKey("#" + index) ;index++) {
+			Argument arg = (Argument) values.get("#" + index);
+			if (arg.getValues().size() > 0)
+				out.add(arg);
+		}
+		return out;
+	}
+
+	public Map<String, Option> getOptions() {
+		final HashMap<String, Option> out = new HashMap<>();
+		values.forEach((k,v) -> {if (k.startsWith("-")) out.put(k, (Option) v); });
+		return out;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+	
+	public static Argument argAll(String name, String desc) {
+		return new Argument(name, -1, false, desc);
+	}
+	
+	public static Argument arg(String name, String desc) {
+		return new Argument(name, 1, false, desc);
+	}
+
+	public static Argument arg(String name, boolean mandatory, String desc) {
+		return new Argument(name, 1, mandatory, desc);
+	}
+	
+	public static Argument arg(String name, int valueCnt, boolean mandatory, String desc) {
+		return new Argument(name, valueCnt, mandatory, desc);
+	}
+	
+	public static Help help(String help) {
+		return new Help(help);
+	}
+	
+	public static Option opt(String name, String alias, int valueCnt, boolean mandatory, String desc) {
+		return new Option(name, alias, valueCnt, mandatory, desc);
+	}
+	
+	public static Option opt(String name, String desc) {
+		return new Option(name, null, 0, false, desc);
+	}
+	
+	public static Option optVal(String name, String desc) {
+		return new Option(name, null, 1, false, desc);
+	}
+	
 }
