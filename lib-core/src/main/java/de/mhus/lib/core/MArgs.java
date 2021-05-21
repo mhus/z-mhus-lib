@@ -16,11 +16,20 @@
 package de.mhus.lib.core;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import de.mhus.lib.annotations.cmd.CmdArgument;
+import de.mhus.lib.annotations.cmd.CmdDescription;
+import de.mhus.lib.annotations.cmd.CmdOption;
+import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.core.pojo.PojoAttribute;
+import de.mhus.lib.core.pojo.PojoModel;
 import de.mhus.lib.errors.UsageException;
 
 /**
@@ -36,11 +45,12 @@ import de.mhus.lib.errors.UsageException;
  *
  * @author mhu
  */
-public class MArgs {
+public class MArgs extends MLog {
 
     private Map<String, Usage> values = new HashMap<>();
     private Usage[] usage;
-    private boolean valid = true;
+    private boolean showHelp = true;
+	private String error;
 
     /**
      * Use the argument array to parse arguments.
@@ -51,6 +61,90 @@ public class MArgs {
         this(args, (Usage[])null);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public MArgs(Object pojo, String[] args) {
+    	
+    	PojoModel model = MPojo.getAttributeModelFactory().createPojoModel(pojo.getClass());
+    	List<Usage> u = new ArrayList<>();
+    	Usage[] a = new Usage[50]; // max 50 should be ok
+    	Map<String,Usage> map = new HashMap<>();
+    	CmdDescription cmd = pojo.getClass().getAnnotation(CmdDescription.class);
+    	if (cmd != null) {
+    		u.add(new Help(cmd.description()));
+    	}
+    	for (PojoAttribute<?> entry : model) {
+    		CmdOption cOpt = entry.getAnnotation(CmdOption.class);
+    		if (cOpt != null) {
+    			Option opt = new Option(
+    					cOpt.shortcut(), 
+    					cOpt.name(), 
+    					cOpt.multi() ? -1 : cOpt.value() ? 1 : cOpt.valueCnt(), 
+    					cOpt.mandatory(), 
+    					cOpt.description());
+    			map.put(entry.getName(), opt);
+    			u.add(opt);
+    		} else {
+    			CmdArgument cArg = entry.getAnnotation(CmdArgument.class);
+    			if (cArg != null) {
+    				Argument arg = new Argument(
+    						cArg.name(), 
+    						cArg.multi() ? -1 : cArg.valueCnt(), 
+    						cArg.mandatory(), 
+    						cArg.description());
+        			map.put(entry.getName(), arg);
+        			a[cArg.index()] = arg;
+    			}
+    		}
+    	}
+    	
+    	for (Usage entry : a) {
+    		if (entry != null)
+    			u.add(entry);
+    	}
+    	
+    	this.usage = u.toArray(new Usage[u.size()]);
+    	init(args);
+    	
+    	for (Map.Entry<String,Usage> entry : map.entrySet()) {
+    		try {
+
+	    		PojoAttribute attr = model.getAttribute(entry.getKey());
+	    		Object value = null;
+	    		List<String> values = entry.getValue().getValues();
+	    		Class type = attr.getType();
+	    		if (type == Boolean.class || type == boolean.class)
+	    			value = MCast.toboolean(values.get(0), false);
+	    		else
+	    		if (type == Integer.class || type == int.class)
+	    			value = MCast.toint(values.get(0), 0);
+	    		else
+	    		if (type == Long.class || type == long.class)
+	    			value = MCast.tolong(values.get(0), 0);
+	    		else
+	    		if (type == String.class)
+	    			value = values.get(0);
+	    		else
+	    		if (type == String[].class) 
+	    			value = values.toArray(new String[0]);
+	    		else
+	    		if (type == Date.class)
+	    			value = MCast.toDate(values.get(0), null);
+	    		else
+	    		if (type == UUID.class)
+	    			value = UUID.fromString(values.get(0));
+	    		else
+	    		if (type.isAssignableFrom(List.class))
+	    			value = values;
+    		
+				attr.set(pojo, value, true);
+			} catch (Throwable e) {
+				log().e(entry,e);
+			}
+    	}
+    	
+    }
+    
+    
     /**
      * Usage:
      * : <param1> : Command description\ncontaining line breaks
@@ -72,7 +166,10 @@ public class MArgs {
     public MArgs(String[] args, Usage ... pUsage) {
 
         this.usage = pUsage;
-        
+        init(args);
+    }
+    
+    private void init(String[] args) {
         if (usage != null) {
         	int index = 1;
         	for (Usage u : usage) {
@@ -91,7 +188,6 @@ public class MArgs {
         // parse
         Usage current = null;
         Usage currentArg = null;
-        boolean printUsage = false;
         int index = 1;
         
         try {
@@ -110,7 +206,7 @@ public class MArgs {
 	            	n = n.substring(2);
 	            	n = encaps(n);
 	            	if (n.equals("help")) {
-	            		printUsage = true;
+	            		showHelp = true;
 	            		break;
 	            	}
 	            	
@@ -194,18 +290,19 @@ public class MArgs {
 	        values.forEach((k,v) -> v.noMoreValues() );
 	        
         } catch (UsageException e) {
-        	printUsage = true;
-        	System.out.println("Usage error: " + e.getMessage());
+        	showHelp = true;
+        	error = "Usage error: " + e.getMessage();
         }
         
-        if (printUsage) {
-            // print usage
-        	printUsage(System.out);
-        	valid = false;
-        }
     }
 
+    public void printUsage() {
+    	printUsage(System.out);
+    }
+    
     public void printUsage(PrintStream out) {
+    	if (error != null)
+    		out.println(error);
     	if (usage != null) {
     		System.out.println("Usage: ");
     		for (Usage u : usage)
@@ -320,11 +417,11 @@ public class MArgs {
 		private String alias;
 
 		public Option(String name) {
-			this(null, name, -1, false, null);
+			this(name.length() == 1 ? name.charAt(0) : (char)0, name.length() > 1 ? name : null, -1, false, null);
 		}
 		
-		public Option(String name, String alias, int valueCnt, boolean mandatory, String desc) {
-			super(name);
+		public Option(char name, String alias, int valueCnt, boolean mandatory, String desc) {
+			super(name == 0 ? null : String.valueOf(name));
 			this.desc = desc;
 			this.valueCnt = valueCnt;
 			this.mandatory = mandatory;
@@ -493,7 +590,7 @@ public class MArgs {
 	}
 
 	public boolean isValid() {
-		return valid;
+		return error == null;
 	}
 	
 	public static Argument argAll(String name, String desc) {
@@ -516,16 +613,20 @@ public class MArgs {
 		return new Help(help);
 	}
 	
-	public static Option opt(String name, String alias, int valueCnt, boolean mandatory, String desc) {
+	public static Option opt(char name, String alias, int valueCnt, boolean mandatory, String desc) {
 		return new Option(name, alias, valueCnt, mandatory, desc);
 	}
 	
-	public static Option opt(String name, String desc) {
+	public static Option opt(char name, String desc) {
 		return new Option(name, null, 0, false, desc);
 	}
 	
-	public static Option optVal(String name, String desc) {
+	public static Option optVal(char name, String desc) {
 		return new Option(name, null, 1, false, desc);
 	}
-	
+
+	public boolean isPrintUsage() {
+		return showHelp;
+	}
+
 }

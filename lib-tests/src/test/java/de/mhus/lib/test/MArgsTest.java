@@ -21,27 +21,58 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import de.mhus.lib.annotations.cmd.CmdArgument;
+import de.mhus.lib.annotations.cmd.CmdOption;
 import de.mhus.lib.core.MArgs;
 import de.mhus.lib.tests.TestCase;
 
 public class MArgsTest extends TestCase {
 
     @Test
+    public void testPojoParsing() {
+        String[] args = new String[] {"default1", "-a", "aa", "default2", "-a", "bb", "-b", "cc"};
+        Container1 cont = new Container1();
+    	MArgs ma = new MArgs(cont, args);
+        System.out.println(ma);
+        assertTrue(ma.isValid());
+    	assertEquals("default1", cont.arg1);
+    	assertEquals("default2", cont.arg2);
+    	assertEquals(2, cont.optA.length);
+    	assertEquals("aa", cont.optA[0]);
+    	assertEquals("bb", cont.optA[1]);
+    	assertEquals("cc", cont.optB);
+
+    }
+    
+    static class Container1 {
+    	@CmdArgument(index = 1)
+    	String arg1;
+    	@CmdArgument(index = 2)
+    	String arg2;
+    	@CmdOption(shortcut = 'a', multi = true)
+    	String[] optA;
+    	@CmdOption(shortcut = 'b', value = true)
+    	String optB;
+    	
+    }
+     
+	
+    @Test
     public void testUsageMultiParsing1() {
         String[] args = new String[] {"default", "-a", "aa", "default", "-a", "bb", "-b", "cc"};
         MArgs ma = new MArgs(args,
         		MArgs.help("Do something"),
-        		MArgs.opt("a", null, -1, false, "opt a"),
-        		MArgs.opt("b", null, 1, false, "opt a"),
+        		MArgs.opt('a', null, -1, false, "opt a"),
+        		MArgs.opt('b', null, 1, false, "opt a"),
         		MArgs.arg("1", "arg 1"),
         		MArgs.arg("2", "arg 2")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(2, ma.getArguments().size());
         assertEquals(2, ma.getOptions().size());
         assertEquals(2, ma.getOption("a").getValues().size());
         assertEquals(1, ma.getOption("b").getValues().size());
-        assertTrue(ma.isValid());
     }
 
     @Test
@@ -49,17 +80,17 @@ public class MArgsTest extends TestCase {
         String[] args = new String[] {"default", "-a", "aa", "default", "-a", "bb", "-b", "cc"};
         MArgs ma = new MArgs(args,
         		MArgs.help("Do something"),
-        		MArgs.opt("a", null, -1, false, "opt a"),
-        		MArgs.opt("b", null, 1, false, "opt a"),
+        		MArgs.opt('a', null, -1, false, "opt a"),
+        		MArgs.opt('b', null, 1, false, "opt a"),
         		MArgs.arg("1", true, "arg 1"),
         		MArgs.arg("2", true, "arg 2")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(2, ma.getArguments().size());
         assertEquals(2, ma.getOptions().size());
         assertEquals(2, ma.getOption("a").getValues().size());
         assertEquals(1, ma.getOption("b").getValues().size());
-        assertTrue(ma.isValid());
     }
     
     @Test
@@ -67,8 +98,8 @@ public class MArgsTest extends TestCase {
         String[] args = new String[] {"default", "-a", "aa", "-a", "bb", "-b", "cc"};
         MArgs ma = new MArgs(args,
         		MArgs.help("Do something"),
-        		MArgs.opt("a", null, -1, false, "opt a"),
-        		MArgs.opt("b", null, 1, false, "opt a"),
+        		MArgs.opt('a', null, -1, false, "opt a"),
+        		MArgs.opt('b', null, 1, false, "opt a"),
         		MArgs.arg("1", true, "arg 1"),
         		MArgs.arg("2", true, "arg 2")
         		);
@@ -78,70 +109,70 @@ public class MArgsTest extends TestCase {
         assertEquals(2, ma.getOption("a").getValues().size());
         assertEquals(1, ma.getOption("b").getValues().size());
         assertFalse(ma.isValid());
+        
     }
-    
     @Test
     public void testUsageMultiParsing4() {
         String[] args = new String[] {"default", "-a", "aa", "default", "-a", "bb", "-b", "cc", "default"};
         MArgs ma = new MArgs(args,
         		MArgs.help("Do something"),
-        		MArgs.opt("a", null, -1, false, "opt a"),
-        		MArgs.opt("b", null, 1, false, "opt a"),
+        		MArgs.opt('a', null, -1, false, "opt a"),
+        		MArgs.opt('b', null, 1, false, "opt a"),
         		MArgs.arg("1", true, "arg 1"),
         		MArgs.argAll("2", "arg 2")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(2, ma.getArguments().size());
         assertEquals(2, ma.getOptions().size());
         assertEquals(2, ma.getOption("a").getValues().size());
         assertEquals(1, ma.getOption("b").getValues().size());
-        assertTrue(ma.isValid());
     }
 
     @Test
     public void testUsageKeyParsing1() {
         String[] args = new String[] {"-a", "aa", "-a", "bb", "-a", "cc"};
         MArgs ma = new MArgs(args,
-        		MArgs.opt("a", null, 3, false, "opt a")
+        		MArgs.opt('a', null, 3, false, "opt a")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(1, ma.getOptions().size());
         assertEquals(3, ma.getOption("a").getValues().size());
         assertEquals(ma.getOption("a").getValue(), "aa");
-        assertTrue(ma.isValid());
     }
 
     @Test
     public void testUsageKeyParsing2() {
         String[] args = new String[] {"-a", "aa", "-a", "bb", "-a", "cc"};
         MArgs ma = new MArgs(args,
-        		MArgs.opt("a", null, 3, true, "opt a")
+        		MArgs.opt('a', null, 3, true, "opt a")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(1, ma.getOptions().size());
         assertEquals(3, ma.getOption("a").getValues().size());
         assertEquals(ma.getOption("a").getValue(), "aa");
-        assertTrue(ma.isValid());
     }
     
     @Test
     public void testUsageKeyParsing3() {
         String[] args = new String[] {"-a", "aa", "-a", "bb"};
         MArgs ma = new MArgs(args,
-        		MArgs.opt("a", null, 3, false, "opt a")
+        		MArgs.opt('a', null, 3, false, "opt a")
         		);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(1, ma.getOptions().size());
         assertEquals(2, ma.getOption("a").getValues().size());
         assertEquals(ma.getOption("a").getValue(), "aa");
-        assertTrue(ma.isValid());
     }
 
     @Test
     public void testUsageKeyParsing4() {
         String[] args = new String[] {"-a", "aa", "-a", "bb"};
         MArgs ma = new MArgs(args,
-        		MArgs.opt("a", null, 3, true, "opt a")
+        		MArgs.opt('a', null, 3, true, "opt a")
         		);
         System.out.println(ma);
         assertEquals(1, ma.getOptions().size());
@@ -159,8 +190,8 @@ public class MArgsTest extends TestCase {
         		MArgs.arg("3", "nr 3")
         		);
         System.out.println(ma);
-        assertEquals(3, ma.getArguments().size());
         assertTrue(ma.isValid());
+        assertEquals(3, ma.getArguments().size());
     }
 
     @Test
@@ -181,8 +212,8 @@ public class MArgsTest extends TestCase {
         String[] args = new String[] {"a", "b", "c"};
         MArgs ma = new MArgs(args);
         System.out.println(ma);
-        assertEquals(3, ma.getArguments().size());
         assertTrue(ma.isValid());
+        assertEquals(3, ma.getArguments().size());
     }
 
     @Test
@@ -190,10 +221,10 @@ public class MArgsTest extends TestCase {
         String[] args = new String[] {"-a", "aa", "-a", "bb", "-a", "cc"};
         MArgs ma = new MArgs(args);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(1, ma.getOptions().size());
         assertEquals(3, ma.getOption("a").getValues().size());
         assertEquals(ma.getOption("a").getValue(), "aa");
-        assertTrue(ma.isValid());
     }
 
     @Test
@@ -213,11 +244,11 @@ public class MArgsTest extends TestCase {
         String[] args = new String[] {"-a", "zz", "-a", "bb", "-a", "aa"};
         MArgs ma = new MArgs(args);
         System.out.println(ma);
+        assertTrue(ma.isValid());
         assertEquals(1, ma.getOptions().size());
         assertEquals(3, ma.getOption("a").getValues().size());
         assertEquals("zz", ma.getOption("a").getValues().get(0));
         assertEquals("bb", ma.getOption("a").getValues().get(1));
         assertEquals("aa", ma.getOption("a").getValues().get(2));
-        assertTrue(ma.isValid());
     }
 }
