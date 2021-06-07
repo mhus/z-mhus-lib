@@ -31,7 +31,7 @@ public abstract class LogFactory {
     protected LEVEL level = LEVEL.INFO;
     // protected LevelMapper levelMapper;
     private ParameterMapper parameterMapper;
-    private int maxMsgSize = 1024 * 100; // 100kb default max
+    private int maxMsgSize = 10000; // default max length
     private List<String> maxMsgSizeExceptions = null;
 
     /**
