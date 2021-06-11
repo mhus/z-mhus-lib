@@ -53,7 +53,7 @@ public class Log {
 	private ITracer tracer;
 	private boolean tracerInError = false;
     //    protected UUID id = UUID.randomUUID();
-    protected static int maxMsgSize = 0;
+    private static int maxMsgSize = 0;
     private static boolean verbose = false;
 
     public Log(Object owner) {
@@ -414,6 +414,14 @@ public class Log {
 
     public static void setVerbose(boolean verbose) {
         Log.verbose = verbose;
+    }
+
+    public static int getMaxMsgSize() {
+        return maxMsgSize;
+    }
+
+    public static void setMaxMsgSize(int maxMsgSize) {
+        Log.maxMsgSize = maxMsgSize;
     }
 
     //	public UUID getId() {

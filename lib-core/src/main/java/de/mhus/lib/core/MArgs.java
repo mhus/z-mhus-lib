@@ -464,7 +464,8 @@ public class MArgs extends MLog {
 			return values.get(0);
 		}
 		
-		protected void add(String n) {
+		@Override
+        protected void add(String n) {
 			if (valueCnt > -1 && values.size() >= valueCnt)
 				throw new UsageException("Too much values for option",name);
 			super.add(n);
@@ -519,7 +520,8 @@ public class MArgs extends MLog {
 			return null;
 		}
 
-		protected void add(String n) {
+		@Override
+        protected void add(String n) {
 			if (valueCnt > 1 && values.size() >= valueCnt)
 				throw new UsageException("Too much values for option",name);
 			super.add(n);

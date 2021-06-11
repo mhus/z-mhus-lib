@@ -424,6 +424,13 @@ public final class MCast {
      * @return an integer
      */
     public static int toint(Object in, int def) {
+        if (OBJECT_TO_INTEGER == null) {
+            try {
+                return Integer.parseInt(String.valueOf(in));
+            } catch (Throwable t) {
+                return def;
+            }
+        }
         return OBJECT_TO_INTEGER.toInt(in, def, null);
     }
 
@@ -436,6 +443,13 @@ public final class MCast {
      * @return a long
      */
     public static long tolong(Object in, long def) {
+        if (OBJECT_TO_LONG == null) {
+            try {
+                return Long.parseLong(String.valueOf(in));
+            } catch (Throwable t) {
+                return def;
+            }
+        }
         return OBJECT_TO_LONG.toLong(in, def, null);
     }
 

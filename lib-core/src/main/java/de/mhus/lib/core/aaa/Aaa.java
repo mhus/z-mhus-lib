@@ -195,8 +195,20 @@ public class Aaa {
         GUEST_SUBJECT = null;
     }
 
+    public static boolean hasAccess(Class<?> domain, String action, String instance) {
+        return hasAccess(getSubject(), domain.getCanonicalName() + ":" + (action == null ? "*" : normalize(action)) + (instance != null ? ":" + normalize(instance) : ""));
+    }
+
+    public static boolean hasAccess(String domain, String action, String instance) {
+        return hasAccess(getSubject(), normalize(domain) + ":" + (action == null ? "*" : normalize(action)) + (instance != null ? ":" + normalize(instance) : ""));
+    }
+
     public static boolean hasAccess(String resource) {
         return hasAccess(getSubject(), resource);
+    }
+
+    public static boolean hasAccess(Subject subject, String domain, String action, String instance) {
+        return hasAccess(subject, normalize(domain) + ":" + (action == null ? "*" : normalize(action)) + (instance != null ? ":" + normalize(instance) : ""));
     }
 
     /**
