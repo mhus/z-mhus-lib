@@ -119,7 +119,7 @@ public class MString {
      *     whitespaces
      */
     public static boolean isSetTrim(String _in) {
-        return !isEmptyTrim(_in);
+        return _in != null && _in.trim().length() > 0;
     }
 
     /**
@@ -129,7 +129,7 @@ public class MString {
      * @return true if the string is not null and not an empty string
      */
     public static boolean isSet(String _in) {
-        return !isEmpty(_in);
+        return _in != null && _in.length() > 0;
     }
 
     /**
