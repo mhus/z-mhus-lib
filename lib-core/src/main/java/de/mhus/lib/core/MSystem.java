@@ -43,10 +43,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.errors.NotFoundException;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.ClassFileLocator;
@@ -1124,4 +1126,22 @@ public class MSystem {
         }
         return null;
     }
+    
+    public static Manifest getManifest(Class<?> owner) throws NotFoundException {
+        // try to get version info from JAR file
+        ClassLoader cl = owner.getClassLoader();
+        URL url = cl.getResource("META-INF/MANIFEST.MF");
+        if (url == null)
+            url = cl.getResource("/META-INF/MANIFEST.MF");
+        if (url != null) {
+            try (InputStream is = url.openStream()) {
+                Manifest manifest = new Manifest(is);
+                return manifest;
+            } catch (Throwable t) {
+                MApi.dirtyLogTrace(owner,t);
+            }
+        }
+        throw new NotFoundException("manifest not found for",owner);
+    }
+    
 }

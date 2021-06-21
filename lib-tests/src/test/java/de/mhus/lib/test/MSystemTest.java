@@ -16,19 +16,31 @@
 package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
+import java.util.jar.Manifest;
 
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.test.util.StringValue;
 import de.mhus.lib.test.util.Template;
 import de.mhus.lib.tests.TestCase;
 
 public class MSystemTest extends TestCase {
 
+    @Test
+    public void testManifest() throws NotFoundException {
+        Manifest manifest = MSystem.getManifest(MSystem.class);
+        assertNotNull(manifest);
+        String manifestVersion = manifest.getMainAttributes().getValue("Manifest-Version");
+        System.out.println(manifestVersion);
+        assertEquals("1.0", manifestVersion);
+    }
+    
     @Test
     public void testTemplateNames() {
         Class<?> testy = StringValue.class;
