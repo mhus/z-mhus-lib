@@ -7,5 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface CmdDescription {
 
 	String description() default "";
+	String[] flags() default {};
 
 }

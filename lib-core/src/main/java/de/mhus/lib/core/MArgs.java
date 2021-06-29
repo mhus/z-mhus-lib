@@ -47,9 +47,10 @@ import de.mhus.lib.errors.UsageException;
  */
 public class MArgs extends MLog {
 
+    public static final String ALLOW_OTHER_OPTIONS = "allowOtherOptions";
     private Map<String, Usage> values = new HashMap<>();
     private Usage[] usage;
-    private boolean showHelp = true;
+    private boolean showHelp = false;
 	private String error;
 
     /**
@@ -71,6 +72,8 @@ public class MArgs extends MLog {
     	CmdDescription cmd = pojo.getClass().getAnnotation(CmdDescription.class);
     	if (cmd != null) {
     		u.add(new Help(cmd.description()));
+    		for (String flag : cmd.flags())
+    		    u.add(new Flag(flag, null));
     	}
     	for (PojoAttribute<?> entry : model) {
     		CmdOption cOpt = entry.getAnnotation(CmdOption.class);
@@ -186,6 +189,9 @@ public class MArgs extends MLog {
         }
         
         // parse
+        
+        boolean allowOtherOptions = usage == null || getFlag(ALLOW_OTHER_OPTIONS) != null;
+        
         Usage current = null;
         Usage currentArg = null;
         int index = 1;
@@ -242,12 +248,12 @@ public class MArgs extends MLog {
 		            	}
 
 		            	Usage opt = values.get("-" + p);
-		            	if (opt == null && usage == null) {
+		            	if (opt == null && allowOtherOptions) {
 		            		opt = new Option(p);
 		            		values.put(opt.getIntName(), opt);
 		            	}
 		            	if (opt == null)
-		            		throw new UsageException("unknown operation",n);
+		            		throw new UsageException("unknown option",n);
 		            	
 		            	opt.set();
 		            	
@@ -292,6 +298,7 @@ public class MArgs extends MLog {
         } catch (UsageException e) {
         	showHelp = true;
         	error = "Usage error: " + e.getMessage();
+//        	e.printStackTrace();
         }
         
     }
@@ -320,7 +327,7 @@ public class MArgs extends MLog {
 	}
 
 	/**
-     * Returns true if the options list contains the key.
+     * Returns true if the options list contains the key and the option is set.
      *
      * @param name
      * @return if is included
@@ -331,16 +338,36 @@ public class MArgs extends MLog {
         return opt.isSet();
     }
 
+    /**
+     * Will always return an option even if it's not configured. In this case
+     * the value is null.
+     * 
+     * @param name
+     * @return An Option
+     */
     public Option getOption(String name) {
         Usage opt = values.get("-" + name);
+        if (opt == null)
+            opt = new Option(name);
         return (Option) opt;
     }
 
+    /**
+     * Return the argument from index. The first index is 1 and NOT 0 - like it's printed in usage.
+     * 
+     * @param index
+     * @return The Argument object
+     */
     public Argument getArgument(int index) {
     	Usage arg = values.get("#" + index);
     	return (Argument) arg;
     }
     
+    /**
+     * Return an argument by name.
+     * @param name
+     * @return The Argument object
+     */
     public Argument getArgument(String name) {
     	if (usage == null) return null;
     	for (Usage u : usage)
@@ -348,7 +375,11 @@ public class MArgs extends MLog {
     			return (Argument) u;
     	return null;
     }
-    
+
+    public Flag getFlag(String name) {
+        return (Flag)values.get("+" + name);
+    }
+
     @Override
     public String toString() {
         return values.toString();
@@ -444,12 +475,12 @@ public class MArgs extends MLog {
 		@Override
 		protected void noMoreValues() {
 			if (valueCnt > 0 && mandatory && values.size() < valueCnt)
-				throw new UsageException("Argument mandatory", name);
+				throw new UsageException("Option " + name + " is mandatory");
 		}
 
 		@Override
 		protected void printUsage(PrintStream out) {
-			out.println("-" + name + (alias != null ? ", --" + alias : "") + (valueCnt > 0 ? " <value> (max. " + valueCnt + ")" : ""));
+			out.println("-" + name + (alias != null ? ", --" + alias : "") + (valueCnt > 0 ? " <value> (" + valueCnt + ")" : "")  + (mandatory ? "*" : ""));
 			if (desc != null)
 				out.println(toDesc(desc));
 		}
@@ -505,12 +536,12 @@ public class MArgs extends MLog {
 		@Override
 		protected void noMoreValues() {
 			if (valueCnt > 0 && mandatory && values.size() < valueCnt)
-				throw new UsageException( );
+				throw new UsageException("Argument " + index + " not set");
 		}
 
 		@Override
 		protected void printUsage(PrintStream out) {
-			out.println("Argument #" + index + " " + name);
+			out.println("Argument #" + index + " " + name + (mandatory ? "*" : ""));
 			if (desc != null)
 				out.println(toDesc(desc));
 		}
@@ -542,6 +573,7 @@ public class MArgs extends MLog {
 			if (values.size() <= index) return def;
 			return values.get(index);
 		}
+		
     }
     
     public static class Help extends Usage {
@@ -571,6 +603,39 @@ public class MArgs extends MLog {
     	
     }
 
+    public static class Flag extends Usage {
+
+        private String flag;
+
+        public Flag(String flag, String help) {
+            super(help);
+            this.flag = flag;
+        }
+
+        @Override
+        public String getIntName() {
+            return "+" + flag;
+        }
+
+        @Override
+        protected void noMoreValues() {
+        }
+
+        @Override
+        protected void printUsage(PrintStream out) {
+            out.println("+ " + (name != null ? name : flag));
+        }
+
+        @Override
+        public String getAliasName() {
+            return null;
+        }
+        
+        public String getFlag() {
+            return flag;
+        }
+    }
+    
 	protected static String toDesc(String desc) {
 		return "    " + desc.replace("\n", "\n    ");
 	}
@@ -615,6 +680,14 @@ public class MArgs extends MLog {
 		return new Help(help);
 	}
 	
+    public static Flag optOther(String help) {
+        return new Flag(ALLOW_OTHER_OPTIONS,help);
+    }
+    
+    public static Flag allowOtherOptions() {
+        return new Flag(ALLOW_OTHER_OPTIONS,"More options are possible");
+    }
+    
 	public static Option opt(char name, String alias, int valueCnt, boolean mandatory, String desc) {
 		return new Option(name, alias, valueCnt, mandatory, desc);
 	}
@@ -630,5 +703,5 @@ public class MArgs extends MLog {
 	public boolean isPrintUsage() {
 		return showHelp;
 	}
-
+	
 }

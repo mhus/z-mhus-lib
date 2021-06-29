@@ -17,6 +17,7 @@ package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,95 @@ import de.mhus.lib.tests.TestCase;
 public class MArgsTest extends TestCase {
 
     @Test
+    public void testHelp1() {
+        String[] args = new String[] {"--help"};
+        MArgs ma = new MArgs(args,
+                MArgs.arg("1", false, "nr 1"),
+                MArgs.arg("2", false, "nr 2")
+//                MArgs.arg("3", true, "nr 3")
+                );
+        System.out.println(ma);
+        ma.printUsage();
+        assertTrue(ma.isPrintUsage());
+        assertTrue(ma.isValid());
+    }
+
+    @Test
+    public void testHelp2() {
+        String[] args = new String[] {"--help"};
+        MArgs ma = new MArgs(args,
+                MArgs.arg("1", true, "nr 1"),
+                MArgs.arg("2", false, "nr 2")
+//                MArgs.arg("3", true, "nr 3")
+                );
+        System.out.println(ma);
+        ma.printUsage();
+        assertTrue(ma.isPrintUsage());
+        assertFalse(ma.isValid());
+    }
+    
+    @Test
+    public void testHelp3() {
+        String[] args = new String[] {};
+        MArgs ma = new MArgs(args,
+                MArgs.arg("1", true, "nr 1"),
+                MArgs.arg("2", false, "nr 2")
+//                MArgs.arg("3", true, "nr 3")
+                );
+        System.out.println(ma);
+        ma.printUsage();
+        assertTrue(ma.isPrintUsage());
+        assertFalse(ma.isValid());
+    }
+   
+    @Test
+    public void testUnknownOptions() {
+        String[] args = new String[] {"-a", "aa", "-b", "bb", "-c", "-d", "dd"};
+        MArgs ma = new MArgs(args,
+                MArgs.opt('a', null, 1, false, "opt a"),
+                MArgs.opt('x', null, 1, false, "opt x is not used"),
+                MArgs.allowOtherOptions()
+                );
+        System.out.println(ma);
+        ma.printUsage();
+        assertFalse(ma.isPrintUsage());
+        assertTrue(ma.isValid());
+        
+        assertEquals(5, ma.getOptions().size());
+        
+        assertTrue(ma.hasOption("a"));
+        assertEquals(1, ma.getOption("a").getValues().size());
+        assertEquals(ma.getOption("a").getValue(), "aa");
+        
+        assertTrue(ma.hasOption("b"));
+        assertEquals(1, ma.getOption("b").getValues().size());
+        assertEquals(ma.getOption("b").getValue(), "bb");
+        
+        assertTrue(ma.hasOption("c"));
+        assertEquals(0, ma.getOption("c").getValues().size());
+        assertNull(ma.getOption("c").getValue());
+        
+        assertTrue(ma.hasOption("d"));
+        assertEquals(1, ma.getOption("d").getValues().size());
+        assertEquals(ma.getOption("d").getValue(), "dd");
+
+        assertFalse(ma.hasOption("e"));
+        assertEquals(0, ma.getOption("e").getValues().size());
+        assertNull(ma.getOption("e").getValue());
+        
+        assertFalse(ma.hasOption("x"));
+        assertEquals(0, ma.getOption("x").getValues().size());
+        assertNull(ma.getOption("x").getValue());
+        
+    }
+
+    @Test
     public void testPojoParsing() {
         String[] args = new String[] {"default1", "-a", "aa", "default2", "-a", "bb", "-b", "cc"};
         Container1 cont = new Container1();
     	MArgs ma = new MArgs(cont, args);
         System.out.println(ma);
+        assertFalse(ma.isPrintUsage());
         assertTrue(ma.isValid());
     	assertEquals("default1", cont.arg1);
     	assertEquals("default2", cont.arg2);
@@ -204,6 +289,7 @@ public class MArgsTest extends TestCase {
         		);
         System.out.println(ma);
         assertEquals(2, ma.getArguments().size());
+        assertTrue(ma.isPrintUsage());
         assertFalse(ma.isValid());
     }
 
