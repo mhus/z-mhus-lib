@@ -15,6 +15,9 @@
  */
 package de.mhus.lib.core.node;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -380,6 +383,18 @@ public class MNode extends MProperties implements INode {
                 } else
                     put(String.valueOf(e.getKey()), e.getValue());
             }
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        out.writeObject(name);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+        name = (String) in.readObject();
     }
 
 }

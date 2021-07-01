@@ -15,6 +15,10 @@
  */
 package de.mhus.lib.core.definition;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import de.mhus.lib.errors.MException;
 
 public class DefRoot extends DefComponent {
@@ -22,6 +26,10 @@ public class DefRoot extends DefComponent {
     private static final long serialVersionUID = 1L;
     public static final String ROOT = "root";
     private boolean build = false;
+
+    public DefRoot() {
+        super(null);
+    }
 
     public DefRoot(IDefDefinition... definitions) {
         this(ROOT, definitions);
@@ -45,5 +53,21 @@ public class DefRoot extends DefComponent {
 
     public boolean isBuild() {
         return build;
+    }
+    
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        try {
+            build();
+        } catch (MException e) {
+            throw new IOException(e);
+        }
+        super.writeExternal(out);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        super.readExternal(in);
+        build = true;
     }
 }

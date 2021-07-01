@@ -21,25 +21,111 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.definition.DefRoot;
 import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.DefaultNodeFactory;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.form.definition.FaShowInformationPanel;
+import de.mhus.lib.form.definition.FmText;
 import de.mhus.lib.tests.TestCase;
 
 public class MNodeTest extends TestCase {
 
+    @Test
+    public void testDefRootSerializable() throws MException, IOException, ClassNotFoundException {
+        
+        String serialized = null;
+        {
+            DefRoot root = new DefRoot(
+                    new FaShowInformationPanel(),
+                    new FmText("test1")
+                    );
+
+            serialized = MCast.serializeToString(root);
+
+        }
+
+        {
+            DefRoot root = (DefRoot) MCast.unserializeFromString(serialized, null);
+            root.build();
+            System.out.println(root);
+            assertEquals(true,root.getBoolean("showInformation"));
+            NodeList array = root.getArray("element");
+            assertEquals(1, array.size());
+            INode ele = array.get(0);
+            assertEquals("text", ele.getString("type"));
+            assertEquals("test1", ele.getString("name"));
+            assertTrue(root.isBuild());
+            root.build();
+            assertEquals(true,root.getBoolean("showInformation"));
+        }
+    }
+    
+    @Test
+    public void testSerializable() throws MException, IOException, ClassNotFoundException {
+        
+        String serialized = null;
+        
+        {
+            INode c = new MNode();
+            c.setString("test1", "wow");
+            c.setString("test2", "alf");
+    
+            INode c1 = new MNode();
+            c1.setString("test1", "wow");
+            c1.setString("test2", "alf");
+            
+            INode c2 = new MNode();
+            c2.setString("test1", "wow");
+            c2.setString("test2", "alf");
+            
+            INode c3 = new MNode();
+            c3.setString("test1", "wow");
+            c3.setString("test2", "alf");
+    
+            c.setObject("c1", c1);
+            NodeList array = c.createArray("array");
+            array.add(c2);
+            array.add(c3);
+            
+            derTeschd(c, false);
+            derTeschd(c1, false);
+            derTeschd(c2, false);
+            derTeschd(c3, false);
+            
+            serialized = MCast.serializeToString(c);
+        }
+        
+        {
+            INode c = (INode) MCast.unserializeFromString(serialized, null);
+            derTeschd(c, false);
+            
+            INode c1 = c.getObject("c1");
+            derTeschd(c1, false);
+            
+            NodeList array = c.getArray("array");
+            INode c2 = array.get(0);
+            derTeschd(c2, false);
+            INode c3 = array.get(0);
+            derTeschd(c3, false);
+        }
+        
+    }
+    
     @Test
     public void testProperties() throws MException {
         {
