@@ -61,7 +61,6 @@ public class MNodeTest extends TestCase {
 
         {
             DefRoot root = (DefRoot) MCast.unserializeFromString(serialized, null);
-            root.build();
             System.out.println(root);
             assertEquals(true,root.getBoolean("showInformation"));
             NodeList array = root.getArray("element");
