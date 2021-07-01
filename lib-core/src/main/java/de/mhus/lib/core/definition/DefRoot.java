@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.definition;
 
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -26,7 +27,7 @@ import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.form.ModelUtil;
 
-public class DefRoot extends DefComponent {
+public class DefRoot extends DefComponent implements Externalizable {
 
     private static final long serialVersionUID = 1L;
     public static final String ROOT = "root";
