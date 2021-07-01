@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.form.definition;
 
-import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
@@ -33,7 +32,7 @@ public class FaSource extends MNode implements IDefAttribute {
     }
 
     @Override
-    public void inject(DefComponent root) throws MException {
+    public void inject(INode root) throws MException {
         INode sources = root.getObject("sources");
         if (sources == null) {
             sources = root.createObject("sources");

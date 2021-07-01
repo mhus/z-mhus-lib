@@ -15,8 +15,8 @@
  */
 package de.mhus.lib.form.definition;
 
-import de.mhus.lib.core.definition.DefComponent;
 import de.mhus.lib.core.definition.IDefAttribute;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class FaTitle implements IDefAttribute {
@@ -30,7 +30,7 @@ public class FaTitle implements IDefAttribute {
     }
 
     @Override
-    public void inject(DefComponent root) throws MException {
+    public void inject(INode root) throws MException {
         if (title != null) root.setString("title", title);
         if (descritpion != null) root.setString("description", descritpion);
     }

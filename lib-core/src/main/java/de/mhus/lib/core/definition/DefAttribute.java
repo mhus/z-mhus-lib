@@ -16,6 +16,7 @@
 package de.mhus.lib.core.definition;
 
 import de.mhus.lib.core.MCast;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class DefAttribute implements IDefAttribute {
@@ -29,7 +30,7 @@ public class DefAttribute implements IDefAttribute {
     }
 
     @Override
-    public void inject(DefComponent parent) throws MException {
+    public void inject(INode parent) throws MException {
         parent.setString(name, MCast.objectToString(value));
     }
 

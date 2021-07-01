@@ -18,7 +18,7 @@ package de.mhus.lib.form.definition;
 import java.util.UUID;
 
 import de.mhus.lib.core.definition.DefAttribute;
-import de.mhus.lib.core.definition.DefComponent;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class FaNls extends DefAttribute {
@@ -41,7 +41,7 @@ public class FaNls extends DefAttribute {
     }
 
     @Override
-    public void inject(DefComponent root) throws MException {
+    public void inject(INode root) throws MException {
         super.inject(root);
         if (title != null) root.setString("caption", title);
         if (description != null) root.setString("description", description);

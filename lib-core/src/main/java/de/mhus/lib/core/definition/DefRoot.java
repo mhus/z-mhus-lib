@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class DefRoot extends DefComponent {
@@ -40,7 +41,7 @@ public class DefRoot extends DefComponent {
     }
 
     @Override
-    public void inject(DefComponent parent) throws MException {
+    public void inject(INode parent) throws MException {
         throw new MException("can't link root into another container");
     }
 

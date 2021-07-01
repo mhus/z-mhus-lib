@@ -17,6 +17,7 @@ package de.mhus.lib.form.definition;
 
 import de.mhus.lib.core.definition.DefAttribute;
 import de.mhus.lib.core.definition.DefComponent;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
 
 public class FmWizard extends DefAttribute {
@@ -34,7 +35,7 @@ public class FmWizard extends DefAttribute {
     }
 
     @Override
-    public void inject(DefComponent parent) throws MException {
+    public void inject(INode parent) throws MException {
         super.inject(parent);
         if (options != null) {
             DefComponent dummy = new DefComponent("wizard", options);
