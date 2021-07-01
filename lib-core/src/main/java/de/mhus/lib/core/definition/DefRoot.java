@@ -19,8 +19,12 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.form.ModelUtil;
 
 public class DefRoot extends DefComponent {
 
@@ -63,12 +67,17 @@ public class DefRoot extends DefComponent {
         } catch (MException e) {
             throw new IOException(e);
         }
-        super.writeExternal(out);
+        ObjectNode json = ModelUtil.toJson(this);
+        String content = MJson.toString(json);
+        out.writeUTF(content);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        build = true;
+        String json = in.readUTF();
+        DefRoot ext = ModelUtil.fromJson(json);
+        this.properties = ext.properties;
+        this.definitions = ext.definitions;
+        this.name = ext.name;
     }
 }

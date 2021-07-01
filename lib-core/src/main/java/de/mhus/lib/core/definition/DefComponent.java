@@ -25,7 +25,7 @@ import de.mhus.lib.errors.MException;
 public class DefComponent extends MNode implements IDefDefinition {
 
     private static final long serialVersionUID = 1L;
-    private LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
+    protected LinkedList<IDefDefinition> definitions = new LinkedList<IDefDefinition>();
 
     public DefComponent(String tag, IDefDefinition... definitions) {
         super(tag);
@@ -49,17 +49,11 @@ public class DefComponent extends MNode implements IDefDefinition {
     @Override
     public void inject(INode parent) throws MException {
         if (parent != null) {
-            MNode obj = new MNode(getName());
-            obj.putAll(this);
-            parent.getArrayOrCreate(getName()).add(obj);
+            parent.getArrayOrCreate(getName()).add(this);
             //parent.setObject(tag, this);
-            for (IDefDefinition d : definitions) {
-                d.inject(obj);
-            }
-        } else {
-            for (IDefDefinition d : definitions) {
-                d.inject(this);
-            }
+        }
+        for (IDefDefinition d : definitions) {
+            d.inject(this);
         }
     }
 

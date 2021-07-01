@@ -68,8 +68,8 @@ public class MNodeTest extends TestCase {
             INode ele = array.get(0);
             assertEquals("text", ele.getString("type"));
             assertEquals("test1", ele.getString("name"));
-            assertTrue(root.isBuild());
             root.build();
+            assertTrue(root.isBuild());
             assertEquals(true,root.getBoolean("showInformation"));
         }
     }
