@@ -80,7 +80,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
             if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
             if (debugPermissions == DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+                log.d(MSystem.currentStackTrace(username));
         }
 
         if (username == null)
