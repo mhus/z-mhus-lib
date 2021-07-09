@@ -103,8 +103,8 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             }
             if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
-            if (debugPermissions != DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+            if (debugPermissions == DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(username));
         }
 
         if (username == null)
@@ -176,7 +176,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions != DEBUG.NO && !ret) {
             log.i("perm access denied", info, permission);
-            if (debugPermissions != DEBUG.TRACE)
+            if (debugPermissions == DEBUG.TRACE)
                 log.d(MSystem.currentStackTrace(null));
         }
         return ret;
@@ -193,8 +193,8 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions != DEBUG.NO && !ret) {
             log.i("role access denied", info, roleIdentifier);
-            if (debugPermissions != DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+            if (debugPermissions == DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(roleIdentifier));
         }
         return ret;
     }

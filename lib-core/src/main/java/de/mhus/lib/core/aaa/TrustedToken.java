@@ -91,14 +91,14 @@ public class TrustedToken implements AuthenticationToken {
                     if (cached) {
                         if (debugPermissions != DEBUG.NO)
                             log.i("TrustedToken access granted by cache",callerName);
-                        if (debugPermissions != DEBUG.TRACE)
-                            log.d(MSystem.currentStackTrace(null));
+                        if (debugPermissions == DEBUG.TRACE)
+                            log.d(MSystem.currentStackTrace(callerName));
                         return true;
                     } else {
                         if (debugPermissions != DEBUG.NO)
                             log.i("TrustedToken access denied (2)",callerName);
-                        if (debugPermissions != DEBUG.TRACE)
-                            log.d(MSystem.currentStackTrace(null));
+                        if (debugPermissions == DEBUG.TRACE)
+                            log.d(MSystem.currentStackTrace(callerName));
                         return false;
                     }
                 }

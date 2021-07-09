@@ -26,7 +26,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
     protected DEBUG debugPermissions;
 
     @SuppressWarnings("unused")
-    private CfgString CFG_DEBUG_PERMISSIONS = new CfgString(getClass(), "debugPermissions", "trace").updateAction(v -> {
+    private CfgString CFG_DEBUG_PERMISSIONS = new CfgString(getClass(), "debugPermissions", "yes").updateAction(v -> {
         switch (v) {
         case "trace":
         case "true":
@@ -79,7 +79,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
             }
             if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
-            if (debugPermissions != DEBUG.TRACE)
+            if (debugPermissions == DEBUG.TRACE)
                 log.d(MSystem.currentStackTrace(null));
         }
 

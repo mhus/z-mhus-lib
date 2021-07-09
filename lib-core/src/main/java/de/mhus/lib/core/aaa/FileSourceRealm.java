@@ -427,8 +427,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions != DEBUG.NO && !ret) {
             log.d("perm access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, permission);
-            if (debugPermissions != DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+            if (debugPermissions == DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(String.valueOf(permission)));
         }
         return ret;
     }
@@ -443,9 +443,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         // 2. check default role access
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions != DEBUG.NO && !ret) {
-            log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
-            if (debugPermissions != DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+            if (!Aaa.ROLE_ADMIN.value().equals(roleIdentifier))
+                log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
+            if (debugPermissions == DEBUG.TRACE)
+                log.d(MSystem.currentStackTrace(roleIdentifier));
         }
 
         return ret;
