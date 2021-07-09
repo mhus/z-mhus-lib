@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -30,21 +31,38 @@ import org.w3c.dom.Document;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
+import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.definition.DefRoot;
-import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.DefaultNodeFactory;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
+import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.errors.MException;
+import de.mhus.lib.errors.NotFoundException;
 import de.mhus.lib.form.definition.FaShowInformationPanel;
 import de.mhus.lib.form.definition.FmText;
 import de.mhus.lib.tests.TestCase;
 
 public class MNodeTest extends TestCase {
 
+    @Test
+    public void testPropertiesWithUTF8() throws IOException, NotFoundException {
+       InputStream is = MSystem.locateResource(this, "utf8.properties")
+                                .openStream();
+
+        MProperties props = MProperties.load(is);
+        System.out.println(props);
+        assertTrue(props.containsKey("utf8key_u_\u2022"));
+        assertTrue(props.containsKey("test1\u00b0"));
+//        assertTrue(props.containsKey("utf8key•"));
+        assertEquals("360\u2022", props.getString("utf8key_u_\u2022"));
+        assertEquals("test\u00b0", props.getString("test1\u00b0"));
+//        assertEquals("360\u2022", props.getString("utf8key\u2022"));
+    }
+    
     @Test
     public void testDefRootSerializable() throws MException, IOException, ClassNotFoundException {
         
