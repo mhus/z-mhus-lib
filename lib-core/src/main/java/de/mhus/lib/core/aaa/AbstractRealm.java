@@ -75,7 +75,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
             if (!access) {
                 if (debugPermissions != DEBUG.NO)
                     log.i("TrustedToken access denied (3)");
-                throw new AuthenticationException("TrustedToken access denied (3)");
+                throw new AuthenticationException(Aaa.getPrincipal() + ": TrustedToken access denied (3)");
             }
             if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
@@ -84,7 +84,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
         }
 
         if (username == null)
-            throw new AuthenticationException("User or Token not found");
+            throw new AuthenticationException(Aaa.getPrincipal() + ": User or Token not found");
 
         return doGetAuthenticationInfo(username, token);
     }

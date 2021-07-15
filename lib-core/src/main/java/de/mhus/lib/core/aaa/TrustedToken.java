@@ -79,7 +79,7 @@ public class TrustedToken implements AuthenticationToken {
         if (sb.length() == 0) {
             if (debugPermissions != DEBUG.NO)
                 log.i("TrustedToken access denied (1)",stackTrace);
-            throw new AuthenticationException("TrustedToken access denied (1)");
+            throw new AuthenticationException(Aaa.getPrincipal() + ": TrustedToken access denied (1)");
         }
 
         String callerName = sb.toString().trim();
@@ -90,13 +90,13 @@ public class TrustedToken implements AuthenticationToken {
                 if (cached != null) {
                     if (cached) {
                         if (debugPermissions != DEBUG.NO)
-                            log.i("TrustedToken access granted by cache",callerName);
+                            log.i(Aaa.getPrincipal() + ": TrustedToken access granted by cache",callerName);
                         if (debugPermissions == DEBUG.TRACE)
                             log.d(MSystem.currentStackTrace(callerName));
                         return true;
                     } else {
                         if (debugPermissions != DEBUG.NO)
-                            log.i("TrustedToken access denied (2)",callerName);
+                            log.i(Aaa.getPrincipal() + ": TrustedToken access denied (2)",callerName);
                         if (debugPermissions == DEBUG.TRACE)
                             log.d(MSystem.currentStackTrace(callerName));
                         return false;
