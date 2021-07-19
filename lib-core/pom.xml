@@ -53,6 +53,7 @@
 		            org.bouncycastle.*;resolution:=optional,
 		            org.apache.http.*;resolution:=optional,
 		            org.newsclub.net.unix.*;resolution:=optional,
+		            javax.mail.*;resolution:=optional,
                     jline.console*;resolution:=optional,
                     org.apache.shiro.*;resolution:=optional,
                     org.yaml.snakeyaml.*;resolution:=optional,
@@ -111,7 +112,7 @@
 
 	<dependency>
 		<groupId>javax.mail</groupId>
-		<artifactId>mail</artifactId>
+		<artifactId>javax.mail-api</artifactId>
 	</dependency>
 	<dependency>
 	    <groupId>org.jline</groupId>
