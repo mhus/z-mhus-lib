@@ -53,7 +53,6 @@
 		            org.bouncycastle.*;resolution:=optional,
 		            org.apache.http.*;resolution:=optional,
 		            org.newsclub.net.unix.*;resolution:=optional,
-		            javax.mail.*;resolution:=optional,
                     jline.console*;resolution:=optional,
                     org.apache.shiro.*;resolution:=optional,
                     org.yaml.snakeyaml.*;resolution:=optional,
