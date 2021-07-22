@@ -25,6 +25,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.MXml;
@@ -100,6 +101,15 @@ public class XmlNodeBuilder extends INodeBuilder {
         for (String key : MXml.getAttributeNames(element)) {
             if (key.startsWith("node:")) continue;
             node.put(key, element.getAttribute(key));
+        }
+        org.w3c.dom.NodeList children = element.getChildNodes();
+        if (children.getLength() == 1) {
+            Node first = children.item(0);
+            if (first.getNodeType() == Node.TEXT_NODE)
+                node.setString(INode.NAMELESS_VALUE, first.getNodeValue());
+            else
+            if (first.getNodeType() == Node.CDATA_SECTION_NODE)
+                node.setString(INode.NAMELESS_VALUE, first.getNodeValue());
         }
         for (Element itemE : MXml.getLocalElementIterator(element)) {
             String key = itemE.getTagName();
