@@ -136,5 +136,15 @@ public interface ITracer {
                                 });
         return parentSpanCtx;
     }
+
+    default void cleanup() {
+        try {
+            Span cur = current();
+            if (cur != null)
+                cur.finish();
+        } catch (Throwable t) {
+            MApi.dirtyLogDebug(t);
+        }
+    }
     
 }
