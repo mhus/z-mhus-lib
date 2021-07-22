@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -32,6 +35,47 @@ import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MUri;
 
 public class TestUtil {
+
+    
+    public static void configureApacheCommonLogging(String logger, Level level) {
+        System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
+        System.setProperty("org.apache.commons.logging.simplelog.showdatetime","true");
+
+        String l = "FATAL";
+        switch (level.getName()) {
+        case "INFO":
+            l = "INFO"; break;
+        case "WARNING":
+            l = "WARN"; break;
+        case "FINE":
+            l = "DEBUG"; break;
+        case "FINER":
+            l = "TRACE"; break;
+        case "SEVERE":
+            l = "WARN"; break;
+        }
+        if (logger == null)
+            System.setProperty("org.apache.commons.logging", l);
+        else
+            System.setProperty("org.apache.commons.logging." + logger, l);
+    }
+    public static void configureJavaLogger(String name, Level level) {
+        Logger logger = Logger.getLogger(name);
+        logger.setLevel(level);
+    }
+
+    public static void configureJavaLogger(Level level) {
+
+        System.setProperty("java.util.logging.SimpleFormatter.format",
+                "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] (%2$s) %5$s %6$s%n");
+
+        Logger rootLogger = Logger.getLogger("");
+        for(Handler handler : rootLogger.getHandlers()) {
+          handler.setLevel(level);
+        }
+        // Set root logger level
+        rootLogger.setLevel(level);
+    }
 
     public static void enableDebug() {
         MApi.setDirtyTrace(false);
