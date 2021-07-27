@@ -115,8 +115,8 @@ public class MThread extends MObject implements Runnable {
                     ITracer.get()
                             .enter(
                                     span,
-                                    name,
-                                    "id",
+                                    "Thread: " + name,
+                                    "thread",
                                     "" + thread.getId(),
                                     "parent",
                                     "" + parentThreadId)) {

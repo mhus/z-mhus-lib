@@ -36,7 +36,7 @@ import de.mhus.lib.core.util.MUri;
 
 public class TestUtil {
 
-    
+    // not working
     public static void configureApacheCommonLogging(String logger, Level level) {
         System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
         System.setProperty("org.apache.commons.logging.simplelog.showdatetime","true");
@@ -59,6 +59,7 @@ public class TestUtil {
         else
             System.setProperty("org.apache.commons.logging." + logger, l);
     }
+    
     public static void configureJavaLogger(String name, Level level) {
         Logger logger = Logger.getLogger(name);
         logger.setLevel(level);
