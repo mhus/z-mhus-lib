@@ -211,6 +211,9 @@ public class Aaa {
         return hasAccess(subject, normalize(domain) + ":" + (action == null ? "*" : normalize(action)) + (instance != null ? ":" + normalize(instance) : ""));
     }
 
+    public static boolean hasAccess(Subject subject, Class<?> domain, String action, String instance) {
+        return hasAccess(subject, domain.getCanonicalName() + ":" + (action == null ? "*" : normalize(action)) + (instance != null ? ":" + normalize(instance) : ""));
+    }
     /**
      * Return true if the subject has access to the resource. 
      * In the Background the resource manager will decide if access
