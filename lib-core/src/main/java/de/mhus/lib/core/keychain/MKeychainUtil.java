@@ -46,14 +46,14 @@ public class MKeychainUtil {
     }
 
     public static void main(String[] in) throws IOException {
-        MArgs args = new MArgs(
-        		in,
-        		MArgs.opt('f', "file", 1, false, "File" ),
-        		MArgs.opt('p', "passphrase", 1, false, "Passphrase")
-        		);
+        MArgs args =
+                new MArgs(
+                        in,
+                        MArgs.opt('f', "file", 1, false, "File"),
+                        MArgs.opt('p', "passphrase", 1, false, "Passphrase"));
         if (!args.isPrintUsage()) {
-        	args.printUsage();
-        	System.exit(args.isValid() ? 0 : 1);
+            args.printUsage();
+            System.exit(args.isValid() ? 0 : 1);
         }
 
         MKeychain vault = loadDefault();

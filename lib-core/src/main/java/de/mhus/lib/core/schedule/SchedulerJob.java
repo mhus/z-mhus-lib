@@ -65,7 +65,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
     public SchedulerJob(ITimerTask task) {
         if (ITracer.get().current() != null)
-            logTrailConfig  = ITracer.serialize(ITracer.get().current().context());
+            logTrailConfig = ITracer.serialize(ITracer.get().current().context());
         setTask(task);
         if (task == null) setName("null");
         else if (task instanceof Named) setName(((Named) task).getName());
@@ -107,11 +107,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
             try (SubjectEnvironment access = Aaa.asSubject(username)) {
                 SpanContext ctx = null;
                 Scope scope = null;
-                if (getLogTrailConfig() != null)
-                    ctx = ITracer.deserialize(getLogTrailConfig());
-                if (ctx == null) 
+                if (getLogTrailConfig() != null) ctx = ITracer.deserialize(getLogTrailConfig());
+                if (ctx == null)
                     scope = ITracer.get().tracer().buildSpan(getName()).startActive(true);
-                else 
+                else
                     scope =
                             ITracer.get()
                                     .tracer()
@@ -133,7 +132,9 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                                 log.d("access denied", context, context.getErrorMessage());
                                 res =
                                         new NotSuccessful(
-                                                this, "access denied", OperationResult.ACCESS_DENIED);
+                                                this,
+                                                "access denied",
+                                                OperationResult.ACCESS_DENIED);
                             } else if (!canExecute(context)) {
                                 log.d("execution denied", context.getErrorMessage());
                                 res =
@@ -151,7 +152,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                             if (intercepter != null) intercepter.onError(this, context, e);
                         }
                         lastExecutionStop = System.currentTimeMillis();
-    
+
                         thread = null;
                     }
                     synchronized (this) {
@@ -168,7 +169,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                     setDone(true);
                 }
             } catch (Throwable e) {
-                // reshedule in case of an exception - this will prevent amok behavior 
+                // reshedule in case of an exception - this will prevent amok behavior
                 synchronized (this) {
                     doCaclulateNextExecution();
                     log.d("Scheduled to", getName(), getNextExecutionTime());
@@ -433,5 +434,4 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     protected void setUsername(String username) {
         this.username = username;
     }
-
 }

@@ -21,23 +21,23 @@ import java.util.Map;
 public class Successful extends OperationResult {
 
     public Successful(Operation operation) {
-        this(operation, "", 0, (String)null);
+        this(operation, "", 0, (String) null);
     }
 
     public Successful(Operation operation, String msg) {
-        this(operation, msg, 0, (String)null);
+        this(operation, msg, 0, (String) null);
     }
 
     public Successful(Operation operation, String msg, int rc) {
-        this(operation, msg, rc, (String)null);
+        this(operation, msg, rc, (String) null);
     }
-    
-    public Successful(Operation operation, String msg, Map<?,?> result) {
+
+    public Successful(Operation operation, String msg, Map<?, ?> result) {
         this(operation, msg, 0, result);
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(Operation operation, String msg, int rc, Map<?,?> result) {
+    public Successful(Operation operation, String msg, int rc, Map<?, ?> result) {
         setOperationPath(operation.getDescription().getPath());
         setCaption(operation.getDescription().getCaption());
         setMsg(msg);
@@ -47,7 +47,7 @@ public class Successful extends OperationResult {
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(String path, String msg, int rc, Map<?,?> result) {
+    public Successful(String path, String msg, int rc, Map<?, ?> result) {
         setOperationPath(path);
         setCaption("");
         setMsg(msg);

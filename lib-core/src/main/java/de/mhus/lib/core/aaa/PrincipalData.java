@@ -189,7 +189,7 @@ public class PrincipalData implements Map<String, String>, Serializable {
             throws IOException, ClassNotFoundException {
         data = (Map<String, String>) s.readObject();
     }
-    
+
     @Override
     public String toString() {
         return MSystem.toString(this, data);

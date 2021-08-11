@@ -101,7 +101,9 @@ public class MPojo {
                         public PojoModel createPojoModel(Class<?> pojoClass) {
                             PojoModel model =
                                     new PojoParser()
-                                            .parse(pojoClass, new AttributesStrategy(true, true, "_", null))
+                                            .parse(
+                                                    pojoClass,
+                                                    new AttributesStrategy(true, true, "_", null))
                                             .filter(
                                                     new DefaultFilter(
                                                             true, false, false, false, true))
@@ -111,7 +113,7 @@ public class MPojo {
                     };
         return attributesModelFactory;
     }
-    
+
     public static synchronized PojoModelFactory getAttributeModelFactory() {
         if (defaultModelFactory == null)
             defaultModelFactory =
@@ -138,11 +140,14 @@ public class MPojo {
         return pojoToNode(from, getDefaultModelFactory(), false, false);
     }
 
-    public static INode pojoToNode(Object from, boolean verbose, boolean useAnnotations) throws IOException {
+    public static INode pojoToNode(Object from, boolean verbose, boolean useAnnotations)
+            throws IOException {
         return pojoToNode(from, getDefaultModelFactory(), verbose, useAnnotations);
     }
-    
-    public static INode pojoToNode(Object from, PojoModelFactory factory, boolean verbose, boolean useAnnotations) throws IOException {
+
+    public static INode pojoToNode(
+            Object from, PojoModelFactory factory, boolean verbose, boolean useAnnotations)
+            throws IOException {
         MNode to = new MNode();
         pojoToNode(from, to, factory, verbose, useAnnotations, "", 0);
         return to;
@@ -151,77 +156,74 @@ public class MPojo {
     public static void pojoToNode(Object from, INode to) throws IOException {
         pojoToNode(from, to, getDefaultModelFactory(), false, false, "", 0);
     }
-    
-    public static void pojoToNode(Object from, INode to, PojoModelFactory factory) throws IOException {
+
+    public static void pojoToNode(Object from, INode to, PojoModelFactory factory)
+            throws IOException {
         pojoToNode(from, to, factory, false, false, "", 0);
     }
-    
-    public static void pojoToNode(Object from, INode to, boolean verbose, boolean useAnnotations) throws IOException {
+
+    public static void pojoToNode(Object from, INode to, boolean verbose, boolean useAnnotations)
+            throws IOException {
         pojoToNode(from, to, getDefaultModelFactory(), verbose, useAnnotations, "", 0);
     }
-    
-    private static void pojoToNode(Object from, INode to, PojoModelFactory factory, boolean verbose, boolean useAnnotations, String prefix, int level) throws IOException {
+
+    private static void pojoToNode(
+            Object from,
+            INode to,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            String prefix,
+            int level)
+            throws IOException {
         if (level > MAX_LEVEL) return;
         if (from == null) {
             to.setBoolean(INode.NULL, true);
             return;
         }
-        if (verbose)
-            to.setString(INode.CLASS, from.getClass().getCanonicalName());
+        if (verbose) to.setString(INode.CLASS, from.getClass().getCanonicalName());
 
         if (from instanceof String) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setString(INode.NAMELESS_VALUE, (String)from);
-        } else
-        if (from instanceof Long) {
+            to.setString(INode.NAMELESS_VALUE, (String) from);
+        } else if (from instanceof Long) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setLong(INode.NAMELESS_VALUE, (Long)from);
-        } else
-        if (from instanceof Integer) {
+            to.setLong(INode.NAMELESS_VALUE, (Long) from);
+        } else if (from instanceof Integer) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setInt(INode.NAMELESS_VALUE, (Integer)from);
-        } else
-        if (from instanceof Boolean) {
+            to.setInt(INode.NAMELESS_VALUE, (Integer) from);
+        } else if (from instanceof Boolean) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setBoolean(INode.NAMELESS_VALUE, (Boolean)from);
-        } else
-        if (from instanceof Float) {
+            to.setBoolean(INode.NAMELESS_VALUE, (Boolean) from);
+        } else if (from instanceof Float) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setFloat(INode.NAMELESS_VALUE, (Float)from);
-        } else
-        if (from instanceof Short) {
+            to.setFloat(INode.NAMELESS_VALUE, (Float) from);
+        } else if (from instanceof Short) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setInt(INode.NAMELESS_VALUE, (Short)from);
-        } else
-        if (from instanceof Byte) {
+            to.setInt(INode.NAMELESS_VALUE, (Short) from);
+        } else if (from instanceof Byte) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setLong(INode.NAMELESS_VALUE, (Byte)from);
-        } else
-        if (from instanceof java.sql.Timestamp) {
+            to.setLong(INode.NAMELESS_VALUE, (Byte) from);
+        } else if (from instanceof java.sql.Timestamp) {
             to.setString(INode.CLASS, "java.sql.Timestamp");
-            to.setLong(INode.NAMELESS_VALUE, ((java.sql.Timestamp)from).getTime());
-        } else
-        if (from instanceof Date) {
+            to.setLong(INode.NAMELESS_VALUE, ((java.sql.Timestamp) from).getTime());
+        } else if (from instanceof Date) {
             to.setString(INode.CLASS, "java.util.Date");
-            to.setLong(INode.NAMELESS_VALUE, ((Date)from).getTime());
-        } else
-        if (from instanceof Enum) {
+            to.setLong(INode.NAMELESS_VALUE, ((Date) from).getTime());
+        } else if (from instanceof Enum) {
             to.setString(INode.CLASS, "java.lang.Enum");
             to.setString(INode.CLASS + "_", from.getClass().getCanonicalName());
-            to.setInt(INode.NAMELESS_VALUE, ((Enum<?>)from).ordinal());
-            to.setString(INode.HELPER_VALUE, ((Enum<?>)from).toString());
-        } else
-        if (from instanceof Character) {
+            to.setInt(INode.NAMELESS_VALUE, ((Enum<?>) from).ordinal());
+            to.setString(INode.HELPER_VALUE, ((Enum<?>) from).toString());
+        } else if (from instanceof Character) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setInt(INode.NAMELESS_VALUE, (Character)from);
-        } else
-        if (from instanceof Double) {
+            to.setInt(INode.NAMELESS_VALUE, (Character) from);
+        } else if (from instanceof Double) {
             to.setString(INode.CLASS, from.getClass().getCanonicalName());
-            to.setDouble(INode.NAMELESS_VALUE, (Double)from);
-        } else
-        if (from instanceof UUID) {
+            to.setDouble(INode.NAMELESS_VALUE, (Double) from);
+        } else if (from instanceof UUID) {
             to.setString(INode.CLASS, "java.util.UUID");
-            to.setString(INode.NAMELESS_VALUE, ((UUID)from).toString());
+            to.setString(INode.NAMELESS_VALUE, ((UUID) from).toString());
         } else {
             PojoModel model = factory.createPojoModel(from.getClass());
             for (PojoAttribute<?> attr : model) {
@@ -230,8 +232,7 @@ public class MPojo {
                 if (attr.getName().equals("class")) continue;
                 if (useAnnotations) {
                     Hidden hidden = attr.getAnnotation(Hidden.class);
-                    if (hidden != null)
-                        continue;
+                    if (hidden != null) continue;
                     Public pub = attr.getAnnotation(Public.class);
                     if (pub != null) {
                         if (!pub.readable()) continue;
@@ -241,13 +242,29 @@ public class MPojo {
                     if (emb != null) {
                         Object value = attr.get(from);
                         String name = attr.getName();
-                        pojoToNode(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
+                        pojoToNode(
+                                value,
+                                to,
+                                factory,
+                                verbose,
+                                useAnnotations,
+                                prefix + name + "_",
+                                level + 1);
                         continue;
                     }
                 }
                 Object value = attr.get(from);
                 String name = attr.getName();
-                setNodeValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
+                setNodeValue(
+                        to,
+                        prefix + name,
+                        value,
+                        factory,
+                        verbose,
+                        useAnnotations,
+                        deep,
+                        prefix,
+                        level + 1);
             }
         }
     }
@@ -263,7 +280,7 @@ public class MPojo {
             throws IOException {
         setNodeValue(to, name, value, factory, verbose, useAnnotations, deep, "", 0);
     }
-    
+
     @SuppressWarnings("unchecked")
     private static void setNodeValue(
             INode to,
@@ -280,7 +297,8 @@ public class MPojo {
         try {
             if (verbose) {
                 if (value != null)
-                    to.setString(INode.CLASS + "_" + prefix + name, value.getClass().getCanonicalName());
+                    to.setString(
+                            INode.CLASS + "_" + prefix + name, value.getClass().getCanonicalName());
                 if (value == null) {
                     to.setBoolean(INode.NULL + "_" + prefix + name, true);
                 }
@@ -289,11 +307,11 @@ public class MPojo {
             else if (value instanceof Integer) to.setInt(prefix + name, (int) value);
             else if (value instanceof String) to.setString(prefix + name, (String) value);
             else if (value instanceof Long) to.setLong(prefix + name, (long) value);
-//            else if (value instanceof byte[]) to.put(prefix + name, (byte[]) value);
+            //            else if (value instanceof byte[]) to.put(prefix + name, (byte[]) value);
             else if (value instanceof Float) to.setFloat(prefix + name, (float) value);
             else if (value instanceof Double) to.setDouble(prefix + name, (double) value);
             else if (value instanceof Short) to.setInt(prefix + name, (short) value);
-            else if (value instanceof Date) to.setLong(prefix + name, ((Date)value).getTime());
+            else if (value instanceof Date) to.setLong(prefix + name, ((Date) value).getTime());
             else if (value instanceof Character)
                 to.put(prefix + name, Character.toString((Character) value));
             else if (value instanceof Date) {
@@ -321,12 +339,14 @@ public class MPojo {
             } else if (value.getClass().isArray()) {
                 NodeList array = to.createArray(prefix + name);
                 for (Object o : (Object[]) value) {
-                    addNodeValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addNodeValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else if (value instanceof Collection) {
                 NodeList array = to.createArray(prefix + name);
                 for (Object o : ((Collection<Object>) value)) {
-                    addNodeValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addNodeValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
@@ -340,7 +360,7 @@ public class MPojo {
             log.t(t);
         }
     }
-    
+
     public static void addNodeValue(
             NodeList to,
             Object value,
@@ -351,7 +371,7 @@ public class MPojo {
             throws IOException {
         addNodeValue(to, value, factory, verbose, useAnnotations, deep, "", 0);
     }
-    
+
     @SuppressWarnings("unchecked")
     private static void addNodeValue(
             NodeList to,
@@ -367,27 +387,28 @@ public class MPojo {
         try {
             INode oo = to.createObject();
             if (verbose) {
-                if (value != null)
-                    oo.setString(INode.CLASS, value.getClass().getCanonicalName());
+                if (value != null) oo.setString(INode.CLASS, value.getClass().getCanonicalName());
                 if (value == null) {
                     oo.setBoolean(INode.NULL, true);
                 }
-            }
-            else if (value instanceof Boolean) oo.setBoolean(INode.NAMELESS_VALUE, (boolean) value);
+            } else if (value instanceof Boolean)
+                oo.setBoolean(INode.NAMELESS_VALUE, (boolean) value);
             else if (value instanceof Integer) oo.setInt(INode.NAMELESS_VALUE, (int) value);
             else if (value instanceof String) oo.setString(INode.NAMELESS_VALUE, (String) value);
             else if (value instanceof Long) oo.setLong(INode.NAMELESS_VALUE, (Long) value);
             else if (value instanceof Date) {
                 oo.setLong(INode.NAMELESS_VALUE, ((Date) value).getTime());
-                oo.setString(INode.HELPER_VALUE, MDate.toIso8601((Date)value));
+                oo.setString(INode.HELPER_VALUE, MDate.toIso8601((Date) value));
             }
-//            else if (value instanceof byte[]) oo.set(INode.NAMELESS_VALUE, (byte[]) value);
+            //            else if (value instanceof byte[]) oo.set(INode.NAMELESS_VALUE, (byte[])
+            // value);
             else if (value instanceof Float) oo.setFloat(INode.NAMELESS_VALUE, (Float) value);
-//            else if (value instanceof BigDecimal) oo.set(INode.NAMELESS_VALUE, (BigDecimal) value);
+            //            else if (value instanceof BigDecimal) oo.set(INode.NAMELESS_VALUE,
+            // (BigDecimal) value);
             else if (value instanceof INode) oo.addObject(INode.NAMELESS_VALUE, (INode) value);
             else if (value.getClass().isEnum()) {
                 oo.setInt(INode.HELPER_VALUE, ((Enum<?>) value).ordinal());
-                oo.setString(INode.NAMELESS_VALUE, ((Enum<?>)value).name());
+                oo.setString(INode.NAMELESS_VALUE, ((Enum<?>) value).name());
             } else if (value instanceof Map) {
                 for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) value).entrySet()) {
                     setNodeValue(
@@ -404,7 +425,8 @@ public class MPojo {
             } else if (value instanceof Collection) {
                 NodeList array = oo.createArray(INode.NAMELESS_VALUE);
                 for (Object o : ((Collection<Object>) value)) {
-                    addNodeValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addNodeValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
@@ -417,7 +439,7 @@ public class MPojo {
             log.t(t);
         }
     }
-    
+
     public static void nodeToPojo(INode from, Object to) throws IOException {
         nodeToPojo(from, to, getDefaultModelFactory(), false, false);
     }
@@ -426,7 +448,8 @@ public class MPojo {
         nodeToPojo(from, to, getDefaultModelFactory(), force, false);
     }
 
-    public static void nodeToPojo(INode from, Object to, boolean force, boolean verbose) throws IOException {
+    public static void nodeToPojo(INode from, Object to, boolean force, boolean verbose)
+            throws IOException {
         nodeToPojo(from, to, getDefaultModelFactory(), force, verbose);
     }
 
@@ -443,57 +466,61 @@ public class MPojo {
         return nodeToPojoObject(from, getDefaultModelFactory(), null, force, false);
     }
 
-    public static Object nodeToPojoObject(INode from, boolean force, boolean verbose) throws Exception {
+    public static Object nodeToPojoObject(INode from, boolean force, boolean verbose)
+            throws Exception {
         return nodeToPojoObject(from, getDefaultModelFactory(), null, force, verbose);
     }
 
-    public static Object nodeToPojoObject(INode from, PojoModelFactory factory)
-            throws Exception {
+    public static Object nodeToPojoObject(INode from, PojoModelFactory factory) throws Exception {
         return nodeToPojoObject(from, factory, null, false, false);
     }
-    
-    public static Object nodeToPojoObject(INode from, PojoModelFactory factory, MActivator activator, boolean force, boolean verbose)
+
+    public static Object nodeToPojoObject(
+            INode from,
+            PojoModelFactory factory,
+            MActivator activator,
+            boolean force,
+            boolean verbose)
             throws Exception {
 
         if (activator == null) activator = getDefaultActivator();
-        if (from.getBoolean(INode.NULL, false))
-            return null;
+        if (from.getBoolean(INode.NULL, false)) return null;
         String clazz = from.getString(INode.CLASS, null);
         if (clazz == null) return null;
         switch (clazz) {
-        case "java.lang.Boolean":
-            return from.getBoolean(INode.NAMELESS_VALUE, false);
-        case "java.lang.Integer":
-            return from.getInt(INode.NAMELESS_VALUE, 0);
-        case "java.lang.Long":
-            return from.getLong(INode.NAMELESS_VALUE, 0);
-        case "java.lang.Short":
-            return (short)from.getInt(INode.NAMELESS_VALUE, 0);
-        case "java.lang.Double":
-            return from.getDouble(INode.NAMELESS_VALUE, 0);
-        case "java.lang.Float":
-            return from.getFloat(INode.NAMELESS_VALUE, 0);
-        case "java.lang.Byte":
-            return (byte)from.getInt(INode.NAMELESS_VALUE, 0);
-        case "java.lang.String":
-            return from.getString(INode.NAMELESS_VALUE);
-        case "java.util.Date":
-            return new Date( from.getLong(INode.NAMELESS_VALUE, 0) );
-        case "java.lang.Character":
-            return (char)from.getInt(INode.NAMELESS_VALUE, 0);
-        case "java.util.UUID":
-            return UUID.fromString(from.getString(INode.NAMELESS_VALUE));
-        case "java.sql.Timestamp":
-            return new java.sql.Timestamp(from.getLong(INode.NAMELESS_VALUE, 0));
-        case "java.lang.Enum":
-            String enuName = from.getString(INode.CLASS + "_");
-            Class<? extends Enum<?>> type = MSystem.getEnum(enuName, activator);
-            if (type != null) {
-                Object[] cons = type.getEnumConstants();
-                int ord = from.getInt(INode.NAMELESS_VALUE, 0);
-                if (ord >= 0 && ord < cons.length) return cons[ord];
-            }
-            return null;
+            case "java.lang.Boolean":
+                return from.getBoolean(INode.NAMELESS_VALUE, false);
+            case "java.lang.Integer":
+                return from.getInt(INode.NAMELESS_VALUE, 0);
+            case "java.lang.Long":
+                return from.getLong(INode.NAMELESS_VALUE, 0);
+            case "java.lang.Short":
+                return (short) from.getInt(INode.NAMELESS_VALUE, 0);
+            case "java.lang.Double":
+                return from.getDouble(INode.NAMELESS_VALUE, 0);
+            case "java.lang.Float":
+                return from.getFloat(INode.NAMELESS_VALUE, 0);
+            case "java.lang.Byte":
+                return (byte) from.getInt(INode.NAMELESS_VALUE, 0);
+            case "java.lang.String":
+                return from.getString(INode.NAMELESS_VALUE);
+            case "java.util.Date":
+                return new Date(from.getLong(INode.NAMELESS_VALUE, 0));
+            case "java.lang.Character":
+                return (char) from.getInt(INode.NAMELESS_VALUE, 0);
+            case "java.util.UUID":
+                return UUID.fromString(from.getString(INode.NAMELESS_VALUE));
+            case "java.sql.Timestamp":
+                return new java.sql.Timestamp(from.getLong(INode.NAMELESS_VALUE, 0));
+            case "java.lang.Enum":
+                String enuName = from.getString(INode.CLASS + "_");
+                Class<? extends Enum<?>> type = MSystem.getEnum(enuName, activator);
+                if (type != null) {
+                    Object[] cons = type.getEnumConstants();
+                    int ord = from.getInt(INode.NAMELESS_VALUE, 0);
+                    if (ord >= 0 && ord < cons.length) return cons[ord];
+                }
+                return null;
         }
         Object obj = activator.createObject(clazz);
         nodeToPojo(from, obj, factory, force, verbose);
@@ -501,13 +528,11 @@ public class MPojo {
     }
 
     private static synchronized MActivator getDefaultActivator() {
-        if (defaultActivator == null)
-            defaultActivator = M.l(MActivator.class);
+        if (defaultActivator == null) defaultActivator = M.l(MActivator.class);
         return defaultActivator;
     }
 
     /**
-     * 
      * @param from
      * @param to
      * @param factory
@@ -515,8 +540,9 @@ public class MPojo {
      * @param verbose Use verbose hints from serialization to create the correct object
      * @throws IOException
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void nodeToPojo(INode from, Object to, PojoModelFactory factory, boolean force, boolean verbose)
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void nodeToPojo(
+            INode from, Object to, PojoModelFactory factory, boolean force, boolean verbose)
             throws IOException {
         PojoModel model = factory.createPojoModel(to.getClass());
         for (PojoAttribute<Object> attr : model) {
@@ -540,13 +566,12 @@ public class MPojo {
                 else if (type == Float.class || type == float.class)
                     attr.set(to, from.getFloat(name, 0), force);
                 else if (type == Byte.class || type == byte.class)
-                    attr.set(to, (byte)from.getInt(name, 0), force);
+                    attr.set(to, (byte) from.getInt(name, 0), force);
                 else if (type == Short.class || type == short.class)
-                    attr.set(to, (short)from.getInt(name, 0), force);
+                    attr.set(to, (short) from.getInt(name, 0), force);
                 else if (type == Character.class || type == char.class)
                     attr.set(to, (char) from.getInt(name, 0), force);
-                else if (type == Date.class)
-                    attr.set(to, new Date( from.getLong(name, 0) ), force);
+                else if (type == Date.class) attr.set(to, new Date(from.getLong(name, 0)), force);
                 else if (type == String.class) attr.set(to, from.getString(name, null), force);
                 else if (type == UUID.class)
                     try {
@@ -564,19 +589,24 @@ public class MPojo {
                     INode obj = from.getObjectOrNull(name);
                     if (obj != null) {
                         Map inst = null;
-                        if (type == Map.class)
-                            inst = new HashMap<>();
-                        else
-                            inst = (Map)type.getConstructor().newInstance();
+                        if (type == Map.class) inst = new HashMap<>();
+                        else inst = (Map) type.getConstructor().newInstance();
                         if (verbose)
                             for (Entry<String, Object> entry : obj.entrySet()) {
                                 if (!entry.getKey().startsWith("_")) {
-                                    String hint = obj.getString(INode.CLASS + "_" + entry.getKey(), null);
-                                    addNodeValue(inst, entry.getKey(), entry.getValue(), hint, factory, force, verbose);
+                                    String hint =
+                                            obj.getString(INode.CLASS + "_" + entry.getKey(), null);
+                                    addNodeValue(
+                                            inst,
+                                            entry.getKey(),
+                                            entry.getValue(),
+                                            hint,
+                                            factory,
+                                            force,
+                                            verbose);
                                 }
                             }
-                        else
-                            inst.putAll(obj);
+                        else inst.putAll(obj);
                         attr.set(to, inst, force);
                     }
                 } else if (type.isAssignableFrom(Collection.class)) {
@@ -585,19 +615,17 @@ public class MPojo {
                         Collection inst = null;
                         if (type == Collection.class || type == List.class)
                             inst = new ArrayList<>();
-                        else
-                            inst = (Collection)type.getConstructor().newInstance();
+                        else inst = (Collection) type.getConstructor().newInstance();
                         for (INode obj : array) {
                             if (verbose) {
                                 String hint = obj.getString(INode.CLASS, null);
                                 Object val = toNodeValue(model, hint, factory, force, verbose);
-                                if (val != null)
-                                    inst.add(val);
-                            } else
-                            if (obj.containsKey(INode.NAMELESS_VALUE))
+                                if (val != null) inst.add(val);
+                            } else if (obj.containsKey(INode.NAMELESS_VALUE))
                                 inst.add(obj.get(INode.NAMELESS_VALUE));
                             else {
-//                                oo = // not possible, cant generate a complex object from no type
+                                //                                oo = // not possible, cant
+                                // generate a complex object from no type
                             }
                         }
                         attr.set(to, inst, force);
@@ -608,19 +636,22 @@ public class MPojo {
             }
         }
     }
-    
-    
-    
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static void addNodeValue(Map inst, String name, Object value, String hint, PojoModelFactory factory,
-            boolean force, boolean verbose) {
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void addNodeValue(
+            Map inst,
+            String name,
+            Object value,
+            String hint,
+            PojoModelFactory factory,
+            boolean force,
+            boolean verbose) {
         Object val = toNodeValue(value, hint, factory, force, verbose);
-        if (val != null)
-            inst.put(name, val);
+        if (val != null) inst.put(name, val);
     }
-    
-    public static Object toNodeValue(Object value, String hint, PojoModelFactory factory,
-            boolean force, boolean verbose) {
+
+    public static Object toNodeValue(
+            Object value, String hint, PojoModelFactory factory, boolean force, boolean verbose) {
         Object val = value;
         if (MString.isEmptyTrim(hint)) {
             // nothing
@@ -629,12 +660,11 @@ public class MPojo {
             if (val == null && value instanceof INode) {
                 try {
                     val = getDefaultActivator().createObject(hint);
-                    nodeToPojo((INode)value, val, factory, force, verbose );
+                    nodeToPojo((INode) value, val, factory, force, verbose);
                 } catch (Throwable t) {
                     log.d(hint, t);
                 }
-            } else
-            if (val == null) {
+            } else if (val == null) {
                 try {
                     // try enum
                     Class<?> type = MSystem.getEnum(hint, null);
@@ -647,8 +677,7 @@ public class MPojo {
                 } catch (Throwable t) {
                     log.d(hint, t);
                 }
-                if (val == null)
-                    val = value; // fallback
+                if (val == null) val = value; // fallback
             }
         }
         return val;
@@ -670,13 +699,23 @@ public class MPojo {
     }
 
     public static void pojoToJson(
-            Object from, ObjectNode to, PojoModelFactory factory, boolean verbose, boolean useAnnotations)
+            Object from,
+            ObjectNode to,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations)
             throws IOException {
         pojoToJson(from, to, factory, verbose, useAnnotations, "", 0);
     }
-    
+
     private static void pojoToJson(
-            Object from, ObjectNode to, PojoModelFactory factory, boolean verbose, boolean useAnnotations, String prefix, int level)
+            Object from,
+            ObjectNode to,
+            PojoModelFactory factory,
+            boolean verbose,
+            boolean useAnnotations,
+            String prefix,
+            int level)
             throws IOException {
         if (level > MAX_LEVEL) return;
         PojoModel model = factory.createPojoModel(from.getClass());
@@ -685,8 +724,7 @@ public class MPojo {
             if (!attr.canRead()) continue;
             if (useAnnotations) {
                 Hidden hidden = attr.getAnnotation(Hidden.class);
-                if (hidden != null)
-                    continue;
+                if (hidden != null) continue;
                 Public pub = attr.getAnnotation(Public.class);
                 if (pub != null) {
                     if (!pub.readable()) continue;
@@ -696,13 +734,29 @@ public class MPojo {
                 if (emb != null) {
                     Object value = attr.get(from);
                     String name = attr.getName();
-                    pojoToJson(value, to, factory, verbose, useAnnotations, prefix + name + "_", level+1);
+                    pojoToJson(
+                            value,
+                            to,
+                            factory,
+                            verbose,
+                            useAnnotations,
+                            prefix + name + "_",
+                            level + 1);
                     continue;
                 }
             }
             Object value = attr.get(from);
             String name = attr.getName();
-            setJsonValue(to, prefix + name, value, factory, verbose, useAnnotations, deep, prefix, level + 1);
+            setJsonValue(
+                    to,
+                    prefix + name,
+                    value,
+                    factory,
+                    verbose,
+                    useAnnotations,
+                    deep,
+                    prefix,
+                    level + 1);
         }
     }
 
@@ -716,7 +770,7 @@ public class MPojo {
             throws IOException {
         addJsonValue(to, value, factory, verbose, useAnnotations, deep, "", 0);
     }
-    
+
     @SuppressWarnings("unchecked")
     private static void addJsonValue(
             ArrayNode to,
@@ -761,7 +815,8 @@ public class MPojo {
                 ArrayNode array = to.arrayNode();
                 to.add(array);
                 for (Object o : ((Collection<Object>) value)) {
-                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addJsonValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {
@@ -786,7 +841,7 @@ public class MPojo {
             boolean useAnnotations,
             boolean deep)
             throws IOException {
-                setJsonValue(to, name, value, factory, verbose, useAnnotations, deep, "",0);
+        setJsonValue(to, name, value, factory, verbose, useAnnotations, deep, "", 0);
     }
 
     @SuppressWarnings("unchecked")
@@ -804,8 +859,7 @@ public class MPojo {
         if (level > MAX_LEVEL) return;
         try {
             if (verbose) {
-                if (value != null)
-                    to.put(INode.CLASS, value.getClass().getCanonicalName());
+                if (value != null) to.put(INode.CLASS, value.getClass().getCanonicalName());
             }
             if (value == null) to.putNull(prefix + name);
             else if (value instanceof Boolean) to.put(prefix + name, (boolean) value);
@@ -845,13 +899,15 @@ public class MPojo {
                 ArrayNode array = to.arrayNode();
                 to.set(prefix + name, array);
                 for (Object o : (Object[]) value) {
-                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addJsonValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else if (value instanceof Collection) {
                 ArrayNode array = to.arrayNode();
                 to.set(prefix + name, array);
                 for (Object o : ((Collection<Object>) value)) {
-                    addJsonValue(array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
+                    addJsonValue(
+                            array, o, factory, verbose, useAnnotations, true, prefix, level + 1);
                 }
             } else {
                 if (deep) {

@@ -33,11 +33,9 @@ public class YamlNodeBuilder extends INodeBuilder {
         YMap itemY = MYaml.load(is);
         MNode itemC = new MNode();
         if (itemY.isList()) {
-        	NodeList arrayC = itemC.createArray(INode.NAMELESS_VALUE);
-    		fill(arrayC, new YList(itemY.getObject()), 0);
-        } else
-    	if (itemY.isMap())
-    		fill(itemC, itemY, 0);
+            NodeList arrayC = itemC.createArray(INode.NAMELESS_VALUE);
+            fill(arrayC, new YList(itemY.getObject()), 0);
+        } else if (itemY.isMap()) fill(itemC, itemY, 0);
         return itemC;
     }
 

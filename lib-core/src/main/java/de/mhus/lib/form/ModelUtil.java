@@ -110,9 +110,8 @@ public class ModelUtil {
 
     public static DefRoot fromJson(String content) throws JsonProcessingException, IOException {
         JsonNode model = MJson.load(content);
-        if (! (model instanceof ObjectNode))
-            throw new IOException("json is not an object");
-        return fromJson((ObjectNode)model);
+        if (!(model instanceof ObjectNode)) throw new IOException("json is not an object");
+        return fromJson((ObjectNode) model);
     }
 
     public static DefRoot fromJson(ObjectNode json) {

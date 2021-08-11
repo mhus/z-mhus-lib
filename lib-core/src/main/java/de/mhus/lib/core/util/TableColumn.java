@@ -54,7 +54,7 @@ public class TableColumn implements Serializable, NodeSerializable {
     @Override
     public void readSerializabledNode(INode cfg) throws Exception {
         name = cfg.getString("name", null);
-        type =cfg.getString("type", null);
+        type = cfg.getString("type", null);
         note = cfg.getString("note", null);
     }
 

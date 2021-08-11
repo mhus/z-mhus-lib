@@ -71,5 +71,4 @@ public class IntervalJob extends SchedulerJob implements MutableSchedulerJob {
     public void setUsername(String username) {
         super.setUsername(username);
     }
-
 }

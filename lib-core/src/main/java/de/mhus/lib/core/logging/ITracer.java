@@ -96,28 +96,31 @@ public interface ITracer {
     void activate(String activation);
 
     SpanBuilder createSpan(Span parent, String spanName, Object... tagPairs);
-    
+
     public static MProperties serialize(SpanContext context) {
         MProperties out = new MProperties();
-        get().tracer().inject(context, Format.Builtin.TEXT_MAP, new TextMap() {
+        get().tracer()
+                .inject(
+                        context,
+                        Format.Builtin.TEXT_MAP,
+                        new TextMap() {
 
-            @Override
-            public Iterator<Entry<String, String>> iterator() {
-                return null;
-            }
+                            @Override
+                            public Iterator<Entry<String, String>> iterator() {
+                                return null;
+                            }
 
-            @Override
-            public void put(String key, String value) {
-                out.put(key, value);
-            }
-            
-        });
+                            @Override
+                            public void put(String key, String value) {
+                                out.put(key, value);
+                            }
+                        });
         return out;
     }
-    
+
     public static SpanContext deserialize(IProperties prop) {
-        Map<String, String> copy = new HashMap<String,String>();
-        prop.forEach((k,v) -> copy.put(k, String.valueOf(v)));
+        Map<String, String> copy = new HashMap<String, String>();
+        prop.forEach((k, v) -> copy.put(k, String.valueOf(v)));
         SpanContext parentSpanCtx =
                 ITracer.get()
                         .tracer()
@@ -131,8 +134,7 @@ public interface ITracer {
                                     }
 
                                     @Override
-                                    public void put(String key, String value) {
-                                    }
+                                    public void put(String key, String value) {}
                                 });
         return parentSpanCtx;
     }
@@ -140,11 +142,9 @@ public interface ITracer {
     default void cleanup() {
         try {
             Span cur = current();
-            if (cur != null)
-                cur.finish();
+            if (cur != null) cur.finish();
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
         }
     }
-    
 }

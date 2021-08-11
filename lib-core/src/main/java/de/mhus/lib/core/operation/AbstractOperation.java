@@ -151,7 +151,7 @@ public abstract class AbstractOperation extends MLog implements Operation {
 
         MProperties labels = null;
         if (desc != null) {
-        	labels = IProperties.explodeToMProperties(desc.labels());
+            labels = IProperties.explodeToMProperties(desc.labels());
         }
         OperationDescription ret =
                 new OperationDescription(getUuid(), path, version, this, title, labels, form);

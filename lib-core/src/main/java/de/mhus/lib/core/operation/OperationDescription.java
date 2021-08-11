@@ -90,11 +90,25 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
         this(owner.getUuid(), owner.getClass(), owner, null, title, null, form);
     }
 
-    public OperationDescription(Operation owner, String path, String title, DefRoot form, String ... labels ) {
-        this(owner.getUuid(), path, null, owner, title, IProperties.explodeToMProperties(labels), form);
+    public OperationDescription(
+            Operation owner, String path, String title, DefRoot form, String... labels) {
+        this(
+                owner.getUuid(),
+                path,
+                null,
+                owner,
+                title,
+                IProperties.explodeToMProperties(labels),
+                form);
     }
 
-    public OperationDescription(UUID uuid, Class<?> clazz, MNlsProvider nlsProvider, Version version, String title, DefRoot form) {
+    public OperationDescription(
+            UUID uuid,
+            Class<?> clazz,
+            MNlsProvider nlsProvider,
+            Version version,
+            String title,
+            DefRoot form) {
         this(uuid, clazz, nlsProvider, version, title, null, form);
     }
 
@@ -134,20 +148,25 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
     }
 
     public OperationDescription(
-            UUID uuid, String path, Version version, String title, DefRoot form, String ... labels) {
+            UUID uuid, String path, Version version, String title, DefRoot form, String... labels) {
         this(uuid, path, version, null, title, IProperties.explodeToMProperties(labels), form);
     }
-    
+
     public OperationDescription(
             UUID uuid, String path, Version version, MNlsProvider nlsProvider, String title) {
         this(uuid, path, version, nlsProvider, title, null, null);
     }
 
     public OperationDescription(
-            UUID uuid, String path, Version version, String title, IProperties labels, DefRoot form) {
+            UUID uuid,
+            String path,
+            Version version,
+            String title,
+            IProperties labels,
+            DefRoot form) {
         this(uuid, path, version, null, title, labels, form);
     }
-    
+
     /**
      * Create a clone with the same UUID, but it's possible to manipulate the labels.
      *
@@ -156,7 +175,7 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
      * @param version
      * @param nlsProvider
      * @param title
-     * @param labels 
+     * @param labels
      * @param form
      */
     public OperationDescription(
@@ -184,9 +203,9 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
                 desc.getVersion(),
                 desc.nlsProvider,
                 desc.getTitle(),
-                desc.hasLabels() ? new MProperties( desc.getLabels()) : null,
+                desc.hasLabels() ? new MProperties(desc.getLabels()) : null,
                 desc.getForm());
-// done by setForm() if (desc.parameterDef != null) this.parameterDef = desc.parameterDef;
+        // done by setForm() if (desc.parameterDef != null) this.parameterDef = desc.parameterDef;
     }
 
     public String getTitle() {
@@ -211,23 +230,23 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
     }
 
     public boolean hasLabels() {
-    	return labels != null;
+        return labels != null;
     }
-    
+
     public IReadProperties getLabels() {
         if (this.labels == null) this.labels = new MProperties();
         return labels;
     }
 
-//    public void setLabels(IProperties labels) {
-//        this.labels = labels;
-//    }
+    //    public void setLabels(IProperties labels) {
+    //        this.labels = labels;
+    //    }
 
-//    public OperationDescription putLabel(String key, String value) {
-//        if (this.labels == null) this.labels = new MProperties();
-//        this.labels.put(key, value);
-//        return this;
-//    }
+    //    public OperationDescription putLabel(String key, String value) {
+    //        if (this.labels == null) this.labels = new MProperties();
+    //        this.labels.put(key, value);
+    //        return this;
+    //    }
 
     @Override
     public boolean equals(Object o) {
@@ -325,12 +344,12 @@ public class OperationDescription implements MNlsProvider, Nls, Versioned, Exter
 
         IReadProperties labels = desc.getLabels();
         for (Map.Entry<String, JsonNode> field : M.iterate(json.get("labels").fields())) {
-            ((MProperties)labels).put(field.getKey(), field.getValue().asText());
+            ((MProperties) labels).put(field.getKey(), field.getValue().asText());
         }
         return desc;
     }
 
-	public String getPathVersion() {
-		return getPath() + ":" + getVersionString();
-	}
+    public String getPathVersion() {
+        return getPath() + ":" + getVersionString();
+    }
 }

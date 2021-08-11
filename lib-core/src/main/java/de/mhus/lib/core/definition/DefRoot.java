@@ -60,7 +60,7 @@ public class DefRoot extends DefComponent implements Externalizable {
     public boolean isBuild() {
         return build;
     }
-    
+
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         try {

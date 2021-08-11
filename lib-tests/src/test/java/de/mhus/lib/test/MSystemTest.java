@@ -40,7 +40,7 @@ public class MSystemTest extends TestCase {
         System.out.println(manifestVersion);
         assertEquals("1.0", manifestVersion);
     }
-    
+
     @Test
     public void testTemplateNames() {
         Class<?> testy = StringValue.class;

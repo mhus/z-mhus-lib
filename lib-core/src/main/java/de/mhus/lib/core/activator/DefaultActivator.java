@@ -176,14 +176,14 @@ public class DefaultActivator extends MActivator implements MutableActivator {
             try {
                 T ret = getObject(ifc);
                 if (ret != null) return ret;
-    
+
             } catch (Exception e) {
                 MApi.dirtyLogDebug("info: fallback to default", ifc, def, e.toString());
                 MApi.dirtyLogTrace(e);
             }
-    
+
             if (def == null) return null;
-    
+
             try {
                 return def.getDeclaredConstructor().newInstance();
             } catch (InstantiationException

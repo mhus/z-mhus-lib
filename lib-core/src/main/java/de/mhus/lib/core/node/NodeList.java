@@ -55,7 +55,7 @@ public class NodeList extends LinkedList<INode> {
         node.putAll(e);
         return super.add(node);
     }
-    
+
     public INode add(NodeSerializable object) {
         INode cfg = createObject();
         try {
@@ -95,11 +95,11 @@ public class NodeList extends LinkedList<INode> {
         return ret;
     }
 
-	public INode getParent() {
-		return parent;
-	}
+    public INode getParent() {
+        return parent;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 }

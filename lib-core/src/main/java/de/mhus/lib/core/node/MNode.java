@@ -49,14 +49,13 @@ public class MNode extends MProperties implements INode {
     public MNode(String name) {
         this.name = name;
     }
-    
+
     public MNode(String name, NodeList array) {
         this.name = name;
         this.array = array;
-        if (array != null)
-        	this.parent = array.getParent();
+        if (array != null) this.parent = array.getParent();
     }
-    
+
     public MNode(String name, INode parent) {
         this.name = name;
         this.parent = parent;
@@ -77,7 +76,7 @@ public class MNode extends MProperties implements INode {
         throw new NotFoundException("value is not an INode", key);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public INode getAsObject(String key) {
         Object val = get(key);
@@ -87,12 +86,11 @@ public class MNode extends MProperties implements INode {
 
         MNode ret = new MNode();
         if (val instanceof Map) {
-            ret.putAll((Map)val);
-        } else
-            ret.put(NAMELESS_VALUE, val);
+            ret.putAll((Map) val);
+        } else ret.put(NAMELESS_VALUE, val);
         return ret;
     }
-    
+
     @Override
     public INode getObjectOrNull(String key) {
         Object val = get(key);
@@ -309,7 +307,7 @@ public class MNode extends MProperties implements INode {
     public NodeList getParentArray() {
         return array;
     }
-    
+
     @Override
     public List<String> getObjectKeys() {
         ArrayList<String> out = new ArrayList<>();
@@ -346,11 +344,9 @@ public class MNode extends MProperties implements INode {
     @Override
     public boolean isProperties() {
         for (Object val : values())
-            if ((val instanceof NodeList) || (val instanceof INode))
-                return false;
+            if ((val instanceof NodeList) || (val instanceof INode)) return false;
         return true;
     }
-    
 
     public void putMapToNode(Map<?, ?> m) {
         putMapToNode(m, 0);
@@ -363,25 +359,22 @@ public class MNode extends MProperties implements INode {
             else {
                 if (e.getValue() instanceof Map) {
                     MNode cfg = new MNode();
-                    cfg.putMapToNode((Map<?,?>)e.getValue(), level+1);
+                    cfg.putMapToNode((Map<?, ?>) e.getValue(), level + 1);
                     put(String.valueOf(e.getKey()), cfg);
-                } else
-                if (e.getValue() instanceof List) {
+                } else if (e.getValue() instanceof List) {
                     NodeList list = new NodeList(String.valueOf(e.getKey()), null);
                     put(String.valueOf(e.getKey()), list);
-                    for (Object obj : ((List<?>)e.getValue())) {
+                    for (Object obj : ((List<?>) e.getValue())) {
                         if (obj instanceof INode) {
-                            list.add((INode)obj);
+                            list.add((INode) obj);
                         } else {
                             MNode cfg = (MNode) list.createObject();
                             if (obj instanceof Map) {
-                                cfg.putMapToNode((Map<?,?>)obj, level+1);
-                            } else
-                                cfg.put(NAMELESS_VALUE, obj);
+                                cfg.putMapToNode((Map<?, ?>) obj, level + 1);
+                            } else cfg.put(NAMELESS_VALUE, obj);
                         }
                     }
-                } else
-                    put(String.valueOf(e.getKey()), e.getValue());
+                } else put(String.valueOf(e.getKey()), e.getValue());
             }
     }
 
@@ -396,5 +389,4 @@ public class MNode extends MProperties implements INode {
         super.readExternal(in);
         name = (String) in.readObject();
     }
-
 }

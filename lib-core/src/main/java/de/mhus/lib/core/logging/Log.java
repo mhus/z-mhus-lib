@@ -50,8 +50,8 @@ public class Log {
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     private List<String> maxMsgSizeExceptions;
-	private ITracer tracer;
-	private boolean tracerInError = false;
+    private ITracer tracer;
+    private boolean tracerInError = false;
     //    protected UUID id = UUID.randomUUID();
     private static int maxMsgSize = 0;
     private static boolean verbose = false;
@@ -60,7 +60,7 @@ public class Log {
 
         name = MSystem.getOwnerName(owner);
         localTrace = MApi.isTrace(name);
-//        tracer = getITracer(); - causes stack loop
+        //        tracer = getITracer(); - causes stack loop
 
         update();
 
@@ -95,18 +95,17 @@ public class Log {
         Span span = null;
         // avoid stack overload
         if (lookingForSpan.get() == null) {
-        	try {
-        		lookingForSpan.set("");
-            	span = getITracer().current();
-        	} catch (Throwable t) {
-        	    System.out.println("*** Error looking for ITracer span: " + name + " " + t);
+            try {
+                lookingForSpan.set("");
+                span = getITracer().current();
+            } catch (Throwable t) {
+                System.out.println("*** Error looking for ITracer span: " + name + " " + t);
             } finally {
-            	lookingForSpan.remove();
+                lookingForSpan.remove();
             }
         }
         if (verbose) {
-            if (level == LEVEL.DEBUG)
-                level = LEVEL.INFO;
+            if (level == LEVEL.DEBUG) level = LEVEL.INFO;
         }
         if (span != null) {
             String mapping = span.getBaggageItem(MLog.LOG_LEVEL_MAPPING);
@@ -180,25 +179,39 @@ public class Log {
     }
 
     private ITracer getITracer() {
-    	if (!tracerInError) {
-	    	try {
-	    		tracer = ITracer.get();
-	    	} catch (ClassCastException e) {
-	    		// The exception occurs if because of class loader conflicts the tracer is no more compatible to the interface
-	    		// in this case use the last loaded for further actions
-	    		tracerInError = true;
-	    		System.out.println(new Date() + " ERROR: 1 ITRACER IN ERROR " + e + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
-	    		if (tracer == null)
-	    			System.out.println(new Date() + " FATAL: *** CAN'T LOAD ITRACER FOR: " + name);
-	    	} catch (Throwable t) {
-                System.out.println(new Date() + " ERROR: 2 ITRACER IN ERROR " + t + ", ClassLoader: " + getClass().getClassLoader() + ", Log: " + name );
-	    	}
-	    	
-    	}
-		return tracer;
-	}
+        if (!tracerInError) {
+            try {
+                tracer = ITracer.get();
+            } catch (ClassCastException e) {
+                // The exception occurs if because of class loader conflicts the tracer is no more
+                // compatible to the interface
+                // in this case use the last loaded for further actions
+                tracerInError = true;
+                System.out.println(
+                        new Date()
+                                + " ERROR: 1 ITRACER IN ERROR "
+                                + e
+                                + ", ClassLoader: "
+                                + getClass().getClassLoader()
+                                + ", Log: "
+                                + name);
+                if (tracer == null)
+                    System.out.println(new Date() + " FATAL: *** CAN'T LOAD ITRACER FOR: " + name);
+            } catch (Throwable t) {
+                System.out.println(
+                        new Date()
+                                + " ERROR: 2 ITRACER IN ERROR "
+                                + t
+                                + ", ClassLoader: "
+                                + getClass().getClassLoader()
+                                + ", Log: "
+                                + name);
+            }
+        }
+        return tracer;
+    }
 
-	// toos from MDate
+    // toos from MDate
     protected static String toIsoDateTime(Date _in) {
         Calendar c = Calendar.getInstance();
         c.setTime(_in);
@@ -356,11 +369,11 @@ public class Log {
         Span span = null;
         // avoid stack overload
         if (lookingForSpan.get() == null) {
-        	try {
-        		lookingForSpan.set("");
-            	span = getITracer().current();
+            try {
+                lookingForSpan.set("");
+                span = getITracer().current();
             } finally {
-            	lookingForSpan.remove();
+                lookingForSpan.remove();
             }
         }
         if (span != null) {

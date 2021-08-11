@@ -103,17 +103,18 @@ public abstract class CfgValue<T> {
         this.value = newValue;
         onPostUpdate(value);
     }
-    
+
     /**
-     * Calls the update action (again).
-     * This could be used to initial values using the update action.
-     * @param <C> 
+     * Calls the update action (again). This could be used to initial values using the update
+     * action.
+     *
+     * @param <C>
      * @return This
      */
     @SuppressWarnings("unchecked")
     public <C extends CfgValue<T>> C doUpdateAction() {
         onPostUpdate(value);
-        return (C)this;
+        return (C) this;
     }
 
     @Override

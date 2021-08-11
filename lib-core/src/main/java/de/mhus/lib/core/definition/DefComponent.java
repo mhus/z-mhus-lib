@@ -50,7 +50,7 @@ public class DefComponent extends MNode implements IDefDefinition {
     public void inject(INode parent) throws MException {
         if (parent != null) {
             parent.getArrayOrCreate(getName()).add(this);
-            //parent.setObject(tag, this);
+            // parent.setObject(tag, this);
         }
         for (IDefDefinition d : definitions) {
             d.inject(this);

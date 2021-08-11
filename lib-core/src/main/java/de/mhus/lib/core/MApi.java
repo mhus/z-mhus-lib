@@ -241,11 +241,7 @@ public class MApi {
                 case M.PROP_TIMER_CONFIG_FILE:
                     {
                         String file = M.DEFAULT_MHUS_TIMER_CONFIG_FILE;
-                        file =
-                                get().getCfgString(
-                                                IApi.class,
-                                                M.PROP_TIMER_CONFIG_FILE,
-                                                file);
+                        file = get().getCfgString(IApi.class, M.PROP_TIMER_CONFIG_FILE, file);
                         return getFile(MApi.SCOPE.ETC, M.DEFAULT_MHUS_TIMER_CONFIG_FILE)
                                 .getAbsolutePath();
                     }

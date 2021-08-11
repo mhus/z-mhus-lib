@@ -103,8 +103,12 @@ public class M {
 
     public static final String ADDR_DISPLAY_NAME = "displayName";
 
-    public enum DEBUG {NO,YES,TRACE}
-    
+    public enum DEBUG {
+        NO,
+        YES,
+        TRACE
+    }
+
     public static enum ADDR_SCOPE {
         PRIVATE,
         WORK
@@ -122,7 +126,7 @@ public class M {
 
     public static final String CFG_SYSTEM = "system";
     public static final String PARAM_AUTH_TOKEN = "auth_token";
-    
+
     /**
      * Return a string cascading the names of the getters (without 'get' prefix). and joined with
      * underscore.

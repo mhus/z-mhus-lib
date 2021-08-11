@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Mike Hummel (mh@mhus.de)
+ * Copyright (C) 2002 Mike Hummel (mh@mhus.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,4 @@ import java.io.Closeable;
 
 import javax.cache.Cache;
 
-public interface ICache<K, V> extends Cache<K, V>, Closeable {
-
-}
+public interface ICache<K, V> extends Cache<K, V>, Closeable {}

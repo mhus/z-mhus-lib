@@ -39,5 +39,4 @@ public interface TrustApi {
     }
 
     AuthenticationToken createToken(String ticket);
-
 }

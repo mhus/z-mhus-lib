@@ -78,7 +78,7 @@ public class LocalLock extends MLog implements Lock {
     @SuppressWarnings("resource")
     @Override
     public boolean lock(long timeout) {
-        log().t("lock",name,timeout);
+        log().t("lock", name, timeout);
         Scope scope = null;
         try {
             synchronized (this) {
@@ -91,7 +91,7 @@ public class LocalLock extends MLog implements Lock {
                     } catch (InterruptedException e) {
                     }
                     if (System.currentTimeMillis() - start >= timeout) {
-                        log().t("timeout lock",name);
+                        log().t("timeout lock", name);
                         return false;
                     }
                 }
@@ -99,7 +99,7 @@ public class LocalLock extends MLog implements Lock {
                 stacktrace = MCast.toString("", lock.getStackTrace());
                 lockTime = System.currentTimeMillis();
                 lockEvent(true);
-                log().t("gain lock",name);
+                log().t("gain lock", name);
                 return true;
             }
         } finally {
@@ -114,7 +114,7 @@ public class LocalLock extends MLog implements Lock {
      */
     @Override
     public boolean unlock() {
-        log().t("unlock",name);
+        log().t("unlock", name);
         synchronized (this) {
             if (lock != Thread.currentThread()) return false;
             lockEvent(false);
@@ -129,7 +129,7 @@ public class LocalLock extends MLog implements Lock {
     /** Unlock in every case !!! This can break a locked area. */
     @Override
     public void unlockHard() {
-        log().d("unlockHard",name);
+        log().d("unlockHard", name);
         synchronized (this) {
             lockEvent(false);
             lock = null;

@@ -61,32 +61,17 @@ import de.mhus.lib.core.cfg.CfgLong;
 
 /**
  * Load user and role definitions from txt or xml files.
- * 
- * XML User Format:
- * 
- * <user password="">
- *   <roles>
- *     <role>role name</role>
- *   </roles>
- *   <perms>
- *     <perm>Permission</perm>
- *   </perms>
- *   <data>
- *     <key>value</key>
- *   </data>
- * </user>
- * 
- * 
- * XML Role Format:
- * 
- * <role>
- *   <perms>
- *     <perm>Permission</perm>
- *   </perms>
- * </role>
- * 
- * @author mikehummel
  *
+ * <p>XML User Format:
+ *
+ * <p><user password=""> <roles> <role>role name</role> </roles> <perms> <perm>Permission</perm>
+ * </perms> <data> <key>value</key> </data> </user>
+ *
+ * <p>XML Role Format:
+ *
+ * <p><role> <perms> <perm>Permission</perm> </perms> </role>
+ *
+ * @author mikehummel
  */
 public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm {
 
@@ -97,6 +82,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     protected String rolePermission;
     private ICache<String, SimpleAccount> userCacheApi;
     private ICache<String, SimpleRole> roleCacheApi;
+
     @SuppressWarnings("rawtypes")
     private ICache<String, Map> dataCacheApi;
 
@@ -104,9 +90,16 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     protected long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
 
     @SuppressWarnings("unused")
-    private CfgBoolean CFG_USE_CACHE = new CfgBoolean(getClass(), "cacheEnabled", true).updateAction(v -> setUseCache(v) ).doUpdateAction();
+    private CfgBoolean CFG_USE_CACHE =
+            new CfgBoolean(getClass(), "cacheEnabled", true)
+                    .updateAction(v -> setUseCache(v))
+                    .doUpdateAction();
+
     @SuppressWarnings("unused")
-    private CfgLong CFG_CACHE_TTL = new CfgLong(getClass(), "cacheTTL", MPeriod.MINUTE_IN_MILLISECOUNDS * 30).updateAction(v -> setCacheTTL(v)).doUpdateAction();
+    private CfgLong CFG_CACHE_TTL =
+            new CfgLong(getClass(), "cacheTTL", MPeriod.MINUTE_IN_MILLISECOUNDS * 30)
+                    .updateAction(v -> setCacheTTL(v))
+                    .doUpdateAction();
 
     public FileSourceRealm() {
         setCredentialsMatcher(new CombiCredentialsMatcher());
@@ -147,10 +140,10 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     }
 
     protected SimpleAccount getUser(String username) {
-        
+
         if (Aaa.USER_ADMIN.value().equals(username)) return Aaa.ADMIN;
         if (Aaa.USER_GUEST.value().equals(username)) return Aaa.GUEST;
-        
+
         if (useCache) {
             initCache();
             if (userCacheApi != null) {
@@ -158,7 +151,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                 if (cached != null) return cached;
             }
         }
-        
+
         try {
             // load from FS
             File file = new File(userDir, MFile.normalize(username) + ".txt");
@@ -186,10 +179,9 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                         account.addObjectPermissions(role.getPermissions());
                     }
                 }
-                
-                if (useCache && userCacheApi != null)
-                    userCacheApi.put(username, account);
-                
+
+                if (useCache && userCacheApi != null) userCacheApi.put(username, account);
+
                 return account;
             }
         } catch (IOException e) {
@@ -215,8 +207,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                             if (role != null) {
                                 account.addRole(rolename);
                                 Set<Permission> perm = role.getPermissions();
-                                if (perm != null)
-                                    account.addObjectPermissions(perm);
+                                if (perm != null) account.addObjectPermissions(perm);
                             }
                         }
                     }
@@ -233,9 +224,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                             PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                     account.addObjectPermissions(permissions);
                 }
-                
-                if (useCache && userCacheApi != null)
-                    userCacheApi.put(username, account);
+
+                if (useCache && userCacheApi != null) userCacheApi.put(username, account);
 
                 return account;
             }
@@ -253,24 +243,27 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         try {
             ICacheService cacheService = M.l(ICacheService.class);
             if (cacheService == null) return;
-            userCacheApi = cacheService.createCache(
-                    this, 
-                    getName() + ":user", 
-                    String.class, 
-                    SimpleAccount.class, 
-                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
-            roleCacheApi = cacheService.createCache(
-                    this, 
-                    getName() + ":role", 
-                    String.class, 
-                    SimpleRole.class, 
-                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
-            dataCacheApi = cacheService.createCache(
-                    this, 
-                    getName() + ":data", 
-                    String.class, 
-                    Map.class, 
-                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+            userCacheApi =
+                    cacheService.createCache(
+                            this,
+                            getName() + ":user",
+                            String.class,
+                            SimpleAccount.class,
+                            new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+            roleCacheApi =
+                    cacheService.createCache(
+                            this,
+                            getName() + ":role",
+                            String.class,
+                            SimpleRole.class,
+                            new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
+            dataCacheApi =
+                    cacheService.createCache(
+                            this,
+                            getName() + ":data",
+                            String.class,
+                            Map.class,
+                            new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
         } catch (Throwable t) {
             log.d(t);
         }
@@ -302,10 +295,9 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                 Set<Permission> permissions =
                         PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                 role.setPermissions(permissions);
-                
-                if (useCache && roleCacheApi != null)
-                    roleCacheApi.put(rolename, role);
-                
+
+                if (useCache && roleCacheApi != null) roleCacheApi.put(rolename, role);
+
                 return role;
             }
         } catch (IOException e) {
@@ -331,9 +323,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                             PermissionUtils.resolvePermissions(perms, getPermissionResolver());
                     role.setPermissions(permissions);
                 }
-                
-                if (useCache && roleCacheApi != null)
-                    roleCacheApi.put(rolename, role);
+
+                if (useCache && roleCacheApi != null) roleCacheApi.put(rolename, role);
 
                 return role;
             }
@@ -356,7 +347,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     @Override
     public Map<String, String> getUserData(Subject subject) {
         String username = Aaa.getPrincipal(subject);
-        
+
         if (useCache) {
             initCache();
             if (dataCacheApi != null) {
@@ -375,10 +366,9 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                 HashMap<String, String> ret = new HashMap<>();
                 for (Entry<String, Object> entry : prop.entrySet())
                     ret.put(entry.getKey(), String.valueOf(entry.getValue()));
-                
-                if (useCache && dataCacheApi != null)
-                    dataCacheApi.put(username, ret);
-                
+
+                if (useCache && dataCacheApi != null) dataCacheApi.put(username, ret);
+
                 return ret;
             }
         } catch (Exception e) {
@@ -399,9 +389,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                         String value = MXml.getValue(datE, false);
                         ret.put(datE.getNodeName(), value);
                     }
-                    
-                    if (useCache && dataCacheApi != null)
-                        dataCacheApi.put(username, ret);
+
+                    if (useCache && dataCacheApi != null) dataCacheApi.put(username, ret);
 
                     return ret;
                 }
@@ -445,8 +434,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         if (debugPermissions != DEBUG.NO && !ret) {
             if (!Aaa.ROLE_ADMIN.value().equals(roleIdentifier))
                 log.d("role access denied", Aaa.CURRENT_PRINCIPAL_OR_GUEST, roleIdentifier);
-            if (debugPermissions == DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(roleIdentifier));
+            if (debugPermissions == DEBUG.TRACE) log.d(MSystem.currentStackTrace(roleIdentifier));
         }
 
         return ret;
@@ -495,6 +483,4 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     public void setCacheTTL(long cacheTTL) {
         this.cacheTTL = cacheTTL;
     }
-
-    
 }

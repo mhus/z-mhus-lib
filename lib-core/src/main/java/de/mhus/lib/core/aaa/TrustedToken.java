@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2002 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.mhus.lib.core.aaa;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -15,29 +30,28 @@ import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.logging.Log;
 
 /**
- * To use TrustedToken you need to give access to one of the calling classes in the stacktrace to access the
- * user or all users. Give access to
- * 
- * de.mhus.lib.core.aaa.TrustedToken:admin:de.mhus.karaf.commands.impl.CmdAccessAdmin
- * 
- * to let de.mhus.karaf.commands.impl.CmdAccessAdmin access 'admin'
- * or
- * 
- * de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin
- * 
- * to let de.mhus.karaf.commands.impl.CmdAccessLogin access all users (this is default).
- * 
- * 
- * @author mikehummel
+ * To use TrustedToken you need to give access to one of the calling classes in the stacktrace to
+ * access the user or all users. Give access to
  *
+ * <p>de.mhus.lib.core.aaa.TrustedToken:admin:de.mhus.karaf.commands.impl.CmdAccessAdmin
+ *
+ * <p>to let de.mhus.karaf.commands.impl.CmdAccessAdmin access 'admin' or
+ *
+ * <p>de.mhus.lib.core.aaa.TrustedToken:*:de.mhus.karaf.commands.impl.CmdAccessLogin
+ *
+ * <p>to let de.mhus.karaf.commands.impl.CmdAccessLogin access all users (this is default).
+ *
+ * @author mikehummel
  */
 public class TrustedToken implements AuthenticationToken {
 
     private static final Log log = Log.getLog(TrustedToken.class);
     private static final long serialVersionUID = 1L;
     private String principal;
-    private static final CfgBoolean useCache = new CfgBoolean(AccessApi.class, "callerCacheEnabled", true);
-    private static final CfgLong cacheTTL = new CfgLong(AccessApi.class, "callerCacheTTL", MPeriod.HOUR_IN_MILLISECOUNDS);
+    private static final CfgBoolean useCache =
+            new CfgBoolean(AccessApi.class, "callerCacheEnabled", true);
+    private static final CfgLong cacheTTL =
+            new CfgLong(AccessApi.class, "callerCacheTTL", MPeriod.HOUR_IN_MILLISECOUNDS);
     private static ICache<String, Boolean> callerCache;
 
     public TrustedToken(String principal) {
@@ -58,7 +72,6 @@ public class TrustedToken implements AuthenticationToken {
         return hasAccess(debugPermissions, principal);
     }
 
-    
     private static boolean hasAccess(DEBUG debugPermissions, String username) {
 
         // you can sudo to your own
@@ -70,16 +83,16 @@ public class TrustedToken implements AuthenticationToken {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (StackTraceElement element : stackTrace) {
             String clazz = element.getClassName();
-//            for (String ignore : ignoreClassList)
-//                if (!clazz.startsWith(ignore)) {
-                    sb.append(clazz).append(' ');
-//                    break;
-//                }
+            //            for (String ignore : ignoreClassList)
+            //                if (!clazz.startsWith(ignore)) {
+            sb.append(clazz).append(' ');
+            //                    break;
+            //                }
         }
         if (sb.length() == 0) {
-            if (debugPermissions != DEBUG.NO)
-                log.i("TrustedToken access denied (1)",stackTrace);
-            throw new AuthenticationException(Aaa.getPrincipal() + ": TrustedToken access denied (1)");
+            if (debugPermissions != DEBUG.NO) log.i("TrustedToken access denied (1)", stackTrace);
+            throw new AuthenticationException(
+                    Aaa.getPrincipal() + ": TrustedToken access denied (1)");
         }
 
         String callerName = sb.toString().trim();
@@ -90,13 +103,17 @@ public class TrustedToken implements AuthenticationToken {
                 if (cached != null) {
                     if (cached) {
                         if (debugPermissions != DEBUG.NO)
-                            log.i(Aaa.getPrincipal() + ": TrustedToken access granted by cache",callerName);
+                            log.i(
+                                    Aaa.getPrincipal() + ": TrustedToken access granted by cache",
+                                    callerName);
                         if (debugPermissions == DEBUG.TRACE)
                             log.d(MSystem.currentStackTrace(callerName));
                         return true;
                     } else {
                         if (debugPermissions != DEBUG.NO)
-                            log.i(Aaa.getPrincipal() + ": TrustedToken access denied (2)",callerName);
+                            log.i(
+                                    Aaa.getPrincipal() + ": TrustedToken access denied (2)",
+                                    callerName);
                         if (debugPermissions == DEBUG.TRACE)
                             log.d(MSystem.currentStackTrace(callerName));
                         return false;
@@ -104,22 +121,20 @@ public class TrustedToken implements AuthenticationToken {
                 }
             }
         }
-        
+
         // really check access
         boolean access = false;
         String prefix = TrustedToken.class.getCanonicalName() + ":" + username + ":";
         for (StackTraceElement element : stackTrace) {
             String clazz = element.getClassName();
-            if (debugPermissions != DEBUG.NO)
-                log.d("hasAccess",Aaa.getPrincipal(),prefix, clazz);
-            if (Aaa.hasAccess( prefix + clazz )) {
+            if (debugPermissions != DEBUG.NO) log.d("hasAccess", Aaa.getPrincipal(), prefix, clazz);
+            if (Aaa.hasAccess(prefix + clazz)) {
                 access = true;
                 break;
             }
         }
-    
-        if (callerCache != null)
-            callerCache.put(callerName, access);
+
+        if (callerCache != null) callerCache.put(callerName, access);
 
         return access;
     }
@@ -130,16 +145,16 @@ public class TrustedToken implements AuthenticationToken {
         try {
             ICacheService cacheService = M.l(ICacheService.class);
             if (cacheService == null) return;
-            callerCache = cacheService.createCache(
-                    TrustedToken.class,
-                    "caller", 
-                    String.class, 
-                    Boolean.class, 
-                    new CacheConfig().setHeapSize(10000).setTTL(cacheTTL.value()));
+            callerCache =
+                    cacheService.createCache(
+                            TrustedToken.class,
+                            "caller",
+                            String.class,
+                            Boolean.class,
+                            new CacheConfig().setHeapSize(10000).setTTL(cacheTTL.value()));
         } catch (Throwable t) {
             log.i(t);
         }
-
     }
 
     @Override

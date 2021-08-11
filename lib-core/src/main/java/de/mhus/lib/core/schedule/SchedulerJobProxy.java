@@ -213,5 +213,4 @@ public class SchedulerJobProxy extends SchedulerJob implements MutableSchedulerJ
     public void setUsername(String username) {
         instance.setUsername(username);
     }
-
 }

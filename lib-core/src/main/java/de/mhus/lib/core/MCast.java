@@ -1233,9 +1233,9 @@ public final class MCast {
     }
 
     /**
-     * Try to convert the value in a basic value like bool, int; etc.
-     * If it's not possible it will return null.
-     * 
+     * Try to convert the value in a basic value like bool, int; etc. If it's not possible it will
+     * return null.
+     *
      * @param value The value
      * @param hint The type or hint for the type
      * @return The typed value or null
@@ -1244,50 +1244,50 @@ public final class MCast {
         if (MString.isEmptyTrim(hint)) return null;
         Object val = null;
         switch (hint) {
-        case "java.lang.Boolean":
-        case "boolean":
-        case "bool":
-            val = MCast.toboolean(value, false);
-            break;
-        case "java.lang.Integer":
-        case "integer":
-        case "int":
-            val = MCast.toint(value, 0);
-            break;
-        case "java.lang.Long":
-        case "long":
-            val = MCast.tolong(value, 0);
-            break;
-        case "java.lang.Double":
-        case "double":
-            val = MCast.todouble(value, 0);
-            break;
-        case "java.lang.Float":
-        case "float":
-            val = MCast.tofloat(value, 0);
-            break;
-        case "java.lang.Short":
-        case "short":
-            val = MCast.toshort(value, (short)0);
-            break;
-        case "java.lang.Character":
-        case "character":
-        case "char":
-            val = MCast.toint(value, 0);
-            break;
-        case "java.util.Date":
-        case "date":
-            val = MCast.toDate(value, null);
-            break;
-        case "java.util.Calendar":
-        case "calendar":
-            val = MCast.toCalendar(value);
-            break;
-        case "java.lang.String":
-        case "string":
-        case "text":
-            val = String.valueOf(value);
-            break;
+            case "java.lang.Boolean":
+            case "boolean":
+            case "bool":
+                val = MCast.toboolean(value, false);
+                break;
+            case "java.lang.Integer":
+            case "integer":
+            case "int":
+                val = MCast.toint(value, 0);
+                break;
+            case "java.lang.Long":
+            case "long":
+                val = MCast.tolong(value, 0);
+                break;
+            case "java.lang.Double":
+            case "double":
+                val = MCast.todouble(value, 0);
+                break;
+            case "java.lang.Float":
+            case "float":
+                val = MCast.tofloat(value, 0);
+                break;
+            case "java.lang.Short":
+            case "short":
+                val = MCast.toshort(value, (short) 0);
+                break;
+            case "java.lang.Character":
+            case "character":
+            case "char":
+                val = MCast.toint(value, 0);
+                break;
+            case "java.util.Date":
+            case "date":
+                val = MCast.toDate(value, null);
+                break;
+            case "java.util.Calendar":
+            case "calendar":
+                val = MCast.toCalendar(value);
+                break;
+            case "java.lang.String":
+            case "string":
+            case "text":
+                val = String.valueOf(value);
+                break;
         }
         return val;
     }

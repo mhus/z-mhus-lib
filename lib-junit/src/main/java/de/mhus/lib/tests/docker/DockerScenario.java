@@ -420,13 +420,14 @@ public class DockerScenario {
         }
     }
 
-    public boolean waitForLog(long timeout, long sleep, LogStream logStream, Function<String, Boolean> check)
+    public boolean waitForLog(
+            long timeout, long sleep, LogStream logStream, Function<String, Boolean> check)
             throws NotFoundException, IOException {
 
         WaitContainer waitCont = new WaitContainer();
         waitCont.cont = logStream.getContainer();
         StringBuilder content = new StringBuilder();
-        
+
         if (waitCont.cont.getId() == null)
             throw new NotFoundException("Container not started", waitCont.cont.getName());
 

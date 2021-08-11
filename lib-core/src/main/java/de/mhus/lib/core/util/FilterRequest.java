@@ -110,7 +110,7 @@ public class FilterRequest {
     public boolean isFacet(String key) {
         return facets != null && facets.containsKey(key);
     }
-    
+
     @Override
     public String toString() {
         return MSystem.toString(this, facets, text);

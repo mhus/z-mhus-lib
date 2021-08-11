@@ -1116,32 +1116,31 @@ public class MSystem {
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends Enum<?>> getEnum(String className, MActivator activator) throws Exception {
+    public static Class<? extends Enum<?>> getEnum(String className, MActivator activator)
+            throws Exception {
         if (activator == null) activator = M.l(MActivator.class);
         int p = className.lastIndexOf('.');
         if (p > 0) {
-            className = className.substring(0, p) + "$" + className.substring(p+1);
+            className = className.substring(0, p) + "$" + className.substring(p + 1);
             Class<?> type = activator.getClazz(className);
             if (type.isEnum()) return (Class<? extends Enum<?>>) type;
         }
         return null;
     }
-    
+
     public static Manifest getManifest(Class<?> owner) throws NotFoundException {
         // try to get version info from JAR file
         ClassLoader cl = owner.getClassLoader();
         URL url = cl.getResource("META-INF/MANIFEST.MF");
-        if (url == null)
-            url = cl.getResource("/META-INF/MANIFEST.MF");
+        if (url == null) url = cl.getResource("/META-INF/MANIFEST.MF");
         if (url != null) {
             try (InputStream is = url.openStream()) {
                 Manifest manifest = new Manifest(is);
                 return manifest;
             } catch (Throwable t) {
-                MApi.dirtyLogTrace(owner,t);
+                MApi.dirtyLogTrace(owner, t);
             }
         }
-        throw new NotFoundException("manifest not found for",owner);
+        throw new NotFoundException("manifest not found for", owner);
     }
-    
 }

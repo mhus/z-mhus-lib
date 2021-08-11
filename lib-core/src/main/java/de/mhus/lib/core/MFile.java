@@ -75,9 +75,8 @@ public class MFile {
     }
 
     /**
-     * Create a file from path like new File(path) but will
-     * check and resolve user home prefix ~/
-     * 
+     * Create a file from path like new File(path) but will check and resolve user home prefix ~/
+     *
      * @param path Path to the file
      * @return The file
      */
@@ -200,14 +199,13 @@ public class MFile {
 
     /**
      * Write an byte array to a Writer byte after byte. No encoding will be used.
-     * 
+     *
      * @param array
      * @param writer
      * @throws IOException
      */
     public static void writeBinary(byte[] array, Writer writer) throws IOException {
-        for (byte b : array)
-            writer.write(b);
+        for (byte b : array) writer.write(b);
     }
 
     /**

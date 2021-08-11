@@ -29,12 +29,12 @@ public interface AccessApi {
 
     void updateSessionLastAccessTime();
 
-//    Subject getSubject();
+    //    Subject getSubject();
 
     void restart();
 
     void destroySession();
 
-//    ResourceManager getResourceManager();
-    
+    //    ResourceManager getResourceManager();
+
 }

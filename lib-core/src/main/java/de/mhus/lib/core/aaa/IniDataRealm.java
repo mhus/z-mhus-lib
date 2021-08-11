@@ -67,12 +67,8 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     @Override
     public boolean supports(AuthenticationToken token) {
-        if (token != null && 
-                (
-                        token instanceof TrustedToken
-                        ||
-                        token instanceof BearerToken
-                    )) return true;
+        if (token != null && (token instanceof TrustedToken || token instanceof BearerToken))
+            return true;
         return super.supports(token);
     }
 
@@ -89,29 +85,25 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
             JwsData jwtToken = M.l(JwtProvider.class).readToken(tokenStr);
             username = jwtToken.getSubject();
         } else if (token instanceof TrustedToken) {
-            username = (String)((TrustedToken)token).getPrincipal();
+            username = (String) ((TrustedToken) token).getPrincipal();
 
             if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
             // check permissions to use trusted token
 
-            boolean access = ((TrustedToken)token).hasAccess(debugPermissions);
+            boolean access = ((TrustedToken) token).hasAccess(debugPermissions);
 
             if (!access) {
-                if (debugPermissions != DEBUG.NO)
-                    log.i("TrustedToken access denied (3)");
+                if (debugPermissions != DEBUG.NO) log.i("TrustedToken access denied (3)");
                 throw new AuthenticationException("TrustedToken access denied (3)");
             }
             if (debugPermissions != DEBUG.NO)
-                log.i("TrustedToken access granted",Aaa.getPrincipal(),username);
-            if (debugPermissions == DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(username));
+                log.i("TrustedToken access granted", Aaa.getPrincipal(), username);
+            if (debugPermissions == DEBUG.TRACE) log.d(MSystem.currentStackTrace(username));
         }
 
-        if (username == null)
-            throw new AuthenticationException("User or Token not found");
-        
+        if (username == null) throw new AuthenticationException("User or Token not found");
+
         return doGetAuthenticationInfo(username, token);
-        
     }
 
     private AuthenticationInfo doGetAuthenticationInfo(String username, AuthenticationToken token) {
@@ -128,9 +120,9 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
     @Override
     protected void onInit() {
-        
+
         super.onInit();
-        
+
         Ini ini = getIni();
 
         processDefinitions(ini);
@@ -176,8 +168,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         boolean ret = super.isPermitted(permission, info);
         if (debugPermissions != DEBUG.NO && !ret) {
             log.i("perm access denied", info, permission);
-            if (debugPermissions == DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(null));
+            if (debugPermissions == DEBUG.TRACE) log.d(MSystem.currentStackTrace(null));
         }
         return ret;
     }
@@ -193,8 +184,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         boolean ret = super.hasRole(roleIdentifier, info);
         if (debugPermissions != DEBUG.NO && !ret) {
             log.i("role access denied", info, roleIdentifier);
-            if (debugPermissions == DEBUG.TRACE)
-                log.d(MSystem.currentStackTrace(roleIdentifier));
+            if (debugPermissions == DEBUG.TRACE) log.d(MSystem.currentStackTrace(roleIdentifier));
         }
         return ret;
     }
@@ -250,5 +240,4 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
 
         return super.getAuthorizationInfo(principals);
     }
-    
 }

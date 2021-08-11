@@ -66,5 +66,4 @@ public interface IApi {
     DefaultActivator getLookupActivator();
 
     <T> void cleanupLookup(Class<T> ifc);
-
 }

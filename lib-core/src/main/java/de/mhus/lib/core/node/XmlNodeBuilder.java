@@ -107,8 +107,7 @@ public class XmlNodeBuilder extends INodeBuilder {
             Node first = children.item(0);
             if (first.getNodeType() == Node.TEXT_NODE)
                 node.setString(INode.NAMELESS_VALUE, first.getNodeValue());
-            else
-            if (first.getNodeType() == Node.CDATA_SECTION_NODE)
+            else if (first.getNodeType() == Node.CDATA_SECTION_NODE)
                 node.setString(INode.NAMELESS_VALUE, first.getNodeValue());
         }
         for (Element itemE : MXml.getLocalElementIterator(element)) {
@@ -120,8 +119,7 @@ public class XmlNodeBuilder extends INodeBuilder {
                 NodeList arrayC = node.getArrayOrCreate(key);
                 INode itemC = arrayC.createObject();
                 read(itemC, itemE, level + 1);
-            } else if (node.isObject(key)
-                    && !"object".equals(itemE.getAttribute("node:type"))) {
+            } else if (node.isObject(key) && !"object".equals(itemE.getAttribute("node:type"))) {
                 INode firstC = node.getObjectOrNull(key);
                 NodeList arrayC = node.createArray(key);
                 if (firstC != null) arrayC.add(firstC);

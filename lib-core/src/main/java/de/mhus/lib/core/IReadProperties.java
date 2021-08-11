@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 import de.mhus.lib.errors.MException;
 
-public interface IReadProperties extends Iterable<Map.Entry<String, Object>>{
+public interface IReadProperties extends Iterable<Map.Entry<String, Object>> {
 
     String getString(String name, String def);
 

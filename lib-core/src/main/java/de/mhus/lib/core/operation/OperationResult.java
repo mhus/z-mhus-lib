@@ -103,6 +103,7 @@ public class OperationResult {
 
     /**
      * Return the raw result. Don't use this method directly.
+     *
      * @return The resulting object
      */
     @Deprecated
@@ -112,6 +113,7 @@ public class OperationResult {
 
     /**
      * Set the result as object. Don't use it directly. Should be stored as INode or Map.
+     *
      * @param result
      */
     @Deprecated
@@ -142,11 +144,12 @@ public class OperationResult {
     public boolean isResultNull() {
         return result == null;
     }
-    
+
     public String getResultAsString() {
         if (result == null) return "";
         if (result instanceof String) return (String) result;
-        if (result instanceof byte[]) return new String( (byte[])result, MString.CHARSET_CHARSET_UTF_8 );
+        if (result instanceof byte[])
+            return new String((byte[]) result, MString.CHARSET_CHARSET_UTF_8);
         return String.valueOf(result);
     }
 
@@ -184,9 +187,9 @@ public class OperationResult {
     }
 
     /**
-     * Try to convert the result into a INode object. Therefore a string is analyzed to be a
-     * json or xml and will be readed as INode. Also INode or IProperty will be transformed.
-     * 
+     * Try to convert the result into a INode object. Therefore a string is analyzed to be a json or
+     * xml and will be readed as INode. Also INode or IProperty will be transformed.
+     *
      * @return A INode object or a RuntimeException
      */
     @SuppressWarnings("unchecked")
@@ -197,7 +200,7 @@ public class OperationResult {
             if (result instanceof INode) return (INode) result;
             if (result instanceof IProperties) {
                 MNode ret = new MNode();
-                ret.putAll( (IProperties)result );
+                ret.putAll((IProperties) result);
                 return ret;
             }
             if (result instanceof Map)
@@ -213,6 +216,7 @@ public class OperationResult {
 
     /**
      * Get a INode result and load it via NodeSynchronize mechanism into the given object.
+     *
      * @param <T> Type of the given object, must be NodeSerializable
      * @param fillIn The object to fill
      * @return The filled Object given in fillIn
@@ -227,5 +231,4 @@ public class OperationResult {
         }
         return fillIn;
     }
-
 }

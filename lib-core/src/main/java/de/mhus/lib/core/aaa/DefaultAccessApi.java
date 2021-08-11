@@ -54,7 +54,9 @@ public class DefaultAccessApi extends MLog implements AccessApi {
         }
         if (env == null || env.getSecurityManager() instanceof EmptySecurityManager) {
             HashMap<String, Object> seed = new HashMap<>();
-            seed.put(DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY, createDefaultSecurityManager() );
+            seed.put(
+                    DefaultEnvironment.DEFAULT_SECURITY_MANAGER_KEY,
+                    createDefaultSecurityManager());
             env = new DefaultEnvironment(seed);
         }
         SecurityUtils.setSecurityManager(env.getSecurityManager());
@@ -65,7 +67,8 @@ public class DefaultAccessApi extends MLog implements AccessApi {
     }
 
     protected Environment createEnvironment() {
-        if (CFG_CONFIG_FILE.value().startsWith("classpath:") || new File(CFG_CONFIG_FILE.value()).exists()) {
+        if (CFG_CONFIG_FILE.value().startsWith("classpath:")
+                || new File(CFG_CONFIG_FILE.value()).exists()) {
             log().i("Initialize shiro ini", CFG_CONFIG_FILE);
             return new IniDataEnvironment(CFG_CONFIG_FILE.value());
         } else {
@@ -76,7 +79,7 @@ public class DefaultAccessApi extends MLog implements AccessApi {
 
     @Override
     public SecurityManager getSecurityManager() {
-//        return env.getSecurityManager();
+        //        return env.getSecurityManager();
         return SecurityUtils.getSecurityManager();
     }
 
@@ -136,5 +139,4 @@ public class DefaultAccessApi extends MLog implements AccessApi {
             log().d(t);
         }
     }
-
 }

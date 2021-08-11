@@ -183,19 +183,13 @@ public abstract class Console extends PrintStream implements Adaptable {
         println();
     }
 
-    /**
-     * Will clear the console content
-     */
+    /** Will clear the console content */
     public void clearTerminal() {}
 
-    /**
-     * Will reset the current configuration. For ANSI \033c
-     */
+    /** Will reset the current configuration. For ANSI \033c */
     public void resetTerminal() {}
 
-    /**
-     * Will reset the console instance in this framework.
-     */
+    /** Will reset the console instance in this framework. */
     public static void resetConsole() {
         consoles.remove();
     }

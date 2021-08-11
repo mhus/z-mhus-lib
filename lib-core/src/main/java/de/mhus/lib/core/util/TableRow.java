@@ -137,7 +137,7 @@ public class TableRow implements Serializable, NodeSerializable {
         if (val == null) return def;
         return (T) val;
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(data);

@@ -136,8 +136,8 @@ public class PropertiesReadOnly implements IReadProperties, ReadOnly {
         return parent.getStringOrCreate(name, def);
     }
 
-	@Override
-	public Iterator<Entry<String, Object>> iterator() {
-		return parent.iterator();
-	}
+    @Override
+    public Iterator<Entry<String, Object>> iterator() {
+        return parent.iterator();
+    }
 }

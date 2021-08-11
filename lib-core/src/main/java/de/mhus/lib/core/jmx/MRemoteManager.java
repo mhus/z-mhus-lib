@@ -36,7 +36,8 @@ import de.mhus.lib.errors.MException;
 public class MRemoteManager extends MObject {
 
     private static CfgBoolean CFG_ENABLED = new CfgBoolean(MRemoteManager.class, "enabled", false);
-    private static CfgLong CFG_HOUSEKEEPER_SLEEP = new CfgLong(MRemoteManager.class, "housekeeper_sleep", 30000);
+    private static CfgLong CFG_HOUSEKEEPER_SLEEP =
+            new CfgLong(MRemoteManager.class, "housekeeper_sleep", 30000);
     private MBeanServer mbs;
     private HashMap<ObjectName, Object> registry = new HashMap<ObjectName, Object>();
 

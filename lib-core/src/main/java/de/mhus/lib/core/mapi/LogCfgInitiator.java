@@ -138,17 +138,19 @@ public class LogCfgInitiator implements CfgInitiator {
                     String name = mapper.getString("name");
                     String clazz = mapper.getString("class");
                     if (MString.isSet(name) && MString.isSet(clazz)) {
-                    	ParameterEntryMapper inst = null;
-                    	try {
-	                    	inst = (ParameterEntryMapper)Class.forName(clazz.trim())
-	                                .getDeclaredConstructor()
-	                                .newInstance();
-                    	} catch (Throwable t) {
-                    		MApi.dirtyLogDebug("LogCfgInitiator:UseProxy",name,clazz,t.getMessage());
-                    		inst = new ParameterEntryMapperProxy(clazz);
-                    	}
-                        ((MutableParameterMapper) logFactory.getParameterMapper())
-                                .put(name, inst);
+                        ParameterEntryMapper inst = null;
+                        try {
+                            inst =
+                                    (ParameterEntryMapper)
+                                            Class.forName(clazz.trim())
+                                                    .getDeclaredConstructor()
+                                                    .newInstance();
+                        } catch (Throwable t) {
+                            MApi.dirtyLogDebug(
+                                    "LogCfgInitiator:UseProxy", name, clazz, t.getMessage());
+                            inst = new ParameterEntryMapperProxy(clazz);
+                        }
+                        ((MutableParameterMapper) logFactory.getParameterMapper()).put(name, inst);
                     }
                 }
             } catch (Throwable t) {
@@ -189,7 +191,7 @@ public class LogCfgInitiator implements CfgInitiator {
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
         }
-        
+
         internal.setLogFactory(logFactory);
 
         MApi.updateLoggers();

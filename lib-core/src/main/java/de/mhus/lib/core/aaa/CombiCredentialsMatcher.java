@@ -43,7 +43,8 @@ public class CombiCredentialsMatcher extends SimpleCredentialsMatcher {
             return false;
         }
 
-        if (!Aaa.ADMIN_LOGIN_ALLOWED.value() && Aaa.USER_ADMIN.value().equals(principal)) return false; // admin can't login directly
+        if (!Aaa.ADMIN_LOGIN_ALLOWED.value() && Aaa.USER_ADMIN.value().equals(principal))
+            return false; // admin can't login directly
         if (Aaa.USER_GUEST.value().equals(principal)) return false; // guest can't login directly
 
         return super.doCredentialsMatch(token, info);

@@ -33,11 +33,15 @@ public interface IFormInformation extends IFormProvider {
      */
     Class<? extends FormControl> getFormControl();
 
-    default FormControl createFormControl() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    default FormControl createFormControl()
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+                    InvocationTargetException, NoSuchMethodException, SecurityException {
         return getFormControl().getConstructor().newInstance();
     }
-    
-    default ActionHandler createActionHandler() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+    default ActionHandler createActionHandler()
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+                    InvocationTargetException, NoSuchMethodException, SecurityException {
         return getActionHandler().getConstructor().newInstance();
     }
 }

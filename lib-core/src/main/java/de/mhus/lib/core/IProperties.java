@@ -95,6 +95,7 @@ public interface IProperties
 
     /**
      * This will transfer the property to a string using Rfc1738 url encoding
+     *
      * @param properties
      * @return The String
      */
@@ -272,35 +273,39 @@ public interface IProperties
     }
 
     /**
-     * Extract the keys starting with prefix in a new HashMap.
-     * Will return an empty map if prefix or map is null.
-     * 
+     * Extract the keys starting with prefix in a new HashMap. Will return an empty map if prefix or
+     * map is null.
+     *
      * @param prefix Prefix of the key to extract
      * @param map Map of all entries
      * @return Extracted subset
      */
     static IProperties subset(String prefix, Map<String, ?> map) {
-    	MProperties out = new MProperties();
+        MProperties out = new MProperties();
         if (prefix == null || map == null) return out;
-        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k, v); } );
+        map.forEach(
+                (k, v) -> {
+                    if (k.startsWith(prefix)) out.put(k, v);
+                });
         return out;
     }
-    
+
     /**
-     * Extract the keys starting with prefix in a new HashMap.
-     * It removes the prefix from the keys.
+     * Extract the keys starting with prefix in a new HashMap. It removes the prefix from the keys.
      * Will return an empty map if prefix or map is null.
-     * 
+     *
      * @param prefix Prefix of the key to extract
      * @param map Map of all entries
      * @return Extracted subset
      */
     static IProperties subsetCrop(String prefix, Map<String, ?> map) {
-    	MProperties out = new MProperties();
+        MProperties out = new MProperties();
         if (prefix == null || map == null) return out;
         int l = prefix.length();
-        map.forEach((k,v) -> {if (k.startsWith(prefix)) out.put(k.substring(l), v); } );
+        map.forEach(
+                (k, v) -> {
+                    if (k.startsWith(prefix)) out.put(k.substring(l), v);
+                });
         return out;
     }
-    
 }

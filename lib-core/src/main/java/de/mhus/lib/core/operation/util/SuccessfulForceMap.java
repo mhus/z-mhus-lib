@@ -46,9 +46,8 @@ public class SuccessfulForceMap extends SuccessfulMap {
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "deprecation" })
+    @SuppressWarnings({"unchecked", "deprecation"})
     public Map<String, Object> getMap() {
         return (Map<String, Object>) ((MapValue) getResult()).getValue();
     }
-
 }

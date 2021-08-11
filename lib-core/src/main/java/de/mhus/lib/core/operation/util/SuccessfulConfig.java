@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2002 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.mhus.lib.core.operation.util;
 
 import java.util.List;
@@ -13,87 +28,87 @@ import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;
 
 public class SuccessfulConfig extends Successful {
-    
+
     public SuccessfulConfig(Operation operation, String msg) {
-        super(operation, msg, 0, (String)null);
+        super(operation, msg, 0, (String) null);
         setResultNode(new MNode());
     }
 
     public SuccessfulConfig(Operation operation, String msg, INode config) {
-        super(operation, msg, 0, (String)null);
+        super(operation, msg, 0, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulConfig(Operation operation, String msg, int rc, INode config) {
-        super(operation, msg, rc, (String)null);
+        super(operation, msg, rc, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulConfig(String path, String msg, INode config) {
-        super(path, msg, 0, (String)null);
+        super(path, msg, 0, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulConfig(String path, String msg, int rc, INode config) {
-        super(path, msg, rc, (String)null);
+        super(path, msg, rc, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulConfig(Operation operation, String msg, NodeSerializable object) {
-        super(operation, msg, 0, (String)null);
+        super(operation, msg, 0, (String) null);
         MNode cfg = new MNode();
         if (object != null)
-            try {   
+            try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg,e);
+                throw new MRuntimeException(getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
 
     public SuccessfulConfig(Operation operation, String msg, int rc, NodeSerializable object) {
-        super(operation, msg, rc, (String)null);
+        super(operation, msg, rc, (String) null);
         MNode cfg = new MNode();
         if (object != null)
-            try {   
+            try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg,e);
+                throw new MRuntimeException(getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
 
     public SuccessfulConfig(String path, String msg, NodeSerializable object) {
-        super(path, msg, 0, (String)null);
+        super(path, msg, 0, (String) null);
         MNode cfg = new MNode();
         if (object != null)
-            try {   
+            try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg,e);
+                throw new MRuntimeException(getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
 
     public SuccessfulConfig(String path, String msg, int rc, NodeSerializable object) {
-        super(path, msg, rc, (String)null);
+        super(path, msg, rc, (String) null);
         MNode cfg = new MNode();
         if (object != null)
-            try {   
+            try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg,e);
+                throw new MRuntimeException(getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
-    
+
     public SuccessfulConfig(Operation operation, String msg, String... keyValues) {
         this(operation.getDescription().getPath(), msg, 0, keyValues);
         setCaption(operation.getDescription().getCaption());
     }
 
     public SuccessfulConfig(String path, String msg, int rc, String... keyValues) {
-        super(path, msg, rc, (String)null);
+        super(path, msg, rc, (String) null);
         setOperationPath(path);
         setCaption("");
         setMsg(msg);
@@ -135,7 +150,7 @@ public class SuccessfulConfig extends Successful {
     public int size() {
         return getConfig().size();
     }
-    
+
     public boolean isObject(String key) {
         return getConfig().isObject(key);
     }
@@ -179,7 +194,7 @@ public class SuccessfulConfig extends Successful {
     public void setObject(String key, NodeSerializable object) {
         getConfig().setObject(key, object);
     }
-    
+
     public INode createObject(String key) {
         return getConfig().createObject(key);
     }
@@ -233,5 +248,4 @@ public class SuccessfulConfig extends Successful {
     public NodeList createArray(String key) {
         return getConfig().createArray(key);
     }
-
 }

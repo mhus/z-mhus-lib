@@ -39,17 +39,24 @@ import de.mhus.lib.errors.NotFoundRuntimeException;
 // TODO Use hashed passwords
 public class TrustFromConfiguration extends MLog implements TrustApi {
 
-    public enum TYPE { PLAIN, JWT };
-    
-    public static final BearerConfiguration BEARER_CONFIG = new BearerConfiguration();
-    @SuppressWarnings("unused")
-    private static final CfgLong CFG_BEARER_CONFIG_TIMEOUT = new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECOUNDS)
-            .updateAction(v -> BEARER_CONFIG.setTimeout(v) ).doUpdateAction();
+    public enum TYPE {
+        PLAIN,
+        JWT
+    };
 
-    private Map<String, SecureString> passwordCache = Collections.synchronizedMap( new SoftHashMap<>());
+    public static final BearerConfiguration BEARER_CONFIG = new BearerConfiguration();
+
+    @SuppressWarnings("unused")
+    private static final CfgLong CFG_BEARER_CONFIG_TIMEOUT =
+            new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECOUNDS)
+                    .updateAction(v -> BEARER_CONFIG.setTimeout(v))
+                    .doUpdateAction();
+
+    private Map<String, SecureString> passwordCache =
+            Collections.synchronizedMap(new SoftHashMap<>());
     private Map<String, TYPE> typeCache = Collections.synchronizedMap(new SoftHashMap<>());
     private Map<String, String> targetCache = Collections.synchronizedMap(new SoftHashMap<>());
-    
+
     private CfgNode config =
             new CfgNode(TrustApi.class, "", null)
                     .updateAction(
@@ -77,7 +84,7 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
         }
         throw new NotFoundRuntimeException("unknown trust", name);
     }
-    
+
     public TYPE getType(String name) {
         TYPE ret = typeCache.get(name);
         if (ret == null) {
@@ -98,7 +105,7 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
 
     @Override
     public AuthenticationToken createToken(String ticket) {
-        String[] parts = ticket.split(":",3);
+        String[] parts = ticket.split(":", 3);
         validatePassword(parts[0], parts[2]);
         return new TrustedToken(parts[1]);
     }
@@ -112,11 +119,12 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
     public String createToken(String source, Object target, Subject subject) {
         String trust = getTrustFor(source, target);
         switch (getType(trust)) {
-        case PLAIN:
-            return createTrustTicket(trust, getPassword(trust), subject);
-        case JWT:
-            String tokenStr = Aaa.createBearerToken(subject, MSystem.getHostname(), BEARER_CONFIG );
-            return Aaa.TICKET_PREFIX_BEARER + ":" + tokenStr;
+            case PLAIN:
+                return createTrustTicket(trust, getPassword(trust), subject);
+            case JWT:
+                String tokenStr =
+                        Aaa.createBearerToken(subject, MSystem.getHostname(), BEARER_CONFIG);
+                return Aaa.TICKET_PREFIX_BEARER + ":" + tokenStr;
         }
         throw new NotFoundRuntimeException("unknown trust type", trust);
     }
@@ -129,12 +137,12 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
             if (node != null) {
                 for (INode trust : node.getObjects()) {
                     if (trust.getString("source", "").matches(source)) {
-                        ret = trust.getString("name",null);
+                        ret = trust.getString("name", null);
                         targetCache.put(name, ret);
                         break;
                     }
                 }
-                if (ret == null) 
+                if (ret == null)
                     throw new NotFoundRuntimeException("trust not found for source", source);
             }
         }

@@ -50,14 +50,14 @@ import de.mhus.lib.test.shiro.ShiroAnnotationTest;
 import de.mhus.lib.tests.TestCase;
 
 public class ShiroSecurityTest extends TestCase {
-    
-//    @Test
-//    public void envTest() throws NoSuchMethodException, SecurityException {
-//
-//        init("classpath:de/mhus/lib/test/shiro-data.ini");
-//        SecurityManager manager = SecurityUtils.getSecurityManager();
-//        AccessApi api = M.l(AccessApi.class);
-//    }
+
+    //    @Test
+    //    public void envTest() throws NoSuchMethodException, SecurityException {
+    //
+    //        init("classpath:de/mhus/lib/test/shiro-data.ini");
+    //        SecurityManager manager = SecurityUtils.getSecurityManager();
+    //        AccessApi api = M.l(AccessApi.class);
+    //    }
 
     @Test
     public void annotationsTest() throws NoSuchMethodException, SecurityException {
@@ -248,8 +248,7 @@ public class ShiroSecurityTest extends TestCase {
         Subject session = Aaa.createSubjectFromSessionId(sessionId);
         session.execute(
                 () -> {
-                    System.out.println(
-                            "4 Subject: " + Aaa.toString(Aaa.getSubject()));
+                    System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
                     System.out.println("4 Session: " + Aaa.getSessionId(false));
                     assertTrue(Aaa.getSubject().isAuthenticated());
                     assertEquals("admin", Aaa.getPrincipal());

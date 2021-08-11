@@ -93,8 +93,11 @@ public class PropertiesNodeBuilder extends INodeBuilder {
             Object val = entry.getValue();
             if (val == null || val instanceof NullValue) {
                 // null object or ignore ?
-            } else
-            if (val instanceof String || val.getClass().isPrimitive() || val instanceof Number || val instanceof Date || val instanceof Boolean) {
+            } else if (val instanceof String
+                    || val.getClass().isPrimitive()
+                    || val instanceof Number
+                    || val instanceof Date
+                    || val instanceof Boolean) {
                 node.put(key, val);
             } else {
                 INode obj = readObject(val, level);
@@ -104,17 +107,16 @@ public class PropertiesNodeBuilder extends INodeBuilder {
                         node.put(INode.HELPER_VALUE + key, node.get(INode.HELPER_VALUE));
                 } else if (obj.isObject(INode.NAMELESS_VALUE)) {
                     node.addObject(key, obj.getObjectOrNull(INode.NAMELESS_VALUE));
-                } else
-                    node.addObject(key, obj);
+                } else node.addObject(key, obj);
             }
         }
         return node;
     }
-    
+
     public INode readObject(Object item) {
         return readObject(item, 0);
     }
-    
+
     protected INode readObject(Object item, int level) {
         level++;
         if (level > CFG_MAX_LEVEL.value()) throw new TooDeepStructuresException();
@@ -123,52 +125,56 @@ public class PropertiesNodeBuilder extends INodeBuilder {
             MNode obj = new MNode();
             obj.setBoolean(INode.NULL, true);
             return obj;
-        } else
-        if (item instanceof NodeSerializable) {
+        } else if (item instanceof NodeSerializable) {
             MNode obj = new MNode();
             try {
-                ((NodeSerializable)item).writeSerializabledNode(obj);
+                ((NodeSerializable) item).writeSerializabledNode(obj);
             } catch (Exception e) {
-                throw new MRuntimeException(item,e);
+                throw new MRuntimeException(item, e);
             }
             return obj;
-        } else
-        if (item instanceof INode) {
+        } else if (item instanceof INode) {
             return (INode) item;
         } else if (item instanceof Map) {
             INode obj = readFromMap((Map<?, ?>) item, level);
             return obj;
-        } else if (item instanceof String || item.getClass().isPrimitive() || item instanceof Number || item instanceof Date || item instanceof Boolean){
+        } else if (item instanceof String
+                || item.getClass().isPrimitive()
+                || item instanceof Number
+                || item instanceof Date
+                || item instanceof Boolean) {
             MNode obj = new MNode();
             obj.put(INode.NAMELESS_VALUE, item);
             return obj;
-        } else if (item instanceof Date){
+        } else if (item instanceof Date) {
             MNode obj = new MNode();
-            obj.put(INode.NAMELESS_VALUE, ((Date)item).getTime());
-            obj.put(INode.HELPER_VALUE, MDate.toIso8601( (Date)item ));
+            obj.put(INode.NAMELESS_VALUE, ((Date) item).getTime());
+            obj.put(INode.HELPER_VALUE, MDate.toIso8601((Date) item));
             return obj;
         } else if (item.getClass().isArray()) {
             MNode obj = new MNode();
             obj.setString(INode.CLASS, item.getClass().getCanonicalName());
-            readFromCollection( obj, INode.NAMELESS_VALUE, MCollection.toList(((Object[])item)), level );
+            readFromCollection(
+                    obj, INode.NAMELESS_VALUE, MCollection.toList(((Object[]) item)), level);
             return obj;
         } else if (item instanceof Collection) {
             MNode obj = new MNode();
             obj.setString(INode.CLASS, item.getClass().getCanonicalName());
-            readFromCollection( obj, INode.NAMELESS_VALUE, (Collection<?>)item, level );
+            readFromCollection(obj, INode.NAMELESS_VALUE, (Collection<?>) item, level);
             return obj;
         } else {
             MNode obj = new MNode();
             try {
                 MPojo.pojoToNode(item, obj);
             } catch (IOException e) {
-                throw new MRuntimeException(item,e);
+                throw new MRuntimeException(item, e);
             }
             return obj;
         }
     }
 
-    public <T extends NodeSerializable> List<T> loadToCollection(INode source, Class<T> target) throws Exception {
+    public <T extends NodeSerializable> List<T> loadToCollection(INode source, Class<T> target)
+            throws Exception {
         ArrayList<T> out = new ArrayList<>();
         for (INode entry : source.getArray(INode.NAMELESS_VALUE)) {
             T inst = target.getConstructor().newInstance();
@@ -178,7 +184,8 @@ public class PropertiesNodeBuilder extends INodeBuilder {
         return out;
     }
 
-    public <V extends NodeSerializable> Map<String,V> loadToMap(INode source, Class<V> target) throws Exception {
+    public <V extends NodeSerializable> Map<String, V> loadToMap(INode source, Class<V> target)
+            throws Exception {
         HashMap<String, V> out = new HashMap<>();
         for (INode entry : source.getObjects()) {
             V inst = target.getConstructor().newInstance();
@@ -187,5 +194,4 @@ public class PropertiesNodeBuilder extends INodeBuilder {
         }
         return out;
     }
-    
 }

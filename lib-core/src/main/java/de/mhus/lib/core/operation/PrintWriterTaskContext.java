@@ -33,8 +33,7 @@ public class PrintWriterTaskContext implements TaskContext {
     private Log log = null;
     private String errorMessage;
 
-    public PrintWriterTaskContext(
-            String name, PrintWriter writer, INode config, boolean testOnly) {
+    public PrintWriterTaskContext(String name, PrintWriter writer, INode config, boolean testOnly) {
         log = new PrintWriterLog(name, writer);
         this.writer = writer;
         this.config = config;

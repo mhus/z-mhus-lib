@@ -209,17 +209,17 @@ public class Table implements Serializable, Externalizable, NodeSerializable {
     @Override
     public void readSerializabledNode(INode cfg) throws Exception {
         name = cfg.getString("name", null);
-        
+
         columns = new LinkedList<>();
         columnsIndex = new HashMap<>();
-        
+
         for (INode col : cfg.getArrayOrCreate("columns")) {
             TableColumn tc = new TableColumn();
             tc.readSerializabledNode(col);
             columnsIndex.put(tc.getName(), columns.size());
             columns.add(tc);
         }
-        
+
         for (INode row : cfg.getArrayOrCreate("rows")) {
             TableRow tr = new TableRow();
             tr.setTable(this);
@@ -232,13 +232,11 @@ public class Table implements Serializable, Externalizable, NodeSerializable {
     public void writeSerializabledNode(INode cfg) throws Exception {
         cfg.setString("name", name);
         NodeList arr = cfg.createArray("columns");
-        for (TableColumn v : columns)
-            v.writeSerializabledNode( arr.createObject() );
-        
+        for (TableColumn v : columns) v.writeSerializabledNode(arr.createObject());
+
         arr = cfg.createArray("rows");
         for (TableRow tr : rows) {
-            tr.writeSerializabledNode(arr.createObject() );
+            tr.writeSerializabledNode(arr.createObject());
         }
-        
     }
 }

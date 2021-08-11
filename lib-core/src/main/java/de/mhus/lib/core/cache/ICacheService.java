@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2018 Mike Hummel (mh@mhus.de)
+ * Copyright (C) 2002 Mike Hummel (mh@mhus.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ public interface ICacheService {
 
     /**
      * Create or get a cache handler also for in memory usage
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param owner
@@ -33,16 +33,11 @@ public interface ICacheService {
      * @return New or existing cache handler
      */
     <K, V> ICache<K, V> createCache(
-            Object owner,
-            String name,
-            Class<K> keyType,
-            Class<V> valueType,
-            CacheConfig config
-            );
+            Object owner, String name, Class<K> keyType, Class<V> valueType, CacheConfig config);
 
     /**
      * Create a cache handler to be stored or shared.
-     * 
+     *
      * @param <K>
      * @param <V>
      * @param owner
@@ -53,12 +48,7 @@ public interface ICacheService {
      * @return New or existing cache handler
      */
     default <K extends Serializable, V extends Serializable> ICache<K, V> createSerilizableCache(
-            Object owner,
-            String name,
-            Class<K> keyType,
-            Class<V> valueType,
-            CacheConfig config
-            ) {
+            Object owner, String name, Class<K> keyType, Class<V> valueType, CacheConfig config) {
         if (config == null) config = new CacheConfig();
         config.setSerializable(true);
         return createCache(owner, name, keyType, valueType, config);

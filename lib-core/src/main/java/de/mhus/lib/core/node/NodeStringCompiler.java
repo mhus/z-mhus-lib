@@ -48,8 +48,7 @@ public class NodeStringCompiler extends StringCompiler {
         public RootAttributePart(String part) {
             name = MString.afterIndex(part, ':');
             node = rootNode;
-            while (node.getParent() != null && node.getParent() != node)
-                node = node.getParent();
+            while (node.getParent() != null && node.getParent() != node) node = node.getParent();
             int pos = name.indexOf(',');
             if (pos > 0) {
                 def = name.substring(pos + 1);

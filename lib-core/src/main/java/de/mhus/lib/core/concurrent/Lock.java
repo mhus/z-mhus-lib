@@ -28,6 +28,7 @@ public interface Lock extends Closeable {
 
     /**
      * The method will throw an exception after the timeout is reached.
+     *
      * @param timeout
      * @return The lock itself
      * @throws TimeoutException If timeout is reached
@@ -38,8 +39,9 @@ public interface Lock extends Closeable {
     }
 
     /**
-     * The method will unlock the resource automatically and try to gain access after timeout is reached.
-     * 
+     * The method will unlock the resource automatically and try to gain access after timeout is
+     * reached.
+     *
      * @param timeout
      * @return The lock itself
      */
@@ -52,7 +54,7 @@ public interface Lock extends Closeable {
 
     /**
      * Try to lock the resource or return false if tmeout is reached.
-     * 
+     *
      * @param timeout
      * @return false if timeout is reached. true if locked.
      */
