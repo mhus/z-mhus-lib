@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.AttachContainerCmd;
@@ -46,6 +47,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 
 import de.mhus.lib.core.MCollection;
+import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.mapi.DockerInitializer;
@@ -416,6 +418,57 @@ public class DockerScenario {
             logStream.awaitStarted(60, TimeUnit.SECONDS);
             waitForLogEntry(logStream, waitForString);
         }
+    }
+
+    public boolean waitForLog(long timeout, long sleep, LogStream logStream, Function<String, Boolean> check)
+            throws NotFoundException, IOException {
+
+        WaitContainer waitCont = new WaitContainer();
+        waitCont.cont = logStream.getContainer();
+        StringBuilder content = new StringBuilder();
+        
+        if (waitCont.cont.getId() == null)
+            throw new NotFoundException("Container not started", waitCont.cont.getName());
+
+        watch.schedule(
+                new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            if (!waitCont.running) {
+                                cancel();
+                            } else if (!waitCont.cont.isRunning()) {
+                                System.err.println(
+                                        "#### CLOSE " + waitCont.cont.getName() + " ####");
+                                logStream.close();
+                                cancel();
+                            }
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
+                    }
+                },
+                1000,
+                1000);
+
+        try {
+            long start = System.currentTimeMillis();
+            while (!MPeriod.isTimeOut(start, timeout)) {
+
+                String logStr = logStream.readLine();
+                //                System.err.println(logStr);
+                content.append(logStr);
+                if (check.apply(content.toString())) {
+                    return true;
+                }
+                if (logStream.isClosed()) throw new EOFException();
+            }
+        } finally {
+            waitCont.running = false;
+        }
+
+        return false;
     }
 
     public void waitForLogEntry(LogStream logStream, String waitForString)
