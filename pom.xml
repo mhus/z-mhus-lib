@@ -28,7 +28,7 @@
 	<artifactId>mhus-lib</artifactId>
 	<packaging>pom</packaging>
 	<description>Library with useful tools and frameworks to rapid develop fast and stable applications</description>
-	<url>http://www.mhus.org</url>
+	<url>http://www.mhus.info</url>
 	<name>mhus-lib</name>
     
     <properties>
@@ -50,7 +50,7 @@
 	</licenses>
 	<scm>
 		<url>https://github.com/mhus/mhus-lib</url>
-		<connection>scm:git:https://github.com/mhus/mhus-lib/</connection>
+		<connection>scm:git:https://github.com/mhus-info/mhus-lib/</connection>
 		<tag>HEAD</tag>
 	</scm>
 	<developers>
@@ -58,7 +58,7 @@
 			<id>mhu</id>
 			<name>Mike Hummel</name>
 			<email>mh@mhus.de</email>
-			<url>http://www.mhus.org</url>
+			<url>http://www.mhus.de</url>
 		</developer>
 	</developers>
 	<build>
