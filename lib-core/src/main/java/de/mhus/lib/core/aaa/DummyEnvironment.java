@@ -17,6 +17,10 @@ package de.mhus.lib.core.aaa;
 
 import org.apache.shiro.env.DefaultEnvironment;
 import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+
+import de.mhus.lib.core.MApi;
+import de.mhus.lib.core.MCast;
 
 public class DummyEnvironment extends DefaultEnvironment {
 
@@ -25,5 +29,7 @@ public class DummyEnvironment extends DefaultEnvironment {
                 (DefaultSecurityManager) new IniDataSecurityManagerFactory().getInstance();
         manager.setRealm(new DummyRealm());
         setSecurityManager(manager);
+        long globalSessionTimeout = MCast.tolong(MApi.get().getCfgString(Aaa.class, "globalSessionTimeout", null), 3600000); // 1h
+        ((DefaultSessionManager)manager.getSessionManager()).setGlobalSessionTimeout(globalSessionTimeout);
     }
 }
