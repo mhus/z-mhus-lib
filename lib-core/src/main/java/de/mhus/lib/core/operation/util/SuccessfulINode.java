@@ -27,34 +27,34 @@ import de.mhus.lib.core.operation.Successful;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.NotFoundException;
 
-public class SuccessfulConfig extends Successful {
+public class SuccessfulINode extends Successful {
 
-    public SuccessfulConfig(Operation operation, String msg) {
+    public SuccessfulINode(Operation operation, String msg) {
         super(operation, msg, 0, (String) null);
         setResultNode(new MNode());
     }
 
-    public SuccessfulConfig(Operation operation, String msg, INode config) {
+    public SuccessfulINode(Operation operation, String msg, INode config) {
         super(operation, msg, 0, (String) null);
         setResultNode(config);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, int rc, INode config) {
+    public SuccessfulINode(Operation operation, String msg, int rc, INode config) {
         super(operation, msg, rc, (String) null);
         setResultNode(config);
     }
 
-    public SuccessfulConfig(String path, String msg, INode config) {
+    public SuccessfulINode(String path, String msg, INode config) {
         super(path, msg, 0, (String) null);
         setResultNode(config);
     }
 
-    public SuccessfulConfig(String path, String msg, int rc, INode config) {
+    public SuccessfulINode(String path, String msg, int rc, INode config) {
         super(path, msg, rc, (String) null);
         setResultNode(config);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, NodeSerializable object) {
+    public SuccessfulINode(Operation operation, String msg, NodeSerializable object) {
         super(operation, msg, 0, (String) null);
         MNode cfg = new MNode();
         if (object != null)
@@ -66,7 +66,7 @@ public class SuccessfulConfig extends Successful {
         setResultNode(cfg);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, int rc, NodeSerializable object) {
+    public SuccessfulINode(Operation operation, String msg, int rc, NodeSerializable object) {
         super(operation, msg, rc, (String) null);
         MNode cfg = new MNode();
         if (object != null)
@@ -78,7 +78,7 @@ public class SuccessfulConfig extends Successful {
         setResultNode(cfg);
     }
 
-    public SuccessfulConfig(String path, String msg, NodeSerializable object) {
+    public SuccessfulINode(String path, String msg, NodeSerializable object) {
         super(path, msg, 0, (String) null);
         MNode cfg = new MNode();
         if (object != null)
@@ -90,7 +90,7 @@ public class SuccessfulConfig extends Successful {
         setResultNode(cfg);
     }
 
-    public SuccessfulConfig(String path, String msg, int rc, NodeSerializable object) {
+    public SuccessfulINode(String path, String msg, int rc, NodeSerializable object) {
         super(path, msg, rc, (String) null);
         MNode cfg = new MNode();
         if (object != null)
@@ -102,12 +102,12 @@ public class SuccessfulConfig extends Successful {
         setResultNode(cfg);
     }
 
-    public SuccessfulConfig(Operation operation, String msg, String... keyValues) {
+    public SuccessfulINode(Operation operation, String msg, String... keyValues) {
         this(operation.getDescription().getPath(), msg, 0, keyValues);
         setCaption(operation.getDescription().getCaption());
     }
 
-    public SuccessfulConfig(String path, String msg, int rc, String... keyValues) {
+    public SuccessfulINode(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, (String) null);
         setOperationPath(path);
         setCaption("");
@@ -122,7 +122,7 @@ public class SuccessfulConfig extends Successful {
         }
     }
 
-    public SuccessfulConfig(Operation operation, String msg, int rc, String... keyValues) {
+    public SuccessfulINode(Operation operation, String msg, int rc, String... keyValues) {
         this(operation.getDescription().getPath(), msg, rc, keyValues);
         setCaption(operation.getDescription().getCaption());
     }
