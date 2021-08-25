@@ -17,6 +17,7 @@ package de.mhus.lib.core.util;
 
 import java.lang.ref.SoftReference;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +31,7 @@ import de.mhus.lib.errors.NotSupportedException;
 
 public class SoftTimeoutMap<K, V> implements Map<K, V> {
 
-    private Map<K, Container<V>> map = new HashMap<>();
+    private Map<K, Container<V>> map = Collections.synchronizedMap(new HashMap<>());
     private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
     private long lastCheck = System.currentTimeMillis();
     private long checkTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
