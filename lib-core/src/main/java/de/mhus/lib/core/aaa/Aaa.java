@@ -477,6 +477,12 @@ public class Aaa {
         return new SubjectEnvironment(subject, current, scope);
     }
 
+    public static SubjectEnvironment asSubjectWithoutTracing(Subject subject) {
+        Subject current = ThreadContext.getSubject();
+        ThreadContext.bind(subject);
+        return new SubjectEnvironment(subject, current, null);
+    }
+    
     /**
      * Run as subject or if subject is null use the dummy subject.
      *
@@ -914,7 +920,7 @@ public class Aaa {
             // surround with guest environment
             final Subject guest = getGuestSubject(careful);
             if (guest == null) return action.apply(); // fallback to prevent loops
-            try (SubjectEnvironment access = asSubject(guest)) {
+            try (SubjectEnvironment access = asSubjectWithoutTracing(guest)) {
                 return action.apply();
             }
         }
