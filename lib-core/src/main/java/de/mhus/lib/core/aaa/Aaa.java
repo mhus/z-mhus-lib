@@ -471,7 +471,12 @@ public class Aaa {
     }
 
     public static SubjectEnvironment asSubject(Subject subject) {
-        Scope scope = ITracer.get().enter("asSubject " + subject.getPrincipal(), "username", subject.getPrincipal() );
+        Scope scope =
+                ITracer.get()
+                        .enter(
+                                "asSubject " + subject.getPrincipal(),
+                                "username",
+                                subject.getPrincipal());
         Subject current = ThreadContext.getSubject();
         ThreadContext.bind(subject);
         return new SubjectEnvironment(subject, current, scope);
@@ -482,7 +487,7 @@ public class Aaa {
         ThreadContext.bind(subject);
         return new SubjectEnvironment(subject, current, null);
     }
-    
+
     /**
      * Run as subject or if subject is null use the dummy subject.
      *
@@ -496,7 +501,12 @@ public class Aaa {
             }
             subject = DUMMY_SUBJECT;
         }
-        Scope scope = ITracer.get().enter("asSubject " + subject.getPrincipal(), "username", subject.getPrincipal() );
+        Scope scope =
+                ITracer.get()
+                        .enter(
+                                "asSubject " + subject.getPrincipal(),
+                                "username",
+                                subject.getPrincipal());
         Subject current = ThreadContext.getSubject();
         ThreadContext.bind(subject);
         return new SubjectEnvironment(subject, current, scope);
@@ -824,7 +834,7 @@ public class Aaa {
      */
     public static Subject createSubjectWithoutCheck(String account) {
         try (Scope scope =
-                ITracer.get().enter("createSubjectWithoutCheck " + account, "username",account) ) {
+                ITracer.get().enter("createSubjectWithoutCheck " + account, "username", account)) {
             return properEnvironment(
                     () -> {
                         Subject subject = M.l(AccessApi.class).createSubject();

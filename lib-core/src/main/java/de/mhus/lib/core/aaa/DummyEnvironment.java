@@ -29,7 +29,11 @@ public class DummyEnvironment extends DefaultEnvironment {
                 (DefaultSecurityManager) new IniDataSecurityManagerFactory().getInstance();
         manager.setRealm(new DummyRealm());
         setSecurityManager(manager);
-        long globalSessionTimeout = MCast.tolong(MApi.get().getCfgString(Aaa.class, "globalSessionTimeout", null), 3600000); // 1h
-        ((DefaultSessionManager)manager.getSessionManager()).setGlobalSessionTimeout(globalSessionTimeout);
+        long globalSessionTimeout =
+                MCast.tolong(
+                        MApi.get().getCfgString(Aaa.class, "globalSessionTimeout", null),
+                        3600000); // 1h
+        ((DefaultSessionManager) manager.getSessionManager())
+                .setGlobalSessionTimeout(globalSessionTimeout);
     }
 }

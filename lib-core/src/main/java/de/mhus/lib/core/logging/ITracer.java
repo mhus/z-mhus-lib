@@ -151,15 +151,10 @@ public interface ITracer {
     default String getCurrentId() {
         TraceUberIdMap tracer = new TraceUberIdMap();
         try {
-                    tracer()
-                    .inject(
-                            current().context(),
-                            Format.Builtin.TEXT_MAP,
-                            tracer);
+            tracer().inject(current().context(), Format.Builtin.TEXT_MAP, tracer);
         } catch (Throwable t2) {
             MLogUtil.log().d(t2);
         }
         return tracer.getId();
     }
-
 }

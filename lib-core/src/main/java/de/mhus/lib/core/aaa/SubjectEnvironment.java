@@ -45,7 +45,8 @@ public class SubjectEnvironment implements Closeable {
         if (scope != null)
             try {
                 scope.close();
-            } catch (Throwable t) {}
+            } catch (Throwable t) {
+            }
         scope = null;
     }
 

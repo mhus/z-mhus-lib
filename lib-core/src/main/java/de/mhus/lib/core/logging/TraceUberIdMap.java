@@ -25,8 +25,7 @@ public class TraceUberIdMap implements TextMap {
 
     private String id;
 
-    public TraceUberIdMap() {
-    }
+    public TraceUberIdMap() {}
 
     @Override
     public Iterator<Entry<String, String>> iterator() {
@@ -35,8 +34,7 @@ public class TraceUberIdMap implements TextMap {
 
     @Override
     public void put(String key, String value) {
-        if (key.equals("uber-trace-id"))
-            id = value;
+        if (key.equals("uber-trace-id")) id = value;
     }
 
     public String getId() {
