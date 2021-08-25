@@ -84,7 +84,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     private ICache<String, SimpleRole> roleCacheApi;
 
     @SuppressWarnings("rawtypes")
-    private ICache<String, Map> dataCacheApi;
+    private ICache<String, HashMap> dataCacheApi;
 
     protected boolean useCache;
     protected long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
@@ -262,7 +262,7 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                             this,
                             getName() + ":data",
                             String.class,
-                            Map.class,
+                            HashMap.class,
                             new CacheConfig().setHeapSize(10000).setTTL(cacheTTL));
         } catch (Throwable t) {
             log.d(t);
