@@ -20,14 +20,18 @@ import java.io.Closeable;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 
+import io.opentracing.Scope;
+
 public class SubjectEnvironment implements Closeable {
 
     private Subject subject;
     private Subject predecessor;
+    private Scope scope;
 
-    public SubjectEnvironment(Subject subject, Subject predecessor) {
+    public SubjectEnvironment(Subject subject, Subject predecessor, Scope scope) {
         this.subject = subject;
         this.predecessor = predecessor;
+        this.scope = scope;
     }
 
     public Subject getSubject() {
@@ -38,6 +42,11 @@ public class SubjectEnvironment implements Closeable {
     public void close() {
         if (predecessor == null) ThreadContext.remove();
         else ThreadContext.bind(predecessor);
+        if (scope != null)
+            try {
+                scope.close();
+            } catch (Throwable t) {}
+        scope = null;
     }
 
     @Override

@@ -71,9 +71,11 @@ import de.mhus.lib.core.cfg.CfgBoolean;
 import de.mhus.lib.core.cfg.CfgInt;
 import de.mhus.lib.core.cfg.CfgLong;
 import de.mhus.lib.core.cfg.CfgString;
+import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.security.TrustApi;
 import de.mhus.lib.core.util.Value;
+import io.opentracing.Scope;
 
 public class Aaa {
 
@@ -469,9 +471,10 @@ public class Aaa {
     }
 
     public static SubjectEnvironment asSubject(Subject subject) {
+        Scope scope = ITracer.get().enter("asSubject " + subject.getPrincipal(), "username", subject.getPrincipal() );
         Subject current = ThreadContext.getSubject();
         ThreadContext.bind(subject);
-        return new SubjectEnvironment(subject, current);
+        return new SubjectEnvironment(subject, current, scope);
     }
 
     /**
@@ -487,9 +490,10 @@ public class Aaa {
             }
             subject = DUMMY_SUBJECT;
         }
+        Scope scope = ITracer.get().enter("asSubject " + subject.getPrincipal(), "username", subject.getPrincipal() );
         Subject current = ThreadContext.getSubject();
         ThreadContext.bind(subject);
-        return new SubjectEnvironment(subject, current);
+        return new SubjectEnvironment(subject, current, scope);
     }
 
     public static Collection<Realm> getRealms() {
@@ -813,14 +817,16 @@ public class Aaa {
      * @return A new Subject
      */
     public static Subject createSubjectWithoutCheck(String account) {
-
-        return properEnvironment(
-                () -> {
-                    Subject subject = M.l(AccessApi.class).createSubject();
-                    subject.login(new TrustedToken(account));
-                    return subject;
-                },
-                false);
+        try (Scope scope =
+                ITracer.get().enter("createSubjectWithoutCheck " + account, "username",account) ) {
+            return properEnvironment(
+                    () -> {
+                        Subject subject = M.l(AccessApi.class).createSubject();
+                        subject.login(new TrustedToken(account));
+                        return subject;
+                    },
+                    false);
+        }
     }
 
     public static boolean hasRole(String role) {
