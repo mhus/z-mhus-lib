@@ -138,6 +138,15 @@ public class OperationResult {
         if (result == null) return new MProperties();
         if (result instanceof IProperties) return (IProperties) result;
         if (result instanceof Map) return new MProperties((Map<?, ?>) result);
+
+        if (result instanceof String)
+            try {
+                INode ret = INode.readNodeFromString(String.valueOf(result));
+                if (ret != null)
+                    return ret;
+            } catch (Throwable t) {
+                throw new MRuntimeException(this, t);
+            }
         throw new UsageException("Can't cast result to map", result.getClass());
     }
 
@@ -166,6 +175,7 @@ public class OperationResult {
         this.returnCode = returnCode;
     }
 
+    @Deprecated
     public String getMsgCaption() {
         if (MString.isSet(msg) && msg.startsWith("m=")) {
             Map<String, String> msgParts = MUri.explode(msg);
@@ -174,6 +184,7 @@ public class OperationResult {
         return null;
     }
 
+    @Deprecated
     public String getMsgMessage() {
         if (MString.isSet(msg) && msg.startsWith("m=")) {
             Map<String, String> msgParts = MUri.explode(msg);
@@ -196,7 +207,6 @@ public class OperationResult {
     public INode getResultAsNode() {
         if (result == null) return new MNode();
         try {
-            if (result instanceof String) return INode.readNodeFromString((String) result);
             if (result instanceof INode) return (INode) result;
             if (result instanceof IProperties) {
                 MNode ret = new MNode();
@@ -207,10 +217,14 @@ public class OperationResult {
                 return INode.readFromProperties((Map<String, Object>) result);
 
             // fallback
-            return INode.readNodeFromString(String.valueOf(result));
+            INode ret = INode.readNodeFromString(String.valueOf(result));
+            if (ret != null)
+                return ret;
+
+            throw new UsageException("Can't cast result to node", result.getClass());
 
         } catch (Exception e) {
-            throw new MRuntimeException(this, e); // or empty node?
+            throw new MRuntimeException(this, e);
         }
     }
 
