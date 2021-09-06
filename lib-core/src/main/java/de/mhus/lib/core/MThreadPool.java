@@ -17,11 +17,13 @@ package de.mhus.lib.core;
 
 import java.util.function.Consumer;
 
+import org.apache.shiro.subject.Subject;
+
+import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.aaa.SubjectEnvironment;
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.MObject;
-import de.mhus.lib.core.util.ValueProvider;
-import de.mhus.lib.errors.TimeoutRuntimeException;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 
@@ -37,6 +39,8 @@ public class MThreadPool extends MObject implements Runnable {
     protected Runnable task = this;
     protected String name = "";
     protected ThreadContainer tc = null;
+
+    protected final Subject subject = Aaa.getSubject();
 
     public MThreadPool() {}
 
@@ -114,8 +118,21 @@ public class MThreadPool extends MObject implements Runnable {
         }
     }
 
+    private void taskBegin() {
+        setName(
+                name
+                        + '['
+                        + Thread.currentThread().getId()
+                        + "] "
+                        + getTask().getClass().getName());
+
+        Aaa.subjectCleanup();
+    }
+    
     private void taskFinish() {
+        setName(name + " sleeping");
         tc = null;
+        Aaa.subjectCleanup();
     }
 
     public boolean isAlive() {
@@ -126,11 +143,11 @@ public class MThreadPool extends MObject implements Runnable {
 
     protected static class ThreadContainer extends Thread {
 
-        private boolean running = true;
-        private MThreadPool task = null;
-        private String name;
-        private long sleepStart;
-        private Span span;
+        private volatile boolean running = true;
+        private volatile MThreadPool task = null;
+        private volatile String name;
+        private volatile long sleepStart;
+        private volatile Span span;
 
         public ThreadContainer(ThreadGroup group, String pName) {
             super(group, pName);
@@ -162,8 +179,8 @@ public class MThreadPool extends MObject implements Runnable {
 
         public boolean stopRunning() {
             synchronized (this) {
-                if (task != null) return false;
                 running = false;
+                if (task != null) return false;
                 notifyAll();
             }
             return true;
@@ -191,65 +208,38 @@ public class MThreadPool extends MObject implements Runnable {
                 }
 
                 MThreadPool currentTask = task;
-                if (task != null) {
+                if (currentTask != null) {
 
                     // run ....
-                    setName(
-                            name
-                                    + '['
-                                    + getId()
-                                    + "] "
-                                    + currentTask.getTask().getClass().getName());
-
-                    // set trail log if set
-                    try (Scope scope = ITracer.get().enter(span, name)) {
-                        try {
-                            log.t("Enter Thread Task");
-                            currentTask.getTask().run();
-                            log.t("Leave Thread Task");
-                        } catch (Throwable t) {
+                    currentTask.taskBegin();
+                    try (SubjectEnvironment env = Aaa.asSubjectWithoutTracing(currentTask.subject)) {
+                        // set trail log if set
+                        try (Scope scope = ITracer.get().enter(span, name)) {
                             try {
-                                log.i("Thread Task Error", getName(), t);
-                                currentTask.taskError(t);
-                            } catch (Throwable t2) {
-                                log.i("Thread Task Finish Error", getName(), t2);
+                                log.t("Enter Thread Task");
+                                currentTask.getTask().run();
+                                log.t("Leave Thread Task");
+                            } catch (Throwable t) {
+                                try {
+                                    log.i("Thread Task Error", getName(), t);
+                                    currentTask.taskError(t);
+                                } catch (Throwable t2) {
+                                    log.i("Thread Task Finish Error", getName(), t2);
+                                }
                             }
+                            log.t("###: LEAVE THREAD");
                         }
-                        log.t("###: LEAVE THREAD");
                     }
-                    setName(name + " sleeping");
+                    currentTask.taskFinish();
+                    currentTask = null;
                 }
-                if (currentTask != null) currentTask.taskFinish();
-                task = null; // don't need sync
+                task = null; // don't need a sync
             }
         }
     }
 
     public static void asynchron(Runnable task) {
         new MThreadPool(task).start();
-    }
-
-    /**
-     * Try every 200ms to get the value. If the provider throws an error or return null the try will
-     * be repeated. If the time out is reached a TimeoutRuntimeException will be thrown.
-     *
-     * @param provider
-     * @param timeout
-     * @param nullAllowed
-     * @return The requested value
-     */
-    public static <T> T getWithTimeout(
-            ValueProvider<T> provider, long timeout, boolean nullAllowed) {
-        long start = System.currentTimeMillis();
-        while (true) {
-            try {
-                T val = provider.getValue();
-                if (nullAllowed || val != null) return val;
-            } catch (Throwable t) {
-            }
-            if (System.currentTimeMillis() - start > timeout) throw new TimeoutRuntimeException();
-            sleep(200);
-        }
     }
 
     public static void run(Runnable task) {

@@ -17,7 +17,11 @@ package de.mhus.lib.core;
 
 import java.util.function.Consumer;
 
+import org.apache.shiro.subject.Subject;
+
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.core.aaa.Aaa;
+import de.mhus.lib.core.aaa.SubjectEnvironment;
 import de.mhus.lib.core.logging.ITracer;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.core.util.Checker;
@@ -97,36 +101,34 @@ public class MThread extends MObject implements Runnable {
 
     private class Container implements Runnable {
 
-        private long parentThreadId;
-        private Span span;
+        private final long parentThreadId = Thread.currentThread().getId();
+        private final Span span = ITracer.get().current();
+        private final Subject subject = Aaa.getSubject();
 
         public Container() {
-            try {
-                parentThreadId = Thread.currentThread().getId();
-                span = ITracer.get().current();
-                ;
-            } catch (Throwable t) {
-            }
         }
 
         @Override
         public void run() {
-            try (Scope scope =
-                    ITracer.get()
-                            .enter(
-                                    span,
-                                    "Thread: " + name,
-                                    "thread",
-                                    "" + thread.getId(),
-                                    "parent",
-                                    "" + parentThreadId)) {
-                log().t("###: NEW THREAD", parentThreadId, thread.getId());
-                try {
-                    if (task != null) task.run();
-                } catch (Throwable t) {
-                    taskError(t);
+            Aaa.subjectCleanup(); // paranoia
+            try (SubjectEnvironment env = Aaa.asSubjectWithoutTracing(subject)) {
+                try (Scope scope =
+                        ITracer.get()
+                                .enter(
+                                        span,
+                                        "Thread: " + name,
+                                        "thread",
+                                        "" + thread.getId(),
+                                        "parent",
+                                        "" + parentThreadId)) {
+                    log().t("###: NEW THREAD", parentThreadId, thread.getId());
+                    try {
+                        if (task != null) task.run();
+                    } catch (Throwable t) {
+                        taskError(t);
+                    }
+                    log.t("###: LEAVE THREAD", thread.getId());
                 }
-                log.t("###: LEAVE THREAD", thread.getId());
             }
         }
     }

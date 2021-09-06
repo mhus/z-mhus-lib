@@ -449,7 +449,7 @@ public class Aaa {
 
     public static String toString(Subject subject) {
         if (subject == null) return "[null]";
-        if (!subject.isAuthenticated()) return "[" + USER_GUEST.value() + "]";
+        if (!subject.isAuthenticated()) return USER_GUEST.value();
         Object p = subject.getPrincipal();
         if (p == null) return "[?]";
         return String.valueOf(p);
