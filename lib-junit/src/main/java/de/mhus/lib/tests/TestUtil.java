@@ -31,7 +31,11 @@ import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MXml;
+import de.mhus.lib.core.cfg.CfgProvider;
+import de.mhus.lib.core.cfg.NodeCfgProvider;
 import de.mhus.lib.core.logging.Log;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.util.MUri;
 
 public class TestUtil {
@@ -127,5 +131,61 @@ public class TestUtil {
                         + (clazz == null || clazz.isEmpty() ? "?" : clazz.get().getCanonicalName())
                         + "::"
                         + (method == null || method.isEmpty() ? "?" : method.get().getName()));
+    }
+
+    /**
+     * Remove all CFG providers and restart config manager to be clean
+     */
+    public static void clearCfg() {
+        for (CfgProvider p :  MApi.get().getCfgManager().getProviders().toArray(new CfgProvider[0])) {
+            MApi.get().getCfgManager().unregisterCfgProvider(p.getName());
+        }
+        MApi.get().getCfgManager().doRestart();
+    }
+    
+    public static void setCfg(Class<?> owner, String parameter, String value) {
+        setCfg(owner.getCanonicalName(), parameter, value);
+    }
+
+    public static void setCfg(String owner, String parameter, String value) {
+        CfgProvider provider = null;
+        for (CfgProvider p : MApi.get().getCfgManager().getProviders()) {
+            if (p.getName().equals(owner))
+                provider = p;
+        }
+        if (provider == null) {
+            provider = new TestCfgProvider(owner, new MNode());
+            MApi.get().getCfgManager().registerCfgProvider(provider);
+        }
+        if (!(provider instanceof TestCfgProvider)) {
+            MApi.get().getCfgManager().unregisterCfgProvider(provider.getName());
+            provider = new TestCfgProvider(owner, provider.getConfig());
+            MApi.get().getCfgManager().registerCfgProvider(provider);
+        }
+        MNode c = (MNode)((TestCfgProvider)provider).getConfig();
+        c.setString(parameter, value);
+        
+        MApi.get().getCfgManager().doRestart();
+    }
+    
+    private static class TestCfgProvider extends NodeCfgProvider {
+
+        public TestCfgProvider(String name, INode config) {
+            super(name);
+            this.config = config;
+        }
+
+        @Override
+        public void doRestart() {
+        }
+
+        @Override
+        public void doStart() {
+        }
+
+        @Override
+        public void doStop() {
+        }
+
     }
 }

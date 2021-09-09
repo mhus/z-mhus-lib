@@ -20,17 +20,15 @@ import java.io.File;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.io.FileWatch;
-import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.INodeFactory;
 import de.mhus.lib.errors.MException;
 
-public class PropertiesCfgFileWatch extends CfgProvider {
+public class FileWatchCfgProvider extends NodeCfgProvider {
 
     private FileWatch fileWatch;
     private File file;
-    private INode config;
 
-    public PropertiesCfgFileWatch(String name, File file) {
+    public FileWatchCfgProvider(String name, File file) {
         super(name);
         setFile(file);
     }
@@ -74,11 +72,6 @@ public class PropertiesCfgFileWatch extends CfgProvider {
             fileWatch.doStop();
             fileWatch = null;
         }
-    }
-
-    @Override
-    public INode getConfig() {
-        return config;
     }
 
     public File getFile() {
