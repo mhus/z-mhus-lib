@@ -104,6 +104,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
         if (forced || isExecutionTimeReached()) {
 
+            Aaa.subjectCleanup();
             try (SubjectEnvironment access = Aaa.asSubject(username)) {
                 SpanContext ctx = null;
                 Scope scope = null;

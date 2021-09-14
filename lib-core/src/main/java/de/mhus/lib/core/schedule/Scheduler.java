@@ -127,7 +127,7 @@ public class Scheduler extends MLog implements Named {
 
     protected void doExecuteJobInternal(SchedulerJob job, boolean forced) {
         if (!job.setBusy(this)) {
-            log().w("job is busy, reshedule", job.getName());
+            log().w("job is busy, reschedule", job.getName());
             boolean isRunning = false;
             synchronized (running) {
                 isRunning = running.contains(job);
