@@ -125,4 +125,11 @@ public class DefaultTracer extends MLog implements ITracer {
             return null;
         }
     }
+
+    @Override
+    public void reset() {
+        Tracer tracer = GlobalTracer.get();
+        if (tracer instanceof TracerProxy)
+            ((TracerProxy)tracer).reset();
+    }
 }

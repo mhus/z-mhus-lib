@@ -157,4 +157,7 @@ public interface ITracer {
         }
         return tracer.getId();
     }
+
+    void reset();
+
 }
