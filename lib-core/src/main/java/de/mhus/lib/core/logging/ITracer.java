@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.core.logging;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,15 +25,12 @@ import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MProperties;
 import io.opentracing.Scope;
-import io.opentracing.ScopeManager;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
-import io.opentracing.util.ThreadLocalScope;
-import io.opentracing.util.ThreadLocalScopeManager;
 
 @DefaultImplementation(DefaultTracer.class)
 public interface ITracer {
@@ -143,32 +139,7 @@ public interface ITracer {
         return parentSpanCtx;
     }
 
-    default void cleanup() {
-        try {
-//            Tracer tracer = ITracer.get().tracer();
-//            while (tracer.scopeManager().activeSpan() != null)
-//                tracer.scopeManager().activeSpan().finish();
-            // hack-o-mania
-            ScopeManager manager = tracer().scopeManager();
-            if (manager instanceof ThreadLocalScopeManager) {
-                Field field = ThreadLocalScopeManager.class.getField("tlsScope");
-                if (!field.canAccess(manager))
-                    field.setAccessible(true);
-                @SuppressWarnings("unchecked")
-                ThreadLocal<ThreadLocalScope> tlsScope = (ThreadLocal<ThreadLocalScope>)field.get(manager);
-                ThreadLocalScope current = tlsScope.get();
-                if (current != null) {
-                    current.close();
-                    tlsScope.remove();
-                }
-            } else {
-                Span cur = current();
-                if (cur != null) cur.finish();
-            }
-        } catch (Throwable t) {
-            MApi.dirtyLogDebug(t);
-        }
-    }
+    void cleanup();
 
     default String getCurrentId() {
         TraceUberIdMap tracer = new TraceUberIdMap();
