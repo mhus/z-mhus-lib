@@ -1,6 +1,7 @@
 package de.mhus.lib.core.logging;
 
 import de.mhus.lib.core.MLog;
+import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
@@ -46,4 +47,14 @@ public abstract class TracerProxy extends MLog implements Tracer {
         return instance.extract(format, carrier);
     }
     
+    @Override
+    public Scope activateSpan(Span span) {
+        return instance.activateSpan(span);
+    }
+
+    @Override
+    public void close() {
+        instance.close();
+    }
+
 }

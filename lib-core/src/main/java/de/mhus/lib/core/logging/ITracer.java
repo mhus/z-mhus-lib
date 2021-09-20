@@ -141,8 +141,11 @@ public interface ITracer {
 
     default void cleanup() {
         try {
-            Span cur = current();
-            if (cur != null) cur.finish();
+            Tracer tracer = ITracer.get().tracer();
+            while (tracer.scopeManager().activeSpan() != null)
+                tracer.scopeManager().activeSpan().finish();
+//            Span cur = current();
+//            if (cur != null) cur.finish();
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
         }

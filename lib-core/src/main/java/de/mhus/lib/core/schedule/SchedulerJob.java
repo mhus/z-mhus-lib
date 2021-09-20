@@ -37,6 +37,7 @@ import de.mhus.lib.core.operation.TaskContext;
 import de.mhus.lib.core.util.MNls;
 import io.opentracing.References;
 import io.opentracing.Scope;
+import io.opentracing.Span;
 import io.opentracing.SpanContext;
 
 public abstract class SchedulerJob extends MTimerTask implements Operation {
@@ -110,14 +111,15 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                 Scope scope = null;
                 if (getLogTrailConfig() != null) ctx = ITracer.deserialize(getLogTrailConfig());
                 if (ctx == null)
-                    scope = ITracer.get().tracer().buildSpan(getName()).startActive(true);
-                else
-                    scope =
-                            ITracer.get()
-                                    .tracer()
-                                    .buildSpan(getName())
-                                    .addReference(References.FOLLOWS_FROM, ctx)
-                                    .startActive(true);
+                    scope = ITracer.get().enter(getName());
+                else {
+                    Span span = ITracer.get()
+                            .tracer()
+                            .buildSpan(getName())
+                            .addReference(References.FOLLOWS_FROM, ctx)
+                            .start();
+                    scope = ITracer.get().tracer().scopeManager().activate(span);
+                }
                 try (Scope scopeFinal = scope) {
                     boolean doIt = true;
                     if (intercepter != null) {

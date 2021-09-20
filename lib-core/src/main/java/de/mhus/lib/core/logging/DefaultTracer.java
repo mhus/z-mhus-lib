@@ -34,8 +34,10 @@ public class DefaultTracer extends MLog implements ITracer {
     @Override
     public Scope start(String spanName, String activation, Object... tagPairs) {
         try {
-            SpanBuilder span = createSpan(null, spanName, tagPairs);
-            Scope scope = span.ignoreActiveSpan().startActive(true);
+            SpanBuilder builder = createSpan(null, spanName, tagPairs);
+            builder.ignoreActiveSpan();
+            Span span = builder.start();
+            Scope scope = tracer().scopeManager().activate(span);
             activate(activation);
             return scope;
         } catch (Throwable t) {
@@ -80,8 +82,9 @@ public class DefaultTracer extends MLog implements ITracer {
     @Override
     public Scope enter(Span parent, String spanName, Object... tagPairs) {
         try {
-            SpanBuilder span = createSpan(parent, spanName, tagPairs);
-            Scope scope = span.startActive(true);
+            SpanBuilder builder = createSpan(parent, spanName, tagPairs);
+            Span span = builder.start();
+            Scope scope = tracer().scopeManager().activate(span);
             return scope;
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
