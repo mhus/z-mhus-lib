@@ -1,6 +1,7 @@
 package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -16,6 +17,7 @@ import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.aaa.AccessApi;
 import de.mhus.lib.core.aaa.DefaultAccessApi;
 import de.mhus.lib.core.util.MDirtyTricks;
+import de.mhus.lib.core.util.Value;
 import de.mhus.lib.tests.TestCase;
 
 public class ShiroMThreadTest extends TestCase {
@@ -36,18 +38,21 @@ public class ShiroMThreadTest extends TestCase {
         // init shiro and get subject
         System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
 
+        Value<Boolean> done = new Value<>(false);
         MThread.asynchron(new Runnable() {
             @Override
             public void run() {
                 System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
                 asyncSybject = Aaa.getSubject();
+                done.value = true;
             }
         });
 
-        while (asyncSybject == null)
+        while (!done.value)
             MThread.sleep(200);
         
         System.out.println("3 Subject: " + Aaa.toString(asyncSybject));
+        assertNotNull(asyncSybject);
         assertEquals("lonestarr", Aaa.toString(asyncSybject));
         
         Aaa.getSubject().logout();
@@ -66,25 +71,27 @@ public class ShiroMThreadTest extends TestCase {
 
         // init shiro and get subject
         System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
-
+        Value<Boolean> done = new Value<>(false);
         MThreadPool.asynchron(new Runnable() {
             @Override
             public void run() {
                 System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
                 asyncSybject = Aaa.getSubject();
+                done.value = true;
             }
         });
 
-        while (asyncSybject == null)
+        while (!done.value)
             MThread.sleep(200);
-        
+
         System.out.println("3 Subject: " + Aaa.toString(asyncSybject));
+        assertNotNull(asyncSybject);
         assertEquals("lonestarr", Aaa.toString(asyncSybject));
-        
+
         Aaa.getSubject().logout();
         Aaa.subjectCleanup();
         asyncSybject = null;
-        
+
         MThreadPool.asynchron(new Runnable() {
             @Override
             public void run() {
