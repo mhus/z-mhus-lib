@@ -36,6 +36,9 @@ import io.opentracing.util.ThreadLocalScopeManager;
 
 public class DefaultTracer extends MLog implements ITracer {
 
+    private TracerFactory tracerFactory;
+    private Field tlsScopeField;
+
     @Override
     public Scope start(String spanName, String activation, Object... tagPairs) {
         try {
@@ -44,7 +47,7 @@ public class DefaultTracer extends MLog implements ITracer {
             Span span = builder.start();
             Scope scope = tracer().scopeManager().activate(span);
             activate(activation);
-            return scope;
+            return new ScopeEnv(scope,span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
             return null;
@@ -90,7 +93,7 @@ public class DefaultTracer extends MLog implements ITracer {
             SpanBuilder builder = createSpan(parent, spanName, tagPairs);
             Span span = builder.start();
             Scope scope = tracer().scopeManager().activate(span);
-            return scope;
+            return new ScopeEnv(scope,span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
             return null;
@@ -134,11 +137,34 @@ public class DefaultTracer extends MLog implements ITracer {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void reset() {
-        Tracer tracer = GlobalTracer.get();
-        if (tracer instanceof TracerProxy)
-            ((TracerProxy)tracer).reset();
+
+        Tracer tracer = tracerFactory.create();
+        
+        try {
+            Field field = GlobalTracer.class.getDeclaredField("tracer");
+            if (!field.isAccessible())
+                field.setAccessible(true);
+            field.set(null, tracer);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+    }
+    
+    @SuppressWarnings("deprecation")
+    public Tracer getEncapsulatedTracer() {
+        try {
+            Field field = GlobalTracer.class.getDeclaredField("tracer");
+            if (!field.isAccessible())
+                field.setAccessible(true);
+            return (Tracer) field.get(null);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        return null;
     }
     
     @Override
@@ -150,11 +176,13 @@ public class DefaultTracer extends MLog implements ITracer {
             // hack-o-mania
             ScopeManager manager = tracer().scopeManager();
             if (manager instanceof ThreadLocalScopeManager) {
-                Field field = ThreadLocalScopeManager.class.getField("tlsScope");
-                if (!field.canAccess(manager))
-                    field.setAccessible(true);
+                if (tlsScopeField == null || tlsScopeField.getDeclaringClass() != ThreadLocalScopeManager.class) {
+                    tlsScopeField = ThreadLocalScopeManager.class.getDeclaredField("tlsScope");
+                    if (!tlsScopeField.canAccess(manager))
+                        tlsScopeField.setAccessible(true);
+                }
                 @SuppressWarnings("unchecked")
-                ThreadLocal<ThreadLocalScope> tlsScope = (ThreadLocal<ThreadLocalScope>)field.get(manager);
+                ThreadLocal<ThreadLocalScope> tlsScope = (ThreadLocal<ThreadLocalScope>)tlsScopeField.get(manager);
                 ThreadLocalScope current = tlsScope.get();
                 if (current != null) {
                     current.close();
@@ -169,4 +197,17 @@ public class DefaultTracer extends MLog implements ITracer {
         }
     }
 
+    public TracerFactory getTracerFactory() {
+        return tracerFactory;
+    }
+
+    public void setTracerFactory(TracerFactory tracerFactory) {
+        this.tracerFactory = tracerFactory;
+    }
+
+    @Override
+    public Scope activate(Span span) {
+        Scope scope = tracer().activateSpan(span);
+        return new ScopeEnv(scope, span);
+    }
 }

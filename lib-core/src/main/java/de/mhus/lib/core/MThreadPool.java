@@ -126,13 +126,13 @@ public class MThreadPool extends MObject implements Runnable {
                         + "] "
                         + getTask().getClass().getName());
 
-        Aaa.subjectCleanup();
+        MThread.cleanup();
     }
     
     private void taskFinish() {
         setName(name + " sleeping");
         tc = null;
-        Aaa.subjectCleanup();
+        MThread.cleanup();
     }
 
     public boolean isAlive() {

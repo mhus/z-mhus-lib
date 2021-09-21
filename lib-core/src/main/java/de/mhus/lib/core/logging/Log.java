@@ -50,8 +50,9 @@ public class Log {
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
     private List<String> maxMsgSizeExceptions;
-    private ITracer tracer;
-    private boolean tracerInError = false;
+    private volatile ITracer tracer;
+    private volatile boolean tracerInError = false;
+    private volatile boolean tracerStartup;
     //    protected UUID id = UUID.randomUUID();
     private static int maxMsgSize = 0;
     private static boolean verbose = false;
@@ -179,6 +180,11 @@ public class Log {
     }
 
     private ITracer getITracer() {
+        if (tracer == null) {
+            if (tracerStartup)
+                return null;
+            tracerStartup = true;
+        }
         if (!tracerInError) {
             try {
                 tracer = ITracer.get();
@@ -208,6 +214,7 @@ public class Log {
                                 + name);
             }
         }
+        tracerStartup = false;
         return tracer;
     }
 

@@ -110,7 +110,7 @@ public class MThread extends MObject implements Runnable {
 
         @Override
         public void run() {
-            Aaa.subjectCleanup(); // paranoia
+            cleanup();
             try (SubjectEnvironment env = Aaa.asSubjectWithoutTracing(subject)) {
                 try (Scope scope =
                         ITracer.get()
@@ -420,5 +420,10 @@ public class MThread extends MObject implements Runnable {
                             }
                         })
                 .start();
+    }
+
+    public static void cleanup() {
+        Aaa.subjectCleanup();
+        ITracer.get().cleanup();
     }
 }

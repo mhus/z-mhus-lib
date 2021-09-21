@@ -23,6 +23,7 @@ import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
+import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimerTask;
 import de.mhus.lib.core.aaa.Aaa;
 import de.mhus.lib.core.aaa.SubjectEnvironment;
@@ -105,7 +106,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
         if (forced || isExecutionTimeReached()) {
 
-            Aaa.subjectCleanup();
+            MThread.cleanup();
             try (SubjectEnvironment access = Aaa.asSubject(username)) {
                 SpanContext ctx = null;
                 Scope scope = null;
@@ -118,7 +119,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                             .buildSpan(getName())
                             .addReference(References.FOLLOWS_FROM, ctx)
                             .start();
-                    scope = ITracer.get().tracer().scopeManager().activate(span);
+                    scope = ITracer.get().activate(span);
                 }
                 try (Scope scopeFinal = scope) {
                     boolean doIt = true;
