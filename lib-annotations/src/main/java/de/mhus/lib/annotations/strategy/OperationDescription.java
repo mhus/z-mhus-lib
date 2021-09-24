@@ -19,7 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OperationService {
+public @interface OperationDescription {
 
     /**
      * Display title of the operation. Default is the simple name of the current class.
