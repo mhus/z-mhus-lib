@@ -36,7 +36,7 @@ public class Version implements Comparable<Version>, Externalizable {
     private VersionRange range;
 
     public Version(String in) {
-        if (in == null) in = Versioned.DEFAULT_VERSION;
+        if (MString.isEmpty(in)) in = Versioned.DEFAULT_VERSION;
 
         this.original = in;
         // parse in
