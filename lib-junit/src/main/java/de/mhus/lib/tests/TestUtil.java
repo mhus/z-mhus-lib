@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.jupiter.api.TestInfo;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -40,12 +41,33 @@ import de.mhus.lib.core.util.MUri;
 
 public class TestUtil {
 
-    // not working
     public static void configureApacheCommonLogging(String logger, Level level) {
-        System.setProperty(
-                "org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+        
+        try {
+            System.setProperty(
+                    "org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+            System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
 
+            String l = javaToApacheLogLevel(level);
+            if (logger == null) {
+                System.setProperty("org.apache.commons.logging", l);
+                System.out.println("Logging set default: " + l);
+                Logger root = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+                root.setLevel(Level.INFO);
+                return;
+            }
+            System.setProperty("org.apache.commons.logging." + logger, l);
+
+            System.out.println("Logging set: " + logger + "=" + l);
+            final org.slf4j.Logger logger2 = LoggerFactory.getLogger(logger);
+            final ch.qos.logback.classic.Logger logger3 = (ch.qos.logback.classic.Logger) logger2;
+            logger3.setLevel(ch.qos.logback.classic.Level.toLevel(l));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+    
+    private static String javaToApacheLogLevel(Level level) {
         String l = "FATAL";
         switch (level.getName()) {
             case "INFO":
@@ -64,8 +86,7 @@ public class TestUtil {
                 l = "WARN";
                 break;
         }
-        if (logger == null) System.setProperty("org.apache.commons.logging", l);
-        else System.setProperty("org.apache.commons.logging." + logger, l);
+        return l;
     }
 
     public static void configureJavaLogger(String name, Level level) {

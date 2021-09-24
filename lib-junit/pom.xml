@@ -67,7 +67,14 @@
             <version>${hamcrest.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+        <!-- to set apache logging log level -->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>${logback.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+		
         <!-- for docker remote control -->
 		<dependency>
 		    <groupId>com.github.docker-java</groupId>
