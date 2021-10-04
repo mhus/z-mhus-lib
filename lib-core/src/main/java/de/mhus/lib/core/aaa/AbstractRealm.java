@@ -82,7 +82,7 @@ public abstract class AbstractRealm extends AuthorizingRealm implements BearerRe
         } else if (token instanceof TrustedToken) {
             username = (String) ((TrustedToken) token).getPrincipal();
 
-            if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
+            if (username.equals(Aaa.USER_GUEST.value())) return Aaa.ACCOUNT_GUEST;
             // check permissions to use trusted token
 
             boolean access = ((TrustedToken) token).hasAccess(debugPermissions);

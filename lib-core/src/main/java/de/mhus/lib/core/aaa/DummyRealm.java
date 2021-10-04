@@ -38,8 +38,8 @@ public class DummyRealm extends AbstractRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(
             String username, AuthenticationToken token) {
-        if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
-        if (username.equals(Aaa.USER_ADMIN.value())) return Aaa.ADMIN;
+        if (username.equals(Aaa.USER_GUEST.value())) return Aaa.ACCOUNT_GUEST;
+        if (username.equals(Aaa.USER_ADMIN.value())) return Aaa.ACCOUNT_ADMIN;
         return null;
     }
 

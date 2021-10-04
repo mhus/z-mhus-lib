@@ -141,8 +141,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
 
     protected SimpleAccount getUser(String username) {
 
-        if (Aaa.USER_ADMIN.value().equals(username)) return Aaa.ADMIN;
-        if (Aaa.USER_GUEST.value().equals(username)) return Aaa.GUEST;
+        if (Aaa.USER_ADMIN.value().equals(username)) return Aaa.ACCOUNT_ADMIN;
+        if (Aaa.USER_GUEST.value().equals(username)) return Aaa.ACCOUNT_GUEST;
 
         if (useCache) {
             initCache();

@@ -87,7 +87,7 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
         } else if (token instanceof TrustedToken) {
             username = (String) ((TrustedToken) token).getPrincipal();
 
-            if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
+            if (username.equals(Aaa.USER_GUEST.value())) return Aaa.ACCOUNT_GUEST;
             // check permissions to use trusted token
 
             boolean access = ((TrustedToken) token).hasAccess(debugPermissions);
@@ -234,9 +234,9 @@ public class IniDataRealm extends IniRealm implements PrincipalDataRealm, Bearer
                 AuthorizationInfo info = super.getAuthorizationInfo(principals);
                 if (info != null) return info;
             }
-            return Aaa.ADMIN;
+            return Aaa.ACCOUNT_ADMIN;
         }
-        if (username.equals(Aaa.USER_GUEST.value())) return Aaa.GUEST;
+        if (username.equals(Aaa.USER_GUEST.value())) return Aaa.ACCOUNT_GUEST;
 
         return super.getAuthorizationInfo(principals);
     }

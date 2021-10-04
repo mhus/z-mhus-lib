@@ -79,6 +79,14 @@ import io.opentracing.Scope;
 
 public class Aaa {
 
+    // default rights
+    public static final String READ = "read";
+    public static final String CREATE = "create";
+    public static final String UPDATE = "update";
+    public static final String DELETE = "delete";
+    public static final String VIEW = "view";
+    public static final String ADMIN = "admin";
+
     public static final CfgString USER_ADMIN = new CfgString(AccessApi.class, "adminUser", "admin");
     public static final CfgString USER_GUEST = new CfgString(AccessApi.class, "guestUser", "guest");
 
@@ -118,9 +126,9 @@ public class Aaa {
                             Public.class.getCanonicalName(), new PublicAnnotationHandler()));
     private static ICache<String, Boolean> accessCacheApi;
 
-    public static final SimpleAccount ADMIN =
+    public static final SimpleAccount ACCOUNT_ADMIN =
             new SimpleAccount(USER_ADMIN.value(), UUID.randomUUID().toString(), "");
-    public static final SimpleAccount GUEST =
+    public static final SimpleAccount ACCOUNT_GUEST =
             new SimpleAccount(USER_GUEST.value(), UUID.randomUUID().toString(), "");
 
     private static final CfgString PERMS_GUEST_INT =
@@ -146,7 +154,7 @@ public class Aaa {
                                     HashSet<String> roles = new HashSet<>();
                                     for (String r : v.split(";"))
                                         if (MString.isSetTrim(r)) roles.add(r.trim());
-                                    GUEST.setRoles(roles);
+                                    ACCOUNT_GUEST.setRoles(roles);
                                 }
                             });
 
@@ -159,7 +167,7 @@ public class Aaa {
                                     roles.add(Aaa.ROLE_ADMIN.value());
                                     for (String r : v.split(";"))
                                         if (MString.isSetTrim(r)) roles.add(r.trim());
-                                    ADMIN.setRoles(roles);
+                                    ACCOUNT_ADMIN.setRoles(roles);
                                 }
                             });
 
@@ -171,7 +179,7 @@ public class Aaa {
     private static boolean doInitGuestSubject;
 
     static {
-        ADMIN.addStringPermission("*");
+        ACCOUNT_ADMIN.addStringPermission("*");
         ROLES_ADMIN.doUpdateAction();
 
         PERMS_GUEST.doUpdateAction();
@@ -194,7 +202,7 @@ public class Aaa {
                     if (MString.isSetTrim(r)) perms.add(new WildcardPermission(r.trim()));
             }
         }
-        GUEST.setObjectPermissions(perms);
+        ACCOUNT_GUEST.setObjectPermissions(perms);
         GUEST_SUBJECT = null;
     }
 
