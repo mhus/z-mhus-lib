@@ -47,7 +47,7 @@ public class DefaultTracer extends MLog implements ITracer {
             Span span = builder.start();
             Scope scope = tracer().scopeManager().activate(span);
             activate(activation);
-            return new ScopeEnv(scope,span);
+            return new ScopeEnv(scope, span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
             return null;
@@ -93,7 +93,7 @@ public class DefaultTracer extends MLog implements ITracer {
             SpanBuilder builder = createSpan(parent, spanName, tagPairs);
             Span span = builder.start();
             Scope scope = tracer().scopeManager().activate(span);
-            return new ScopeEnv(scope,span);
+            return new ScopeEnv(scope, span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
             return null;
@@ -142,47 +142,45 @@ public class DefaultTracer extends MLog implements ITracer {
     public void reset() {
 
         Tracer tracer = tracerFactory.create();
-        
+
         try {
             Field field = GlobalTracer.class.getDeclaredField("tracer");
-            if (!field.isAccessible())
-                field.setAccessible(true);
+            if (!field.isAccessible()) field.setAccessible(true);
             field.set(null, tracer);
         } catch (Throwable t) {
             t.printStackTrace();
         }
-
     }
-    
+
     @SuppressWarnings("deprecation")
     public Tracer getEncapsulatedTracer() {
         try {
             Field field = GlobalTracer.class.getDeclaredField("tracer");
-            if (!field.isAccessible())
-                field.setAccessible(true);
+            if (!field.isAccessible()) field.setAccessible(true);
             return (Tracer) field.get(null);
         } catch (Throwable t) {
             t.printStackTrace();
         }
         return null;
     }
-    
+
     @Override
     public void cleanup() {
         try {
-//            Tracer tracer = ITracer.get().tracer();
-//            while (tracer.scopeManager().activeSpan() != null)
-//                tracer.scopeManager().activeSpan().finish();
+            //            Tracer tracer = ITracer.get().tracer();
+            //            while (tracer.scopeManager().activeSpan() != null)
+            //                tracer.scopeManager().activeSpan().finish();
             // hack-o-mania
             ScopeManager manager = tracer().scopeManager();
             if (manager instanceof ThreadLocalScopeManager) {
-                if (tlsScopeField == null || tlsScopeField.getDeclaringClass() != ThreadLocalScopeManager.class) {
+                if (tlsScopeField == null
+                        || tlsScopeField.getDeclaringClass() != ThreadLocalScopeManager.class) {
                     tlsScopeField = ThreadLocalScopeManager.class.getDeclaredField("tlsScope");
-                    if (!tlsScopeField.canAccess(manager))
-                        tlsScopeField.setAccessible(true);
+                    if (!tlsScopeField.canAccess(manager)) tlsScopeField.setAccessible(true);
                 }
                 @SuppressWarnings("unchecked")
-                ThreadLocal<ThreadLocalScope> tlsScope = (ThreadLocal<ThreadLocalScope>)tlsScopeField.get(manager);
+                ThreadLocal<ThreadLocalScope> tlsScope =
+                        (ThreadLocal<ThreadLocalScope>) tlsScopeField.get(manager);
                 ThreadLocalScope current = tlsScope.get();
                 if (current != null) {
                     current.close();

@@ -138,47 +138,25 @@ public class JsonNodeBuilder extends INodeBuilder {
             else {
                 Object o = itemC.get(key);
                 if (o instanceof String) {
-                    objectJ.put(key, (String)o);
-                } else
-                if (o instanceof Boolean)
-                    objectJ.put(key, (Boolean)o);
-                else
-                if (o instanceof Integer)
-                    objectJ.put(key, (Integer)o);
-                else
-                if (o instanceof Long)
-                    objectJ.put(key, (Long)o);
-                else
-                if (o instanceof Double)
-                    objectJ.put(key, (Double)o);
-                else
-                if (o instanceof Float)
-                    objectJ.put(key, (Float)o);
-                else
-                if (o instanceof Short)
-                    objectJ.put(key, (Short)o);
-                else
-                if (o instanceof BigInteger)
-                    objectJ.put(key, (BigInteger)o);
-                else
-                if (o instanceof BigDecimal)
-                    objectJ.put(key, (BigDecimal)o);
-                else
-                if (o instanceof byte[])
-                    objectJ.put(key, (byte[])o);
-                else
-                if (o instanceof Date) {
-                    objectJ.put(key, ((Date)o).getTime());
-                    objectJ.put("_"+key, MDate.toIso8601((Date)o));
-                } else
-                if (o instanceof Enum) {
-                    objectJ.put(key, ((Enum<?>)o).ordinal());
-                    objectJ.put("_"+key, ((Enum<?>)o).name() );
-                } else
-                if (o instanceof NullValue) {
+                    objectJ.put(key, (String) o);
+                } else if (o instanceof Boolean) objectJ.put(key, (Boolean) o);
+                else if (o instanceof Integer) objectJ.put(key, (Integer) o);
+                else if (o instanceof Long) objectJ.put(key, (Long) o);
+                else if (o instanceof Double) objectJ.put(key, (Double) o);
+                else if (o instanceof Float) objectJ.put(key, (Float) o);
+                else if (o instanceof Short) objectJ.put(key, (Short) o);
+                else if (o instanceof BigInteger) objectJ.put(key, (BigInteger) o);
+                else if (o instanceof BigDecimal) objectJ.put(key, (BigDecimal) o);
+                else if (o instanceof byte[]) objectJ.put(key, (byte[]) o);
+                else if (o instanceof Date) {
+                    objectJ.put(key, ((Date) o).getTime());
+                    objectJ.put("_" + key, MDate.toIso8601((Date) o));
+                } else if (o instanceof Enum) {
+                    objectJ.put(key, ((Enum<?>) o).ordinal());
+                    objectJ.put("_" + key, ((Enum<?>) o).name());
+                } else if (o instanceof NullValue) {
                     objectJ.putNull(key);
-                } else
-                    objectJ.put(key, itemC.getString(key, null));
+                } else objectJ.put(key, itemC.getString(key, null));
             }
         }
     }

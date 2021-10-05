@@ -105,8 +105,7 @@ public class MThread extends MObject implements Runnable {
         private final Span span = ITracer.get().current();
         private final Subject subject = Aaa.getSubject();
 
-        public Container() {
-        }
+        public Container() {}
 
         @Override
         public void run() {

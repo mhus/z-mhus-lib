@@ -42,7 +42,7 @@ import de.mhus.lib.core.util.MUri;
 public class TestUtil {
 
     public static void configureApacheCommonLogging(String logger, Level level) {
-        
+
         try {
             System.setProperty(
                     "org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
@@ -52,7 +52,7 @@ public class TestUtil {
             if (logger == null) {
                 System.setProperty("org.apache.commons.logging", l);
                 System.out.println("Logging set default: " + l);
-                Logger root = (Logger)LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+                Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
                 root.setLevel(Level.INFO);
                 return;
             }
@@ -66,7 +66,7 @@ public class TestUtil {
             t.printStackTrace();
         }
     }
-    
+
     private static String javaToApacheLogLevel(Level level) {
         String l = "FATAL";
         switch (level.getName()) {
@@ -154,16 +154,15 @@ public class TestUtil {
                         + (method == null || method.isEmpty() ? "?" : method.get().getName()));
     }
 
-    /**
-     * Remove all CFG providers and restart config manager to be clean
-     */
+    /** Remove all CFG providers and restart config manager to be clean */
     public static void clearCfg() {
-        for (CfgProvider p :  MApi.get().getCfgManager().getProviders().toArray(new CfgProvider[0])) {
+        for (CfgProvider p :
+                MApi.get().getCfgManager().getProviders().toArray(new CfgProvider[0])) {
             MApi.get().getCfgManager().unregisterCfgProvider(p.getName());
         }
         MApi.get().getCfgManager().doRestart();
     }
-    
+
     public static void setCfg(Class<?> owner, String parameter, String value) {
         setCfg(owner.getCanonicalName(), parameter, value);
     }
@@ -171,8 +170,7 @@ public class TestUtil {
     public static void setCfg(String owner, String parameter, String value) {
         CfgProvider provider = null;
         for (CfgProvider p : MApi.get().getCfgManager().getProviders()) {
-            if (p.getName().equals(owner))
-                provider = p;
+            if (p.getName().equals(owner)) provider = p;
         }
         if (provider == null) {
             provider = new TestCfgProvider(owner, new MNode());
@@ -183,12 +181,12 @@ public class TestUtil {
             provider = new TestCfgProvider(owner, provider.getConfig());
             MApi.get().getCfgManager().registerCfgProvider(provider);
         }
-        MNode c = (MNode)((TestCfgProvider)provider).getConfig();
+        MNode c = (MNode) ((TestCfgProvider) provider).getConfig();
         c.setString(parameter, value);
-        
+
         MApi.get().getCfgManager().doRestart();
     }
-    
+
     private static class TestCfgProvider extends NodeCfgProvider {
 
         public TestCfgProvider(String name, INode config) {
@@ -197,16 +195,12 @@ public class TestUtil {
         }
 
         @Override
-        public void doRestart() {
-        }
+        public void doRestart() {}
 
         @Override
-        public void doStart() {
-        }
+        public void doStart() {}
 
         @Override
-        public void doStop() {
-        }
-
+        public void doStop() {}
     }
 }

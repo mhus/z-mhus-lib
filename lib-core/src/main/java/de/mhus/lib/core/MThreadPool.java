@@ -128,7 +128,7 @@ public class MThreadPool extends MObject implements Runnable {
 
         MThread.cleanup();
     }
-    
+
     private void taskFinish() {
         setName(name + " sleeping");
         tc = null;
@@ -212,7 +212,8 @@ public class MThreadPool extends MObject implements Runnable {
 
                     // run ....
                     currentTask.taskBegin();
-                    try (SubjectEnvironment env = Aaa.asSubjectWithoutTracing(currentTask.subject)) {
+                    try (SubjectEnvironment env =
+                            Aaa.asSubjectWithoutTracing(currentTask.subject)) {
                         // set trail log if set
                         try (Scope scope = ITracer.get().enter(span, name)) {
                             try {

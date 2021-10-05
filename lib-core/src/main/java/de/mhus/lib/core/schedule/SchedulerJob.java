@@ -111,14 +111,14 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                 SpanContext ctx = null;
                 Scope scope = null;
                 if (getLogTrailConfig() != null) ctx = ITracer.deserialize(getLogTrailConfig());
-                if (ctx == null)
-                    scope = ITracer.get().enter(getName());
+                if (ctx == null) scope = ITracer.get().enter(getName());
                 else {
-                    Span span = ITracer.get()
-                            .tracer()
-                            .buildSpan(getName())
-                            .addReference(References.FOLLOWS_FROM, ctx)
-                            .start();
+                    Span span =
+                            ITracer.get()
+                                    .tracer()
+                                    .buildSpan(getName())
+                                    .addReference(References.FOLLOWS_FROM, ctx)
+                                    .start();
                     scope = ITracer.get().activate(span);
                 }
                 try (Scope scopeFinal = scope) {

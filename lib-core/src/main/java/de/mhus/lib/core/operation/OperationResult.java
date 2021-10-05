@@ -142,8 +142,7 @@ public class OperationResult {
         if (result instanceof String)
             try {
                 INode ret = INode.readNodeFromString(String.valueOf(result));
-                if (ret != null)
-                    return ret;
+                if (ret != null) return ret;
             } catch (Throwable t) {
                 throw new MRuntimeException(this, t);
             }
@@ -218,8 +217,7 @@ public class OperationResult {
 
             // fallback
             INode ret = INode.readNodeFromString(String.valueOf(result));
-            if (ret != null)
-                return ret;
+            if (ret != null) return ret;
 
             throw new UsageException("Can't cast result to node", result.getClass());
 

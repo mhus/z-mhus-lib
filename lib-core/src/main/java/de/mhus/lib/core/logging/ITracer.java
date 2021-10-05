@@ -39,7 +39,7 @@ public interface ITracer {
     public static final String TYPE_THREAD = "thread";
 
     Scope activate(Span span);
-    
+
     /**
      * This will start a completely new span. Current active spans will be closed before creation of
      * the new span. It is always a root span.
@@ -154,5 +154,4 @@ public interface ITracer {
     }
 
     void reset();
-
 }

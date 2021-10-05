@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2002 Mike Hummel (mh@mhus.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.mhus.lib.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,25 +54,25 @@ public class ShiroMThreadTest extends TestCase {
         System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
 
         Value<Boolean> done = new Value<>(false);
-        MThread.asynchron(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
-                asyncSybject = Aaa.getSubject();
-                done.value = true;
-            }
-        });
+        MThread.asynchron(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+                        asyncSybject = Aaa.getSubject();
+                        done.value = true;
+                    }
+                });
 
-        while (!done.value)
-            MThread.sleep(200);
-        
+        while (!done.value) MThread.sleep(200);
+
         System.out.println("3 Subject: " + Aaa.toString(asyncSybject));
         assertNotNull(asyncSybject);
         assertEquals("lonestarr", Aaa.toString(asyncSybject));
-        
+
         Aaa.getSubject().logout();
     }
-    
+
     @Test
     public void testAsynchronPool() {
 
@@ -72,17 +87,17 @@ public class ShiroMThreadTest extends TestCase {
         // init shiro and get subject
         System.out.println("1 Subject: " + Aaa.toString(Aaa.getSubject()));
         Value<Boolean> done = new Value<>(false);
-        MThreadPool.asynchron(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
-                asyncSybject = Aaa.getSubject();
-                done.value = true;
-            }
-        });
+        MThreadPool.asynchron(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("2 Subject: " + Aaa.toString(Aaa.getSubject()));
+                        asyncSybject = Aaa.getSubject();
+                        done.value = true;
+                    }
+                });
 
-        while (!done.value)
-            MThread.sleep(200);
+        while (!done.value) MThread.sleep(200);
 
         System.out.println("3 Subject: " + Aaa.toString(asyncSybject));
         assertNotNull(asyncSybject);
@@ -92,22 +107,21 @@ public class ShiroMThreadTest extends TestCase {
         Aaa.subjectCleanup();
         asyncSybject = null;
 
-        MThreadPool.asynchron(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
-                asyncSybject = Aaa.getSubject();
-            }
-        });
-        
-        while (asyncSybject == null)
-            MThread.sleep(200);
-        
+        MThreadPool.asynchron(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("4 Subject: " + Aaa.toString(Aaa.getSubject()));
+                        asyncSybject = Aaa.getSubject();
+                    }
+                });
+
+        while (asyncSybject == null) MThread.sleep(200);
+
         System.out.println("5 Subject: " + Aaa.toString(asyncSybject));
         assertEquals("guest", Aaa.toString(asyncSybject));
-
     }
-    
+
     private void init(String config) {
         System.out.println();
         System.out.println(">>> " + MSystem.findCallingMethod(3));
@@ -123,5 +137,4 @@ public class ShiroMThreadTest extends TestCase {
         assertTrue(MDirtyTricks.updateCfgValue(AccessApi.class, "allowAdminLogin", "true"));
         M.l(AccessApi.class);
     }
-    
 }

@@ -181,8 +181,7 @@ public class Log {
 
     private ITracer getITracer() {
         if (tracer == null) {
-            if (tracerStartup)
-                return null;
+            if (tracerStartup) return null;
             tracerStartup = true;
         }
         if (!tracerInError) {

@@ -129,7 +129,8 @@ public abstract class AbstractOperation extends MLog implements Operation {
         String path = clazz.getCanonicalName();
 
         de.mhus.lib.annotations.strategy.OperationDescription desc =
-                getClass().getAnnotation(de.mhus.lib.annotations.strategy.OperationDescription.class);
+                getClass()
+                        .getAnnotation(de.mhus.lib.annotations.strategy.OperationDescription.class);
         if (desc != null) {
             if (MString.isSet(desc.title())) title = desc.title();
             if (desc.clazz() != Object.class) {
