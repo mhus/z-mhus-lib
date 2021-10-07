@@ -267,6 +267,7 @@ public class Aaa {
      */
     public static boolean hasAccess(Subject subject, String resource) {
         if (subject.getPrincipal() == null) subject = getGuestSubject(false);
+        touch(subject);
         Boolean cached = getCachedAccess(subject, "access", resource);
         if (cached != null) return cached;
 
@@ -597,6 +598,7 @@ public class Aaa {
 
     public static boolean isPermitted(
             Subject subject, String permission, String level, String instance) {
+        touch(subject);
         try {
             if (subject == null) return false;
             permission = normalizeWildcardPart(permission);
@@ -632,6 +634,7 @@ public class Aaa {
     }
 
     public static boolean isPermitted(Subject subject, String wildcardString) {
+        touch(subject);
         try {
             return subject.isPermitted(new WildcardPermission(wildcardString));
         } catch (Throwable t) {
@@ -856,6 +859,7 @@ public class Aaa {
     public static boolean hasRole(String role) {
         Subject subject = getSubject();
         if (subject.getPrincipal() == null) subject = getGuestSubject(false);
+        touch(subject);
         return subject.hasRole(role);
     }
 
@@ -875,6 +879,7 @@ public class Aaa {
     public static boolean hasPermission(Subject subject, Annotation[] annotations) {
 
         if (subject.getPrincipal() == null) subject = getGuestSubject(false);
+        touch(subject);
         Value<Boolean> perm = new Value<>(true);
         subject.execute(
                 () -> {
@@ -908,6 +913,7 @@ public class Aaa {
 
     public static void checkPermission(Annotation[] annotations) throws AuthorizationException {
 
+        touch();
         properEnvironment(
                 () -> {
                     for (Annotation classAnno : annotations) {
@@ -1062,6 +1068,7 @@ public class Aaa {
             List<String> rules, String permission, String level, String instance) {
         // check rules
         Subject subject = getSubject();
+        touch(subject);
         String principal = getPrincipal(subject);
         for (String rule : rules) {
             rule = rule.trim();
@@ -1120,4 +1127,35 @@ public class Aaa {
     public static Collection<String> getPerms(Subject subject) {
         return TrustedAaa.getPerms(subject);
     }
+
+    /**
+     * Touch the current session
+     */
+    public static void touch() {
+        try {
+            Subject subject = getSubject();
+            if (subject == null) return;
+            Session session = subject.getSession(false);
+            if (session == null) return;
+            session.touch();
+        } catch (Throwable t) {
+            log.d(t);
+        }
+    }
+    
+    /**
+     * Touch the session of the subject
+     * @param subject 
+     */
+    public static void touch(Subject subject) {
+        try {
+            if (subject == null) return;
+            Session session = subject.getSession(false);
+            if (session == null) return;
+            session.touch();
+        } catch (Throwable t) {
+            log.d(t);
+        }
+    }
+
 }
