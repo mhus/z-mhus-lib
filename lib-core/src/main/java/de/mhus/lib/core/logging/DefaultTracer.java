@@ -50,7 +50,7 @@ public class DefaultTracer extends MLog implements ITracer {
             return new ScopeEnv(scope, span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
-            return null;
+            return new ScopeEnv(null,null); // empty
         }
     }
 
@@ -97,7 +97,7 @@ public class DefaultTracer extends MLog implements ITracer {
             return new ScopeEnv(scope, span);
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);
-            return null;
+            return new ScopeEnv(null,null); // empty
         }
     }
 

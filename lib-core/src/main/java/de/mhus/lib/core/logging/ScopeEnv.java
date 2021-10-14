@@ -48,14 +48,16 @@ public class ScopeEnv implements Scope {
     @Override
     public void close() {
         try {
-            if (finishSpan) span.finish();
+            if (scope != null) scope.close();
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        scope = null;
         try {
-            scope.close();
+            if (span != null && finishSpan) span.finish();
         } catch (Throwable t) {
             t.printStackTrace();
         }
+        span = null;
     }
 }
