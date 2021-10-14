@@ -84,7 +84,8 @@ public class DefaultTracer extends MLog implements ITracer {
 
     @Override
     public Scope enter(String spanName, Object... tagPairs) {
-        return enter(null, spanName, tagPairs);
+        Span parent = current();
+        return enter(parent, spanName, tagPairs);
     }
 
     @Override
