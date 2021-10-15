@@ -65,7 +65,7 @@ public class MArgs extends MLog {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public MArgs(Object pojo, String[] args) {
 
-        PojoModel model = MPojo.getAttributeModelFactory().createPojoModel(pojo.getClass());
+        PojoModel model = MPojo.getAttributesModelFactory().createPojoModel(pojo.getClass());
         List<Usage> u = new ArrayList<>();
         Usage[] a = new Usage[50]; // max 50 should be ok
         Map<String, Usage> map = new HashMap<>();
