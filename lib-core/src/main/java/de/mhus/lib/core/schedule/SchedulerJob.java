@@ -36,10 +36,8 @@ import de.mhus.lib.core.operation.OperationDescription;
 import de.mhus.lib.core.operation.OperationResult;
 import de.mhus.lib.core.operation.TaskContext;
 import de.mhus.lib.core.util.MNls;
-import io.opentracing.References;
 import io.opentracing.Scope;
 import io.opentracing.Span;
-import io.opentracing.SpanContext;
 
 public abstract class SchedulerJob extends MTimerTask implements Operation {
 
@@ -66,8 +64,8 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     private String username = null;
 
     public SchedulerJob(ITimerTask task) {
-        if (ITracer.get().current() != null)
-            logTrailConfig = ITracer.serialize(ITracer.get().current().context());
+//        if (ITracer.get().current() != null)
+//            logTrailConfig = ITracer.serialize(ITracer.get().current().context());
         setTask(task);
         if (task == null) setName("null");
         else if (task instanceof Named) setName(((Named) task).getName());
@@ -108,20 +106,13 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
             MThread.cleanup();
             try (SubjectEnvironment access = Aaa.asSubject(username)) {
-                SpanContext ctx = null;
-                Scope scope = null;
-                if (getLogTrailConfig() != null) ctx = ITracer.deserialize(getLogTrailConfig());
-                if (ctx == null) scope = ITracer.get().enter(getName());
-                else {
-                    Span span =
-                            ITracer.get()
-                                    .tracer()
-                                    .buildSpan(getName())
-                                    .addReference(References.FOLLOWS_FROM, ctx)
-                                    .start();
-                    scope = ITracer.get().activate(span);
-                }
-                try (Scope scopeFinal = scope) {
+                Span span = ITracer.get()
+                      .tracer()
+                      .buildSpan(getName()).start();
+                span.setTag("scheduler", true);
+                span.setTag("task", task.getName());
+//                span.setTag("trail", getLogTrailConfig());
+                try (Scope scope = ITracer.get().activate(span)) {
                     boolean doIt = true;
                     if (intercepter != null) {
                         log.d("Intercepter beforeExecution", getName());
@@ -174,15 +165,19 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                 }
             } catch (Throwable e) {
                 // reshedule in case of an exception - this will prevent amok behavior
+                log.d(e);
                 synchronized (this) {
                     doCaclulateNextExecution();
                     log.d("Scheduled to", getName(), getNextExecutionTime());
                 }
                 throw e;
+            } finally {
+                MThread.cleanup();
             }
-        } else {
-            log.d("Execution delayed", task);
-        }
+        } 
+//        else {
+//            log.d("Execution delayed", task);
+//        }
     }
 
     /** Calculate the next executionTime and store it into nextExecutionTime */
