@@ -209,4 +209,15 @@ public class DefaultTracer extends MLog implements ITracer {
         Scope scope = tracer().activateSpan(span);
         return new ScopeEnv(scope, span);
     }
+
+    @Override
+    public void error(String error) {
+        try {
+            Span span = current();
+            if (span == null) return;
+            span.setTag("error", true);
+            if (error != null)
+                span.setTag("errorMessage", error);
+        } catch (Throwable t) {}
+    }
 }

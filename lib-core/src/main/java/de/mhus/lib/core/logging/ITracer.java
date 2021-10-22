@@ -95,6 +95,12 @@ public interface ITracer {
         return MApi.lookup(ITracer.class);
     }
 
+    /**
+     * Set the current span in error and set a error message. Use null for no message.
+     * @param error The message or null.
+     */
+    void error(String error);
+    
     void activate(String activation);
 
     SpanBuilder createSpan(Span parent, String spanName, Object... tagPairs);
