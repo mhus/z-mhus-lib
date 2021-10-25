@@ -18,10 +18,8 @@ package de.mhus.lib.core.schedule;
 import java.util.UUID;
 
 import de.mhus.lib.basics.Named;
-import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.MThread;
 import de.mhus.lib.core.MTimerTask;
@@ -59,7 +57,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     private MNls nls;
     private String info;
     private TimerTaskInterceptor intercepter;
-    private MProperties logTrailConfig;
+    private String logTrailCaller;
     private UUID uuid = UUID.randomUUID();
     private String username = null;
 
@@ -70,6 +68,12 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
         if (task == null) setName("null");
         else if (task instanceof Named) setName(((Named) task).getName());
         else setName(MSystem.getClassName(task));
+        logTrailCaller = ITracer.get().getCurrentId();
+        try {
+            Span cur = ITracer.get().current();
+            if (cur != null)
+                cur.setTag("scheduled", task.getName());
+        } catch(Throwable t) {}
     }
 
     public SchedulerJob(String name, ITimerTask task) {
@@ -111,6 +115,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                       .buildSpan(getName()).start();
                 span.setTag("scheduler", true);
                 span.setTag("task", task.getName());
+                span.setTag("caller", getLogTrailCaller());
 //                span.setTag("trail", getLogTrailConfig());
                 try (Scope scope = ITracer.get().activate(span)) {
                     boolean doIt = true;
@@ -417,10 +422,6 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
         if (intercepter != null) intercepter.initialize(this);
     }
 
-    public IProperties getLogTrailConfig() {
-        return logTrailConfig;
-    }
-
     @Override
     public UUID getUuid() {
         return uuid;
@@ -432,5 +433,13 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
     protected void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getLogTrailCaller() {
+        return logTrailCaller;
+    }
+
+    public void setLogTrailCaller(String logTrailCaller) {
+        this.logTrailCaller = logTrailCaller;
     }
 }
