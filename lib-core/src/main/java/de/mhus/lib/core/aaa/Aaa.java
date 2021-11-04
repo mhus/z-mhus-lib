@@ -1158,4 +1158,11 @@ public class Aaa {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public static Collection<String> getRoles(Subject subject) {
+        if (subject instanceof SimpleAccount)
+            return ((SimpleAccount)subject).getRoles();
+        return (Collection<String>) M.EMPTY_LIST;
+    }
+
 }
