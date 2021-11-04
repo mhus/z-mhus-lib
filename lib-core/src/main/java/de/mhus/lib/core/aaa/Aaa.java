@@ -29,6 +29,7 @@ import java.util.UUID;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.BearerToken;
 import org.apache.shiro.authc.SimpleAccount;
@@ -47,6 +48,7 @@ import org.apache.shiro.authz.aop.PermissionAnnotationHandler;
 import org.apache.shiro.authz.aop.RoleAnnotationHandler;
 import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.apache.shiro.authz.permission.WildcardPermission;
+import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -1159,10 +1161,27 @@ public class Aaa {
     }
 
     @SuppressWarnings("unchecked")
-    public static Collection<String> getRoles(Subject subject) {
-        if (subject instanceof SimpleAccount)
+    public static Collection<String> getRoles(String principal) {
+        AuthenticationInfo subject = getSubjectFromRealm(principal);
+        if (subject != null && subject instanceof SimpleAccount)
             return ((SimpleAccount)subject).getRoles();
         return (Collection<String>) M.EMPTY_LIST;
+    }
+
+    private static AuthenticationInfo getSubjectFromRealm(String principal) {
+        Collection<Realm> realms =
+                ((DefaultSecurityManager) SecurityUtils.getSecurityManager()).getRealms();
+        for (Realm realm : realms) {
+            try {
+                AuthenticationInfo info =
+                        realm.getAuthenticationInfo(new TrustedToken(principal));
+                if (info != null) 
+                    return info;
+            } catch (Throwable t) {
+                log.d(principal,realm,t);
+            }
+        }
+        return null;
     }
 
 }
