@@ -36,7 +36,7 @@ public class PrincipalData implements Map<String, String>, Serializable {
     public static final String SESSION_KEY = "_shiro.principalData";
     //    private static final String READ_ONLY = "_ro";
 
-    private Map<String, String> data = null;
+    protected Map<String, String> data = null;
 
     public PrincipalData() {}
 

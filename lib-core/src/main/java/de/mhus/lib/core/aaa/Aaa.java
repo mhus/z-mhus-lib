@@ -543,7 +543,7 @@ public class Aaa {
                     if (!data.containsKey(PrincipalData.DISPLAY_NAME))
                         data.put(
                                 PrincipalData.DISPLAY_NAME, String.valueOf(subject.getPrincipal()));
-                    return new PrincipalData(data);
+                    return new MutablePrincipalData(data);
                 }
             }
         }
