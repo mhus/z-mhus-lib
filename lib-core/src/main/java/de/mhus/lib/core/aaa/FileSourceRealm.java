@@ -16,15 +16,8 @@
 package de.mhus.lib.core.aaa;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -40,19 +33,11 @@ import org.apache.shiro.authz.SimpleRole;
 import org.apache.shiro.authz.permission.WildcardPermission;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.PermissionUtils;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.M.DEBUG;
-import de.mhus.lib.core.MFile;
-import de.mhus.lib.core.MPassword;
 import de.mhus.lib.core.MPeriod;
-import de.mhus.lib.core.MProperties;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.MXml;
 import de.mhus.lib.core.cache.CacheConfig;
 import de.mhus.lib.core.cache.ICache;
 import de.mhus.lib.core.cache.ICacheService;
@@ -73,7 +58,7 @@ import de.mhus.lib.core.cfg.CfgLong;
  *
  * @author mikehummel
  */
-public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm {
+public abstract class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm {
 
     protected String resourcesPath;
     protected File userDir;
@@ -86,8 +71,8 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     @SuppressWarnings("rawtypes")
     private ICache<String, HashMap> dataCacheApi;
 
-    protected boolean useCache;
-    protected long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
+    private boolean useCache;
+    private long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
 
     @SuppressWarnings("unused")
     private CfgBoolean CFG_USE_CACHE =
@@ -151,92 +136,21 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
                 if (cached != null) return cached;
             }
         }
-
+        
         try {
-            // load from FS
-            File file = new File(userDir, MFile.normalize(username) + ".txt");
-            if (file.exists() && file.isFile()) {
-                log.d("load user", username, "txt");
-                List<String> lines = MFile.readLines(file, false);
-                String password = lines.get(0);
-                SimpleAccount account = new SimpleAccount(username, password, getName());
-                account.setCredentials(password);
-                lines.remove(0);
-                for (String line : lines) {
-                    line = line.trim();
-                    if (MString.isEmpty(line) || line.startsWith("#")) continue;
-                    String rolename = line;
-                    SimpleRole role = this.getRole(rolename);
-                    if (role != null) {
-                        account.addRole(rolename);
-                        account.addObjectPermissions(role.getPermissions());
-                    }
-                }
-                if (MString.isSet(defaultRole)) {
-                    SimpleRole role = this.getRole(defaultRole);
-                    if (role != null) {
-                        account.addRole(defaultRole);
-                        account.addObjectPermissions(role.getPermissions());
-                    }
-                }
-
+            SimpleAccount account = createUser(username);
+            if (account != null) {
                 if (useCache && userCacheApi != null) userCacheApi.put(username, account);
-
-                return account;
-            }
-        } catch (IOException e) {
+            } else
+                log.d("user not found", username);
+            return account;
+        } catch (Exception e) {
             log.d(username, e);
             return null;
         }
-
-        try {
-            // load from FS
-            File file = new File(userDir, MFile.normalize(username) + ".xml");
-            if (file.exists() && file.isFile()) {
-                log.d("load user", username, "xml");
-                Element xml = MXml.loadXml(file).getDocumentElement();
-                String password = MPassword.decode(xml.getAttribute("password"));
-                SimpleAccount account = new SimpleAccount(username, password, getName());
-                account.setCredentials(password);
-                Element rolesE = MXml.getElementByPath(xml, "roles");
-                if (rolesE != null) {
-                    for (Element roleE : MXml.getLocalElementIterator(rolesE, "role")) {
-                        String rolename = MXml.getValue(roleE, false);
-                        if (MString.isSet(rolename)) {
-                            SimpleRole role = getRole(rolename);
-                            if (role != null) {
-                                account.addRole(rolename);
-                                Set<Permission> perm = role.getPermissions();
-                                if (perm != null) account.addObjectPermissions(perm);
-                            }
-                        }
-                    }
-                }
-
-                Element permsE = MXml.getElementByPath(xml, "perms");
-                if (permsE != null) {
-                    HashSet<String> perms = new HashSet<>();
-                    for (Element permE : MXml.getLocalElementIterator(permsE, "perm")) {
-                        String perm = MXml.getValue(permE, false);
-                        if (MString.isSet(perm)) perms.add(perm);
-                    }
-                    Set<Permission> permissions =
-                            PermissionUtils.resolvePermissions(perms, getPermissionResolver());
-                    account.addObjectPermissions(permissions);
-                }
-
-                if (useCache && userCacheApi != null) userCacheApi.put(username, account);
-
-                return account;
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            log.d(username, e);
-            return null;
-        }
-
-        log.d("user not found", username);
-        return null;
     }
+
+    protected abstract SimpleAccount createUser(String username) throws Exception;
 
     private synchronized void initCache() {
         if (!useCache || userCacheApi != null) return;
@@ -280,61 +194,20 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         }
 
         try {
-            // load from FS
-            File file = new File(rolesDir, MFile.normalize(rolename) + ".txt");
-            if (file.exists() && file.isFile()) {
-                log.d("load role", rolename, "txt");
-                SimpleRole role = new SimpleRole(rolename);
-                List<String> lines = MFile.readLines(file, false);
-                HashSet<String> perms = new HashSet<>();
-                for (String line : lines) {
-                    line = line.trim();
-                    if (MString.isEmpty(line) || line.startsWith("#")) continue;
-                    perms.add(line);
-                }
-                Set<Permission> permissions =
-                        PermissionUtils.resolvePermissions(perms, getPermissionResolver());
-                role.setPermissions(permissions);
+            SimpleRole role = createRole(rolename);
 
+            if (role != null) {
                 if (useCache && roleCacheApi != null) roleCacheApi.put(rolename, role);
-
-                return role;
-            }
-        } catch (IOException e) {
+            } else
+                log.d("role not found", rolename);
+            return role;
+        } catch (Exception e) {
             log.d(rolename, e);
             return null;
         }
-
-        try {
-            // load from FS
-            File file = new File(rolesDir, MFile.normalize(rolename) + ".xml");
-            if (file.exists() && file.isFile()) {
-                log.d("load role", rolename, "xml");
-                Element xml = MXml.loadXml(file).getDocumentElement();
-                SimpleRole role = new SimpleRole(rolename);
-                Element permsE = MXml.getElementByPath(xml, "perms");
-                if (permsE != null) {
-                    HashSet<String> perms = new HashSet<>();
-                    for (Element permE : MXml.getLocalElementIterator(permsE, "perm")) {
-                        String perm = MXml.getValue(permE, false);
-                        if (MString.isSet(perm)) perms.add(perm);
-                    }
-                    Set<Permission> permissions =
-                            PermissionUtils.resolvePermissions(perms, getPermissionResolver());
-                    role.setPermissions(permissions);
-                }
-
-                if (useCache && roleCacheApi != null) roleCacheApi.put(rolename, role);
-
-                return role;
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            log.d(rolename, e);
-            return null;
-        }
-        log.i("role not found", rolename);
-        return null;
     }
+
+    protected abstract SimpleRole createRole(String rolename) throws Exception;
 
     public String getResourcesPath() {
         return resourcesPath;
@@ -358,50 +231,20 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
         }
 
         try {
-            // load from FS
-            File file = new File(userDir, MFile.normalize(username) + ".properties");
-            if (file.exists() && file.isFile()) {
-                log.d("load data", username, "properties");
-                MProperties prop = MProperties.load(file);
-                HashMap<String, String> ret = new HashMap<>();
-                for (Entry<String, Object> entry : prop.entrySet())
-                    ret.put(entry.getKey(), String.valueOf(entry.getValue()));
+            HashMap<String, String> data = createData(username);
 
-                if (useCache && dataCacheApi != null) dataCacheApi.put(username, ret);
-
-                return ret;
-            }
+            if (data != null) {
+                if (useCache && dataCacheApi != null) dataCacheApi.put(username, data);
+            } else
+                log.d("data not found", username);
+            return data;
         } catch (Exception e) {
             log.d(username, e);
             return null;
         }
-
-        try {
-            // load from FS
-            File file = new File(userDir, MFile.normalize(username) + ".xml");
-            if (file.exists() && file.isFile()) {
-                log.d("load data", username, "xml");
-                Element xml = MXml.loadXml(file).getDocumentElement();
-                Element dataE = MXml.getElementByPath(xml, "data");
-                if (dataE != null) {
-                    HashMap<String, String> ret = new HashMap<>();
-                    for (Element datE : MXml.getLocalElementIterator(dataE)) {
-                        String value = MXml.getValue(datE, false);
-                        ret.put(datE.getNodeName(), value);
-                    }
-
-                    if (useCache && dataCacheApi != null) dataCacheApi.put(username, ret);
-
-                    return ret;
-                }
-            }
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            log.d(username, e);
-            return null;
-        }
-
-        return null;
     }
+
+    protected abstract HashMap<String, String> createData(String username) throws Exception;
 
     public String getDefaultRole() {
         return defaultRole;
@@ -483,4 +326,26 @@ public class FileSourceRealm extends AbstractRealm implements PrincipalDataRealm
     public void setCacheTTL(long cacheTTL) {
         this.cacheTTL = cacheTTL;
     }
+
+    public void invalidateUserCache(String username) {
+        if (useCache) {
+            if (dataCacheApi != null) {
+                dataCacheApi.remove(username);
+            }
+            if (userCacheApi != null) {
+                userCacheApi.remove(username);
+            }
+        }
+
+    }
+
+    public void invalidateRoleCache(String rolename) {
+        if (useCache) {
+            if (roleCacheApi != null) {
+                roleCacheApi.remove(rolename);
+            }
+        }
+
+    }
+
 }
