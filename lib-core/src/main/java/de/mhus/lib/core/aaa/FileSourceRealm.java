@@ -136,13 +136,12 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
                 if (cached != null) return cached;
             }
         }
-        
+
         try {
             SimpleAccount account = createUser(username);
             if (account != null) {
                 if (useCache && userCacheApi != null) userCacheApi.put(username, account);
-            } else
-                log.d("user not found", username);
+            } else log.d("user not found", username);
             return account;
         } catch (Exception e) {
             log.d(username, e);
@@ -198,8 +197,7 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
 
             if (role != null) {
                 if (useCache && roleCacheApi != null) roleCacheApi.put(rolename, role);
-            } else
-                log.d("role not found", rolename);
+            } else log.d("role not found", rolename);
             return role;
         } catch (Exception e) {
             log.d(rolename, e);
@@ -235,8 +233,7 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
 
             if (data != null) {
                 if (useCache && dataCacheApi != null) dataCacheApi.put(username, data);
-            } else
-                log.d("data not found", username);
+            } else log.d("data not found", username);
             return data;
         } catch (Exception e) {
             log.d(username, e);
@@ -336,7 +333,6 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
                 userCacheApi.remove(username);
             }
         }
-
     }
 
     public void invalidateRoleCache(String rolename) {
@@ -345,7 +341,5 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
                 roleCacheApi.remove(rolename);
             }
         }
-
     }
-
 }

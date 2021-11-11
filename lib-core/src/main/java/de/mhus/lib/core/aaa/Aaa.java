@@ -1130,9 +1130,7 @@ public class Aaa {
         return TrustedAaa.getPerms(subject);
     }
 
-    /**
-     * Touch the current session
-     */
+    /** Touch the current session */
     public static void touch() {
         try {
             Subject subject = getSubject();
@@ -1144,10 +1142,11 @@ public class Aaa {
             log.d(t);
         }
     }
-    
+
     /**
      * Touch the session of the subject
-     * @param subject 
+     *
+     * @param subject
      */
     public static void touch(Subject subject) {
         try {
@@ -1164,7 +1163,7 @@ public class Aaa {
     public static Collection<String> getRoles(String principal) {
         AuthenticationInfo subject = getSubjectFromRealm(principal);
         if (subject != null && subject instanceof SimpleAccount)
-            return ((SimpleAccount)subject).getRoles();
+            return ((SimpleAccount) subject).getRoles();
         return (Collection<String>) M.EMPTY_LIST;
     }
 
@@ -1173,15 +1172,12 @@ public class Aaa {
                 ((DefaultSecurityManager) SecurityUtils.getSecurityManager()).getRealms();
         for (Realm realm : realms) {
             try {
-                AuthenticationInfo info =
-                        realm.getAuthenticationInfo(new TrustedToken(principal));
-                if (info != null) 
-                    return info;
+                AuthenticationInfo info = realm.getAuthenticationInfo(new TrustedToken(principal));
+                if (info != null) return info;
             } catch (Throwable t) {
-                log.d(principal,realm,t);
+                log.d(principal, realm, t);
             }
         }
         return null;
     }
-
 }

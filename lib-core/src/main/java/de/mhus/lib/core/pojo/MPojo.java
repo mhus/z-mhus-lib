@@ -114,27 +114,28 @@ public class MPojo {
         return attributesModelFactory;
     }
 
-//    public static synchronized PojoModelFactory getAttributeModelFactory() {
-//        if (defaultModelFactory == null)
-//            defaultModelFactory =
-//                    new PojoModelFactory() {
-//
-//                        @Override
-//                        public PojoModel createPojoModel(Class<?> pojoClass) {
-//                            PojoModel model =
-//                                    new PojoParser()
-//                                            .parse(
-//                                                    pojoClass,
-//                                                    new AttributesStrategy(true, true, "_", null))
-//                                            .filter(
-//                                                    new DefaultFilter(
-//                                                            true, false, false, false, true))
-//                                            .getModel();
-//                            return model;
-//                        }
-//                    };
-//        return defaultModelFactory;
-//    }
+    //    public static synchronized PojoModelFactory getAttributeModelFactory() {
+    //        if (defaultModelFactory == null)
+    //            defaultModelFactory =
+    //                    new PojoModelFactory() {
+    //
+    //                        @Override
+    //                        public PojoModel createPojoModel(Class<?> pojoClass) {
+    //                            PojoModel model =
+    //                                    new PojoParser()
+    //                                            .parse(
+    //                                                    pojoClass,
+    //                                                    new AttributesStrategy(true, true, "_",
+    // null))
+    //                                            .filter(
+    //                                                    new DefaultFilter(
+    //                                                            true, false, false, false, true))
+    //                                            .getModel();
+    //                            return model;
+    //                        }
+    //                    };
+    //        return defaultModelFactory;
+    //    }
 
     public static INode pojoToNode(Object from) throws IOException {
         return pojoToNode(from, getDefaultModelFactory(), false, false);

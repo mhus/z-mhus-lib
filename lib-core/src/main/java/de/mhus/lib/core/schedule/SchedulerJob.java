@@ -62,8 +62,8 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
     private String username = null;
 
     public SchedulerJob(ITimerTask task) {
-//        if (ITracer.get().current() != null)
-//            logTrailConfig = ITracer.serialize(ITracer.get().current().context());
+        //        if (ITracer.get().current() != null)
+        //            logTrailConfig = ITracer.serialize(ITracer.get().current().context());
         setTask(task);
         if (task == null) setName("null");
         else if (task instanceof Named) setName(((Named) task).getName());
@@ -71,9 +71,9 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
         logTrailCaller = ITracer.get().getCurrentId();
         try {
             Span cur = ITracer.get().current();
-            if (cur != null)
-                cur.setTag("scheduled", task.getName());
-        } catch(Throwable t) {}
+            if (cur != null) cur.setTag("scheduled", task.getName());
+        } catch (Throwable t) {
+        }
     }
 
     public SchedulerJob(String name, ITimerTask task) {
@@ -110,13 +110,11 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
 
             MThread.cleanup();
             try (SubjectEnvironment access = Aaa.asSubject(username)) {
-                Span span = ITracer.get()
-                      .tracer()
-                      .buildSpan(getName()).start();
+                Span span = ITracer.get().tracer().buildSpan(getName()).start();
                 span.setTag("scheduler", true);
                 span.setTag("task", task.getName());
                 span.setTag("caller", getLogTrailCaller());
-//                span.setTag("trail", getLogTrailConfig());
+                //                span.setTag("trail", getLogTrailConfig());
                 try (Scope scope = ITracer.get().activate(span)) {
                     boolean doIt = true;
                     if (intercepter != null) {
@@ -179,10 +177,10 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
             } finally {
                 MThread.cleanup();
             }
-        } 
-//        else {
-//            log.d("Execution delayed", task);
-//        }
+        }
+        //        else {
+        //            log.d("Execution delayed", task);
+        //        }
     }
 
     /** Calculate the next executionTime and store it into nextExecutionTime */
