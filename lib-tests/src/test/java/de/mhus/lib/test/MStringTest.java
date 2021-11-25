@@ -30,6 +30,138 @@ import de.mhus.lib.tests.TestCase;
 public class MStringTest extends TestCase {
 
     @Test
+    public void testSubstr() throws MException {
+        String t = "abcdefghijklmnopqrstuvwxyz";
+        // standards
+        {
+            String v = MString.substr(t, 0, 0);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(t, 0, 26);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substr(t, 0, 25);
+            assertEquals("abcdefghijklmnopqrstuvwxy", v);
+        }
+        {
+            String v = MString.substr(t, 1, 25);
+            assertEquals("bcdefghijklmnopqrstuvwxy", v);
+        }
+        
+        // exceptions
+        {
+            String v = MString.substr(t, 0, 30);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substr(t, 1, 30);
+            assertEquals("bcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substr(t, 10, 5);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(null, 1, 5);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(t, 30, 35);
+            assertEquals("", v);
+        }
+        
+        // from right to left - only in ext version
+        {
+            String v = MString.substr(t, -3, 30);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substr(t, -3, -1);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(t, 0, -1);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(t, 1, -2);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substr(t, -1, 2);
+            assertEquals("ab", v);
+        }
+    }
+
+    @Test
+    public void testSubstrExt() throws MException {
+        String t = "abcdefghijklmnopqrstuvwxyz";
+        // standards
+        {
+            String v = MString.substrext(t, 0, 0);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substrext(t, 0, 26);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substrext(t, 0, 25);
+            assertEquals("abcdefghijklmnopqrstuvwxy", v);
+        }
+        {
+            String v = MString.substrext(t, 1, 25);
+            assertEquals("bcdefghijklmnopqrstuvwxy", v);
+        }
+        
+        // exceptions
+        {
+            String v = MString.substrext(t, 0, 30);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substrext(t, 1, 30);
+            assertEquals("bcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substrext(t, 10, 5);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substrext(null, 1, 5);
+            assertEquals("", v);
+        }
+        {
+            String v = MString.substrext(t, 30, 35);
+            assertEquals("", v);
+        }
+        
+        // from right to left
+        {
+            String v = MString.substrext(t, -3, 30);
+            assertEquals("yz", v);
+        }
+        {
+            String v = MString.substrext(t, -3, -1);
+            assertEquals("yz", v);
+        }
+        {
+            String v = MString.substrext(t, 0, -1);
+            assertEquals("abcdefghijklmnopqrstuvwxyz", v);
+        }
+        {
+            String v = MString.substrext(t, 1, -2);
+            assertEquals("bcdefghijklmnopqrstuvwxy", v);
+        }
+        {
+            String v = MString.substrext(t, -1, 2);
+            assertEquals("", v);
+        }
+    }
+
+    @Test
     public void testStringCompiler() throws MException {
         MProperties attr = new MProperties();
         attr.setString("name", "Mickey");

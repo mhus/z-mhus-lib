@@ -157,6 +157,31 @@ public class M {
     }
 
     /**
+     * Substring of the string. See MString.substr() for details.
+     * 
+     * @param in String to do an substring for
+     * @param from start index, if smaller zero it will be set to 0
+     * @param to end index, if smaller then or zero it will be set to in 0
+     * @return The substring or an empty string
+     */
+    public static String sub(String in, int from, int to) {
+        return MString.substr(in, from, to);
+    }
+    
+    /**
+     * Substring if the string with extended functionality.
+     * See MString.substrext() for details.
+     * 
+     * @param in String to do an substring for
+     * @param from start index, if smaller zero it will be set to length minus from + 1
+     * @param to end index, if smaller then or zero it will be set to in length minus to + 1
+     * @return The substring or an empty string
+     */
+    public static String sube(String in, int from, int to) {
+        return MString.substrext(in, from, to);
+    }
+    
+    /**
      * Cast to default type
      *
      * @param in

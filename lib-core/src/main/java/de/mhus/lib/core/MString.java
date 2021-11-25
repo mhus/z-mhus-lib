@@ -2240,4 +2240,42 @@ public class MString {
         if (in instanceof String) return (String) in;
         return in.toString();
     }
+    
+    /**
+     * Doing a substring like String.substr() but will ever return a string and never throw an exception.
+     * If something is wrong like in is null or from is out of scope it will return an empty string.
+     * 
+     * @param in String to do an substring for
+     * @param from start index, if smaller zero it will be set to 0
+     * @param to end index, if smaller then or zero it will be set to in 0
+     * @return The substring or an empty string
+     */
+    public static String substr(String in, int from, int to) {
+        if (in == null) return "";
+        if (from < 0) from = 0;
+        if (to < 0) to = 0;
+        if (from > to) return "";
+        if (from > in.length()) return "";
+        if (to > in.length()) to = in.length();
+        return in.substring(from, to);
+    }
+
+    /**
+     * Doing a substring like String.substr() but will ever return a string and never throw an exception.
+     * If something is wrong like in is null or from is out of scope it will return an empty string.
+     * 
+     * @param in String to do an substring for
+     * @param from start index, if smaller zero it will be set to length minus from + 1
+     * @param to end index, if smaller then or zero it will be set to in length minus to + 1
+     * @return The substring or an empty string
+     */
+    public static String substrext(String in, int from, int to) {
+        if (in == null) return "";
+        if (from < 0) from = in.length() + from + 1;
+        if (to < 0) to = in.length() + to + 1;
+        if (from > to) return "";
+        if (from > in.length()) return "";
+        if (to > in.length()) to = in.length();
+        return in.substring(from, to);
+    }
 }
