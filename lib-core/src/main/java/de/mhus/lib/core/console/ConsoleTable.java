@@ -65,6 +65,18 @@ public class ConsoleTable {
             options = options.trim();
             MProperties o = IProperties.explodeToMProperties(options);
             setFull(o.getBoolean("all", false));
+            if (o.getBoolean("csv", false)) {
+                colSeparator = ",";
+                cellSpacer = false;
+                acceptHorizontalLine = false;
+                multiLine = false;
+                lineSpacer = false;
+            }
+            colSeparator = o.getString("separator", colSeparator);
+            cellSpacer = o.getBoolean("cellSpacer", cellSpacer);
+            lineSpacer = o.getBoolean("lineSpacer", lineSpacer);
+            multiLine = o.getBoolean("multiLine", multiLine);
+            acceptHorizontalLine = o.getBoolean("acceptHorizontalLine", acceptHorizontalLine);
             // TODO more options ...
         } else {
             fitToConsole();

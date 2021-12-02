@@ -61,6 +61,38 @@ public interface IProperties
     String getFormatted(String name, String def, Object... values);
 
     /**
+     * Creates an MProperties object and fills in the keys and values in alternating order.
+     * @param keysAndValues
+     * @return In every case a properties object
+     */
+    public static MProperties to(Object ... keysAndValues) {
+        MProperties out = new MProperties();
+        if (keysAndValues != null) {
+            for (int i = 0; i < keysAndValues.length; i += 2) {
+                if (i + 1 < keysAndValues.length)
+                    out.put(String.valueOf(keysAndValues[i]), keysAndValues[i + 1]);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Creates an MProperties object and fills in the keys and values in alternating order.
+     * @param keysAndValues
+     * @return In every case a properties object
+     */
+    public static MProperties to(String ... keysAndValues) {
+        MProperties out = new MProperties();
+        if (keysAndValues != null) {
+            for (int i = 0; i < keysAndValues.length; i += 2) {
+                if (i + 1 < keysAndValues.length)
+                    out.put(keysAndValues[i], keysAndValues[i + 1]);
+            }
+        }
+        return out;
+    }
+
+    /**
      * This will handle the strings like options. Means a string without separator will handled as
      * key and set to true. e.g. val1&val2&a=b will be val1=true, val2=true, a=b
      *
