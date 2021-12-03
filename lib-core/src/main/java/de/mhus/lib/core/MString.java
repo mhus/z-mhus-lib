@@ -18,6 +18,7 @@ package de.mhus.lib.core;
 import java.awt.Color;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -2064,13 +2065,16 @@ public class MString {
      * @return The object as string
      */
     public static String toString(Object val) {
-        if (val == null) return "[null]";
-        if (val instanceof Color) return colorToString((Color) val);
-        if (val instanceof byte[]) return byteToString((byte[]) val);
-        if (val instanceof String) return (String) val;
-        StringBuilder sb = new StringBuilder();
-        serialize(sb, val, null);
-        return sb.toString();
+        try {
+            if (val == null) return ":null";
+            if (val instanceof Color) return colorToString((Color) val);
+            if (val instanceof byte[]) return byteToString((byte[]) val);
+            if (val instanceof String) return (String) val;
+            if (val.getClass().isArray()) return Arrays.deepToString((Object[]) val);
+            return String.valueOf(val);
+        } catch (Throwable t) {
+        }
+        return ":?";
     }
 
     /**
