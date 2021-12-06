@@ -62,10 +62,11 @@ public interface IProperties
 
     /**
      * Creates an MProperties object and fills in the keys and values in alternating order.
+     *
      * @param keysAndValues
      * @return In every case a properties object
      */
-    public static MProperties to(Object ... keysAndValues) {
+    public static MProperties to(Object... keysAndValues) {
         MProperties out = new MProperties();
         if (keysAndValues != null) {
             for (int i = 0; i < keysAndValues.length; i += 2) {
@@ -78,15 +79,15 @@ public interface IProperties
 
     /**
      * Creates an MProperties object and fills in the keys and values in alternating order.
+     *
      * @param keysAndValues
      * @return In every case a properties object
      */
-    public static MProperties to(String ... keysAndValues) {
+    public static MProperties to(String... keysAndValues) {
         MProperties out = new MProperties();
         if (keysAndValues != null) {
             for (int i = 0; i < keysAndValues.length; i += 2) {
-                if (i + 1 < keysAndValues.length)
-                    out.put(keysAndValues[i], keysAndValues[i + 1]);
+                if (i + 1 < keysAndValues.length) out.put(keysAndValues[i], keysAndValues[i + 1]);
             }
         }
         return out;

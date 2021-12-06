@@ -57,15 +57,15 @@ public class MProperties extends AbstractProperties implements Externalizable {
     }
 
     // use IProperties.to() instead
-//    public MProperties(String... values) {
-//        this(new Properties());
-//        if (values != null) {
-//            for (int i = 0; i < values.length; i += 2) {
-//                if (i + 1 < values.length)
-//                    IProperties.appendToMap(this, values[i] + "=" + values[i + 1], '=', ':');
-//            }
-//        }
-//    }
+    //    public MProperties(String... values) {
+    //        this(new Properties());
+    //        if (values != null) {
+    //            for (int i = 0; i < values.length; i += 2) {
+    //                if (i + 1 < values.length)
+    //                    IProperties.appendToMap(this, values[i] + "=" + values[i + 1], '=', ':');
+    //            }
+    //        }
+    //    }
 
     public MProperties(Dictionary<?, ?> config) {
         this.properties = new Properties();

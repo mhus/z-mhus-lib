@@ -49,7 +49,7 @@ public class MStringTest extends TestCase {
             String v = MString.substr(t, 1, 25);
             assertEquals("bcdefghijklmnopqrstuvwxy", v);
         }
-        
+
         // exceptions
         {
             String v = MString.substr(t, 0, 30);
@@ -71,7 +71,7 @@ public class MStringTest extends TestCase {
             String v = MString.substr(t, 30, 35);
             assertEquals("", v);
         }
-        
+
         // from right to left - only in ext version
         {
             String v = MString.substr(t, -3, 30);
@@ -115,7 +115,7 @@ public class MStringTest extends TestCase {
             String v = MString.substrext(t, 1, 25);
             assertEquals("bcdefghijklmnopqrstuvwxy", v);
         }
-        
+
         // exceptions
         {
             String v = MString.substrext(t, 0, 30);
@@ -137,7 +137,7 @@ public class MStringTest extends TestCase {
             String v = MString.substrext(t, 30, 35);
             assertEquals("", v);
         }
-        
+
         // from right to left
         {
             String v = MString.substrext(t, -3, 30);
