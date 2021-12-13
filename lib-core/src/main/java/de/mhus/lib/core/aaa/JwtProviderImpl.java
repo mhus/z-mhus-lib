@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.shiro.ShiroException;
+import org.apache.shiro.authc.AuthenticationException;
 
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
@@ -42,7 +43,6 @@ import de.mhus.lib.core.keychain.MKeychainUtil;
 import de.mhus.lib.core.keychain.MutableVaultSource;
 import de.mhus.lib.core.security.MSecurity;
 import de.mhus.lib.core.util.TimeoutMap;
-import de.mhus.lib.errors.AccessDeniedException;
 import de.mhus.lib.errors.MRuntimeException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -121,7 +121,8 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
         } catch (JwtException ex) {
             // we *cannot* use the JWT as intended by its creator
             log().d(ex);
-            throw new AccessDeniedException(ex);
+            throw new AuthenticationException(ex);
+//            throw new AccessDeniedException(ex);
         }
     }
 
