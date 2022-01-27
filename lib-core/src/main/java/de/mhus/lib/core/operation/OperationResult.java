@@ -43,62 +43,42 @@ public class OperationResult {
     public static final int NOT_SUPPORTED = -505;
     public static final int WRONG_STATUS = -506;
 
-    private String operationPath;
-    private String caption;
-    private String msg;
-    private Object result; // technical result
-    private boolean successful;
-    private int returnCode = 0;
+    protected String path;
+    protected String caption;
+    protected String msg;
+    protected Object result; // technical result
+    protected boolean successful;
+    protected int returnCode = 0;
 
-    private OperationDescription nextOperation;
+    protected OperationDescription nextOperation;
 
     public OperationResult() {}
 
     public OperationResult(OperationDescription description) {
         if (description != null) {
-            setOperationPath(description.getPath());
-            setCaption(description.getCaption());
+            path = description.getPath();
+            caption = description.getCaption();
         }
     }
 
     public String getOperationPath() {
-        return operationPath;
-    }
-
-    public void setOperationPath(String operationPath) {
-        this.operationPath = operationPath;
+        return path;
     }
 
     public String getCaption() {
         return caption;
     }
 
-    public void setCaption(String title) {
-        this.caption = title;
-    }
-
     public String getMsg() {
         return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 
     public boolean isSuccessful() {
         return successful;
     }
 
-    public void setSuccessful(boolean successful) {
-        this.successful = successful;
-    }
-
     public OperationDescription getNextOperation() {
         return nextOperation;
-    }
-
-    public void setNextOperation(OperationDescription nextOperation) {
-        this.nextOperation = nextOperation;
     }
 
     /**
@@ -109,24 +89,6 @@ public class OperationResult {
     @Deprecated
     public Object getResult() {
         return result;
-    }
-
-    /**
-     * Set the result as object. Don't use it directly. Should be stored as INode or Map.
-     *
-     * @param result
-     */
-    @Deprecated
-    public void setResult(Object result) {
-        this.result = result;
-    }
-
-    public void setResultNode(Map<String, Object> result) {
-        this.result = result;
-    }
-
-    public void setResultString(String result) {
-        this.result = result;
     }
 
     @Deprecated
@@ -163,15 +125,11 @@ public class OperationResult {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, operationPath, successful, msg, nextOperation, result);
+        return MSystem.toString(this, path, successful, msg, nextOperation, result);
     }
 
     public int getReturnCode() {
         return returnCode;
-    }
-
-    public void setReturnCode(int returnCode) {
-        this.returnCode = returnCode;
     }
 
     @Deprecated

@@ -15,9 +15,10 @@
  */
 package de.mhus.lib.core.operation.util;
 
+import de.mhus.lib.core.operation.MutableOperationResult;
 import de.mhus.lib.core.operation.OperationResult;
 
-public class OperationResultProxy extends OperationResult {
+public class OperationResultProxy extends MutableOperationResult {
 
     @SuppressWarnings("deprecation")
     public OperationResultProxy(OperationResult instance) {

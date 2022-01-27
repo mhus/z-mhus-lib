@@ -17,7 +17,7 @@ package de.mhus.lib.core.operation;
 
 import de.mhus.lib.core.util.MUri;
 
-public class ProfessionalError extends OperationResult {
+public class ProfessionalError extends MutableOperationResult {
 
     public ProfessionalError(String path, String msg, int rc) {
         setSuccessful(false);

@@ -102,7 +102,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
         try {
             Object ret = method.invoke(obj, params);
 
-            OperationResult result = new OperationResult(this.getDescription());
+            MutableOperationResult result = new MutableOperationResult(this.getDescription());
             result.setSuccessful(true);
             result.setMsg("serialized");
             result.setResultString(toSerialized(ret));

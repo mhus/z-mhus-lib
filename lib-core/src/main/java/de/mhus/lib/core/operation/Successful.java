@@ -18,7 +18,7 @@ package de.mhus.lib.core.operation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Successful extends OperationResult {
+public class Successful extends MutableOperationResult {
 
     public Successful(Operation operation) {
         this(operation, "", 0, (String) null);

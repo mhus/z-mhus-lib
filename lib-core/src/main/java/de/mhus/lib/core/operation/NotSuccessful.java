@@ -17,7 +17,7 @@ package de.mhus.lib.core.operation;
 
 import de.mhus.lib.core.util.MUri;
 
-public class NotSuccessful extends OperationResult {
+public class NotSuccessful extends MutableOperationResult {
 
     public NotSuccessful(String path, String msg, int rc) {
         setSuccessful(false);

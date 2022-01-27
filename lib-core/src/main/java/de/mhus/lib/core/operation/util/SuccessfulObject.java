@@ -15,11 +15,11 @@
  */
 package de.mhus.lib.core.operation.util;
 
+import de.mhus.lib.core.operation.MutableOperationResult;
 import de.mhus.lib.core.operation.Operation;
-import de.mhus.lib.core.operation.OperationResult;
 
 @Deprecated
-public class SuccessfulObject extends OperationResult {
+public class SuccessfulObject extends MutableOperationResult {
 
     public SuccessfulObject(Operation operation, String msg, Object result) {
         this(operation.getDescription().getPath(), msg, 0, result);
