@@ -18,6 +18,7 @@ package de.mhus.lib.core.schedule;
 import java.util.UUID;
 
 import de.mhus.lib.basics.Named;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.ITimerTask;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MSystem;
@@ -131,17 +132,17 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                                 res =
                                         new NotSuccessful(
                                                 this,
-                                                "access denied",
-                                                OperationResult.ACCESS_DENIED);
+                                                RC.ACCESS_DENIED,
+                                                "access denied");
                             } else if (!canExecute(context)) {
                                 log.d("execution denied", context.getErrorMessage());
                                 res =
                                         new NotSuccessful(
                                                 this,
+                                                RC.FORBIDDEN,
                                                 context.getErrorMessage() != null
                                                         ? context.getErrorMessage()
-                                                        : "can't execute",
-                                                OperationResult.NOT_EXECUTABLE);
+                                                        : "can't execute");
                             } else res = doExecute(context);
                             log.d("Finished", res);
                         } catch (Throwable e) {

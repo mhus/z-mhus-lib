@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import org.apache.commons.codec.Charsets;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MBigMath;
 import de.mhus.lib.core.MCast;
@@ -691,7 +692,7 @@ public class MCrypt {
 
             return new UUID(a, b);
         } catch (Exception t) {
-            throw new MRuntimeException(in, t);
+            throw new MRuntimeException(RC.STATUS.ERROR, in, t);
         }
     }
 }

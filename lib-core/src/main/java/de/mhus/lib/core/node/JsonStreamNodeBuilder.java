@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.util.NullValue;
 import de.mhus.lib.errors.MException;
 
@@ -139,7 +140,7 @@ public class JsonStreamNodeBuilder extends INodeBuilder {
             if (root == null) root = new MNode();
             return root;
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -152,7 +153,7 @@ public class JsonStreamNodeBuilder extends INodeBuilder {
             write(node, generator);
             generator.close();
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 

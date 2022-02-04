@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;
@@ -140,7 +141,7 @@ public class ParameterDefinition implements Externalizable {
                     String[] parts = def.split(",");
                     String val = String.valueOf(object).toLowerCase();
                     for (String p : parts) if (val.equals(p.toLowerCase())) return p;
-                    if (isMandatory()) throw new MException("field is mandatory", name);
+                    if (isMandatory()) throw new MException(RC.USAGE, "field is mandatory", name);
                     return "";
                 }
             case "string":

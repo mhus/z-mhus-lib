@@ -27,6 +27,7 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.Volume;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MNet;
 import de.mhus.lib.core.MString;
@@ -85,7 +86,7 @@ public class ContainerBuilder {
                             // only localhost !!
                             int start = M.to(bindPort.substring(0, bindPort.length() - 1), 0);
                             start = start + scenario.cnt();
-                            if (start == 0) throw new MRuntimeException("port malformed", bindPort);
+                            if (start == 0) throw new MRuntimeException(RC.SYNTAX_ERROR, "port malformed", bindPort);
                             while (!MNet.availablePort(start)) {
                                 start++;
                                 scenario.cnt();

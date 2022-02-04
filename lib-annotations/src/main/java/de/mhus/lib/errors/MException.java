@@ -15,51 +15,63 @@
  */
 package de.mhus.lib.errors;
 
-import java.util.UUID;
+import de.mhus.lib.basics.RC;
 
 public class MException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
-    private UUID errorId = UUID.randomUUID();
+    private int rc;
 
-    public MException(Object... in) {
-        super(argToString(4, in), argToCause(4, in));
+    public MException(RC.STATUS rc, Object... in) {
+        super(argToString(rc.name(), in),argToCause(in));
+        setReturnCode(rc.rc());
     }
 
+    public MException(int rc, Throwable cause) {
+        super(argToString(cause.getMessage()),cause);
+        setReturnCode(rc);
+    }
+
+    public MException(MException cause) {
+        super(cause.getMessage(), cause);
+        setReturnCode(cause.getReturnCode());
+    }
+
+    public MException(int rc, String msg, Object... in) {
+        super(argToString(msg, in), argToCause(in));
+        setReturnCode(rc);
+    }
+
+    public MException(int rc) {
+        super(RC.toString(rc));
+        setReturnCode(rc);
+    }
+    
     @Override
     public String toString() {
-        return errorId.toString() + " " + super.toString();
+        return getReturnCode() + "|" + super.toString();
     }
 
-    public static String argToString(int level, Object... in) {
-        StringBuilder sb = new StringBuilder();
-        for (Object o : in) {
-            if (o instanceof Object[]) {
-                sb.append("[");
-                if (level < 0) sb.append(o);
-                else sb.append(argToString(level - 1, o));
-                sb.append("]");
-            } else sb.append("[").append(o).append("]");
-        }
-        return sb.toString();
+    public static String argToString(String msg, Object... in) {
+        return RC.toResponseString(msg, in);
     }
 
-    public static Throwable argToCause(int level, Object... in) {
-        if (level < 0) return null;
-        Throwable cause = null;
+    public static Throwable argToCause(Object... in) {
+        if (in == null) return null;
         for (Object o : in) {
-            if ((o instanceof Throwable) && cause == null) {
-                cause = (Throwable) o;
-            } else if (o instanceof Object[]) {
-                cause = argToCause(level - 1, o);
-                if (cause != null) return cause;
+            if (o instanceof Throwable) {
+                return (Throwable) o;
             }
         }
-        return cause;
+        return null;
     }
 
-    public UUID getId() {
-        return errorId;
+    public int getReturnCode() {
+        return rc;
+    }
+
+    protected void setReturnCode(int rc) {
+        this.rc = rc;
     }
 }

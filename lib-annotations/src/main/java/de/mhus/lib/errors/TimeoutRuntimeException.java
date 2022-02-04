@@ -15,11 +15,13 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class TimeoutRuntimeException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public TimeoutRuntimeException(Object... in) {
-        super(in);
+        super(RC.STATUS.TIMEOUT, in);
     }
 }

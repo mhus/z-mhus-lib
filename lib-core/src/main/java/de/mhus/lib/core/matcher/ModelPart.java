@@ -17,6 +17,7 @@ package de.mhus.lib.core.matcher;
 
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.parser.StringPart;
 import de.mhus.lib.errors.MException;
@@ -64,7 +65,7 @@ public abstract class ModelPart {
                 extra.execute(out, map);
                 val = out.toString();
             } catch (MException e) {
-                throw new MRuntimeException(param, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, param, e);
             }
         } else val = map.get(param);
         if (val != null) return matches(this, map, String.valueOf(val));

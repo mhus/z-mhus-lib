@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.Versioned;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MString;
@@ -123,7 +124,7 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version nextMajor() {
         if (versions.length < 1)
-            throw new MRuntimeException(
+            throw new MRuntimeException(RC.SYNTAX_ERROR,
                     "malformed version, can't create next major version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] + 1;
@@ -132,7 +133,7 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version nextMinor() {
         if (versions.length < 2)
-            throw new MRuntimeException(
+            throw new MRuntimeException(RC.SYNTAX_ERROR,
                     "malformed version, can't create next minor version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];
@@ -142,7 +143,7 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version previousMajor() {
         if (versions.length < 1 || versions[0] <= 0)
-            throw new MRuntimeException(
+            throw new MRuntimeException(RC.SYNTAX_ERROR,
                     "malformed version, can't create previous major version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] - 1;
@@ -151,7 +152,7 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version previousMinor() {
         if (versions.length < 2 || versions[1] <= 0)
-            throw new MRuntimeException(
+            throw new MRuntimeException(RC.SYNTAX_ERROR,
                     "malformed version, can't create previous minor version", original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];

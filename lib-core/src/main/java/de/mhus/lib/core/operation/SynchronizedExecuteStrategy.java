@@ -15,6 +15,8 @@
  */
 package de.mhus.lib.core.operation;
 
+import de.mhus.lib.basics.RC;
+
 public class SynchronizedExecuteStrategy extends ExecuteStrategy {
 
     private Operation executable;
@@ -23,7 +25,7 @@ public class SynchronizedExecuteStrategy extends ExecuteStrategy {
     protected OperationResult doExecute2(TaskContext context) throws Exception {
         synchronized (this) {
             if (executable == null)
-                return new NotSuccessful(this, "executable not found", OperationResult.EMPTY);
+                return new NotSuccessful(this, RC.GONE, "executable not found");
             executable.setBusy(this);
             OperationResult out = executable.doExecute(context);
             executable.releaseBusy(this);

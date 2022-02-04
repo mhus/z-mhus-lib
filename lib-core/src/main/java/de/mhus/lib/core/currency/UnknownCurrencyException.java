@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.currency;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.errors.MException;
 
 public class UnknownCurrencyException extends MException {
@@ -22,6 +23,6 @@ public class UnknownCurrencyException extends MException {
     private static final long serialVersionUID = 1L;
 
     public UnknownCurrencyException(Object... in) {
-        super(in);
+        super(RC.STATUS.SYNTAX_ERROR, in);
     }
 }

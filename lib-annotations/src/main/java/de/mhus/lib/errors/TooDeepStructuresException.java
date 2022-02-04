@@ -15,11 +15,13 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class TooDeepStructuresException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public TooDeepStructuresException(Object... in) {
-        super(in);
+        super(RC.STATUS.TOO_DEEP, in);
     }
 }

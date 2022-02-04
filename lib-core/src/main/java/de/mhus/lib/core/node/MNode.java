@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.mhus.lib.basics.IsNull;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MProperties;
@@ -205,7 +206,7 @@ public class MNode extends MProperties implements INode {
             try {
                 return cached.execute(new NodeStringCompiler.NodeMap(level, this));
             } catch (MException e) {
-                throw new MRuntimeException(key, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, key, e);
             }
         }
     }
@@ -259,7 +260,7 @@ public class MNode extends MProperties implements INode {
         try {
             object.writeSerializabledNode(cfg);
         } catch (Exception e) {
-            throw new MRuntimeException(e);
+            throw new MRuntimeException(RC.STATUS.ERROR, e);
         }
         return cfg;
     }

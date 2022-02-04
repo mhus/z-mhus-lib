@@ -20,6 +20,7 @@ import java.util.Set;
 
 import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.operation.Operation;
@@ -61,7 +62,7 @@ public class SuccessfulINode extends Successful {
             try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
@@ -73,7 +74,7 @@ public class SuccessfulINode extends Successful {
             try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
@@ -85,7 +86,7 @@ public class SuccessfulINode extends Successful {
             try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
@@ -97,23 +98,20 @@ public class SuccessfulINode extends Successful {
             try {
                 object.writeSerializabledNode(cfg);
             } catch (Exception e) {
-                throw new MRuntimeException(getOperationPath(), msg, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, getOperationPath(), msg, e);
             }
         setResultNode(cfg);
     }
 
     public SuccessfulINode(Operation operation, String msg, String... keyValues) {
         this(operation.getDescription().getPath(), msg, 0, keyValues);
-        setCaption(operation.getDescription().getCaption());
     }
 
     public SuccessfulINode(String path, String msg, int rc, String... keyValues) {
         super(path, msg, rc, (String) null);
         setOperationPath(path);
-        setCaption("");
         setMsg(msg);
         setReturnCode(rc);
-        setSuccessful(true);
         MNode r = new MNode();
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
@@ -124,7 +122,6 @@ public class SuccessfulINode extends Successful {
 
     public SuccessfulINode(Operation operation, String msg, int rc, String... keyValues) {
         this(operation.getDescription().getPath(), msg, rc, keyValues);
-        setCaption(operation.getDescription().getCaption());
     }
 
     public INode getConfig() {

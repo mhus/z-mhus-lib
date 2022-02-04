@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
@@ -251,7 +252,7 @@ public class PemBlockModel extends MProperties implements PemBlock {
         try {
             return new PemBlockModel().parse(MFile.readFile(f));
         } catch (ParseException e) {
-            throw new MRuntimeException(f, e);
+            throw new MRuntimeException(RC.STATUS.SYNTAX_ERROR, f, e);
         }
     }
 

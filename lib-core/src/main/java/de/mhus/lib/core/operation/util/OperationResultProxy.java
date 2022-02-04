@@ -22,7 +22,6 @@ public class OperationResultProxy extends MutableOperationResult {
 
     @SuppressWarnings("deprecation")
     public OperationResultProxy(OperationResult instance) {
-        setSuccessful(instance.isSuccessful());
         setReturnCode(instance.getReturnCode());
         setMsg(instance.getMsg());
         setResult(instance.getResult());

@@ -15,11 +15,13 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class AccessDeniedException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public AccessDeniedException(Object... in) {
-        super(in);
+        super(RC.STATUS.ACCESS_DENIED,in);
     }
 }

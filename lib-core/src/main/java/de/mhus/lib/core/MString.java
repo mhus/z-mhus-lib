@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.logging.MLogUtil;
 import de.mhus.lib.core.parser.StringCompiler;
 import de.mhus.lib.core.util.EmptyList;
@@ -2002,7 +2003,7 @@ public class MString {
         try {
             return data.getBytes(CHARSET_UTF_8);
         } catch (UnsupportedEncodingException e) {
-            throw new MRuntimeException(e); // this should never happen!!!
+            throw new MRuntimeException(RC.STATUS.ERROR, e); // this should never happen!!!
         }
     }
 
@@ -2017,7 +2018,7 @@ public class MString {
         try {
             return new String(data, CHARSET_UTF_8);
         } catch (UnsupportedEncodingException e) {
-            throw new MRuntimeException(e); // this should never happen!!!
+            throw new MRuntimeException(RC.STATUS.ERROR, e); // this should never happen!!!
         }
     }
 

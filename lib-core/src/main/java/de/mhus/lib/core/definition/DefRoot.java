@@ -22,6 +22,7 @@ import java.io.ObjectOutput;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.errors.MException;
@@ -47,7 +48,7 @@ public class DefRoot extends DefComponent implements Externalizable {
 
     @Override
     public void inject(INode parent) throws MException {
-        throw new MException("can't link root into another container");
+        throw new MException(RC.CONFLICT, "can't link root into another container");
     }
 
     public synchronized DefRoot build() throws MException {

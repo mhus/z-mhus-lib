@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.w3c.dom.Element;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MXml;
@@ -134,7 +135,7 @@ public interface INode extends IProperties {
         try {
             fillIn.readSerializabledNode(this);
         } catch (Exception e) {
-            throw new MRuntimeException(fillIn, this, e);
+            throw new MRuntimeException(RC.STATUS.ERROR, fillIn, this, e);
         }
         return fillIn;
     }
@@ -166,14 +167,14 @@ public interface INode extends IProperties {
             try {
                 return readFromJsonString(nodeString);
             } catch (Exception e) {
-                throw new MException(nodeString, e);
+                throw new MException(RC.STATUS.ERROR, nodeString, e);
             }
         }
         if (nodeString.startsWith("<?")) {
             try {
                 return readFromXmlString(MXml.loadXml(nodeString).getDocumentElement());
             } catch (Exception e) {
-                throw new MException(nodeString, e);
+                throw new MException(RC.STATUS.ERROR, nodeString, e);
             }
         }
 
@@ -241,7 +242,7 @@ public interface INode extends IProperties {
             builder.write(node, os);
             return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR,e);
         }
     }
 
@@ -253,7 +254,7 @@ public interface INode extends IProperties {
             builder.write(node, os);
             return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
         } catch (Exception e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR,e);
         }
     }
 

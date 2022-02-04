@@ -35,6 +35,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.util.EmptyList;
 import de.mhus.lib.core.util.EmptySet;
 import de.mhus.lib.core.util.ReadOnlyList;
@@ -549,7 +550,7 @@ public class MCollection {
      */
     public static <T> T[] cropArray(T[] from, int start, int stop) {
         int length = stop - start;
-        if (length < 0) throw new MRuntimeException("malformed indexes", start, stop, length);
+        if (length < 0) throw new MRuntimeException(RC.STATUS.SYNTAX_ERROR, "malformed indexes", start, stop, length);
         @SuppressWarnings("unchecked")
         T[] out = (T[]) Array.newInstance(from.getClass().getComponentType(), length);
         System.arraycopy(from, start, out, 0, length);
@@ -563,7 +564,7 @@ public class MCollection {
      * @return new extended array
      */
     public static <T> T[] extendArray(T[] from, int left, int right) {
-        if (left < 0 || right < 0) throw new MRuntimeException("malformed extensions", left, right);
+        if (left < 0 || right < 0) throw new MRuntimeException(RC.STATUS.SYNTAX_ERROR, "malformed extensions", left, right);
         int length = from.length + left + right;
         @SuppressWarnings("unchecked")
         T[] out = (T[]) Array.newInstance(from.getClass().getComponentType(), length);

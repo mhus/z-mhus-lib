@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import de.mhus.lib.basics.IsNull;
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.util.MObject;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.MRuntimeException;
@@ -204,7 +205,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
             setFloat(key, (Float) value);
         } else if (value instanceof Double) {
             setDouble(key, (Double) value);
-        } else throw new MRuntimeException("Unknown number class", key, value.getClass());
+        } else throw new MRuntimeException(RC.SYNTAX_ERROR, "Unknown number class", key, value.getClass());
     }
 
     @Override
@@ -318,7 +319,7 @@ public abstract class AbstractProperties extends MObject implements IProperties 
             try {
                 return getProperty(key);
             } catch (Throwable e) {
-                throw new MRuntimeException(e);
+                throw new MRuntimeException(RC.STATUS.NOT_FOUND, e);
             }
         }
 

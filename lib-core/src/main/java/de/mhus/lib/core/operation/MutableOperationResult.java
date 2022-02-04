@@ -2,6 +2,8 @@ package de.mhus.lib.core.operation;
 
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
+
 public class MutableOperationResult extends OperationResult {
 
 
@@ -10,7 +12,20 @@ public class MutableOperationResult extends OperationResult {
     public MutableOperationResult(OperationDescription description) {
         if (description != null) {
             setOperationPath(description.getPath());
-            setCaption(description.getCaption());
+        }
+    }
+    
+    public MutableOperationResult(String path, int rc, String msg, Object ... parameters) {
+        setMsg(RC.toResponseString(msg, parameters));
+        setOperationPath(path);
+        setReturnCode(rc);
+    }
+
+    public MutableOperationResult(Operation operation, int rc, String msg, Object ... parameters) {
+        setMsg(RC.toResponseString(msg, parameters));
+        setReturnCode(rc);
+        if (operation != null && operation.getDescription() != null) {
+            setOperationPath(operation.getDescription().getPath());
         }
     }
 
@@ -18,16 +33,8 @@ public class MutableOperationResult extends OperationResult {
         this.path = operationPath;
     }
 
-    public void setCaption(String title) {
-        this.caption = title;
-    }
-    
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public void setSuccessful(boolean successful) {
-        this.successful = successful;
     }
 
     public void setNextOperation(OperationDescription nextOperation) {

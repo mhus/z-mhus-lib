@@ -31,6 +31,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -99,7 +100,7 @@ public class MLdap {
             res.close();
             return next;
         } catch (Exception t) {
-            throw new MRuntimeException(t);
+            throw new MRuntimeException(RC.STATUS.USAGE, t);
         }
     }
 
@@ -109,7 +110,7 @@ public class MLdap {
             SearchResult result = (SearchResult) res.next();
             return resultToMap(result);
         } catch (Exception t) {
-            throw new MRuntimeException(t);
+            throw new MRuntimeException(RC.STATUS.USAGE, t);
         }
     }
 
@@ -125,7 +126,7 @@ public class MLdap {
                         try {
                             return res.hasMore();
                         } catch (Exception t) {
-                            throw new MRuntimeException(t);
+                            throw new MRuntimeException(RC.STATUS.ERROR, t);
                         }
                     }
 
@@ -136,7 +137,7 @@ public class MLdap {
                             Map<String, Object> map = resultToMap(result);
                             return map;
                         } catch (Exception t) {
-                            throw new MRuntimeException(t);
+                            throw new MRuntimeException(RC.STATUS.ERROR, t);
                         }
                     }
                 };
@@ -152,7 +153,7 @@ public class MLdap {
                 out.add(result.getName());
             }
         } catch (Exception t) {
-            throw new MRuntimeException(t);
+            throw new MRuntimeException(RC.STATUS.ERROR, t);
         }
         return out;
     }
@@ -165,7 +166,7 @@ public class MLdap {
                 out.add(result.getNameInNamespace());
             }
         } catch (Exception t) {
-            throw new MRuntimeException(t);
+            throw new MRuntimeException(RC.STATUS.ERROR, t);
         }
         return out;
     }

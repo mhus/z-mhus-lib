@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.yaml.MYaml;
 import de.mhus.lib.core.yaml.YElement;
 import de.mhus.lib.core.yaml.YList;
@@ -79,7 +80,7 @@ public class YamlNodeBuilder extends INodeBuilder {
         try {
             MYaml.write(elemY, os);
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 

@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.IReadProperties;
 import de.mhus.lib.core.MCast;
@@ -103,7 +104,6 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
             Object ret = method.invoke(obj, params);
 
             MutableOperationResult result = new MutableOperationResult(this.getDescription());
-            result.setSuccessful(true);
             result.setMsg("serialized");
             result.setResultString(toSerialized(ret));
             return result;
@@ -114,7 +114,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
             if (e.getCause() != null) t = e.getCause();
             if (t instanceof Exception) throw (Exception) t;
             if (t instanceof RuntimeException) throw (RuntimeException) t;
-            throw new MException(e.toString());
+            throw new MException(RC.STATUS.ERROR, e.toString());
         }
     }
 

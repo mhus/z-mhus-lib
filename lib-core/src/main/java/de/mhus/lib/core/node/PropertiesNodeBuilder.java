@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MProperties;
@@ -48,7 +49,7 @@ public class PropertiesNodeBuilder extends INodeBuilder {
             MProperties p = MProperties.load(is);
             return readFromMap(p);
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -58,7 +59,7 @@ public class PropertiesNodeBuilder extends INodeBuilder {
         try {
             p.save(os);
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -130,7 +131,7 @@ public class PropertiesNodeBuilder extends INodeBuilder {
             try {
                 ((NodeSerializable) item).writeSerializabledNode(obj);
             } catch (Exception e) {
-                throw new MRuntimeException(item, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, item, e);
             }
             return obj;
         } else if (item instanceof INode) {
@@ -167,7 +168,7 @@ public class PropertiesNodeBuilder extends INodeBuilder {
             try {
                 MPojo.pojoToNode(item, obj);
             } catch (IOException e) {
-                throw new MRuntimeException(item, e);
+                throw new MRuntimeException(RC.STATUS.ERROR, item, e);
             }
             return obj;
         }

@@ -17,37 +17,22 @@ package de.mhus.lib.core.operation;
 
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.node.NodeSerializable;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
-import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.core.node.NodeSerializable;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
 
 public class OperationResult {
 
-    public static final int OK = 0;
-    public static final int EMPTY = -10;
-    public static final int BUSY = -11;
-    public static final int NOT_EXECUTABLE = -12;
-    public static final int SYNTAX_ERROR = -13;
-    public static final int USAGE = -14;
-
-    public static final int INTERNAL_ERROR = -500;
-    public static final int ACCESS_DENIED = -401;
-    public static final int NOT_FOUND = -404;
-    public static final int NOT_SUPPORTED = -505;
-    public static final int WRONG_STATUS = -506;
-
     protected String path;
-    protected String caption;
     protected String msg;
     protected Object result; // technical result
-    protected boolean successful;
     protected int returnCode = 0;
 
     protected OperationDescription nextOperation;
@@ -57,7 +42,6 @@ public class OperationResult {
     public OperationResult(OperationDescription description) {
         if (description != null) {
             path = description.getPath();
-            caption = description.getCaption();
         }
     }
 
@@ -65,16 +49,12 @@ public class OperationResult {
         return path;
     }
 
-    public String getCaption() {
-        return caption;
-    }
-
     public String getMsg() {
         return msg;
     }
 
     public boolean isSuccessful() {
-        return successful;
+        return returnCode <= RC.RANGE_MAX_SUCCESSFUL;
     }
 
     public OperationDescription getNextOperation() {
@@ -106,7 +86,7 @@ public class OperationResult {
                 INode ret = INode.readNodeFromString(String.valueOf(result));
                 if (ret != null) return ret;
             } catch (Throwable t) {
-                throw new MRuntimeException(this, t);
+                throw new MRuntimeException(RC.STATUS.CONFLICT, this, t);
             }
         throw new UsageException("Can't cast result to map", result.getClass());
     }
@@ -125,29 +105,11 @@ public class OperationResult {
 
     @Override
     public String toString() {
-        return MSystem.toString(this, path, successful, msg, nextOperation, result);
+        return MSystem.toString(this, path, returnCode, msg, nextOperation, result);
     }
 
     public int getReturnCode() {
         return returnCode;
-    }
-
-    @Deprecated
-    public String getMsgCaption() {
-        if (MString.isSet(msg) && msg.startsWith("m=")) {
-            Map<String, String> msgParts = MUri.explode(msg);
-            return msgParts.get("c");
-        }
-        return null;
-    }
-
-    @Deprecated
-    public String getMsgMessage() {
-        if (MString.isSet(msg) && msg.startsWith("m=")) {
-            Map<String, String> msgParts = MUri.explode(msg);
-            return msgParts.get("m");
-        }
-        return msg;
     }
 
     public boolean isEmpty() {
@@ -180,7 +142,7 @@ public class OperationResult {
             throw new UsageException("Can't cast result to node", result.getClass());
 
         } catch (Exception e) {
-            throw new MRuntimeException(this, e);
+            throw new MRuntimeException(RC.STATUS.CONFLICT, this, e);
         }
     }
 
@@ -197,7 +159,7 @@ public class OperationResult {
         try {
             fillIn.readSerializabledNode(cfg);
         } catch (Exception e) {
-            throw new MRuntimeException(this, e);
+            throw new MRuntimeException(RC.STATUS.CONFLICT, this, e);
         }
         return fillIn;
     }

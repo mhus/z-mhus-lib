@@ -35,7 +35,6 @@ public class SuccessfulMap extends Successful {
 
     public SuccessfulMap(Operation operation, String msg, int rc, String... keyValues) {
         super(operation.getDescription().getPath(), msg, rc, keyValues);
-        setCaption(operation.getDescription().getCaption());
     }
 
     public Map<String, Object> getMap() {

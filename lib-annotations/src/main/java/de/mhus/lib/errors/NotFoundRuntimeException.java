@@ -15,11 +15,13 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class NotFoundRuntimeException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public NotFoundRuntimeException(Object... in) {
-        super(in);
+        super(RC.STATUS.NOT_FOUND, in);
     }
 }

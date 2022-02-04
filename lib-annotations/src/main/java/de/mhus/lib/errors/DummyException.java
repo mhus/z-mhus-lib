@@ -15,17 +15,19 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class DummyException extends MException {
 
     private static final long serialVersionUID = 1L;
     private StackTraceElement[] stackTrace;
 
     public DummyException(String msg) {
-        super(msg);
+        super(RC.OK, msg);
     }
 
     public DummyException(String msg, StackTraceElement[] stackTrace) {
-        super(msg);
+        super(RC.OK, msg);
         this.stackTrace = stackTrace;
     }
 

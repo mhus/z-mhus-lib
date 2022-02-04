@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.M;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MDate;
@@ -75,7 +76,7 @@ public class PrintStreamFactory extends LogFactory {
             try {
                 f = new FileOutputStream(file, config.getBoolean("append", true));
             } catch (FileNotFoundException e) {
-                throw new MException(file, e);
+                throw new MException(RC.NOT_FOUND, file, e);
             }
             out = new PrintStream(f, true);
         } else if ("console".equals(io)) {

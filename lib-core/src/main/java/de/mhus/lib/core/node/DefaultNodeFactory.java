@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MFile;
 import de.mhus.lib.core.MSystem;
 import de.mhus.lib.errors.MException;
@@ -44,7 +45,7 @@ public class DefaultNodeFactory implements INodeFactory {
             URL url = MSystem.locateResource(owner, fileName);
             return read(url);
         } catch (IOException e) {
-            throw new MException(fileName, e);
+            throw new MException(RC.STATUS.ERROR, fileName, e);
         }
     }
 
@@ -65,7 +66,7 @@ public class DefaultNodeFactory implements INodeFactory {
         try (InputStream is = url.openStream()) {
             return builder.read(is);
         } catch (IOException e) {
-            throw new MException(url, e);
+            throw new MException(RC.STATUS.ERROR, url, e);
         }
     }
 

@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MRuntimeException;
@@ -182,7 +183,7 @@ public class Base64 {
         try {
             return new String(decode(encoded), "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new MRuntimeException(encoded, e);
+            throw new MRuntimeException(RC.STATUS.NOT_SUPPORTED, encoded, e);
         }
     }
 

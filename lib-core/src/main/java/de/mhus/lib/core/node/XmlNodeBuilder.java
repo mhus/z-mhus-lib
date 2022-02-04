@@ -28,6 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MXml;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.errors.TooDeepStructuresException;
@@ -40,7 +41,7 @@ public class XmlNodeBuilder extends INodeBuilder {
             Document doc = MXml.loadXml(is);
             return readFromElement(doc.getDocumentElement());
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -58,7 +59,7 @@ public class XmlNodeBuilder extends INodeBuilder {
         } catch (ParserConfigurationException
                 | TransformerFactoryConfigurationError
                 | TransformerException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 

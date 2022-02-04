@@ -15,11 +15,13 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.RC;
+
 public class SyntaxError extends MException {
 
     private static final long serialVersionUID = 1L;
 
     public SyntaxError(Object... in) {
-        super(in);
+        super(RC.STATUS.SYNTAX_ERROR, in);
     }
 }

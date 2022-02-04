@@ -15,12 +15,14 @@
  */
 package de.mhus.lib.errors;
 
-public class AuthenticationException extends RuntimeException {
+import de.mhus.lib.basics.RC;
+
+public class AuthenticationException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public AuthenticationException() {
-        super();
+        super(RC.STATUS.ACCESS_DENIED);
     }
 
     public AuthenticationException(
@@ -28,18 +30,18 @@ public class AuthenticationException extends RuntimeException {
             Throwable cause,
             boolean enableSuppression,
             boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        super(RC.ACCESS_DENIED, message, cause, enableSuppression, writableStackTrace);
     }
 
     public AuthenticationException(String message, Throwable cause) {
-        super(message, cause);
+        super(RC.ACCESS_DENIED, message, cause);
     }
 
     public AuthenticationException(String message) {
-        super(message);
+        super(RC.ACCESS_DENIED, message);
     }
 
     public AuthenticationException(Throwable cause) {
-        super(cause);
+        super(RC.ACCESS_DENIED, cause);
     }
 }

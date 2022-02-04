@@ -23,12 +23,10 @@ public class SuccessfulObject extends MutableOperationResult {
 
     public SuccessfulObject(Operation operation, String msg, Object result) {
         this(operation.getDescription().getPath(), msg, 0, result);
-        setCaption(operation.getDescription().getCaption());
     }
 
     public SuccessfulObject(Operation operation, String msg, int rc, Object result) {
         this(operation.getDescription().getPath(), msg, rc, result);
-        setCaption(operation.getDescription().getCaption());
     }
 
     public SuccessfulObject(String path, String msg, Object result) {
@@ -40,6 +38,5 @@ public class SuccessfulObject extends MutableOperationResult {
         setResult(result);
         setMsg(msg);
         setReturnCode(rc);
-        setSuccessful(true);
     }
 }

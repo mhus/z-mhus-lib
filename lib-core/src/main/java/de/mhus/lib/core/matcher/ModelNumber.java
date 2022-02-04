@@ -18,6 +18,7 @@ package de.mhus.lib.core.matcher;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.errors.MRuntimeException;
 
 public class ModelNumber extends ModelPattern {
@@ -37,7 +38,7 @@ public class ModelNumber extends ModelPattern {
 
         if (name != null) {
             if (map == null)
-                throw new MRuntimeException("variables not available, use condition not matcher");
+                throw new MRuntimeException(RC.NOT_FOUND, "variables not available, use condition not matcher");
             Object val = map.get(name);
             if (val == null) return false;
             str = val.toString();

@@ -18,18 +18,26 @@ package de.mhus.lib.core.operation;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.mhus.lib.basics.RC;
+import de.mhus.lib.core.logging.MLogUtil;
+
 public class Successful extends MutableOperationResult {
 
-    public Successful(Operation operation) {
-        this(operation, "", 0, (String) null);
+
+    public Successful() {
+        super();
     }
 
-    public Successful(Operation operation, String msg) {
-        this(operation, msg, 0, (String) null);
+    public Successful(Operation operation, int rc, String msg, Object... parameters) {
+        super(operation, rc, msg, parameters);
     }
 
-    public Successful(Operation operation, String msg, int rc) {
-        this(operation, msg, rc, (String) null);
+    public Successful(OperationDescription description) {
+        super(description);
+    }
+
+    public Successful(String path, int rc, String msg, Object... parameters) {
+        super(path, rc, msg, parameters);
     }
 
     public Successful(Operation operation, String msg, Map<?, ?> result) {
@@ -39,21 +47,17 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, Map<?, ?> result) {
         setOperationPath(operation.getDescription().getPath());
-        setCaption(operation.getDescription().getCaption());
         setMsg(msg);
         setResult(result);
         setReturnCode(rc);
-        setSuccessful(true);
     }
 
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, Map<?, ?> result) {
         setOperationPath(path);
-        setCaption("");
         setMsg(msg);
         setResult(result);
         setReturnCode(rc);
-        setSuccessful(true);
     }
 
     public Successful(Operation operation, String msg, String result) {
@@ -63,21 +67,17 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, String result) {
         setOperationPath(operation.getDescription().getPath());
-        setCaption(operation.getDescription().getCaption());
         setMsg(msg);
         setResult(result);
         setReturnCode(rc);
-        setSuccessful(true);
     }
 
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String result) {
         setOperationPath(path);
-        setCaption("");
         setMsg(msg);
         setResult(result);
         setReturnCode(rc);
-        setSuccessful(true);
     }
 
     public Successful(Operation operation, String msg, String... keyValues) {
@@ -91,10 +91,8 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String... keyValues) {
         setOperationPath(path);
-        setCaption("");
         setMsg(msg);
         setReturnCode(rc);
-        setSuccessful(true);
         HashMap<Object, Object> r = new HashMap<>();
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
@@ -102,4 +100,18 @@ public class Successful extends MutableOperationResult {
             setResult(r);
         }
     }
+
+    @Override
+    public void setReturnCode(int returnCode) {
+        if (returnCode < 0) {
+            MLogUtil.log().d("de.mhus.lib.core.operation.Successful: negative return code",returnCode);
+            this.returnCode = RC.OK;
+        } else
+        if (returnCode > RC.RANGE_MAX_SUCCESSFUL) {
+            MLogUtil.log().d("de.mhus.lib.core.operation.Successful: wrong return code",returnCode);
+            this.returnCode = RC.OK;
+        } else
+            this.returnCode = returnCode;
+    }
+
 }

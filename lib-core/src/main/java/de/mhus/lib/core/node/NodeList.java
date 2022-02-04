@@ -18,6 +18,7 @@ package de.mhus.lib.core.node;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.errors.MRuntimeException;
 
@@ -61,7 +62,7 @@ public class NodeList extends LinkedList<INode> {
         try {
             object.writeSerializabledNode(cfg);
         } catch (Exception e) {
-            throw new MRuntimeException(e);
+            throw new MRuntimeException(RC.STATUS.ERROR, e);
         }
         return cfg;
     }

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MDate;
 import de.mhus.lib.core.MJson;
 import de.mhus.lib.core.util.MIterable;
@@ -42,7 +43,7 @@ public class JsonNodeBuilder extends INodeBuilder {
             JsonNode docJ = MJson.load(is);
             return fromJson(docJ);
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -60,7 +61,7 @@ public class JsonNodeBuilder extends INodeBuilder {
             // TODO separate for each type
             node.setString(INode.NAMELESS_VALUE, docJ.asText());
         } else {
-            throw new MException("Unknown basic json object type");
+            throw new MException(RC.SYNTAX_ERROR, "Unknown basic json object type");
         }
 
         return node;
@@ -95,7 +96,7 @@ public class JsonNodeBuilder extends INodeBuilder {
             JsonNode objectJ = writeToJsonNode(node);
             MJson.save(objectJ, os);
         } catch (IOException e) {
-            throw new MException(e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 

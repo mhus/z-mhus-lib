@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.errors.MException;
@@ -38,7 +39,7 @@ public abstract class INodeBuilder extends MLog {
         try (FileInputStream is = new FileInputStream(file)) {
             return read(is);
         } catch (IOException e) {
-            throw new MException(file, e);
+            throw new MException(RC.STATUS.ERROR, file, e);
         }
     }
 
@@ -50,7 +51,7 @@ public abstract class INodeBuilder extends MLog {
         try (FileOutputStream os = new FileOutputStream(file)) {
             write(node, os);
         } catch (IOException e) {
-            throw new MException(file, e);
+            throw new MException(RC.STATUS.ERROR, file, e);
         }
     }
 

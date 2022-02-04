@@ -15,23 +15,64 @@
  */
 package de.mhus.lib.errors;
 
-import java.util.UUID;
+import de.mhus.lib.basics.RC;
 
 public class MRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-    private UUID errorId = UUID.randomUUID();
 
-    public MRuntimeException(Object... in) {
-        super(MException.argToString(4, in), MException.argToCause(4, in));
+    private int rc;
+    
+    public MRuntimeException(RC.STATUS rc, Object... in) {
+        super(argToString(rc.name(), in),argToCause(in));
+        setReturnCode(rc.rc());
     }
 
+    public MRuntimeException(int rc, Throwable cause) {
+        super(argToString(cause.getMessage()),cause);
+        setReturnCode(rc);
+    }
+
+    public MRuntimeException(MException cause) {
+        super(cause.getMessage(), cause);
+        setReturnCode(cause.getReturnCode());
+    }
+
+    public MRuntimeException(int rc, String msg, Object... in) {
+        super(argToString(msg, in), argToCause(in));
+        setReturnCode(rc);
+    }
+
+    public MRuntimeException(int rc) {
+        super(RC.toString(rc));
+        setReturnCode(rc);
+    }
+    
     @Override
     public String toString() {
-        return errorId.toString() + " " + super.toString();
+        return getReturnCode() + "|" + super.toString();
     }
 
-    public UUID getId() {
-        return errorId;
+    public static String argToString(String msg, Object... in) {
+        return RC.toResponseString(msg, in);
     }
+
+    public static Throwable argToCause(Object... in) {
+        if (in == null) return null;
+        for (Object o : in) {
+            if (o instanceof Throwable) {
+                return (Throwable) o;
+            }
+        }
+        return null;
+    }
+
+    public int getReturnCode() {
+        return rc;
+    }
+
+    protected void setReturnCode(int rc) {
+        this.rc = rc;
+    }
+
 }

@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.crypt.AsyncKey;
 import de.mhus.lib.core.crypt.MCrypt;
 import de.mhus.lib.core.crypt.MRandom;
@@ -97,17 +98,17 @@ public class MPassword {
             case RSA:
                 MKeychain vault = MKeychainUtil.loadDefault();
                 KeyEntry entry = vault.getEntry(UUID.fromString(secret));
-                if (entry == null) throw new MRuntimeException("key not found", secret);
+                if (entry == null) throw new MRuntimeException(RC.ERROR, "key not found", secret);
                 try {
                     AsyncKey key = MKeychainUtil.adaptTo(entry, AsyncKey.class);
                     return PREFIX_RSA + entry.getId() + ":" + MCrypt.encodeWithSalt(key, in);
                 } catch (Exception e) {
-                    throw new MRuntimeException(e);
+                    throw new MRuntimeException(RC.STATUS.ERROR, e);
                 }
             case HASH_MD5:
                 return PREFIX_HASH_MD5 + encodePasswordMD5(secret);
             default:
-                throw new MRuntimeException("unknown encode method", method);
+                throw new MRuntimeException(RC.ERROR, "unknown encode method", method);
         }
     }
 
@@ -138,16 +139,16 @@ public class MPassword {
             in = in.substring(p + 1);
             MKeychain vault = MKeychainUtil.loadDefault();
             KeyEntry entry = vault.getEntry(UUID.fromString(keyId));
-            if (entry == null) throw new MRuntimeException("key not found", keyId);
+            if (entry == null) throw new MRuntimeException(RC.ERROR, "key not found", keyId);
             try {
                 AsyncKey key = MKeychainUtil.adaptTo(entry, AsyncKey.class);
                 return MCrypt.decodeWithSalt(key, in);
             } catch (Exception e) {
-                throw new MRuntimeException(e);
+                throw new MRuntimeException(RC.STATUS.ERROR, e);
             }
         }
         if (in.startsWith(PREFIX_DUMMY))
-            throw new MRuntimeException("try to encode a dummy password");
+            throw new MRuntimeException(RC.ERROR, "try to encode a dummy password");
         if (in.startsWith(PREFIX_SPECIAL1)) {
             StringBuilder out = new StringBuilder();
             for (int i = 2; i < in.length(); i++) {

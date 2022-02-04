@@ -26,6 +26,7 @@ import java.util.UUID;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authc.AuthenticationException;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MLog;
 import de.mhus.lib.core.MPeriod;
 import de.mhus.lib.core.MProperties;
@@ -229,14 +230,14 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
             if (MValidator.isUUID(kid)) e = source.getEntry(UUID.fromString(kid));
             else e = source.getEntry("jwt." + kid + ".pub");
 
-            if (e == null) throw new MRuntimeException("Key unknown", kid);
+            if (e == null) throw new MRuntimeException(RC.USAGE, "Key unknown", kid);
 
             String pem = e.getValue().value();
             key = MSecurity.readPublicKey(pem, ALGORITHM, PROVIDER);
             publicKeyCache.put(kid, key);
             return key;
         } catch (Exception e) {
-            throw new MRuntimeException(kid, e);
+            throw new MRuntimeException(RC.STATUS.ERROR, kid, e);
         }
     }
 

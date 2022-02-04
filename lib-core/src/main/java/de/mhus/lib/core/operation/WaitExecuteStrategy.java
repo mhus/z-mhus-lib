@@ -17,6 +17,7 @@ package de.mhus.lib.core.operation;
 
 import java.util.concurrent.TimeoutException;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.MThread;
 
 public class WaitExecuteStrategy extends ExecuteStrategy {
@@ -28,7 +29,7 @@ public class WaitExecuteStrategy extends ExecuteStrategy {
     @Override
     protected OperationResult doExecute2(TaskContext context) throws Exception {
         if (executable == null)
-            return new NotSuccessful(this, "executable not found", OperationResult.EMPTY);
+            return new NotSuccessful(this, RC.GONE, "executable not found");
         try {
             long cnt = timeout;
             ;
@@ -40,7 +41,7 @@ public class WaitExecuteStrategy extends ExecuteStrategy {
                 }
             }
             if (executable == null)
-                return new NotSuccessful(this, "executable not found", OperationResult.EMPTY);
+                return new NotSuccessful(this, RC.GONE, "executable not found");
             return executable.doExecute(context);
         } finally {
             if (executable != null) executable.releaseBusy(this);

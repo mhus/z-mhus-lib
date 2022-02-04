@@ -15,34 +15,38 @@
  */
 package de.mhus.lib.core.operation;
 
-import de.mhus.lib.core.util.MUri;
+import de.mhus.lib.basics.RC;
+import de.mhus.lib.core.logging.MLogUtil;
 
 public class NotSuccessful extends MutableOperationResult {
 
-    public NotSuccessful(String path, String msg, int rc) {
-        setSuccessful(false);
-        setMsg(MUri.implodeKeyValues("m", msg));
-        setOperationPath(path);
-        setReturnCode(rc);
+    public NotSuccessful() {
+        super();
     }
 
-    public NotSuccessful(Operation operation, String msg, int rc) {
-        setSuccessful(false);
-        setMsg(MUri.implodeKeyValues("m", msg));
-        setReturnCode(rc);
-        if (operation != null && operation.getDescription() != null) {
-            setOperationPath(operation.getDescription().getPath());
-            setCaption(operation.getDescription().getCaption());
-        }
+    public NotSuccessful(Operation operation, int rc, String msg, Object... parameters) {
+        super(operation, rc, msg, parameters);
     }
 
-    public NotSuccessful(Operation operation, String msg, String caption, int rc) {
-        setSuccessful(false);
-        setMsg(MUri.implodeKeyValues("m", msg, "c", caption));
-        setReturnCode(rc);
-        if (operation != null && operation.getDescription() != null) {
-            setOperationPath(operation.getDescription().getPath());
-            setCaption(operation.getDescription().getCaption());
-        }
+    public NotSuccessful(OperationDescription description) {
+        super(description);
     }
+
+    public NotSuccessful(String path, int rc, String msg, Object... parameters) {
+        super(path, rc, msg, parameters);
+    }
+
+    @Override
+    public void setReturnCode(int returnCode) {
+        if (returnCode <= RC.RANGE_MAX_SUCCESSFUL) {
+            MLogUtil.log().d("de.mhus.lib.core.operation.NotSuccessful: wrong return code",returnCode);
+            this.returnCode = RC.INTERNAL_ERROR;
+        } else
+        if (returnCode > RC.RANGE_MAX) {
+            MLogUtil.log().d("de.mhus.lib.core.operation.NotSuccessful: return code out of range",returnCode);
+            this.returnCode = RC.INTERNAL_ERROR;
+        } else
+            this.returnCode = returnCode;
+    }
+
 }
