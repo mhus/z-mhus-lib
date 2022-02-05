@@ -165,6 +165,10 @@ public class RC {
         return rc >= 0 && rc <= RANGE_MAX_SUCCESSFUL;
     }
 
+    public static boolean canRetry(int rc) {
+        return rc >= RANGE_MIN_TECHNICAL && rc <= RANGE_MAX_TECHNICAL && rc != NOT_SUPPORTED ;
+    }
+
     public static String toString(int rc) {
         switch (rc) {
         case WARNING_TEMPORARELY: return "WARNING_TEMPORARELY";
