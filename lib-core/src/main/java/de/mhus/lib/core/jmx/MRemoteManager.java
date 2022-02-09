@@ -113,11 +113,11 @@ public class MRemoteManager extends MObject {
                             }
                         }
                     } else {
-                        log().d(name, e);
+                        log().d("registration failed", name, e);
                         throw e;
                     }
                 } catch (Exception e) {
-                    log().d(name, e);
+                    log().d("registration failed", name, e);
                     throw e;
                 }
             registry.put(name, proxy);
@@ -132,7 +132,7 @@ public class MRemoteManager extends MObject {
                     log().t("unregister", name);
                     mbs.unregisterMBean(name);
                 } catch (Exception e) {
-                    log().e(name, e);
+                    log().e("unregistration failed", name, e);
                 }
         }
     }
@@ -146,7 +146,7 @@ public class MRemoteManager extends MObject {
                     log().t("register", item.getKey());
                     mbs.registerMBean(item.getValue(), item.getKey());
                 } catch (Exception e) {
-                    log().e(item.getKey(), e);
+                    log().e("registration failed", item.getKey(), e);
                 }
             }
         }
@@ -160,7 +160,7 @@ public class MRemoteManager extends MObject {
                     log().t("unregister", item.getKey());
                     mbs.unregisterMBean(item.getKey());
                 } catch (Exception e) {
-                    log().e(item.getKey(), e);
+                    log().e("unregistration failed", item.getKey(), e);
                 }
             }
             mbs = null;

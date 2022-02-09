@@ -109,7 +109,7 @@ public abstract class OperationToIfcProxy extends AbstractOperation {
             return result;
 
         } catch (InvocationTargetException e) {
-            log().d(clazz, obj.getClass(), e);
+            log().d("invocation of interface {2} failed", clazz, obj.getClass(), e);
             Throwable t = e;
             if (e.getCause() != null) t = e.getCause();
             if (t instanceof Exception) throw (Exception) t;

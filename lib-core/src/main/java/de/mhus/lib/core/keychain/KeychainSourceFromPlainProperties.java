@@ -130,7 +130,7 @@ public class KeychainSourceFromPlainProperties extends MapMutableVaultSource {
             try {
                 doLoad();
             } catch (IOException e) {
-                log().e(file, e);
+                log().e("loading {1} failed", file, e);
             }
     }
 }

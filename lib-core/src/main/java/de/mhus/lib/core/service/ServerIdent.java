@@ -145,7 +145,7 @@ public class ServerIdent extends MObject {
             try {
                 p.save(file);
             } catch (IOException e) {
-                log().w(file, e);
+                log().w("writing {1} failed", file, e);
             }
     }
 

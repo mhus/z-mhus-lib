@@ -100,7 +100,7 @@ public class MFile {
         try {
             Files.setPosixFilePermissions(file.toPath(), permissions);
         } catch (IOException e) {
-            log.d(file, permissionsStr, e);
+            log.d("set unix permissions failed", file, permissionsStr, e);
             return false;
         }
         return true;
@@ -117,7 +117,7 @@ public class MFile {
             Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
             return PosixFilePermissions.toString(permissions);
         } catch (IOException e) {
-            log.d(file, e);
+            log.d("get unix permissions failed", file, e);
         }
         return null;
     }
@@ -236,7 +236,7 @@ public class MFile {
             fis.close();
             return ret;
         } catch (Exception e) {
-            log.d(_f, e);
+            log.d("read file failed", _f, e);
         }
         return null;
     }
@@ -404,7 +404,7 @@ public class MFile {
             osw.flush();
             osw.close();
         } catch (Exception e) {
-            log.d(_f, e);
+            log.d("write file failed", _f, e);
             return false;
         }
 
@@ -445,7 +445,7 @@ public class MFile {
             if (_content != null) writeFile(fos, _content, 0, _content.length);
             fos.close();
         } catch (Exception e) {
-            log.d(_f, e);
+            log.d("write file failed", _f, e);
             return false;
         }
 
@@ -492,7 +492,7 @@ public class MFile {
             fis.close();
             fos.close();
         } catch (Exception e) {
-            log.d(_src, _dest, e);
+            log.d("copy file failed", _src, _dest, e);
             return -4;
         }
         return size;

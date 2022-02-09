@@ -73,7 +73,7 @@ public abstract class CfgValue<T> {
         try {
             onPostUpdate(value);
         } catch (Throwable t) {
-            MLogUtil.log().d(this, t);
+            MLogUtil.log().d("post update failed", this, t);
         }
     }
 

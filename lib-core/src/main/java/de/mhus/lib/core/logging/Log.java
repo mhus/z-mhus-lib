@@ -49,7 +49,7 @@ public class Log {
     protected String name;
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
-    private List<String> maxMsgSizeExceptions;
+    private List<String> maxMsgSizeExceptions; // if one if the strings is found in the message the messgae is full printed
     private volatile ITracer tracer;
     private volatile boolean tracerInError = false;
     private volatile boolean tracerStartup;
@@ -84,12 +84,17 @@ public class Log {
      * trace is switched on.
      *
      * @param msg
+     * @param param 
      */
-    public void t(Object... msg) {
-        log(LEVEL.TRACE, msg);
+    public void t(String msg, Object... param) {
+        log(LEVEL.TRACE, msg, param);
     }
 
-    public void log(LEVEL level, Object... msg) {
+    public void t(Throwable t) {
+        log(LEVEL.TRACE, t.toString(), t);
+    }
+
+    public void log(LEVEL level, String msg, Object... param) {
         if (engine == null) return;
 
         // level mapping
@@ -143,11 +148,11 @@ public class Log {
                 return;
         }
 
-        if (parameterMapper != null) msg = parameterMapper.map(this, msg);
+        if (parameterMapper != null) param = parameterMapper.map(this, param);
 
         StringBuilder sb = new StringBuilder();
         prepare(sb);
-        Throwable error = MString.serialize(sb, msg, maxMsgSize, maxMsgSizeExceptions);
+        Throwable error = MString.serialize(sb, msg, param, maxMsgSize, maxMsgSizeExceptions);
 
         switch (level) {
             case DEBUG:
@@ -266,19 +271,29 @@ public class Log {
      * Also add a trace.
      *
      * @param msg
+     * @param param 
      */
-    public void d(Object... msg) {
-        log(LEVEL.DEBUG, msg);
+    public void d(String msg, Object... param) {
+        log(LEVEL.DEBUG, msg, param);
     }
 
+    public void d(Throwable t) {
+        log(LEVEL.DEBUG, t.toString(), t);
+    }
+    
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also
      * add a trace.
      *
      * @param msg
+     * @param param 
      */
-    public void i(Object... msg) {
-        log(LEVEL.INFO, msg);
+    public void i(String msg, Object... param) {
+        log(LEVEL.INFO, msg, param);
+    }
+
+    public void i(Throwable t) {
+        log(LEVEL.INFO, t.toString(), t);
     }
 
     /**
@@ -286,9 +301,14 @@ public class Log {
      * add a trace.
      *
      * @param msg
+     * @param param 
      */
-    public void w(Object... msg) {
-        log(LEVEL.WARN, msg);
+    public void w(String msg, Object... param) {
+        log(LEVEL.WARN, msg, param);
+    }
+
+    public void w(Throwable t) {
+        log(LEVEL.WARN, t.toString(), t);
     }
 
     /**
@@ -296,9 +316,14 @@ public class Log {
      * Also add a trace.
      *
      * @param msg
+     * @param param 
      */
-    public void e(Object... msg) {
-        log(LEVEL.ERROR, msg);
+    public void e(String msg, Object... param) {
+        log(LEVEL.ERROR, msg, param);
+    }
+
+    public void e(Throwable t) {
+        log(LEVEL.ERROR, t.toString(), t);
     }
 
     /**
@@ -306,9 +331,14 @@ public class Log {
      * add a trace.
      *
      * @param msg
+     * @param param 
      */
-    public void f(Object... msg) {
-        log(LEVEL.FATAL, msg);
+    public void f(String msg, Object... param) {
+        log(LEVEL.FATAL, msg, param);
+    }
+
+    public void f(Throwable t) {
+        log(LEVEL.FATAL, t.toString(), t);
     }
 
     protected void prepare(StringBuilder sb) {

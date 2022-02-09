@@ -2095,6 +2095,7 @@ public class MString {
     }
 
     public static Throwable serialize(StringBuilder sb, Object o, Throwable error) {
+
         try {
             if (o == null) {
                 sb.append("[null]");
@@ -2102,30 +2103,42 @@ public class MString {
                 if (error == null) return (Throwable) o;
                 // another error
                 sb.append("[").append(o).append("]");
-            } else if (o.getClass().isArray()) {
-                sb.append("[");
-                boolean first = true;
-                for (Object p : (Object[]) o) {
-                    if (first) first = false;
-                    else sb.append(",");
-                    error = serialize(sb, p, error);
+            } else {
+                String msg = String.valueOf(o);
+                int pos = 0;
+                int nextPos;
+                while ((nextPos = msg.indexOf('|', pos)) != -1) {
+                    sb.append(msg.substring(pos, nextPos));
+                    sb.append(":");
+                    pos = nextPos+1;
+                    if (pos >= msg.length()) break;
                 }
-                sb.append("]");
-            } else sb.append("[").append(o).append("]");
+                if (pos < msg.length())
+                    sb.append(msg.substring(pos));
+            }
         } catch (Throwable t) {
         }
         return error;
     }
 
     public static Throwable serialize(StringBuilder sb, Object[] msg, int maxMsgSize) {
-        return serialize(sb, msg, maxMsgSize, null);
+        return serialize(sb, null, msg, maxMsgSize, null);
     }
 
     public static Throwable serialize(
-            StringBuilder sb, Object[] msg, int maxMsgSize, List<String> exceptions) {
+            StringBuilder sb, String msg, Object[] param, int maxMsgSize, List<String> exceptions) {
         Throwable error = null;
-        if (msg == null) return null;
-        for (Object o : msg) {
+        if (msg == null && param == null) {
+            sb.append("?");
+            return null;
+        }
+
+        if (msg != null)
+            serialize(sb, msg, null);
+
+        for (Object o : param) {
+            if (sb.length() > 0)
+                sb.append("|");
             error = serialize(sb, o, error);
             if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
                 // check for exceptions

@@ -105,7 +105,7 @@ public abstract class MTimerTask extends TimerTask implements ITimerTask {
                 return field.getInt(task);
             }
         } catch (Throwable t) {
-            MLogUtil.log().d(task, t);
+            MLogUtil.log().d("get status failed", task, t);
         }
         return -1;
     }

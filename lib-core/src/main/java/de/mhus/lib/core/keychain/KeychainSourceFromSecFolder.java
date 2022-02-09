@@ -82,7 +82,7 @@ public class KeychainSourceFromSecFolder extends MapMutableVaultSource {
             KeyEntry entry = new FileEntry(ois);
             addEntry(entry);
         } catch (Exception e) {
-            log().w(file, e);
+            log().w("load entry {1} failed", file, e);
         }
         parent.close();
     }

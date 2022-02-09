@@ -51,7 +51,7 @@ public class ObjectToDouble implements Caster<Object, Double> {
             if (ret != null) ret.setValue(r);
             return r;
         } catch (Throwable e) {
-            log.t(in, e.toString());
+            log.t("cast to double failed", in, e.toString());
         }
         return def;
     }

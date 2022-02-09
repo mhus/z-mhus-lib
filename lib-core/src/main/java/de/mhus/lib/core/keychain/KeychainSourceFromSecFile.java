@@ -59,7 +59,7 @@ public class KeychainSourceFromSecFile extends MapMutableVaultSource {
             try {
                 addEntry(entry);
             } catch (MException e) {
-                log().d(entry, e);
+                log().d("add entry {1} failed", entry, e);
             }
         }
         parent.close();

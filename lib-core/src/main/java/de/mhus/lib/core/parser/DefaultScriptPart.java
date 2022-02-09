@@ -49,7 +49,7 @@ public class DefaultScriptPart extends MObject implements StringPart {
                 out.append(ret);
             }
         } catch (ScriptException e) {
-            log().d(e, part);
+            log().d("script execution failed", e, part);
         }
     }
 

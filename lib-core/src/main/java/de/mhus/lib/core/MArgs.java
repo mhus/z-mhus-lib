@@ -109,12 +109,13 @@ public class MArgs extends MLog {
         init(args);
 
         for (Map.Entry<String, Usage> entry : map.entrySet()) {
+            Class type = null;
             try {
 
                 PojoAttribute attr = model.getAttribute(entry.getKey());
                 Object value = null;
                 List<String> values = entry.getValue().getValues();
-                Class type = attr.getType();
+                type = attr.getType();
                 if (type == Boolean.class || type == boolean.class)
                     value = MCast.toboolean(values.get(0), false);
                 else if (type == Integer.class || type == int.class)
@@ -129,7 +130,7 @@ public class MArgs extends MLog {
 
                 attr.set(pojo, value, true);
             } catch (Throwable e) {
-                log().e(entry, e);
+                log().e("cast of {1} to {2} failed", entry, type, e);
             }
         }
     }

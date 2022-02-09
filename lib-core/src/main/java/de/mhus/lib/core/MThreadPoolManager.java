@@ -35,7 +35,7 @@ public class MThreadPoolManager extends MObject {
 
         @Override
         public void doit() {
-            log().t(getClass(), "Housekeeper");
+            log().t("Start Housekeeper", getClass());
             poolClean(CFG_PENDING_TIME.value());
             try {
                 MThreadPoolDaemon.poolClean(CFG_PENDING_TIME.value());

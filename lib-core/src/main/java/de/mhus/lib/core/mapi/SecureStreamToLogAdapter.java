@@ -33,7 +33,7 @@ public class SecureStreamToLogAdapter extends StreamToLogAdapter {
         if (enter.get() != null) return;
         enter.set(true);
         try {
-            log.log(level, line);
+            log.log(level, null, line);
             line.setLength(0);
         } finally {
             enter.remove();

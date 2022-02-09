@@ -124,7 +124,7 @@ final class MBeanProxy extends MObject implements DynamicMBean {
         try {
             getObject();
         } catch (Throwable t) {
-            log().t(name, "closed");
+            log().t("check failed", name);
         }
     }
 }

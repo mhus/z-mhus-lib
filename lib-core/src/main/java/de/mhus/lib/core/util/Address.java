@@ -232,7 +232,7 @@ public class Address implements Externalizable {
             try {
                 definition = M.l(INodeFactory.class).read(Address.class, "address.xml");
             } catch (MException e) {
-                MLogUtil.log().w(Address.class, e);
+                MLogUtil.log().w(e);
                 definition = M.l(INodeFactory.class).create(); // empty config
             }
 

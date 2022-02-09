@@ -73,7 +73,7 @@ public class StreamToLogAdapter extends PrintStream {
     }
 
     protected void writeLine() {
-        log.log(level, line);
+        log.log(level, null, line);
         line.setLength(0);
     }
 }

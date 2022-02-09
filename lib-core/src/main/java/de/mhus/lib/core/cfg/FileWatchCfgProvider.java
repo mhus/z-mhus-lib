@@ -52,7 +52,7 @@ public class FileWatchCfgProvider extends NodeCfgProvider {
 
                             @Override
                             public void onFileWatchError(FileWatch fileWatch, Throwable t) {
-                                log().d(file, t);
+                                log().d("onFileWatchError", file, t);
                             }
                         });
         fileWatch.doStart();
@@ -62,7 +62,7 @@ public class FileWatchCfgProvider extends NodeCfgProvider {
         try {
             config = M.l(INodeFactory.class).read(file);
         } catch (MException e) {
-            log().d(file, e);
+            log().d("read file failed", file, e);
         }
     }
 

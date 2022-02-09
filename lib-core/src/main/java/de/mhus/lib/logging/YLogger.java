@@ -27,8 +27,8 @@ public class YLogger extends Log {
     }
 
     @Override
-    public void log(LEVEL level, Object... msg) {
-        for (Log target : targets) target.log(level, msg);
+    public void log(LEVEL level, String msg, Object... param) {
+        for (Log target : targets) target.log(level, msg, param);
     }
 
     @Override

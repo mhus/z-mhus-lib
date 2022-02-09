@@ -70,7 +70,7 @@ public class DefaultMonitor implements Monitor {
     public void print(Object... out) {
         synchronized (lineBuffer) {
             for (Object o : out) {
-                if (o instanceof Throwable) log.i(o);
+                if (o instanceof Throwable) log.i(null, o);
                 else lineBuffer.append(o);
             }
         }

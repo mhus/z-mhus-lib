@@ -190,7 +190,7 @@ public class MApi {
 
     public static void dirtyLogTrace(Object... string) {
         if (log != null) {
-            log.t(string);
+            log.t(null, string);
             return;
         }
         if (string == null || !isDirtyTrace()) return;
@@ -200,7 +200,7 @@ public class MApi {
 
     public static void dirtyLogDebug(Object... string) {
         if (log != null) {
-            log.d(string);
+            log.d(null, string);
             return;
         }
         if (string == null || !isDirtyTrace()) return;
@@ -210,7 +210,7 @@ public class MApi {
 
     public static void dirtyLogInfo(Object... string) {
         if (log != null) {
-            log.i(string);
+            log.i(null, string);
             return;
         }
         if (!isDirtyTrace()) return;
@@ -221,7 +221,7 @@ public class MApi {
 
     public static void dirtyLogError(Object... string) {
         if (log != null) {
-            log.e(string);
+            log.e(null, string);
             return;
         }
         if (string == null) return;
