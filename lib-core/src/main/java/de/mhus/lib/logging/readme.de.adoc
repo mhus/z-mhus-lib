@@ -1,0 +1,74 @@
+//@manual
+
+== Log Erweiterung
+
+Die Log-Erweiterung ist eine Fassade und vereinfacht das Loggen mit dem Standard Logger.
+Die Log-Engine kann gewechselt werden sollte aber immer den Spring logger bzw. SlfJ
+nutzen. Eine alternative ist die direkte Ausgabe auf die Konsole.
+
+Die Vereinfachung liegt vor allem beim Aufruf und der Ausgabe der Daten. Der Aufruf kann durch
+shortcut Funktionen 
+
+* f() für fatal(), 
+* e() für error(), 
+* w() für warn(), 
+* i() für info(), 
+* d() für debug() und 
+* t() für trace() 
+
+verkürzt werden. Alle Funktionen können eine Nachricht (msg) und
+weitere Parameter aufnehmen. Die Parameter können in der Nachricht durch '{nr}' referenziert
+werden.
+
+NOTE: Zur Ausgabe siehe auch Exceptions.
+
+Ist das Log-Level nicht erreicht werden die parameter nicht zu einer Log-Nachricht aggrigiert 
+und somit keine Rechenzeit verbraucht. Deshalb empfiehlt es sich in den Parametern ganze
+Objekte zu übergeben und diese vorher explizit nicht in Strings umzuwandeln.
+
+Sollen Objekte durch einen besonderen Source Code in einen String umgewandelt werden können
+ParameterMapper hinterlegt werden die anstelle von toString() genutzt werden um aus einem
+Parameter einen repräsentativen Text zu erstellen.
+
+Wird in einer Klasse von MLog abgeleitet kann die Tool-Funktion log() genutzt werden um
+zu loggen. Der Logger wird erst beim ersten Aufruf erstellt. Durch diese emfolhene
+Vorgehen kann ebenfalls Rechenzeit gespart bzw. verteilt werden.
+
+=== Implementation einstellen
+
+Da der Logger nur eine Fassade ist muss die passende Implementierung definiert werden.
+Ohne Konfiguration wird eine einfache Ausgabe in die Konsole benutzt.
+
+Die Implementierung kann in der mhu-lib Konfiguration unter `<system>` angegeben werden oder
+als java property mit dem Präfix `mhus.lib.`.
+
+
+* log.factory: Canonical Class Name der Log Factory
+* level.mapper: Canonical Class Name des Level Mappers
+* log.max.message.size: Maximale Länge einer Log-Nachricht in Zeichen, 0 bedeutet keine Beschränkung
+* log.max.message.size.exceptions:  Maximale Länge einer Exception
+* parameter.mapper: Canonical Class Name des Parameter Mapper Managers
+* parameter.entry.mapper: Liste von Parameter Mappern - nicht als Property möglich
+* log.console.redirect: Setze auf 'true' wenn die Ausgabe zusätzlich auf der die Konsole ausgegeben werden soll
+* log.level: Setzt das Log-Level
+* log.verbose: Setze auf 'true' um alle DEBUG Nachrichten als INFO auszugeben
+
+Log Factories:
+
+* `de.mhus.lib.logging.SLF4JFactory` Implementierung für SLF4J
+* `de.mhus.lib.logging.Log4JFactory` Implementierung für Log4J Version 2
+* `de.mhus.lib.logging.JavaLoggerFactory` Implementierung für den Java Logger
+* `de.mhus.lib.core.logging.ConsoleFactory` Direkte Ausgabe auf die Konsole
+
+Beispiel:
+
+----
+java -Dmhus.lib.log.factory=de.mhus.lib.logging.JavaLoggerFactory -Dmhus.lib.log.level=DEBUG ...
+----
+
+Nutzt die Java Logger Engine als Ausgabe und gibt alle DEBUG Nachrichten aus (soweit auch Java Logger auf DEBUG steht).
+
+
+ 
+
+
