@@ -17,12 +17,12 @@ package de.mhus.lib.core.logging;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
+import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.CAUSE;
 import de.mhus.lib.core.MApi;
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MLog;
-import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
 import io.opentracing.Span;
 
@@ -49,7 +49,6 @@ public class Log {
     protected String name;
     protected static ParameterMapper parameterMapper;
     protected LogEngine engine = null;
-    private List<String> maxMsgSizeExceptions; // if one if the strings is found in the message the messgae is full printed
     private volatile ITracer tracer;
     private volatile boolean tracerInError = false;
     private volatile boolean tracerStartup;
@@ -150,28 +149,28 @@ public class Log {
 
         if (parameterMapper != null) param = parameterMapper.map(this, param);
 
-        StringBuilder sb = new StringBuilder();
-        prepare(sb);
-        Throwable error = MString.serialize(sb, msg, param, maxMsgSize, maxMsgSizeExceptions);
+        msg = "[" + Thread.currentThread().getId() + "]" + (msg != null ? msg : "");
+        msg = RC.toMessage(CAUSE.ENCAPSULATE, msg, param, maxMsgSize);
+        Throwable error = RC.findCause(CAUSE.ENCAPSULATE, param);
 
         switch (level) {
             case DEBUG:
-                engine.debug(sb.toString(), error);
+                engine.debug(msg, error);
                 break;
             case ERROR:
-                engine.error(sb.toString(), error);
+                engine.error(msg, error);
                 break;
             case FATAL:
-                engine.fatal(sb.toString(), error);
+                engine.fatal(msg, error);
                 break;
             case INFO:
-                engine.info(sb.toString(), error);
+                engine.info(msg, error);
                 break;
             case TRACE:
-                engine.trace(sb.toString(), error);
+                engine.trace(msg, error);
                 break;
             case WARN:
-                engine.warn(sb.toString(), error);
+                engine.warn(msg, error);
                 break;
             default:
                 break;
@@ -341,10 +340,6 @@ public class Log {
         log(LEVEL.FATAL, t.toString(), t);
     }
 
-    protected void prepare(StringBuilder sb) {
-        sb.append('[').append(Thread.currentThread().getId()).append(']');
-    }
-
     public void setLocalTrace(boolean localTrace) {
         this.localTrace = localTrace;
     }
@@ -382,7 +377,6 @@ public class Log {
         localTrace = MApi.isTrace(name);
         parameterMapper = MApi.get().getLogFactory().getParameterMapper();
         maxMsgSize = MApi.get().getLogFactory().getMaxMessageSize();
-        maxMsgSizeExceptions = MApi.get().getLogFactory().getMaxMessageSizeExceptions();
     }
 
     public ParameterMapper getParameterMapper() {

@@ -16,13 +16,42 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
 public class ValidationException extends MRuntimeException {
 
     /** */
-    private static final long serialVersionUID = -1520109962430808111L;
+    private static final long serialVersionUID = -1L;
+
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.SYNTAX_ERROR;
+    }
 
     public ValidationException(Object... in) {
-        super(RC.SYNTAX_ERROR,"validation error" , in);
+        super(getDefaultStatus(),in);
+    }
+
+    public ValidationException(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public ValidationException(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public ValidationException(IException cause) {
+        super(cause);
+    }
+
+    public ValidationException(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public ValidationException(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public ValidationException(int rc) {
+        super(getDefaultStatus().rc());
     }
 }

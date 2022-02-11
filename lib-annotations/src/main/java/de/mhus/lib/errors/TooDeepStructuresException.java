@@ -16,12 +16,41 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
 public class TooDeepStructuresException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.TOO_DEEP;
+    }
+
     public TooDeepStructuresException(Object... in) {
-        super(RC.STATUS.TOO_DEEP, in);
+        super(getDefaultStatus(),in);
+    }
+
+    public TooDeepStructuresException(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public TooDeepStructuresException(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public TooDeepStructuresException(IException cause) {
+        super(cause);
+    }
+
+    public TooDeepStructuresException(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public TooDeepStructuresException(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public TooDeepStructuresException(int rc) {
+        super(getDefaultStatus().rc());
     }
 }

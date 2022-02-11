@@ -25,10 +25,11 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.node.NodeSerializable;
+import de.mhus.lib.errors.IException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
 
-public class OperationResult {
+public class OperationResult implements IException {
 
     protected String path;
     protected String msg;
@@ -49,6 +50,11 @@ public class OperationResult {
         return path;
     }
 
+    /**
+     * Use getMessage() instead
+     * @return Message
+     */
+    @Deprecated
     public String getMsg() {
         return msg;
     }
@@ -108,6 +114,7 @@ public class OperationResult {
         return MSystem.toString(this, path, returnCode, msg, nextOperation, result);
     }
 
+    @Override
     public int getReturnCode() {
         return returnCode;
     }
@@ -162,5 +169,10 @@ public class OperationResult {
             throw new MRuntimeException(RC.STATUS.CONFLICT, this, e);
         }
         return fillIn;
+    }
+
+    @Override
+    public String getMessage() {
+        return getMsg();
     }
 }

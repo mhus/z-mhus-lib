@@ -24,12 +24,18 @@ import de.mhus.lib.core.logging.MLogUtil;
 public class Successful extends MutableOperationResult {
 
 
+    public static final String OK = "ok";
+
     public Successful() {
         super();
     }
 
+    public Successful(Operation operation) {
+        super(operation, RC.OK, "ok");
+    }
+
     public Successful(Operation operation, int rc, String msg, Object... parameters) {
-        super(operation, rc, msg, parameters);
+        super(operation, rc, msg == null ? OK : msg, parameters);
     }
 
     public Successful(OperationDescription description) {
@@ -37,17 +43,17 @@ public class Successful extends MutableOperationResult {
     }
 
     public Successful(String path, int rc, String msg, Object... parameters) {
-        super(path, rc, msg, parameters);
+        super(path, rc, msg == null ? OK : msg, parameters);
     }
 
     public Successful(Operation operation, String msg, Map<?, ?> result) {
-        this(operation, msg, 0, result);
+        this(operation, msg == null ? OK : msg, 0, result);
     }
 
     @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, Map<?, ?> result) {
         setOperationPath(operation.getDescription().getPath());
-        setMsg(msg);
+        setMsg(msg == null ? OK : msg);
         setResult(result);
         setReturnCode(rc);
     }
@@ -55,7 +61,7 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, Map<?, ?> result) {
         setOperationPath(path);
-        setMsg(msg);
+        setMsg(msg == null ? OK : msg);
         setResult(result);
         setReturnCode(rc);
     }
@@ -67,7 +73,7 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(Operation operation, String msg, int rc, String result) {
         setOperationPath(operation.getDescription().getPath());
-        setMsg(msg);
+        setMsg(msg == null ? OK : msg);
         setResult(result);
         setReturnCode(rc);
     }
@@ -75,7 +81,7 @@ public class Successful extends MutableOperationResult {
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String result) {
         setOperationPath(path);
-        setMsg(msg);
+        setMsg(msg == null ? OK : msg);
         setResult(result);
         setReturnCode(rc);
     }
@@ -85,13 +91,13 @@ public class Successful extends MutableOperationResult {
     }
 
     public Successful(String path) {
-        this(path, "ok", 0);
+        this(path, OK, RC.OK);
     }
 
     @SuppressWarnings("deprecation")
     public Successful(String path, String msg, int rc, String... keyValues) {
         setOperationPath(path);
-        setMsg(msg);
+        setMsg(msg == null ? OK : msg);
         setReturnCode(rc);
         HashMap<Object, Object> r = new HashMap<>();
         if (keyValues != null) {

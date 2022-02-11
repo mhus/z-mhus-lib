@@ -1,7 +1,17 @@
 package de.mhus.lib.basics;
 
+import de.mhus.lib.errors.IException;
+
 public class RC {
 
+    public enum CAUSE {
+        ENCAPSULATE, // encapsulate cause state
+        ADAPT, // if possible adapt cause state
+        APPEND, // if possible adapt cause state and append message entries
+        IGNORE, // do print as parameters
+        HIDE // print as parameters but do not link as cause
+    }
+    
     public enum STATUS {
         
         WARNING_TEMPORARELY(199),
@@ -17,8 +27,9 @@ public class RC {
         GONE(410),
         TOO_LARGE(413),
         SYNTAX_ERROR(415),
-        USAGE(422),
         TEAPOT(418),
+        USAGE(422),
+        LIMIT(427),
         INTERNAL_ERROR(500),
         NOT_SUPPORTED(501),
         BUSY(503),
@@ -38,31 +49,84 @@ public class RC {
         
     }
     
+    /**
+     * Miscellaneous warning
+     */
     public static final int WARNING_TEMPORARELY = 199; // Miscellaneous warning
     
     public static final int OK = 200;
     public static final int CREATED = 201;
     public static final int ACCEPTED = 202;
+    /**
+     * Miscellaneous persistent warning
+     */
     public static final int WARNING = 299; // Miscellaneous persistent warning, https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.46
 
-    // do not retry with this errors - professional errors
+    // do not retry with these errors - professional errors
+    /**
+     * Default Error
+     */
     public static final int ERROR = 400;
     public static final int ACCESS_DENIED = 401;
     public static final int FORBIDDEN = 403;
     public static final int NOT_FOUND = 404;
+    /**
+     * conflict state or wrong state, to much retries,
+     * key to remove not found, key already set
+     * wrong configuration - if not fixed fast,
+     * result is null,
+     * duplicate entry,
+     * device is not enabled
+     * ... is not writable / read only
+     */
     public static final int CONFLICT = 409; // conflict state or wrong state
+    /**
+     * indicating that the resource requested by the client has been permanently deleted, 
+     * and that the client should not expect an alternative redirection or forwarding address
+     */
     public static final int GONE = 410;
     public static final int TOO_LARGE = 413;
+    /**
+     * Unsupported Media Type - string instead of int,
+     * wrong parameter value type,
+     * malformed format
+     */
     public static final int SYNTAX_ERROR = 415; // Unsupported Media Type - string instead of int
+    /**
+     * Unprocessable Entity - parameter not set,
+     * parameter not found, parameter data is null
+     */
     public static final int USAGE = 422; // Unprocessable Entity - parameter not set
 
+    /**
+     * Too Many Requests, Limit exceeded
+     */
+    public static final int LIMIT = 427; // Too Many Requests
+    
     public static final int TEAPOT = 418; // I’m a teapot - joke
 
     // retry later - technical errors
+    /**
+     * Internal Server Error, general error executing remote methods
+     * use BUSY if not available but could
+     */
     public static final int INTERNAL_ERROR = 500; // Internal Server Error
+    /**
+     * Not Implemented, method or operation not found
+     */
     public static final int NOT_SUPPORTED = 501; // Not Implemented
+    /**
+     * Service Unavailable, do not use 403 because it could be repeated,
+     * Resource currently not available, locked
+     */
     public static final int BUSY = 503; // Service Unavailable, do not use 403 because it could be repeated
+    /**
+     * Gateway Timeout
+     */
     public static final int TIMEOUT = 504; // Gateway Timeout
+    /**
+     * Loop Detected, to deep iteration, stack overflow
+     */
     public static final int TOO_DEEP = 508; // Loop Detected
 
     public static final int RANGE_MIN_SUCCESSFUL = 200;
@@ -77,7 +141,8 @@ public class RC {
 
     public static final int RANGE_MAX = 999;
 
-    public static String toResponseString(String msg, Object[] parameters) {
+    public static String toMessage(CAUSE causeHandling, String msg, Object[] parameters, int maxSize) {
+        if (causeHandling == null) causeHandling = CAUSE.ENCAPSULATE;
         // short cuts
         if (msg == null && parameters == null) return "?";
         if (parameters == null && msg.indexOf('|') == -1) return msg;
@@ -85,8 +150,27 @@ public class RC {
         StringBuilder sb = new StringBuilder();
         addPipeEncoded(sb,msg);
         if (parameters != null && parameters.length > 0) {
+            boolean firstException = true;
             for (Object parameter : parameters) {
-                if (parameter !=  null && parameter instanceof Throwable) continue;
+                if (maxSize > 0 && sb.length() > maxSize) {
+                    sb.append(" ...");
+                    break;
+                }
+                if (parameter !=  null) {
+                    if (parameter instanceof IException && causeHandling == CAUSE.ADAPT) 
+                        return ((IException)parameter).getMessage();
+                    if (parameter instanceof IException && causeHandling == CAUSE.APPEND) {
+                        if (sb.length() > 0)
+                            sb.insert(0,"||");
+                        sb.insert(0, ((IException)parameter).getMessage() );
+                        firstException = false; // ignore only first exception - it's the cause exception
+                        continue;
+                    }
+                    if( parameter instanceof Throwable && causeHandling != CAUSE.IGNORE && firstException) {
+                        firstException = false; // ignore only first exception - it's the cause exception
+                        continue;
+                    }
+                }
                 sb.append("|");
                 if (parameter == null)
                     sb.append("null");
@@ -118,6 +202,29 @@ public class RC {
             sb.append(msg.substring(pos));
     }
 
+    public static Throwable findCause(CAUSE causeHandling, Object... in) {
+        if (in == null || (causeHandling != null && causeHandling == CAUSE.HIDE)) return null;
+        for (Object o : in) {
+            if (o instanceof Throwable) {
+                return (Throwable) o;
+            }
+        }
+        return null;
+    }
+
+    public static int findReturnCode(CAUSE causeHandling, int rc, Object... in) {
+        if (causeHandling == null || in == null || (causeHandling != CAUSE.ADAPT && causeHandling != CAUSE.APPEND))
+            return rc;
+        for (Object o : in) {
+            if (o instanceof IException) {
+                return ((IException) o).getReturnCode();
+            }
+        }
+        return rc;
+    }
+    
+
+    
     /**
      * Allow all between 0 - 999, otherwise 400 (ERROR)
      * 
@@ -191,8 +298,9 @@ public class RC {
         case TIMEOUT: return "TIMEOUT";
         case TOO_DEEP: return "TOO_DEEP";
         case CONFLICT: return "CONFLICT";
+        case LIMIT: return "LIMIT";
         }
         return String.valueOf(rc);
     }
-    
+
 }

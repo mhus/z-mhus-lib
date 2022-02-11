@@ -16,12 +16,41 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
 public class NotSupportedException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.NOT_SUPPORTED;
+    }
+
     public NotSupportedException(Object... in) {
-        super(RC.STATUS.NOT_SUPPORTED, in);
+        super(getDefaultStatus(),in);
+    }
+
+    public NotSupportedException(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public NotSupportedException(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public NotSupportedException(IException cause) {
+        super(cause);
+    }
+
+    public NotSupportedException(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public NotSupportedException(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public NotSupportedException(int rc) {
+        super(getDefaultStatus().rc());
     }
 }

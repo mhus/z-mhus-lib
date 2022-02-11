@@ -16,12 +16,41 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
 public class UsageException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.USAGE;
+    }
+
     public UsageException(Object... in) {
-        super(RC.STATUS.USAGE, in);
+        super(getDefaultStatus(),in);
+    }
+
+    public UsageException(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public UsageException(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public UsageException(IException cause) {
+        super(cause);
+    }
+
+    public UsageException(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public UsageException(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public UsageException(int rc) {
+        super(getDefaultStatus().rc());
     }
 }

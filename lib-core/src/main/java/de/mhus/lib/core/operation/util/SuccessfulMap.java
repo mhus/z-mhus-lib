@@ -24,6 +24,11 @@ import de.mhus.lib.core.operation.Successful;
 
 public class SuccessfulMap extends Successful {
 
+    public SuccessfulMap(Operation operation) {
+        super(operation, OK);
+        setResultNode(new MProperties());
+    }
+    
     public SuccessfulMap(Operation operation, String msg) {
         super(operation, msg);
         setResultNode(new MProperties());

@@ -16,13 +16,13 @@ public class MutableOperationResult extends OperationResult {
     }
     
     public MutableOperationResult(String path, int rc, String msg, Object ... parameters) {
-        setMsg(RC.toResponseString(msg, parameters));
+        setMsg(RC.toMessage(RC.CAUSE.IGNORE, msg, parameters, 0));
         setOperationPath(path);
         setReturnCode(rc);
     }
 
     public MutableOperationResult(Operation operation, int rc, String msg, Object ... parameters) {
-        setMsg(RC.toResponseString(msg, parameters));
+        setMsg(RC.toMessage(RC.CAUSE.IGNORE, msg, parameters, 0));
         setReturnCode(rc);
         if (operation != null && operation.getDescription() != null) {
             setOperationPath(operation.getDescription().getPath());

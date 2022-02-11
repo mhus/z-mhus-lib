@@ -16,63 +16,62 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.CAUSE;
 
-public class MRuntimeException extends RuntimeException {
+public class MRuntimeException extends RuntimeException implements IException {
 
     private static final long serialVersionUID = 1L;
 
     private int rc;
-    
+
     public MRuntimeException(RC.STATUS rc, Object... in) {
-        super(argToString(rc.name(), in),argToCause(in));
-        setReturnCode(rc.rc());
+        this(CAUSE.ENCAPSULATE, rc.rc(), rc.name(), in);
+    }
+
+    public MRuntimeException(RC.CAUSE causeHandling, RC.STATUS rc, Object... in) {
+        this(causeHandling, rc.rc(), rc.name(), in);
+
     }
 
     public MRuntimeException(int rc, Throwable cause) {
-        super(argToString(cause.getMessage()),cause);
-        setReturnCode(rc);
+        this(CAUSE.ENCAPSULATE, rc, cause.getMessage(), cause);
     }
 
-    public MRuntimeException(MException cause) {
-        super(cause.getMessage(), cause);
+    public MRuntimeException(IException cause) {
+        super(cause.getMessage(), cause instanceof Throwable ? (Throwable)cause : null );
+        setReturnCode(cause.getReturnCode());
+    }
+
+    public MRuntimeException(IException cause, String msg, Object... parameters) {
+        super(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 
     public MRuntimeException(int rc, String msg, Object... in) {
-        super(argToString(msg, in), argToCause(in));
-        setReturnCode(rc);
+        this(CAUSE.ENCAPSULATE, rc, msg, in);
     }
 
+    public MRuntimeException(RC.CAUSE causeHandling, int rc, String msg, Object... parameters) {
+        super(RC.toMessage(causeHandling, msg, parameters, 0), RC.findCause(causeHandling, parameters));
+        setReturnCode(RC.findReturnCode(causeHandling, rc));
+    }
+    
     public MRuntimeException(int rc) {
         super(RC.toString(rc));
         setReturnCode(rc);
     }
-    
+
     @Override
     public String toString() {
-        return getReturnCode() + "|" + super.toString();
+        return getReturnCode() + " " + super.toString();
     }
 
-    public static String argToString(String msg, Object... in) {
-        return RC.toResponseString(msg, in);
-    }
-
-    public static Throwable argToCause(Object... in) {
-        if (in == null) return null;
-        for (Object o : in) {
-            if (o instanceof Throwable) {
-                return (Throwable) o;
-            }
-        }
-        return null;
-    }
-
+    @Override
     public int getReturnCode() {
         return rc;
     }
 
-    protected void setReturnCode(int rc) {
+    private void setReturnCode(int rc) {
         this.rc = rc;
     }
-
 }

@@ -16,12 +16,42 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
 public class AccessDeniedException extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public AccessDeniedException(Object... in) {
-        super(RC.STATUS.ACCESS_DENIED,in);
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.ACCESS_DENIED;
     }
+
+    public AccessDeniedException(Object... in) {
+        super(getDefaultStatus(),in);
+    }
+
+    public AccessDeniedException(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public AccessDeniedException(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public AccessDeniedException(IException cause) {
+        super(cause);
+    }
+
+    public AccessDeniedException(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public AccessDeniedException(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public AccessDeniedException(int rc) {
+        super(getDefaultStatus().rc());
+    }
+
 }

@@ -15,7 +15,43 @@
  */
 package de.mhus.lib.errors;
 
-public class MaxDepthReached extends RuntimeException {
+import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
+
+public class MaxDepthReached extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
+    
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.TOO_DEEP;
+    }
+
+    public MaxDepthReached(Object... in) {
+        super(getDefaultStatus(),in);
+    }
+
+    public MaxDepthReached(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public MaxDepthReached(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public MaxDepthReached(IException cause) {
+        super(cause);
+    }
+
+    public MaxDepthReached(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public MaxDepthReached(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public MaxDepthReached(int rc) {
+        super(getDefaultStatus().rc());
+    }
+    
 }

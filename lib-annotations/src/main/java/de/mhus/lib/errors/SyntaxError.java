@@ -16,12 +16,42 @@
 package de.mhus.lib.errors;
 
 import de.mhus.lib.basics.RC;
+import de.mhus.lib.basics.RC.STATUS;
 
+// should be SyntaxErrorException
 public class SyntaxError extends MException {
 
     private static final long serialVersionUID = 1L;
 
+    public static STATUS getDefaultStatus() {
+        return RC.STATUS.SYNTAX_ERROR;
+    }
+
     public SyntaxError(Object... in) {
-        super(RC.STATUS.SYNTAX_ERROR, in);
+        super(getDefaultStatus(),in);
+    }
+
+    public SyntaxError(RC.CAUSE causeHandling, Object... in) {
+        super(causeHandling, getDefaultStatus(), in);
+    }
+
+    public SyntaxError(Throwable cause) {
+        super(getDefaultStatus().rc(), cause);
+    }
+
+    public SyntaxError(IException cause) {
+        super(cause);
+    }
+
+    public SyntaxError(String msg, Object... in) {
+        super(getDefaultStatus().rc(), msg, in);
+    }
+
+    public SyntaxError(RC.CAUSE causeHandling, String msg, Object... parameters) {
+        super(causeHandling, getDefaultStatus().rc(), msg, parameters);
+    }
+
+    public SyntaxError(int rc) {
+        super(getDefaultStatus().rc());
     }
 }
