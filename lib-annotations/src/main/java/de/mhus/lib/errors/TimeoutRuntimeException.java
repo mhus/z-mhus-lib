@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -38,7 +39,7 @@ public class TimeoutRuntimeException extends MRuntimeException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public TimeoutRuntimeException(IException cause) {
+    public TimeoutRuntimeException(IResult cause) {
         super(cause);
     }
 

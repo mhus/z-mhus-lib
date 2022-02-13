@@ -15,10 +15,11 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.CAUSE;
 
-public class MException extends Exception implements IException {
+public class MException extends Exception implements IResult {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,13 +38,13 @@ public class MException extends Exception implements IException {
         this(CAUSE.ENCAPSULATE, rc, cause.getMessage(), cause);
     }
 
-    public MException(IException cause) {
+    public MException(IResult cause) {
         super(cause.getMessage(), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 
-    public MException(IException cause, String msg, Object... parameters) {
-        super(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
+    public MException(IResult cause, String msg, Object... parameters) {
+        super(RC.toMessage(cause, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 

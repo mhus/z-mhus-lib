@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -38,7 +39,7 @@ public class WrongStateException extends MRuntimeException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public WrongStateException(IException cause) {
+    public WrongStateException(IResult cause) {
         super(cause);
     }
 

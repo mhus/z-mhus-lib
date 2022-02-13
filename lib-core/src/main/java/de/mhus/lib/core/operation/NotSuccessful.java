@@ -15,9 +15,8 @@
  */
 package de.mhus.lib.core.operation;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
-import de.mhus.lib.basics.RC.CAUSE;
-import de.mhus.lib.errors.IException;
 
 public class NotSuccessful extends MutableOperationResult {
 
@@ -37,36 +36,36 @@ public class NotSuccessful extends MutableOperationResult {
         super(path, rc, msg, parameters);
     }
 
-    public NotSuccessful(Operation operation, IException cause) {
+    public NotSuccessful(Operation operation, IResult cause) {
         super(operation, cause.getReturnCode(), null);
         setMsg(cause.getMessage());
     }
 
-    public NotSuccessful(OperationDescription description, IException cause) {
+    public NotSuccessful(OperationDescription description, IResult cause) {
         super(description);
         setReturnCode(cause.getReturnCode());
         setMsg(cause.getMessage());
     }
 
-    public NotSuccessful(String path, IException cause) {
+    public NotSuccessful(String path, IResult cause) {
         super(path, cause.getReturnCode(), null);
         setMsg(cause.getMessage());
     }
 
-    public NotSuccessful(Operation operation, IException cause, String msg, Object... parameters) {
+    public NotSuccessful(Operation operation, IResult cause, String msg, Object... parameters) {
         super(operation, cause.getReturnCode(), null);
-        setMsg(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0));
+        setMsg(RC.toMessage(cause, msg, parameters, 0));
     }
 
-    public NotSuccessful(OperationDescription description, IException cause, String msg, Object... parameters) {
+    public NotSuccessful(OperationDescription description, IResult cause, String msg, Object... parameters) {
         super(description);
         setReturnCode(cause.getReturnCode());
-        setMsg(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0));
+        setMsg(RC.toMessage(cause, msg, parameters, 0));
     }
 
-    public NotSuccessful(String path, IException cause, String msg, Object... parameters) {
+    public NotSuccessful(String path, IResult cause, String msg, Object... parameters) {
         super(path, cause.getReturnCode(), null);
-        setMsg(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0));
+        setMsg(RC.toMessage(cause, msg, parameters, 0));
     }
     
     @Override

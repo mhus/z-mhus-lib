@@ -1,7 +1,5 @@
 package de.mhus.lib.basics;
 
-import de.mhus.lib.errors.IException;
-
 public class RC {
 
     public enum CAUSE {
@@ -141,6 +139,10 @@ public class RC {
 
     public static final int RANGE_MAX = 999;
 
+    public static String toMessage(IResult cause, String msg, Object[] parameters, int maxSize) {
+        return RC.toMessage(CAUSE.IGNORE, msg, parameters, 0) + "|# " + cause.getMessage();
+    }
+    
     public static String toMessage(CAUSE causeHandling, String msg, Object[] parameters, int maxSize) {
         if (causeHandling == null) causeHandling = CAUSE.ENCAPSULATE;
         // short cuts
@@ -151,18 +153,17 @@ public class RC {
         addPipeEncoded(sb,msg);
         if (parameters != null && parameters.length > 0) {
             boolean firstException = true;
+            IResult appendCause = null;
             for (Object parameter : parameters) {
                 if (maxSize > 0 && sb.length() > maxSize) {
                     sb.append(" ...");
                     break;
                 }
                 if (parameter !=  null) {
-                    if (parameter instanceof IException && causeHandling == CAUSE.ADAPT) 
-                        return ((IException)parameter).getMessage();
-                    if (parameter instanceof IException && causeHandling == CAUSE.APPEND) {
-                        if (sb.length() > 0)
-                            sb.insert(0,"||");
-                        sb.insert(0, ((IException)parameter).getMessage() );
+                    if (parameter instanceof IResult && causeHandling == CAUSE.ADAPT) 
+                        return ((IResult)parameter).getMessage();
+                    if (parameter instanceof IResult && causeHandling == CAUSE.APPEND) {
+                        appendCause = (IResult)parameter;
                         firstException = false; // ignore only first exception - it's the cause exception
                         continue;
                     }
@@ -170,31 +171,42 @@ public class RC {
                         firstException = false; // ignore only first exception - it's the cause exception
                         continue;
                     }
-                }
-                sb.append("|");
-                if (parameter == null)
-                    sb.append("null");
-                else
-                if (parameter instanceof Object[]) {
-                    sb.append("<");
-                    for (Object item : (Object[])parameter) {
-                        sb.append("|");
-                        addPipeEncoded(sb,String.valueOf(item));
+                    if (parameter instanceof Object[]) {
+                        sb.append("|[");
+                        for (Object item : (Object[])parameter) {
+                            if (item == null)
+                                sb.append("|N");
+                            else {
+                                sb.append("| ");
+                                addPipeEncoded(sb,item);
+                            }
+                        }
+                        sb.append("|]");
+                    } else {
+                        if (sb.length() > 0)
+                            sb.append("| ");
+                        addPipeEncoded(sb,parameter);
                     }
-                    sb.append("|>");
                 } else
-                    addPipeEncoded(sb,String.valueOf(parameter));
+                    sb.append("|N");
+            }
+            if (appendCause != null) {
+                if (sb.length() > 0)
+                    sb.append("|# ");
+                sb.append(appendCause.getMessage() );
             }
         }
         return sb.toString();
     }
 
-    private static void addPipeEncoded(StringBuilder sb, String msg) {
+    private static void addPipeEncoded(StringBuilder sb, Object obj) {
+        if (obj == null) return;
+        String msg = String.valueOf(obj);
         int pos = 0;
         int nextPos;
         while ((nextPos = msg.indexOf('|', pos)) != -1) {
             sb.append(msg.substring(pos, nextPos));
-            sb.append(":");
+            sb.append("||");
             pos = nextPos+1;
             if (pos >= msg.length()) break;
         }
@@ -216,8 +228,8 @@ public class RC {
         if (causeHandling == null || in == null || (causeHandling != CAUSE.ADAPT && causeHandling != CAUSE.APPEND))
             return rc;
         for (Object o : in) {
-            if (o instanceof IException) {
-                return ((IException) o).getReturnCode();
+            if (o instanceof IResult) {
+                return ((IResult) o).getReturnCode();
             }
         }
         return rc;

@@ -1,5 +1,6 @@
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -23,7 +24,7 @@ public class ErrorException extends MException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public ErrorException(IException cause) {
+    public ErrorException(IResult cause) {
         super(cause);
     }
 

@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -39,7 +40,7 @@ public class ValidationException extends MRuntimeException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public ValidationException(IException cause) {
+    public ValidationException(IResult cause) {
         super(cause);
     }
 

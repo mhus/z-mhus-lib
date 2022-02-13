@@ -1,6 +1,6 @@
-package de.mhus.lib.errors;
+package de.mhus.lib.basics;
 
-public interface IException {
+public interface IResult {
 
     int getReturnCode();
     

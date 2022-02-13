@@ -15,10 +15,11 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.CAUSE;
 
-public class MRuntimeException extends RuntimeException implements IException {
+public class MRuntimeException extends RuntimeException implements IResult {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,13 +38,13 @@ public class MRuntimeException extends RuntimeException implements IException {
         this(CAUSE.ENCAPSULATE, rc, cause.getMessage(), cause);
     }
 
-    public MRuntimeException(IException cause) {
+    public MRuntimeException(IResult cause) {
         super(cause.getMessage(), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 
-    public MRuntimeException(IException cause, String msg, Object... parameters) {
-        super(cause.getMessage() + "||" + RC.toMessage(CAUSE.IGNORE, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
+    public MRuntimeException(IResult cause, String msg, Object... parameters) {
+        super(RC.toMessage(cause, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 

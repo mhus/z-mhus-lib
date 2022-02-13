@@ -17,6 +17,7 @@ package de.mhus.lib.core.operation;
 
 import java.util.Map;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
@@ -25,11 +26,10 @@ import de.mhus.lib.core.MSystem;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.node.NodeSerializable;
-import de.mhus.lib.errors.IException;
 import de.mhus.lib.errors.MRuntimeException;
 import de.mhus.lib.errors.UsageException;
 
-public class OperationResult implements IException {
+public class OperationResult implements IResult {
 
     protected String path;
     protected String msg;

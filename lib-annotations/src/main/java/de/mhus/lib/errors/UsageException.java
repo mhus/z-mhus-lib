@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -38,7 +39,7 @@ public class UsageException extends MRuntimeException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public UsageException(IException cause) {
+    public UsageException(IResult cause) {
         super(cause);
     }
 

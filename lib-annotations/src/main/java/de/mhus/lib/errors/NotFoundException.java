@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -38,7 +39,7 @@ public class NotFoundException extends MException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public NotFoundException(IException cause) {
+    public NotFoundException(IResult cause) {
         super(cause);
     }
 

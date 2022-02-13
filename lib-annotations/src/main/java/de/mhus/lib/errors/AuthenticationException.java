@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.errors;
 
+import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.STATUS;
 
@@ -38,7 +39,7 @@ public class AuthenticationException extends MRuntimeException {
         super(getDefaultStatus().rc(), cause);
     }
 
-    public AuthenticationException(IException cause) {
+    public AuthenticationException(IResult cause) {
         super(cause);
     }
 
