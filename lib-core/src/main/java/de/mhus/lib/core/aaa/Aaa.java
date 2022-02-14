@@ -98,7 +98,7 @@ public class Aaa {
     private static final CfgInt CFG_ACCESS_CACHE_SIZE =
             new CfgInt(AccessApi.class, "accessCacheSize", 1000000);
     private static final CfgLong CFG_ACCESS_CACHE_TTL =
-            new CfgLong(AccessApi.class, "accessCacheTTL", MPeriod.MINUTE_IN_MILLISECOUNDS * 15);
+            new CfgLong(AccessApi.class, "accessCacheTTL", MPeriod.MINUTE_IN_MILLISECONDS * 15);
 
     private static final Log log = Log.getLog(Aaa.class);
     public static final CfgString ROLE_ADMIN =

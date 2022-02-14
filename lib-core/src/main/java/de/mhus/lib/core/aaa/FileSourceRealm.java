@@ -72,7 +72,7 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
     private ICache<String, HashMap> dataCacheApi;
 
     private boolean useCache;
-    private long cacheTTL = MPeriod.HOUR_IN_MILLISECOUNDS;
+    private long cacheTTL = MPeriod.HOUR_IN_MILLISECONDS;
 
     @SuppressWarnings("unused")
     private CfgBoolean CFG_USE_CACHE =
@@ -82,7 +82,7 @@ public abstract class FileSourceRealm extends AbstractRealm implements Principal
 
     @SuppressWarnings("unused")
     private CfgLong CFG_CACHE_TTL =
-            new CfgLong(getClass(), "cacheTTL", MPeriod.MINUTE_IN_MILLISECOUNDS * 30)
+            new CfgLong(getClass(), "cacheTTL", MPeriod.MINUTE_IN_MILLISECONDS * 30)
                     .updateAction(v -> setCacheTTL(v))
                     .doUpdateAction();
 

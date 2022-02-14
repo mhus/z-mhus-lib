@@ -64,15 +64,15 @@ public class MTimeIntervalTest extends TestCase {
     public void testParse() {
         {
             MPeriod i = new MPeriod("1h");
-            assertEquals(MPeriod.HOUR_IN_MILLISECOUNDS, i.getAllMilliseconds());
+            assertEquals(MPeriod.HOUR_IN_MILLISECONDS, i.getAllMilliseconds());
         }
         {
             MPeriod i = new MPeriod("1M");
-            assertEquals(MPeriod.MINUTE_IN_MILLISECOUNDS, i.getAllMilliseconds());
+            assertEquals(MPeriod.MINUTE_IN_MILLISECONDS, i.getAllMilliseconds());
         }
         {
             MPeriod i = new MPeriod("1d");
-            assertEquals(MPeriod.DAY_IN_MILLISECOUNDS, i.getAllMilliseconds());
+            assertEquals(MPeriod.DAY_IN_MILLISECONDS, i.getAllMilliseconds());
         }
         {
             MPeriod i = new MPeriod("1d 1h");
@@ -102,7 +102,7 @@ public class MTimeIntervalTest extends TestCase {
     {
         MPeriod i = new MPeriod(2629746000l);
         assertEquals(2629746000l, i.getAllMilliseconds());
-        assertEquals(2629746, i.getAllSecounds());
+        assertEquals(2629746, i.getAllSECONDs());
         assertEquals(2629746 / 60, i.getAllMinutes());
         assertEquals(2629746 / 60 / 60, i.getAllHours());
         assertEquals(2629746 / 60 / 60 / 24, i.getAllDays());

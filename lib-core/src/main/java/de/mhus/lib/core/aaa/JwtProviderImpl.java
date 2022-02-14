@@ -71,7 +71,7 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
     private Key jwtPrivateKey;
     private String jwtKeyId;
     private Map<String, PublicKey> publicKeyCache =
-            Collections.synchronizedMap(new TimeoutMap<>(MPeriod.MINUTE_IN_MILLISECOUNDS * 10));
+            Collections.synchronizedMap(new TimeoutMap<>(MPeriod.MINUTE_IN_MILLISECONDS * 10));
     private SigningKeyResolverAdapter jwtKeyResolver =
             new SigningKeyResolverAdapter() {
                 @Override

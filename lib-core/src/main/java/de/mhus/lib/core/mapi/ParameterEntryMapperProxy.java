@@ -31,7 +31,7 @@ public class ParameterEntryMapperProxy implements ParameterEntryMapper {
 
     @Override
     public Object map(Object in) {
-        if (inst == null && MPeriod.isTimeOut(last, MPeriod.MINUTE_IN_MILLISECOUNDS)) {
+        if (inst == null && MPeriod.isTimeOut(last, MPeriod.MINUTE_IN_MILLISECONDS)) {
             last = System.currentTimeMillis();
             try {
                 inst =

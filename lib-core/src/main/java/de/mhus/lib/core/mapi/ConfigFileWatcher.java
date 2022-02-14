@@ -63,6 +63,6 @@ public class ConfigFileWatcher implements ApiInitialize {
                 };
 
         MHousekeeper housekeeper = M.l(MHousekeeper.class);
-        housekeeper.register(fileWatch, MPeriod.MINUTE_IN_MILLISECOUNDS);
+        housekeeper.register(fileWatch, MPeriod.MINUTE_IN_MILLISECONDS);
     }
 }

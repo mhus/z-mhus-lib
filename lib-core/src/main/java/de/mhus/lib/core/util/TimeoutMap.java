@@ -31,9 +31,9 @@ import de.mhus.lib.errors.NotSupportedException;
 public class TimeoutMap<K, V> implements Map<K, V> {
 
     private Map<K, Container<V>> map = new HashMap<>();
-    private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
+    private long timeout = MPeriod.MINUTE_IN_MILLISECONDS * 10;
     private long lastCheck = System.currentTimeMillis();
-    private long checkTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 10;
+    private long checkTimeout = MPeriod.MINUTE_IN_MILLISECONDS * 10;
     private Invalidator<K, V> invalidator;
     private boolean refreshOnAccess;
 

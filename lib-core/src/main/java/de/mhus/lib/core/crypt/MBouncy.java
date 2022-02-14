@@ -112,7 +112,7 @@ public class MBouncy {
     private static LinkedList<KeyPair> keyPool = new LinkedList<>();
     private static long keyPoolUpdate = 0;
     private static CfgLong CFG_POOL_UPDATE_TIME =
-            new CfgLong(MBouncy.class, "poolUpdateTime", MPeriod.MINUTE_IN_MILLISECOUNDS * 10);
+            new CfgLong(MBouncy.class, "poolUpdateTime", MPeriod.MINUTE_IN_MILLISECONDS * 10);
     private static CfgInt CFG_POOL_SIZE = new CfgInt(MBouncy.class, "poolSize", 10);
 
     /**

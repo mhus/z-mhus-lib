@@ -42,7 +42,7 @@ public class Scheduler extends MLog implements Named {
     protected HashSet<SchedulerJob> jobs = new HashSet<>();
     private long nextTimeoutCheck;
     private long lastQueueCheck = System.currentTimeMillis();
-    private long queueCheckTimeout = MPeriod.MINUTE_IN_MILLISECOUNDS;
+    private long queueCheckTimeout = MPeriod.MINUTE_IN_MILLISECONDS;
 
     public Scheduler() {}
 
@@ -98,7 +98,7 @@ public class Scheduler extends MLog implements Named {
         if (nextTimeoutCheck < time) {
             try {
                 for (SchedulerJob job : running) {
-                    long timeout = job.getTimeoutInMinutes() * MPeriod.MINUTE_IN_MILLISECOUNDS;
+                    long timeout = job.getTimeoutInMinutes() * MPeriod.MINUTE_IN_MILLISECONDS;
                     if (timeout > 0 && timeout + job.getLastExecutionStart() <= time) {
                         try {
                             if (job.isBusy()) {
@@ -116,7 +116,7 @@ public class Scheduler extends MLog implements Named {
                 log().e(t); // should not happen
             }
 
-            nextTimeoutCheck = time + MPeriod.MINUTE_IN_MILLISECOUNDS;
+            nextTimeoutCheck = time + MPeriod.MINUTE_IN_MILLISECONDS;
         }
     }
 

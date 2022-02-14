@@ -19,7 +19,7 @@ import de.mhus.lib.core.MPeriod;
 
 public class BearerConfiguration {
 
-    private long timeout = MPeriod.MINUTE_IN_MILLISECOUNDS * 15; // TODO configurable
+    private long timeout = MPeriod.MINUTE_IN_MILLISECONDS * 15; // TODO configurable
 
     public BearerConfiguration() {}
 

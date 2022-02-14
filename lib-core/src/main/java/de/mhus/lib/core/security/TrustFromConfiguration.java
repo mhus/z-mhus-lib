@@ -48,7 +48,7 @@ public class TrustFromConfiguration extends MLog implements TrustApi {
 
     @SuppressWarnings("unused")
     private static final CfgLong CFG_BEARER_CONFIG_TIMEOUT =
-            new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECOUNDS)
+            new CfgLong(TrustApi.class, "bearerTimeout", MPeriod.HOUR_IN_MILLISECONDS)
                     .updateAction(v -> BEARER_CONFIG.setTimeout(v))
                     .doUpdateAction();
 

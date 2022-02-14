@@ -51,7 +51,7 @@ public class TrustedToken implements AuthenticationToken {
     private static final CfgBoolean useCache =
             new CfgBoolean(AccessApi.class, "callerCacheEnabled", true);
     private static final CfgLong cacheTTL =
-            new CfgLong(AccessApi.class, "callerCacheTTL", MPeriod.HOUR_IN_MILLISECOUNDS);
+            new CfgLong(AccessApi.class, "callerCacheTTL", MPeriod.HOUR_IN_MILLISECONDS);
     private static ICache<String, Boolean> callerCache;
 
     public TrustedToken(String principal) {

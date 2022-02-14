@@ -332,7 +332,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
         }
         if (getNextExecutionTime() == DISABLED_TIME) {
             setScheduledTime(
-                    System.currentTimeMillis() + MPeriod.DAY_IN_MILLISECOUNDS); // schedule tomorrow
+                    System.currentTimeMillis() + MPeriod.DAY_IN_MILLISECONDS); // schedule tomorrow
             scheduler.getQueue().removeJob(this);
             scheduler.getQueue().doSchedule(this);
             return;

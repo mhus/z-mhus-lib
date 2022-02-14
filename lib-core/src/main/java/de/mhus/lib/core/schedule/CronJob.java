@@ -90,7 +90,7 @@ public class CronJob extends SchedulerJob implements MutableSchedulerJob {
     protected boolean isExecutionTimeReached() {
         if (restrictive) {
             if (getNextExecutionTime() > 0
-                    && System.currentTimeMillis() + MPeriod.MINUTE_IN_MILLISECOUNDS
+                    && System.currentTimeMillis() + MPeriod.MINUTE_IN_MILLISECONDS
                             <= getNextExecutionTime()) {
                 log.d("cron restrictive over time, reschedule job", getName(), getTask());
                 doCaclulateNextExecution();

@@ -33,7 +33,7 @@ import de.mhus.lib.core.logging.Log;
 public class AtomicClockUtil {
 
     private static Log log = Log.getLog(AtomicClockUtil.class);
-    private static final long TIMEOUT_RELOAD = MPeriod.MINUTE_IN_MILLISECOUNDS * 30;
+    private static final long TIMEOUT_RELOAD = MPeriod.MINUTE_IN_MILLISECONDS * 30;
     private static long lastUpdate;
     private static long now;
 

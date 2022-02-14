@@ -28,11 +28,11 @@ public class MPeriod {
     public static final long MONTH_AVERAGE_MILLISECONDS = 2629746000l; // for 10.000 years
     public static final long YEAR_AVERAGE_MILLISECONDS =
             MONTH_AVERAGE_MILLISECONDS * 12; // for 10.000 years
-    public static final long SECOUND_IN_MILLISECOUNDS = 1000;
-    public static final long MINUTE_IN_MILLISECOUNDS = SECOUND_IN_MILLISECOUNDS * 60;
-    public static final long HOUR_IN_MILLISECOUNDS = MINUTE_IN_MILLISECOUNDS * 60;
-    public static final long DAY_IN_MILLISECOUNDS = HOUR_IN_MILLISECOUNDS * 24;
-    public static final long WEEK_IN_MILLISECOUNDS = DAY_IN_MILLISECOUNDS * 7;
+    public static final long SECOND_IN_MILLISECONDS = 1000;
+    public static final long MINUTE_IN_MILLISECONDS = SECOND_IN_MILLISECONDS * 60;
+    public static final long HOUR_IN_MILLISECONDS = MINUTE_IN_MILLISECONDS * 60;
+    public static final long DAY_IN_MILLISECONDS = HOUR_IN_MILLISECONDS * 24;
+    public static final long WEEK_IN_MILLISECONDS = DAY_IN_MILLISECONDS * 7;
 
     public static final int MILLISECOND = 1;
     public static final int SECOND = 2;
@@ -276,8 +276,8 @@ public class MPeriod {
     }
 
     /**
-     * Parse a string and returns an interval, possible formats are Secounds: 123425 Secounds and
-     * millis: 12345.123 Format: Day Hour:Minutes:Secounds.Millis or DD HH:MM:ss.SSS or ss, ss.SSS,
+     * Parse a string and returns an interval, possible formats are SECONDs: 123425 SECONDs and
+     * millis: 12345.123 Format: Day Hour:Minutes:SECONDs.Millis or DD HH:MM:ss.SSS or ss, ss.SSS,
      * MM:ss.SSS, HH:MM:ss.SSS, MM:ss, HH:MM:ss
      *
      * @param interval
@@ -318,13 +318,13 @@ public class MPeriod {
 
             long out = 0;
 
-            if (day != null) out = out + MCast.tolong(day, 0) * DAY_IN_MILLISECOUNDS;
+            if (day != null) out = out + MCast.tolong(day, 0) * DAY_IN_MILLISECONDS;
 
-            if (hour != null) out = out + MCast.tolong(hour, 0) * HOUR_IN_MILLISECOUNDS;
+            if (hour != null) out = out + MCast.tolong(hour, 0) * HOUR_IN_MILLISECONDS;
 
-            if (min != null) out = out + MCast.tolong(min, 0) * MINUTE_IN_MILLISECOUNDS;
+            if (min != null) out = out + MCast.tolong(min, 0) * MINUTE_IN_MILLISECONDS;
 
-            if (sec != null) out = out + MCast.tolong(sec, 0) * SECOUND_IN_MILLISECOUNDS;
+            if (sec != null) out = out + MCast.tolong(sec, 0) * SECOND_IN_MILLISECONDS;
 
             if (msec != null) out = out + MCast.tolong(msec, 0);
 
@@ -368,7 +368,7 @@ public class MPeriod {
         return (((days * 24 + hours) * 60 + minutes) * 60 + seconds) * 1000 + millisec;
     }
 
-    public long getAllSecounds() {
+    public long getAllSECONDs() {
         return getAllMilliseconds() / 1000;
     }
 
@@ -411,22 +411,22 @@ public class MPeriod {
                 || in.endsWith("min")
                 || in.endsWith("minutes")
                 || in.endsWith("minute"))
-            return MCast.tolong(MString.integerPart(in), 0) * MINUTE_IN_MILLISECOUNDS;
+            return MCast.tolong(MString.integerPart(in), 0) * MINUTE_IN_MILLISECONDS;
 
         if (in.endsWith("h") || in.endsWith("hour") || in.endsWith("hours"))
-            return MCast.tolong(MString.integerPart(in), 0) * HOUR_IN_MILLISECOUNDS;
+            return MCast.tolong(MString.integerPart(in), 0) * HOUR_IN_MILLISECONDS;
 
         if (in.endsWith("s")
                 || in.endsWith("sec")
-                || in.endsWith("secound")
-                || in.endsWith("secounds"))
-            return MCast.tolong(MString.integerPart(in), 0) * SECOUND_IN_MILLISECOUNDS;
+                || in.endsWith("SECOND")
+                || in.endsWith("SECONDs"))
+            return MCast.tolong(MString.integerPart(in), 0) * SECOND_IN_MILLISECONDS;
 
         if (in.endsWith("d") || in.endsWith("day") || in.endsWith("days"))
-            return MCast.tolong(MString.integerPart(in), 0) * DAY_IN_MILLISECOUNDS;
+            return MCast.tolong(MString.integerPart(in), 0) * DAY_IN_MILLISECONDS;
 
         if (in.endsWith("w") || in.endsWith("week") || in.endsWith("weeks"))
-            return MCast.tolong(MString.integerPart(in), 0) * DAY_IN_MILLISECOUNDS * 7;
+            return MCast.tolong(MString.integerPart(in), 0) * DAY_IN_MILLISECONDS * 7;
 
         if (in.endsWith("m") || in.endsWith("mon") || in.endsWith("month") || in.endsWith("months"))
             return MCast.tolong(MString.integerPart(in), 0) * MONTH_AVERAGE_MILLISECONDS;
