@@ -12,7 +12,7 @@ public class RC {
     
     public enum STATUS {
         
-        WARNING_TEMPORARELY(199),
+        WARNING_TEMPORARILY(199),
         OK(200),
         CREATED(201),
         ACCEPTED(202),
@@ -50,7 +50,7 @@ public class RC {
     /**
      * Miscellaneous warning
      */
-    public static final int WARNING_TEMPORARELY = 199; // Miscellaneous warning
+    public static final int WARNING_TEMPORARILY = 199; // Miscellaneous warning
     
     public static final int OK = 200;
     public static final int CREATED = 201;
@@ -62,14 +62,28 @@ public class RC {
 
     // do not retry with these errors - professional errors
     /**
-     * Default Error
+     * Default Error, client error
      */
     public static final int ERROR = 400;
+    /**
+     * you are not allowed to access the system,
+     * causes the client system to ask for a password,
+     * exception for authentication
+     */
     public static final int ACCESS_DENIED = 401;
+    /**
+     * you are not allowed to access this resource,
+     * user and password is given but access ins not granted,
+     * exception for authorization
+     */
     public static final int FORBIDDEN = 403;
+    /**
+     * Resource was not found and thats ok 
+     * - in contrast to CONFLICT - resource should be there
+     */
     public static final int NOT_FOUND = 404;
     /**
-     * conflict state or wrong state, to much retries,
+     * conflict state or wrong state, to many retries,
      * key to remove not found, key already set
      * wrong configuration - if not fixed fast,
      * result is null,
@@ -91,7 +105,7 @@ public class RC {
      */
     public static final int SYNTAX_ERROR = 415; // Unsupported Media Type - string instead of int
     /**
-     * Unprocessable Entity - parameter not set,
+     * Unprocessable Entity - parameter from client not set,
      * parameter not found, parameter data is null
      */
     public static final int USAGE = 422; // Unprocessable Entity - parameter not set
@@ -105,8 +119,7 @@ public class RC {
 
     // retry later - technical errors
     /**
-     * Internal Server Error, general error executing remote methods
-     * use BUSY if not available but could
+     * Internal Server Error, general server error
      */
     public static final int INTERNAL_ERROR = 500; // Internal Server Error
     /**
@@ -254,7 +267,7 @@ public class RC {
      * @return true if this kind of error
      */
     public static boolean isWarning(int rc) {
-        return rc == 0 || rc == WARNING || rc == WARNING_TEMPORARELY;
+        return rc == 0 || rc == WARNING || rc == WARNING_TEMPORARILY;
     }
     
     /**
@@ -290,7 +303,7 @@ public class RC {
 
     public static String toString(int rc) {
         switch (rc) {
-        case WARNING_TEMPORARELY: return "WARNING_TEMPORARELY";
+        case WARNING_TEMPORARILY: return "WARNING_TEMPORARILY";
         case OK: return "OK";
         case CREATED: return "CREATED";
         case ACCEPTED: return "ACCEPTED";
