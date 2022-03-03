@@ -18,11 +18,11 @@ package de.mhus.lib.core.operation.util;
 import java.util.List;
 import java.util.Set;
 
-import de.mhus.lib.core.node.NodeList;
-import de.mhus.lib.core.node.NodeSerializable;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
+import de.mhus.lib.core.node.NodeList;
+import de.mhus.lib.core.node.NodeSerializable;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.Successful;
 import de.mhus.lib.errors.MRuntimeException;

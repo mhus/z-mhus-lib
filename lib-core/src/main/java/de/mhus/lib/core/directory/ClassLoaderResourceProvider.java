@@ -22,9 +22,9 @@ import java.util.List;
 import de.mhus.lib.core.MCollection;
 import de.mhus.lib.core.MString;
 import de.mhus.lib.core.MSystem;
-import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.MNode;
+import de.mhus.lib.core.node.NodeList;
 
 public class ClassLoaderResourceProvider extends MResourceProvider {
 

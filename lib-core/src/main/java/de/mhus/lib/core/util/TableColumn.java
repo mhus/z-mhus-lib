@@ -17,8 +17,8 @@ package de.mhus.lib.core.util;
 
 import java.io.Serializable;
 
-import de.mhus.lib.core.node.NodeSerializable;
 import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.NodeSerializable;
 
 public class TableColumn implements Serializable, NodeSerializable {
 

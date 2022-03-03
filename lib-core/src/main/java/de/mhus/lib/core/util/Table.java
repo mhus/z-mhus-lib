@@ -28,9 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.mhus.lib.core.logging.MLogUtil;
+import de.mhus.lib.core.node.INode;
 import de.mhus.lib.core.node.NodeList;
 import de.mhus.lib.core.node.NodeSerializable;
-import de.mhus.lib.core.node.INode;
 
 public class Table implements Serializable, Externalizable, NodeSerializable {
 
