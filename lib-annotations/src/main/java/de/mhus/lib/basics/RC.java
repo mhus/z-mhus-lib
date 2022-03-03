@@ -152,79 +152,116 @@ public class RC {
 
     public static final int RANGE_MAX = 999;
 
-    public static String toMessage(IResult cause, String msg, Object[] parameters, int maxSize) {
-        return RC.toMessage(CAUSE.IGNORE, msg, parameters, 0) + "|# " + cause.getMessage();
+    public static String toMessage(int rc, IResult cause, String msg, Object[] parameters, int maxSize) {
+        return toMessage(rc, CAUSE.IGNORE, msg, parameters, maxSize, cause);
     }
-    
-    public static String toMessage(CAUSE causeHandling, String msg, Object[] parameters, int maxSize) {
+
+    public static String toMessage(int rc, CAUSE causeHandling, String msg, Object[] parameters, int maxSize) {
+        return toMessage(rc, null, msg, parameters, maxSize, null);
+    }
+
+    public static String toMessage(int rc, CAUSE causeHandling, String msg, Object[] parameters, int maxSize, IResult cause) {
         if (causeHandling == null) causeHandling = CAUSE.ENCAPSULATE;
         // short cuts
-        if (msg == null && parameters == null) return "?";
-        if (parameters == null && msg.indexOf('|') == -1) return msg;
+        if (msg == null && parameters == null) return "["+ (rc >= 0 ? rc : "") +"]";
+        if (parameters == null && msg.indexOf('"') == -1) return "[" + (rc >= 0 ? rc + "," : "") + "\"" + msg + "\"]";
         // pipe to colon
         StringBuilder sb = new StringBuilder();
-        addPipeEncoded(sb,msg);
+        sb.append("[");
+        if (rc >= 0)
+            sb.append(rc).append(",");
+        addEncoded(sb,msg);
         if (parameters != null && parameters.length > 0) {
             boolean firstException = true;
             IResult appendCause = null;
             for (Object parameter : parameters) {
+
+                sb.append(",");
+
                 if (maxSize > 0 && sb.length() > maxSize) {
                     sb.append(" ...");
                     break;
                 }
+                
                 if (parameter !=  null) {
+                    
                     if (parameter instanceof IResult && causeHandling == CAUSE.ADAPT) 
                         return ((IResult)parameter).getMessage();
                     if (parameter instanceof IResult && causeHandling == CAUSE.APPEND) {
                         appendCause = (IResult)parameter;
                         firstException = false; // ignore only first exception - it's the cause exception
+                        sb.setLength(sb.length()-1);
                         continue;
                     }
                     if( parameter instanceof Throwable && causeHandling != CAUSE.IGNORE && firstException) {
                         firstException = false; // ignore only first exception - it's the cause exception
+                        sb.setLength(sb.length()-1);
                         continue;
                     }
                     if (parameter instanceof Object[]) {
-                        sb.append("|[");
+                        sb.append("[");
+                        boolean first2 = true;
                         for (Object item : (Object[])parameter) {
+                            if (first2) first2 = false; else sb.append(",");
                             if (item == null)
-                                sb.append("|N");
+                                sb.append("null");
                             else {
-                                sb.append("| ");
-                                addPipeEncoded(sb,item);
+                                addEncoded(sb,item);
                             }
                         }
-                        sb.append("|]");
+                        sb.append("]");
+                        continue;
                     } else {
-                        if (sb.length() > 0)
-                            sb.append("| ");
-                        addPipeEncoded(sb,parameter);
+                        addEncoded(sb,parameter);
                     }
                 } else
-                    sb.append("|N");
+                    sb.append("null");
             }
             if (appendCause != null) {
-                if (sb.length() > 0)
-                    sb.append("|# ");
-                sb.append(appendCause.getMessage() );
+                String msg2 = appendCause.getMessage();
+                if (msg2 != null) {
+                    if (sb.length() > 0)
+                        sb.append(",");
+                    if (msg2.startsWith("[") && msg2.endsWith("]"))
+                        sb.append(msg2);
+                    else
+                        addEncoded(sb, msg2);
+                }
+            }
+            if (cause != null) {
+                String msg2 = cause.getMessage();
+                if (msg2 != null) {
+                    if (sb.length() > 0)
+                        sb.append(",");
+                    if (msg2.startsWith("[") && msg2.endsWith("]"))
+                        sb.append(msg2);
+                    else
+                        addEncoded(sb, msg2);
+                }
             }
         }
+        sb.append("]");
         return sb.toString();
     }
 
-    private static void addPipeEncoded(StringBuilder sb, Object obj) {
-        if (obj == null) return;
+    private static void addEncoded(StringBuilder sb, Object obj) {
+        if (obj == null) {
+            sb.append("null");
+            return;
+        }
         String msg = String.valueOf(obj);
         int pos = 0;
         int nextPos;
-        while ((nextPos = msg.indexOf('|', pos)) != -1) {
+        sb.append("\"");
+        while ((nextPos = msg.indexOf('"', pos)) != -1) {
             sb.append(msg.substring(pos, nextPos));
-            sb.append("||");
+            sb.append("\\\"");
             pos = nextPos+1;
             if (pos >= msg.length()) break;
         }
         if (pos < msg.length())
             sb.append(msg.substring(pos));
+        sb.append("\"");
     }
 
     public static Throwable findCause(CAUSE causeHandling, Object... in) {

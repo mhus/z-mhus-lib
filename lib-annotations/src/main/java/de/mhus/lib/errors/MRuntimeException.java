@@ -44,7 +44,7 @@ public class MRuntimeException extends RuntimeException implements IResult {
     }
 
     public MRuntimeException(IResult cause, String msg, Object... parameters) {
-        super(RC.toMessage(cause, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
+        super(RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
         setReturnCode(cause.getReturnCode());
     }
 
@@ -53,7 +53,7 @@ public class MRuntimeException extends RuntimeException implements IResult {
     }
 
     public MRuntimeException(RC.CAUSE causeHandling, int rc, String msg, Object... parameters) {
-        super(RC.toMessage(causeHandling, msg, parameters, 0), RC.findCause(causeHandling, parameters));
+        super(RC.toMessage(rc, causeHandling, msg, parameters, 0), RC.findCause(causeHandling, parameters));
         setReturnCode(RC.findReturnCode(causeHandling, rc));
     }
     

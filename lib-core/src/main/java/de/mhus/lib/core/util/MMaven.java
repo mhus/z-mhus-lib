@@ -24,13 +24,10 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import de.mhus.lib.core.MCast;
 import de.mhus.lib.core.MFile;
