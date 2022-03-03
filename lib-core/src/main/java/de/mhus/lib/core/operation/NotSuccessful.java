@@ -54,18 +54,18 @@ public class NotSuccessful extends MutableOperationResult {
 
     public NotSuccessful(Operation operation, IResult cause, String msg, Object... parameters) {
         super(operation, cause.getReturnCode(), null);
-        setMsg(RC.toMessage(cause, msg, parameters, 0));
+        setMsg(RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0));
     }
 
     public NotSuccessful(OperationDescription description, IResult cause, String msg, Object... parameters) {
         super(description);
         setReturnCode(cause.getReturnCode());
-        setMsg(RC.toMessage(cause, msg, parameters, 0));
+        setMsg(RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0));
     }
 
     public NotSuccessful(String path, IResult cause, String msg, Object... parameters) {
         super(path, cause.getReturnCode(), null);
-        setMsg(RC.toMessage(cause, msg, parameters, 0));
+        setMsg(RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0));
     }
     
     @Override
