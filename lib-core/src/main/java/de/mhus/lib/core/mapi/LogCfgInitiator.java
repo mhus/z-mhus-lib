@@ -99,6 +99,7 @@ public class LogCfgInitiator implements CfgInitiator {
             String size = system.getString(key, null);
             if (size != null) {
                 logFactory.setMaxMessageSize(Integer.valueOf(size));
+                Log.setMaxMsgSize(Integer.valueOf(size));
             }
         } catch (Throwable t) {
             MApi.dirtyLogDebug(t);

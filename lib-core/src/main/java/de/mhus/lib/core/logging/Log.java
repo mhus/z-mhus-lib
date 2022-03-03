@@ -53,7 +53,7 @@ public class Log {
     private volatile boolean tracerInError = false;
     private volatile boolean tracerStartup;
     //    protected UUID id = UUID.randomUUID();
-    private static int maxMsgSize = 0;
+    private static int maxMsgSize = 10000;
     private static boolean verbose = false;
 
     public Log(Object owner) {
@@ -149,8 +149,7 @@ public class Log {
 
         if (parameterMapper != null) param = parameterMapper.map(this, param);
 
-        msg = "[" + Thread.currentThread().getId() + "]" + (msg != null ? msg : "");
-        msg = RC.toMessage(-1,CAUSE.ENCAPSULATE, msg, param, maxMsgSize);
+        msg = Thread.currentThread().getId() + RC.toMessage(-1,CAUSE.ENCAPSULATE, msg, param, maxMsgSize);
         Throwable error = RC.findCause(CAUSE.ENCAPSULATE, param);
 
         switch (level) {
