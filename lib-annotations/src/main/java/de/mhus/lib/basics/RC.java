@@ -157,7 +157,7 @@ public class RC {
     }
 
     public static String toMessage(int rc, CAUSE causeHandling, String msg, Object[] parameters, int maxSize) {
-        return toMessage(rc, null, msg, parameters, maxSize, null);
+        return toMessage(rc, causeHandling, msg, parameters, maxSize, null);
     }
 
     public static String toMessage(int rc, CAUSE causeHandling, String msg, Object[] parameters, int maxSize, IResult cause) {
