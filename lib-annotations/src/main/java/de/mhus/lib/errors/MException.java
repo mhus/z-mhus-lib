@@ -54,7 +54,7 @@ public class MException extends Exception implements IResult {
 
     public MException(RC.CAUSE causeHandling, int rc, String msg, Object... parameters) {
         super(RC.toMessage(rc,causeHandling, msg, parameters, 0), RC.findCause(causeHandling, parameters));
-        setReturnCode(RC.findReturnCode(causeHandling, rc));
+        setReturnCode(RC.findReturnCode(causeHandling, rc, parameters));
     }
     
     public MException(int rc) {

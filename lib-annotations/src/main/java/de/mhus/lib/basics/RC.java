@@ -293,7 +293,7 @@ public class RC {
      * @param rc
      * @return normalize error code
      */
-    public int normalize(int rc) {
+    public static int normalize(int rc) {
         if (rc < 0) return ERROR;
         if (rc >= 1000) return ERROR;
         return rc;
