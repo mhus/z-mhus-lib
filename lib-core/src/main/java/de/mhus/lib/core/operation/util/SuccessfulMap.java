@@ -18,7 +18,6 @@ package de.mhus.lib.core.operation.util;
 import java.util.Map;
 import java.util.Set;
 
-import de.mhus.lib.core.MProperties;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.Successful;
 
@@ -26,12 +25,12 @@ public class SuccessfulMap extends Successful {
 
     public SuccessfulMap(Operation operation) {
         super(operation, OK);
-        setResultNode(new MProperties());
+//        setResultNode(new MProperties());
     }
     
     public SuccessfulMap(Operation operation, String msg) {
         super(operation, msg);
-        setResultNode(new MProperties());
+//        setResultNode(new MProperties());
     }
 
     public SuccessfulMap(String path, String msg, int rc, String... keyValues) {
@@ -42,8 +41,9 @@ public class SuccessfulMap extends Successful {
         super(operation.getDescription().getPath(), msg, rc, keyValues);
     }
 
+    @SuppressWarnings({ "deprecation", "unchecked" })
     public Map<String, Object> getMap() {
-        return getResultAsMap();
+        return (Map<String, Object>)getResult();
     }
 
     public void put(String key, Object value) {

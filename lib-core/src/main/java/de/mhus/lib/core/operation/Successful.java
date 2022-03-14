@@ -103,8 +103,8 @@ public class Successful extends MutableOperationResult {
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
                 if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
-            setResult(r);
         }
+        setResult(r);
     }
 
     @Override
