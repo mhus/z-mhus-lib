@@ -49,7 +49,7 @@ public class LogTest extends TestCase {
         {
             String msg = RC.toMessage(1,(IResult)null, "test", new Object[] {"nr1",null, new String[] {"a","b"}, "last" } , 0);
             System.out.println(msg);
-            assertEquals("[1,\"test\",\"nr1\",null,[\"a\",\"b\"],\"last\"]", msg);
+            assertEquals("[1,\"test\",\"nr1\",null,\"[a, b]\",\"last\"]", msg);
         }
         {
             String msg = RC.toMessage(1,CAUSE.APPEND, "test", new Object[] {"nr1", new Exception("exception"), "nr2"} , 0);
