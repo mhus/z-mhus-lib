@@ -1,5 +1,7 @@
 package de.mhus.lib.basics;
 
+import java.util.Arrays;
+
 public class RC {
 
     public enum CAUSE {
@@ -198,22 +200,31 @@ public class RC {
                         sb.setLength(sb.length()-1);
                         continue;
                     }
-                    if (parameter instanceof Object[]) {
-                        sb.append("[");
-                        boolean first2 = true;
-                        for (Object item : (Object[])parameter) {
-                            if (first2) first2 = false; else sb.append(",");
-                            if (item == null)
-                                sb.append("null");
-                            else {
-                                addEncoded(sb,item);
-                            }
-                        }
-                        sb.append("]");
-                        continue;
-                    } else {
+                    if (parameter instanceof Object[])
+                        addEncoded(sb,Arrays.deepToString((Object[])parameter));
+                    else
+                    if (parameter instanceof int[])
+                        addEncoded(sb,Arrays.toString((int[])parameter));
+                    else
+                    if (parameter instanceof double[])
+                        addEncoded(sb,Arrays.toString((double[])parameter));
+                    else
+                    if (parameter instanceof long[])
+                        addEncoded(sb,Arrays.toString((long[])parameter));
+                    else
+                    if (parameter instanceof byte[])
+                        addEncoded(sb,Arrays.toString((byte[])parameter));
+                    else
+                    if (parameter instanceof float[])
+                        addEncoded(sb,Arrays.toString((float[])parameter));
+                    else
+                    if (parameter instanceof short[])
+                        addEncoded(sb,Arrays.toString((short[])parameter));
+                    else
+                    if (parameter instanceof char[])
+                        addEncoded(sb,Arrays.toString((char[])parameter));
+                   else
                         addEncoded(sb,parameter);
-                    }
                 } else
                     sb.append("null");
             }
@@ -254,14 +265,29 @@ public class RC {
         int nextPos;
         sb.append("\"");
         while ((nextPos = msg.indexOf('"', pos)) != -1) {
-            sb.append(msg.substring(pos, nextPos));
+            encodeBackslash(sb, msg.substring(pos, nextPos));
             sb.append("\\\"");
             pos = nextPos+1;
             if (pos >= msg.length()) break;
         }
         if (pos < msg.length())
-            sb.append(msg.substring(pos));
+            encodeBackslash(sb, msg.substring(pos));
         sb.append("\"");
+    }
+
+    private static void encodeBackslash(StringBuilder sb, String msg) {
+        int pos = 0;
+        int nextPos;
+        while ((nextPos = msg.indexOf('\\', pos)) != -1) {
+            sb.append(msg.substring(pos, nextPos));
+            sb.append("\\\\");
+            pos = nextPos+1;
+            if (pos >= msg.length()) break;
+            if (pos < msg.length())
+                sb.append(msg.substring(pos));
+        }
+        if (pos < msg.length())
+            sb.append(msg.substring(pos));
     }
 
     public static Throwable findCause(CAUSE causeHandling, Object... in) {

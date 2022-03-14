@@ -60,7 +60,7 @@ public class OperationResult implements IResult {
     }
 
     public boolean isSuccessful() {
-        return returnCode <= RC.RANGE_MAX_SUCCESSFUL;
+        return returnCode >= 0 && returnCode <= RC.RANGE_MAX_SUCCESSFUL;
     }
 
     public OperationDescription getNextOperation() {
