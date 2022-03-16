@@ -25,6 +25,10 @@ public class Successful extends MutableOperationResult {
 
     public static final String OK = "ok";
 
+    public Successful(Operation operation, String msg) {
+        super(operation, RC.OK, msg);
+    }
+
     public Successful(Operation operation) {
         super(operation, RC.OK, "ok");
     }

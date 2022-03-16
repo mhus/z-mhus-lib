@@ -26,8 +26,8 @@ import de.mhus.lib.core.operation.Successful;
 public class SuccessfulMap extends Successful {
 
 
-    public SuccessfulMap(Operation operation, String msg, String... keyValues) {
-        this(operation.getDescription().getPath(), RC.OK, msg, keyValues);
+    public SuccessfulMap(String path, String msg, String... keyValues) {
+        this(path, RC.OK, msg, keyValues);
     }
 
     @SuppressWarnings("deprecation")
@@ -39,6 +39,10 @@ public class SuccessfulMap extends Successful {
                 if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
         }
         setResult(r);
+    }
+
+    public SuccessfulMap(Operation operation, String msg, String... keyValues) {
+        this(operation, RC.OK, msg, keyValues);
     }
 
     @SuppressWarnings("deprecation")
