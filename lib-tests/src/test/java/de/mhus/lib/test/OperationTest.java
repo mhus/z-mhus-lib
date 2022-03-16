@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.util.MapValue;
 import de.mhus.lib.core.operation.util.SuccessfulForceMap;
@@ -30,7 +31,7 @@ public class OperationTest extends TestCase {
     @Test
     @SuppressWarnings("deprecation")
     public void testForceMapResult1() {
-        SuccessfulForceMap res = new SuccessfulForceMap("path", "msg", 0);
+        SuccessfulForceMap res = new SuccessfulForceMap("path", RC.OK, "msg");
         res.put("key", "value");
         System.out.println(res);
         assertTrue(res.getResult() instanceof MapValue);

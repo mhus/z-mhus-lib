@@ -15,7 +15,6 @@
  */
 package de.mhus.lib.core.operation;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import de.mhus.lib.basics.RC;
@@ -25,10 +24,6 @@ public class Successful extends MutableOperationResult {
 
 
     public static final String OK = "ok";
-
-    public Successful() {
-        super();
-    }
 
     public Successful(Operation operation) {
         super(operation, RC.OK, "ok");
@@ -67,7 +62,7 @@ public class Successful extends MutableOperationResult {
     }
 
     public Successful(Operation operation, String msg, String result) {
-        this(operation, msg, 0, result);
+        this(operation, msg, RC.OK, result);
     }
 
     @SuppressWarnings("deprecation")
@@ -79,32 +74,20 @@ public class Successful extends MutableOperationResult {
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(String path, String msg, int rc, String result) {
+    public Successful(String path, int rc, String msg, String result) {
         setOperationPath(path);
         setMsg(msg == null ? OK : msg);
         setResult(result);
         setReturnCode(rc);
     }
 
-    public Successful(Operation operation, String msg, String... keyValues) {
-        this(operation.getDescription().getPath(), msg, 0, keyValues);
-    }
 
     public Successful(String path) {
-        this(path, OK, RC.OK);
+        this(path, RC.OK, OK, (String)null);
     }
 
-    @SuppressWarnings("deprecation")
-    public Successful(String path, String msg, int rc, String... keyValues) {
-        setOperationPath(path);
-        setMsg(msg == null ? OK : msg);
-        setReturnCode(rc);
-        HashMap<Object, Object> r = new HashMap<>();
-        if (keyValues != null) {
-            for (int i = 0; i < keyValues.length - 1; i += 2)
-                if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
-        }
-        setResult(r);
+    public Successful(String path, int rc, String msg) {
+        this(path, rc, msg, (String)null);
     }
 
     @Override

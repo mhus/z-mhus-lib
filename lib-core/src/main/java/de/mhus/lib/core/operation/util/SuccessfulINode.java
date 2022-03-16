@@ -31,12 +31,12 @@ import de.mhus.lib.errors.NotFoundException;
 public class SuccessfulINode extends Successful {
 
     public SuccessfulINode(Operation operation, String msg) {
-        super(operation, msg, 0, (String) null);
+        super(operation, msg, RC.OK, (String) null);
         setResultNode(new MNode());
     }
 
     public SuccessfulINode(Operation operation, String msg, INode config) {
-        super(operation, msg, 0, (String) null);
+        super(operation, msg, RC.OK, (String) null);
         setResultNode(config);
     }
 
@@ -46,17 +46,17 @@ public class SuccessfulINode extends Successful {
     }
 
     public SuccessfulINode(String path, String msg, INode config) {
-        super(path, msg, 0, (String) null);
+        super(path, RC.OK, msg, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulINode(String path, String msg, int rc, INode config) {
-        super(path, msg, rc, (String) null);
+        super(path, rc, msg, (String) null);
         setResultNode(config);
     }
 
     public SuccessfulINode(Operation operation, String msg, NodeSerializable object) {
-        super(operation, msg, 0, (String) null);
+        super(operation, RC.OK, msg, (String) null);
         MNode cfg = new MNode();
         if (object != null)
             try {
@@ -80,7 +80,7 @@ public class SuccessfulINode extends Successful {
     }
 
     public SuccessfulINode(String path, String msg, NodeSerializable object) {
-        super(path, msg, 0, (String) null);
+        super(path, RC.OK, msg, (String) null);
         MNode cfg = new MNode();
         if (object != null)
             try {
@@ -92,7 +92,7 @@ public class SuccessfulINode extends Successful {
     }
 
     public SuccessfulINode(String path, String msg, int rc, NodeSerializable object) {
-        super(path, msg, rc, (String) null);
+        super(path, rc, msg, (String) null);
         MNode cfg = new MNode();
         if (object != null)
             try {
@@ -108,7 +108,7 @@ public class SuccessfulINode extends Successful {
     }
 
     public SuccessfulINode(String path, String msg, int rc, String... keyValues) {
-        super(path, msg, rc, (String) null);
+        super(path, rc, msg, (String) null);
         setOperationPath(path);
         setMsg(msg);
         setReturnCode(rc);
