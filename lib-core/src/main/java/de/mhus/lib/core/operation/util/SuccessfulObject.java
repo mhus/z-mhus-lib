@@ -15,6 +15,7 @@
  */
 package de.mhus.lib.core.operation.util;
 
+import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.operation.MutableOperationResult;
 import de.mhus.lib.core.operation.Operation;
 
@@ -22,18 +23,18 @@ import de.mhus.lib.core.operation.Operation;
 public class SuccessfulObject extends MutableOperationResult {
 
     public SuccessfulObject(Operation operation, String msg, Object result) {
-        this(operation.getDescription().getPath(), msg, 0, result);
+        this(operation.getDescription().getPath(), RC.OK, msg, result);
     }
 
-    public SuccessfulObject(Operation operation, String msg, int rc, Object result) {
-        this(operation.getDescription().getPath(), msg, rc, result);
+    public SuccessfulObject(Operation operation, int rc, String msg, Object result) {
+        this(operation.getDescription().getPath(), rc, msg, result);
     }
 
     public SuccessfulObject(String path, String msg, Object result) {
-        this(path, msg, 0, result);
+        this(path, RC.OK, msg, result);
     }
 
-    public SuccessfulObject(String path, String msg, int rc, Object result) {
+    public SuccessfulObject(String path, int rc, String msg, Object result) {
         setOperationPath(path);
         setResult(result);
         setMsg(msg);

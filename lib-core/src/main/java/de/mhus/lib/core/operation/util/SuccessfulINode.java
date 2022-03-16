@@ -31,17 +31,17 @@ import de.mhus.lib.errors.NotFoundException;
 public class SuccessfulINode extends Successful {
 
     public SuccessfulINode(Operation operation, String msg) {
-        super(operation, msg, RC.OK, (String) null);
+        super(operation, RC.OK, msg, (String) null);
         setResultNode(new MNode());
     }
 
     public SuccessfulINode(Operation operation, String msg, INode config) {
-        super(operation, msg, RC.OK, (String) null);
+        super(operation, RC.OK, msg, (String) null);
         setResultNode(config);
     }
 
-    public SuccessfulINode(Operation operation, String msg, int rc, INode config) {
-        super(operation, msg, rc, (String) null);
+    public SuccessfulINode(Operation operation, int rc, String msg, INode config) {
+        super(operation, rc, msg, (String) null);
         setResultNode(config);
     }
 
@@ -67,8 +67,8 @@ public class SuccessfulINode extends Successful {
         setResultNode(cfg);
     }
 
-    public SuccessfulINode(Operation operation, String msg, int rc, NodeSerializable object) {
-        super(operation, msg, rc, (String) null);
+    public SuccessfulINode(Operation operation, int rc, String msg, NodeSerializable object) {
+        super(operation, rc, msg, (String) null);
         MNode cfg = new MNode();
         if (object != null)
             try {

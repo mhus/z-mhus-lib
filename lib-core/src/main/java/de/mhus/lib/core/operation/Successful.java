@@ -46,11 +46,11 @@ public class Successful extends MutableOperationResult {
     }
 
     public Successful(Operation operation, String msg, Map<?, ?> result) {
-        this(operation, msg == null ? OK : msg, 0, result);
+        this(operation, RC.OK, msg == null ? OK : msg, result);
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(Operation operation, String msg, int rc, Map<?, ?> result) {
+    public Successful(Operation operation, int rc, String msg, Map<?, ?> result) {
         setOperationPath(operation.getDescription().getPath());
         setMsg(msg == null ? OK : msg);
         setResult(result);
@@ -58,7 +58,7 @@ public class Successful extends MutableOperationResult {
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(String path, String msg, int rc, Map<?, ?> result) {
+    public Successful(String path, int rc, String msg, Map<?, ?> result) {
         setOperationPath(path);
         setMsg(msg == null ? OK : msg);
         setResult(result);
@@ -66,11 +66,11 @@ public class Successful extends MutableOperationResult {
     }
 
     public Successful(Operation operation, String msg, String result) {
-        this(operation, msg, RC.OK, result);
+        this(operation, RC.OK, msg, result);
     }
 
     @SuppressWarnings("deprecation")
-    public Successful(Operation operation, String msg, int rc, String result) {
+    public Successful(Operation operation, int rc, String msg, String result) {
         setOperationPath(operation.getDescription().getPath());
         setMsg(msg == null ? OK : msg);
         setResult(result);
