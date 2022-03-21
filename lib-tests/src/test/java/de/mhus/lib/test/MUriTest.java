@@ -36,7 +36,7 @@ public class MUriTest extends TestCase {
                             "http://user:pass@domain.com/path1/path2;param1;param2?q1=abc&q2=def#fragment");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
-            assertEquals("pass", MPassword.decode(uri.getPassword()));
+            assertEquals("password", MPassword.decode(uri.getPassword()));
             assertEquals("domain.com", uri.getLocation());
             assertEquals(2, uri.getPathParts().length);
             assertEquals("path1", uri.getPathParts()[0]);
@@ -55,7 +55,7 @@ public class MUriTest extends TestCase {
                             "http://user:pass@domain.com/path1/path2;param1;param2?q1=abc&q2=def");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
-            assertEquals("pass", MPassword.decode(uri.getPassword()));
+            assertEquals("password", MPassword.decode(uri.getPassword()));
             assertEquals("domain.com", uri.getLocation());
             assertEquals(2, uri.getPathParts().length);
             assertEquals("path1", uri.getPathParts()[0]);
@@ -72,7 +72,7 @@ public class MUriTest extends TestCase {
             MUri uri = MUri.toUri("http://user:pass@domain.com/path1/path2;param1;param2#fragment");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
-            assertEquals("pass", MPassword.decode(uri.getPassword()));
+            assertEquals("password", MPassword.decode(uri.getPassword()));
             assertEquals("domain.com", uri.getLocation());
             assertEquals(2, uri.getPathParts().length);
             assertEquals("path1", uri.getPathParts()[0]);
@@ -86,7 +86,7 @@ public class MUriTest extends TestCase {
             MUri uri = MUri.toUri("http://user:pass@domain.com/path1/path2?q1=abc&q2=def#fragment");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
-            assertEquals("pass", MPassword.decode(uri.getPassword()));
+            assertEquals("password", MPassword.decode(uri.getPassword()));
             assertEquals("domain.com", uri.getLocation());
             assertEquals(2, uri.getPathParts().length);
             assertEquals("path1", uri.getPathParts()[0]);
@@ -139,7 +139,7 @@ public class MUriTest extends TestCase {
                             "//user:pass@domain.com/path1/path2;param1;param2?q1=abc&q2=def#fragment");
             assertNull(uri.getScheme());
             assertEquals("user", uri.getUsername());
-            assertEquals("pass", MPassword.decode(uri.getPassword()));
+            assertEquals("password", MPassword.decode(uri.getPassword()));
             assertEquals("domain.com", uri.getLocation());
             assertEquals(2, uri.getPathParts().length);
             assertEquals("path1", uri.getPathParts()[0]);

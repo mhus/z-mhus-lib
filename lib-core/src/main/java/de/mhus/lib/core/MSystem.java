@@ -1017,7 +1017,8 @@ public class MSystem {
 
     public static boolean isPasswordName(String key) {
         if (key == null) return false;
-        return key.toLowerCase().contains("pass"); // password, ? secret ?
+        String lc = key.toLowerCase();
+        return lc.contains("pass") || lc.contains("token") ; // password, ? secret ?
     }
 
     public static String currentStackTrace(String firstLine) {
