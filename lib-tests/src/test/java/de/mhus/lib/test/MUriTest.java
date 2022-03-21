@@ -136,7 +136,7 @@ public class MUriTest extends TestCase {
         { // full
             MUri uri =
                     MUri.toUri(
-                            "//user:pass@domain.com/path1/path2;param1;param2?q1=abc&q2=def#fragment");
+                            "//user:password@domain.com/path1/path2;param1;param2?q1=abc&q2=def#fragment");
             assertNull(uri.getScheme());
             assertEquals("user", uri.getUsername());
             assertEquals("password", MPassword.decode(uri.getPassword()));
