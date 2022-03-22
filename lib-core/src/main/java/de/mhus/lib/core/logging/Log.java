@@ -83,7 +83,7 @@ public class Log {
      * trace is switched on.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void t(String msg, Object... param) {
         log(LEVEL.TRACE, msg, param);
@@ -149,7 +149,10 @@ public class Log {
 
         if (parameterMapper != null) param = parameterMapper.map(this, param);
 
-        msg = Thread.currentThread().getId() + "#" + RC.toMessage(-1,CAUSE.ENCAPSULATE, msg, param, maxMsgSize);
+        msg =
+                Thread.currentThread().getId()
+                        + "#"
+                        + RC.toMessage(-1, CAUSE.ENCAPSULATE, msg, param, maxMsgSize);
         Throwable error = RC.findCause(CAUSE.ENCAPSULATE, param);
 
         switch (level) {
@@ -269,7 +272,7 @@ public class Log {
      * Also add a trace.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void d(String msg, Object... param) {
         log(LEVEL.DEBUG, msg, param);
@@ -278,13 +281,13 @@ public class Log {
     public void d(Throwable t) {
         log(LEVEL.DEBUG, t.toString(), t);
     }
-    
+
     /**
      * Log a message in info, it will automatically append the objects if debug is enabled. Can Also
      * add a trace.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void i(String msg, Object... param) {
         log(LEVEL.INFO, msg, param);
@@ -299,7 +302,7 @@ public class Log {
      * add a trace.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void w(String msg, Object... param) {
         log(LEVEL.WARN, msg, param);
@@ -314,7 +317,7 @@ public class Log {
      * Also add a trace.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void e(String msg, Object... param) {
         log(LEVEL.ERROR, msg, param);
@@ -329,7 +332,7 @@ public class Log {
      * add a trace.
      *
      * @param msg
-     * @param param 
+     * @param param
      */
     public void f(String msg, Object... param) {
         log(LEVEL.FATAL, msg, param);

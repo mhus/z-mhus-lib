@@ -28,7 +28,7 @@ public class TimeoutRuntimeException extends MRuntimeException {
     }
 
     public TimeoutRuntimeException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public TimeoutRuntimeException(RC.CAUSE causeHandling, Object... in) {

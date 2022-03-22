@@ -28,7 +28,7 @@ public class ErrorRuntimeException extends MRuntimeException {
     }
 
     public ErrorRuntimeException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public ErrorRuntimeException(RC.CAUSE causeHandling, Object... in) {

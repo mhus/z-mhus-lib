@@ -90,7 +90,8 @@ public class TrustedToken implements AuthenticationToken {
             //                }
         }
         if (sb.length() == 0) {
-            if (debugPermissions != DEBUG.NO) log.i("TrustedToken access denied (1)", (Object)stackTrace);
+            if (debugPermissions != DEBUG.NO)
+                log.i("TrustedToken access denied (1)", (Object) stackTrace);
             throw new AuthenticationException(
                     Aaa.getPrincipal() + ": TrustedToken access denied (1)");
         }

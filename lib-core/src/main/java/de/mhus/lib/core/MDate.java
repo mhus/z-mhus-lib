@@ -349,8 +349,7 @@ public class MDate extends Date {
 
     public static Date toDateOnly(Date date) {
         if (date == null) return null;
-        return new Date(
-                date.getTime() / MPeriod.DAY_IN_MILLISECONDS * MPeriod.DAY_IN_MILLISECONDS);
+        return new Date(date.getTime() / MPeriod.DAY_IN_MILLISECONDS * MPeriod.DAY_IN_MILLISECONDS);
     }
 
     /**

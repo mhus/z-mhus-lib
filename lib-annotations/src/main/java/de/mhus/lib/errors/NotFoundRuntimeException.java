@@ -28,7 +28,7 @@ public class NotFoundRuntimeException extends MRuntimeException {
     }
 
     public NotFoundRuntimeException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public NotFoundRuntimeException(RC.CAUSE causeHandling, Object... in) {

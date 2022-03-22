@@ -28,8 +28,7 @@ public class WaitExecuteStrategy extends ExecuteStrategy {
 
     @Override
     protected OperationResult doExecute2(TaskContext context) throws Exception {
-        if (executable == null)
-            return new NotSuccessful(this, RC.GONE, "executable not found");
+        if (executable == null) return new NotSuccessful(this, RC.GONE, "executable not found");
         try {
             long cnt = timeout;
             ;
@@ -40,8 +39,7 @@ public class WaitExecuteStrategy extends ExecuteStrategy {
                     if (cnt <= 0) throw new TimeoutException("timeout");
                 }
             }
-            if (executable == null)
-                return new NotSuccessful(this, RC.GONE, "executable not found");
+            if (executable == null) return new NotSuccessful(this, RC.GONE, "executable not found");
             return executable.doExecute(context);
         } finally {
             if (executable != null) executable.releaseBusy(this);

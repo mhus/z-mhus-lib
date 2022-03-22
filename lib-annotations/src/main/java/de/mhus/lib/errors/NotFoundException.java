@@ -28,7 +28,7 @@ public class NotFoundException extends MException {
     }
 
     public NotFoundException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public NotFoundException(RC.CAUSE causeHandling, Object... in) {

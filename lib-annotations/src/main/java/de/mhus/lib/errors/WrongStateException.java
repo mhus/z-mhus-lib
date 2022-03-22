@@ -28,7 +28,7 @@ public class WrongStateException extends MRuntimeException {
     }
 
     public WrongStateException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public WrongStateException(RC.CAUSE causeHandling, Object... in) {

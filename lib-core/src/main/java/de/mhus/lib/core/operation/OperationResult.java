@@ -52,6 +52,7 @@ public class OperationResult implements IResult {
 
     /**
      * Use getMessage() instead
+     *
      * @return Message
      */
     @Deprecated

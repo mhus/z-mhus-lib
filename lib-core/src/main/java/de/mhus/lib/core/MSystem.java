@@ -1018,7 +1018,7 @@ public class MSystem {
     public static boolean isPasswordName(String key) {
         if (key == null) return false;
         String lc = key.toLowerCase();
-        return lc.contains("pass") || lc.contains("token") ; // password, ? secret ?
+        return lc.contains("pass") || lc.contains("token"); // password, ? secret ?
     }
 
     public static String currentStackTrace(String firstLine) {
@@ -1144,5 +1144,4 @@ public class MSystem {
         }
         throw new NotFoundException("manifest not found for", owner);
     }
-
 }

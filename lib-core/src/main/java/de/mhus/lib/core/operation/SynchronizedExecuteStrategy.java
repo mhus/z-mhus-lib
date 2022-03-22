@@ -24,8 +24,7 @@ public class SynchronizedExecuteStrategy extends ExecuteStrategy {
     @Override
     protected OperationResult doExecute2(TaskContext context) throws Exception {
         synchronized (this) {
-            if (executable == null)
-                return new NotSuccessful(this, RC.GONE, "executable not found");
+            if (executable == null) return new NotSuccessful(this, RC.GONE, "executable not found");
             executable.setBusy(this);
             OperationResult out = executable.doExecute(context);
             executable.releaseBusy(this);

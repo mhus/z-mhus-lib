@@ -28,7 +28,7 @@ public class NotSupportedException extends MRuntimeException {
     }
 
     public NotSupportedException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public NotSupportedException(RC.CAUSE causeHandling, Object... in) {

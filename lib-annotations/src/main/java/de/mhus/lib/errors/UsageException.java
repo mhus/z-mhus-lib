@@ -28,7 +28,7 @@ public class UsageException extends MRuntimeException {
     }
 
     public UsageException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public UsageException(RC.CAUSE causeHandling, Object... in) {

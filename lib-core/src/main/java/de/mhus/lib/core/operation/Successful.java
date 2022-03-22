@@ -22,7 +22,6 @@ import de.mhus.lib.core.logging.MLogUtil;
 
 public class Successful extends MutableOperationResult {
 
-
     public static final String OK = "ok";
 
     public Successful(Operation operation, String msg) {
@@ -85,26 +84,24 @@ public class Successful extends MutableOperationResult {
         setReturnCode(rc);
     }
 
-
     public Successful(String path) {
-        this(path, RC.OK, OK, (String)null);
+        this(path, RC.OK, OK, (String) null);
     }
 
     public Successful(String path, int rc, String msg) {
-        this(path, rc, msg, (String)null);
+        this(path, rc, msg, (String) null);
     }
 
     @Override
     public void setReturnCode(int returnCode) {
         if (returnCode < 0) {
-            MLogUtil.log().d("de.mhus.lib.core.operation.Successful: negative return code",returnCode);
+            MLogUtil.log()
+                    .d("de.mhus.lib.core.operation.Successful: negative return code", returnCode);
             this.returnCode = RC.OK;
-        } else
-        if (returnCode > RC.RANGE_MAX_SUCCESSFUL) {
-            MLogUtil.log().d("de.mhus.lib.core.operation.Successful: wrong return code",returnCode);
+        } else if (returnCode > RC.RANGE_MAX_SUCCESSFUL) {
+            MLogUtil.log()
+                    .d("de.mhus.lib.core.operation.Successful: wrong return code", returnCode);
             this.returnCode = RC.OK;
-        } else
-            this.returnCode = returnCode;
+        } else this.returnCode = returnCode;
     }
-
 }

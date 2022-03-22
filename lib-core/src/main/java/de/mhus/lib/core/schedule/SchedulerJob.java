@@ -129,11 +129,7 @@ public abstract class SchedulerJob extends MTimerTask implements Operation {
                         try {
                             if (!hasAccess(context)) {
                                 log.d("access denied", context, context.getErrorMessage());
-                                res =
-                                        new NotSuccessful(
-                                                this,
-                                                RC.ACCESS_DENIED,
-                                                "access denied");
+                                res = new NotSuccessful(this, RC.ACCESS_DENIED, "access denied");
                             } else if (!canExecute(context)) {
                                 log.d("execution denied", context.getErrorMessage());
                                 res =

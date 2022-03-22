@@ -34,7 +34,8 @@ public class ModelVariable extends ModelPattern {
     @Override
     protected boolean matches(ModelPart model, Map<String, ?> map, String str) {
         if (map == null)
-            throw new MRuntimeException(RC.NOT_FOUND, "variables not available, use condition not matcher");
+            throw new MRuntimeException(
+                    RC.NOT_FOUND, "variables not available, use condition not matcher");
         Object val = map.get(name);
         if (val == null) return false;
         int c = str.compareTo(val.toString());

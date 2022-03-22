@@ -124,8 +124,10 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version nextMajor() {
         if (versions.length < 1)
-            throw new MRuntimeException(RC.SYNTAX_ERROR,
-                    "malformed version, can't create next major version", original);
+            throw new MRuntimeException(
+                    RC.SYNTAX_ERROR,
+                    "malformed version, can't create next major version",
+                    original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] + 1;
         return new Version(MString.join(v2, '.'));
@@ -133,8 +135,10 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version nextMinor() {
         if (versions.length < 2)
-            throw new MRuntimeException(RC.SYNTAX_ERROR,
-                    "malformed version, can't create next minor version", original);
+            throw new MRuntimeException(
+                    RC.SYNTAX_ERROR,
+                    "malformed version, can't create next minor version",
+                    original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];
         v2[1] = versions[1] + 1;
@@ -143,8 +147,10 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version previousMajor() {
         if (versions.length < 1 || versions[0] <= 0)
-            throw new MRuntimeException(RC.SYNTAX_ERROR,
-                    "malformed version, can't create previous major version", original);
+            throw new MRuntimeException(
+                    RC.SYNTAX_ERROR,
+                    "malformed version, can't create previous major version",
+                    original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0] - 1;
         return new Version(MString.join(v2, '.'));
@@ -152,8 +158,10 @@ public class Version implements Comparable<Version>, Externalizable {
 
     public Version previousMinor() {
         if (versions.length < 2 || versions[1] <= 0)
-            throw new MRuntimeException(RC.SYNTAX_ERROR,
-                    "malformed version, can't create previous minor version", original);
+            throw new MRuntimeException(
+                    RC.SYNTAX_ERROR,
+                    "malformed version, can't create previous minor version",
+                    original);
         long[] v2 = new long[versions.length];
         v2[0] = versions[0];
         v2[1] = versions[1] - 1;

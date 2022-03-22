@@ -28,7 +28,7 @@ public class AccessDeniedException extends MRuntimeException {
     }
 
     public AccessDeniedException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public AccessDeniedException(RC.CAUSE causeHandling, Object... in) {
@@ -54,5 +54,4 @@ public class AccessDeniedException extends MRuntimeException {
     public AccessDeniedException(int rc) {
         super(getDefaultStatus().rc());
     }
-
 }

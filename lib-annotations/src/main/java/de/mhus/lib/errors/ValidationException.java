@@ -29,7 +29,7 @@ public class ValidationException extends MRuntimeException {
     }
 
     public ValidationException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public ValidationException(RC.CAUSE causeHandling, Object... in) {

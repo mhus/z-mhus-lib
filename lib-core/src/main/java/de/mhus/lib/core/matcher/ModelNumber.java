@@ -38,7 +38,8 @@ public class ModelNumber extends ModelPattern {
 
         if (name != null) {
             if (map == null)
-                throw new MRuntimeException(RC.NOT_FOUND, "variables not available, use condition not matcher");
+                throw new MRuntimeException(
+                        RC.NOT_FOUND, "variables not available, use condition not matcher");
             Object val = map.get(name);
             if (val == null) return false;
             str = val.toString();

@@ -69,7 +69,9 @@ public class MUriTest extends TestCase {
         }
 
         {
-            MUri uri = MUri.toUri("http://user:password@domain.com/path1/path2;param1;param2#fragment");
+            MUri uri =
+                    MUri.toUri(
+                            "http://user:password@domain.com/path1/path2;param1;param2#fragment");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
             assertEquals("password", MPassword.decode(uri.getPassword()));
@@ -83,7 +85,9 @@ public class MUriTest extends TestCase {
             assertEquals("fragment", uri.getFragment());
         }
         {
-            MUri uri = MUri.toUri("http://user:password@domain.com/path1/path2?q1=abc&q2=def#fragment");
+            MUri uri =
+                    MUri.toUri(
+                            "http://user:password@domain.com/path1/path2?q1=abc&q2=def#fragment");
             assertEquals("http", uri.getScheme());
             assertEquals("user", uri.getUsername());
             assertEquals("password", MPassword.decode(uri.getPassword()));

@@ -2110,11 +2110,10 @@ public class MString {
                 while ((nextPos = msg.indexOf('|', pos)) != -1) {
                     sb.append(msg.substring(pos, nextPos));
                     sb.append(":");
-                    pos = nextPos+1;
+                    pos = nextPos + 1;
                     if (pos >= msg.length()) break;
                 }
-                if (pos < msg.length())
-                    sb.append(msg.substring(pos));
+                if (pos < msg.length()) sb.append(msg.substring(pos));
             }
         } catch (Throwable t) {
         }
@@ -2133,12 +2132,10 @@ public class MString {
             return null;
         }
 
-        if (msg != null)
-            serialize(sb, msg, null);
+        if (msg != null) serialize(sb, msg, null);
 
         for (Object o : param) {
-            if (sb.length() > 0)
-                sb.append("|");
+            if (sb.length() > 0) sb.append("|");
             error = serialize(sb, o, error);
             if (maxMsgSize > 0 && sb.length() > maxMsgSize) {
                 // check for exceptions

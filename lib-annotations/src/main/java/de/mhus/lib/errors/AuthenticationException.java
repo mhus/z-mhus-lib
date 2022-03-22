@@ -28,7 +28,7 @@ public class AuthenticationException extends MRuntimeException {
     }
 
     public AuthenticationException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public AuthenticationException(RC.CAUSE causeHandling, Object... in) {
@@ -54,5 +54,4 @@ public class AuthenticationException extends MRuntimeException {
     public AuthenticationException(int rc) {
         super(getDefaultStatus().rc());
     }
-
 }

@@ -29,7 +29,7 @@ public class SyntaxError extends MException {
     }
 
     public SyntaxError(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public SyntaxError(RC.CAUSE causeHandling, Object... in) {

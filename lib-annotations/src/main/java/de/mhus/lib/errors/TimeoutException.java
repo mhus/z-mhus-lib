@@ -28,7 +28,7 @@ public class TimeoutException extends MException {
     }
 
     public TimeoutException(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public TimeoutException(RC.CAUSE causeHandling, Object... in) {

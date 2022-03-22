@@ -205,7 +205,9 @@ public abstract class AbstractProperties extends MObject implements IProperties 
             setFloat(key, (Float) value);
         } else if (value instanceof Double) {
             setDouble(key, (Double) value);
-        } else throw new MRuntimeException(RC.SYNTAX_ERROR, "Unknown number class", key, value.getClass());
+        } else
+            throw new MRuntimeException(
+                    RC.SYNTAX_ERROR, "Unknown number class", key, value.getClass());
     }
 
     @Override

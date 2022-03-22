@@ -242,7 +242,7 @@ public interface INode extends IProperties {
             builder.write(node, os);
             return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
         } catch (Exception e) {
-            throw new MException(RC.STATUS.ERROR,e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 
@@ -254,7 +254,7 @@ public interface INode extends IProperties {
             builder.write(node, os);
             return new String(os.toByteArray(), MString.CHARSET_CHARSET_UTF_8);
         } catch (Exception e) {
-            throw new MException(RC.STATUS.ERROR,e);
+            throw new MException(RC.STATUS.ERROR, e);
         }
     }
 

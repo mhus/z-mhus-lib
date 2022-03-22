@@ -86,7 +86,9 @@ public class ContainerBuilder {
                             // only localhost !!
                             int start = M.to(bindPort.substring(0, bindPort.length() - 1), 0);
                             start = start + scenario.cnt();
-                            if (start == 0) throw new MRuntimeException(RC.SYNTAX_ERROR, "port {1} malformed", bindPort);
+                            if (start == 0)
+                                throw new MRuntimeException(
+                                        RC.SYNTAX_ERROR, "port {1} malformed", bindPort);
                             while (!MNet.availablePort(start)) {
                                 start++;
                                 scenario.cnt();

@@ -123,7 +123,7 @@ public class JwtProviderImpl extends MLog implements JwtProvider {
             // we *cannot* use the JWT as intended by its creator
             log().d(ex);
             throw new AuthenticationException(ex);
-//            throw new AccessDeniedException(ex);
+            //            throw new AccessDeniedException(ex);
         }
     }
 

@@ -25,7 +25,6 @@ import de.mhus.lib.core.operation.Successful;
 
 public class SuccessfulMap extends Successful {
 
-
     public SuccessfulMap(String path, String msg, String... keyValues) {
         this(path, RC.OK, msg, keyValues);
     }
@@ -55,18 +54,18 @@ public class SuccessfulMap extends Successful {
         }
         setResult(r);
     }
-    
+
     public SuccessfulMap(Operation operation) {
         this(operation, OK);
     }
-    
+
     public SuccessfulMap(Operation operation, String msg) {
         this(operation, RC.OK, msg);
     }
 
-    @SuppressWarnings({ "deprecation" })
+    @SuppressWarnings({"deprecation"})
     public IProperties getMap() {
-        return (IProperties)getResult();
+        return (IProperties) getResult();
     }
 
     public void put(String key, Object value) {

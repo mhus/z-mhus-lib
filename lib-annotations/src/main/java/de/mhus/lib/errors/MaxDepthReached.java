@@ -22,13 +22,13 @@ import de.mhus.lib.basics.RC.STATUS;
 public class MaxDepthReached extends MRuntimeException {
 
     private static final long serialVersionUID = 1L;
-    
+
     public static STATUS getDefaultStatus() {
         return RC.STATUS.TOO_DEEP;
     }
 
     public MaxDepthReached(Object... in) {
-        super(getDefaultStatus(),in);
+        super(getDefaultStatus(), in);
     }
 
     public MaxDepthReached(RC.CAUSE causeHandling, Object... in) {
@@ -54,5 +54,4 @@ public class MaxDepthReached extends MRuntimeException {
     public MaxDepthReached(int rc) {
         super(getDefaultStatus().rc());
     }
-    
 }

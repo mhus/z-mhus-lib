@@ -31,7 +31,6 @@ public class MRuntimeException extends RuntimeException implements IResult {
 
     public MRuntimeException(RC.CAUSE causeHandling, RC.STATUS rc, Object... in) {
         this(causeHandling, rc.rc(), rc.name(), in);
-
     }
 
     public MRuntimeException(int rc, Throwable cause) {
@@ -39,12 +38,14 @@ public class MRuntimeException extends RuntimeException implements IResult {
     }
 
     public MRuntimeException(IResult cause) {
-        super(cause.getMessage(), cause instanceof Throwable ? (Throwable)cause : null );
+        super(cause.getMessage(), cause instanceof Throwable ? (Throwable) cause : null);
         setReturnCode(cause.getReturnCode());
     }
 
     public MRuntimeException(IResult cause, String msg, Object... parameters) {
-        super(RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0), cause instanceof Throwable ? (Throwable)cause : null );
+        super(
+                RC.toMessage(cause.getReturnCode(), cause, msg, parameters, 0),
+                cause instanceof Throwable ? (Throwable) cause : null);
         setReturnCode(cause.getReturnCode());
     }
 
@@ -53,10 +54,12 @@ public class MRuntimeException extends RuntimeException implements IResult {
     }
 
     public MRuntimeException(RC.CAUSE causeHandling, int rc, String msg, Object... parameters) {
-        super(RC.toMessage(rc, causeHandling, msg, parameters, 0), RC.findCause(causeHandling, parameters));
+        super(
+                RC.toMessage(rc, causeHandling, msg, parameters, 0),
+                RC.findCause(causeHandling, parameters));
         setReturnCode(RC.findReturnCode(causeHandling, rc, parameters));
     }
-    
+
     public MRuntimeException(int rc) {
         super(RC.toString(rc));
         setReturnCode(rc);
