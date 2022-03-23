@@ -18,12 +18,18 @@ package de.mhus.lib.test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.util.MapValue;
 import de.mhus.lib.core.operation.util.SuccessfulForceMap;
+import de.mhus.lib.core.operation.util.SuccessfulMap;
+import de.mhus.lib.core.pojo.MPojo;
+import de.mhus.lib.test.util.User;
 import de.mhus.lib.tests.TestCase;
 
 public class OperationTest extends TestCase {
@@ -48,4 +54,18 @@ public class OperationTest extends TestCase {
         assertTrue(res.getResult() instanceof MapValue);
         assertNotNull(((MapValue) res.getResult()).getValue());
     }
+    
+    @Test
+    public void testMap() throws IOException {
+        Operation oper = new TestOperation();
+        SuccessfulMap result = new SuccessfulMap(oper, "ok");
+        Map<String, Object> out = result.getMap();
+        User user = new User();
+        user.setFirstname("John");
+        user.setFirstname("Doe");
+        out.put("key", MPojo.pojoToNode(user, false, true) );
+
+
+    }
+    
 }

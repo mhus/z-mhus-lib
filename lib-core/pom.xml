@@ -23,8 +23,9 @@
   <parent>
 	  	<groupId>de.mhus.lib</groupId>
         <artifactId>mhus-lib</artifactId>
-        <version>7.9.0-SNAPSHOT</version>
+        <version>7.8.0</version>
   </parent>
+        <version>7.8.1</version>
     <properties>
       <site.path>..</site.path>
     </properties>
@@ -83,6 +84,7 @@
     <dependency>
         <groupId>de.mhus.lib</groupId>
         <artifactId>lib-annotations</artifactId>
+        <version>7.8.0</version>
     </dependency>
 	<dependency>
 	    <groupId>org.bouncycastle</groupId>

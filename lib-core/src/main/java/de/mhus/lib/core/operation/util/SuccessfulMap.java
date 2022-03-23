@@ -20,6 +20,8 @@ import java.util.Set;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.core.IProperties;
 import de.mhus.lib.core.MProperties;
+import de.mhus.lib.core.node.INode;
+import de.mhus.lib.core.node.MNode;
 import de.mhus.lib.core.operation.Operation;
 import de.mhus.lib.core.operation.Successful;
 
@@ -32,7 +34,7 @@ public class SuccessfulMap extends Successful {
     @SuppressWarnings("deprecation")
     public SuccessfulMap(String path, int rc, String msg, String... keyValues) {
         super(path, rc, msg);
-        MProperties r = new MProperties();
+        MNode r = new MNode();
         if (keyValues != null) {
             for (int i = 0; i < keyValues.length - 1; i += 2)
                 if (keyValues.length > i + 1) r.put(keyValues[i], keyValues[i + 1]);
@@ -66,6 +68,11 @@ public class SuccessfulMap extends Successful {
     @SuppressWarnings({"deprecation"})
     public IProperties getMap() {
         return (IProperties) getResult();
+    }
+
+    @SuppressWarnings({"deprecation"})
+    public INode getNode() {
+        return (INode) getResult();
     }
 
     public void put(String key, Object value) {
