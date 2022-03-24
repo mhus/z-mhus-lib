@@ -175,26 +175,9 @@ public class RC {
             IResult appendCause = null;
             for (Object parameter : parameters) {
 
-                if (maxSize > 0) {
-                    if (sb.length() == maxSize) {
-                        sb.append("\"...\"]");
-                        return sb.toString();
-                    } else
-                    if (sb.length() > maxSize) {
-                        sb.setLength(maxSize);
-                        char c = sb.charAt(maxSize-1);
-                        // try to fix a truncated json array
-                        if (c == '\\')
-                            sb.append("\\\",\"...\"]");
-                        else
-                        if (c == '[')
-                            sb.append("\"...\"]");
-                        else
-                            sb.append("\",\"...\"]");
-                        return sb.toString();
-                    }
-                }
                 sb.append(",");
+                if (truncateMessage(sb,maxSize))
+                    return sb.toString();
 
                 if (parameter != null) {
 
@@ -240,6 +223,8 @@ public class RC {
                     if (sb.length() > 0) sb.append(",");
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
                     else addEncoded(sb, msg2, maxSize);
+                    if (truncateMessage(sb,maxSize))
+                        return sb.toString();
                 }
             }
             if (cause != null) {
@@ -248,11 +233,40 @@ public class RC {
                     if (sb.length() > 0) sb.append(",");
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
                     else addEncoded(sb, msg2, maxSize);
+                    if (truncateMessage(sb,maxSize))
+                        return sb.toString();
                 }
             }
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    private static boolean truncateMessage(StringBuilder sb, int maxSize) {
+        if (maxSize > 0) {
+            if (sb.length() == maxSize) {
+                char c = sb.charAt(maxSize-1);
+                if (c == ']')
+                    sb.append(",\"...\"]");
+                else
+                    sb.append("\"...\"]");
+                return true;
+            } else
+            if (sb.length() > maxSize) {
+                sb.setLength(maxSize);
+                char c = sb.charAt(maxSize-1);
+                // try to fix a truncated json array
+                if (c == '\\')
+                    sb.append("\\...\"]");
+                else
+                if (c == '[')
+                    sb.append("0,\"...\"]]");
+                else
+                    sb.append("...\"]");
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void addEncoded(StringBuilder sb, Object obj, int maxSize) {

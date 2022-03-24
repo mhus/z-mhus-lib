@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.CAUSE;
+import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.tests.TestCase;
 
@@ -79,6 +80,30 @@ public class LogTest extends TestCase {
             String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 0);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"]]", msg);
+        }
+        { // exact at end of second entry
+            MException cause = new MException(1, "cause", "c1");
+            String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 10);
+            System.out.println(msg);
+            assertEquals("[1,\"test\",\"...\"]", msg);
+        }
+        { // end in mittle of attribute
+            MException cause = new MException(1, "cause", "c1");
+            String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 13);
+            System.out.println(msg);
+            assertEquals("[1,\"test\",\"nr...\"]", msg);
+        }
+        { // end in mittle of attribute
+            MException cause = new MException(1, "cause", "c1");
+            String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 23);
+            System.out.println(msg);
+            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[0,\"...\"]]", msg);
+        }
+        { // end in mittle of attribute
+            MException cause = new MException(1, "cause", "c1");
+            String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 38);
+            System.out.println(msg);
+            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"],\"...\"]", msg);
         }
     }
 }
