@@ -169,18 +169,32 @@ public class RC {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         if (rc >= 0) sb.append(rc).append(",");
-        addEncoded(sb, msg);
+        addEncoded(sb, msg, maxSize);
         if (parameters != null && parameters.length > 0) {
             boolean firstException = true;
             IResult appendCause = null;
             for (Object parameter : parameters) {
 
-                sb.append(",");
-
-                if (maxSize > 0 && sb.length() > maxSize) {
-                    sb.append(" ...");
-                    break;
+                if (maxSize > 0) {
+                    if (sb.length() == maxSize) {
+                        sb.append("\"...\"]");
+                        return sb.toString();
+                    } else
+                    if (sb.length() > maxSize) {
+                        sb.setLength(maxSize);
+                        char c = sb.charAt(maxSize-1);
+                        // try to fix a truncated json array
+                        if (c == '\\')
+                            sb.append("\\\",\"...\"]");
+                        else
+                        if (c == '[')
+                            sb.append("\"...\"]");
+                        else
+                            sb.append("\",\"...\"]");
+                        return sb.toString();
+                    }
                 }
+                sb.append(",");
 
                 if (parameter != null) {
 
@@ -202,22 +216,22 @@ public class RC {
                         continue;
                     }
                     if (parameter instanceof Object[])
-                        addEncoded(sb, Arrays.deepToString((Object[]) parameter));
+                        addEncoded(sb, Arrays.deepToString((Object[]) parameter), maxSize );
                     else if (parameter instanceof int[])
-                        addEncoded(sb, Arrays.toString((int[]) parameter));
+                        addEncoded(sb, Arrays.toString((int[]) parameter), maxSize);
                     else if (parameter instanceof double[])
-                        addEncoded(sb, Arrays.toString((double[]) parameter));
+                        addEncoded(sb, Arrays.toString((double[]) parameter), maxSize);
                     else if (parameter instanceof long[])
-                        addEncoded(sb, Arrays.toString((long[]) parameter));
+                        addEncoded(sb, Arrays.toString((long[]) parameter), maxSize);
                     else if (parameter instanceof byte[])
-                        addEncoded(sb, Arrays.toString((byte[]) parameter));
+                        addEncoded(sb, Arrays.toString((byte[]) parameter), maxSize);
                     else if (parameter instanceof float[])
-                        addEncoded(sb, Arrays.toString((float[]) parameter));
+                        addEncoded(sb, Arrays.toString((float[]) parameter), maxSize);
                     else if (parameter instanceof short[])
-                        addEncoded(sb, Arrays.toString((short[]) parameter));
+                        addEncoded(sb, Arrays.toString((short[]) parameter), maxSize);
                     else if (parameter instanceof char[])
-                        addEncoded(sb, Arrays.toString((char[]) parameter));
-                    else addEncoded(sb, parameter);
+                        addEncoded(sb, Arrays.toString((char[]) parameter), maxSize);
+                    else addEncoded(sb, parameter, maxSize);
                 } else sb.append("null");
             }
             if (appendCause != null) {
@@ -225,7 +239,7 @@ public class RC {
                 if (msg2 != null) {
                     if (sb.length() > 0) sb.append(",");
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
-                    else addEncoded(sb, msg2);
+                    else addEncoded(sb, msg2, maxSize);
                 }
             }
             if (cause != null) {
@@ -233,7 +247,7 @@ public class RC {
                 if (msg2 != null) {
                     if (sb.length() > 0) sb.append(",");
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
-                    else addEncoded(sb, msg2);
+                    else addEncoded(sb, msg2, maxSize);
                 }
             }
         }
@@ -241,9 +255,12 @@ public class RC {
         return sb.toString();
     }
 
-    private static void addEncoded(StringBuilder sb, Object obj) {
+    private static void addEncoded(StringBuilder sb, Object obj, int maxSize) {
         if (obj == null) {
             sb.append("null");
+            return;
+        }
+        if (maxSize > 0 && sb.length() > maxSize) {
             return;
         }
         String msg = String.valueOf(obj);
@@ -251,16 +268,22 @@ public class RC {
         int nextPos;
         sb.append("\"");
         while ((nextPos = msg.indexOf('"', pos)) != -1) {
-            encodeBackslash(sb, msg.substring(pos, nextPos));
+            encodeBackslash(sb, msg.substring(pos, nextPos), maxSize);
             sb.append("\\\"");
             pos = nextPos + 1;
+            if (maxSize > 0 && sb.length() > maxSize) {
+                return;
+            }
             if (pos >= msg.length()) break;
         }
-        if (pos < msg.length()) encodeBackslash(sb, msg.substring(pos));
+        if (pos < msg.length()) encodeBackslash(sb, msg.substring(pos), maxSize);
         sb.append("\"");
     }
 
-    private static void encodeBackslash(StringBuilder sb, String msg) {
+    private static void encodeBackslash(StringBuilder sb, String msg, int maxSize) {
+        if (maxSize > 0 && sb.length() > maxSize) {
+            return;
+        }
         int pos = 0;
         int nextPos;
         while ((nextPos = msg.indexOf('\\', pos)) != -1) {
