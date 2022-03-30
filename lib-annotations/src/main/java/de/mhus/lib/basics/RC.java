@@ -181,12 +181,16 @@ public class RC {
 
                 if (parameter != null) {
 
-                    if (parameter instanceof IResult && causeHandling == CAUSE.ADAPT)
-                        return ((IResult) parameter).getMessage();
+                    if (parameter instanceof IResult && causeHandling == CAUSE.ADAPT) {
+                        String m = ((IResult) parameter).getMessage();
+                        if (m != null && maxSize > 0 && m.length() > maxSize ) {
+                            m = m.substring(0, maxSize) + "...\"]"; // TODO not well truncated
+                        }
+                        return m;
+                    }
                     if (parameter instanceof IResult && causeHandling == CAUSE.APPEND) {
                         appendCause = (IResult) parameter;
-                        firstException =
-                                false; // ignore only first exception - it's the cause exception
+                        firstException = false; // ignore only first exception - it's the cause exception
                         sb.setLength(sb.length() - 1);
                         continue;
                     }
@@ -246,6 +250,8 @@ public class RC {
                 }
             }
         }
+        truncateMessage(sb,maxSize);
+
         sb.append("]");
         return sb.toString();
     }
