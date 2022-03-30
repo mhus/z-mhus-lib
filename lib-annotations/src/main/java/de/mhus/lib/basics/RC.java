@@ -221,20 +221,28 @@ public class RC {
                 String msg2 = appendCause.getMessage();
                 if (msg2 != null) {
                     if (sb.length() > 0) sb.append(",");
+                    int beforeLen = sb.length();
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
                     else addEncoded(sb, msg2, maxSize);
-                    if (truncateMessage(sb,maxSize))
-                        return sb.toString();
+                    if (maxSize > 0 && sb.length() > maxSize) {
+                        // remove full cause
+                        sb.setLength(beforeLen);
+                        sb.append("["+appendCause.getReturnCode()+",\"...cause...\"]");
+                    }
                 }
             }
             if (cause != null) {
                 String msg2 = cause.getMessage();
                 if (msg2 != null) {
                     if (sb.length() > 0) sb.append(",");
+                    int beforeLen = sb.length();
                     if (msg2.startsWith("[") && msg2.endsWith("]")) sb.append(msg2);
                     else addEncoded(sb, msg2, maxSize);
-                    if (truncateMessage(sb,maxSize))
-                        return sb.toString();
+                    if (maxSize > 0 && sb.length() > maxSize) {
+                        // remove full cause
+                        sb.setLength(beforeLen);
+                        sb.append("["+cause.getReturnCode()+",\"...cause...\"]");
+                    }
                 }
             }
         }
@@ -245,22 +253,14 @@ public class RC {
     private static boolean truncateMessage(StringBuilder sb, int maxSize) {
         if (maxSize > 0) {
             if (sb.length() == maxSize) {
-                char c = sb.charAt(maxSize-1);
-                if (c == ']')
-                    sb.append(",\"...\"]");
-                else
-                    sb.append("\"...\"]");
+                sb.append("\"...\"]");
                 return true;
             } else
             if (sb.length() > maxSize) {
                 sb.setLength(maxSize);
                 char c = sb.charAt(maxSize-1);
-                // try to fix a truncated json array
                 if (c == '\\')
                     sb.append("\\...\"]");
-                else
-                if (c == '[')
-                    sb.append("0,\"...\"]]");
                 else
                     sb.append("...\"]");
                 return true;

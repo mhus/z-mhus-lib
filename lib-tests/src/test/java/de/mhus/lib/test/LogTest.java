@@ -24,14 +24,13 @@ import org.junit.jupiter.api.Test;
 import de.mhus.lib.basics.IResult;
 import de.mhus.lib.basics.RC;
 import de.mhus.lib.basics.RC.CAUSE;
-import de.mhus.lib.core.logging.Log;
 import de.mhus.lib.errors.MException;
 import de.mhus.lib.tests.TestCase;
 
 public class LogTest extends TestCase {
 
     @Test
-    public void testRC() throws Exception {
+    public void testRCMessage() throws Exception {
         {
             String msg = RC.toMessage(1, (IResult) null, "test", null, 0);
             System.out.println(msg);
@@ -81,6 +80,9 @@ public class LogTest extends TestCase {
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"]]", msg);
         }
+    }
+    @Test
+    public void testRCMessageTruncate() throws Exception {
         { // exact at end of second entry
             MException cause = new MException(1, "cause", "c1");
             String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 10);
@@ -97,13 +99,19 @@ public class LogTest extends TestCase {
             MException cause = new MException(1, "cause", "c1");
             String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 23);
             System.out.println(msg);
-            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[0,\"...\"]]", msg);
+            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"...cause...\"]]", msg);
+        }
+        { // end in mittle of attribute
+            MException cause = new MException(1, "cause", "c1");
+            String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 37);
+            System.out.println(msg);
+            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"...cause...\"]]", msg);
         }
         { // end in mittle of attribute
             MException cause = new MException(1, "cause", "c1");
             String msg = RC.toMessage(1, cause, "test", new Object[] {"nr1", "nr2"}, 38);
             System.out.println(msg);
-            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"],\"...\"]", msg);
+            assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"]]", msg);
         }
     }
 }

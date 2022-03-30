@@ -15,9 +15,13 @@
  */
 package de.mhus.lib.core.util;
 
+import de.mhus.lib.annotations.generic.Public;
+
 public class Pair<K, V> {
 
+    @Public
     private K key;
+    @Public
     private V value;
 
     public Pair(K key, V value) {
