@@ -170,6 +170,7 @@ public class RC {
         sb.append("[");
         if (rc >= 0) sb.append(rc).append(",");
         addEncoded(sb, msg, maxSize);
+        boolean isCause = false;
         if (parameters != null && parameters.length > 0) {
             boolean firstException = true;
             IResult appendCause = null;
@@ -233,6 +234,7 @@ public class RC {
                         sb.setLength(beforeLen);
                         sb.append("["+appendCause.getReturnCode()+",\"...cause...\"]");
                     }
+                    isCause = true;
                 }
             }
             if (cause != null) {
@@ -247,25 +249,46 @@ public class RC {
                         sb.setLength(beforeLen);
                         sb.append("["+cause.getReturnCode()+",\"...cause...\"]");
                     }
+                    isCause = true;
                 }
             }
         }
-        truncateMessage(sb,maxSize);
-
-        sb.append("]");
+        if (isCause || !truncateMessage(sb,maxSize))
+            sb.append("]");
         return sb.toString();
     }
 
     private static boolean truncateMessage(StringBuilder sb, int maxSize) {
         if (maxSize > 0) {
             if (sb.length() == maxSize) {
-                sb.append("\"...\"]");
+                if (maxSize < 3) { // fallback - should not be
+                    sb.append("\"...\"]");
+                    return true;
+                }
+                char c1 = sb.charAt(maxSize-1);
+                char c2 = sb.charAt(maxSize-2);
+                if (c1 == '\"' && c2 != ',' && c2 != '\\')
+                    sb.append(",\"...\"]");
+                else
+                if (c1 == '\\' && c2 != '\\')
+                    sb.append("\\...\"]");
+                else                
+                    sb.append("\"...\"]");
                 return true;
+                
             } else
             if (sb.length() > maxSize) {
                 sb.setLength(maxSize);
-                char c = sb.charAt(maxSize-1);
-                if (c == '\\')
+                if (maxSize < 3) { // fallback - should not be
+                    sb.append("...\"]");
+                    return true;
+                }
+                char c1 = sb.charAt(maxSize-1);
+                char c2 = sb.charAt(maxSize-2);
+                if (c1 == '\"' && c2 != ',' && c2 != '\\')
+                    sb.append(",\"...\"]");
+                else
+                if (c1 == '\\' && c2 != '\\')
                     sb.append("\\...\"]");
                 else
                     sb.append("...\"]");
