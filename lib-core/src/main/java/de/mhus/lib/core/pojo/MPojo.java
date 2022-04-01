@@ -586,7 +586,7 @@ public class MPojo {
                     Object c = cons.length > 0 ? cons[0] : null;
                     if (ord >= 0 && ord < cons.length) c = cons[ord];
                     attr.set(to, c, force);
-                } else if (type.isAssignableFrom(Map.class)) {
+                } else if (Map.class.isAssignableFrom(type)) {
                     INode obj = from.getObjectOrNull(name);
                     if (obj != null) {
                         Map inst = null;
@@ -610,7 +610,7 @@ public class MPojo {
                         else inst.putAll(obj);
                         attr.set(to, inst, force);
                     }
-                } else if (type.isAssignableFrom(Collection.class)) {
+                } else if (Collection.class.isAssignableFrom(type)) {
                     NodeList array = from.getArrayOrNull(name);
                     if (array != null) {
                         Collection inst = null;

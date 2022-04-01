@@ -126,7 +126,7 @@ public class MArgs extends MLog {
                 else if (type == String[].class) value = values.toArray(new String[0]);
                 else if (type == Date.class) value = MCast.toDate(values.get(0), null);
                 else if (type == UUID.class) value = UUID.fromString(values.get(0));
-                else if (type.isAssignableFrom(List.class)) value = values;
+                else if (List.class.isAssignableFrom(type)) value = values;
 
                 attr.set(pojo, value, true);
             } catch (Throwable e) {
