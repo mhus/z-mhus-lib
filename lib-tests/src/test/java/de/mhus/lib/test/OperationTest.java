@@ -54,7 +54,7 @@ public class OperationTest extends TestCase {
         assertTrue(res.getResult() instanceof MapValue);
         assertNotNull(((MapValue) res.getResult()).getValue());
     }
-    
+
     @Test
     public void testMap() throws IOException {
         Operation oper = new TestOperation();
@@ -63,9 +63,6 @@ public class OperationTest extends TestCase {
         User user = new User();
         user.setFirstname("John");
         user.setFirstname("Doe");
-        out.put("key", MPojo.pojoToNode(user, false, true) );
-
-
+        out.put("key", MPojo.pojoToNode(user, false, true));
     }
-    
 }

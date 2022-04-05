@@ -81,7 +81,7 @@ public class LogTest extends TestCase {
             assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"]]", msg);
         }
     }
-    
+
     @Test
     public void testRCMessageTruncate() throws Exception {
         { // exact at end of second entry
@@ -114,39 +114,39 @@ public class LogTest extends TestCase {
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\",[1,\"cause\",\"c1\"]]", msg);
         }
-        
+
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2"}, 20);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2"}, 20);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2"}, 21);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2"}, 21);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\",\"...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2\\"}, 21);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2\\"}, 21);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\\\\...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2\\"}, 22);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2\\"}, 22);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\\\\...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2\""}, 21);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2\""}, 21);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\\\\...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2\""}, 22);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2\""}, 22);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\\\"...\"]", msg);
         }
         { // cut at the end
-            String msg = RC.toMessage(1, (IResult)null, "test", new Object[] {"nr1", "nr2\""}, 23);
+            String msg = RC.toMessage(1, (IResult) null, "test", new Object[] {"nr1", "nr2\""}, 23);
             System.out.println(msg);
             assertEquals("[1,\"test\",\"nr1\",\"nr2\\\"\",\"...\"]", msg);
         }

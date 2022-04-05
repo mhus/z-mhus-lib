@@ -68,9 +68,8 @@ public class RC {
     public static final int CREATED = 201;
     public static final int ACCEPTED = 202;
     /** Miscellaneous persistent warning */
-    public static final int WARNING =
-            299; // Miscellaneous persistent warning,
-                 // https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.46
+    public static final int WARNING = 299; // Miscellaneous persistent warning,
+    // https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.46
 
     // do not retry with these errors - professional errors
     /** Default Error, client error */
@@ -177,21 +176,21 @@ public class RC {
             for (Object parameter : parameters) {
 
                 sb.append(",");
-                if (truncateMessage(sb,maxSize))
-                    return sb.toString();
+                if (truncateMessage(sb, maxSize)) return sb.toString();
 
                 if (parameter != null) {
 
                     if (parameter instanceof IResult && causeHandling == CAUSE.ADAPT) {
                         String m = ((IResult) parameter).getMessage();
-                        if (m != null && maxSize > 0 && m.length() > maxSize ) {
+                        if (m != null && maxSize > 0 && m.length() > maxSize) {
                             m = m.substring(0, maxSize) + "...\"]"; // TODO not well truncated
                         }
                         return m;
                     }
                     if (parameter instanceof IResult && causeHandling == CAUSE.APPEND) {
                         appendCause = (IResult) parameter;
-                        firstException = false; // ignore only first exception - it's the cause exception
+                        firstException =
+                                false; // ignore only first exception - it's the cause exception
                         sb.setLength(sb.length() - 1);
                         continue;
                     }
@@ -204,7 +203,7 @@ public class RC {
                         continue;
                     }
                     if (parameter instanceof Object[])
-                        addEncoded(sb, Arrays.deepToString((Object[]) parameter), maxSize );
+                        addEncoded(sb, Arrays.deepToString((Object[]) parameter), maxSize);
                     else if (parameter instanceof int[])
                         addEncoded(sb, Arrays.toString((int[]) parameter), maxSize);
                     else if (parameter instanceof double[])
@@ -232,7 +231,7 @@ public class RC {
                     if (maxSize > 0 && sb.length() > maxSize) {
                         // remove full cause
                         sb.setLength(beforeLen);
-                        sb.append("["+appendCause.getReturnCode()+",\"...cause...\"]");
+                        sb.append("[" + appendCause.getReturnCode() + ",\"...cause...\"]");
                     }
                     isCause = true;
                 }
@@ -247,14 +246,13 @@ public class RC {
                     if (maxSize > 0 && sb.length() > maxSize) {
                         // remove full cause
                         sb.setLength(beforeLen);
-                        sb.append("["+cause.getReturnCode()+",\"...cause...\"]");
+                        sb.append("[" + cause.getReturnCode() + ",\"...cause...\"]");
                     }
                     isCause = true;
                 }
             }
         }
-        if (isCause || !truncateMessage(sb,maxSize))
-            sb.append("]");
+        if (isCause || !truncateMessage(sb, maxSize)) sb.append("]");
         return sb.toString();
     }
 
@@ -265,33 +263,24 @@ public class RC {
                     sb.append("\"...\"]");
                     return true;
                 }
-                char c1 = sb.charAt(maxSize-1);
-                char c2 = sb.charAt(maxSize-2);
-                if (c1 == '\"' && c2 != ',' && c2 != '\\')
-                    sb.append(",\"...\"]");
-                else
-                if (c1 == '\\' && c2 != '\\')
-                    sb.append("\\...\"]");
-                else                
-                    sb.append("\"...\"]");
+                char c1 = sb.charAt(maxSize - 1);
+                char c2 = sb.charAt(maxSize - 2);
+                if (c1 == '\"' && c2 != ',' && c2 != '\\') sb.append(",\"...\"]");
+                else if (c1 == '\\' && c2 != '\\') sb.append("\\...\"]");
+                else sb.append("\"...\"]");
                 return true;
-                
-            } else
-            if (sb.length() > maxSize) {
+
+            } else if (sb.length() > maxSize) {
                 sb.setLength(maxSize);
                 if (maxSize < 3) { // fallback - should not be
                     sb.append("...\"]");
                     return true;
                 }
-                char c1 = sb.charAt(maxSize-1);
-                char c2 = sb.charAt(maxSize-2);
-                if (c1 == '\"' && c2 != ',' && c2 != '\\')
-                    sb.append(",\"...\"]");
-                else
-                if (c1 == '\\' && c2 != '\\')
-                    sb.append("\\...\"]");
-                else
-                    sb.append("...\"]");
+                char c1 = sb.charAt(maxSize - 1);
+                char c2 = sb.charAt(maxSize - 2);
+                if (c1 == '\"' && c2 != ',' && c2 != '\\') sb.append(",\"...\"]");
+                else if (c1 == '\\' && c2 != '\\') sb.append("\\...\"]");
+                else sb.append("...\"]");
                 return true;
             }
         }
