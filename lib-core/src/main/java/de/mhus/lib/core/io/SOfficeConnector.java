@@ -188,6 +188,7 @@ public class SOfficeConnector extends MLog {
             if (inNext.getName().equals(SOFFICE_CONTENT) || inNext.getName().equals(WORD_CONTENT)) {
                 InputStream isRewritten = replacer.rewriteContent(inNext.getName(), isZip);
                 MFile.copyFile(isRewritten, outZip);
+                isRewritten.close();
             } else {
                 MFile.copyFile(isZip, outZip);
             }
