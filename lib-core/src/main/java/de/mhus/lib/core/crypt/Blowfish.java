@@ -18,6 +18,7 @@ package de.mhus.lib.core.crypt;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import de.mhus.lib.core.MString;
 import de.mhus.lib.core.util.Base64;
 
 // https://stackoverflow.com/questions/23561104/how-to-encrypt-and-decrypt-string-with-my-passphrase-in-java-pc-not-mobile-plat
@@ -31,7 +32,18 @@ public class Blowfish {
         return new String(decrypt(Base64.decode(strEncrypted), strKey), "utf-8");
     }
 
+    private static String normalizeKey(String strKey) {
+        if (strKey == null) return "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+        if (strKey.length() < 32)
+            strKey = strKey + MString.rep('\0', 32 - strKey.length());
+        else
+        if (strKey.length() > 448)
+            strKey = strKey.substring(0, 448);
+        return strKey;
+    }
+
     public static byte[] encrypt(byte[] strClearText, String strKey) throws Exception {
+        strKey = normalizeKey(strKey);
         MBouncy.init();
         strKey = fixKey(strKey);
         SecretKeySpec skeyspec = new SecretKeySpec(strKey.getBytes("utf-8"), "Blowfish");
@@ -42,6 +54,7 @@ public class Blowfish {
     }
 
     public static byte[] decrypt(byte[] strEncrypted, String strKey) throws Exception {
+        strKey = normalizeKey(strKey);
         MBouncy.init();
         strKey = fixKey(strKey);
         SecretKeySpec skeyspec = new SecretKeySpec(strKey.getBytes("utf-8"), "Blowfish");

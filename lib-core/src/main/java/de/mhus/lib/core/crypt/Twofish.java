@@ -31,9 +31,25 @@ public class Twofish {
         return new String(decrypt(Base64.decode(strEncrypted), strKey), "utf-8");
     }
 
+    private static String normalizeKey(String strKey) {
+        if (strKey == null) return "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+        if (strKey.length() < 16)
+            strKey = strKey + MString.rep('\0', 16 - strKey.length());
+        else
+        if (strKey.length() < 24)
+            strKey = strKey + MString.rep('\0', 24 - strKey.length());
+        else
+        if (strKey.length() < 32)
+            strKey = strKey + MString.rep('\0', 32 - strKey.length());
+        else
+        if (strKey.length() > 32)
+            strKey = strKey.substring(0, 32);
+        return strKey;
+    }
+
     public static byte[] encrypt(byte[] strClearText, String strKey) throws Exception {
+        strKey = normalizeKey(strKey);
         MBouncy.init();
-        strKey = fixKey(strKey);
         SecretKeySpec skeyspec = new SecretKeySpec(strKey.getBytes("utf-8"), "twofish");
         Cipher cipher = Cipher.getInstance("twofish", MBouncy.PROVIDER);
         cipher.init(Cipher.ENCRYPT_MODE, skeyspec);
@@ -42,8 +58,8 @@ public class Twofish {
     }
 
     public static byte[] decrypt(byte[] strEncrypted, String strKey) throws Exception {
+        strKey = normalizeKey(strKey);
         MBouncy.init();
-        strKey = fixKey(strKey);
         SecretKeySpec skeyspec = new SecretKeySpec(strKey.getBytes("utf-8"), "twofish");
         Cipher cipher = Cipher.getInstance("twofish", MBouncy.PROVIDER);
         cipher.init(Cipher.DECRYPT_MODE, skeyspec);
@@ -51,9 +67,4 @@ public class Twofish {
         return decrypted;
     }
 
-    private static String fixKey(String strKey) {
-        // min key size 64bit - 8byte, fill with spaces
-        if (strKey.length() < 8) strKey = strKey + MString.rep(' ', 8 - strKey.length());
-        return strKey;
-    }
 }
