@@ -169,8 +169,9 @@ public class MProperties extends AbstractProperties implements Externalizable {
         try {
             File f = new File(fileName);
             if (f.exists() && f.isFile()) {
-                FileInputStream is = new FileInputStream(f);
-                p.load(is);
+            	try(FileInputStream is = new FileInputStream(f)){            		
+            		p.load(is);
+            	}
             }
         } catch (Throwable t) {
             MLogUtil.log().d(fileName, t);
